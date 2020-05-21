@@ -416,4 +416,6 @@ public class AppConstants {
 
     public static final String SHORT_STORY_LISTING_SCREEN = "https://www.momspresso.com/parenting/topic/short-stories";
     public static final String MOM_VLOG_LISTING_SCREEN = "https://www.momspresso.com/parenting/videos";
+
+    public static final String MOM_VLOG_TUTORIAL_COLLECTION = "5ec53266e0dfff57de575526";
 }

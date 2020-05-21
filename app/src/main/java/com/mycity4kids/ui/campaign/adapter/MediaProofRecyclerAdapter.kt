@@ -81,7 +81,7 @@ class MediaProofRecyclerAdapter(
                     }
 
                     holder.imageEdit.setOnClickListener {
-                        if (campaignProofResponse.get(holder.adapterPosition).url!!.contains("video")){
+                        if (campaignProofResponse.get(holder.adapterPosition).url!!.contains("video")) {
                             hasVideo = false
                         }
                         clickListener.onProofDelete(holder.adapterPosition)

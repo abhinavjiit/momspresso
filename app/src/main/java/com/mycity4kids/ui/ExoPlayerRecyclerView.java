@@ -45,7 +45,6 @@ import com.google.android.exoplayer2.upstream.DefaultHttpDataSource;
 import com.google.android.exoplayer2.upstream.DefaultHttpDataSourceFactory;
 import com.google.android.exoplayer2.util.Util;
 import com.mycity4kids.R;
-import com.mycity4kids.models.Topics;
 import com.mycity4kids.models.response.VlogsListingAndDetailResult;
 import com.mycity4kids.ui.activity.ParallelFeedActivity;
 import com.mycity4kids.ui.adapter.VideoRecyclerViewAdapter;
@@ -71,7 +70,6 @@ public class ExoPlayerRecyclerView extends RecyclerView {
     private Context context;
     private String uriString;
     private MediaSource videoSource;
-    private ArrayList<Object> mergedInfoList = new ArrayList<>();
 
 
     /**
@@ -108,13 +106,6 @@ public class ExoPlayerRecyclerView extends RecyclerView {
     public void setVideoInfoList(Context context, ArrayList<VlogsListingAndDetailResult> videoInfoList) {
         this.context = context;
         this.videoInfoList = videoInfoList;
-
-    }
-
-    public void setMergedList(Context context, ArrayList<Object> mergedInfoList) {
-        this.context = context;
-        this.mergedInfoList = mergedInfoList;
-
     }
 
     //remove the player from the row
@@ -180,7 +171,7 @@ public class ExoPlayerRecyclerView extends RecyclerView {
         }
         VideoRecyclerViewAdapter.ViewHolder holder = null;
         VideoRecyclerViewAdapter.ChallengeCardHolder holder1 = null;
-        if (mergedInfoList.get(targetPosition).getClass().getSimpleName().equals("Topics")) {
+        if (videoInfoList.get(targetPosition).getItemType() == 2) {
             holder1 = (VideoRecyclerViewAdapter.ChallengeCardHolder) child.getTag();
             if (holder1 == null) {
                 playPosition = -1;
@@ -202,10 +193,10 @@ public class ExoPlayerRecyclerView extends RecyclerView {
             progressBar = holder.progressBar;
             frameLayout = holder.itemView.findViewById(R.id.video_layout);
         }
-        if (mergedInfoList.get(targetPosition).getClass().getSimpleName().equals("Topics")) {
+        if (videoInfoList.get(targetPosition).getItemType() == 2) {
             Glide.with(appContext)
                     .asBitmap()
-                    .load(((Topics) mergedInfoList.get(targetPosition)).getExtraData().get(0).getChallenge()
+                    .load(videoInfoList.get(targetPosition).getChallengeInfo().getExtraData().get(0).getChallenge()
                             .getImageUrl())
                     .into(new SimpleTarget<Bitmap>() {
                         @Override
@@ -228,7 +219,7 @@ public class ExoPlayerRecyclerView extends RecyclerView {
         } else {
             Glide.with(appContext)
                     .asBitmap()
-                    .load(((VlogsListingAndDetailResult) mergedInfoList.get(targetPosition)).getThumbnail())
+                    .load(((VlogsListingAndDetailResult) videoInfoList.get(targetPosition)).getThumbnail())
                     .into(new SimpleTarget<Bitmap>() {
                         @Override
                         public void onResourceReady(Bitmap bitmap,
@@ -252,7 +243,7 @@ public class ExoPlayerRecyclerView extends RecyclerView {
         frameLayout.addView(videoSurfaceView);
 
         addedVideo = true;
-        if (mergedInfoList.get(targetPosition).getClass().getSimpleName().equals("Topics")) {
+        if (videoInfoList.get(targetPosition).getItemType() == 2) {
             if (holder1 != null) {
                 rowParent = holder1.itemView;
             }
@@ -267,11 +258,11 @@ public class ExoPlayerRecyclerView extends RecyclerView {
 
         // Measures bandwidth during playback. Can be null if not required.
         DefaultBandwidthMeter defaultBandwidthMeter = new DefaultBandwidthMeter();
-        if (mergedInfoList.get(targetPosition).getClass().getSimpleName().equals("Topics")) {
-            uriString = ((Topics) mergedInfoList.get(targetPosition)).getExtraData().get(0).getChallenge()
+        if (videoInfoList.get(targetPosition).getItemType() == 2) {
+            uriString = videoInfoList.get(targetPosition).getChallengeInfo().getExtraData().get(0).getChallenge()
                     .getVideoUrl();
         } else {
-            uriString = ((VlogsListingAndDetailResult) mergedInfoList.get(targetPosition)).getUrl();
+            uriString = videoInfoList.get(targetPosition).getUrl();
         }
         if (uriString != null) {
             String userAgent = Util.getUserAgent(appContext, appContext.getApplicationInfo().packageName);
@@ -285,12 +276,9 @@ public class ExoPlayerRecyclerView extends RecyclerView {
             // Prepare the player with the source.
             player.prepare(videoSource);
             player.setPlayWhenReady(true);
-            if (mergedInfoList.get(targetPosition).getClass().getSimpleName().equals("Topics")) {
-//                ((ParallelFeedActivity) context).hitUpdateViewCountApi(
-//                        ((Topics) mergedInfoList.get(targetPosition)).getId());
-            } else {
+            if (videoInfoList.get(targetPosition).getItemType() != 2) {
                 ((ParallelFeedActivity) context).hitUpdateViewCountApi(
-                        ((VlogsListingAndDetailResult) mergedInfoList.get(targetPosition)).getId());
+                        videoInfoList.get(targetPosition).getId());
             }
             ((ParallelFeedActivity) context).pushMomVlogViewEvent();
         }
@@ -368,7 +356,7 @@ public class ExoPlayerRecyclerView extends RecyclerView {
             public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
                 super.onScrollStateChanged(recyclerView, newState);
                 if (newState == AbsListView.OnScrollListener.SCROLL_STATE_IDLE) {
-                    if (playPosition < mergedInfoList.size() - 1) {
+                    if (playPosition < videoInfoList.size() - 1) {
                         playVideo(false);
                     }
                 }
@@ -430,7 +418,7 @@ public class ExoPlayerRecyclerView extends RecyclerView {
                         break;
                     case Player.STATE_ENDED:
                         player.seekTo(0);
-                        if (playPosition < mergedInfoList.size() - 1) {
+                        if (playPosition < videoInfoList.size() - 1) {
                             recyclerView.smoothScrollToPosition(playPosition + 1);
                             playVideo(true);
                         }

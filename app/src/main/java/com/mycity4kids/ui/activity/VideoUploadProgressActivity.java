@@ -295,6 +295,7 @@ public class VideoUploadProgressActivity extends BaseActivity implements View.On
             case R.id.okayTextView:
                 Intent intent = new Intent(VideoUploadProgressActivity.this, DashboardActivity.class);
                 intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                intent.putExtra("showInviteDialog", true);
                 startActivity(intent);
                 finish();
                 break;

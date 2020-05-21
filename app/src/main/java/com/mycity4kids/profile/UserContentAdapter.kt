@@ -888,6 +888,7 @@ class UserContentAdapter(
                 winnerVlogImageView.visibility = View.GONE
             }
         } catch (e: Exception) {
+            winnerVlogImageView.visibility = View.GONE
             FirebaseCrashlytics.getInstance().recordException(e)
             Log.d("MC4kException", Log.getStackTraceString(e))
         }

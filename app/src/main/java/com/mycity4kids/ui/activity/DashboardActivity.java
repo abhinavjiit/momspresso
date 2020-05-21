@@ -96,6 +96,7 @@ import com.mycity4kids.ui.fragment.ChangePreferredLanguageDialogFragment;
 import com.mycity4kids.ui.fragment.ChooseVideoUploadOptionDialogFragment;
 import com.mycity4kids.ui.fragment.FragmentMC4KHomeNew;
 import com.mycity4kids.ui.fragment.GroupsViewFragment;
+import com.mycity4kids.ui.fragment.InviteFriendsDialogFragment;
 import com.mycity4kids.ui.fragment.RateAppDialogFragment;
 import com.mycity4kids.ui.fragment.UploadVideoInfoFragment;
 import com.mycity4kids.ui.rewards.activity.RewardsContainerActivity;
@@ -728,8 +729,22 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
             rateAppDialogFragment
                     .show(getFragmentManager(), rateAppDialogFragment.getClass().getSimpleName());
         }
-
+        if (getIntent().getBooleanExtra("showInviteDialog", false)) {
+            launchInviteFriendsDialog();
+        }
         getUsersData();
+    }
+
+    private void launchInviteFriendsDialog() {
+        InviteFriendsDialogFragment inviteFriendsDialogFragment = new InviteFriendsDialogFragment();
+        Bundle args = new Bundle();
+        inviteFriendsDialogFragment.setArguments(args);
+        inviteFriendsDialogFragment.setCancelable(true);
+        FragmentManager fm = getSupportFragmentManager();
+        inviteFriendsDialogFragment.show(fm, "Invite Friends");
+        Utils.pushGenericEvent(this, "Show_InvitePopup_PostCreation",
+                SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId(),
+                "DashboardActivity");
     }
 
     private void showMyMoneyRegistrationPrompt(Intent mymoneyIntent) {

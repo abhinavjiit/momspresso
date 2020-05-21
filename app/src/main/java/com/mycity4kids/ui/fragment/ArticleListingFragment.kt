@@ -26,7 +26,6 @@ import android.widget.Toast
 import androidx.appcompat.view.menu.MenuBuilder
 import androidx.appcompat.view.menu.MenuPopupHelper
 import androidx.appcompat.widget.PopupMenu
-import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.app.ActivityCompat
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -80,6 +79,7 @@ import com.mycity4kids.widget.StoryShareCardWidget
 import java.io.File
 import java.util.ArrayList
 import okhttp3.ResponseBody
+import org.apache.commons.lang3.text.WordUtils
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -123,7 +123,7 @@ class ArticleListingFragment : BaseFragment(), View.OnClickListener,
     private lateinit var articleFilterTextView: MomspressoButtonWidget
     private lateinit var storyFilterTextView: MomspressoButtonWidget
     private lateinit var vlogsFilterTextView: MomspressoButtonWidget
-    private lateinit var filterContentContainer: ConstraintLayout
+    private lateinit var filterContentContainer: LinearLayout
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -156,6 +156,15 @@ class ArticleListingFragment : BaseFragment(), View.OnClickListener,
         articleFilterTextView.setOnClickListener(this)
         storyFilterTextView.setOnClickListener(this)
         vlogsFilterTextView.setOnClickListener(this)
+        articleFilterTextView.setText(
+            WordUtils.capitalizeFully(articleFilterTextView.context.getString(R.string.groups_sections_blogs))
+        )
+        storyFilterTextView.setText(
+            WordUtils.capitalizeFully(storyFilterTextView.context.getString(R.string.myprofile_section_short_story_label))
+        )
+        vlogsFilterTextView.setText(
+            WordUtils.capitalizeFully(vlogsFilterTextView.context.getString(R.string.myprofile_section_videos_label))
+        )
 
         articleFilterTextView.isSelected = true
         storyFilterTextView.isSelected = false
@@ -684,7 +693,6 @@ class ArticleListingFragment : BaseFragment(), View.OnClickListener,
                                 articleDataModelsSubList,
                                 AppConstants.CONTENT_TYPE_SHORT_STORY
                             )
-                        //                        intent.putParcelableArrayListExtra("pagerListData", filteredResult);
                         intent.putExtra(
                             Constants.ARTICLE_INDEX, "" + AppUtils
                             .getFilteredPosition1(

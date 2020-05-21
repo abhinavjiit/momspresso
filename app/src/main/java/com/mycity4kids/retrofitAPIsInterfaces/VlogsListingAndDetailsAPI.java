@@ -2,6 +2,7 @@ package com.mycity4kids.retrofitAPIsInterfaces;
 
 import com.mycity4kids.models.Topics;
 import com.mycity4kids.models.TopicsResponse;
+import com.mycity4kids.models.collectionsModels.TutorialCollectionsListModel;
 import com.mycity4kids.models.request.AddCommentRequest;
 import com.mycity4kids.models.request.ArticleDetailRequest;
 import com.mycity4kids.models.request.RecommendUnrecommendArticleRequest;
@@ -11,12 +12,14 @@ import com.mycity4kids.models.request.VlogsEventRequest;
 import com.mycity4kids.models.response.AddBookmarkResponse;
 import com.mycity4kids.models.response.AddCommentResponse;
 import com.mycity4kids.models.response.ArticleRecommendationStatusResponse;
+import com.mycity4kids.models.response.BaseResponseGeneric;
 import com.mycity4kids.models.response.MomVlogListingResponse;
 import com.mycity4kids.models.response.MomVlogersDetailResponse;
 import com.mycity4kids.models.response.RecommendUnrecommendArticleResponse;
 import com.mycity4kids.models.response.VlogsDetailResponse;
 import com.mycity4kids.models.response.VlogsListingResponse;
 import com.mycity4kids.vlogs.VlogsCategoryWiseChallengesResponse;
+import java.util.ArrayList;
 import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.http.Body;
@@ -44,7 +47,7 @@ public interface VlogsListingAndDetailsAPI {
     Call<VlogsCategoryWiseChallengesResponse> getVlogsCategoryWiseChallenges();
 
     @GET("/v2/categories/category/challenges/")
-    Call<VlogsCategoryWiseChallengesResponse> getSingleChallenge(@Query("id") ArrayList<String> id );
+    Call<VlogsCategoryWiseChallengesResponse> getSingleChallenge(@Query("id") ArrayList<String> id);
 
     @GET("/v2/videos/{videoId}")
     Call<VlogsDetailResponse> getVlogDetail(@Path("videoId") String videoId);
@@ -82,9 +85,13 @@ public interface VlogsListingAndDetailsAPI {
             @Query("type") int type,
             @Query("category_id") String categoryId);
 
-    //https://stagingapi.momspresso.com/v2/categories/?id=category-d4379f58f7b24846adcefc82dc22a86b
-    @GET("/v2/categories/")
-    Call<Topics> getMomVlogs(@Query("id") String id);
+    @GET("/v1/collections/{collectionId}")
+    Call<BaseResponseGeneric<TutorialCollectionsListModel>> getTutorialCollectionItems(
+            @Path("collectionId") String collectionId,
+            @Query("start") int start,
+            @Query("offset") int offset
+    );
+
 
     @GET("v2/videos/")
     Call<VlogsListingResponse> getVlogsListForWinner(@Query("start") int start,

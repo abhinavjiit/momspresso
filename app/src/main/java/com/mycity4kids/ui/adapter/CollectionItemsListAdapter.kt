@@ -17,9 +17,12 @@ import com.mycity4kids.models.collectionsModels.UserCollectionsModel
 import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.user_collection_items_list_adapter.view.*
 
+const val TUTORIAL = 1
+
 class CollectionItemsListAdapter(var activity: Context, var recyclerViewClick: RecyclerViewClick) :
     RecyclerView.Adapter<CollectionItemsListAdapter.ViewHolder>() {
 
+    private var listType: Int = 0
     private var mInflater: LayoutInflater =
         BaseApplication.getAppContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
     var context: Context = activity
@@ -30,8 +33,11 @@ class CollectionItemsListAdapter(var activity: Context, var recyclerViewClick: R
         return ViewHolder(view, recyclerViewClick)
     }
 
-    override fun getItemCount(): Int {
+    fun setListType(listType: Int) {
+        this.listType = listType
+    }
 
+    override fun getItemCount(): Int {
         return userCollectionsTopicList.size
     }
 
@@ -53,9 +59,15 @@ class CollectionItemsListAdapter(var activity: Context, var recyclerViewClick: R
                 }
 
                 holder.articleVideoShortStoryIcon.setImageResource(R.drawable.ic_video)
-                if (userCollectionsTopicList[position].item_info.author != null)
-                    holder.articleAuthorName.text =
-                        userCollectionsTopicList[position].item_info.author.firstName + userCollectionsTopicList[position].item_info.author.lastName
+
+                if (listType == TUTORIAL) {
+                    holder.articleAuthorName.visibility = View.GONE
+                } else {
+                    holder.articleAuthorName.visibility = View.VISIBLE
+                    if (userCollectionsTopicList[position].item_info.author != null)
+                        holder.articleAuthorName.text =
+                            userCollectionsTopicList[position].item_info.author.firstName + userCollectionsTopicList[position].item_info.author.lastName
+                }
             } else if (userCollectionsTopicList[position].itemType.equals(AppConstants.CONTENT_TYPE_ARTICLE)) {
                 try {
                     Picasso.get().load(userCollectionsTopicList[position].item_info.imageUrl.thumbMax)

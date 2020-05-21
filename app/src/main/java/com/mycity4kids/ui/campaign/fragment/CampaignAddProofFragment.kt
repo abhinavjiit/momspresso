@@ -45,12 +45,12 @@ import io.reactivex.Observer
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable
 import io.reactivex.schedulers.Schedulers
-import retrofit2.Call
-import retrofit2.Callback
 import java.io.File
 import java.text.SimpleDateFormat
 import java.util.ArrayList
 import java.util.Date
+import retrofit2.Call
+import retrofit2.Callback
 
 const val SELECT_IMAGE = 1005
 const val SELECT_VIDEO = 1006
@@ -84,7 +84,7 @@ class CampaignAddProofFragment : BaseFragment(), UrlProofRecyclerAdapter.ClickLi
     }
 
     override fun onCellClick() {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        TODO("not implemented") // To change body of created functions use File | Settings | File Templates.
     }
 
     override fun onUrlProofDelete(cellIndex: Int) {
@@ -151,7 +151,7 @@ class CampaignAddProofFragment : BaseFragment(), UrlProofRecyclerAdapter.ClickLi
 
     override fun onCellClick(hasVideo: Boolean) {
         chooseMediaTypeContainer.visibility = View.VISIBLE
-        if (hasVideo || hasVideos){
+        if (hasVideo || hasVideos) {
             chooseVideoTextView.visibility = View.GONE
         } else {
             chooseVideoTextView.visibility = View.VISIBLE

@@ -1,6 +1,7 @@
 package com.mycity4kids.models.response;
 
 import com.google.gson.annotations.SerializedName;
+import com.mycity4kids.models.Topics;
 import com.mycity4kids.profile.Author;
 
 import java.util.ArrayList;
@@ -64,6 +65,11 @@ public class VlogsListingAndDetailResult {
     private boolean isCarouselRequestRunning = false;
     private int start = 0;
     private int index = 0;
+    private Topics challengeInfo;
+
+    public VlogsListingAndDetailResult() {
+
+    }
 
     public int getIndex() {
         return index;
@@ -299,5 +305,13 @@ public class VlogsListingAndDetailResult {
 
     public void setItemType(int itemType) {
         this.itemType = itemType;
+    }
+
+    public Topics getChallengeInfo() {
+        return challengeInfo;
+    }
+
+    public void setChallengeInfo(Topics challengeInfo) {
+        this.challengeInfo = challengeInfo;
     }
 }

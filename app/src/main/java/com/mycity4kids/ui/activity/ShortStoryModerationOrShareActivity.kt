@@ -346,6 +346,7 @@ class ShortStoryModerationOrShareActivity : BaseActivity(), View.OnClickListener
     private fun launchHome() {
         val intent = Intent(this@ShortStoryModerationOrShareActivity, DashboardActivity::class.java)
         intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_NEW_TASK
+        intent.putExtra("showInviteDialog", true)
         startActivity(intent)
         finish()
     }

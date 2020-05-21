@@ -503,6 +503,7 @@
     <activity android:name=".ui.activity.phoneLogin.FacebookFriends" />
     <activity android:name=".ui.activity.collection.AddMultipleCollectionItemActivity" />
     <activity android:name=".ui.activity.ShortStoriesCardActivity" />
+    <activity android:name=".ui.activity.ContentCreationTutorialListingActivity" />
     <activity android:name=".vlogs.VideoCategoryAndChallengeSelectionActivity" />
     <activity
       android:name=".ui.activity.PhoneContactsActivity"

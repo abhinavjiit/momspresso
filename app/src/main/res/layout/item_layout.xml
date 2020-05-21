@@ -199,7 +199,6 @@
       android:layout_centerVertical="true"
       android:layout_marginStart="5dp"
       android:layout_toEndOf="@+id/share"
-      android:alpha="0.85"
       android:padding="12dp"
       android:src="@drawable/ic_whats_app"
       android:tint="@color/white_color" />
@@ -211,7 +210,6 @@
       android:layout_centerVertical="true"
       android:layout_marginStart="5dp"
       android:layout_toEndOf="@+id/whatsapp"
-      android:alpha="0.85"
       android:padding="12dp"
       android:src="@drawable/collectionadd"
       android:tint="@color/white_color"
@@ -223,11 +221,19 @@
       android:layout_height="50dp"
       android:layout_centerVertical="true"
       android:layout_toEndOf="@id/heart"
-      android:alpha="0.9"
       android:padding="12dp"
       android:src="@drawable/ic_comments"
       android:tint="@color/white_color" />
 
+    <ImageView
+      android:id="@+id/commentIndicator"
+      android:layout_width="10dp"
+      android:layout_height="10dp"
+      android:layout_alignStart="@+id/comment"
+      android:layout_alignTop="@+id/comment"
+      android:layout_marginStart="12dp"
+      android:layout_marginTop="12dp"
+      android:src="@drawable/ic_red_dot" />
 
     <com.mycity4kids.widget.CustomFontTextView
       android:id="@+id/commentCount"
