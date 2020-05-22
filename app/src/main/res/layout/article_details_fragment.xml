@@ -27,17 +27,6 @@
         android:layout_centerHorizontal="true" />
 
 
-      <ImageView
-        android:id="@+id/badge"
-        android:layout_width="50dp"
-        android:layout_height="50dp"
-        android:layout_below="@+id/article_title"
-        android:layout_alignParentRight="true"
-        android:layout_marginRight="10dp"
-        android:translationZ="5dp"
-        android:visibility="gone" />
-
-
       <RelativeLayout
         android:id="@+id/headerImageOrYoutubeViewContainer"
         android:layout_width="match_parent"
@@ -51,6 +40,14 @@
           android:layout_height="@dimen/article_details_app_bar_height"
           android:scaleType="fitXY"
           android:src="@drawable/default_article" />
+
+        <ImageView
+          android:id="@+id/badge"
+          android:layout_width="50dp"
+          android:layout_height="50dp"
+          android:layout_alignParentEnd="true"
+          android:translationZ="5dp"
+          android:visibility="gone" />
 
         <com.pierfrancescosoffritti.androidyoutubeplayer.core.player.views.YouTubePlayerView
           android:id="@+id/youtube_player_view"
@@ -209,7 +206,7 @@
           android:layout_marginTop="48dp"
           android:background="@drawable/profile_crown_bg"
           android:elevation="4dp"
-          android:visibility="gone" />
+          android:visibility="visible" />
       </RelativeLayout>
 
       <com.mycity4kids.widget.CustomFontTextView
@@ -303,12 +300,23 @@
         android:layout_below="@+id/articleWebView"
         android:layout_centerHorizontal="true" />
 
+      <com.mycity4kids.widget.CustomFontTextView
+        android:id="@+id/publishedDateTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/bottomAdSlotWebView"
+        android:gravity="center_vertical"
+        android:padding="@dimen/space_16"
+        android:text="dkjbdk ksbdvk"
+        android:textColor="#979797"
+        android:textSize="12sp" />
+
+
       <RelativeLayout
         android:id="@+id/tagsLayoutContainer"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/bottomAdSlotWebView"
-        android:layout_marginTop="4dp"
+        android:layout_below="@+id/publishedDateTextView"
         android:layout_marginBottom="10dp"
         android:visibility="visible">
 
@@ -341,23 +349,23 @@
           android:visibility="gone"
           app:fontName="open_sans.ttf" />
 
+
         <RelativeLayout
           android:id="@+id/rl"
           android:layout_width="match_parent"
           android:layout_height="wrap_content"
-          android:layout_below="@+id/tagsSubtitleTextView"
-          android:layout_marginTop="10dp">
+          android:layout_below="@+id/tagsSubtitleTextView">
           <RelativeLayout
             android:id="@+id/tagsContainer"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content">
-            <com.mycity4kids.widget.CustomFontTextView
+            <androidx.appcompat.widget.AppCompatImageView
               android:id="@+id/tagsIndicatorView"
               android:layout_width="20dp"
               android:layout_height="20dp"
               android:layout_centerVertical="true"
               android:layout_marginStart="12dp"
-              android:background="#D1415A" />
+              app:srcCompat="@drawable/ic_tags" />
 
             <org.apmem.tools.layouts.FlowLayout
               android:id="@+id/tagsLayout"
@@ -410,7 +418,7 @@
             android:src="@drawable/default_commentor_img" />
 
           <RelativeLayout
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
             android:layout_marginStart="@dimen/space_10"
@@ -425,6 +433,7 @@
               android:textColor="#4A4A4A"
               android:textSize="18sp"
               app:fontName="OpenSans-SemiBold.ttf" />
+
 
             <RelativeLayout
               android:layout_width="wrap_content"
@@ -458,30 +467,29 @@
                 android:textSize="12sp" />
             </RelativeLayout>
           </RelativeLayout>
-
-
           <com.mycity4kids.widget.MomspressoButtonWidget
             android:id="@+id/followTextViewFollowContainer"
-            android:layout_width="125dp"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentEnd="true"
             android:layout_centerVertical="true"
             android:layout_marginTop="@dimen/space_5"
             android:layout_marginEnd="@dimen/space_5"
             android:layout_marginBottom="@dimen/space_5"
-            android:padding="@dimen/space_10"
             android:elevation="0dp"
+            android:padding="10dp"
             android:text="FOLLOW"
+            app:borderColor="@color/app_red"
+            app:borderthickness="1dp"
+            app:elevation="0dp"
             app:fb_borderColor="@color/app_red"
             app:fb_borderWidth="1dp"
             app:fb_defaultColor="@color/white_color"
             app:fb_radius="@dimen/space_30"
             app:fb_textColor="@color/app_red"
             app:fb_textSize="14sp"
-            app:borderColor="@color/app_red"
-            app:borderthickness="1dp"
-            app:elevation="0dp"
             app:gravity="center"
+            app:radius="5dp"
             app:textStyle="bold" />
         </RelativeLayout>
 
@@ -766,7 +774,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@id/todaysBestHeaderTextView"
-        android:layout_marginBottom="@dimen/space_20"/>
+        android:layout_marginBottom="@dimen/space_20" />
 
 
       <LinearLayout
@@ -903,6 +911,27 @@
         android:layout_marginTop="5dp"
         android:background="#f2f2f2"
         android:visibility="gone" />
+
+
+      <com.mycity4kids.widget.MomspressoButtonWidget
+        android:id="@+id/moreArticlesTextView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/todaysBestContainerLayout"
+        android:layout_marginTop="@dimen/space_16"
+        android:padding="@dimen/space_16"
+        android:text="@string/ad.view_all_tags.text"
+        android:textSize="@dimen/space_16"
+        android:visibility="gone"
+        app:borderColor="@color/app_red"
+        app:borderthickness="1dp"
+        app:elevation="0dp"
+        app:fb_borderColor="@color/app_red"
+        app:fb_borderWidth="1dp"
+        app:fb_defaultColor="@color/app_red"
+        app:fb_textColor="@color/white"
+        app:fb_textSize="14sp" />
+
     </RelativeLayout>
   </com.mycity4kids.observablescrollview.ObservableScrollView>
 
@@ -1098,7 +1127,6 @@
       android:layout_height="wrap_content"
       android:layout_centerVertical="true"
       android:padding="@dimen/space_16"
-      android:tint="@color/app_red"
       app:srcCompat="@drawable/ic_group_bookmark_article_detail"
       app:tint="@color/grey" />
 

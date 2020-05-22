@@ -339,11 +339,6 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
     private TextView authorName3;
     private TextView authorName4;
     private TextView authorName5;
-    private TextView article_date1;
-    private TextView article_date2;
-    private TextView article_date3;
-    private TextView article_date4;
-    private TextView article_date5;
     private TextView articleViewCountTextView1;
     private TextView articleViewCountTextView2;
     private TextView articleViewCountTextView3;
@@ -378,6 +373,8 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
     private RelativeLayout userFollowView;
     private ImageView reportCommentContent2;
     private ImageView reportCommentContent1;
+    private TextView publishedDateTextView;
+    private MomspressoButtonWidget moreArticlesTextView;
 
 
     static {
@@ -398,6 +395,8 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
             mixpanel = MixpanelAPI
                     .getInstance(BaseApplication.getAppContext(), AppConstants.MIX_PANEL_TOKEN);
 
+            moreArticlesTextView = fragmentView.findViewById(R.id.moreArticlesTextView);
+            publishedDateTextView = fragmentView.findViewById(R.id.publishedDateTextView);
             reportCommentContent1 = fragmentView.findViewById(R.id.reportCommentContent1);
             reportCommentContent2 = fragmentView.findViewById(R.id.reportCommentContent2);
             moreFromAuthorTextView = fragmentView.findViewById(R.id.moreFromAuthorTextView);
@@ -633,6 +632,7 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
             userFollowView.setOnClickListener(this);
             reportCommentContent1.setOnClickListener(this);
             reportCommentContent2.setOnClickListener(this);
+            moreArticlesTextView.setOnClickListener(this);
 
             mainWebChromeClient = new MyWebChromeClient();
             mainWebView.setWebChromeClient(mainWebChromeClient);
@@ -939,8 +939,8 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
 
     private void getTodaysBestArticles() {
         Retrofit retrofit = BaseApplication.getInstance().getRetrofit();
-        TopicsCategoryAPI topicsCategoryAPI = retrofit.create(TopicsCategoryAPI.class);
-        Call<MixFeedResponse> todaysBestCall = topicsCategoryAPI
+        TopicsCategoryAPI topicsCategoryApi = retrofit.create(TopicsCategoryAPI.class);
+        Call<MixFeedResponse> todaysBestCall = topicsCategoryApi
                 .getTodaysBestFeed(DateTimeUtils.getKidsDOBNanoMilliTimestamp("" + System.currentTimeMillis()), 1, 6,
                         SharedPrefUtils.getLanguageFilters(BaseApplication.getAppContext()));
         todaysBestCall.enqueue(new Callback<MixFeedResponse>() {
@@ -1039,11 +1039,13 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
         body.setText(dataList.getExcerpt());
         if (dataList.getIsbookmark() == 1) {
             Drawable top = ContextCompat.getDrawable(bookmarkImageView.getContext(), R.drawable.ic_bookmarked);
-            top.setColorFilter(ContextCompat.getColor(getActivity(), R.color.app_red), PorterDuff.Mode.SRC_IN);
+            top.setColorFilter(ContextCompat.getColor(bookmarkImageView.getContext(), R.color.app_red),
+                    PorterDuff.Mode.SRC_IN);
             bookmarkImageView.setImageDrawable(top);
         } else {
             Drawable top = ContextCompat.getDrawable(bookmarkImageView.getContext(), R.drawable.ic_bookmark);
-            top.setColorFilter(ContextCompat.getColor(getActivity(), R.color.grey), PorterDuff.Mode.SRC_IN);
+            top.setColorFilter(ContextCompat.getColor(bookmarkImageView.getContext(), R.color.grey),
+                    PorterDuff.Mode.SRC_IN);
             bookmarkImageView.setImageDrawable(top);
         }
 
@@ -1111,11 +1113,10 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
 
     private void getComments() {
         Retrofit retrofit = BaseApplication.getInstance().getRetrofit();
-        ArticleDetailsAPI articleDetailsAPI = retrofit.create(ArticleDetailsAPI.class);
-        Call<CommentListResponse> call = articleDetailsAPI.getArticleComments(articleId, null, null);
+        ArticleDetailsAPI articleDetailsApi = retrofit.create(ArticleDetailsAPI.class);
+        Call<CommentListResponse> call = articleDetailsApi.getArticleComments(articleId, null, null);
         call.enqueue(ssCommentsResponseCallback);
     }
-
 
     private Callback<CommentListResponse> ssCommentsResponseCallback = new Callback<CommentListResponse>() {
         @Override
@@ -1130,9 +1131,7 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
                 CommentListResponse commentListResponse = response.body();
                 commentsList = new ArrayList<>(commentListResponse.getData());
                 if (commentListResponse.getCount() != 0) {
-                    commentsHeaderTextView.setText("Comments(" + commentListResponse.getCount() + ")");
                     showComments(commentListResponse.getData());
-                    commentsHeaderTextView.setVisibility(View.VISIBLE);
                     commentContainer.setVisibility(View.VISIBLE);
                 } else {
                     getFbCommentsApi();
@@ -1152,8 +1151,8 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
 
     private void getFbCommentsApi() {
         Retrofit retro = BaseApplication.getInstance().getRetrofit();
-        ArticleDetailsAPI articleDetailsAPI = retro.create(ArticleDetailsAPI.class);
-        Call<FBCommentResponse> call = articleDetailsAPI.getFBComments(articleId, null);
+        ArticleDetailsAPI articleDetailsApi = retro.create(ArticleDetailsAPI.class);
+        Call<FBCommentResponse> call = articleDetailsApi.getFBComments(articleId, null);
         call.enqueue(fbCommentsCallback);
     }
 
@@ -1175,14 +1174,11 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
                 if (responseData.getCode() == 200 && Constants.SUCCESS.equals(responseData.getStatus())) {
                     if (null != responseData.getData().getResult() && !responseData.getData().getResult().isEmpty()) {
                         fbCommentsList = responseData.getData().getResult();
-                        commentsHeaderTextView.setText("Comments(" + fbCommentsList.size() + ")");
                         reportCommentContent1.setVisibility(View.GONE);
                         reportCommentContent2.setVisibility(View.GONE);
                         showFbComments(fbCommentsList);
-                        commentsHeaderTextView.setVisibility(View.VISIBLE);
                         commentContainer.setVisibility(View.VISIBLE);
                     } else {
-                        commentsHeaderTextView.setVisibility(View.GONE);
                         commentContainer.setVisibility(View.GONE);
                         viewMoreTextView.setVisibility(View.GONE);
                         beTheFirstOneCommentContainer.setVisibility(View.VISIBLE);
@@ -1206,11 +1202,8 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
         public void onFailure(Call<FBCommentResponse> call, Throwable e) {
             FirebaseCrashlytics.getInstance().recordException(e);
             Log.d("MC4kException", Log.getStackTraceString(e));
-//            mLodingView.setVisibility(View.GONE);
-//            handleExceptions(t);
         }
     };
-
 
     private void showComments(List<CommentListData> commentsList) {
         if (commentsList.size() == 1) {
@@ -1234,12 +1227,14 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
                 Drawable myDrawable = ContextCompat
                         .getDrawable(likeCount1.getContext(), R.drawable.ic_recommended);
                 myDrawable
-                        .setColorFilter(ContextCompat.getColor(getActivity(), R.color.app_red), PorterDuff.Mode.SRC_IN);
+                        .setColorFilter(ContextCompat.getColor(likeCount1.getContext(), R.color.app_red),
+                                PorterDuff.Mode.SRC_IN);
                 likeCount1.setCompoundDrawablesWithIntrinsicBounds(myDrawable, null, null, null);
             } else {
                 Drawable myDrawable = ContextCompat
                         .getDrawable(likeCount1.getContext(), R.drawable.ic_recommend);
-                myDrawable.setColorFilter(ContextCompat.getColor(getActivity(), R.color.grey), PorterDuff.Mode.SRC_IN);
+                myDrawable.setColorFilter(ContextCompat.getColor(likeCount1.getContext(), R.color.grey),
+                        PorterDuff.Mode.SRC_IN);
                 likeCount1.setCompoundDrawablesWithIntrinsicBounds(myDrawable, null, null, null);
             }
             if (commentsList.get(0).getLikeCount() == 0) {
@@ -1247,7 +1242,6 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
 
             } else {
                 likeCount1.setText(commentsList.get(0).getLikeCount() + "");
-
             }
             if (commentsList.get(0).getRepliesCount() == 0) {
                 replyCount1.setText("Reply");
@@ -1279,14 +1273,14 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
 
             if (commentsList.get(0).getLiked()) {
                 Drawable myDrawable = ContextCompat
-                        .getDrawable(getActivity(), R.drawable.ic_recommended).mutate();
-                myDrawable.setTint(getResources().getColor(R.color.app_red));
+                        .getDrawable(likeCount1.getContext(), R.drawable.ic_recommended).mutate();
+                myDrawable.setColorFilter(getResources().getColor(R.color.app_red), PorterDuff.Mode.SRC_IN);
                 likeCount1.setCompoundDrawablesWithIntrinsicBounds(myDrawable, null, null, null);
             } else {
 
                 Drawable myDrawable = ContextCompat
-                        .getDrawable(getActivity(), R.drawable.ic_recommend).mutate();
-                myDrawable.setTint(getResources().getColor(R.color.grey));
+                        .getDrawable(likeCount1.getContext(), R.drawable.ic_recommend).mutate();
+                myDrawable.setColorFilter(getResources().getColor(R.color.grey), PorterDuff.Mode.SRC_IN);
                 likeCount1.setCompoundDrawablesWithIntrinsicBounds(myDrawable, null, null, null);
             }
             if (commentsList.get(0).getLikeCount() == 0) {
@@ -1294,9 +1288,7 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
 
             } else {
                 likeCount1.setText(commentsList.get(0).getLikeCount() + "");
-
             }
-
             if (commentsList.get(0).getRepliesCount() == 0) {
                 replyCount1.setText("Reply");
             } else {
@@ -1314,12 +1306,12 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
             if (commentsList.get(1).getLiked()) {
                 Drawable myDrawable = ContextCompat
                         .getDrawable(getActivity(), R.drawable.ic_recommended);
-                myDrawable.setTint(getResources().getColor(R.color.app_red));
+                myDrawable.setColorFilter(getResources().getColor(R.color.app_red), PorterDuff.Mode.SRC_IN);
                 likeCount2.setCompoundDrawablesWithIntrinsicBounds(myDrawable, null, null, null);
             } else {
                 Drawable myDrawable = ContextCompat
                         .getDrawable(getActivity(), R.drawable.ic_recommend);
-                myDrawable.setTint(getResources().getColor(R.color.grey));
+                myDrawable.setColorFilter(getResources().getColor(R.color.grey), PorterDuff.Mode.SRC_IN);
                 likeCount2.setCompoundDrawablesWithIntrinsicBounds(myDrawable, null, null, null);
             }
             if (commentsList.get(1).getLikeCount() == 0) {
@@ -1357,12 +1349,12 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
             if (commentsList.get(0).getLiked()) {
                 Drawable myDrawable = ContextCompat
                         .getDrawable(likeCount1.getContext(), R.drawable.ic_recommended);
-                myDrawable.setTint(getResources().getColor(R.color.app_red));
+                myDrawable.setColorFilter(getResources().getColor(R.color.app_red), PorterDuff.Mode.SRC_IN);
                 likeCount1.setCompoundDrawablesWithIntrinsicBounds(myDrawable, null, null, null);
             } else {
                 Drawable myDrawable = ContextCompat
                         .getDrawable(likeCount1.getContext(), R.drawable.ic_recommend);
-                myDrawable.setTint(getResources().getColor(R.color.grey));
+                myDrawable.setColorFilter(getResources().getColor(R.color.grey), PorterDuff.Mode.SRC_IN);
                 likeCount1.setCompoundDrawablesWithIntrinsicBounds(myDrawable, null, null, null);
             }
             if (commentsList.get(0).getLikeCount() == 0) {
@@ -1387,13 +1379,13 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
             if (commentsList.get(1).getLiked()) {
                 Drawable myDrawable = ContextCompat
                         .getDrawable(likeCount2.getContext(), R.drawable.ic_recommended);
-                myDrawable.setTint(getResources().getColor(R.color.app_red));
+                myDrawable.setColorFilter(getResources().getColor(R.color.app_red), PorterDuff.Mode.SRC_IN);
                 likeCount2.setCompoundDrawablesWithIntrinsicBounds(myDrawable, null, null, null);
             } else {
 
                 Drawable myDrawable = ContextCompat
                         .getDrawable(likeCount2.getContext(), R.drawable.ic_recommend);
-                myDrawable.setTint(getResources().getColor(R.color.grey));
+                myDrawable.setColorFilter(getResources().getColor(R.color.grey), PorterDuff.Mode.SRC_IN);
                 likeCount2.setCompoundDrawablesWithIntrinsicBounds(myDrawable, null, null, null);
             }
             if (commentsList.get(1).getLikeCount() == 0) {
@@ -1696,13 +1688,6 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
     }
 
     private void hitRelatedArticleApi() {
-       /* Retrofit retrofit = BaseApplication.getInstance().getRetrofit();
-        TopicsCategoryAPI topicsCategoryApi = retrofit.create(TopicsCategoryAPI.class);
-        Call<ArticleListingResponse> vernacularTrendingCall = topicsCategoryApi
-                .getTrendingArticles(1, 4,
-                        SharedPrefUtils.getLanguageFilters(BaseApplication.getAppContext()));
-        vernacularTrendingCall.enqueue(vernacularTrendingResponseCallback);*/
-
         Call<ArticleListingResponse> categoryRelatedArticlesCall = articleDetailsApi
                 .getCategoryRelatedArticles(articleId, 0, 4,
                         SharedPrefUtils.getLanguageFilters(BaseApplication.getAppContext()));
@@ -1903,6 +1888,9 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
         if (!StringUtils.isNullOrEmpty(detailData.getCreated())) {
             ((TextView) fragmentView.findViewById(R.id.article_date)).setText(
                     DateTimeUtils.getDateFromTimestamp(Long.parseLong(detailData.getCreated())));
+            publishedDateTextView
+                    .setText("Published : " + DateTimeUtils
+                            .getDateFromTimestamp(Long.parseLong(detailData.getCreated())));
         }
 
         if (!newArticleDetailFlag) {
@@ -2157,6 +2145,11 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
     public void onClick(View v) {
         try {
             switch (v.getId()) {
+                case R.id.moreArticlesTextView:
+                    Intent intent1 =new Intent(getActivity(),DashboardActivity.class);
+                    intent1.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
+                    startActivity(intent1);
+                    break;
                 case R.id.groupHeaderView: {
                     if (groupId == 0) {
                         Intent groupIntent = new Intent(getActivity(), DashboardActivity.class);
@@ -2396,7 +2389,7 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
                         articleCommentRepliesDialogFragment.setCancelable(true);
                         articleCommentRepliesDialogFragment.show(fm, "View Replies");
                     } else {
-                        openAddCommentReplyDialog(commentsList.get(1));
+                       // openAddCommentReplyDialog(commentsList.get(1));
                     }
                     break;
                 case R.id.replyCount:
@@ -2411,7 +2404,7 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
                         articleCommentRepliesDialogFragment.setCancelable(true);
                         articleCommentRepliesDialogFragment.show(fm, "View Replies");
                     } else {
-                        openAddCommentReplyDialog(commentsList.get(0));
+                      //  openAddCommentReplyDialog(commentsList.get(0));
                     }
                     break;
                 case R.id.menuItemImageView:
@@ -2568,7 +2561,6 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
                         likeCount1.setText("");
                     }
                     commentsList.get(0).setLikeCount(commentsList.get(0).getLikeCount() - 1);
-
                 } catch (NullPointerException e) {
                     FirebaseCrashlytics.getInstance().recordException(e);
                     Log.d("NullPointerException", Log.getStackTraceString(e));
@@ -3076,7 +3068,8 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
             articleDetailRequest.setArticleId(articleId);
             bookmarkStatus = 1;
             Drawable top = ContextCompat.getDrawable(bookmarkImageViewNew.getContext(), R.drawable.ic_bookmarked);
-            top.setTint(ContextCompat.getColor(getActivity(), R.color.app_red));
+            top.setColorFilter(ContextCompat.getColor(bookmarkImageViewNew.getContext(), R.color.app_red),
+                    PorterDuff.Mode.SRC_IN);
             bookmarkImageViewNew.setImageDrawable(top);
 
             if ("1".equals(isMomspresso)) {
@@ -3098,7 +3091,8 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
             bookmarkStatus = 0;
 
             Drawable top = ContextCompat.getDrawable(bookmarkImageViewNew.getContext(), R.drawable.ic_bookmark);
-            top.setTint(ContextCompat.getColor(getActivity(), R.color.grey));
+            top.setColorFilter(ContextCompat.getColor(bookmarkImageViewNew.getContext(), R.color.grey),
+                    PorterDuff.Mode.SRC_IN);
             bookmarkImageViewNew.setImageDrawable(top);
 
             if ("1".equals(isMomspresso)) {
@@ -3271,6 +3265,11 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
 
                     if ("0".equals(responseData.getData().get(0).getCommentCount())) {
                         articleCommentCountTextView.setVisibility(View.GONE);
+                        commentsHeaderTextView.setVisibility(View.GONE);
+                    } else {
+                        commentsHeaderTextView.setVisibility(View.VISIBLE);
+                        commentsHeaderTextView
+                                .setText("Comments(" + responseData.getData().get(0).getCommentCount() + ")");
                     }
                     if ("0".equals(responseData.getData().get(0).getLikeCount())) {
                         articleRecommendationCountTextView.setVisibility(View.GONE);
@@ -3660,24 +3659,6 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
                             recommendCountTextView1.setText(dataList.get(0).getLikesCount());
                             commentCountTextView1.setText(dataList.get(0).getCommentsCount());
                             viewCountTextView1.setText(dataList.get(0).getArticleCount());
-
-                            //  viewCountTextView1.setText(dataList.get(0).get);
-
-                           /* relatedArticles1.setTag(new ArrayList<>(
-                                    dataList.subList(0, 3)));*/
-                        /*    Picasso.get().load(dataList.get(1).getImageUrl().getThumbMin())
-                                    .placeholder(R.drawable.default_article).fit()
-                                    .into(relatedArticles2.getArticleImageView());
-                            relatedArticles2.setArticleTitle(dataList.get(1).getTitle());
-                            relatedArticles2.setTag(new ArrayList<>(
-                                    dataList.subList(0, 3)));
-                            Picasso.get().load(dataList.get(2).getImageUrl().getThumbMin())
-                                    .placeholder(R.drawable.default_article).fit()
-                                    .into(relatedArticles3.getArticleImageView());
-                            relatedArticles3.setArticleTitle(dataList.get(2).getTitle());
-                            relatedArticles3.setTag(new ArrayList<>(
-                                    dataList.subList(0, 3)))*/
-                            ;
                         }
 
                         if (dataList.size() >= 2) {
@@ -3712,7 +3693,7 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
                             commentCountTextView3.setText(dataList.get(2).getCommentsCount());
                             viewCountTextView3.setText(dataList.get(2).getArticleCount());
 
-                          /*  relatedArticles1.setArticleTitle(dataList.get(0).getTitle());
+                            /*  relatedArticles1.setArticleTitle(dataList.get(0).getTitle());
                             relatedArticles1.setTag(dataList);
                             relatedArticles2.setVisibility(View.GONE);
                             relatedArticles3.setVisibility(View.GONE);*/
@@ -3744,7 +3725,7 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
                             viewCountTextView5.setText(dataList.get(4).getArticleCount());
 
                         }
-                      /*  recentAuthorArticleHeading
+                         /*  recentAuthorArticleHeading
                                 .setText(getString(R.string.ad_recent_logs_from_title));
                         recentAuthorArticles.setVisibility(View.GONE);
                         if (dataList.size() >= 3) {
@@ -4121,7 +4102,8 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
                                 if (getActivity() != null) {
                                     Drawable top = ContextCompat
                                             .getDrawable(getActivity(), R.drawable.ic_bookmark);
-                                    top.setTint(ContextCompat.getColor(getActivity(), R.color.grey));
+                                    top.setColorFilter(ContextCompat.getColor(getActivity(), R.color.grey),
+                                            PorterDuff.Mode.SRC_IN);
                                     bookmarkImageViewNew.setImageDrawable(top);
 
                                 }
@@ -4129,7 +4111,8 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
                                 if (getActivity() != null) {
                                     Drawable top = ContextCompat
                                             .getDrawable(getActivity(), R.drawable.ic_bookmarked);
-                                    top.setTint(ContextCompat.getColor(getActivity(), R.color.app_red));
+                                    top.setColorFilter(ContextCompat.getColor(getActivity(), R.color.app_red),
+                                            PorterDuff.Mode.SRC_IN);
                                     bookmarkImageViewNew.setImageDrawable(top);
 
                                 }
@@ -4192,7 +4175,7 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
                     if (getActivity() != null) {
                         Drawable top = ContextCompat
                                 .getDrawable(getActivity(), R.drawable.ic_bookmark);
-                        top.setTint(ContextCompat.getColor(getActivity(), R.color.grey));
+                        top.setColorFilter(ContextCompat.getColor(getActivity(), R.color.grey), PorterDuff.Mode.SRC_IN);
                         bookmarkImageViewNew.setImageDrawable(top);
 
                     }
@@ -4200,7 +4183,8 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
                     if (getActivity() != null) {
                         Drawable top = ContextCompat
                                 .getDrawable(getActivity(), R.drawable.ic_bookmarked);
-                        top.setTint(ContextCompat.getColor(getActivity(), R.color.app_red));
+                        top.setColorFilter(ContextCompat.getColor(getActivity(), R.color.app_red),
+                                PorterDuff.Mode.SRC_IN);
                         bookmarkImageViewNew.setImageDrawable(top);
 
                     }
@@ -4356,7 +4340,6 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
                 todaysBestListData.get(todaysBestBookmarkIdIndex)
                         .setBookmarkId(responseData.getData().getResult().getBookmarkId());
             } else {
-
             }
         }
     }
