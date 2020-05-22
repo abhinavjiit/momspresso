@@ -213,6 +213,7 @@
         android:textSize="14sp"
         android:visibility="gone" />
 
+
       <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/collectionItemRecyclerView"
         android:layout_width="match_parent"
@@ -241,7 +242,6 @@
     android:background="@color/white_color"
     android:visibility="visible"
     app:duration="1000">
-
 
     <include
       layout="@layout/collection_detail_shimmer_layout"
