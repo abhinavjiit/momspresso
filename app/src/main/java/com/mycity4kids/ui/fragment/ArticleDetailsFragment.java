@@ -376,7 +376,6 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
     private TextView publishedDateTextView;
     private MomspressoButtonWidget moreArticlesTextView;
 
-
     static {
         AppCompatDelegate.setCompatVectorFromResourcesEnabled(true);
     }
@@ -1431,7 +1430,7 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
             }
 
         } else if (fbCommentsList.size() == 2) {
-            viewMoreTextView.setVisibility(View.GONE);
+            viewMoreTextView.setVisibility(View.VISIBLE);
             try {
                 Picasso.get().load(fbCommentsList.get(0).getProfile_image().getClientApp())
                         .error(R.drawable.default_commentor_img).into(commentatorImageView1);
@@ -1688,10 +1687,9 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
     }
 
     private void hitRelatedArticleApi() {
-        Call<ArticleListingResponse> categoryRelatedArticlesCall = articleDetailsApi
-                .getCategoryRelatedArticles(articleId, 0, 4,
-                        SharedPrefUtils.getLanguageFilters(BaseApplication.getAppContext()));
-        categoryRelatedArticlesCall.enqueue(categoryArticleResponseCallback);
+        Call<ArticleListingResponse> callAuthorRecentcall = articleDetailsApi
+                .getPublishedArticles(authorId, 0, 1, 6);
+        callAuthorRecentcall.enqueue(bloggersArticleResponseCallback);
     }
 
     private void hitUpdateViewCountApi(String userId, ArrayList<Map<String, String>> tagsList,
@@ -3454,7 +3452,7 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
                 }
             };*/
 
-    private Callback<ArticleListingResponse> categoryArticleResponseCallback = new Callback<ArticleListingResponse>() {
+    private Callback<ArticleListingResponse> bloggersArticleResponseCallback = new Callback<ArticleListingResponse>() {
         @Override
         public void onResponse(Call<ArticleListingResponse> call,
                 retrofit2.Response<ArticleListingResponse> response) {
@@ -3465,9 +3463,10 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
                 NetworkErrorException nee = new NetworkErrorException(
                         "Category related Article API failure");
                 FirebaseCrashlytics.getInstance().recordException(nee);
-                Call<ArticleListingResponse> callAuthorRecentcall = articleDetailsApi
-                        .getPublishedArticles(authorId, 0, 1, 6);
-                callAuthorRecentcall.enqueue(bloggersArticleResponseCallback);
+                Call<ArticleListingResponse> categoryRelatedArticlesCall = articleDetailsApi
+                        .getCategoryRelatedArticles(articleId, 0, 4,
+                                SharedPrefUtils.getLanguageFilters(BaseApplication.getAppContext()));
+                categoryRelatedArticlesCall.enqueue(categoryArticleResponseCallback);
                 return;
             }
 
@@ -3486,16 +3485,17 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
                         }
                     }
                     if (dataList.size() == 0) {
-                        Call<ArticleListingResponse> callAuthorRecentcall = articleDetailsApi
-                                .getPublishedArticles(authorId, 0, 1, 6);
-                        callAuthorRecentcall.enqueue(bloggersArticleResponseCallback);
+                        Call<ArticleListingResponse> categoryRelatedArticlesCall = articleDetailsApi
+                                .getCategoryRelatedArticles(articleId, 0, 4,
+                                        SharedPrefUtils.getLanguageFilters(BaseApplication.getAppContext()));
+                        categoryRelatedArticlesCall.enqueue(categoryArticleResponseCallback);
                     } else {
                         recentAuthorArticleHeading.setText(getString(R.string.recent_article));
                         recentAuthorArticles.setVisibility(View.GONE);
                         Collections.shuffle(dataList);
                         impressionList.addAll(dataList);
                         swipeRelated.onRelatedSwipe(dataList);
-                        moreFromAuthorTextView.setText("RELATED ARTICLES");
+                        moreFromAuthorTextView.setText("MORE FROM AUTHOR");
                         relatedOrBloggerArticle = new ArrayList<>();
                         relatedOrBloggerArticle = dataList;
                         if (dataList.size() >= 1) {
@@ -3593,16 +3593,18 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
                     NetworkErrorException nee = new NetworkErrorException(
                             "Category related Article Error Response");
                     FirebaseCrashlytics.getInstance().recordException(nee);
-                    Call<ArticleListingResponse> callAuthorRecentcall = articleDetailsApi
-                            .getPublishedArticles(authorId, 0, 1, 6);
-                    callAuthorRecentcall.enqueue(bloggersArticleResponseCallback);
+                    Call<ArticleListingResponse> categoryRelatedArticlesCall = articleDetailsApi
+                            .getCategoryRelatedArticles(articleId, 0, 4,
+                                    SharedPrefUtils.getLanguageFilters(BaseApplication.getAppContext()));
+                    categoryRelatedArticlesCall.enqueue(categoryArticleResponseCallback);
                 }
             } catch (Exception e) {
                 FirebaseCrashlytics.getInstance().recordException(e);
                 Log.d("MC4kException", Log.getStackTraceString(e));
-                Call<ArticleListingResponse> callAuthorRecentcall = articleDetailsApi
-                        .getPublishedArticles(authorId, 0, 1, 6);
-                callAuthorRecentcall.enqueue(bloggersArticleResponseCallback);
+                Call<ArticleListingResponse> categoryRelatedArticlesCall = articleDetailsApi
+                        .getCategoryRelatedArticles(articleId, 0, 4,
+                                SharedPrefUtils.getLanguageFilters(BaseApplication.getAppContext()));
+                categoryRelatedArticlesCall.enqueue(categoryArticleResponseCallback);
             }
         }
 
@@ -3612,7 +3614,7 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
         }
     };
 
-    private Callback<ArticleListingResponse> bloggersArticleResponseCallback = new Callback<ArticleListingResponse>() {
+    private Callback<ArticleListingResponse> categoryArticleResponseCallback = new Callback<ArticleListingResponse>() {
         @Override
         public void onResponse(Call<ArticleListingResponse> call,
                 retrofit2.Response<ArticleListingResponse> response) {
@@ -3647,7 +3649,7 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
                     } else {
                         impressionList.addAll(dataList);
                         Collections.shuffle(dataList);
-                        moreFromAuthorTextView.setText("MORE FROM AUTHOR");
+                        moreFromAuthorTextView.setText("RELATED ARTICLES");
                         relatedOrBloggerArticle = new ArrayList<>();
                         relatedOrBloggerArticle = dataList;
                         if (dataList.size() >= 1) {
