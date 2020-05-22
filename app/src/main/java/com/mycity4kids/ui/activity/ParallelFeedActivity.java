@@ -261,15 +261,15 @@ public class ParallelFeedActivity extends BaseActivity implements View.OnClickLi
                         finalList = dataList;
                         finalList.add(new VlogsListingAndDetailResult(1));
                         getChallenges();
-                        setRecycler();
                     } else {
                         finalList.addAll(dataList);
                         if (dataList.size() > 10) {
                             finalList.add(new VlogsListingAndDetailResult(1));
                         }
+                        recyclerViewFeed.setVideoInfoList(ParallelFeedActivity.this, finalList);
+                        videoRecyclerViewAdapter.updateList(finalList);
                     }
-                    recyclerViewFeed.setVideoInfoList(ParallelFeedActivity.this, finalList);
-                    videoRecyclerViewAdapter.updateList(finalList);
+
                 } else {
                     showToast(getString(R.string.server_went_wrong));
                 }
@@ -322,9 +322,10 @@ public class ParallelFeedActivity extends BaseActivity implements View.OnClickLi
                                 if (dataList.size() > 10) {
                                     finalList.add(new VlogsListingAndDetailResult(1));
                                 }
+                                recyclerViewFeed.setVideoInfoList(ParallelFeedActivity.this, finalList);
+                                videoRecyclerViewAdapter.updateList(finalList);
                             }
-                            recyclerViewFeed.setVideoInfoList(ParallelFeedActivity.this, finalList);
-                            videoRecyclerViewAdapter.updateList(finalList);
+
                         } else {
                             showToast(getString(R.string.server_went_wrong));
                         }
@@ -915,5 +916,7 @@ public class ParallelFeedActivity extends BaseActivity implements View.OnClickLi
             finalList.add(5, item);
         }
         setRecycler();
+        recyclerViewFeed.setVideoInfoList(ParallelFeedActivity.this, finalList);
+        videoRecyclerViewAdapter.updateList(finalList);
     }
 }
