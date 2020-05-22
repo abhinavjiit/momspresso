@@ -12,5 +12,8 @@
     android:id="@+id/share"
     android:actionMenuTextColor="@color/app_red"
     android:title="SHARE" />
-
+  <item
+    android:id="@+id/reportLang"
+    android:actionMenuTextColor="@color/app_red"
+    android:title="REPORT INCORRECT LANGUAGE" />
 </menu>

@@ -16,7 +16,6 @@ import android.os.Bundle;
 import android.text.Html;
 import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.LinearInterpolator;
@@ -32,7 +31,6 @@ import android.widget.HorizontalScrollView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.PopupMenu;
-import android.widget.PopupMenu.OnMenuItemClickListener;
 import android.widget.RelativeLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
@@ -67,6 +65,7 @@ import com.mycity4kids.models.request.ArticleDetailRequest;
 import com.mycity4kids.models.request.DeleteBookmarkRequest;
 import com.mycity4kids.models.request.FollowUnfollowUserRequest;
 import com.mycity4kids.models.request.RecommendUnrecommendArticleRequest;
+import com.mycity4kids.models.request.ReportStoryOrCommentRequest;
 import com.mycity4kids.models.request.UpdateViewCountRequest;
 import com.mycity4kids.models.response.AddBookmarkResponse;
 import com.mycity4kids.models.response.ArticleDetailResponse;
@@ -88,6 +87,7 @@ import com.mycity4kids.models.response.LikeReactionModel;
 import com.mycity4kids.models.response.MixFeedResponse;
 import com.mycity4kids.models.response.MixFeedResult;
 import com.mycity4kids.models.response.RecommendUnrecommendArticleResponse;
+import com.mycity4kids.models.response.ReportStoryOrCommentResponse;
 import com.mycity4kids.models.response.UserDetailResponse;
 import com.mycity4kids.models.response.ViewCountResponse;
 import com.mycity4kids.newmodels.FollowUnfollowCategoriesRequest;
@@ -100,6 +100,7 @@ import com.mycity4kids.retrofitAPIsInterfaces.ArticleDetailsAPI;
 import com.mycity4kids.retrofitAPIsInterfaces.BloggerDashboardAPI;
 import com.mycity4kids.retrofitAPIsInterfaces.DeepLinkingAPI;
 import com.mycity4kids.retrofitAPIsInterfaces.FollowAPI;
+import com.mycity4kids.retrofitAPIsInterfaces.ShortStoryAPI;
 import com.mycity4kids.retrofitAPIsInterfaces.TopicsCategoryAPI;
 import com.mycity4kids.retrofitAPIsInterfaces.TorcaiAdsAPI;
 import com.mycity4kids.ui.GroupMembershipStatus;
@@ -175,7 +176,6 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
     private boolean isArticleDetailLoaded = false;
     private boolean isSwipeNextAvailable;
     private boolean bookmarkFlag = false;
-    private String recommendationFlag = "0";
     private String commentUrl = "";
     private String shareUrl = "";
     private String bookmarkId;
@@ -2380,32 +2380,30 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
                     break;
                 case R.id.replyCount2:
                     if (commentsList.get(1).getRepliesCount() > 0) {
-                        ArticleCommentRepliesDialogFragment articleCommentRepliesDialogFragment = new ArticleCommentRepliesDialogFragment();
-                        FragmentManager fm = getChildFragmentManager();
-                        Bundle _args = new Bundle();
-                        _args.putParcelable("commentReplies", commentsList.get(1));
-                        _args.putInt("totalRepliesCount", commentsList.get(1).getRepliesCount());
-                        _args.putInt("position", 1);
-                        articleCommentRepliesDialogFragment.setArguments(_args);
+                        Bundle args = new Bundle();
+                        args.putParcelable("commentReplies", commentsList.get(1));
+                        args.putInt("totalRepliesCount", commentsList.get(1).getRepliesCount());
+                        args.putInt("position", 1);
+                        ArticleCommentRepliesDialogFragment articleCommentRepliesDialogFragment =
+                                new ArticleCommentRepliesDialogFragment();
+                        articleCommentRepliesDialogFragment.setArguments(args);
                         articleCommentRepliesDialogFragment.setCancelable(true);
+                        FragmentManager fm = getChildFragmentManager();
                         articleCommentRepliesDialogFragment.show(fm, "View Replies");
-                    } else {
-                        // openAddCommentReplyDialog(commentsList.get(1));
                     }
                     break;
                 case R.id.replyCount:
                     if (commentsList.get(0).getRepliesCount() > 0) {
-                        ArticleCommentRepliesDialogFragment articleCommentRepliesDialogFragment = new ArticleCommentRepliesDialogFragment();
-                        FragmentManager fm = getChildFragmentManager();
-                        Bundle _args = new Bundle();
-                        _args.putParcelable("commentReplies", commentsList.get(0));
-                        _args.putInt("totalRepliesCount", commentsList.get(0).getRepliesCount());
-                        _args.putInt("position", 0);
-                        articleCommentRepliesDialogFragment.setArguments(_args);
+                        Bundle args = new Bundle();
+                        args.putParcelable("commentReplies", commentsList.get(0));
+                        args.putInt("totalRepliesCount", commentsList.get(0).getRepliesCount());
+                        args.putInt("position", 0);
+                        ArticleCommentRepliesDialogFragment articleCommentRepliesDialogFragment
+                                = new ArticleCommentRepliesDialogFragment();
+                        articleCommentRepliesDialogFragment.setArguments(args);
                         articleCommentRepliesDialogFragment.setCancelable(true);
+                        FragmentManager fm = getChildFragmentManager();
                         articleCommentRepliesDialogFragment.show(fm, "View Replies");
-                    } else {
-                        //  openAddCommentReplyDialog(commentsList.get(0));
                     }
                     break;
                 case R.id.menuItemImageView:
@@ -2493,13 +2491,13 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
     }
 
     private void reportComment(int position) {
+        Bundle args = new Bundle();
+        args.putString("postId", commentsList.get(position).getId());
+        args.putInt("type", AppConstants.REPORT_TYPE_COMMENT);
         ReportContentDialogFragment reportContentDialogFragment = new ReportContentDialogFragment();
-        FragmentManager fm = getChildFragmentManager();
-        Bundle _args = new Bundle();
-        _args.putString("postId", commentsList.get(position).getId());
-        _args.putInt("type", AppConstants.REPORT_TYPE_COMMENT);
-        reportContentDialogFragment.setArguments(_args);
+        reportContentDialogFragment.setArguments(args);
         reportContentDialogFragment.setCancelable(true);
+        FragmentManager fm = getChildFragmentManager();
         reportContentDialogFragment.show(fm, "Report Content");
     }
 
@@ -2541,8 +2539,8 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
             commentListData.setReaction("like");
             commentListData.setStatus("1");
             Retrofit retrofit = BaseApplication.getInstance().getRetrofit();
-            ArticleDetailsAPI articleDetailsAPI = retrofit.create(ArticleDetailsAPI.class);
-            Call<ResponseBody> call = articleDetailsAPI
+            ArticleDetailsAPI articleDetailsApi = retrofit.create(ArticleDetailsAPI.class);
+            Call<ResponseBody> call = articleDetailsApi
                     .likeDislikeComment(commentsList.get(index).getId(), commentListData);
             call.enqueue(likeDisLikeCommentCallback);
         } else if (commentsList.get(index).getLiked()) {
@@ -2593,8 +2591,8 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
             commentListData.setReaction("like");
             commentListData.setStatus("0");
             Retrofit retrofit = BaseApplication.getInstance().getRetrofit();
-            ArticleDetailsAPI articleDetailsAPI = retrofit.create(ArticleDetailsAPI.class);
-            Call<ResponseBody> call = articleDetailsAPI
+            ArticleDetailsAPI articleDetailsApi = retrofit.create(ArticleDetailsAPI.class);
+            Call<ResponseBody> call = articleDetailsApi
                     .likeDislikeComment(commentsList.get(index).getId(), commentListData);
             call.enqueue(likeDisLikeCommentCallback);
         }
@@ -2604,29 +2602,6 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
     private Callback<ResponseBody> likeDisLikeCommentCallback = new Callback<ResponseBody>() {
         @Override
         public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
-            if (response == null || null == response.body()) {
-                NetworkErrorException nee = new NetworkErrorException(response.raw().toString());
-                FirebaseCrashlytics.getInstance().recordException(nee);
-                if (isAdded()) {
-                    ((ArticleDetailsContainerActivity) getActivity())
-                            .showToast(getString(R.string.server_went_wrong));
-                }
-                return;
-            }
-            try {
-                String resData = new String(response.body().bytes());
-                JSONObject jsonObject = new JSONObject(resData);
-                if (jsonObject.getJSONObject("status").toString().equals(Constants.SUCCESS) && jsonObject
-                        .getJSONObject("code").toString().equals("200")) {
-
-                }
-
-            } catch (Exception e) {
-                FirebaseCrashlytics.getInstance().recordException(e);
-                Log.d("MC4kException", Log.getStackTraceString(e));
-            }
-
-
         }
 
         @Override
@@ -2639,25 +2614,24 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
     private void shareTodaysBestArticles(MixFeedResult dataList) {
         String shareUrl = AppUtils.getShareUrl(dataList.getUserType(), dataList.getBlogTitleSlug(),
                 dataList.getTitleSlug());
-
         Intent shareIntent = new Intent(Intent.ACTION_SEND);
         shareIntent.setType("text/plain");
         shareIntent.putExtra(Intent.EXTRA_TEXT, shareUrl);
         startActivity(Intent.createChooser(shareIntent, "Momspresso"));
-
     }
 
 
-    private void addRemoveTodatsBestArticleBookmark(MixFeedResult dataList, int Index, ImageView bookmarkImageViewNew) {
-        todaysBestBookmarkIdIndex = Index - 1;
-        if (todaysBestListData.get(Index - 1).getIsbookmark() == 0) {
+    private void addRemoveTodatsBestArticleBookmark(MixFeedResult dataList, int index, ImageView bookmarkImageViewNew) {
+        todaysBestBookmarkIdIndex = index - 1;
+        if (todaysBestListData.get(index - 1).getIsbookmark() == 0) {
             ArticleDetailRequest articleDetailRequest = new ArticleDetailRequest();
-            articleDetailRequest.setArticleId(todaysBestListData.get(Index - 1).getId());
-            todaysBestListData.get(Index - 1).setIsbookmark(1);
+            articleDetailRequest.setArticleId(todaysBestListData.get(index - 1).getId());
+            todaysBestListData.get(index - 1).setIsbookmark(1);
             Drawable top = ContextCompat.getDrawable(bookmarkImageViewNew.getContext(), R.drawable.ic_bookmarked);
-            top.setColorFilter(ContextCompat.getColor(getActivity(), R.color.app_red), PorterDuff.Mode.SRC_IN);
+            top.setColorFilter(ContextCompat.getColor(bookmarkImageViewNew.getContext(), R.color.app_red),
+                    PorterDuff.Mode.SRC_IN);
             bookmarkImageViewNew.setImageDrawable(top);
-            if ("1".equals(todaysBestListData.get(Index - 1).isMomspresso())) {
+            if ("1".equals(todaysBestListData.get(index - 1).isMomspresso())) {
                 Call<AddBookmarkResponse> call = articleDetailsApi
                         .addVideoWatchLater(articleDetailRequest);
                 call.enqueue(addTodaysBestBookmarkCallback);
@@ -2668,14 +2642,15 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
             }
         } else {
             DeleteBookmarkRequest deleteBookmarkRequest = new DeleteBookmarkRequest();
-            deleteBookmarkRequest.setId(todaysBestListData.get(Index - 1).getBookmarkId());
-            todaysBestListData.get(Index - 1).setIsbookmark(0);
+            deleteBookmarkRequest.setId(todaysBestListData.get(index - 1).getBookmarkId());
+            todaysBestListData.get(index - 1).setIsbookmark(0);
 
             Drawable top = ContextCompat.getDrawable(bookmarkImageViewNew.getContext(), R.drawable.ic_bookmark);
-            top.setColorFilter(ContextCompat.getColor(getActivity(), R.color.grey), PorterDuff.Mode.SRC_IN);
+            top.setColorFilter(ContextCompat.getColor(bookmarkImageViewNew.getContext(), R.color.grey),
+                    PorterDuff.Mode.SRC_IN);
             bookmarkImageViewNew.setImageDrawable(top);
 
-            if ("1".equals(todaysBestListData.get(Index - 1).isMomspresso())) {
+            if ("1".equals(todaysBestListData.get(index - 1).isMomspresso())) {
                 Call<AddBookmarkResponse> call = articleDetailsApi
                         .deleteVideoWatchLater(deleteBookmarkRequest);
                 call.enqueue(addTodaysBestBookmarkCallback);
@@ -2692,54 +2667,74 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
     private void chooseOptionMenuItem(View chooseOptionMenuItem) {
         PopupMenu popupMenu = new PopupMenu(getActivity(), chooseOptionMenuItem);
         popupMenu.getMenuInflater().inflate(R.menu.article_detail_items_menu, popupMenu.getMenu());
-        popupMenu.setOnMenuItemClickListener(new OnMenuItemClickListener() {
-            @Override
-            public boolean onMenuItemClick(MenuItem menuItem) {
-                if (menuItem.getItemId() == R.id.copyLink) {
-                    AppUtils.copyToClipboard(
-                            AppUtils.getShareUrl(detailData.getUserType(), detailData.getBlogTitleSlug(),
-                                    detailData.getTitleSlug())
-                    );
-                    ToastUtils.showToast(getActivity(), "Link Copied");
-                    return true;
-                } else if (menuItem.getItemId() == R.id.addCollection) {
-                    try {
-                        AddCollectionAndCollectionItemDialogFragment addCollectionAndCollectionitemDialogFragment =
-                                new AddCollectionAndCollectionItemDialogFragment();
-                        Bundle bundle = new Bundle();
-                        bundle.putString("articleId", articleId);
-                        bundle.putString("type", AppConstants.ARTICLE_COLLECTION_TYPE);
-                        addCollectionAndCollectionitemDialogFragment.setArguments(bundle);
-                        FragmentManager fm = getFragmentManager();
-                        addCollectionAndCollectionitemDialogFragment.setTargetFragment(ArticleDetailsFragment.this, 0);
-                        addCollectionAndCollectionitemDialogFragment.show(fm, "collectionAdd");
-                        Utils.pushProfileEvents(getActivity(), "CTA_Article_Add_To_Collection",
-                                "ArticleDetailsFragment", "Add to Collection", "-");
-                    } catch (Exception e) {
-                        FirebaseCrashlytics.getInstance().recordException(e);
-                        Log.d("MC4kException", Log.getStackTraceString(e));
-                    }
-                    return true;
-                } else if (menuItem.getItemId() == R.id.share) {
-                    Intent shareIntent = new Intent(Intent.ACTION_SEND);
-                    shareIntent.setType("text/plain");
-                    shareIntent.putExtra(Intent.EXTRA_TEXT, shareUrl);
-                    startActivity(Intent.createChooser(shareIntent, "Momspresso"));
-                    return true;
+        popupMenu.setOnMenuItemClickListener(menuItem -> {
+            if (menuItem.getItemId() == R.id.copyLink) {
+                AppUtils.copyToClipboard(
+                        AppUtils.getShareUrl(detailData.getUserType(), detailData.getBlogTitleSlug(),
+                                detailData.getTitleSlug())
+                );
+                ToastUtils.showToast(getActivity(), "Link Copied");
+                return true;
+            } else if (menuItem.getItemId() == R.id.addCollection) {
+                try {
+                    AddCollectionAndCollectionItemDialogFragment addCollectionAndCollectionitemDialogFragment =
+                            new AddCollectionAndCollectionItemDialogFragment();
+                    Bundle bundle = new Bundle();
+                    bundle.putString("articleId", articleId);
+                    bundle.putString("type", AppConstants.ARTICLE_COLLECTION_TYPE);
+                    addCollectionAndCollectionitemDialogFragment.setArguments(bundle);
+                    FragmentManager fm = getFragmentManager();
+                    addCollectionAndCollectionitemDialogFragment.setTargetFragment(ArticleDetailsFragment.this, 0);
+                    addCollectionAndCollectionitemDialogFragment.show(fm, "collectionAdd");
+                    Utils.pushProfileEvents(getActivity(), "CTA_Article_Add_To_Collection",
+                            "ArticleDetailsFragment", "Add to Collection", "-");
+                } catch (Exception e) {
+                    FirebaseCrashlytics.getInstance().recordException(e);
+                    Log.d("MC4kException", Log.getStackTraceString(e));
                 }
-                return false;
+                return true;
+            } else if (menuItem.getItemId() == R.id.share) {
+                Intent shareIntent = new Intent(Intent.ACTION_SEND);
+                shareIntent.setType("text/plain");
+                shareIntent.putExtra(Intent.EXTRA_TEXT, shareUrl);
+                startActivity(Intent.createChooser(shareIntent, "Momspresso"));
+                return true;
+            } else if (menuItem.getItemId() == R.id.reportLang) {
+                final ReportStoryOrCommentRequest reportStoryOrCommentRequest = new ReportStoryOrCommentRequest();
+                reportStoryOrCommentRequest.setId(articleId);
+                reportStoryOrCommentRequest.setType(AppConstants.REPORT_TYPE_ARTICLE);
+                reportStoryOrCommentRequest.setReason("Incorrect Language");
+                Retrofit retrofit = BaseApplication.getInstance().getRetrofit();
+                final ShortStoryAPI shortStoryApi = retrofit.create(ShortStoryAPI.class);
+                Call<ReportStoryOrCommentResponse> call = shortStoryApi
+                        .reportStoryOrComment(reportStoryOrCommentRequest);
+                call.enqueue(new Callback<ReportStoryOrCommentResponse>() {
+                    @Override
+                    public void onResponse(Call<ReportStoryOrCommentResponse> call,
+                            Response<ReportStoryOrCommentResponse> response) {
+
+                    }
+
+                    @Override
+                    public void onFailure(Call<ReportStoryOrCommentResponse> call, Throwable t) {
+
+                    }
+                });
+                return true;
             }
+            return false;
         });
         popupMenu.show();
     }
 
-    void openAddCommentReplyDialog(CommentListData cData) {
-        AddArticleCommentReplyDialogFragment addArticleCommentReplyDialogFragment = new AddArticleCommentReplyDialogFragment();
-        FragmentManager fm = getChildFragmentManager();
-        Bundle _args = new Bundle();
-        _args.putParcelable("parentCommentData", cData);
-        addArticleCommentReplyDialogFragment.setArguments(_args);
+    void openAddCommentReplyDialog(CommentListData commentListData) {
+        Bundle args = new Bundle();
+        args.putParcelable("parentCommentData", commentListData);
+        AddArticleCommentReplyDialogFragment addArticleCommentReplyDialogFragment =
+                new AddArticleCommentReplyDialogFragment();
+        addArticleCommentReplyDialogFragment.setArguments(args);
         addArticleCommentReplyDialogFragment.setCancelable(true);
+        FragmentManager fm = getChildFragmentManager();
         addArticleCommentReplyDialogFragment.show(fm, "Add Replies");
     }
 
@@ -3365,96 +3360,6 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
                 }
             };
 
- /*   private Callback<ArticleListingResponse> vernacularTrendingResponseCallback =
-            new Callback<ArticleListingResponse>() {
-                @Override
-                public void onResponse(Call<ArticleListingResponse> call,
-                        retrofit2.Response<ArticleListingResponse> response) {
-                    if (loadingView.getVisibility() == View.VISIBLE) {
-                        loadingView.setVisibility(View.GONE);
-                    }
-                    if (response.body() == null) {
-                        NetworkErrorException nee = new NetworkErrorException(
-                                "Trending Article API failure");
-                        FirebaseCrashlytics.getInstance().recordException(nee);
-                        return;
-                    }
-
-                    try {
-                        ArticleListin
-
-                        gResponse responseData = response.body();
-                        if (responseData.getCode() == 200 && Constants.SUCCESS
-                                .equals(responseData.getStatus())) {
-                            ArrayList<ArticleListingResult> dataList = responseData.getData().get(0)
-                                    .getResult();
-                            if (dataList != null) {
-                                for (int i = 0; i < dataList.size(); i++) {
-                                    if (dataList.get(i).getId().equals(articleId)) {
-                                        dataList.remove(i);
-                                        break;
-                                    }
-                                }
-                            }
-                            if (dataList != null && dataList.size() != 0) {
-                                trendingArticles.setVisibility(View.GONE);
-                                impressionList.addAll(dataList);
-                                Collections.shuffle(dataList);
-                                if (dataList.size() >= 3) {
-                                    Picasso.get().load(dataList.get(0).getImageUrl().getThumbMin())
-                                            .placeholder(R.drawable.default_article).fit()
-                                            .into(trendingRelatedArticles1.getArticleImageView());
-                                    trendingRelatedArticles1.setArticleTitle(dataList.get(0).getTitle());
-                                    trendingRelatedArticles1.setTag(dataList);
-                                    Picasso.get().load(dataList.get(1).getImageUrl().getThumbMin())
-                                            .placeholder(R.drawable.default_article).fit()
-                                            .into(trendingRelatedArticles2.getArticleImageView());
-                                    trendingRelatedArticles2.setArticleTitle(dataList.get(1).getTitle());
-                                    trendingRelatedArticles2.setTag(dataList);
-                                    Picasso.get().load(dataList.get(2).getImageUrl().getThumbMin())
-                                            .placeholder(R.drawable.default_article).fit()
-                                            .into(trendingRelatedArticles3.getArticleImageView());
-                                    trendingRelatedArticles3.setArticleTitle(dataList.get(2).getTitle());
-                                    trendingRelatedArticles3.setTag(dataList);
-                                } else if (dataList.size() == 2) {
-                                    Picasso.get().load(dataList.get(0).getImageUrl().getThumbMin())
-                                            .placeholder(R.drawable.default_article).fit()
-                                            .into(trendingRelatedArticles1.getArticleImageView());
-                                    trendingRelatedArticles1.setArticleTitle(dataList.get(0).getTitle());
-                                    trendingRelatedArticles1.setTag(dataList);
-                                    Picasso.get().load(dataList.get(1).getImageUrl().getThumbMin())
-                                            .placeholder(R.drawable.default_article).fit()
-                                            .into(trendingRelatedArticles2.getArticleImageView());
-                                    trendingRelatedArticles2.setArticleTitle(dataList.get(1).getTitle());
-                                    trendingRelatedArticles2.setTag(dataList);
-                                    trendingRelatedArticles3.setVisibility(View.GONE);
-                                } else if (dataList.size() == 1) {
-                                    Picasso.get().load(dataList.get(0).getImageUrl().getThumbMin())
-                                            .placeholder(R.drawable.default_article).fit()
-                                            .into(trendingRelatedArticles1.getArticleImageView());
-                                    trendingRelatedArticles1.setArticleTitle(dataList.get(0).getTitle());
-                                    trendingRelatedArticles1.setTag(dataList);
-                                    trendingRelatedArticles2.setVisibility(View.GONE);
-                                    trendingRelatedArticles3.setVisibility(View.GONE);
-                                }
-                            }
-                        } else {
-                            NetworkErrorException nee = new NetworkErrorException(
-                                    "Trending Article Error Response");
-                            FirebaseCrashlytics.getInstance().recordException(nee);
-                        }
-                    } catch (Exception e) {
-                        FirebaseCrashlytics.getInstance().recordException(e);
-                        Log.d("MC4kException", Log.getStackTraceString(e));
-                    }
-                }
-
-                @Override
-                public void onFailure(Call<ArticleListingResponse> call, Throwable t) {
-                    handleExceptions(t);
-                }
-            };*/
-
     private Callback<ArticleListingResponse> bloggersArticleResponseCallback = new Callback<ArticleListingResponse>() {
         @Override
         public void onResponse(Call<ArticleListingResponse> call,
@@ -3510,22 +3415,6 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
                             recommendCountTextView1.setText(dataList.get(0).getLikesCount());
                             commentCountTextView1.setText(dataList.get(0).getCommentsCount());
                             viewCountTextView1.setText(dataList.get(0).getArticleCount());
-
-                           /* relatedArticles1.setTag(new ArrayList<>(
-                                    dataList.subList(0, 3)));*/
-                        /*    Picasso.get().load(dataList.get(1).getImageUrl().getThumbMin())
-                                    .placeholder(R.drawable.default_article).fit()
-                                    .into(relatedArticles2.getArticleImageView());
-                            relatedArticles2.setArticleTitle(dataList.get(1).getTitle());
-                            relatedArticles2.setTag(new ArrayList<>(
-                                    dataList.subList(0, 3)));
-                            Picasso.get().load(dataList.get(2).getImageUrl().getThumbMin())
-                                    .placeholder(R.drawable.default_article).fit()
-                                    .into(relatedArticles3.getArticleImageView());
-                            relatedArticles3.setArticleTitle(dataList.get(2).getTitle());
-                            relatedArticles3.setTag(new ArrayList<>(
-                                    dataList.subList(0, 3)))*/
-                            ;
                         }
 
                         if (dataList.size() >= 2) {
@@ -3537,15 +3426,6 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
                             recommendCountTextView2.setText(dataList.get(1).getLikesCount());
                             commentCountTextView2.setText(dataList.get(1).getCommentsCount());
                             viewCountTextView2.setText(dataList.get(1).getArticleCount());
-
-                    /*        relatedArticles1.setArticleTitle(dataList.get(0).getTitle());
-                            relatedArticles1.setTag(dataList);
-                            Picasso.get().load(dataList.get(1).getImageUrl().getThumbMin())
-                                    .placeholder(R.drawable.default_article).fit()
-                                    .into(relatedArticles2.getArticleImageView());
-                            relatedArticles2.setArticleTitle(dataList.get(1).getTitle());
-                            relatedArticles2.setTag(dataList);
-                            relatedArticles3.setVisibility(View.GONE);*/
                         }
 
                         if (dataList.size() >= 3) {
@@ -3558,11 +3438,6 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
                             recommendCountTextView3.setText(dataList.get(2).getLikesCount());
                             commentCountTextView3.setText(dataList.get(2).getCommentsCount());
                             viewCountTextView3.setText(dataList.get(2).getArticleCount());
-
-                          /*  relatedArticles1.setArticleTitle(dataList.get(0).getTitle());
-                            relatedArticles1.setTag(dataList);
-                            relatedArticles2.setVisibility(View.GONE);
-                            relatedArticles3.setVisibility(View.GONE);*/
                         }
 
                         if (dataList.size() >= 4) {
@@ -3676,15 +3551,6 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
                             recommendCountTextView2.setText(dataList.get(1).getLikesCount());
                             commentCountTextView2.setText(dataList.get(1).getCommentsCount());
                             viewCountTextView2.setText(dataList.get(1).getArticleCount());
-
-                    /*        relatedArticles1.setArticleTitle(dataList.get(0).getTitle());
-                            relatedArticles1.setTag(dataList);
-                            Picasso.get().load(dataList.get(1).getImageUrl().getThumbMin())
-                                    .placeholder(R.drawable.default_article).fit()
-                                    .into(relatedArticles2.getArticleImageView());
-                            relatedArticles2.setArticleTitle(dataList.get(1).getTitle());
-                            relatedArticles2.setTag(dataList);
-                            relatedArticles3.setVisibility(View.GONE);*/
                         }
 
                         if (dataList.size() >= 3) {
@@ -3697,11 +3563,6 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
                             recommendCountTextView3.setText(dataList.get(2).getLikesCount());
                             commentCountTextView3.setText(dataList.get(2).getCommentsCount());
                             viewCountTextView3.setText(dataList.get(2).getArticleCount());
-
-                            /*  relatedArticles1.setArticleTitle(dataList.get(0).getTitle());
-                            relatedArticles1.setTag(dataList);
-                            relatedArticles2.setVisibility(View.GONE);
-                            relatedArticles3.setVisibility(View.GONE);*/
                         }
 
                         if (dataList.size() >= 4) {
@@ -3728,48 +3589,7 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
                             recommendCountTextView5.setText(dataList.get(4).getLikesCount());
                             commentCountTextView5.setText(dataList.get(4).getCommentsCount());
                             viewCountTextView5.setText(dataList.get(4).getArticleCount());
-
                         }
-                         /*  recentAuthorArticleHeading
-                                .setText(getString(R.string.ad_recent_logs_from_title));
-                        recentAuthorArticles.setVisibility(View.GONE);
-                        if (dataList.size() >= 3) {
-                            Picasso.get().load(dataList.get(0).getImageUrl().getThumbMin())
-                                    .placeholder(R.drawable.default_article).fit()
-                                    .into(relatedArticles1.getArticleImageView());
-                            relatedArticles1.setArticleTitle(dataList.get(0).getTitle());
-                            relatedArticles1.setTag(dataList);
-                            Picasso.get().load(dataList.get(1).getImageUrl().getThumbMin())
-                                    .placeholder(R.drawable.default_article).fit()
-                                    .into(relatedArticles2.getArticleImageView());
-                            relatedArticles2.setArticleTitle(dataList.get(1).getTitle());
-                            relatedArticles2.setTag(dataList);
-                            Picasso.get().load(dataList.get(2).getImageUrl().getThumbMin())
-                                    .placeholder(R.drawable.default_article).fit()
-                                    .into(relatedArticles3.getArticleImageView());
-                            relatedArticles3.setArticleTitle(dataList.get(2).getTitle());
-                            relatedArticles3.setTag(dataList);
-                        } else if (dataList.size() == 2) {
-                            Picasso.get().load(dataList.get(0).getImageUrl().getThumbMin())
-                                    .placeholder(R.drawable.default_article).fit()
-                                    .into(relatedArticles1.getArticleImageView());
-                            relatedArticles1.setArticleTitle(dataList.get(0).getTitle());
-                            relatedArticles1.setTag(dataList);
-                            Picasso.get().load(dataList.get(1).getImageUrl().getThumbMin())
-                                    .placeholder(R.drawable.default_article).fit()
-                                    .into(relatedArticles2.getArticleImageView());
-                            relatedArticles2.setArticleTitle(dataList.get(1).getTitle());
-                            relatedArticles2.setTag(dataList);
-                            relatedArticles3.setVisibility(View.GONE);
-                        } else if (dataList.size() == 1) {
-                            Picasso.get().load(dataList.get(0).getImageUrl().getThumbMin())
-                                    .placeholder(R.drawable.default_article).fit()
-                                    .into(relatedArticles1.getArticleImageView());
-                            relatedArticles1.setArticleTitle(dataList.get(0).getTitle());
-                            relatedArticles1.setTag(dataList);
-                            relatedArticles2.setVisibility(View.GONE);
-                            relatedArticles3.setVisibility(View.GONE);
-                        }*/
                     }
                 } else {
                     if (isAdded()) {
@@ -4270,27 +4090,6 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
                 @Override
                 public void onResponse(Call<ArticleRecommendationStatusResponse> call,
                         retrofit2.Response<ArticleRecommendationStatusResponse> response) {
-                    if (null == response.body()) {
-                        if (isAdded()) {
-                            ((ArticleDetailsContainerActivity) getActivity())
-                                    .showToast(getString(R.string.server_went_wrong));
-                        }
-                        return;
-                    }
-                    ArticleRecommendationStatusResponse responseData = response.body();
-                    recommendationFlag = responseData.getData().getStatus();
-                    if (!isAdded()) {
-                        return;
-                    }
-                    if ("0".equals(recommendationFlag)) {
-                      /*  recommendStatus = 0;
-                        Drawable top = ContextCompat.getDrawable(getActivity(), R.drawable.ic_recommend);
-                        likeArticleTextView.setCompoundDrawablesWithIntrinsicBounds(null, top, null, null);*/
-                    } else {
-                      /*  recommendStatus = 1;
-                        Drawable top = ContextCompat.getDrawable(getActivity(), R.drawable.ic_recommended);
-                        likeArticleTextView.setCompoundDrawablesWithIntrinsicBounds(null, top, null, null);*/
-                    }
                 }
 
                 @Override
@@ -4344,7 +4143,6 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
             if (status == ADD_BOOKMARK) {
                 todaysBestListData.get(todaysBestBookmarkIdIndex)
                         .setBookmarkId(responseData.getData().getResult().getBookmarkId());
-            } else {
             }
         }
     }
