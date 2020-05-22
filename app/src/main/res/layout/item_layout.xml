@@ -17,8 +17,8 @@
 
     <com.mikhaellopez.circularimageview.CircularImageView
       android:id="@+id/user_image"
-      android:layout_width="50dp"
-      android:layout_height="50dp"
+      android:layout_width="44dp"
+      android:layout_height="44dp"
       android:layout_centerVertical="true"
       android:clickable="true"
       android:focusable="true"
@@ -41,8 +41,7 @@
       android:text=""
       android:textColor="#E6FFFFFF"
       android:textSize="14sp"
-      android:textStyle="bold"
-      app:fontName="oswald_regular.ttf" />
+      android:textStyle="bold" />
 
     <com.mycity4kids.widget.CustomFontTextView
       android:id="@+id/follow_textview"
@@ -50,20 +49,19 @@
       android:layout_height="wrap_content"
       android:layout_centerVertical="true"
       android:layout_marginEnd="8dp"
-      android:layout_toStartOf="@+id/bookmark"
+      android:layout_toStartOf="@+id/moreOptionImageView"
       android:background="@drawable/update_profile_bg"
       android:paddingStart="16dp"
       android:paddingTop="5dp"
       android:paddingEnd="16dp"
       android:paddingBottom="5dp"
       android:text="@string/all_follow"
-      android:textAllCaps="false"
       android:textColor="@color/white_color"
       android:textSize="12sp"
       android:textStyle="bold" />
 
     <ImageView
-      android:id="@+id/bookmark"
+      android:id="@+id/moreOptionImageView"
       android:layout_width="40dp"
       android:layout_height="40dp"
       android:layout_alignParentEnd="true"
@@ -73,17 +71,6 @@
       android:src="@drawable/ic_more_vert_black_24dp"
       android:tint="#FFFFFF"
       android:visibility="visible" />
-
-    <ImageView
-      android:id="@+id/three_dot"
-      android:layout_width="wrap_content"
-      android:layout_height="wrap_content"
-      android:layout_alignParentEnd="true"
-      android:layout_centerVertical="true"
-      android:padding="5dp"
-      android:src="@drawable/ic_more_vert_black_24dp"
-      android:tint="#CCFFFFFF"
-      android:visibility="gone" />
   </RelativeLayout>
 
   <RelativeLayout
@@ -128,13 +115,11 @@
     android:letterSpacing="-0.02"
     android:lineSpacingExtra="5sp"
     android:paddingStart="18dp"
-    android:paddingTop="8dp"
+    android:paddingTop="4dp"
     android:paddingEnd="18dp"
-    android:paddingBottom="8dp"
+    android:paddingBottom="4dp"
     android:textColor="#D1D1D1"
-    android:textSize="14sp"
-    android:textStyle="bold"
-    app:fontName="oswald_regular.ttf" />
+    android:textSize="14sp" />
 
   <RelativeLayout
     android:id="@+id/countlikecontainer"

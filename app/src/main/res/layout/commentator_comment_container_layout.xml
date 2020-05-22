@@ -23,6 +23,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:padding="@dimen/space_10"
+        android:text=""
         android:textColor="@color/campaign_4A4A4A"
         android:textSize="12sp" />
       <com.mycity4kids.widget.CustomFontTextView
@@ -30,7 +31,6 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@id/commentatorNameAndCommentTextView"
-        android:layout_marginTop="@dimen/space_5"
         android:paddingStart="@dimen/space_10"
         android:textColor="#979797"
         android:textSize="12sp" />
@@ -49,7 +49,6 @@
         android:layout_height="wrap_content"
         android:layout_below="@id/commentDateTextView"
         android:layout_marginStart="45dp"
-        android:layout_marginTop="@dimen/space_5"
         android:layout_toRightOf="@id/likeCount"
         android:drawableLeft="@drawable/ic_shape"
         android:drawablePadding="@dimen/space_6"
@@ -121,7 +120,6 @@
         android:layout_height="wrap_content"
         android:layout_below="@id/commentDateTextView2"
         android:layout_marginStart="45dp"
-        android:layout_marginTop="@dimen/space_5"
         android:layout_toRightOf="@id/likeCount2"
         android:drawableLeft="@drawable/ic_shape"
         android:drawablePadding="@dimen/space_6"

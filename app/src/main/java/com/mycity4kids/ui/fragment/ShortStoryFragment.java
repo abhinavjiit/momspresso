@@ -644,6 +644,7 @@ public class ShortStoryFragment extends BaseFragment implements View.OnClickList
             case R.id.menuItem:
                 chooseMenuOptionsItem(view, position);
                 break;
+            case R.id.moreOptionImageView:
             case R.id.commentRootLayout: {
                 Bundle args = new Bundle();
                 args.putInt("position", position);

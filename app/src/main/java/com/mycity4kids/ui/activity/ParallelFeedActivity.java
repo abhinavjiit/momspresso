@@ -763,7 +763,7 @@ public class ParallelFeedActivity extends BaseActivity implements View.OnClickLi
     @Override
     public void onClick(int position, View view) {
         this.bookMarkPosition = position;
-        if (view.getId() == R.id.bookmark) {
+        if (view.getId() == R.id.moreOptionImageView) {
             final PopupMenu popupMenu = new PopupMenu(this,
                     view);
             popupMenu.getMenuInflater().inflate(R.menu.choose_short_story_menu, popupMenu.getMenu());
@@ -777,7 +777,7 @@ public class ParallelFeedActivity extends BaseActivity implements View.OnClickLi
                             .equals("1")) {
                         popupMenu.getMenu().getItem(i).setIcon(R.drawable.ic_bookmarked);
                     } else {
-                        popupMenu.getMenu().getItem(i).setIcon(R.drawable.ic_bookmark);
+                        popupMenu.getMenu().getItem(i).setIcon(R.drawable.ic_profile_bookmark);
                     }
                 }
                 Drawable drawable = popupMenu.getMenu().getItem(i).getIcon();

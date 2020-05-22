@@ -14,12 +14,13 @@ import androidx.fragment.app.DialogFragment
 import com.google.firebase.crashlytics.FirebaseCrashlytics
 import com.mycity4kids.R
 import com.mycity4kids.application.BaseApplication
+import com.mycity4kids.constants.AppConstants
 import com.mycity4kids.gtmutils.Utils
 import com.mycity4kids.preference.SharedPrefUtils
 import com.mycity4kids.profile.UserProfileActivity
-import com.mycity4kids.ui.activity.ArticleModerationOrShareActivity
 import com.mycity4kids.ui.activity.PhoneContactsActivity
 import com.mycity4kids.ui.activity.UserInviteFBSuggestionActivity
+import com.mycity4kids.utils.AppUtils
 import kotlinx.android.synthetic.main.invite_friends_dialog_fragment.*
 
 class InviteFriendsDialogFragment : DialogFragment(), View.OnClickListener {
@@ -89,8 +90,8 @@ class InviteFriendsDialogFragment : DialogFragment(), View.OnClickListener {
                     if (activity is UserProfileActivity) {
                         (activity as UserProfileActivity).shareProfile()
                         dismiss()
-                    } else if (activity is ArticleModerationOrShareActivity) {
-                        (activity as ArticleModerationOrShareActivity).shareProfileUrl()
+                    } else {
+                        shareProfileUrl()
                         dismiss()
                     }
                     Utils.pushGenericEvent(
@@ -106,6 +107,21 @@ class InviteFriendsDialogFragment : DialogFragment(), View.OnClickListener {
         } catch (e: Exception) {
             FirebaseCrashlytics.getInstance().recordException(e)
             Log.d("MC4kException", Log.getStackTraceString(e))
+        }
+    }
+
+    private fun shareProfileUrl() {
+        activity?.let {
+            val shareText = getString(
+                R.string.profile_follow_author,
+                SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).first_name + " " + SharedPrefUtils.getUserDetailModel(
+                    BaseApplication.getAppContext()
+                ).last_name,
+                AppConstants.USER_PROFILE_SHARE_BASE_URL + SharedPrefUtils.getUserDetailModel(
+                    BaseApplication.getAppContext()
+                ).dynamoId
+            )
+            AppUtils.shareGenericLinkWithSuccessStatus(it, shareText)
         }
     }
 }

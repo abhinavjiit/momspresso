@@ -57,8 +57,8 @@
       android:layout_width="match_parent"
       android:layout_height="wrap_content"
       android:layout_below="@id/commentorUsernameTextView"
-      android:layout_toEndOf="@id/commentorImageView"
       android:layout_marginTop="8dp"
+      android:layout_toEndOf="@id/commentorImageView"
       android:ellipsize="end"
       android:paddingLeft="10dp"
       android:paddingRight="5dp"
@@ -82,62 +82,71 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="5dp"
         android:paddingLeft="10dp"
-        android:paddingRight="@dimen/space_10"
         android:paddingTop="@dimen/space_5"
+        android:paddingRight="@dimen/space_10"
         android:paddingBottom="@dimen/space_5"
         android:textColor="#979797"
         android:textSize="11sp"
         app:fontName="Roboto-Regular.ttf" />
     </LinearLayout>
 
-      <LinearLayout
-        android:id="@+id/likeAndReplyContainer"
+    <LinearLayout
+      android:id="@+id/likeAndReplyContainer"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:layout_below="@+id/dateContainer"
+      android:layout_alignStart="@+id/commentorUsernameTextView"
+      android:layout_alignLeft="@+id/commentorUsernameTextView"
+      android:layout_toEndOf="@id/commentorImageView"
+      android:orientation="horizontal">
+
+      <com.mycity4kids.widget.CustomFontTextView
+        android:id="@+id/likeTextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/dateContainer"
-        android:layout_alignStart="@+id/commentorUsernameTextView"
-        android:layout_alignLeft="@+id/commentorUsernameTextView"
-        android:layout_toEndOf="@id/commentorImageView"
-        android:orientation="horizontal">
-
-          <com.mycity4kids.widget.CustomFontTextView
-            android:id="@+id/likeTextView"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:drawableLeft="@drawable/ic_like_grey"
-            android:drawablePadding="@dimen/space_5"
-            android:gravity="center"
-            android:padding="10dp"
-            android:textSize="14sp" />
+        android:drawableLeft="@drawable/ic_like_grey"
+        android:drawablePadding="@dimen/space_5"
+        android:gravity="center"
+        android:padding="10dp"
+        android:textSize="14sp" />
 
 
-          <com.mycity4kids.widget.CustomFontTextView
-            android:id="@+id/replyCommentTextView"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="45dp"
-            android:drawableLeft="@drawable/ic_shape"
-            android:drawablePadding="@dimen/space_5"
-            android:padding="10dp"
-            android:visibility="gone"
-            android:text="@string/reply"
-            android:textColor="@color/ad.comment.date"
-            android:textSize="@dimen/ad_comments_date"
-            app:fontName="Roboto-Regular.ttf" />
+      <com.mycity4kids.widget.CustomFontTextView
+        android:id="@+id/replyCommentTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="45dp"
+        android:drawableLeft="@drawable/ic_shape"
+        android:drawablePadding="@dimen/space_5"
+        android:padding="10dp"
+        android:text="@string/reply"
+        android:textColor="@color/ad.comment.date"
+        android:textSize="@dimen/ad_comments_date"
+        android:visibility="gone"
+        app:fontName="Roboto-Regular.ttf" />
 
-          <com.mycity4kids.widget.CustomFontTextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="5dp"
-            android:padding="5dp"
-            android:text="Date"
-            android:textColor="@color/ad.comment.date"
-            android:textSize="@dimen/ad_comments_date"
-            android:visibility="gone"
-            app:fontName="oswald.ttf" />
-      </LinearLayout>
+      <com.mycity4kids.widget.CustomFontTextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="5dp"
+        android:padding="5dp"
+        android:text="Date"
+        android:textColor="@color/ad.comment.date"
+        android:textSize="@dimen/ad_comments_date"
+        android:visibility="gone"
+        app:fontName="oswald.ttf" />
+    </LinearLayout>
 
-
+    <androidx.appcompat.widget.AppCompatImageView
+      android:id="@+id/moreOptionRepliesImageView"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:layout_alignTop="@+id/likeAndReplyContainer"
+      android:layout_alignParentEnd="true"
+      android:layout_marginTop="@dimen/space_5"
+      android:layout_marginEnd="5dp"
+      android:padding="8dp"
+      app:srcCompat="@drawable/ic_three_verticle_dot_rounded" />
 
   </RelativeLayout>
 

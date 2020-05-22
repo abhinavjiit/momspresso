@@ -280,6 +280,7 @@ public class ArticleCommentRepliesDialogFragment extends DialogFragment implemen
     @Override
     public void onRecyclerItemLongClick(View view, int position) {
         switch (view.getId()) {
+            case R.id.moreOptionImageView:
             case R.id.commentRootLayout: {
                 CommentOptionsDialogFragment commentOptionsDialogFragment = new CommentOptionsDialogFragment();
                 FragmentManager fm = getChildFragmentManager();
@@ -293,6 +294,7 @@ public class ArticleCommentRepliesDialogFragment extends DialogFragment implemen
                 commentOptionsDialogFragment.show(fm, "Comment Options");
             }
             break;
+            case R.id.moreOptionRepliesImageView:
             case R.id.replyRootView: {
                 CommentOptionsDialogFragment commentOptionsDialogFragment = new CommentOptionsDialogFragment();
                 FragmentManager fm = getChildFragmentManager();

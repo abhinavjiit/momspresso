@@ -139,8 +139,13 @@ public class ArticleCommentsFragment extends BaseFragment implements OnClickList
                 }
             }
         });
-        Picasso.get().load(SharedPrefUtils.getProfileImgUrl(getActivity()))
-                .error(R.drawable.default_commentor_img).into(userImageView);
+        try {
+            Picasso.get().load(SharedPrefUtils.getProfileImgUrl(BaseApplication.getAppContext()))
+                    .error(R.drawable.default_commentor_img).into(userImageView);
+        } catch (Exception e) {
+            Picasso.get().load(R.drawable.default_commentor_img).into(userImageView);
+        }
+
         return rootView;
     }
 
@@ -731,6 +736,7 @@ public class ArticleCommentsFragment extends BaseFragment implements OnClickList
                 }
                 articleCommentsRecyclerAdapter.notifyDataSetChanged();
                 break;
+            case R.id.moreOptionImageView:
             case R.id.commentRootLayout: {
                 Bundle args = new Bundle();
                 args.putInt("position", position);

@@ -1153,7 +1153,68 @@ class ArticleListingFragment : BaseFragment(), View.OnClickListener,
         shimmerFrameLayout.visibility = View.VISIBLE
         shimmerFrameLayout.startShimmerAnimation()
         nextPageNumber = 1
+        when (sortType) {
+            Constants.KEY_TRENDING -> {
+                logFilterEvent("TrendingScreen")
+            }
+            Constants.KEY_RECENT -> {
+                logFilterEvent("RecentScreen")
+            }
+            Constants.KEY_TODAYS_BEST -> {
+                logFilterEvent("TodaysBestScreen")
+            }
+        }
         hitArticleListingApi(sortType)
+    }
+
+    private fun logFilterEvent(screenName: String) {
+        when {
+            getContentFilters() == "0" -> {
+                Utils.momVlogEvent(
+                    activity,
+                    screenName,
+                    "Blogs",
+                    "",
+                    "android",
+                    SharedPrefUtils.getAppLocale(BaseApplication.getAppContext()),
+                    SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).dynamoId,
+                    "" + System.currentTimeMillis(),
+                    "FilterFeed",
+                    "",
+                    ""
+                )
+            }
+            getContentFilters() == "1" -> {
+                Utils.momVlogEvent(
+                    activity,
+                    screenName,
+                    "100 Word Story",
+                    "",
+                    "android",
+                    SharedPrefUtils.getAppLocale(BaseApplication.getAppContext()),
+                    SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).dynamoId,
+                    "" + System.currentTimeMillis(),
+                    "FilterFeed",
+                    "",
+                    ""
+                )
+            }
+            getContentFilters() == "2" -> {
+                Utils.momVlogEvent(
+                    activity,
+                    screenName,
+                    "Mom Vlogs",
+                    "",
+                    "android",
+                    SharedPrefUtils.getAppLocale(BaseApplication.getAppContext()),
+                    SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).dynamoId,
+                    "" + System.currentTimeMillis(),
+                    "FilterFeed",
+                    "",
+                    ""
+                )
+            }
+        }
     }
 
     override fun onResume() {
@@ -1183,9 +1244,9 @@ class ArticleListingFragment : BaseFragment(), View.OnClickListener,
                         sortType,
                         ignoreCase = true
                     )) {
-                    tracker!!.setScreenName("AllTrendingScreen")
+                    tracker!!.setScreenName("TrendingScreen")
                     Utils.pushOpenScreenEvent(
-                        activity, "AllTrending",
+                        activity, "TrendingScreen",
                         SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).dynamoId + ""
                     )
                 } else if (Constants.KEY_FOLLOWING.equals(

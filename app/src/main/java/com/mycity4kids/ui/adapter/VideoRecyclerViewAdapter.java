@@ -17,12 +17,10 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
-import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.HorizontalScrollView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.PopupWindow;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -59,6 +57,7 @@ import com.mycity4kids.ui.fragment.AddCollectionAndCollectionItemDialogFragment;
 import com.mycity4kids.ui.videochallengenewui.activity.NewVideoChallengeActivity;
 import com.mycity4kids.utils.AppUtils;
 import com.mycity4kids.utils.StringUtils;
+import com.mycity4kids.widget.MomspressoButtonWidget;
 import com.squareup.picasso.Picasso;
 import java.util.ArrayList;
 import java.util.List;
@@ -274,9 +273,8 @@ public class VideoRecyclerViewAdapter extends RecyclerView.Adapter<BaseViewHolde
         ImageView heart;
         ImageView share;
         ImageView whatsapp;
-        ImageView threeDot;
         ImageView comment;
-        ImageView imgBookmark;
+        ImageView moreOptionImageView;
         View parent;
         ImageView userImage;
         ImageView collectionAdd;
@@ -301,8 +299,7 @@ public class VideoRecyclerViewAdapter extends RecyclerView.Adapter<BaseViewHolde
             share = itemView.findViewById(R.id.share);
             whatsapp = itemView.findViewById(R.id.whatsapp);
             collectionAdd = itemView.findViewById(R.id.collectionAdd);
-            threeDot = itemView.findViewById(R.id.three_dot);
-            imgBookmark = itemView.findViewById(R.id.bookmark);
+            moreOptionImageView = itemView.findViewById(R.id.moreOptionImageView);
             parent = itemView;
         }
 
@@ -400,7 +397,8 @@ public class VideoRecyclerViewAdapter extends RecyclerView.Adapter<BaseViewHolde
                 }
             });
 
-            imgBookmark.setOnClickListener(view -> videoFeedRecyclerViewClick.onClick(getAdapterPosition(), view));
+            moreOptionImageView
+                    .setOnClickListener(view -> videoFeedRecyclerViewClick.onClick(getAdapterPosition(), view));
 
             share.setOnClickListener(view -> {
                 try {
@@ -525,13 +523,6 @@ public class VideoRecyclerViewAdapter extends RecyclerView.Adapter<BaseViewHolde
                 }
             });
 
-            threeDot.setOnClickListener(view -> {
-                if (responseData.getIs_bookmark() != null) {
-                    PopupWindow popupWindow = popupDisplay(responseData.getIs_bookmark());
-                    popupWindow.showAsDropDown(threeDot, -40, 18);
-                }
-            });
-
             if (StringUtils.isNullOrEmpty(responseData.getThumbnail())) {
                 Glide.with(context).asBitmap().load(R.drawable.default_article)
                         .into(new SimpleTarget<Bitmap>() {
@@ -586,8 +577,9 @@ public class VideoRecyclerViewAdapter extends RecyclerView.Adapter<BaseViewHolde
         public ProgressBar progressBar;
         RelativeLayout videoLayout;
         View parent;
-        TextView participate;
+        MomspressoButtonWidget participate;
         TextView seeMoreChallenge;
+        ImageView shareChallengeImageView;
 
         public ChallengeCardHolder(View itemView) {
             super(itemView);
@@ -601,10 +593,12 @@ public class VideoRecyclerViewAdapter extends RecyclerView.Adapter<BaseViewHolde
             likeCount = itemView.findViewById(R.id.viewsLike);
             participate = itemView.findViewById(R.id.participate_textview);
             seeMoreChallenge = itemView.findViewById(R.id.seeMoreChallenge);
+            shareChallengeImageView = itemView.findViewById(R.id.shareChallengeImageView);
             parent = itemView;
 
             participate.setOnClickListener(this);
             seeMoreChallenge.setOnClickListener(this);
+            shareChallengeImageView.setOnClickListener(this);
         }
 
         @Override
@@ -673,15 +667,22 @@ public class VideoRecyclerViewAdapter extends RecyclerView.Adapter<BaseViewHolde
         public void onClick(View view) {
             switch (view.getId()) {
                 case R.id.participate_textview:
-                    Intent intent = new Intent(context, NewVideoChallengeActivity.class);
-                    intent.putExtra(Constants.CHALLENGE_ID, challengeId);
-                    context.startActivity(intent);
+                    if (!StringUtils.isNullOrEmpty(challengeId)) {
+                        Intent intent = new Intent(context, NewVideoChallengeActivity.class);
+                        intent.putExtra(Constants.CHALLENGE_ID, challengeId);
+                        context.startActivity(intent);
+                    }
                     break;
-
                 case R.id.seeMoreChallenge:
                     Intent vlogsIntent = new Intent(context, CategoryVideosListingActivity.class);
                     vlogsIntent.putExtra("categoryId", "" + AppConstants.VIDEO_CHALLENGE_ID);
                     context.startActivity(vlogsIntent);
+                    break;
+                case R.id.shareChallengeImageView:
+                    if (!StringUtils.isNullOrEmpty(challengeId)) {
+                        AppUtils.shareGenericLinkWithSuccessStatus(view.getContext(),
+                                AppConstants.VLOG_CHALLENGES_BASE_SHARE_URL + challengeId);
+                    }
                     break;
                 default:
             }
@@ -784,6 +785,7 @@ public class VideoRecyclerViewAdapter extends RecyclerView.Adapter<BaseViewHolde
             authorNameTextView5 = itemView.findViewById(R.id.authorNameTextView5);
             authorNameTextView5.setTextColor(Color.parseColor("#D1D1D1"));
             authorNameTextView6 = itemView.findViewById(R.id.authorNameTextView6);
+            authorNameTextView6.setTextColor(Color.parseColor("#D1D1D1"));
             authorRankTextView1 = itemView.findViewById(R.id.authorRankTextView1);
             authorRankTextView2 = itemView.findViewById(R.id.authorRankTextView2);
             authorRankTextView3 = itemView.findViewById(R.id.authorRankTextView3);
@@ -1184,33 +1186,6 @@ public class VideoRecyclerViewAdapter extends RecyclerView.Adapter<BaseViewHolde
         authorRankTextView.setText(
                 StringUtils.firstLetterToUpperCase(context.getString(R.string.myprofile_rank_label)) + ": "
                         + carosalList.getRank());
-    }
-
-    private PopupWindow popupDisplay(String isBookmarked) {
-
-        final PopupWindow popupWindow = new PopupWindow(context);
-
-        LayoutInflater inflater = (LayoutInflater) context
-                .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-
-        View view = inflater.inflate(R.layout.parallel_feed_popup, null);
-
-        ImageView imageView = view.findViewById(R.id.popup_bookmark);
-        TextView textView = view.findViewById(R.id.bookmark_text);
-        if (isBookmarked.equals("1")) {
-            textView.setText("Bookmarked");
-            imageView.setImageResource(R.drawable.ic_bookmarked);
-        } else {
-            textView.setText("Bookmark");
-            imageView.setImageResource(R.drawable.ic_bookmark);
-        }
-
-        popupWindow.setFocusable(true);
-        popupWindow.setWidth(WindowManager.LayoutParams.WRAP_CONTENT);
-        popupWindow.setHeight(WindowManager.LayoutParams.WRAP_CONTENT);
-        popupWindow.setContentView(view);
-
-        return popupWindow;
     }
 
     private void makeTextViewResizable(final TextView tv, final int maxLine, final String expandText,

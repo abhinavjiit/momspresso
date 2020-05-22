@@ -1,8 +1,12 @@
 package com.mycity4kids.models.response;
 
+import com.google.gson.annotations.SerializedName;
+
 public class LikeReactionModel {
 
+    @SerializedName("reaction")
     private String reaction;
+    @SerializedName("status")
     private String status;
 
     public String getReaction() {

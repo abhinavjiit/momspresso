@@ -409,7 +409,6 @@
           android:paddingEnd="@dimen/space_10"
           android:paddingBottom="@dimen/space_20">
 
-
           <com.mikhaellopez.circularimageview.CircularImageView
             android:id="@+id/authorImageViewFollowContainer"
             android:layout_width="48dp"
@@ -422,29 +421,49 @@
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
             android:layout_marginStart="@dimen/space_10"
-            android:layout_toLeftOf="@+id/followTextViewFollowContainer"
-            android:layout_toRightOf="@id/authorImageViewFollowContainer">
+            android:layout_toStartOf="@+id/followTextViewFollowContainer"
+            android:layout_toEndOf="@id/authorImageViewFollowContainer">
 
-            <com.mycity4kids.widget.CustomFontTextView
-              android:id="@+id/authorNameTextViewFollowContainer"
+            <LinearLayout
+              android:id="@+id/authorInfoContainer"
               android:layout_width="wrap_content"
               android:layout_height="wrap_content"
-              android:layout_marginStart="@dimen/space_12"
-              android:textColor="#4A4A4A"
-              android:textSize="18sp"
-              app:fontName="OpenSans-SemiBold.ttf" />
+              android:orientation="horizontal">
+
+              <com.mycity4kids.widget.CustomFontTextView
+                android:id="@+id/authorNameTextViewFollowContainer"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:ellipsize="end"
+                android:singleLine="true"
+                android:textColor="#4A4A4A"
+                android:textSize="18sp"
+                app:fontName="OpenSans-SemiBold.ttf" />
+
+              <com.mycity4kids.widget.MomspressoButtonWidget
+                android:id="@+id/userTypeBadgeTextView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:singleLine="true"
+                android:text="EDITORIAL"
+                android:textSize="12sp"
+                android:visibility="gone"
+                app:fb_defaultColor="@color/app_red"
+                app:fb_radius="6dp" />
+            </LinearLayout>
 
 
             <RelativeLayout
               android:layout_width="wrap_content"
               android:layout_height="wrap_content"
-              android:layout_below="@id/authorNameTextViewFollowContainer">
+              android:layout_below="@id/authorInfoContainer">
 
               <com.mycity4kids.widget.CustomFontTextView
                 android:id="@+id/postsCountTextView"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="@dimen/space_12"
                 android:textSize="12sp" />
 
               <ImageView
@@ -463,10 +482,11 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="5dp"
-                android:layout_toRightOf="@id/dot"
+                android:layout_toEndOf="@id/dot"
                 android:textSize="12sp" />
             </RelativeLayout>
           </RelativeLayout>
+
           <com.mycity4kids.widget.MomspressoButtonWidget
             android:id="@+id/followTextViewFollowContainer"
             android:layout_width="wrap_content"
@@ -544,7 +564,6 @@
             android:text="View More"
             android:textColor="@color/app_red"
             android:textSize="14sp"
-            android:visibility="gone"
             app:fontName="oswald_regular.ttf" />
 
           <RelativeLayout
@@ -708,7 +727,6 @@
               android:layout_height="wrap_content"
               android:layout_below="@+id/groupSubHeadingTextView"
               android:layout_marginStart="20dp"
-              android:layout_marginLeft="20dp"
               android:layout_marginTop="20dp"
               android:background="@drawable/red_rect_bg"
               android:gravity="center"
@@ -920,9 +938,9 @@
         android:layout_below="@id/todaysBestContainerLayout"
         android:layout_marginTop="@dimen/space_16"
         android:padding="@dimen/space_16"
-        android:text="@string/ad.view_all_tags.text"
-        android:textSize="@dimen/space_16"
-        android:visibility="gone"
+        android:text="View More Articles"
+        android:textSize="16sp"
+        android:visibility="visible"
         app:borderColor="@color/app_red"
         app:borderthickness="1dp"
         app:elevation="0dp"
@@ -942,7 +960,7 @@
     android:layout_height="wrap_content"
     android:layout_above="@+id/bottom_Lout"
     android:layout_centerHorizontal="true"
-    android:layout_marginBottom="10dp"
+    android:layout_marginBottom="60dp"
     android:background="@drawable/article_swipe_hint_bg"
     android:gravity="center"
     android:padding="8dp"
@@ -1086,7 +1104,7 @@
             android:layout_width="180dp"
             android:layout_height="wrap_content"
             android:layout_alignParentEnd="true"
-            android:layout_marginEnd="30dp"
+            android:layout_marginEnd="10dp"
             android:elevation="0dp"
             android:textSize="14sp"
             app:radius="4dp"

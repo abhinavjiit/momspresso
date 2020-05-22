@@ -93,11 +93,12 @@ class MomVlogListingAdapter(val mContext: Context) :
                 holder.viewCountTextView1.text = momVlogVideosOrCarousalList[position].view_count
             }
             when {
-
                 momVlogVideosOrCarousalList[position].winner == 1 -> {
+                    holder.imageWinner.visibility = View.VISIBLE
                     holder.imageWinner.setImageResource(R.drawable.ic_trophy)
                 }
                 momVlogVideosOrCarousalList[position].isIs_gold -> {
+                    holder.imageWinner.visibility = View.VISIBLE
                     holder.imageWinner.setImageResource(R.drawable.ic_star_yellow)
                 }
                 else -> {

@@ -259,6 +259,7 @@ public class ShortStoriesDetailRecyclerAdapter extends RecyclerView.Adapter<Recy
         View underlineView;
         TextView DateTextView;
         TextView likeTextView;
+        ImageView moreOptionImageView;
 
         SSCommentViewHolder(View view, RecyclerViewClickListener listener) {
             super(view);
@@ -270,8 +271,10 @@ public class ShortStoriesDetailRecyclerAdapter extends RecyclerView.Adapter<Recy
             replyCountTextView = (TextView) view.findViewById(R.id.replyCountTextView);
             DateTextView = (TextView) view.findViewById(R.id.DateTextView);
             likeTextView = (TextView) view.findViewById(R.id.likeTextView);
+            moreOptionImageView = (ImageView) view.findViewById(R.id.moreOptionImageView);
 
             view.setOnLongClickListener(this);
+            moreOptionImageView.setOnClickListener(this);
             replyCommentTextView.setOnClickListener(this);
             likeTextView.setOnClickListener(this);
             underlineView = view.findViewById(R.id.underlineView);

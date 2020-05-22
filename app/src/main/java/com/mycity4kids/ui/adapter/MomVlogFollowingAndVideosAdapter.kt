@@ -353,9 +353,11 @@ class MomVlogFollowingAndVideosAdapter(val context: Context) :
             }
             when {
                 momVlogVideosOrFollowingList?.get(position)?.winner == 1 -> {
+                    holder.imageWinner.visibility = View.VISIBLE
                     holder.imageWinner.setImageResource(R.drawable.ic_trophy)
                 }
                 momVlogVideosOrFollowingList?.get(position)?.isIs_gold!! -> {
+                    holder.imageWinner.visibility = View.VISIBLE
                     holder.imageWinner.setImageResource(R.drawable.ic_star_yellow)
                 }
                 else -> {

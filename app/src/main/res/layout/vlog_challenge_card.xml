@@ -6,54 +6,82 @@
   android:layout_height="wrap_content"
   android:background="@color/video_feed_bg">
 
+  <View
+    android:id="@+id/challengeIndicator"
+    android:layout_width="match_parent"
+    android:layout_height="3dp"
+    android:layout_alignParentTop="true"
+    android:background="#7C2F3B" />
+
   <RelativeLayout
     android:id="@+id/item_top_layout"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_alignParentTop="true"
+    android:layout_below="@+id/challengeIndicator"
     android:layout_marginStart="@dimen/space_15"
     android:layout_marginTop="8dp"
     android:layout_marginBottom="8dp">
+
+    <ImageView
+      android:id="@+id/trophyImageView"
+      android:layout_width="42dp"
+      android:layout_height="42dp"
+      android:src="@drawable/ic_trophy" />
 
     <com.mycity4kids.widget.CustomFontTextView
       android:id="@+id/challenge"
       android:layout_width="wrap_content"
       android:layout_height="wrap_content"
       android:layout_alignParentTop="true"
+      android:layout_marginStart="8dp"
+      android:layout_toEndOf="@+id/trophyImageView"
       android:text="CHALLENGE"
       android:textColor="@color/color_D63C55"
-      android:textSize="14sp"
-      android:textStyle="bold"
-      app:fontName="oswald_regular.ttf" />
+      android:textSize="14sp" />
 
     <com.mycity4kids.widget.CustomFontTextView
       android:id="@+id/challengeHandle"
       android:layout_width="wrap_content"
       android:layout_height="wrap_content"
       android:layout_below="@id/challenge"
-      android:layout_marginTop="@dimen/space_5"
+      android:layout_marginStart="8dp"
+      android:layout_marginTop="2dp"
+      android:layout_toStartOf="@+id/participate_textview"
+      android:layout_toEndOf="@+id/trophyImageView"
       android:textColor="#E3E3E3"
       android:textSize="16sp"
-      android:textStyle="bold"
-      app:fontName="oswald_regular.ttf" />
+      android:textStyle="bold" />
 
-    <com.mycity4kids.widget.CustomFontTextView
+    <com.mycity4kids.widget.MomspressoButtonWidget
       android:id="@+id/participate_textview"
       android:layout_width="wrap_content"
       android:layout_height="wrap_content"
       android:layout_centerVertical="true"
       android:layout_marginEnd="8dp"
-      android:layout_alignParentEnd="true"
-      android:background="@drawable/update_profile_bg"
+      android:layout_toStartOf="@+id/shareChallengeImageView"
       android:paddingStart="16dp"
       android:paddingTop="5dp"
       android:paddingEnd="16dp"
       android:paddingBottom="5dp"
       android:text="@string/participate"
-      android:textAllCaps="false"
       android:textColor="@color/white_color"
       android:textSize="12sp"
-      android:textStyle="bold" />
+      android:textStyle="bold"
+      app:fb_borderColor="@color/app_red"
+      app:fb_borderWidth="1dp"
+      app:fb_radius="30dp"
+      app:fb_textColor="@color/app_red"
+      app:fb_textSize="13sp" />
+
+    <ImageView
+      android:id="@+id/shareChallengeImageView"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:layout_alignParentEnd="true"
+      android:layout_centerVertical="true"
+      android:padding="6dp"
+      android:src="@drawable/ic_share_icon"
+      android:tint="@color/white_color" />
 
   </RelativeLayout>
 
@@ -73,10 +101,6 @@
       android:layout_width="match_parent"
       android:layout_height="match_parent"
       android:layout_alignParentEnd="true"
-      android:layout_marginStart="0dp"
-      android:layout_marginLeft="0dp"
-      android:layout_marginEnd="0dp"
-      android:layout_marginRight="0dp"
       android:scaleType="centerCrop"
       android:src="@drawable/default_article" />
 
@@ -105,9 +129,7 @@
     android:paddingEnd="18dp"
     android:paddingBottom="8dp"
     android:textColor="#D1D1D1"
-    android:textSize="14sp"
-    android:textStyle="bold"
-    app:fontName="oswald_regular.ttf" />
+    android:textSize="14sp" />
 
   <com.mycity4kids.widget.CustomFontTextView
     android:id="@+id/seeMoreChallenge"
@@ -121,8 +143,7 @@
     android:text="@string/see_more_challenge"
     android:textColor="@color/white"
     android:textSize="12sp"
-    android:textStyle="bold"
-    app:fontName="oswald_regular.ttf" />
+    android:textStyle="bold" />
 
   <View
     android:layout_width="match_parent"

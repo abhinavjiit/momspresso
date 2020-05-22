@@ -144,7 +144,8 @@ public class ShortStoryCommentRepliesDialogFragment extends DialogFragment imple
     private void getCommentReplies() {
         Retrofit retro = BaseApplication.getInstance().getRetrofit();
         ShortStoryAPI shortStoryAPI = retro.create(ShortStoryAPI.class);
-        Call<CommentListResponse> call = shortStoryAPI.getStoryCommentReplies(data.getPostId(), "reply", data.getId(), paginationReplyId);
+        Call<CommentListResponse> call = shortStoryAPI
+                .getStoryCommentReplies(data.getPostId(), "reply", data.getId(), paginationReplyId);
         call.enqueue(storyCommentRepliesCallback);
     }
 
@@ -279,6 +280,7 @@ public class ShortStoryCommentRepliesDialogFragment extends DialogFragment imple
     @Override
     public void onRecyclerItemLongClick(View view, int position) {
         switch (view.getId()) {
+            case R.id.moreOptionImageView:
             case R.id.commentRootLayout: {
                 CommentOptionsDialogFragment commentOptionsDialogFragment = new CommentOptionsDialogFragment();
                 FragmentManager fm = getChildFragmentManager();
@@ -292,6 +294,7 @@ public class ShortStoryCommentRepliesDialogFragment extends DialogFragment imple
                 commentOptionsDialogFragment.show(fm, "Comment Options");
             }
             break;
+            case R.id.moreOptionRepliesImageView:
             case R.id.replyRootView: {
                 CommentOptionsDialogFragment commentOptionsDialogFragment = new CommentOptionsDialogFragment();
                 FragmentManager fm = getChildFragmentManager();
@@ -379,6 +382,7 @@ public class ShortStoryCommentRepliesDialogFragment extends DialogFragment imple
         //reportContentDialogFragment.setTargetFragment(this, 0);
         reportContentDialogFragment.show(fm, "Report Content");
     }
+
     private Callback<ResponseBody> likeDisLikeCommentCallback = new Callback<ResponseBody>() {
         @Override
         public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {

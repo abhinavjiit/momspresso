@@ -104,6 +104,7 @@ public class ArticleCommentsRecyclerAdapter extends
         TextView replyCountTextView;
         TextView DateTextView;
         TextView likeTextView;
+        ImageView moreOptionImageView;
 
         CommentsViewHolder(View view) {
             super(view);
@@ -115,10 +116,12 @@ public class ArticleCommentsRecyclerAdapter extends
             commentDateTextView = (TextView) view.findViewById(R.id.commentDateTextView);
             replyCountTextView = (TextView) view.findViewById(R.id.replyCountTextView);
             likeTextView = (TextView) view.findViewById(R.id.likeTextView);
+            moreOptionImageView = (ImageView) view.findViewById(R.id.moreOptionImageView);
             view.setOnLongClickListener(this);
             replyCommentTextView.setOnClickListener(this);
             replyCountTextView.setOnClickListener(this);
             likeTextView.setOnClickListener(this);
+            moreOptionImageView.setOnClickListener(this);
         }
 
         @Override

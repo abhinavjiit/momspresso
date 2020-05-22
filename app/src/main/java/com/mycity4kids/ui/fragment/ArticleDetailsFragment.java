@@ -375,6 +375,7 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
     private ImageView reportCommentContent1;
     private TextView publishedDateTextView;
     private MomspressoButtonWidget moreArticlesTextView;
+    private MomspressoButtonWidget userTypeBadgeTextView;
 
     static {
         AppCompatDelegate.setCompatVectorFromResourcesEnabled(true);
@@ -576,6 +577,7 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
             bottomAdSlotWebView = fragmentView.findViewById(R.id.bottomAdSlotWebView);
             topAdSlotWebView = fragmentView.findViewById(R.id.topAdSlotWebView);
             authorName = fragmentView.findViewById(R.id.authorName);
+            userTypeBadgeTextView = fragmentView.findViewById(R.id.userTypeBadgeTextView);
 
             fragmentView.findViewById(R.id.user_name).setOnClickListener(this);
             floatingActionButton.setOnClickListener(this);
@@ -1791,6 +1793,7 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
                         shareUrl = deepLinkUrl;
                     }
                 } else if (AppConstants.USER_TYPE_EDITORIAL.equals(detailData.getUserType())) {
+                    userTypeBadgeTextView.setVisibility(View.VISIBLE);
                     if (isAdded()) {
                         authorType.setText(
                                 AppUtils.getString(getActivity(), R.string.author_type_editorial));
@@ -2144,7 +2147,7 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
         try {
             switch (v.getId()) {
                 case R.id.moreArticlesTextView:
-                    Intent intent1 =new Intent(getActivity(),DashboardActivity.class);
+                    Intent intent1 = new Intent(getActivity(), DashboardActivity.class);
                     intent1.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
                     startActivity(intent1);
                     break;
@@ -2387,7 +2390,7 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
                         articleCommentRepliesDialogFragment.setCancelable(true);
                         articleCommentRepliesDialogFragment.show(fm, "View Replies");
                     } else {
-                       // openAddCommentReplyDialog(commentsList.get(1));
+                        // openAddCommentReplyDialog(commentsList.get(1));
                     }
                     break;
                 case R.id.replyCount:
@@ -2402,7 +2405,7 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
                         articleCommentRepliesDialogFragment.setCancelable(true);
                         articleCommentRepliesDialogFragment.show(fm, "View Replies");
                     } else {
-                      //  openAddCommentReplyDialog(commentsList.get(0));
+                        //  openAddCommentReplyDialog(commentsList.get(0));
                     }
                     break;
                 case R.id.menuItemImageView:
