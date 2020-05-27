@@ -2,6 +2,7 @@ package com.mycity4kids.ui.activity;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.media.MediaScannerConnection;
 import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
@@ -34,7 +35,6 @@ import com.mycity4kids.models.response.UserDetailResponse;
 import com.mycity4kids.preference.SharedPrefUtils;
 import com.mycity4kids.retrofitAPIsInterfaces.LoginRegistrationAPI;
 import com.mycity4kids.retrofitAPIsInterfaces.TopicsCategoryAPI;
-import com.mycity4kids.utils.AppUtils;
 import com.mycity4kids.utils.ConnectivityUtils;
 import com.mycity4kids.utils.MixPanelUtils;
 import com.mycity4kids.utils.StringUtils;
@@ -304,10 +304,17 @@ public class AddVideoDetailsActivity extends BaseActivity implements View.OnClic
 
     private void uploadVideo() {
         showProgressDialog("Please wait ...");
-        contentUri = AppUtils.exportToGallery(originalUri.getPath(), getContentResolver(), this);
-        contentUri = AppUtils.getVideoUriFromMediaProvider(originalUri.getPath(), getContentResolver());
-        removeProgressDialog();
-        resumeUpload();
+        MediaScannerConnection.scanFile(this,
+                new String[] {originalPath}, null,
+                (path, uri) -> {
+                    removeProgressDialog();
+                    if (uri == null) {
+                        showToast(getString(R.string.video_upload_fail));
+                    } else {
+                        contentUri = uri;
+                        resumeUpload();
+                    }
+                });
     }
 
     public void resumeUpload() {
@@ -331,30 +338,6 @@ public class AddVideoDetailsActivity extends BaseActivity implements View.OnClic
             intt.putExtra("comingFrom", "notFromChallenge");
         }
         startActivity(intt);
-//        if (contentUri != null && signIn) {
-//            Data uriData = new Data.Builder()
-//                    .putString("ContentUrl", contentUri.toString())
-//                    .putString("categoryId", categoryId)
-//                    .putString("duration", duration)
-//                    .putString("thumbnailTime", thumbnailTime)
-//                    .putString("title", videoTitleEditText.getText().toString())
-//                    .putString("comingFrom", comingFrom)
-//                    .putString("challengeId", challengeId)
-//                    .putString("originalPath", originalPath)
-//                    .build();
-//            Constraints constraints = new Constraints.Builder().setRequiredNetworkType(
-//                    NetworkType.CONNECTED).build();
-//
-//            request = new OneTimeWorkRequest.Builder(NotificationWorker.class)
-//                    .setConstraints(constraints)
-//                    .addTag("VideoUploading")
-//                    .setInputData(uriData)
-//                    .build();
-//
-//            workManager.enqueue(request);
-//            removeProgressDialog();
-//            popup.setVisibility(View.VISIBLE);
-//        }
     }
 
     private void getBlogPage() {

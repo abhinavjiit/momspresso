@@ -197,47 +197,6 @@ public class AppUtils {
         return result;
     }
 
-    public static Uri exportToGallery(String filename, ContentResolver contentResolver,
-            Context context) {
-        // Save the name and description of a video in a ContentValues map.
-        final ContentValues values = new ContentValues(2);
-        values.put(MediaStore.Video.Media.MIME_TYPE, "video/mp4");
-        values.put(MediaStore.Video.Media.DATA, filename);
-        // Add a new record (identified by uri)
-        final Uri uri = contentResolver.insert(MediaStore.Video.Media.EXTERNAL_CONTENT_URI,
-                values);
-        context.sendBroadcast(new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE,
-                Uri.parse("file://" + filename)));
-        return uri;
-    }
-
-    public static final Uri getVideoUriFromMediaProvider(String videoFile,
-            ContentResolver contentResolver) {
-        String selection = MediaStore.Video.VideoColumns.DATA + "=?";
-        String[] selectArgs = {videoFile};
-        String[] projection = {MediaStore.Video.VideoColumns._ID};
-        Cursor c = null;
-        try {
-            c = contentResolver.query(android.provider.MediaStore.Video.Media.EXTERNAL_CONTENT_URI,
-                    projection, selection, selectArgs, null);
-            if (c.getCount() > 0) {
-                c.moveToFirst();
-                String id = c.getString(c
-                        .getColumnIndex(MediaStore.Video.VideoColumns._ID));
-
-                return Uri
-                        .withAppendedPath(
-                                android.provider.MediaStore.Video.Media.EXTERNAL_CONTENT_URI,
-                                id);
-            }
-            return null;
-        } finally {
-            if (c != null) {
-                c.close();
-            }
-        }
-    }
-
     public static Uri exportAudioToGallery(String filename, ContentResolver contentResolver,
             Context context) {
         // Save the name and description of a video in a ContentValues map.
