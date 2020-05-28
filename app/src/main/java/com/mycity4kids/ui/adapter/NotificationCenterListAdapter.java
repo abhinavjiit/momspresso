@@ -138,7 +138,6 @@ public class NotificationCenterListAdapter extends BaseAdapter implements GroupM
 
             String notifType = notificationList.get(position).getNotifType();
             if (StringUtils.isNullOrEmpty(notifType)) {
-                pushEvent("-");
                 return;
             }
 
@@ -193,8 +192,8 @@ public class NotificationCenterListAdapter extends BaseAdapter implements GroupM
                 break;
                 case AppConstants.NOTIFICATION_CENTER_VIDEO_DETAIL: {
                     Intent intent = new Intent(mainContext, ParallelFeedActivity.class);
-                    if (StringUtils.isNullOrEmpty(notificationList.get(position).getArticleId()) ||
-                            notificationList.get(position).getArticleId().equals("0")) {
+                    if (StringUtils.isNullOrEmpty(notificationList.get(position).getArticleId()) || notificationList
+                            .get(position).getArticleId().equals("0")) {
                         intent.putExtra(Constants.VIDEO_ID, notificationList.get(position).getVideoId());
                     } else {
                         intent.putExtra(Constants.VIDEO_ID, notificationList.get(position).getArticleId());
@@ -230,6 +229,7 @@ public class NotificationCenterListAdapter extends BaseAdapter implements GroupM
                     resultIntent.putExtra("fromNotification", true);
                     resultIntent.putExtra("parentTopicId", AppConstants.SHORT_STORY_CATEGORYID);
                     resultIntent.putExtra("selectedTabCategoryId", "" + notificationList.get(position).getCategoryId());
+                    mainContext.startActivity(resultIntent);
                     pushEvent("NOTIFICATION_CENTER_SHORT_STORY_LIST");
                 }
                 break;
