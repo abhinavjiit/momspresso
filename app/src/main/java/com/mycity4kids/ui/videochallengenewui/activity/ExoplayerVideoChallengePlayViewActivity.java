@@ -7,9 +7,7 @@ import android.view.MenuItem;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
-
 import androidx.core.content.ContextCompat;
-
 import com.google.android.exoplayer2.C;
 import com.google.android.exoplayer2.DefaultLoadControl;
 import com.google.android.exoplayer2.DefaultRenderersFactory;
@@ -18,9 +16,7 @@ import com.google.android.exoplayer2.LoadControl;
 import com.google.android.exoplayer2.SimpleExoPlayer;
 import com.google.android.exoplayer2.source.MediaSource;
 import com.google.android.exoplayer2.source.hls.HlsMediaSource;
-import com.google.android.exoplayer2.trackselection.AdaptiveTrackSelection;
 import com.google.android.exoplayer2.trackselection.DefaultTrackSelector;
-import com.google.android.exoplayer2.trackselection.TrackSelection;
 import com.google.android.exoplayer2.trackselection.TrackSelector;
 import com.google.android.exoplayer2.ui.PlayerControlView;
 import com.google.android.exoplayer2.ui.PlayerView;
@@ -90,11 +86,12 @@ public class ExoplayerVideoChallengePlayViewActivity extends BaseActivity {
 
     private void initExoPlayer() {
         BandwidthMeter bandwidthMeter = new DefaultBandwidthMeter();
-        TrackSelection.Factory videoTrackSelectionFactory = new AdaptiveTrackSelection.Factory(bandwidthMeter);
-        TrackSelector trackSelector = new DefaultTrackSelector(videoTrackSelectionFactory);
+        TrackSelector trackSelector = new DefaultTrackSelector();
         LoadControl loadControl = new DefaultLoadControl();
+        DefaultRenderersFactory rendererFactory = new DefaultRenderersFactory(this);
+
         SimpleExoPlayer player = ExoPlayerFactory
-                .newSimpleInstance(this, new DefaultRenderersFactory(this), trackSelector, loadControl);
+                .newSimpleInstance(this, rendererFactory, trackSelector, loadControl, null, bandwidthMeter);
         exoPlayerView.setPlayer(player);
 
         boolean haveResumePosition = resumeWindow != C.INDEX_UNSET;

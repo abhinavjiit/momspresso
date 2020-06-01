@@ -419,4 +419,5 @@ public class AppConstants {
     public static final String MOM_VLOG_LISTING_SCREEN = "https://www.momspresso.com/parenting/videos";
 
     public static final String MOM_VLOG_TUTORIAL_COLLECTION = "5ec53266e0dfff57de575526";
+    public static final String MOGI_ANALYTICS_ID = "5e1e0683238a2648efba8cc0";
 }
