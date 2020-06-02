@@ -84,7 +84,6 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import okhttp3.ResponseBody;
-import org.json.JSONObject;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -97,18 +96,12 @@ public class ShortStoryFragment extends BaseFragment implements View.OnClickList
         ShortStoriesDetailRecyclerAdapter.RecyclerViewClickListener,
         CommentOptionsDialogFragment.ICommentOptionAction {
 
-    private static final int ADD_BOOKMARK = 1;
     private static final int REQUEST_INIT_PERMISSION = 2;
     private SimpleTooltip simpleTooltip;
     private static String[] PERMISSIONS_INIT = {Manifest.permission.READ_EXTERNAL_STORAGE,
             Manifest.permission.WRITE_EXTERNAL_STORAGE};
     private ShortStoryCommentRepliesDialogFragment shortStoryCommentRepliesDialogFragment;
     private String paginationCommentId = null;
-    private int pastVisiblesItems;
-    private int visibleItemCount;
-    private int totalItemCount;
-    private boolean isReuqestRunning = false;
-    private boolean isLastPageReached = false;
     private int totalCommentCount = 0;
     private int downloadedComment = 0;
     private boolean isRecommendRequestRunning;
@@ -170,7 +163,6 @@ public class ShortStoryFragment extends BaseFragment implements View.OnClickList
             adapter = new ShortStoriesDetailRecyclerAdapter(getActivity(), this, colorPosition);
             adapter.setListData(consolidatedList);
             shortStoryRecyclerView.setAdapter(adapter);
-            isReuqestRunning = true;
             if (bundle != null) {
                 articleId = bundle.getString(Constants.ARTICLE_ID);
                 authorId = bundle.getString(Constants.AUTHOR_ID, "");
@@ -182,23 +174,6 @@ public class ShortStoryFragment extends BaseFragment implements View.OnClickList
                 Retrofit retro = BaseApplication.getInstance().getRetrofit();
                 shortStoryApi = retro.create(ShortStoryAPI.class);
                 getShortStoryDetails();
-                /* shortStoryRecyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
-                    @Override
-                    public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
-                        if (dy > 0) {
-                            visibleItemCount = llm.getChildCount();
-                            totalItemCount = llm.getItemCount();
-                            pastVisiblesItems = llm.findFirstVisibleItemPosition();
-
-                            if (!isReuqestRunning && !isLastPageReached) {
-                                if ((visibleItemCount + pastVisiblesItems) >= totalItemCount) {
-                                  //  isReuqestRunning = true;
-                                   // getStoryComments(articleId, "comment");
-                                }
-                            }
-                        }
-                    }
-                });*/
             }
         } catch (Exception e) {
             removeProgressDialog();
@@ -367,7 +342,6 @@ public class ShortStoryFragment extends BaseFragment implements View.OnClickList
     private Callback<CommentListResponse> ssCommentsResponseCallback = new Callback<CommentListResponse>() {
         @Override
         public void onResponse(Call<CommentListResponse> call, retrofit2.Response<CommentListResponse> response) {
-            isReuqestRunning = false;
             if (response.body() == null) {
                 NetworkErrorException nee = new NetworkErrorException("Trending Article API failure");
                 FirebaseCrashlytics.getInstance().recordException(nee);
@@ -387,20 +361,13 @@ public class ShortStoryFragment extends BaseFragment implements View.OnClickList
 
         @Override
         public void onFailure(Call<CommentListResponse> call, Throwable t) {
-            isReuqestRunning = false;
             FirebaseCrashlytics.getInstance().recordException(t);
             Log.d("MC4kException", Log.getStackTraceString(t));
         }
     };
 
     private void showComments(List<CommentListData> commentList) {
-        if (commentList.size() == 0) {
-            isLastPageReached = false;
-            if (null != consolidatedList && !consolidatedList.isEmpty()) {
-                //No more next results from pagination
-                isLastPageReached = true;
-            }
-        } else {
+        if (commentList.size() != 0) {
             for (int i = 0; i < commentList.size(); i++) {
                 ShortStoryDetailAndCommentModel commentModel = new ShortStoryDetailAndCommentModel();
                 commentModel.setSsComment(commentList.get(i));
@@ -409,9 +376,6 @@ public class ShortStoryFragment extends BaseFragment implements View.OnClickList
             adapter.setListData(consolidatedList);
             paginationCommentId = commentList.get(commentList.size() - 1).getId();
             downloadedComment = downloadedComment + commentList.size();
-            if (downloadedComment >= totalCommentCount) {
-                isLastPageReached = true;
-            }
         }
         adapter.notifyDataSetChanged();
     }
@@ -620,10 +584,11 @@ public class ShortStoryFragment extends BaseFragment implements View.OnClickList
                     LikeReactionModel commentListData = new LikeReactionModel();
                     commentListData.setReaction("like");
                     commentListData.setStatus("0");
-                    consolidatedList.get(position).getSsComment().setLikeCount(consolidatedList.get(position).getSsComment().getLikeCount() - 1);
+                    consolidatedList.get(position).getSsComment()
+                            .setLikeCount(consolidatedList.get(position).getSsComment().getLikeCount() - 1);
                     Retrofit retrofit = BaseApplication.getInstance().getRetrofit();
-                    ArticleDetailsAPI articleDetailsAPI = retrofit.create(ArticleDetailsAPI.class);
-                    Call<ResponseBody> call = articleDetailsAPI
+                    ArticleDetailsAPI articleDetailsApi = retrofit.create(ArticleDetailsAPI.class);
+                    Call<ResponseBody> call = articleDetailsApi
                             .likeDislikeComment(consolidatedList.get(position).getSsComment().getId(), commentListData);
                     call.enqueue(likeDisLikeCommentCallback);
 
@@ -632,10 +597,11 @@ public class ShortStoryFragment extends BaseFragment implements View.OnClickList
                     LikeReactionModel commentListData = new LikeReactionModel();
                     commentListData.setReaction("like");
                     commentListData.setStatus("1");
-                    consolidatedList.get(position).getSsComment().setLikeCount(consolidatedList.get(position).getSsComment().getLikeCount() + 1);
+                    consolidatedList.get(position).getSsComment()
+                            .setLikeCount(consolidatedList.get(position).getSsComment().getLikeCount() + 1);
                     Retrofit retrofit = BaseApplication.getInstance().getRetrofit();
-                    ArticleDetailsAPI articleDetailsAPI = retrofit.create(ArticleDetailsAPI.class);
-                    Call<ResponseBody> call = articleDetailsAPI
+                    ArticleDetailsAPI articleDetailsApi = retrofit.create(ArticleDetailsAPI.class);
+                    Call<ResponseBody> call = articleDetailsApi
                             .likeDislikeComment(consolidatedList.get(position).getSsComment().getId(), commentListData);
                     call.enqueue(likeDisLikeCommentCallback);
                 }
@@ -660,8 +626,7 @@ public class ShortStoryFragment extends BaseFragment implements View.OnClickList
             case R.id.replyCommentTextView: {
                 if (consolidatedList.get(position).getSsComment().getRepliesCount() == 0) {
                     openAddCommentReplyDialog(consolidatedList.get(position).getSsComment());
-                }
-                else {
+                } else {
                     shortStoryCommentRepliesDialogFragment = new ShortStoryCommentRepliesDialogFragment();
                     Bundle args = new Bundle();
                     args.putParcelable("commentReplies", consolidatedList.get(position).getSsComment());
@@ -746,26 +711,6 @@ public class ShortStoryFragment extends BaseFragment implements View.OnClickList
     private Callback<ResponseBody> likeDisLikeCommentCallback = new Callback<ResponseBody>() {
         @Override
         public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
-            if (response == null || null == response.body()) {
-                NetworkErrorException nee = new NetworkErrorException(response.raw().toString());
-                FirebaseCrashlytics.getInstance().recordException(nee);
-                if (isAdded()) {
-                    ToastUtils.showToast(getActivity(), getResources().getString(R.string.server_went_wrong));
-                }
-                return;
-            }
-            try {
-                String resData = new String(response.body().bytes());
-                JSONObject jsonObject = new JSONObject(resData);
-                if (jsonObject.getJSONObject("status").toString().equals(Constants.SUCCESS) && jsonObject
-                        .getJSONObject("code").toString().equals("200")) {
-                }
-            } catch (Exception e) {
-                FirebaseCrashlytics.getInstance().recordException(e);
-                Log.d("MC4kException", Log.getStackTraceString(e));
-            }
-
-
         }
 
         @Override
@@ -805,7 +750,7 @@ public class ShortStoryFragment extends BaseFragment implements View.OnClickList
         if (isAdded()) {
             Bitmap bitmap1 = ((BitmapDrawable) shareStoryImageView.getDrawable()).getBitmap();
             shareStoryImageView.setImageBitmap(SharingUtils.getRoundCornerBitmap(bitmap1, AppUtils.dpTopx(4.0f)));
-            //Bh**d**a facebook caches shareIntent. Need different name for all files
+            // Bh**d**a facebook caches shareIntent. Need different name for all files
             String tempName = "" + System.currentTimeMillis();
             AppUtils.getBitmapFromView(storyShareCardWidget, AppConstants.STORY_SHARE_IMAGE_NAME + tempName);
             shareStory(tempName);
@@ -819,26 +764,22 @@ public class ShortStoryFragment extends BaseFragment implements View.OnClickList
             switch (shareMedium) {
                 case AppConstants.MEDIUM_FACEBOOK: {
                     SharingUtils.shareViaFacebook(getActivity(), uri);
-                    Utils.pushShareStoryEvent(getActivity(), "ShortStoryFragment",
-                            userDynamoId + "", sharedStoryItem.getId(),
-                            sharedStoryItem.getUserId() + "~" + sharedStoryItem.getUserName(), "Facebook");
+                    Utils.shareEventTracking(getActivity(), "100WS Detail", "Share_Android", "WSD100_Facebook_Share");
                 }
                 break;
                 case AppConstants.MEDIUM_WHATSAPP: {
                     if (AppUtils.shareImageWithWhatsApp(getActivity(), uri, getString(R.string.ss_follow_author,
                             sharedStoryItem.getUserName(),
                             AppConstants.USER_PROFILE_SHARE_BASE_URL + sharedStoryItem.getUserId()))) {
-                        Utils.pushShareStoryEvent(getActivity(), "ShortStoryFragment",
-                                userDynamoId + "", sharedStoryItem.getId(),
-                                sharedStoryItem.getUserId() + "~" + sharedStoryItem.getUserName(), "Whatsapp");
+                        Utils.shareEventTracking(getActivity(), "100WS Detail", "Share_Android",
+                                "WSD100_Whatsapp_Share");
                     }
                 }
                 break;
                 case AppConstants.MEDIUM_INSTAGRAM: {
                     if (AppUtils.shareImageWithInstagram(getActivity(), uri)) {
-                        Utils.pushShareStoryEvent(getActivity(), "ShortStoryFragment",
-                                userDynamoId + "", sharedStoryItem.getId(),
-                                sharedStoryItem.getUserId() + "~" + sharedStoryItem.getUserName(), "Instagram");
+                        Utils.shareEventTracking(getActivity(), "100WS Detail", "Share_Android",
+                                "WSD100_Instagram_Share");
                     }
                 }
                 break;
@@ -846,9 +787,8 @@ public class ShortStoryFragment extends BaseFragment implements View.OnClickList
                     if (AppUtils.shareGenericImageAndOrLink(getActivity(), uri, getString(R.string.ss_follow_author,
                             sharedStoryItem.getUserName(),
                             AppConstants.USER_PROFILE_SHARE_BASE_URL + sharedStoryItem.getUserId()))) {
-                        Utils.pushShareStoryEvent(getActivity(), "ShortStoryFragment",
-                                userDynamoId + "", sharedStoryItem.getId(),
-                                sharedStoryItem.getUserId() + "~" + sharedStoryItem.getUserName(), "Generic");
+                        Utils.shareEventTracking(getActivity(), "100WS Detail", "Share_Android",
+                                "WSD100_Generic_Share");
                     }
                 }
                 break;
@@ -997,10 +937,8 @@ public class ShortStoryFragment extends BaseFragment implements View.OnClickList
         public void onResponse(Call<CommentListResponse> call, retrofit2.Response<CommentListResponse> response) {
             removeProgressDialog();
             if (response.body() == null) {
-                if (response.raw() != null) {
-                    NetworkErrorException nee = new NetworkErrorException(response.raw().toString());
-                    FirebaseCrashlytics.getInstance().recordException(nee);
-                }
+                NetworkErrorException nee = new NetworkErrorException(response.raw().toString());
+                FirebaseCrashlytics.getInstance().recordException(nee);
                 if (isAdded()) {
                     ((ShortStoryContainerActivity) getActivity()).showToast("Failed to edit comment. Please try again");
                 }
@@ -1061,10 +999,8 @@ public class ShortStoryFragment extends BaseFragment implements View.OnClickList
         public void onResponse(Call<CommentListResponse> call, retrofit2.Response<CommentListResponse> response) {
             removeProgressDialog();
             if (response.body() == null) {
-                if (response.raw() != null) {
-                    NetworkErrorException nee = new NetworkErrorException(response.raw().toString());
-                    FirebaseCrashlytics.getInstance().recordException(nee);
-                }
+                NetworkErrorException nee = new NetworkErrorException(response.raw().toString());
+                FirebaseCrashlytics.getInstance().recordException(nee);
                 if (isAdded()) {
                     ((ShortStoryContainerActivity) getActivity()).showToast("Failed to add reply. Please try again");
                 }
@@ -1126,7 +1062,7 @@ public class ShortStoryFragment extends BaseFragment implements View.OnClickList
         }
     };
 
-    public void editReply(String content, String parentCommentId, String replyId) {
+    void editReply(String content, String parentCommentId, String replyId) {
         showProgressDialog("Editing Reply");
         AddEditCommentOrReplyRequest addEditShortStoryCommentOrReplyRequest = new AddEditCommentOrReplyRequest();
         addEditShortStoryCommentOrReplyRequest.setPost_id(articleId);
@@ -1144,10 +1080,8 @@ public class ShortStoryFragment extends BaseFragment implements View.OnClickList
         public void onResponse(Call<CommentListResponse> call, retrofit2.Response<CommentListResponse> response) {
             removeProgressDialog();
             if (response.body() == null) {
-                if (response.raw() != null) {
-                    NetworkErrorException nee = new NetworkErrorException(response.raw().toString());
-                    FirebaseCrashlytics.getInstance().recordException(nee);
-                }
+                NetworkErrorException nee = new NetworkErrorException(response.raw().toString());
+                FirebaseCrashlytics.getInstance().recordException(nee);
                 if (isAdded()) {
                     ((ShortStoryContainerActivity) getActivity()).showToast("Failed to edit reply. Please try again");
                 }
@@ -1219,10 +1153,8 @@ public class ShortStoryFragment extends BaseFragment implements View.OnClickList
         public void onResponse(Call<CommentListResponse> call, retrofit2.Response<CommentListResponse> response) {
             removeProgressDialog();
             if (response.body() == null) {
-                if (response.raw() != null) {
-                    NetworkErrorException nee = new NetworkErrorException(response.raw().toString());
-                    FirebaseCrashlytics.getInstance().recordException(nee);
-                }
+                NetworkErrorException nee = new NetworkErrorException(response.raw().toString());
+                FirebaseCrashlytics.getInstance().recordException(nee);
                 if (isAdded()) {
                     ((ShortStoryContainerActivity) getActivity()).showToast("Failed to delete reply. Please try again");
                 }
@@ -1286,10 +1218,8 @@ public class ShortStoryFragment extends BaseFragment implements View.OnClickList
         public void onResponse(Call<CommentListResponse> call, retrofit2.Response<CommentListResponse> response) {
             removeProgressDialog();
             if (response.body() == null) {
-                if (response.raw() != null) {
-                    NetworkErrorException nee = new NetworkErrorException(response.raw().toString());
-                    FirebaseCrashlytics.getInstance().recordException(nee);
-                }
+                NetworkErrorException nee = new NetworkErrorException(response.raw().toString());
+                FirebaseCrashlytics.getInstance().recordException(nee);
                 if (isAdded()) {
                     ((ShortStoryContainerActivity) getActivity())
                             .showToast("Failed to delete comment. Please try again");
@@ -1566,12 +1496,9 @@ public class ShortStoryFragment extends BaseFragment implements View.OnClickList
                 .build();
         simpleTooltip.show();
         handler = new Handler();
-        handler.postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                if (simpleTooltip.isShowing()) {
-                    simpleTooltip.dismiss();
-                }
+        handler.postDelayed(() -> {
+            if (simpleTooltip.isShowing()) {
+                simpleTooltip.dismiss();
             }
         }, 3000);
 
@@ -1641,5 +1568,4 @@ public class ShortStoryFragment extends BaseFragment implements View.OnClickList
         menuPopupHelper.setForceShowIcon(true);
         menuPopupHelper.show();
     }
-
 }

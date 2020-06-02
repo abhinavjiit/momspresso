@@ -2331,8 +2331,7 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
                             new ShareDialog(getActivity()).show(content);
                         }
                     }
-                    Utils.pushShareArticleEvent(getActivity(), "DetailArticleScreen",
-                            userDynamoId + "", articleId, authorId + "~" + author, "Facebook");
+                    Utils.shareEventTracking(getActivity(), "Article Detail", "Share_Android", "AD_Facebook_Share");
                     break;
                 case R.id.whatsappShareTextView:
                     if (StringUtils.isNullOrEmpty(shareUrl)) {
@@ -2353,8 +2352,7 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
                             Toast.makeText(getActivity(), "Whatsapp have not been installed.",
                                     Toast.LENGTH_SHORT).show();
                         }
-                        Utils.pushShareArticleEvent(getActivity(), "DetailArticleScreen",
-                                userDynamoId + "", articleId, authorId + "~" + author, "Whatsapp");
+                        Utils.shareEventTracking(getActivity(), "Article Detail", "Share_Android", "AD_Whatsapp_Share");
                     }
                     break;
                 case R.id.emailShareTextView:
@@ -2698,6 +2696,7 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
                 shareIntent.setType("text/plain");
                 shareIntent.putExtra(Intent.EXTRA_TEXT, shareUrl);
                 startActivity(Intent.createChooser(shareIntent, "Momspresso"));
+                Utils.shareEventTracking(getActivity(), "Article Detail", "Share_Android", "AD_Generic_Share");
                 return true;
             } else if (menuItem.getItemId() == R.id.reportLang) {
                 final ReportStoryOrCommentRequest reportStoryOrCommentRequest = new ReportStoryOrCommentRequest();

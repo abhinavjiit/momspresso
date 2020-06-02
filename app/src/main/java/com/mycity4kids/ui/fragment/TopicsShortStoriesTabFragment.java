@@ -649,26 +649,22 @@ public class TopicsShortStoriesTabFragment extends BaseFragment implements View.
             switch (shareMedium) {
                 case AppConstants.MEDIUM_FACEBOOK: {
                     SharingUtils.shareViaFacebook(getActivity(), uri);
-                    Utils.pushShareStoryEvent(getActivity(), "TopicsShortStoriesTabFragment",
-                            userDynamoId + "", sharedStoryItem.getId(),
-                            sharedStoryItem.getUserId() + "~" + sharedStoryItem.getUserName(), "Facebook");
+                    Utils.shareEventTracking(getActivity(), "100WS Listing", "Share_Android", "WSL100_Facebook_Share");
                 }
                 break;
                 case AppConstants.MEDIUM_WHATSAPP: {
                     if (AppUtils.shareImageWithWhatsApp(getActivity(), uri, getString(R.string.ss_follow_author,
                             sharedStoryItem.getUserName(),
                             AppConstants.USER_PROFILE_SHARE_BASE_URL + sharedStoryItem.getUserId()))) {
-                        Utils.pushShareStoryEvent(getActivity(), "TopicsShortStoriesTabFragment",
-                                userDynamoId + "", sharedStoryItem.getId(),
-                                sharedStoryItem.getUserId() + "~" + sharedStoryItem.getUserName(), "Whatsapp");
+                        Utils.shareEventTracking(getActivity(), "100WS Listing", "Share_Android",
+                                "WSL100_Whatsapp_Share");
                     }
                 }
                 break;
                 case AppConstants.MEDIUM_INSTAGRAM: {
                     if (AppUtils.shareImageWithInstagram(getActivity(), uri)) {
-                        Utils.pushShareStoryEvent(getActivity(), "TopicsShortStoriesTabFragment",
-                                userDynamoId + "", sharedStoryItem.getId(),
-                                sharedStoryItem.getUserId() + "~" + sharedStoryItem.getUserName(), "Instagram");
+                        Utils.shareEventTracking(getActivity(), "100WS Listing", "Share_Android",
+                                "WSL100_Instagram_Share");
                     }
                 }
                 break;
@@ -676,9 +672,8 @@ public class TopicsShortStoriesTabFragment extends BaseFragment implements View.
                     if (AppUtils.shareGenericImageAndOrLink(getActivity(), uri, getString(R.string.ss_follow_author,
                             sharedStoryItem.getUserName(),
                             AppConstants.USER_PROFILE_SHARE_BASE_URL + sharedStoryItem.getUserId()))) {
-                        Utils.pushShareStoryEvent(getActivity(), "TopicsShortStoriesTabFragment",
-                                userDynamoId + "", sharedStoryItem.getId(),
-                                sharedStoryItem.getUserId() + "~" + sharedStoryItem.getUserName(), "Generic");
+                        Utils.shareEventTracking(getActivity(), "100WS Listing", "Share_Android",
+                                "WSL100_Generic_Share");
                     }
                 }
                 break;

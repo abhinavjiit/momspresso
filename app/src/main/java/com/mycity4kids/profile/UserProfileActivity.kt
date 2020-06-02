@@ -1015,14 +1015,18 @@ class UserProfileActivity : BaseActivity(),
             )
             AppUtils.shareGenericImageAndOrLink(this, uri, shareText)
             if (AppUtils.isPrivateProfile(authorId)) {
-                Utils.pushProfileEvents(
-                    this, "CTA_Share_Private_Profile", "UserProfileActivity",
-                    "Share", "-"
+                Utils.shareEventTracking(
+                    this,
+                    "Self Profile",
+                    "Share_Android",
+                    "SPC_Generic_Share"
                 )
             } else {
-                Utils.pushProfileEvents(
-                    this, "CTA_Share_Public_Profile", "UserProfileActivity",
-                    "Share", "-"
+                Utils.shareEventTracking(
+                    this,
+                    "Public Profile",
+                    "Share_Android",
+                    "PPC_Generic_Share"
                 )
             }
         } catch (e: Exception) {
