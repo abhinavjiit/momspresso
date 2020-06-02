@@ -127,6 +127,7 @@ public class AppConstants {
     public static final String DEEPLINK_PROFILE_URL = "mc4k://www.mycity4kids.com/profile";
     public static final String DEEPLINK_SELF_PROFILE_URL_1 = ".momspresso.com/parenting/admin";
     public static final String DEEPLINK_SELF_PROFILE_URL_2 = ".momspresso.com/parenting/admin/";
+    public static final String DEEPLINK_PROFILE_INVITE_FRIENDS = ".momspresso.com/parenting/admin#INVITE";
     public static final String DEEPLINK_MOMSPRESSO_PROFILE_URL = "mc4k://www.momspresso.com/profile";
     public static final String DEEPLINK_SUGGESTED_TOPIC_URL = "mc4k://www.mycity4kids.com/suggested_topics";
     public static final String DEEPLINK_MOMSPRESSO_SUGGESTED_TOPIC_URL = "mc4k://www.momspresso.com/suggested_topics";
@@ -193,6 +194,8 @@ public class AppConstants {
     public static final String NOTIFICATION_TYPE_STORY_PUBLISH_SUCCESS = "shortStoryPublishSuccess";
     public static final String NOTIFICATION_TYPE_INVITE_FRIENDS = "inviteFriendsDialog";
     public static final String NOTIFICATION_TYPE_VIDEO_LISTING = "videoListing";
+    public static final String NOTIFICATION_TYPE_CONTENT_COMMENTS = "comment";
+    public static final String NOTIFICATION_TYPE_CONTENT_REPLY = "reply";
 
     public static final String NOTIFICATION_CENTER_APP_SETTINGS = "-1";
     public static final String NOTIFICATION_CENTER_WEB_VIEW = "0";
@@ -401,6 +404,7 @@ public class AppConstants {
     public static final String BADGES_DETAIL_REGEX = ".+?(user\\/)[a-zA-Z0-9]+(\\/(badges\\/))[a-zA-Z0-9]+$";
     public static final String MILESTONE_DETAIL_REGEX = ".+?(user\\/)[a-zA-Z0-9]+(\\/(milestones\\/))[a-zA-Z0-9]+$";
     public static final String USER_PROFILE_REGEX = ".+?(user\\/)[a-zA-Z0-9]+$";
+    public static final String USER_PROFILE_INVITE_FRIENDS_REGEX = ".+?(user\\/)[a-zA-Z0-9]+#INVITE";
     public static final String USER_ANALYTICS_REGEX = ".+?(user\\/)[a-zA-Z0-9]+\\/(rank)$";
     public static final String BADGE_ID = "badgeId";
     public static final String MILESTONE_ID = "milestoneId";
