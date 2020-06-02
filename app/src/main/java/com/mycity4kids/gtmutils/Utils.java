@@ -3,6 +3,7 @@ package com.mycity4kids.gtmutils;
 import android.content.Context;
 import android.os.Bundle;
 import android.util.Log;
+import androidx.fragment.app.FragmentActivity;
 import com.google.android.gms.tagmanager.DataLayer;
 import com.google.android.gms.tagmanager.TagManager;
 import com.google.firebase.analytics.FirebaseAnalytics;
@@ -93,11 +94,11 @@ public class Utils {
 
     public static void momVlogEvent(Context context, String currentScreen, String CTA, String videoId, String platform,
             String lang, String userId, String timestamp, String event, String categoryId, String challengeId) {
-        Log.e("MOMVLOG EVENT", "currentScreen="+currentScreen+" || "
-                +"currentScreen="+currentScreen+" || "
-                +"CTA="+CTA+" || "
-                +"event="+event+" || "
-                +"categoryId="+categoryId+" || ");
+        Log.e("MOMVLOG EVENT", "currentScreen=" + currentScreen + " || "
+                + "currentScreen=" + currentScreen + " || "
+                + "CTA=" + CTA + " || "
+                + "event=" + event + " || "
+                + "categoryId=" + categoryId + " || ");
         MixpanelAPI mixpanel = MixpanelAPI.getInstance(BaseApplication.getAppContext(), AppConstants.MIX_PANEL_TOKEN);
         try {
             JSONObject jsonObject = new JSONObject();
@@ -1547,6 +1548,32 @@ public class Utils {
             bundle.putString(GTMTags.Language, "" + SharedPrefUtils.getAppLocale(BaseApplication.getAppContext()));
             FirebaseAnalytics firebaseAnalytics = FirebaseAnalytics.getInstance(context);
             firebaseAnalytics.logEvent("NotificationCenterClick", bundle);
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+    }
+
+    public static void shareEventTracking(Context context, String screen, String objective, String event) {
+        Log.e("ANALYTICS", "share event = " + screen + " --- " + objective + " --- " + event);
+        try {
+            MixpanelAPI mixpanel = MixpanelAPI
+                    .getInstance(BaseApplication.getAppContext(), AppConstants.MIX_PANEL_TOKEN);
+            JSONObject jsonObject = new JSONObject();
+            jsonObject.put("Screen", screen);
+            jsonObject.put("Objective", objective);
+            jsonObject.put("Language", "" + SharedPrefUtils.getAppLocale(BaseApplication.getAppContext()));
+            mixpanel.track(event, jsonObject);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        try {
+            Bundle bundle = new Bundle();
+            bundle.putString("Screen", screen);
+            bundle.putString("Language", "" + SharedPrefUtils.getAppLocale(BaseApplication.getAppContext()));
+            FirebaseAnalytics firebaseAnalytics = FirebaseAnalytics.getInstance(context);
+
+            firebaseAnalytics.logEvent(objective, bundle);
+            firebaseAnalytics.logEvent(event, bundle);
         } catch (Exception ex) {
             ex.printStackTrace();
         }

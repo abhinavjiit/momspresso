@@ -408,15 +408,7 @@ public class VideoRecyclerViewAdapter extends RecyclerView.Adapter<BaseViewHolde
                             responseData.getTitle(), responseData.getAuthor().getFirstName() + " "
                                     + responseData.getAuthor().getLastName());
                     view.getContext().startActivity(Intent.createChooser(shareIntent, "Momspresso"));
-                    Utils.pushShareVlogEvent(context, "DetailVideoScreen", userDynamoId + "",
-                            responseData.getId(),
-                            responseData.getAuthor().getId() + "~" + responseData.getAuthor().getFirstName() + " "
-                                    + responseData.getAuthor().getLastName(), "CommonShare");
-
-                    Utils.momVlogEvent(context, "Video Detail", "Share", "", "android",
-                            SharedPrefUtils.getAppLocale(context),
-                            SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId(),
-                            String.valueOf(System.currentTimeMillis()), "Vlogs_Engagement_CTA", "", "");
+                    Utils.shareEventTracking(context, "Video Detail", "Share_Android", "VD_Generic_Share");
                 } catch (Exception e) {
                     FirebaseCrashlytics.getInstance().recordException(e);
                     Log.d("MC4kException", Log.getStackTraceString(e));
@@ -468,15 +460,7 @@ public class VideoRecyclerViewAdapter extends RecyclerView.Adapter<BaseViewHolde
                         whatsappIntent.setPackage("com.whatsapp");
                         whatsappIntent.putExtra(Intent.EXTRA_TEXT, shareData);
                         context.startActivity(whatsappIntent);
-                        Utils.pushShareVlogEvent(context, "DetailVideoScreen", userDynamoId + "",
-                                responseData.getId(),
-                                responseData.getAuthor().getId() + "~" + responseData.getAuthor().getFirstName()
-                                        + " " + responseData.getAuthor().getLastName(), "Whatsapp");
-
-                        Utils.momVlogEvent(context, "Video Detail", "Whatsapp", "", "android",
-                                SharedPrefUtils.getAppLocale(context),
-                                SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId(),
-                                String.valueOf(System.currentTimeMillis()), "Vlogs_Engagement_CTA", "", "");
+                        Utils.shareEventTracking(context, "Video Detail", "Share_Android", "VD_Whatsapp_Share");
                     } catch (android.content.ActivityNotFoundException ex) {
                         Toast.makeText(context,
                                 context.getString(R.string.moderation_or_share_whatsapp_not_installed),

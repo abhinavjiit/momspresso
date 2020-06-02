@@ -198,7 +198,7 @@ public class SplashActivity extends BaseActivity {
             try {
                 JSONObject prop = new JSONObject();
                 prop.put("userId", SharedPrefUtils.getUserDetailModel(this).getDynamoId());
-                prop.put("lang", Locale.getDefault().getLanguage());
+                prop.put("Language", Locale.getDefault().getLanguage());
                 mixpanel.registerSuperProperties(prop);
             } catch (Exception e) {
                 FirebaseCrashlytics.getInstance().recordException(e);
