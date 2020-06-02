@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:id="@+id/root"
+    android:id="@+id/rootShimmer"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@android:color/background_light">
@@ -12,14 +12,14 @@
 
 
         <RelativeLayout
-            android:id="@+id/titleHeaderRelativeLayout"
+            android:id="@+id/titleHeaderRelativeLayout1"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@color/white_color">
 
 
             <androidx.appcompat.widget.AppCompatImageView
-                android:id="@+id/collectionImageVIEW"
+                android:id="@+id/collectionImageVIEW1"
                 android:layout_width="match_parent"
                 android:layout_height="110dp"
                 android:scaleType="fitXY"
@@ -34,13 +34,13 @@
             <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_alignBottom="@+id/collectionImageVIEW"
+                android:layout_alignBottom="@+id/collectionImageVIEW1"
                 android:layout_marginStart="@dimen/space_40"
                 android:layout_marginBottom="@dimen/space_12"
                 android:padding="@dimen/space_10">
 
                 <com.mycity4kids.widget.CustomFontTextView
-                    android:id="@+id/followersCount"
+                    android:id="@+id/followersCount1"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_centerVertical="true"
@@ -50,12 +50,12 @@
                     app:fontName="OpenSans-Bold.ttf" />
 
                 <com.mycity4kids.widget.CustomFontTextView
-                    android:id="@+id/followersTextView"
+                    android:id="@+id/followersTextView1"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_centerVertical="true"
                     android:layout_marginLeft="@dimen/space_10"
-                    android:layout_toEndOf="@id/followersCount"
+                    android:layout_toEndOf="@id/followersCount1"
                     android:background="@color/background"
                     android:drawableRight="@drawable/arrow_right"
                     android:drawableTint="@color/background"
@@ -66,17 +66,17 @@
                     app:fontName="open_sans.ttf" />
 
                 <androidx.appcompat.widget.AppCompatImageView
-                    android:id="@+id/rightArrow"
+                    android:id="@+id/rightArrow1"
                     android:layout_width="12dp"
                     android:layout_height="12dp"
                     android:layout_centerVertical="true"
-                    android:layout_toRightOf="@id/followersTextView"
+                    android:layout_toRightOf="@id/followersTextView1"
                     android:src="@drawable/arrow_right"
                     android:tint="@color/white_color"
                     android:visibility="gone" />
 
                 <com.mycity4kids.widget.CustomFontTextView
-                    android:id="@+id/muteVideoSwitch"
+                    android:id="@+id/muteVideoSwitch1"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_alignParentEnd="true"
@@ -88,7 +88,7 @@
             </RelativeLayout>
 
             <RelativeLayout
-                android:id="@+id/upperToolbarHeader"
+                android:id="@+id/upperToolbarHeader1"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="@dimen/space_10"
@@ -97,7 +97,7 @@
                 app:layout_collapseMode="pin">
 
                 <LinearLayout
-                    android:id="@+id/linearLayoutForFollowingShare"
+                    android:id="@+id/linearLayoutForFollowingShare1"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_alignParentEnd="true"
@@ -107,7 +107,7 @@
                     android:orientation="horizontal">
 
                     <com.mycity4kids.widget.CustomFontTextView
-                        android:id="@+id/followFollowingTextView"
+                        android:id="@+id/followFollowingTextView1"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center_vertical"
@@ -124,7 +124,7 @@
                         app:fontName="Helvetica Bold.ttf" />
 
                     <androidx.appcompat.widget.AppCompatImageView
-                        android:id="@+id/share"
+                        android:id="@+id/share1"
                         android:layout_width="30dp"
                         android:layout_height="30dp"
                         android:layout_gravity="center_vertical"
@@ -134,7 +134,7 @@
                         android:tint="@color/white_color" />
 
                     <androidx.appcompat.widget.AppCompatImageView
-                        android:id="@+id/setting"
+                        android:id="@+id/setting1"
                         android:layout_width="30dp"
                         android:layout_height="30dp"
                         android:layout_marginLeft="@dimen/space_5"
@@ -146,13 +146,13 @@
                 </LinearLayout>
 
                 <com.mycity4kids.widget.CustomFontTextView
-                    android:id="@+id/collectionNameTextView"
+                    android:id="@+id/collectionNameTextView1"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_alignParentStart="true"
                     android:layout_centerVertical="true"
                     android:layout_marginRight="@dimen/space_20"
-                    android:layout_toStartOf="@id/linearLayoutForFollowingShare"
+                    android:layout_toStartOf="@id/linearLayoutForFollowingShare1"
                     android:background="@color/background"
                     android:drawablePadding="@dimen/space_10"
                     android:drawableTint="@color/white_color"
@@ -175,10 +175,10 @@
             android:id="@+id/rl"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/titleHeaderRelativeLayout">
+            android:layout_below="@+id/titleHeaderRelativeLayout1">
 
             <com.mycity4kids.widget.CustomFontTextView
-                android:id="@+id/descriptionTextView"
+                android:id="@+id/descriptionTextView1"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerHorizontal="true"
@@ -193,10 +193,10 @@
                 android:visibility="visible" />
 
             <com.mycity4kids.widget.CustomFontTextView
-                android:id="@+id/collectionDescription"
+                android:id="@+id/collectionDescription1"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_below="@id/descriptionTextView"
+                android:layout_below="@id/descriptionTextView1"
                 android:layout_marginStart="@dimen/space_16"
                 android:layout_marginTop="@dimen/space_10"
                 android:layout_marginEnd="@dimen/space_16"

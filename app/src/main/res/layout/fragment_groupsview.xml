@@ -10,7 +10,6 @@
         android:layout_height="wrap_content"
         android:background="@color/white_color"
         android:elevation="3dp"
-        android:minHeight="?attr/actionBarSize"
         android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
         app:tabIndicatorColor="@color/campaign_list_buttons"
         app:tabIndicatorHeight="3dp"

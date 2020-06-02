@@ -25,57 +25,27 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerVertical="true"
-        android:text="@string/all_invite"
+        android:text="@string/invite_friends_facebook"
         android:textColor="@color/user_articles.toolbar.title"
         android:textSize="20sp"
-        app:fontName="oswald_regular.ttf" />
+        app:fontName="Roboto-Bold.ttf" />
 
     </RelativeLayout>
   </androidx.appcompat.widget.Toolbar>
 
-  <RelativeLayout
-    android:id="@+id/fbFriendsContainer"
+  <TextView
+    android:id="@+id/inviteDescTextView"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_below="@id/toolbar"
-    android:padding="20dp">
-
-    <androidx.appcompat.widget.AppCompatImageView
-      android:id="@+id/facebookImageView"
-      android:layout_width="60dp"
-      android:layout_height="60dp"
-      android:layout_alignParentStart="true"
-      android:layout_centerVertical="true"
-      android:src="@drawable/ic_badge_facebook" />
-
-    <com.mycity4kids.widget.CustomFontTextView
-      android:id="@+id/getFBFriendsTextView"
-      android:layout_width="match_parent"
-      android:layout_height="wrap_content"
-      android:layout_centerVertical="true"
-      android:layout_toStartOf="@+id/arrowImageView"
-      android:layout_toEndOf="@+id/facebookImageView"
-      android:gravity="center"
-      android:paddingRight="16dp"
-      android:text="Invite Facebook Friends"
-      android:textSize="20sp"
-      android:textStyle="bold" />
-
-    <androidx.appcompat.widget.AppCompatImageView
-      android:id="@+id/arrowImageView"
-      android:layout_width="wrap_content"
-      android:layout_height="wrap_content"
-      android:layout_alignParentEnd="true"
-      android:layout_centerVertical="true"
-      android:src="@drawable/arrow_right" />
-  </RelativeLayout>
-
+    android:layout_below="@+id/toolbar"
+    android:padding="16dp"
+    android:text="INVITE THEM TO FOLLOW YOUR PROFILE" />
 
   <androidx.recyclerview.widget.RecyclerView
     android:id="@+id/recyclerView"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_below="@id/toolbar"
+    android:layout_below="@id/inviteDescTextView"
     android:visibility="gone" />
 
   <TextView
@@ -85,6 +55,7 @@
     android:gravity="center"
     android:textColor="@color/black_color"
     android:visibility="visible" />
+
   <ProgressBar
     android:id="@+id/progressBar"
     android:layout_width="wrap_content"

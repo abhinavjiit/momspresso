@@ -10,6 +10,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.google.firebase.crashlytics.FirebaseCrashlytics
 import com.mycity4kids.R
 import com.mycity4kids.models.response.FacebookInviteFriendsData
+import com.mycity4kids.widget.MomspressoButtonWidget
 import com.squareup.picasso.Picasso
 
 class FBInviteFriendsAdapter(private val mListener: RecyclerViewClickListener) :
@@ -26,26 +27,23 @@ class FBInviteFriendsAdapter(private val mListener: RecyclerViewClickListener) :
             parent,
             false
         )
-        return FBInviteFriendsViewHolder(v0, mListener)
+        return FBInviteFriendsViewHolder(v0)
     }
 
-    inner class FBInviteFriendsViewHolder(itemView: View, listener: RecyclerViewClickListener) :
+    inner class FBInviteFriendsViewHolder(itemView: View) :
         RecyclerView.ViewHolder(itemView), View.OnClickListener {
         internal var authorNameTextView: TextView
         internal var userImageView: ImageView
-        internal var inviteTextView: TextView
-        internal var invitedTextView: TextView
+        internal var inviteButton: MomspressoButtonWidget
 
         init {
             authorNameTextView = itemView.findViewById<View>(R.id.authorNameTextView) as TextView
             userImageView = itemView.findViewById<View>(R.id.authorImageView) as ImageView
-            inviteTextView = itemView.findViewById<View>(R.id.inviteTextView) as TextView
-            invitedTextView = itemView.findViewById<View>(R.id.invitedTextView) as TextView
+            inviteButton = itemView.findViewById<View>(R.id.inviteButton) as MomspressoButtonWidget
 
             userImageView.setOnClickListener(this)
             authorNameTextView.setOnClickListener(this)
-            inviteTextView.setOnClickListener(this)
-            invitedTextView.setOnClickListener(this)
+            inviteButton.setOnClickListener(this)
             itemView.setOnClickListener(this)
         }
 
@@ -73,12 +71,12 @@ class FBInviteFriendsAdapter(private val mListener: RecyclerViewClickListener) :
             FirebaseCrashlytics.getInstance().recordException(e)
             Log.d("MC4kException", Log.getStackTraceString(e))
         }
-        if (list?.get(position)?.isFollowing == "1") {
-            holder.inviteTextView.visibility = View.GONE
-            holder.invitedTextView.visibility = View.VISIBLE
+        if (list?.get(position)?.isInvited == "1") {
+            holder.inviteButton.setText(holder.inviteButton.context.getString(R.string.all_invited))
+            holder.inviteButton.isSelected = false
         } else {
-            holder.inviteTextView.visibility = View.VISIBLE
-            holder.invitedTextView.visibility = View.GONE
+            holder.inviteButton.setText(holder.inviteButton.context.getString(R.string.all_invite))
+            holder.inviteButton.isSelected = true
         }
     }
 

@@ -4139,11 +4139,16 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
             };
 
     private void updateBookmarkStatus(int status, AddBookmarkResponse responseData) {
-        if (responseData.getCode() == 200 && Constants.SUCCESS.equals(responseData.getStatus())) {
-            if (status == ADD_BOOKMARK) {
-                todaysBestListData.get(todaysBestBookmarkIdIndex)
-                        .setBookmarkId(responseData.getData().getResult().getBookmarkId());
+        try {
+            if (responseData.getCode() == 200 && Constants.SUCCESS.equals(responseData.getStatus())) {
+                if (status == ADD_BOOKMARK) {
+                    todaysBestListData.get(todaysBestBookmarkIdIndex)
+                            .setBookmarkId(responseData.getData().getResult().getBookmarkId());
+                }
             }
+        } catch (Exception e) {
+            FirebaseCrashlytics.getInstance().recordException(e);
+            Log.d("MC4kException", Log.getStackTraceString(e));
         }
     }
 

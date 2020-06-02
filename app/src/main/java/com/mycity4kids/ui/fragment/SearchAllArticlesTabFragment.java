@@ -36,12 +36,14 @@ public class SearchAllArticlesTabFragment extends BaseFragment implements
         SearchArticlesListingAdapter.RecyclerViewClickListener {
 
     private boolean isLastPageReached = true;
-    private int pastVisiblesItems, visibleItemCount, totalItemCount;
+    private int pastVisiblesItems;
+    private int visibleItemCount;
+    private int totalItemCount;
     private String searchName = "";
     private int nextPageNumber = 1;
     private boolean isReuqestRunning = true;
 
-    private RelativeLayout mLodingView;
+    private RelativeLayout loadingView;
     SearchArticlesListingAdapter searchArticlesListingAdapter;
     ArrayList<SearchArticleResult> articleList;
     RecyclerView recyclerView;
@@ -54,7 +56,7 @@ public class SearchAllArticlesTabFragment extends BaseFragment implements
 
         recyclerView = (RecyclerView) view.findViewById(R.id.recyclerView);
         noBlogsTextView = (TextView) view.findViewById(R.id.noBlogsTextView);
-        mLodingView = (RelativeLayout) view.findViewById(R.id.relativeLoadingView);
+        loadingView = (RelativeLayout) view.findViewById(R.id.relativeLoadingView);
 
         noBlogsTextView.setText(BaseApplication.getAppContext().getString(R.string.no_articles_found));
 
@@ -72,17 +74,14 @@ public class SearchAllArticlesTabFragment extends BaseFragment implements
         searchArticlesListingAdapter.setListData(articleList);
 
         recyclerView.setAdapter(searchArticlesListingAdapter);
-        if (StringUtils.isNullOrEmpty(searchName)) {
-
-        } else {
-            searchArticlesAPI();
+        if (!StringUtils.isNullOrEmpty(searchName)) {
+            searchArticlesApi();
         }
 
         recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
             public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
-                if (dy > 0) //check for scroll down
-                {
+                if (dy > 0) {
                     visibleItemCount = llm.getChildCount();
                     totalItemCount = llm.getItemCount();
                     pastVisiblesItems = llm.findFirstVisibleItemPosition();
@@ -90,8 +89,8 @@ public class SearchAllArticlesTabFragment extends BaseFragment implements
                     if (!isReuqestRunning && !isLastPageReached) {
                         if ((visibleItemCount + pastVisiblesItems) >= totalItemCount) {
                             isReuqestRunning = true;
-                            mLodingView.setVisibility(View.VISIBLE);
-                            searchArticlesAPI();
+                            loadingView.setVisibility(View.VISIBLE);
+                            searchArticlesApi();
                         }
                     }
                 }
@@ -132,8 +131,7 @@ public class SearchAllArticlesTabFragment extends BaseFragment implements
         }
     }
 
-    public void searchArticlesAPI() {
-
+    private void searchArticlesApi() {
         if (!ConnectivityUtils.isNetworkEnabled(getActivity())) {
             if (isAdded()) {
                 ((SearchAllActivity) getActivity()).showToast(getString(R.string.connectivity_unavailable));
@@ -142,11 +140,10 @@ public class SearchAllArticlesTabFragment extends BaseFragment implements
         }
 
         Retrofit retro = BaseApplication.getInstance().getRetrofit();
-        SearchArticlesAuthorsAPI searchArticlesAuthorsAPI = retro.create(SearchArticlesAuthorsAPI.class);
+        SearchArticlesAuthorsAPI searchArticlesAuthorsApi = retro.create(SearchArticlesAuthorsAPI.class);
         int from = (nextPageNumber - 1) * 15 + 1;
-        Call<SearchResponse> call = searchArticlesAuthorsAPI.getSearchTopicsResult(searchName,
+        Call<SearchResponse> call = searchArticlesAuthorsApi.getSearchTopicsResult(searchName,
                 "article", from, from + 15);
-
         call.enqueue(searchTopicsResponseCallback);
     }
 
@@ -157,7 +154,7 @@ public class SearchAllArticlesTabFragment extends BaseFragment implements
         nextPageNumber = 1;
         isLastPageReached = false;
         searchName = searchTxt;
-        searchArticlesAPI();
+        searchArticlesApi();
     }
 
     public void resetOnceLoadedFlag(String searchTxt) {
@@ -169,20 +166,19 @@ public class SearchAllArticlesTabFragment extends BaseFragment implements
     }
 
 
-    Callback<SearchResponse> searchTopicsResponseCallback = new Callback<SearchResponse>() {
+    private Callback<SearchResponse> searchTopicsResponseCallback = new Callback<SearchResponse>() {
         @Override
         public void onResponse(Call<SearchResponse> call, retrofit2.Response<SearchResponse> response) {
             isReuqestRunning = false;
-            if (mLodingView.getVisibility() == View.VISIBLE) {
-                mLodingView.setVisibility(View.GONE);
+            if (loadingView.getVisibility() == View.VISIBLE) {
+                loadingView.setVisibility(View.GONE);
             }
             if (isAdded()) {
-                if (response == null || response.body() == null) {
-                    if (mLodingView.getVisibility() == View.VISIBLE) {
-                        mLodingView.setVisibility(View.GONE);
+                if (response.body() == null) {
+                    if (loadingView.getVisibility() == View.VISIBLE) {
+                        loadingView.setVisibility(View.GONE);
                     }
                     ((SearchAllActivity) getActivity()).showToast(getString(R.string.server_went_wrong));
-
                     return;
                 }
             }
@@ -205,8 +201,8 @@ public class SearchAllArticlesTabFragment extends BaseFragment implements
 
         @Override
         public void onFailure(Call<SearchResponse> call, Throwable t) {
-            if (mLodingView.getVisibility() == View.VISIBLE) {
-                mLodingView.setVisibility(View.GONE);
+            if (loadingView.getVisibility() == View.VISIBLE) {
+                loadingView.setVisibility(View.GONE);
             }
             if (getActivity() != null) {
                 ((SearchAllActivity) getActivity()).showToast(getString(R.string.server_went_wrong));
@@ -218,29 +214,35 @@ public class SearchAllArticlesTabFragment extends BaseFragment implements
 
     @Override
     public void onClick(View view, int position) {
-        SearchArticleResult searchData = articleList.get(position);
-        if ("1".equals(searchData.getContentType())) {
-            Intent intent = new Intent(getActivity(), ShortStoryContainerActivity.class);
-            intent.putExtra(Constants.ARTICLE_ID, searchData.getId());
-            intent.putExtra(Constants.AUTHOR_ID, searchData.getUserId());
-            intent.putExtra(Constants.BLOG_SLUG, searchData.getBlogSlug());
-            intent.putExtra(Constants.TITLE_SLUG, searchData.getTitleSlug());
-            intent.putExtra(Constants.ARTICLE_OPENED_FROM, "SearchScreen");
-            intent.putExtra(Constants.FROM_SCREEN, "SearchScreen");
-            intent.putExtra(Constants.ARTICLE_INDEX, "" + position);
-            intent.putExtra(Constants.AUTHOR, searchData.getUserId() + "~");
-            startActivity(intent);
-        } else {
-            Intent intent = new Intent(getActivity(), ArticleDetailsContainerActivity.class);
-            intent.putExtra(Constants.ARTICLE_ID, searchData.getId());
-            intent.putExtra(Constants.AUTHOR_ID, searchData.getUserId());
-            intent.putExtra(Constants.BLOG_SLUG, searchData.getBlogSlug());
-            intent.putExtra(Constants.TITLE_SLUG, searchData.getTitleSlug());
-            intent.putExtra(Constants.ARTICLE_OPENED_FROM, "SearchScreen");
-            intent.putExtra(Constants.FROM_SCREEN, "SearchScreen");
-            intent.putExtra(Constants.ARTICLE_INDEX, "" + position);
-            intent.putExtra(Constants.AUTHOR, searchData.getUserId() + "~");
-            startActivity(intent);
+        try {
+            SearchArticleResult searchData = articleList.get(position);
+            if ("1".equals(searchData.getContentType())) {
+                Intent intent = new Intent(getActivity(), ShortStoryContainerActivity.class);
+                intent.putExtra(Constants.ARTICLE_ID, searchData.getId());
+                intent.putExtra(Constants.AUTHOR_ID, searchData.getUserId());
+                intent.putExtra(Constants.BLOG_SLUG, searchData.getBlogSlug());
+                intent.putExtra(Constants.TITLE_SLUG, searchData.getTitleSlug());
+                intent.putExtra(Constants.ARTICLE_OPENED_FROM, "SearchScreen");
+                intent.putExtra(Constants.FROM_SCREEN, "SearchScreen");
+                intent.putExtra(Constants.ARTICLE_INDEX, "" + position);
+                intent.putExtra(Constants.AUTHOR, searchData.getUserId() + "~");
+                startActivity(intent);
+            } else {
+                Intent intent = new Intent(getActivity(), ArticleDetailsContainerActivity.class);
+                intent.putExtra(Constants.ARTICLE_ID, searchData.getId());
+                intent.putExtra(Constants.AUTHOR_ID, searchData.getUserId());
+                intent.putExtra(Constants.BLOG_SLUG, searchData.getBlogSlug());
+                intent.putExtra(Constants.TITLE_SLUG, searchData.getTitleSlug());
+                intent.putExtra(Constants.ARTICLE_OPENED_FROM, "SearchScreen");
+                intent.putExtra(Constants.FROM_SCREEN, "SearchScreen");
+                intent.putExtra(Constants.ARTICLE_INDEX, "" + position);
+                intent.putExtra(Constants.AUTHOR, searchData.getUserId() + "~");
+                startActivity(intent);
+            }
+        } catch (Exception e) {
+            FirebaseCrashlytics.getInstance().recordException(e);
+            Log.d("MC4kException", Log.getStackTraceString(e));
         }
+
     }
 }
