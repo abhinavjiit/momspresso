@@ -26,18 +26,17 @@ import com.mycity4kids.preference.SharedPrefUtils
 import com.mycity4kids.profile.UserProfileActivity
 import com.mycity4kids.retrofitAPIsInterfaces.FollowAPI
 import com.mycity4kids.ui.adapter.FBInviteFriendsAdapter
-import com.mycity4kids.utils.ToastUtils
 import okhttp3.ResponseBody
 import org.json.JSONObject
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 
-class UserInviteFBSuggestionActivity : BaseActivity(), View.OnClickListener,
+class UserInviteFBSuggestionActivity : BaseActivity(),
     FBInviteFriendsAdapter.RecyclerViewClickListener, IFacebookUser {
 
     private var recyclerView: RecyclerView? = null
-    private var progressBar: ProgressBar? = null
+    private lateinit var progressBar: ProgressBar
     private var emptyList: TextView? = null
     var fbFriendsContainer: RelativeLayout? = null
     private var userDynamoId: String? = null
@@ -60,7 +59,6 @@ class UserInviteFBSuggestionActivity : BaseActivity(), View.OnClickListener,
         supportActionBar!!.setDisplayHomeAsUpEnabled(true)
         supportActionBar!!.setDisplayShowHomeEnabled(true)
 
-        fbFriendsContainer?.setOnClickListener(this)
         callbackManager = CallbackManager.Factory.create()
         adapter = FBInviteFriendsAdapter(this)
         val llm = LinearLayoutManager(this)
@@ -68,16 +66,66 @@ class UserInviteFBSuggestionActivity : BaseActivity(), View.OnClickListener,
         recyclerView?.layoutManager = llm
         recyclerView?.adapter = adapter
 
+        progressBar.visibility = View.VISIBLE
+
         val retrofit = BaseApplication.getInstance().retrofit
         val fbFriendsApi = retrofit.create(FollowAPI::class.java)
         val call = fbFriendsApi.getFacebookFriendsToInvite()
         call.enqueue(getFacebookFriendsResponseCallback)
     }
 
-    override fun getFacebookUser(jObject: JSONObject?, token: String?) {
-        Log.d("FB Data", "+++" + jObject.toString())
-        val arr = jObject?.getJSONObject("friends")?.getJSONArray("data")
+    private var getFacebookFriendsResponseCallback: Callback<FacebookInviteFriendsResponse> =
+        object : Callback<FacebookInviteFriendsResponse> {
+            override fun onResponse(
+                call: Call<FacebookInviteFriendsResponse>,
+                response: Response<FacebookInviteFriendsResponse>
+            ) {
+                if (response.body() == null) {
+                    progressBar.visibility = View.GONE
+                    showToast(getString(R.string.went_wrong))
+                    return
+                }
+                try {
+                    val facebookFriendsResponse = response.body()
+                    facebookFriendsResponse?.let { response ->
+                        if (response.data?.get(0)?.hasExpired!!) {
+                            refreshFbToken()
+                        } else {
+                            progressBar.visibility = View.GONE
+                            response.data[0].friendList?.let {
+                                facebookFriendList.addAll(it)
+                                if (facebookFriendList.isNotEmpty()) {
+                                    recyclerView?.visibility = View.VISIBLE
+                                    emptyList?.visibility = View.GONE
+                                } else {
+                                    recyclerView?.visibility = View.GONE
+                                    emptyList?.text =
+                                        getString(R.string.no_facebook_friends)
+                                }
+                                adapter?.setListData(it)
+                                adapter?.notifyDataSetChanged()
+                            }
+                        }
+                    }
+                } catch (e: Exception) {
+                    progressBar.visibility = View.GONE
+                    FirebaseCrashlytics.getInstance().recordException(e)
+                    Log.d("MC4kException", Log.getStackTraceString(e))
+                }
+            }
 
+            override fun onFailure(call: Call<FacebookInviteFriendsResponse>, t: Throwable) {
+                progressBar.visibility = View.GONE
+                FirebaseCrashlytics.getInstance().recordException(t)
+                Log.d("MC4kException", Log.getStackTraceString(t))
+            }
+        }
+
+    private fun refreshFbToken() {
+        FacebookUtils.facebookLogin(this, this)
+    }
+
+    override fun getFacebookUser(jObject: JSONObject?, token: String?) {
         jObject?.let { json ->
             token?.let {
                 val retrofit = BaseApplication.getInstance().retrofit
@@ -89,69 +137,20 @@ class UserInviteFBSuggestionActivity : BaseActivity(), View.OnClickListener,
         }
     }
 
-    private var getFacebookFriendsResponseCallback: Callback<FacebookInviteFriendsResponse> =
-        object : Callback<FacebookInviteFriendsResponse> {
-            override fun onResponse(
-                call: Call<FacebookInviteFriendsResponse>,
-                response: Response<FacebookInviteFriendsResponse>
-            ) {
-                if (response.body() == null) {
-                    this@UserInviteFBSuggestionActivity.let {
-                        ToastUtils.showToast(it, getString(R.string.went_wrong))
-                    }
-                    return
-                }
-                try {
-                    val facebookFriendsResponse = response.body()
-                    facebookFriendsResponse?.let { response ->
-                        facebookFriendsResponse.data?.get(0)?.friendList?.let {
-                            facebookFriendList.addAll(it)
-                            if (facebookFriendList.isNotEmpty() && !facebookFriendsResponse.data.get(
-                                    0
-                                ).hasExpired) {
-                                recyclerView?.visibility = View.VISIBLE
-                                fbFriendsContainer?.visibility = View.GONE
-                                emptyList?.visibility = View.GONE
-                            } else {
-                                recyclerView?.visibility = View.GONE
-                                fbFriendsContainer?.visibility = View.VISIBLE
-                                emptyList?.text =
-                                    "None of your friends are logged into momspresso using facebook"
-                            }
-                            adapter?.setListData(it)
-                            adapter?.notifyDataSetChanged()
-                        }
-                    }
-                } catch (e: Exception) {
-                    //                    showToast(getString(R.string.server_went_wrong))
-                    FirebaseCrashlytics.getInstance().recordException(e)
-                    Log.d("MC4kException", Log.getStackTraceString(e))
-                }
-            }
-
-            override fun onFailure(call: Call<FacebookInviteFriendsResponse>, t: Throwable) {
-                FirebaseCrashlytics.getInstance().recordException(t)
-                Log.d("MC4kException", Log.getStackTraceString(t))
-            }
-        }
-
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
         callbackManager?.onActivityResult(requestCode, resultCode, data)
         FacebookUtils.onActivityResult(this, requestCode, resultCode, data)
     }
 
-    override fun onClick(v: View) {
-        FacebookUtils.facebookLogin(this, this)
-    }
-
     override fun onClick(view: View, position: Int) {
         when {
-            view.id == R.id.inviteTextView -> {
-                facebookFriendList.get(position).isFollowing = "1"
-                adapter?.notifyDataSetChanged()
-                facebookFriendList.get(position).id?.let { hitInviteAPI(it) }
-                //                facebookFriendList.get(position).id?.let { hitInviteAPI(it, "1") }
+            view.id == R.id.inviteButton -> {
+                if (facebookFriendList.get(position).isInvited != "1") {
+                    facebookFriendList.get(position).isInvited = "1"
+                    adapter?.notifyDataSetChanged()
+                    facebookFriendList.get(position).id?.let { hitInviteAPI(it) }
+                }
             }
             view.id == R.id.authorNameTextView || view.id == R.id.authorImageView -> {
                 this.let {

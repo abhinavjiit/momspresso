@@ -1454,8 +1454,7 @@ Thank you! We will be reviewing your story. You can expect to hear from us withi
   <string name="all_live_challenges">Live Challenges</string>
   <string name="view_comments">View Comments</string>
   <string name="add_vlogs_detail_select_tag">ટેગ પસંદ કરો</string>
-  <string name="fb_invited_friend">Invited</string>
-  <string name="fb_invite_friend">Invite</string>
+  <string name="all_invited">Invited</string>
   <string name="detail_bottom_survey_completed">Survey Completed</string>
   <string name="label_survey_reject">Unfortunately, you did not qualify to complete the survey.</string>
   <string name="detail_bottom_survey_rejected">Survey rejected</string>
@@ -1464,4 +1463,5 @@ Thank you! We will be reviewing your story. You can expect to hear from us withi
   <string name="choose_video_from_gallery">Choose video from gallery</string>
   <string name="see_more_challenge">SEE MORE CHALLENGES</string>
   <string name="vlog_tutorial">Vlog Tutorial</string>
+  <string name="no_facebook_friends">None of your friends are logged into momspresso using facebook</string>
 </resources>

@@ -24,67 +24,43 @@
     android:layout_height="wrap_content"
     android:layout_centerVertical="true"
     android:layout_marginStart="5dp"
-    android:layout_toStartOf="@+id/invitedTextView"
     android:layout_toEndOf="@+id/authorImageView"
     android:background="@color/white_color"
     android:gravity="center_vertical"
     android:text=""
     android:textColor="@color/follower_following_list.author_name"
     android:textSize="14sp"
-    app:fontName="oswald_regular.ttf" />
+    app:fontName="Roboto-Medium.ttf" />
 
-  <com.mycity4kids.widget.CustomFontTextView
-    android:id="@+id/inviteTextView"
+  <com.mycity4kids.widget.MomspressoButtonWidget
+    android:id="@+id/inviteButton"
     android:layout_width="100dp"
     android:layout_height="wrap_content"
     android:layout_alignParentEnd="true"
     android:layout_centerVertical="true"
     android:layout_marginEnd="20dp"
-    android:background="@drawable/follow_topic_author_bg"
     android:gravity="center"
     android:paddingLeft="10dp"
     android:paddingTop="10dp"
     android:paddingRight="10dp"
     android:paddingBottom="10dp"
-    android:text="@string/fb_invite_friend"
-    android:textColor="@color/app_red"
+    android:text="@string/all_invite"
+    android:textAllCaps="true"
+    android:textColor="@color/white_color"
     android:textSize="14sp"
-    app:fontName="oswald.ttf" />
+    app:fb_borderWidth="2dp"
+    app:fb_defaultColor="@color/app_red"
+    app:fb_disabledBorderColor="@color/app_grey"
+    app:fb_disabledColor="@color/white_color"
+    app:fb_disabledTextColor="@color/app_grey"
+    app:fb_radius="20dp"
+    app:fb_textAllCaps="true" />
 
-  <com.mycity4kids.widget.CustomFontTextView
-    android:id="@+id/invitedTextView"
-    android:layout_width="100dp"
-    android:layout_height="wrap_content"
-    android:layout_alignParentEnd="true"
-    android:layout_centerVertical="true"
-    android:layout_marginEnd="20dp"
-    android:background="@drawable/follow_topic_author_bg"
-    android:foregroundGravity="center"
-    android:gravity="center"
-    android:paddingLeft="10dp"
-    android:paddingTop="10dp"
-    android:paddingRight="10dp"
-    android:paddingBottom="10dp"
-    android:text="@string/fb_invited_friend"
-    android:textColor="@color/app_red"
-    android:textSize="14sp"
-    app:fontName="oswald.ttf" />
-
-  <RelativeLayout
-    android:id="@+id/relativeLoadingView"
+  <View
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:layout_alignEnd="@+id/inviteTextView"
-    android:layout_centerVertical="true"
-    android:layout_toEndOf="@+id/authorNameTextView"
-    android:visibility="gone">
-
-    <ImageView
-      android:id="@+id/imgLoader"
-      android:layout_width="wrap_content"
-      android:layout_height="wrap_content"
-      android:layout_centerInParent="true"
-      android:src="@drawable/progress_spinner" />
-  </RelativeLayout>
-
+    android:layout_height="1dp"
+    android:layout_below="@+id/authorImageView"
+    android:layout_marginStart="20dp"
+    android:layout_marginEnd="20dp"
+    android:background="@color/light_underline" />
 </RelativeLayout>

@@ -318,12 +318,18 @@ public class GroupDetailsActivity extends BaseActivity implements View.OnClickLi
             dialog.show();
         }
         getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
-        Toast toast = Toast
-                .makeText(this, getResources().getString(R.string.group_detail_activity_toast_text), Toast.LENGTH_LONG);
-        LinearLayout toastLayout = (LinearLayout) toast.getView();
-        TextView toastTV = (TextView) toastLayout.getChildAt(0);
-        toastTV.setTextSize(16);
-        toast.show();
+        try {
+            Toast toast = Toast
+                    .makeText(this, getResources().getString(R.string.group_detail_activity_toast_text),
+                            Toast.LENGTH_LONG);
+            LinearLayout toastLayout = (LinearLayout) toast.getView();
+            TextView toastTV = (TextView) toastLayout.getChildAt(0);
+            toastTV.setTextSize(16);
+            toast.show();
+        } catch (Exception e) {
+            FirebaseCrashlytics.getInstance().recordException(e);
+            Log.d("MC4kException", Log.getStackTraceString(e));
+        }
         bottomSheetStateChange();
         String[] sections = {
                 getString(R.string.groups_sections_about), getString(R.string.groups_sections_discussions),

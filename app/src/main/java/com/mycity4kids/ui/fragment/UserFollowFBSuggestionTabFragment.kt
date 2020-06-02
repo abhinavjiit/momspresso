@@ -70,27 +70,15 @@ class UserFollowFBSuggestionTabFragment : BaseFragment(), View.OnClickListener,
         recyclerView?.layoutManager = llm
         recyclerView?.adapter = adapter
 
+        fbFriendsContainer?.visibility = View.GONE
+        progressBar?.visibility = View.VISIBLE
+
         val retrofit = BaseApplication.getInstance().retrofit
         val fbFriendsApi = retrofit.create(FollowAPI::class.java)
         val call = fbFriendsApi.getFacebookFriendsToInvite()
         call.enqueue(getFacebookFriendsResponseCallback)
 
         return view
-    }
-
-    override fun getFacebookUser(jObject: JSONObject?, token: String?) {
-        Log.d("FB Data", "+++" + jObject.toString())
-        val arr = jObject?.getJSONObject("friends")?.getJSONArray("data")
-
-        jObject?.let { json ->
-            token?.let {
-                val retrofit = BaseApplication.getInstance().retrofit
-                val facebookFriendsRequest = FacebookFriendsRequest(it, json.getString("id"))
-                val fbFriendsApi = retrofit.create(FollowAPI::class.java)
-                val call = fbFriendsApi.getFacebookFriendsToInvite(facebookFriendsRequest)
-                call.enqueue(getFacebookFriendsResponseCallback)
-            }
-        }
     }
 
     private var getFacebookFriendsResponseCallback: Callback<FacebookInviteFriendsResponse> =
@@ -108,26 +96,28 @@ class UserFollowFBSuggestionTabFragment : BaseFragment(), View.OnClickListener,
                 try {
                     val facebookFriendsResponse = response.body()
                     facebookFriendsResponse?.let { response ->
-                        facebookFriendsResponse.data?.get(0)?.friendList?.let {
-                            facebookFriendList.addAll(it)
-                            if (it.isNotEmpty() && !facebookFriendsResponse.data.get(
-                                    0
-                                ).hasExpired) {
-                                recyclerView?.visibility = View.VISIBLE
-                                fbFriendsContainer?.visibility = View.GONE
-                                emptyList?.visibility = View.GONE
-                            } else {
-                                recyclerView?.visibility = View.GONE
-                                fbFriendsContainer?.visibility = View.VISIBLE
-                                emptyList?.text =
-                                    "None of your friends are logged into momspresso using facebook"
+                        if (response.data?.get(0)?.hasExpired!!) {
+                            fbFriendsContainer?.visibility = View.VISIBLE
+                            progressBar?.visibility = View.GONE
+                        } else {
+                            progressBar?.visibility = View.GONE
+                            response.data[0].friendList?.let {
+                                facebookFriendList.addAll(it)
+                                if (facebookFriendList.isNotEmpty()) {
+                                    recyclerView?.visibility = View.VISIBLE
+                                    emptyList?.visibility = View.GONE
+                                } else {
+                                    recyclerView?.visibility = View.GONE
+                                    fbFriendsContainer?.visibility = View.GONE
+                                    emptyList?.text =
+                                        recyclerView?.context?.getString(R.string.no_facebook_friends)
+                                }
+                                adapter?.setListData(it)
+                                adapter?.notifyDataSetChanged()
                             }
-                            adapter?.setListData(it)
-                            adapter?.notifyDataSetChanged()
                         }
                     }
                 } catch (e: Exception) {
-                    //                    showToast(getString(R.string.server_went_wrong))
                     FirebaseCrashlytics.getInstance().recordException(e)
                     Log.d("MC4kException", Log.getStackTraceString(e))
                 }
@@ -147,6 +137,18 @@ class UserFollowFBSuggestionTabFragment : BaseFragment(), View.OnClickListener,
 
     override fun onClick(v: View) {
         FacebookUtils.facebookLogin(activity, this)
+    }
+
+    override fun getFacebookUser(jObject: JSONObject?, token: String?) {
+        jObject?.let { json ->
+            token?.let {
+                val retrofit = BaseApplication.getInstance().retrofit
+                val facebookFriendsRequest = FacebookFriendsRequest(it, json.getString("id"))
+                val fbFriendsApi = retrofit.create(FollowAPI::class.java)
+                val call = fbFriendsApi.getFacebookFriendsToInvite(facebookFriendsRequest)
+                call.enqueue(getFacebookFriendsResponseCallback)
+            }
+        }
     }
 
     override fun onClick(view: View, position: Int) {
@@ -181,7 +183,7 @@ class UserFollowFBSuggestionTabFragment : BaseFragment(), View.OnClickListener,
             followUnfollowUserResponseCall.enqueue(followUnfollowUserResponseCallback)
             activity?.let {
                 Utils.pushProfileEvents(
-                    it, "CTA_Unfollow_Profile", "UserProfileActivity", "Unfollow", "-"
+                    it, "CTA_Unfollow_Profile", "UserFollowFBSuggestionTabFragment", "Unfollow", "-"
                 )
             }
         } else {
@@ -189,7 +191,7 @@ class UserFollowFBSuggestionTabFragment : BaseFragment(), View.OnClickListener,
             followUnfollowUserResponseCall.enqueue(followUnfollowUserResponseCallback)
             activity?.let {
                 Utils.pushProfileEvents(
-                    it, "CTA_Follow_Profile", "UserProfileActivity", "Follow", "-"
+                    it, "CTA_Follow_Profile", "UserFollowFBSuggestionTabFragment", "Follow", "-"
                 )
             }
         }

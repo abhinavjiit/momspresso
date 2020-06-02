@@ -171,7 +171,6 @@
         android:layout_below="@+id/searchHistoryAndTrendContainer"
         android:background="@color/white_color"
         android:elevation="3dp"
-        android:minHeight="?attr/actionBarSize"
         android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
         android:visibility="gone"
         app:tabGravity="fill"

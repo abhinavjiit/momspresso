@@ -49,7 +49,6 @@
         android:layout_below="@+id/toolbarUnderline"
         android:background="?attr/colorPrimary"
         android:elevation="3dp"
-        android:minHeight="?attr/actionBarSize"
         android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
         app:tabIndicatorColor="@color/home.trending.tabbar_indicator"
         app:tabIndicatorHeight="3dp"

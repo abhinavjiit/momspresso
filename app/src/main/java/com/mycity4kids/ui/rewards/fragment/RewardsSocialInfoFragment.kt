@@ -14,12 +14,6 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.widget.AppCompatSpinner
 import com.facebook.CallbackManager
-import com.google.android.gms.auth.api.Auth
-import com.google.android.gms.auth.api.signin.GoogleSignInOptions
-import com.google.android.gms.common.ConnectionResult
-import com.google.android.gms.common.Scopes
-import com.google.android.gms.common.api.GoogleApiClient
-import com.google.android.gms.common.api.Scope
 import com.google.firebase.crashlytics.FirebaseCrashlytics
 import com.google.gson.Gson
 import com.mycity4kids.R
@@ -41,18 +35,13 @@ import io.reactivex.Observer
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable
 import io.reactivex.schedulers.Schedulers
-import java.util.HashMap
 import java.util.regex.Pattern
 
-class RewardsSocialInfoFragment : BaseFragment(),
-    GoogleApiClient.OnConnectionFailedListener, InstagramApp.OAuthAuthenticationListener {
+class RewardsSocialInfoFragment : BaseFragment(), InstagramApp.OAuthAuthenticationListener {
     override fun onSuccess() {
     }
 
     override fun onFail(error: String?) {
-    }
-
-    override fun onConnectionFailed(p0: ConnectionResult) {
     }
 
     private lateinit var containerView: View
@@ -71,14 +60,8 @@ class RewardsSocialInfoFragment : BaseFragment(),
     private lateinit var textlater: TextView
     private var householdList = ArrayList<String>()
     private var professionList = ArrayList<String>()
-    private var mGoogleApiClient: GoogleApiClient? = null
     private var apiGetResponse: RewardsDetailsResultResonse = RewardsDetailsResultResonse()
-    private var loginMode = ""
-    private var mApp: InstagramApp? = null
-    private var userInfoHashmap = HashMap<String, String>()
     private var callbackManager: CallbackManager? = null
-    private var facebookAuthToken: String? = null
-    private var instagramAuthToken: String? = null
     private var isComingFromRewards = false
     private var isComingFromCampaign = false
 
@@ -114,15 +97,6 @@ class RewardsSocialInfoFragment : BaseFragment(),
                 false
             }
         }
-
-        val gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
-            .requestEmail().requestScopes(Scope(Scopes.PLUS_ME))
-            .build()
-
-        mGoogleApiClient = GoogleApiClient.Builder(activity!!)
-            .enableAutoManage(activity!!, this)
-            .addApi(Auth.GOOGLE_SIGN_IN_API, gso)
-            .build()
         callbackManager = CallbackManager.Factory.create()
         initializeXMLComponents()
         fetchRewardsData()

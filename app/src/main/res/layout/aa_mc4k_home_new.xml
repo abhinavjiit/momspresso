@@ -10,7 +10,6 @@
         android:layout_height="wrap_content"
         android:background="?attr/colorPrimary"
         android:elevation="3dp"
-        android:minHeight="?attr/actionBarSize"
         android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
         app:tabGravity="fill"
         app:tabIndicatorColor="@color/app_red"

@@ -34,5 +34,7 @@ data class FacebookInviteFriendsData(
     @SerializedName("userType")
     val userType: String?,
     @SerializedName("isFollowing")
-    var isFollowing: String?
+    var isFollowing: String?,
+    @SerializedName("isInvited")
+    var isInvited: String? = "0"
 )
