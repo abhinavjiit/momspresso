@@ -704,6 +704,7 @@ class CampaignDetailFragment : BaseFragment() {
             (activity as CampaignContainerActivity).addAddProofFragment(
                 apiGetResponse!!.id!!,
                 (apiGetResponse!!.deliverableTypes as ArrayList<Int>?)!!,
+                (apiGetResponse!!.proofAllowed as ArrayList<Int>?)!!,
                 status, submissionStatus
             )
             if (apiGetResponse != null && apiGetResponse!!.totalPayout != null && apiGetResponse!!.id != null && apiGetResponse!!.nameSlug != null) {

@@ -37,6 +37,7 @@
     android:background="@color/app_red"
     android:gravity="center"
     android:padding="@dimen/space_10"
+    android:visibility="gone"
     android:text="@string/view_comments"
     android:textColor="@color/white"
     android:textSize="@dimen/space_16" />

@@ -121,7 +121,7 @@ class InviteFriendsDialogFragment : DialogFragment(), View.OnClickListener {
                     BaseApplication.getAppContext()
                 ).dynamoId
             )
-            AppUtils.shareGenericLinkWithSuccessStatus(it, shareText)
+            AppUtils.shareLinkWithSuccessStatusWhatsapp(it, shareText)
         }
     }
 }
