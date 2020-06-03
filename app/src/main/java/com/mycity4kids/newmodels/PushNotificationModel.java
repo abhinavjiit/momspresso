@@ -45,6 +45,36 @@ public class PushNotificationModel {
     private String badgeId;
     @SerializedName("milestoneId")
     private String milestoneId;
+    @SerializedName("commentId")
+    private String commentId;
+    @SerializedName("replyId")
+    private String replyId;
+    @SerializedName("contentType")
+    private String contentType;
+
+    public String getCommentId() {
+        return commentId;
+    }
+
+    public void setCommentId(String commentId) {
+        this.commentId = commentId;
+    }
+
+    public String getReplyId() {
+        return replyId;
+    }
+
+    public void setReplyId(String replyId) {
+        this.replyId = replyId;
+    }
+
+    public String getContentType() {
+        return contentType;
+    }
+
+    public void setContentType(String contentType) {
+        this.contentType = contentType;
+    }
 
     public String getSound() {
         return sound;

@@ -65,11 +65,23 @@ public interface ArticleDetailsAPI {
             @Query("type") String type,
             @Query("commentId") String paginationCommentId);
 
+    @GET("/v3/comments/")
+    Call<CommentListResponse> getCommentAndReplyData(@Query("postId") String articleId,
+            @Query("type") String type,
+            @Query("commentId") String paginationCommentId,
+            @Query("replyId") String replyId);
+
     @GET("v3/comments")
     Call<CommentListResponse> getArticleCommentReplies(@Query("postId") String articleId,
             @Query("type") String type,
             @Query("commentId") String parentCommentId,
             @Query("replyId") String paginationReplyId);
+
+    @GET("v3/comments")
+    Call<CommentListResponse> getArticleCommentRepliesNotification(@Query("postId") String articleId,
+            @Query("type") String type,
+            @Query("commentId") String parentCommentId);
+
 
     @PUT("/v1/reactions/comment/{comment_id}/")
     Call<ResponseBody> likeDislikeComment(@Path("comment_id") String comment_id,

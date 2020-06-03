@@ -309,7 +309,6 @@ public class ArticleCommentRepliesDialogFragment extends DialogFragment implemen
             }
             break;
         }
-//        ((ArticleCommentsFragment) getTargetFragment()).openAddCommentReplyDialog(data);
     }
 
     @Override
