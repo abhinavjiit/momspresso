@@ -1013,7 +1013,7 @@ class UserProfileActivity : BaseActivity(),
                 authorNameTextView.text.toString(),
                 (AppConstants.USER_PROFILE_SHARE_BASE_URL + authorId)
             )
-            AppUtils.shareGenericImageAndOrLink(this, uri, shareText)
+            AppUtils.shareGenericImageAndOrLinkViaWhatsapp(this, uri, shareText)
             if (AppUtils.isPrivateProfile(authorId)) {
                 Utils.shareEventTracking(
                     this,

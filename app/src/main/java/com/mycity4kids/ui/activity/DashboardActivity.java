@@ -732,6 +732,7 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
         if (getIntent().getBooleanExtra("showInviteDialog", false)) {
             launchInviteFriendsDialog();
         }
+        launchInviteFriendsDialog();
         getUsersData();
     }
 
@@ -955,8 +956,7 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
                             SharedPrefUtils.setFirebaseRemoteConfigUpdateFlag(
                                     BaseApplication.getAppContext(), false);
                         });
-            }
-            else if (AppConstants.NOTIFICATION_TYPE_CONTENT_COMMENTS.equalsIgnoreCase(notificationType)
+            } else if (AppConstants.NOTIFICATION_TYPE_CONTENT_COMMENTS.equalsIgnoreCase(notificationType)
                     || AppConstants.NOTIFICATION_TYPE_CONTENT_REPLY.equalsIgnoreCase(notificationType)) {
                 String articleId = notificationExtras.getString("id");
                 String commentId = notificationExtras.getString("commentId");
@@ -971,8 +971,7 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
                 commentReplyNotificationIntent.putExtra("contentType", contentType);
                 commentReplyNotificationIntent.putExtra("replyId", replyId);
                 startActivity(commentReplyNotificationIntent);
-            }
-            else if (AppConstants.NOTIFICATION_TYPE_ARTICLE_DETAILS.equalsIgnoreCase(notificationType)) {
+            } else if (AppConstants.NOTIFICATION_TYPE_ARTICLE_DETAILS.equalsIgnoreCase(notificationType)) {
                 pushEvent("article_details");
                 String articleId = notificationExtras.getString("id");
                 String authorId = notificationExtras.getString("userId");
@@ -2042,8 +2041,9 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
             }
             break;
             case R.id.bookmarksTextView: {
-                Intent cityIntent = new Intent(this, UsersBookmarkListActivity.class);
-                startActivity(cityIntent);
+//                Intent cityIntent = new Intent(this, UsersBookmarkListActivity.class);
+//                startActivity(cityIntent);
+                AppUtils.shareGenericLinkWithSuccessStatus(this, "https://mycity4kids.app.link/");
             }
             break;
             case R.id.referral:

@@ -56,6 +56,7 @@ class CampaignContainerActivity : BaseActivity(), CampaignAddProofFragment.Submi
     private var submitProofCampaignId: Int = 0
     private lateinit var panCardNotification: String
     private var arrayList = mutableListOf<Int>()
+    private var proofAllowedList = mutableListOf<Int>()
     private var comingFrom: String = "deeplink"
     private var fromNotification: Boolean = false
     private lateinit var root: FrameLayout
@@ -126,6 +127,7 @@ class CampaignContainerActivity : BaseActivity(), CampaignAddProofFragment.Submi
                     addAddProofFragment(
                         deeplinkCampaignId,
                         arrayList as ArrayList<Int>,
+                        proofAllowedList as ArrayList<Int>,
                         response.data!!.result.campaignStatus!!,
                         response.data!!.result.approvalStatus!!
                     )
@@ -170,11 +172,18 @@ class CampaignContainerActivity : BaseActivity(), CampaignAddProofFragment.Submi
     fun addAddProofFragment(
         id: Int,
         deliverableTypeList: ArrayList<Int>,
+        proofAllowedList: ArrayList<Int>,
         status: Int,
         submission_status: Int
     ) {
         var campaignAddProofFragment =
-            CampaignAddProofFragment.newInstance(id, deliverableTypeList, status, submission_status)
+            CampaignAddProofFragment.newInstance(
+                id,
+                deliverableTypeList,
+                proofAllowedList,
+                status,
+                submission_status
+            )
         supportFragmentManager.beginTransaction().replace(
             R.id.container, campaignAddProofFragment,
             CampaignAddProofFragment::class.java.simpleName

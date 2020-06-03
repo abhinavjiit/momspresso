@@ -692,6 +692,19 @@ public class AppUtils {
         return true;
     }
 
+    public static boolean shareLinkWithSuccessStatusWhatsapp(Context context, String shareUrl) {
+        Intent shareIntent = new Intent(android.content.Intent.ACTION_SEND);
+        shareIntent.setType("text/plain");
+        shareIntent.setPackage("com.whatsapp");
+        if (StringUtils.isNullOrEmpty(shareUrl)) {
+            return false;
+        } else {
+            shareIntent.putExtra(android.content.Intent.EXTRA_TEXT, shareUrl);
+            context.startActivity(Intent.createChooser(shareIntent, "Momspresso"));
+            return true;
+        }
+    }
+
     public static boolean shareGenericLinkWithSuccessStatus(Context context, String shareUrl) {
         Intent shareIntent = new Intent(android.content.Intent.ACTION_SEND);
         shareIntent.setType("text/plain");
@@ -716,6 +729,24 @@ public class AppUtils {
         } catch (Exception e) {
             FirebaseCrashlytics.getInstance().recordException(e);
             Log.d("MC4kException", Log.getStackTraceString(e));
+            return false;
+        }
+    }
+
+    public static boolean shareGenericImageAndOrLinkViaWhatsapp(Context context, Uri uri,
+            String shareTextAndLink) {
+        try {
+            Intent shareIntent = new Intent(android.content.Intent.ACTION_SEND);
+            shareIntent.setType("image/jpeg");
+            shareIntent.putExtra(Intent.EXTRA_STREAM, uri);
+            shareIntent.putExtra(Intent.EXTRA_TEXT, shareTextAndLink);
+            shareIntent.setPackage("com.whatsapp");
+            context.startActivity(Intent.createChooser(shareIntent, "Momspresso"));
+            return true;
+        } catch (android.content.ActivityNotFoundException ex) {
+            Toast.makeText(context,
+                    context.getString(R.string.moderation_or_share_whatsapp_not_installed),
+                    Toast.LENGTH_SHORT).show();
             return false;
         }
     }

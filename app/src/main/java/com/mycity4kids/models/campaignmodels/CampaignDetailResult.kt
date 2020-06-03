@@ -29,6 +29,9 @@ class CampaignDetailResult {
     @SerializedName("deliverable_types")
     @Expose
     var deliverableTypes: List<Int>? = null
+    @SerializedName("proof_allowed")
+    @Expose
+    var proofAllowed: List<Int>? = null
     @SerializedName("deliverables")
     @Expose
     var deliverables: List<List<CampaignDetailDeliverable>>? = null

@@ -45,12 +45,12 @@ import io.reactivex.Observer
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable
 import io.reactivex.schedulers.Schedulers
+import retrofit2.Call
+import retrofit2.Callback
 import java.io.File
 import java.text.SimpleDateFormat
 import java.util.ArrayList
 import java.util.Date
-import retrofit2.Call
-import retrofit2.Callback
 
 const val SELECT_IMAGE = 1005
 const val SELECT_VIDEO = 1006
@@ -150,11 +150,18 @@ class CampaignAddProofFragment : BaseFragment(), UrlProofRecyclerAdapter.ClickLi
     }
 
     override fun onCellClick(hasVideo: Boolean) {
+        //        val intent = Intent()
+        //        intent.setType("image/*")
+        //        intent.setAction(Intent.ACTION_PICK)
+        //        startActivityForResult(Intent.createChooser(intent, "Select Picture"), SELECT_IMAGE)
         chooseMediaTypeContainer.visibility = View.VISIBLE
         if (hasVideo || hasVideos) {
             chooseVideoTextView.visibility = View.GONE
         } else {
-            chooseVideoTextView.visibility = View.VISIBLE
+            if (videoAllowed)
+                chooseVideoTextView.visibility = View.VISIBLE
+            else
+                chooseVideoTextView.visibility = View.GONE
         }
     }
 
@@ -169,9 +176,9 @@ class CampaignAddProofFragment : BaseFragment(), UrlProofRecyclerAdapter.ClickLi
             if (!campaignImageProofList.isNullOrEmpty() && cellIndex < campaignImageProofList.size && !campaignImageProofList.get(
                     cellIndex
                 ).url.isNullOrEmpty()) {
-                /*if (campaignImageProofList.get(cellIndex).url!!.contains("video")){
-                    hasVideo = false
-                }*/
+                if (campaignImageProofList.get(cellIndex).url!!.contains("video")) {
+                    hasVideos = false
+                }
                 deleteProof(campaignImageProofList.get(cellIndex).id!!, urlType = 0)
             }
         }.setPositiveButton(R.string.new_cancel) { dialog, which ->
@@ -197,6 +204,7 @@ class CampaignAddProofFragment : BaseFragment(), UrlProofRecyclerAdapter.ClickLi
     private lateinit var textSubmit: TextView
     private lateinit var textInstruction: TextView
     private lateinit var deliverableTypeList: ArrayList<Int>
+    private lateinit var proofAllowedList: ArrayList<Int>
     private lateinit var submitListener: SubmitListener
     private lateinit var relativeMediaProof: RelativeLayout
     // private lateinit var relativeTextProof: RelativeLayout
@@ -217,12 +225,14 @@ class CampaignAddProofFragment : BaseFragment(), UrlProofRecyclerAdapter.ClickLi
     private lateinit var chooseImageTextView: TextView
     private lateinit var cancelTextView: TextView
     private var hasVideos: Boolean = false
+    private var videoAllowed: Boolean = false
 
     companion object {
         @JvmStatic
         fun newInstance(
             id: Int,
             deliverableTypeList: ArrayList<Int>,
+            proofAllowedList: ArrayList<Int>,
             status: Int,
             submission_status: Int
         ) =
@@ -230,6 +240,7 @@ class CampaignAddProofFragment : BaseFragment(), UrlProofRecyclerAdapter.ClickLi
                 arguments = Bundle().apply {
                     this.putInt("id", id)
                     this.putIntegerArrayList("deliverableTypeList", deliverableTypeList)
+                    this.putIntegerArrayList("proofAllowedList", proofAllowedList)
                     this.putInt("status", status)
                     this.putInt("submission_status", submission_status)
                 }
@@ -267,12 +278,19 @@ class CampaignAddProofFragment : BaseFragment(), UrlProofRecyclerAdapter.ClickLi
                 emptyList<Int>() as ArrayList<Int>
             }
 
+            proofAllowedList = if (arguments!!.containsKey("proofAllowedList")) {
+                arguments!!.getIntegerArrayList("proofAllowedList")!!
+            } else {
+                emptyList<Int>() as ArrayList<Int>
+            }
+
             status = if (arguments!!.containsKey("status")) {
                 arguments!!.getInt("status")
             } else {
                 0
             }
         }
+
         addScreenShotTextView = view.findViewById(R.id.addScreenShotTextView)
         addlinkTextView = view.findViewById(R.id.addlinkTextView)
         addScreenShotTextView1 = view.findViewById(R.id.addScreenShotTextView1)
@@ -286,6 +304,13 @@ class CampaignAddProofFragment : BaseFragment(), UrlProofRecyclerAdapter.ClickLi
         chooseImageTextView = view.findViewById(R.id.chooseImageTextView)
         chooseVideoTextView = view.findViewById(R.id.chooseVideoTextView)
         cancelTextView = view.findViewById(R.id.cancelTextView)
+
+        if (proofAllowedList.size == 0 || proofAllowedList.contains(2)) {
+            videoAllowed = true
+        } else {
+            videoAllowed = false
+        }
+
         textAddUrlProof.setOnClickListener {
             var isEmpty = false
             for (i in 0..campaignUrlProofList.size - 1) {
@@ -863,7 +888,7 @@ class CampaignAddProofFragment : BaseFragment(), UrlProofRecyclerAdapter.ClickLi
                         )
                         val uploadTask = data.data?.let { riversRef.putFile(it) }
                         Log.e("file path ", riversRef.path)
-                        showProgressDialog("")
+                        showProgressDialog(resources.getString(R.string.please_wait))
                         uploadTask?.addOnFailureListener {
                             Log.e("fcm ", it.message)
                             removeProgressDialog()
@@ -906,7 +931,7 @@ class CampaignAddProofFragment : BaseFragment(), UrlProofRecyclerAdapter.ClickLi
                         )
                         val uploadTask = data.data?.let { riversRef.putFile(it) }
                         Log.e("file path ", riversRef.path)
-                        showProgressDialog("")
+                        showProgressDialog(resources.getString(R.string.please_wait))
                         uploadTask?.addOnFailureListener {
                             Log.e("fcm ", it.message)
                             removeProgressDialog()

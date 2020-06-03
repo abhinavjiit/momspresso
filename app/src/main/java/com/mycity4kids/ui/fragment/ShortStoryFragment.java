@@ -351,7 +351,11 @@ public class ShortStoryFragment extends BaseFragment implements View.OnClickList
                 CommentListResponse shortStoryCommentListResponse = response.body();
                 if (shortStoryCommentListResponse.getCount() != 0) {
                     totalCommentCount = shortStoryCommentListResponse.getCount();
+                    viewAllTextView.setText(getString(R.string.view_comments));
+                } else {
+                    viewAllTextView.setText(getString(R.string.group_add_comment_text));
                 }
+                viewAllTextView.setVisibility(View.VISIBLE);
                 showComments(shortStoryCommentListResponse.getData());
             } catch (Exception e) {
                 FirebaseCrashlytics.getInstance().recordException(e);

@@ -1128,7 +1128,7 @@ Thank you! We will be reviewing your story. You can expect to hear from us withi
 
   //addProof
   <string name="add_proof">ADD PROOF</string>
-  <string name="please_add_image_proof">Please add image proofs</string>
+  <string name="please_add_image_proof">Please add proofs</string>
   <string name="please_submit">Please submit</string>
   <string name="please_add_link">Please add a link</string>
   <string name="proof_instructions">Proof Instructions</string>
@@ -1357,4 +1357,6 @@ Thank you! We will be reviewing your story. You can expect to hear from us withi
   <string name="see_more_challenge">SEE MORE CHALLENGES</string>
   <string name="vlog_tutorial">Vlog Tutorial</string>
   <string name="no_facebook_friends">None of your friends are logged into momspresso using facebook</string>
+  <string name="spread_the_word">Spread the word</string>
+  <string name="choose_proof">Choose Proof</string>
 </resources>
