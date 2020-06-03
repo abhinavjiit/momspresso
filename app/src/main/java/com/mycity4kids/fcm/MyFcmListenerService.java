@@ -31,6 +31,7 @@ import com.mycity4kids.newmodels.PushNotificationModel;
 import com.mycity4kids.preference.SharedPrefUtils;
 import com.mycity4kids.profile.UserProfileActivity;
 import com.mycity4kids.sync.PushTokenService;
+import com.mycity4kids.ui.ArticleShortStoryMomVlogCommentNotificationActivity;
 import com.mycity4kids.ui.activity.AppSettingsActivity;
 import com.mycity4kids.ui.activity.ArticleDetailsContainerActivity;
 import com.mycity4kids.ui.activity.BadgeActivity;
@@ -500,6 +501,26 @@ public class MyFcmListenerService extends FirebaseMessagingService {
                     handleNotificationAccordingToStructure(remoteMessage, pushNotificationModel, contentIntent,
                             "videoListing ----- Notification Message --- ",
                             "videoListing ----- Notification MixFeedData");
+                } else if (AppConstants.ARTICLE_STORY_VLOG_REPLY_TYPE.equalsIgnoreCase(type)
+                        || AppConstants.ARTICLE_STORY_VLOG_COMMENT_TYPE.equalsIgnoreCase(type)) {
+                    if (SharedPrefUtils.getAppUpgrade(BaseApplication.getAppContext())) {
+                        contentIntent = handleForcedUpdate();
+                    } else {
+                        intent = new Intent(getApplicationContext(),
+                                ArticleShortStoryMomVlogCommentNotificationActivity.class);
+                        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                        intent.putExtra("articleId", pushNotificationModel.getId());
+                        intent.putExtra("commentId", pushNotificationModel.getCommentId());
+                        intent.putExtra("type", pushNotificationModel.getType());
+                        intent.putExtra("contentType", pushNotificationModel.getContentType());
+                        intent.putExtra("replyId", pushNotificationModel.getReplyId());
+                        TaskStackBuilder stackBuilder = TaskStackBuilder.create(this);
+                        stackBuilder.addNextIntentWithParentStack(intent);
+                        contentIntent = stackBuilder.getPendingIntent(0, PendingIntent.FLAG_UPDATE_CURRENT);
+                    }
+                    handleNotificationAccordingToStructure(remoteMessage, pushNotificationModel, contentIntent,
+                            "commentListing ----- Notification Message --- ",
+                            "commentListing ----- Notification MixFeedData");
                 } else {
                     Utils.pushEventNotificationClick(this, GTMEventType.NOTIFICATION_CLICK_EVENT,
                             SharedPrefUtils.getUserDetailModel(this).getDynamoId(), "Notification Popup", "default");

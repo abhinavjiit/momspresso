@@ -4,16 +4,16 @@ import android.content.Context;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
-import androidx.fragment.app.DialogFragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.TextView;
-
+import androidx.fragment.app.DialogFragment;
 import com.mycity4kids.R;
 import com.mycity4kids.application.BaseApplication;
 import com.mycity4kids.preference.SharedPrefUtils;
+import com.mycity4kids.ui.ArticleShortStoryMomVlogCommentNotificationActivity;
 
 /**
  * Created by user on 08-06-2015.
@@ -27,7 +27,7 @@ public class CommentOptionsDialogFragment extends DialogFragment implements OnCl
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
+            Bundle savedInstanceState) {
 
         final View rootView = inflater.inflate(R.layout.comment_options_dialog, container,
                 false);
@@ -67,21 +67,42 @@ public class CommentOptionsDialogFragment extends DialogFragment implements OnCl
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.deleteCommentTextView: {
-                ICommentOptionAction iCommentOptionAction = (ICommentOptionAction) getParentFragment();
-                iCommentOptionAction.onResponseDelete(position, responseType);
-                dismiss();
+                if (getActivity() != null
+                        && getActivity() instanceof ArticleShortStoryMomVlogCommentNotificationActivity) {
+                    ICommentOptionAction iCommentOptionAction = (ICommentOptionAction) getActivity();
+                    iCommentOptionAction.onResponseDelete(position, responseType);
+                    dismiss();
+                } else {
+                    ICommentOptionAction iCommentOptionAction = (ICommentOptionAction) getParentFragment();
+                    iCommentOptionAction.onResponseDelete(position, responseType);
+                    dismiss();
+                }
             }
             break;
             case R.id.editCommentTextView: {
-                ICommentOptionAction iCommentOptionAction = (ICommentOptionAction) getParentFragment();
-                iCommentOptionAction.onResponseEdit(position, responseType);
-                dismiss();
+                if (getActivity() != null
+                        && getActivity() instanceof ArticleShortStoryMomVlogCommentNotificationActivity) {
+                    ICommentOptionAction iCommentOptionAction = (ICommentOptionAction) getActivity();
+                    iCommentOptionAction.onResponseEdit(position, responseType);
+                    dismiss();
+                } else {
+                    ICommentOptionAction iCommentOptionAction = (ICommentOptionAction) getParentFragment();
+                    iCommentOptionAction.onResponseEdit(position, responseType);
+                    dismiss();
+                }
             }
             break;
             case R.id.reportCommentTextView: {
-                ICommentOptionAction iCommentOptionAction = (ICommentOptionAction) getParentFragment();
-                iCommentOptionAction.onResponseReport(position, responseType);
-                dismiss();
+                if (getActivity() != null
+                        && getActivity() instanceof ArticleShortStoryMomVlogCommentNotificationActivity) {
+                    ICommentOptionAction iCommentOptionAction = (ICommentOptionAction) getActivity();
+                    iCommentOptionAction.onResponseReport(position, responseType);
+                    dismiss();
+                } else {
+                    ICommentOptionAction iCommentOptionAction = (ICommentOptionAction) getParentFragment();
+                    iCommentOptionAction.onResponseReport(position, responseType);
+                    dismiss();
+                }
             }
             break;
         }

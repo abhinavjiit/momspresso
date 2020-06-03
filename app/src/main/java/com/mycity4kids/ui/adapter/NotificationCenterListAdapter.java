@@ -30,6 +30,7 @@ import com.mycity4kids.models.response.NotificationCenterResult;
 import com.mycity4kids.preference.SharedPrefUtils;
 import com.mycity4kids.profile.UserProfileActivity;
 import com.mycity4kids.retrofitAPIsInterfaces.NotificationsAPI;
+import com.mycity4kids.ui.ArticleShortStoryMomVlogCommentNotificationActivity;
 import com.mycity4kids.ui.GroupMembershipStatus;
 import com.mycity4kids.ui.activity.ArticleDetailsContainerActivity;
 import com.mycity4kids.ui.activity.ArticleListingActivity;
@@ -142,6 +143,23 @@ public class NotificationCenterListAdapter extends BaseAdapter implements GroupM
             }
 
             switch (notifType) {
+                case AppConstants.ARTICLE_STORY_VLOG_COMMENT_TYPE:
+                case AppConstants.ARTICLE_STORY_VLOG_REPLY_TYPE: {
+                    String articleId = notificationList.get(position).getId();
+                    String commentId = notificationList.get(position).getCommentId();
+                    String type = notificationList.get(position).getType();
+                    String contentType = notificationList.get(position).getContentType();
+                    String replyId = notificationList.get(position).getReplyId();
+                    Intent commentReplyNotificationIntent = new Intent(mainContext,
+                            ArticleShortStoryMomVlogCommentNotificationActivity.class);
+                    commentReplyNotificationIntent.putExtra("articleId", articleId);
+                    commentReplyNotificationIntent.putExtra("commentId", commentId);
+                    commentReplyNotificationIntent.putExtra("type", type);
+                    commentReplyNotificationIntent.putExtra("contentType", contentType);
+                    commentReplyNotificationIntent.putExtra("replyId", replyId);
+                    mainContext.startActivity(commentReplyNotificationIntent);
+                }
+                break;
                 case AppConstants.NOTIFICATION_CENTER_APP_SETTINGS: {
 
                 }

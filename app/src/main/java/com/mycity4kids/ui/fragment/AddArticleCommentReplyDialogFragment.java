@@ -22,6 +22,7 @@ import com.google.firebase.crashlytics.FirebaseCrashlytics;
 import com.mycity4kids.R;
 import com.mycity4kids.application.BaseApplication;
 import com.mycity4kids.models.response.CommentListData;
+import com.mycity4kids.ui.ArticleShortStoryMomVlogCommentNotificationActivity;
 import com.mycity4kids.utils.DateTimeUtils;
 import com.mycity4kids.utils.StringUtils;
 import com.squareup.picasso.Picasso;
@@ -131,17 +132,53 @@ public class AddArticleCommentReplyDialogFragment extends DialogFragment impleme
         switch (view.getId()) {
             case R.id.postCommentReplyTextView:
                 if (isValid()) {
+                    Fragment parentFragment = getParentFragment();
                     if ("EDIT_COMMENT".equals(actionType)) {
-                        ((ArticleCommentsFragment) getParentFragment()).editComment(commentReplyEditText.getText().toString(), commentOrReplyData.getId(), position);
+                        if (null != parentFragment && parentFragment instanceof ArticleCommentsFragment) {
+                            ((ArticleCommentsFragment) getParentFragment())
+                                    .editComment(commentReplyEditText.getText().toString(), commentOrReplyData.getId(),
+                                            position);
+                        } else if (null != parentFragment && parentFragment instanceof ArticleDetailsFragment) {
+                            ((ArticleDetailsFragment) getParentFragment())
+                                    .editComment(commentReplyEditText.getText().toString(), commentOrReplyData.getId(),
+                                            position);
+
+
+                        } else if (parentFragment != null
+                                && parentFragment instanceof ArticleShortStoryMomVlogCommentAndReplyNotificationFragment) {
+                            ((ArticleShortStoryMomVlogCommentAndReplyNotificationFragment) getParentFragment())
+                                    .editComment(commentReplyEditText.getText().toString()
+                                            , commentOrReplyData.getId(), position);
+                        }
+                        else if(getActivity()!=null&&getActivity() instanceof ArticleShortStoryMomVlogCommentNotificationActivity)
+                        {
+                            ((ArticleShortStoryMomVlogCommentNotificationActivity) getActivity())
+                                    .editComment(commentReplyEditText.getText().toString()
+                                            , commentOrReplyData.getId(), position);
+                        }
+
+
                     } else if ("EDIT_REPLY".equals(actionType)) {
                         Fragment fragment = getParentFragment();
                         if (fragment != null && fragment instanceof ArticleCommentsFragment) {
-                            ((ArticleCommentsFragment) getParentFragment()).editReply(commentReplyEditText.getText().toString(), commentOrReplyData.getParentCommentId(), commentOrReplyData.getId());
+                            ((ArticleCommentsFragment) getParentFragment())
+                                    .editReply(commentReplyEditText.getText().toString(),
+                                            commentOrReplyData.getParentCommentId(), commentOrReplyData.getId());
                         } else if (fragment != null && fragment instanceof ArticleCommentRepliesDialogFragment) {
                             Fragment parentOfParentFragment = fragment.getParentFragment();
-                            if (parentOfParentFragment != null && parentOfParentFragment instanceof ArticleCommentsFragment) {
-                                ((ArticleCommentsFragment) parentOfParentFragment).editReply(commentReplyEditText.getText().toString(), commentOrReplyData.getParentCommentId(), commentOrReplyData.getId());
+                            if (parentOfParentFragment != null
+                                    && parentOfParentFragment instanceof ArticleCommentsFragment) {
+                                ((ArticleCommentsFragment) parentOfParentFragment)
+                                        .editReply(commentReplyEditText.getText().toString(),
+                                                commentOrReplyData.getParentCommentId(), commentOrReplyData.getId());
                             }
+                        } else if (fragment != null
+                                && fragment instanceof ArticleShortStoryMomVlogCommentAndReplyNotificationFragment) {
+
+                            ((ArticleShortStoryMomVlogCommentAndReplyNotificationFragment) getParentFragment())
+                                    .editReply(commentReplyEditText.getText().toString(),
+                                            commentOrReplyData.getParentCommentId(), commentOrReplyData.getId(),
+                                            position);
                         }
 
                     } else {
@@ -150,7 +187,19 @@ public class AddArticleCommentReplyDialogFragment extends DialogFragment impleme
                                     .addComments(commentReplyEditText.getText().toString());
 
                         } else {
-                            ((ArticleCommentsFragment) getParentFragment()).addReply(commentReplyEditText.getText().toString(), commentOrReplyData.getId());
+                            if (getParentFragment() instanceof ArticleCommentsFragment) {
+                                ((ArticleCommentsFragment) getParentFragment())
+                                        .addReply(commentReplyEditText.getText().toString(),
+                                                commentOrReplyData.getId());
+                            } else if (getParentFragment() instanceof ArticleShortStoryMomVlogCommentAndReplyNotificationFragment) {
+                                ((ArticleShortStoryMomVlogCommentAndReplyNotificationFragment) getParentFragment())
+                                        .addReply(commentReplyEditText.getText().toString(),
+                                                commentOrReplyData.getId());
+                            } else if (
+                                    getActivity() != null
+                                            && (getActivity()) instanceof ArticleShortStoryMomVlogCommentNotificationActivity) {
+                                ((ArticleShortStoryMomVlogCommentNotificationActivity)  getActivity()).addReply(commentOrReplyData.getId());
+                            }
                         }
                     }
                     dismiss();

@@ -426,4 +426,7 @@ public class AppConstants {
 
     public static final String MOM_VLOG_TUTORIAL_COLLECTION = "5ec53266e0dfff57de575526";
     public static final String MOGI_ANALYTICS_ID = "5e1e0683238a2648efba8cc0";
+    public static final String ARTICLE_STORY_VLOG_COMMENT_TYPE = "comment";
+    public static final String ARTICLE_STORY_VLOG_REPLY_TYPE = "reply";
+
 }

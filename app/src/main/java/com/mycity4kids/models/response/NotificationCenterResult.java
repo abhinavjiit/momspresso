@@ -54,6 +54,46 @@ public class NotificationCenterResult {
     private String collectionId;
     @SerializedName("challengeId")
     private String challengeId;
+    @SerializedName("commentId")
+    private String commentId;
+    @SerializedName("replyId")
+    private String replyId;
+    @SerializedName("type")
+    private String type;
+    @SerializedName("contentType")
+    private String contentType;
+
+    public String getCommentId() {
+        return commentId;
+    }
+
+    public void setCommentId(String commentId) {
+        this.commentId = commentId;
+    }
+
+    public String getReplyId() {
+        return replyId;
+    }
+
+    public void setReplyId(String replyId) {
+        this.replyId = replyId;
+    }
+
+    public String getType() {
+        return type;
+    }
+
+    public void setType(String type) {
+        this.type = type;
+    }
+
+    public String getContentType() {
+        return contentType;
+    }
+
+    public void setContentType(String contentType) {
+        this.contentType = contentType;
+    }
 
     public String getCategoryId() {
         return categoryId;

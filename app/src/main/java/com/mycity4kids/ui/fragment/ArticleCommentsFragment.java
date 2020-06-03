@@ -145,7 +145,6 @@ public class ArticleCommentsFragment extends BaseFragment implements OnClickList
         } catch (Exception e) {
             Picasso.get().load(R.drawable.default_commentor_img).into(userImageView);
         }
-
         return rootView;
     }
 

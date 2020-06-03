@@ -65,7 +65,7 @@
         android:layout_marginTop="@dimen/space_5"
         android:layout_marginEnd="@dimen/space_20"
         android:padding="5dp"
-        android:visibility="gone"
+        android:visibility="visible"
         app:srcCompat="@drawable/ic_three_verticle_dot_rounded" />
 
 
@@ -135,7 +135,7 @@
         android:layout_marginTop="@dimen/space_5"
         android:layout_marginEnd="@dimen/space_20"
         android:padding="5dp"
-        android:visibility="gone"
+        android:visibility="visible"
         app:srcCompat="@drawable/ic_three_verticle_dot_rounded" />
 
     </RelativeLayout>
