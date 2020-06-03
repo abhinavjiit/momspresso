@@ -323,7 +323,7 @@
       android:screenOrientation="portrait"
       android:windowSoftInputMode="stateHidden|adjustPan" />
     <activity
-      android:name=".ui.ArticleShortStoryMomVlogCommentNotificationActivity"
+      android:name=".ui.ContentCommentReplyNotificationActivity"
       android:screenOrientation="portrait"
       android:windowSoftInputMode="stateHidden|adjustPan" />
     <activity

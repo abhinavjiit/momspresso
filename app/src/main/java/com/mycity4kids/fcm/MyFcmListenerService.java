@@ -31,7 +31,7 @@ import com.mycity4kids.newmodels.PushNotificationModel;
 import com.mycity4kids.preference.SharedPrefUtils;
 import com.mycity4kids.profile.UserProfileActivity;
 import com.mycity4kids.sync.PushTokenService;
-import com.mycity4kids.ui.ArticleShortStoryMomVlogCommentNotificationActivity;
+import com.mycity4kids.ui.ContentCommentReplyNotificationActivity;
 import com.mycity4kids.ui.activity.AppSettingsActivity;
 import com.mycity4kids.ui.activity.ArticleDetailsContainerActivity;
 import com.mycity4kids.ui.activity.BadgeActivity;
@@ -501,13 +501,13 @@ public class MyFcmListenerService extends FirebaseMessagingService {
                     handleNotificationAccordingToStructure(remoteMessage, pushNotificationModel, contentIntent,
                             "videoListing ----- Notification Message --- ",
                             "videoListing ----- Notification MixFeedData");
-                } else if (AppConstants.ARTICLE_STORY_VLOG_REPLY_TYPE.equalsIgnoreCase(type)
-                        || AppConstants.ARTICLE_STORY_VLOG_COMMENT_TYPE.equalsIgnoreCase(type)) {
+                } else if (AppConstants.NOTIFICATION_TYPE_CONTENT_COMMENTS.equalsIgnoreCase(type)
+                        || AppConstants.NOTIFICATION_TYPE_CONTENT_REPLY.equalsIgnoreCase(type)) {
                     if (SharedPrefUtils.getAppUpgrade(BaseApplication.getAppContext())) {
                         contentIntent = handleForcedUpdate();
                     } else {
                         intent = new Intent(getApplicationContext(),
-                                ArticleShortStoryMomVlogCommentNotificationActivity.class);
+                                ContentCommentReplyNotificationActivity.class);
                         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                         intent.putExtra("articleId", pushNotificationModel.getId());
                         intent.putExtra("commentId", pushNotificationModel.getCommentId());

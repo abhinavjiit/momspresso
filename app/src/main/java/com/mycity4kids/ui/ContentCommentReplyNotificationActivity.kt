@@ -26,19 +26,18 @@ import com.mycity4kids.ui.activity.ParallelFeedActivity
 import com.mycity4kids.ui.activity.ShortStoryContainerActivity
 import com.mycity4kids.ui.adapter.ArticleCommentsRecyclerAdapter
 import com.mycity4kids.ui.fragment.AddArticleCommentReplyDialogFragment
-import com.mycity4kids.ui.fragment.ArticleShortStoryMomVlogCommentAndReplyNotificationFragment
+import com.mycity4kids.ui.fragment.ContentCommentReplyNotificationFragment
 import com.mycity4kids.ui.fragment.CommentOptionsDialogFragment
 import com.mycity4kids.ui.fragment.ReportContentDialogFragment
 import com.mycity4kids.utils.EndlessScrollListener
 import com.mycity4kids.utils.ToastUtils
 import okhttp3.ResponseBody
-import org.json.JSONObject
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 import java.util.ArrayList
 
-class ArticleShortStoryMomVlogCommentNotificationActivity : BaseActivity(),
+class ContentCommentReplyNotificationActivity : BaseActivity(),
     ArticleCommentsRecyclerAdapter.RecyclerViewClickListener,
     CommentOptionsDialogFragment.ICommentOptionAction, View.OnClickListener {
 
@@ -52,11 +51,10 @@ class ArticleShortStoryMomVlogCommentNotificationActivity : BaseActivity(),
     private var commentList: ArrayList<CommentListData>? = null
     private var paginationId: String? = null
     private var contentType: String? = null
-    private var articleAuthorId: String? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.article_short_story_mom_vlog_notification_activity)
+        setContentView(R.layout.content_comment_reply_notification_activity)
         commentsShimmerLayout = findViewById(R.id.CommentsShimmerLayout)
         commentToolbarTextView = findViewById(R.id.commentToolbarTextView)
         commentRecyclerView = findViewById(R.id.commentRecyclerView)
@@ -126,14 +124,12 @@ class ArticleShortStoryMomVlogCommentNotificationActivity : BaseActivity(),
     }
 
     private fun showComments(commentsListData: ArrayList<CommentListData>) {
-        if (commentsListData.isNullOrEmpty()) {
-
-
-        } else {
-            if (paginationId == null)
+        if (!commentsListData.isNullOrEmpty()) {
+            if (paginationId == null) {
                 commentList = commentsListData
-            else
+            } else {
                 commentList?.addAll(commentsListData)
+            }
 
             paginationId = commentsListData.get(commentsListData.size - 1).id
             commentList?.let {
@@ -152,9 +148,9 @@ class ArticleShortStoryMomVlogCommentNotificationActivity : BaseActivity(),
             bundle.putString("show", "comment")
             bundle.putString("contentType", contentType)
             val articleShortStoryMomVlogCommentAndReplyNotificationFragment =
-                ArticleShortStoryMomVlogCommentAndReplyNotificationFragment()
+                ContentCommentReplyNotificationFragment()
             articleShortStoryMomVlogCommentAndReplyNotificationFragment.arguments = bundle
-            (this@ArticleShortStoryMomVlogCommentNotificationActivity).addFragment(
+            (this@ContentCommentReplyNotificationActivity).addFragment(
                 articleShortStoryMomVlogCommentAndReplyNotificationFragment,
                 bundle
             )
@@ -169,9 +165,9 @@ class ArticleShortStoryMomVlogCommentNotificationActivity : BaseActivity(),
         bundle.putString("show", "replies")
         bundle.putString("contentType", contentType)
         val articleShortStoryMomVlogCommentAndReplyNotificationFragment =
-            ArticleShortStoryMomVlogCommentAndReplyNotificationFragment()
+            ContentCommentReplyNotificationFragment()
         articleShortStoryMomVlogCommentAndReplyNotificationFragment.arguments = bundle
-        (this@ArticleShortStoryMomVlogCommentNotificationActivity).addFragment(
+        (this@ContentCommentReplyNotificationActivity).addFragment(
             articleShortStoryMomVlogCommentAndReplyNotificationFragment,
             bundle
         )
@@ -251,28 +247,6 @@ class ArticleShortStoryMomVlogCommentNotificationActivity : BaseActivity(),
                 call: Call<ResponseBody?>,
                 response: Response<ResponseBody?>
             ) {
-                if (response == null || null == response.body()) {
-                    val nee =
-                        NetworkErrorException(response.raw().toString())
-                    FirebaseCrashlytics.getInstance().recordException(nee)
-
-                    ToastUtils.showToast(
-                        this@ArticleShortStoryMomVlogCommentNotificationActivity,
-                        resources.getString(R.string.server_went_wrong)
-                    )
-
-                    return
-                }
-                try {
-                    val resData = String(response.body()!!.bytes())
-                    val jsonObject = JSONObject(resData)
-                    if (jsonObject.getJSONObject("status").toString() == Constants.SUCCESS && jsonObject
-                            .getJSONObject("code").toString() == "200") {
-                    }
-                } catch (e:Exception) {
-                    FirebaseCrashlytics.getInstance().recordException(e)
-                    Log.d("MC4kException", Log.getStackTraceString(e))
-                }
             }
 
             override fun onFailure(
@@ -404,7 +378,7 @@ class ArticleShortStoryMomVlogCommentNotificationActivity : BaseActivity(),
                     FirebaseCrashlytics.getInstance().recordException(nee)
 
                     ToastUtils.showToast(
-                        this@ArticleShortStoryMomVlogCommentNotificationActivity,
+                        this@ContentCommentReplyNotificationActivity,
                         "Failed to delete comment. Please try again"
                     )
 
@@ -421,14 +395,14 @@ class ArticleShortStoryMomVlogCommentNotificationActivity : BaseActivity(),
                         }
                     } else {
                         ToastUtils.showToast(
-                            this@ArticleShortStoryMomVlogCommentNotificationActivity,
+                            this@ContentCommentReplyNotificationActivity,
                             "Failed to delete comment. Please try again"
                         )
 
                     }
-                } catch (e:Exception) {
+                } catch (e: Exception) {
                     ToastUtils.showToast(
-                        this@ArticleShortStoryMomVlogCommentNotificationActivity,
+                        this@ContentCommentReplyNotificationActivity,
                         "Failed to delete comment. Please try again"
                     )
 
@@ -443,7 +417,7 @@ class ArticleShortStoryMomVlogCommentNotificationActivity : BaseActivity(),
             ) {
                 removeProgressDialog()
                 ToastUtils.showToast(
-                    this@ArticleShortStoryMomVlogCommentNotificationActivity,
+                    this@ContentCommentReplyNotificationActivity,
                     "Failed to add comment. Please try again"
                 )
                 FirebaseCrashlytics.getInstance().recordException(t)

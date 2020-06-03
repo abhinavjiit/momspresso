@@ -11,15 +11,15 @@ import com.mycity4kids.R
 import com.mycity4kids.models.response.CommentListData
 import com.mycity4kids.utils.DateTimeUtils
 import com.squareup.picasso.Picasso
-import kotlinx.android.synthetic.main.notification_replies_adapter.view.*
+import kotlinx.android.synthetic.main.notification_replies_item.view.*
 
-class ArticleStoryVlogNotificationAdapter(val recyclerViewClickListner: RecyclerViewRepliesClickListner) :
-    RecyclerView.Adapter<ArticleStoryVlogNotificationAdapter.RepliesViewHolder>() {
+class ContentCommentReplyNotificationAdapter(val recyclerViewClickListner: RecyclerViewRepliesClickListner) :
+    RecyclerView.Adapter<ContentCommentReplyNotificationAdapter.RepliesViewHolder>() {
     private var repliesList: ArrayList<CommentListData>? = null
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RepliesViewHolder {
         val view =
-            LayoutInflater.from(parent.context).inflate(R.layout.notification_replies_adapter, null)
+            LayoutInflater.from(parent.context).inflate(R.layout.notification_replies_item, null)
         return RepliesViewHolder(view)
     }
 

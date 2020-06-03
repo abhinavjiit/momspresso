@@ -85,7 +85,7 @@ import com.mycity4kids.retrofitAPIsInterfaces.DeepLinkingAPI;
 import com.mycity4kids.retrofitAPIsInterfaces.ShortStoryAPI;
 import com.mycity4kids.retrofitAPIsInterfaces.TopicsCategoryAPI;
 import com.mycity4kids.retrofitAPIsInterfaces.VlogsListingAndDetailsAPI;
-import com.mycity4kids.ui.ArticleShortStoryMomVlogCommentNotificationActivity;
+import com.mycity4kids.ui.ContentCommentReplyNotificationActivity;
 import com.mycity4kids.ui.GroupMembershipStatus;
 import com.mycity4kids.ui.activity.collection.CollectionsActivity;
 import com.mycity4kids.ui.activity.collection.UserCollectionItemListActivity;
@@ -956,22 +956,21 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
                                     BaseApplication.getAppContext(), false);
                         });
             }
-            else if (AppConstants.ARTICLE_STORY_VLOG_COMMENT_TYPE.equalsIgnoreCase(notificationType)
-                    || AppConstants.ARTICLE_STORY_VLOG_REPLY_TYPE.equalsIgnoreCase(notificationType)) {
+            else if (AppConstants.NOTIFICATION_TYPE_CONTENT_COMMENTS.equalsIgnoreCase(notificationType)
+                    || AppConstants.NOTIFICATION_TYPE_CONTENT_REPLY.equalsIgnoreCase(notificationType)) {
                 String articleId = notificationExtras.getString("id");
                 String commentId = notificationExtras.getString("commentId");
                 String type = notificationExtras.getString("type");
                 String contentType = notificationExtras.getString("contentType");//replyId
                 String replyId = notificationExtras.getString("replyId");
                 Intent commentReplyNotificationIntent = new Intent(this,
-                        ArticleShortStoryMomVlogCommentNotificationActivity.class);
+                        ContentCommentReplyNotificationActivity.class);
                 commentReplyNotificationIntent.putExtra("articleId", articleId);
                 commentReplyNotificationIntent.putExtra("commentId", commentId);
                 commentReplyNotificationIntent.putExtra("type", type);
                 commentReplyNotificationIntent.putExtra("contentType", contentType);
                 commentReplyNotificationIntent.putExtra("replyId", replyId);
                 startActivity(commentReplyNotificationIntent);
-
             }
             else if (AppConstants.NOTIFICATION_TYPE_ARTICLE_DETAILS.equalsIgnoreCase(notificationType)) {
                 pushEvent("article_details");

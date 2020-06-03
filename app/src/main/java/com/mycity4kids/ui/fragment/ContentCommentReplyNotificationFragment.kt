@@ -26,8 +26,8 @@ import com.mycity4kids.models.response.CommentListData
 import com.mycity4kids.models.response.CommentListResponse
 import com.mycity4kids.models.response.LikeReactionModel
 import com.mycity4kids.retrofitAPIsInterfaces.ArticleDetailsAPI
-import com.mycity4kids.ui.ArticleShortStoryMomVlogCommentNotificationActivity
-import com.mycity4kids.ui.adapter.ArticleStoryVlogNotificationAdapter
+import com.mycity4kids.ui.ContentCommentReplyNotificationActivity
+import com.mycity4kids.ui.adapter.ContentCommentReplyNotificationAdapter
 import com.mycity4kids.utils.DateTimeUtils
 import com.mycity4kids.utils.ToastUtils
 import com.squareup.picasso.Picasso
@@ -37,8 +37,8 @@ import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 
-class ArticleShortStoryMomVlogCommentAndReplyNotificationFragment : BaseFragment(),
-    View.OnClickListener, ArticleStoryVlogNotificationAdapter.RecyclerViewRepliesClickListner,
+class ContentCommentReplyNotificationFragment : BaseFragment(),
+    View.OnClickListener, ContentCommentReplyNotificationAdapter.RecyclerViewRepliesClickListner,
     CommentOptionsDialogFragment.ICommentOptionAction {
 
     lateinit var repliesRecyclerView: RecyclerView
@@ -52,7 +52,7 @@ class ArticleShortStoryMomVlogCommentAndReplyNotificationFragment : BaseFragment
     private lateinit var replyCommentTextView: TextView
     private lateinit var moreOptionImageView: ImageView
     private lateinit var repliesShimmerLayout: ShimmerFrameLayout
-    private lateinit var articleStoryVlogNotificationAdapter: ArticleStoryVlogNotificationAdapter
+    private lateinit var contentCommentReplyNotificationAdapter: ContentCommentReplyNotificationAdapter
     private var type: String? = null
     private var replyId: String? = null
     private lateinit var viewAllTextView: TextView
@@ -68,7 +68,7 @@ class ArticleShortStoryMomVlogCommentAndReplyNotificationFragment : BaseFragment
         savedInstanceState: Bundle?
     ): View? {
         val view = inflater.inflate(
-            R.layout.article_short_story_vlogs_notification_comment_fragment_layout,
+            R.layout.content_comment_reply_notification_fragment,
             container,
             false
         )
@@ -89,9 +89,9 @@ class ArticleShortStoryMomVlogCommentAndReplyNotificationFragment : BaseFragment
         type = arguments?.getString("show")
         contentType = arguments?.getString("contentType")
         val linearLayoutManager = LinearLayoutManager(context)
-        articleStoryVlogNotificationAdapter = ArticleStoryVlogNotificationAdapter(this)
+        contentCommentReplyNotificationAdapter = ContentCommentReplyNotificationAdapter(this)
         repliesRecyclerView.layoutManager = linearLayoutManager
-        repliesRecyclerView.adapter = articleStoryVlogNotificationAdapter
+        repliesRecyclerView.adapter = contentCommentReplyNotificationAdapter
         if ("comment" == type) {
             getComment()
             getCommentReplies()
@@ -230,8 +230,8 @@ class ArticleShortStoryMomVlogCommentAndReplyNotificationFragment : BaseFragment
                                 repliesShimmerLayout.visibility = View.GONE
                                 repliesData = repliesListData
                                 repliesData?.let {
-                                    articleStoryVlogNotificationAdapter.setRepliesList(it)
-                                    articleStoryVlogNotificationAdapter.notifyDataSetChanged()
+                                    contentCommentReplyNotificationAdapter.setRepliesList(it)
+                                    contentCommentReplyNotificationAdapter.notifyDataSetChanged()
                                 }
                             }
                         } catch (e: Exception) {
@@ -271,8 +271,8 @@ class ArticleShortStoryMomVlogCommentAndReplyNotificationFragment : BaseFragment
                         setDataInToCommentContainer(commentData)
                         repliesData = commentData?.replies as ArrayList<CommentListData>
                         repliesData?.let {
-                            articleStoryVlogNotificationAdapter.setRepliesList(it)
-                            articleStoryVlogNotificationAdapter.notifyDataSetChanged()
+                            contentCommentReplyNotificationAdapter.setRepliesList(it)
+                            contentCommentReplyNotificationAdapter.notifyDataSetChanged()
                             viewAllTextView.visibility = View.VISIBLE
                         }
                     }
@@ -322,7 +322,7 @@ class ArticleShortStoryMomVlogCommentAndReplyNotificationFragment : BaseFragment
                     .likeDislikeComment(commentData.id, commentListData)
                 call.enqueue(likeDisLikeCommentCallback)
                 commentId?.let {
-                    (activity as ArticleShortStoryMomVlogCommentNotificationActivity).likeDislikeComment(
+                    (activity as ContentCommentReplyNotificationActivity).likeDislikeComment(
                         it,
                         false
                     )
@@ -347,7 +347,7 @@ class ArticleShortStoryMomVlogCommentAndReplyNotificationFragment : BaseFragment
                     .likeDislikeComment(commentData.id, commentListData)
                 call.enqueue(likeDisLikeCommentCallback)
                 commentId?.let {
-                    (activity as ArticleShortStoryMomVlogCommentNotificationActivity).likeDislikeComment(
+                    (activity as ContentCommentReplyNotificationActivity).likeDislikeComment(
                         it,
                         true
                     )
@@ -414,7 +414,7 @@ class ArticleShortStoryMomVlogCommentAndReplyNotificationFragment : BaseFragment
                     .likeDislikeComment(repliesData?.get(position)?.id, commentListData)
                 call.enqueue(likeDisLikeCommentCallback)
             }
-            articleStoryVlogNotificationAdapter.notifyDataSetChanged()
+            contentCommentReplyNotificationAdapter.notifyDataSetChanged()
         } else if (v?.id == R.id.moreOptionImageView) {
             val commentOptionsDialogFragment =
                 CommentOptionsDialogFragment()
@@ -536,11 +536,11 @@ class ArticleShortStoryMomVlogCommentAndReplyNotificationFragment : BaseFragment
                             repliesData?.add(commentListData)
                         }
                         repliesData?.let {
-                            articleStoryVlogNotificationAdapter.setRepliesList(it)
-                            articleStoryVlogNotificationAdapter.notifyDataSetChanged()
+                            contentCommentReplyNotificationAdapter.setRepliesList(it)
+                            contentCommentReplyNotificationAdapter.notifyDataSetChanged()
                         }
                         commentId?.let {
-                            (activity as ArticleShortStoryMomVlogCommentNotificationActivity).addReply(
+                            (activity as ContentCommentReplyNotificationActivity).addReply(
                                 it
                             )
                         }
@@ -632,11 +632,11 @@ class ArticleShortStoryMomVlogCommentAndReplyNotificationFragment : BaseFragment
                     val responseData = response.body()
                     if (responseData?.code == 200 && Constants.SUCCESS == responseData.status) {
                         commentId?.let {
-                            (activity as ArticleShortStoryMomVlogCommentNotificationActivity).deleteComment(
+                            (activity as ContentCommentReplyNotificationActivity).deleteComment(
                                 it
                             )
                         }
-                        (activity as ArticleShortStoryMomVlogCommentNotificationActivity).onBackPressed()
+                        (activity as ContentCommentReplyNotificationActivity).onBackPressed()
                     } else {
                         if (isAdded) {
                             ToastUtils.showToast(
@@ -745,9 +745,9 @@ class ArticleShortStoryMomVlogCommentAndReplyNotificationFragment : BaseFragment
                                 "Reply(" + commentData.repliesCount.minus(1).toString() + ")"
                         }
                         commentData.repliesCount = commentData.repliesCount.minus(1)
-                        articleStoryVlogNotificationAdapter.notifyDataSetChanged()
+                        contentCommentReplyNotificationAdapter.notifyDataSetChanged()
                         commentId?.let { it ->
-                            (activity as ArticleShortStoryMomVlogCommentNotificationActivity).deleteReply(
+                            (activity as ContentCommentReplyNotificationActivity).deleteReply(
                                 it
                             )
                         }
@@ -848,7 +848,7 @@ class ArticleShortStoryMomVlogCommentAndReplyNotificationFragment : BaseFragment
                 removeProgressDialog()
                 try {
                     repliesData?.get(position)?.message = content
-                    articleStoryVlogNotificationAdapter.notifyDataSetChanged()
+                    contentCommentReplyNotificationAdapter.notifyDataSetChanged()
                 } catch (e: Exception) {
                     FirebaseCrashlytics.getInstance().recordException(e)
                     Log.d("MC4kException", Log.getStackTraceString(e))

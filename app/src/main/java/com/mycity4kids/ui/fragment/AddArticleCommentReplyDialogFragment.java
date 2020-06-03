@@ -22,7 +22,7 @@ import com.google.firebase.crashlytics.FirebaseCrashlytics;
 import com.mycity4kids.R;
 import com.mycity4kids.application.BaseApplication;
 import com.mycity4kids.models.response.CommentListData;
-import com.mycity4kids.ui.ArticleShortStoryMomVlogCommentNotificationActivity;
+import com.mycity4kids.ui.ContentCommentReplyNotificationActivity;
 import com.mycity4kids.utils.DateTimeUtils;
 import com.mycity4kids.utils.StringUtils;
 import com.squareup.picasso.Picasso;
@@ -145,14 +145,14 @@ public class AddArticleCommentReplyDialogFragment extends DialogFragment impleme
 
 
                         } else if (parentFragment != null
-                                && parentFragment instanceof ArticleShortStoryMomVlogCommentAndReplyNotificationFragment) {
-                            ((ArticleShortStoryMomVlogCommentAndReplyNotificationFragment) getParentFragment())
+                                && parentFragment instanceof ContentCommentReplyNotificationFragment) {
+                            ((ContentCommentReplyNotificationFragment) getParentFragment())
                                     .editComment(commentReplyEditText.getText().toString()
                                             , commentOrReplyData.getId(), position);
                         }
-                        else if(getActivity()!=null&&getActivity() instanceof ArticleShortStoryMomVlogCommentNotificationActivity)
+                        else if(getActivity()!=null&&getActivity() instanceof ContentCommentReplyNotificationActivity)
                         {
-                            ((ArticleShortStoryMomVlogCommentNotificationActivity) getActivity())
+                            ((ContentCommentReplyNotificationActivity) getActivity())
                                     .editComment(commentReplyEditText.getText().toString()
                                             , commentOrReplyData.getId(), position);
                         }
@@ -173,9 +173,9 @@ public class AddArticleCommentReplyDialogFragment extends DialogFragment impleme
                                                 commentOrReplyData.getParentCommentId(), commentOrReplyData.getId());
                             }
                         } else if (fragment != null
-                                && fragment instanceof ArticleShortStoryMomVlogCommentAndReplyNotificationFragment) {
+                                && fragment instanceof ContentCommentReplyNotificationFragment) {
 
-                            ((ArticleShortStoryMomVlogCommentAndReplyNotificationFragment) getParentFragment())
+                            ((ContentCommentReplyNotificationFragment) getParentFragment())
                                     .editReply(commentReplyEditText.getText().toString(),
                                             commentOrReplyData.getParentCommentId(), commentOrReplyData.getId(),
                                             position);
@@ -191,14 +191,14 @@ public class AddArticleCommentReplyDialogFragment extends DialogFragment impleme
                                 ((ArticleCommentsFragment) getParentFragment())
                                         .addReply(commentReplyEditText.getText().toString(),
                                                 commentOrReplyData.getId());
-                            } else if (getParentFragment() instanceof ArticleShortStoryMomVlogCommentAndReplyNotificationFragment) {
-                                ((ArticleShortStoryMomVlogCommentAndReplyNotificationFragment) getParentFragment())
+                            } else if (getParentFragment() instanceof ContentCommentReplyNotificationFragment) {
+                                ((ContentCommentReplyNotificationFragment) getParentFragment())
                                         .addReply(commentReplyEditText.getText().toString(),
                                                 commentOrReplyData.getId());
                             } else if (
                                     getActivity() != null
-                                            && (getActivity()) instanceof ArticleShortStoryMomVlogCommentNotificationActivity) {
-                                ((ArticleShortStoryMomVlogCommentNotificationActivity)  getActivity()).addReply(commentOrReplyData.getId());
+                                            && (getActivity()) instanceof ContentCommentReplyNotificationActivity) {
+                                ((ContentCommentReplyNotificationActivity)  getActivity()).addReply(commentOrReplyData.getId());
                             }
                         }
                     }

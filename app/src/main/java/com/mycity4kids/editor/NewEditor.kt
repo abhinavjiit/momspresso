@@ -579,11 +579,11 @@ class NewEditor : BaseActivity(),
                 if (wordsLength <= MAX_WORDS) {
                     wordCount.text = ("" + (300 - wordsLength))
                     wordCount.background =
-                        (resources.getDrawable(R.drawable.short_story_word_count_bg, null))
-                } else {
-                    wordCount.text = ("-" + (wordsLength - 300))
-                    wordCount.background =
                         (resources.getDrawable(R.drawable.campaign_detail_red_bg, null))
+                } else {
+                    wordCount.text = "" + (wordsLength - 300)
+                    wordCount.background =
+                        (resources.getDrawable(R.drawable.short_story_word_count_bg, null))
                 }
             }
 

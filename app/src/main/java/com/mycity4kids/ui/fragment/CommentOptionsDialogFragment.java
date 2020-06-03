@@ -13,7 +13,7 @@ import androidx.fragment.app.DialogFragment;
 import com.mycity4kids.R;
 import com.mycity4kids.application.BaseApplication;
 import com.mycity4kids.preference.SharedPrefUtils;
-import com.mycity4kids.ui.ArticleShortStoryMomVlogCommentNotificationActivity;
+import com.mycity4kids.ui.ContentCommentReplyNotificationActivity;
 
 /**
  * Created by user on 08-06-2015.
@@ -68,7 +68,7 @@ public class CommentOptionsDialogFragment extends DialogFragment implements OnCl
         switch (view.getId()) {
             case R.id.deleteCommentTextView: {
                 if (getActivity() != null
-                        && getActivity() instanceof ArticleShortStoryMomVlogCommentNotificationActivity) {
+                        && getActivity() instanceof ContentCommentReplyNotificationActivity) {
                     ICommentOptionAction iCommentOptionAction = (ICommentOptionAction) getActivity();
                     iCommentOptionAction.onResponseDelete(position, responseType);
                     dismiss();
@@ -81,7 +81,7 @@ public class CommentOptionsDialogFragment extends DialogFragment implements OnCl
             break;
             case R.id.editCommentTextView: {
                 if (getActivity() != null
-                        && getActivity() instanceof ArticleShortStoryMomVlogCommentNotificationActivity) {
+                        && getActivity() instanceof ContentCommentReplyNotificationActivity) {
                     ICommentOptionAction iCommentOptionAction = (ICommentOptionAction) getActivity();
                     iCommentOptionAction.onResponseEdit(position, responseType);
                     dismiss();
@@ -94,7 +94,7 @@ public class CommentOptionsDialogFragment extends DialogFragment implements OnCl
             break;
             case R.id.reportCommentTextView: {
                 if (getActivity() != null
-                        && getActivity() instanceof ArticleShortStoryMomVlogCommentNotificationActivity) {
+                        && getActivity() instanceof ContentCommentReplyNotificationActivity) {
                     ICommentOptionAction iCommentOptionAction = (ICommentOptionAction) getActivity();
                     iCommentOptionAction.onResponseReport(position, responseType);
                     dismiss();
