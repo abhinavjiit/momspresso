@@ -75,7 +75,7 @@
     app:shareBgColor="@color/all_invite_link"
     app:shareImage="@drawable/ic_ss_generic"
     app:shareImageTint="@color/white_color"
-    app:shareText="@string/invite_friends_link"
+    app:shareText="@string/invite_friends_whatsapp"
     app:textSize="16sp" />
 
   <TextView

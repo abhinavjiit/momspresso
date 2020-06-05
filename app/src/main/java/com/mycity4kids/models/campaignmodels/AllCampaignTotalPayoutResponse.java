@@ -131,7 +131,7 @@ public class AllCampaignTotalPayoutResponse extends BaseResponse {
         @SerializedName("tax_amount")
         private Double tax_amount;
         @SerializedName("tax_percentage")
-        private int tax_percentage;
+        private Double tax_percentage;
         @SerializedName("total_amount")
         private Double total_amount;
         @SerializedName("transaction")
@@ -185,11 +185,11 @@ public class AllCampaignTotalPayoutResponse extends BaseResponse {
             this.tax_amount = tax_amount;
         }
 
-        public int getTax_percentage() {
+        public Double getTax_percentage() {
             return tax_percentage;
         }
 
-        public void setTax_percentage(int tax_percentage) {
+        public void setTax_percentage(Double tax_percentage) {
             this.tax_percentage = tax_percentage;
         }
 
