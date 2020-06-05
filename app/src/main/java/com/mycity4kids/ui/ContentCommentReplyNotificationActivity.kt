@@ -5,6 +5,7 @@ import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.view.View
+import android.widget.RelativeLayout
 import android.widget.TextView
 import androidx.fragment.app.FragmentManager
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -26,8 +27,8 @@ import com.mycity4kids.ui.activity.ParallelFeedActivity
 import com.mycity4kids.ui.activity.ShortStoryContainerActivity
 import com.mycity4kids.ui.adapter.ArticleCommentsRecyclerAdapter
 import com.mycity4kids.ui.fragment.AddArticleCommentReplyDialogFragment
-import com.mycity4kids.ui.fragment.ContentCommentReplyNotificationFragment
 import com.mycity4kids.ui.fragment.CommentOptionsDialogFragment
+import com.mycity4kids.ui.fragment.ContentCommentReplyNotificationFragment
 import com.mycity4kids.ui.fragment.ReportContentDialogFragment
 import com.mycity4kids.utils.EndlessScrollListener
 import com.mycity4kids.utils.ToastUtils
@@ -51,13 +52,14 @@ class ContentCommentReplyNotificationActivity : BaseActivity(),
     private var commentList: ArrayList<CommentListData>? = null
     private var paginationId: String? = null
     private var contentType: String? = null
-
+    private lateinit var rLayout: RelativeLayout
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.content_comment_reply_notification_activity)
         commentsShimmerLayout = findViewById(R.id.CommentsShimmerLayout)
         commentToolbarTextView = findViewById(R.id.commentToolbarTextView)
         commentRecyclerView = findViewById(R.id.commentRecyclerView)
+        rLayout = findViewById(R.id.rLayout)
         contentType = intent?.getStringExtra("contentType")
         articleId = intent?.getStringExtra("articleId")
         replyId = intent?.getStringExtra("replyId")
@@ -65,7 +67,7 @@ class ContentCommentReplyNotificationActivity : BaseActivity(),
         val show = intent?.getStringExtra("type")
         commentList = ArrayList()
         getComments(null)
-        if ("comment" == show) {
+        if ("comment" == show || replyId.isNullOrBlank()) {
             showCommentFragment(commentId)
         } else if ("reply" == show) {
             showReplyFragment()
@@ -84,6 +86,7 @@ class ContentCommentReplyNotificationActivity : BaseActivity(),
 
         })
         commentToolbarTextView.setOnClickListener(this)
+        rLayout.setOnClickListener(this)
     }
 
     private fun getComments(type: String?) {
@@ -485,6 +488,115 @@ class ContentCommentReplyNotificationActivity : BaseActivity(),
     override fun onClick(v: View?) {
         if (v?.id == R.id.commentToolbarTextView) {
             onBackPressed()
+        } else if (v?.id == R.id.rLayout) {
+            val args = Bundle()
+            val addArticleCommentReplyDialogFragment =
+                AddArticleCommentReplyDialogFragment()
+            addArticleCommentReplyDialogFragment.arguments = args
+            addArticleCommentReplyDialogFragment.isCancelable = true
+            val fm: FragmentManager = supportFragmentManager
+            addArticleCommentReplyDialogFragment.show(fm, "Add Comment")
         }
     }
+
+
+    fun addComment(content: String) {
+        showProgressDialog("Adding Comment")
+        val addEditCommentOrReplyRequest =
+            AddEditCommentOrReplyRequest()
+        addEditCommentOrReplyRequest.post_id = articleId
+        addEditCommentOrReplyRequest.message = content
+        addEditCommentOrReplyRequest.parent_id = "0"
+        when (contentType) {
+            "2" -> {
+                addEditCommentOrReplyRequest.type = "video"
+            }
+            "0" -> {
+                addEditCommentOrReplyRequest.type = "article"
+            }
+            else -> {
+                addEditCommentOrReplyRequest.type = "story"
+            }
+        }
+        val retrofit = BaseApplication.getInstance().retrofit
+        val articleDetailsApi = retrofit.create(ArticleDetailsAPI::class.java)
+        val call: Call<CommentListResponse> =
+            articleDetailsApi.addCommentOrReply(addEditCommentOrReplyRequest)
+        call.enqueue(addCommentResponseListener)
+    }
+
+    private val addCommentResponseListener: Callback<CommentListResponse> =
+        object : Callback<CommentListResponse> {
+            override fun onResponse(
+                call: Call<CommentListResponse?>,
+                response: Response<CommentListResponse?>
+            ) {
+                removeProgressDialog()
+                if (response.body() == null) {
+                    val nee =
+                        NetworkErrorException(response.raw().toString())
+                    FirebaseCrashlytics.getInstance().recordException(nee)
+
+                    ToastUtils.showToast(
+                        this@ContentCommentReplyNotificationActivity,
+                        "Failed to add comment. Please try again"
+                    )
+
+                    return
+                }
+                try {
+                    val responseData = response.body()
+                    if (responseData?.code == 200 && Constants.SUCCESS == responseData.status) {
+                        val commentModel = CommentListData()
+                        commentModel.id = responseData.data[0].id
+                        commentModel.message = responseData.data[0].message
+                        commentModel.createdTime = responseData.data[0].createdTime
+                        commentModel.postId = responseData.data[0].postId
+                        commentModel.parentCommentId = "0"
+                        commentModel.replies = ArrayList()
+                        commentModel.repliesCount = 0
+                        commentModel.userPic = responseData.data[0].userPic
+                        commentModel.userName = responseData.data[0].userName
+                        commentModel.userId = responseData.data[0].userId
+                        if (commentList.isNullOrEmpty()) {
+                            val commentData = ArrayList<CommentListData>()
+                            commentData.add(commentModel)
+                            commentList = commentData
+                        } else {
+                            commentList?.add(0, commentModel)
+                        }
+                        commentList?.let {
+                            articleCommentsRecyclerAdapter.setData(it)
+                            articleCommentsRecyclerAdapter.notifyDataSetChanged()
+                        }
+                    } else {
+                        ToastUtils.showToast(
+                            this@ContentCommentReplyNotificationActivity,
+                            "Failed to add comment. Please try again"
+                        )
+                    }
+                } catch (e: Exception) {
+                    ToastUtils.showToast(
+                        this@ContentCommentReplyNotificationActivity,
+                        "Failed to add comment. Please try again"
+                    )
+                    FirebaseCrashlytics.getInstance().recordException(e)
+                    Log.d("MC4kException", Log.getStackTraceString(e))
+                }
+            }
+
+            override fun onFailure(
+                call: Call<CommentListResponse?>,
+                t: Throwable
+            ) {
+                removeProgressDialog()
+                ToastUtils.showToast(
+                    this@ContentCommentReplyNotificationActivity,
+                    "Failed to add comment. Please try again"
+                )
+
+                FirebaseCrashlytics.getInstance().recordException(t)
+                Log.d("MC4kException", Log.getStackTraceString(t))
+            }
+        }
 }
