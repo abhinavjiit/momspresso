@@ -149,9 +149,8 @@ public class AddArticleCommentReplyDialogFragment extends DialogFragment impleme
                             ((ContentCommentReplyNotificationFragment) getParentFragment())
                                     .editComment(commentReplyEditText.getText().toString()
                                             , commentOrReplyData.getId(), position);
-                        }
-                        else if(getActivity()!=null&&getActivity() instanceof ContentCommentReplyNotificationActivity)
-                        {
+                        } else if (getActivity() != null
+                                && getActivity() instanceof ContentCommentReplyNotificationActivity) {
                             ((ContentCommentReplyNotificationActivity) getActivity())
                                     .editComment(commentReplyEditText.getText().toString()
                                             , commentOrReplyData.getId(), position);
@@ -183,8 +182,14 @@ public class AddArticleCommentReplyDialogFragment extends DialogFragment impleme
 
                     } else {
                         if (commentOrReplyData == null) {
-                            ((AddComments) this.getParentFragment())
-                                    .addComments(commentReplyEditText.getText().toString());
+                            if (getActivity() != null
+                                    && getActivity() instanceof ContentCommentReplyNotificationActivity) {
+                                ((ContentCommentReplyNotificationActivity)getActivity()).addComment(commentReplyEditText.getText().toString());
+
+                            } else {
+                                ((AddComments) this.getParentFragment())
+                                        .addComments(commentReplyEditText.getText().toString());
+                            }
 
                         } else {
                             if (getParentFragment() instanceof ArticleCommentsFragment) {
@@ -198,7 +203,8 @@ public class AddArticleCommentReplyDialogFragment extends DialogFragment impleme
                             } else if (
                                     getActivity() != null
                                             && (getActivity()) instanceof ContentCommentReplyNotificationActivity) {
-                                ((ContentCommentReplyNotificationActivity)  getActivity()).addReply(commentOrReplyData.getId());
+                                ((ContentCommentReplyNotificationActivity) getActivity())
+                                        .addReply(commentOrReplyData.getId());
                             }
                         }
                     }
