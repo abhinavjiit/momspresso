@@ -94,4 +94,5 @@
     <dimen name="space_56">56dp</dimen>
     <dimen name="space_17">17dp</dimen>
     <dimen name="space_22">22dp</dimen>
+  <dimen name="space_58">58dp</dimen>
 </resources>

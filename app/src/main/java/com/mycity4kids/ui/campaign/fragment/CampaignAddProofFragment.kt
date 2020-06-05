@@ -171,7 +171,7 @@ class CampaignAddProofFragment : BaseFragment(), UrlProofRecyclerAdapter.ClickLi
 
     fun showEditDeleteProofDialog(cellIndex: Int) {
         val dialog = AlertDialog.Builder(activity!!, R.style.MyAlertDialogStyle)
-        dialog.setMessage("Are you sure? you want to delete this image.").setNegativeButton("Delete") { dialog, which ->
+        dialog.setMessage("Are you sure? you want to delete this proof.").setNegativeButton("Delete") { dialog, which ->
             dialog.cancel()
             if (!campaignImageProofList.isNullOrEmpty() && cellIndex < campaignImageProofList.size && !campaignImageProofList.get(
                     cellIndex
@@ -353,7 +353,7 @@ class CampaignAddProofFragment : BaseFragment(), UrlProofRecyclerAdapter.ClickLi
 
         chooseVideoTextView.setOnClickListener {
             val intent = Intent()
-            intent.setType("video/mp4")
+            intent.setType("video/*")
             intent.setAction(Intent.ACTION_PICK)
             startActivityForResult(intent, SELECT_VIDEO)
             chooseMediaTypeContainer.visibility = View.GONE

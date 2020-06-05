@@ -732,7 +732,6 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
         if (getIntent().getBooleanExtra("showInviteDialog", false)) {
             launchInviteFriendsDialog();
         }
-        launchInviteFriendsDialog();
         getUsersData();
     }
 
