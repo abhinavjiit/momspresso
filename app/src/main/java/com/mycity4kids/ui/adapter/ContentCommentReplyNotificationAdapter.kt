@@ -39,21 +39,20 @@ class ContentCommentReplyNotificationAdapter(val recyclerViewClickListner: Recyc
             holder.commentDataTextView.text = (
                 (Html
                     .fromHtml(
-                        "<b>" + "<font color=\"#D54058\">" + repliesList?.get(position)?.userName + "</font>"
-                            + "</b>"
-                            + " "
-                            + "<font color=\"#4A4A4A\">" + repliesList?.get(position)?.message + "</font>"
-                        , Html.FROM_HTML_MODE_LEGACY
+                        "<b>" + "<font color=\"#D54058\">" + repliesList?.get(position)?.userName + "</font>" +
+                            "</b>" +
+                            " " +
+                            "<font color=\"#4A4A4A\">" + repliesList?.get(position)?.message + "</font>", Html.FROM_HTML_MODE_LEGACY
                     ))
                 )
         } else {
             holder.commentDataTextView.text = (
                 (Html
                     .fromHtml(
-                        "<b>" + "<font color=\"#D54058\">" + repliesList?.get(position)?.userName + "</font>"
-                            + "</b>"
-                            + " "
-                            + "<font color=\"#4A4A4A\">" + repliesList?.get(position)?.message + "</font>"
+                        "<b>" + "<font color=\"#D54058\">" + repliesList?.get(position)?.userName + "</font>" +
+                            "</b>" +
+                            " " +
+                            "<font color=\"#4A4A4A\">" + repliesList?.get(position)?.message + "</font>"
                     ))
                 )
         }

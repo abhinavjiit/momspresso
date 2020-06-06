@@ -4,14 +4,12 @@ import android.Manifest
 import android.accounts.NetworkErrorException
 import android.content.Intent
 import android.content.pm.PackageManager
-import android.graphics.Bitmap
 import android.graphics.Color
 import android.graphics.PorterDuff
 import android.graphics.drawable.GradientDrawable
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
-import android.provider.MediaStore
 import android.util.Log
 import android.view.Gravity
 import android.view.MenuItem
@@ -35,7 +33,6 @@ import com.mycity4kids.application.BaseApplication
 import com.mycity4kids.base.BaseActivity
 import com.mycity4kids.constants.AppConstants
 import com.mycity4kids.constants.Constants
-import com.mycity4kids.filechooser.com.ipaulpro.afilechooser.utils.FileUtils
 import com.mycity4kids.gtmutils.Utils
 import com.mycity4kids.models.request.ShortStoryConfigRequest
 import com.mycity4kids.models.request.ShortStoryDraftOrPublishRequest
@@ -521,41 +518,29 @@ class ShortStoriesCardActivity : BaseActivity() {
     }
 
     private fun createAndUploadShareableImage() {
-        var finalBitmap: Bitmap? = null
         try {
-            finalBitmap = AppUtils.getBitmapFromView(rlLayout, "shortStory")
+            AppUtils.getBitmapFromView(rlLayout, "shortStory")
         } catch (e: Exception) {
             FirebaseCrashlytics.getInstance().recordException(e)
             Log.d("MC4kException", Log.getStackTraceString(e))
         }
-
-        val retro = BaseApplication.getInstance().retrofit
-        val imageUploadAPI = retro.create(ImageUploadAPI::class.java)
-        path = try {
-            MediaStore.Images.Media.insertImage(
-                contentResolver,
-                finalBitmap,
-                "Title" + System.currentTimeMillis(),
-                null
-            )
+        try {
+            file =
+                File(BaseApplication.getAppContext().getExternalFilesDir(null).toString() + File.separator + "shortStory" + ".jpg")
+            MEDIA_TYPE_PNG = "image/png".toMediaTypeOrNull()!!
+            requestBodyFile = file.asRequestBody(MEDIA_TYPE_PNG)
+            imageType = "4".toRequestBody("text/plain".toMediaTypeOrNull())
+            showProgressDialog(resources.getString(R.string.please_wait))
+            val retro = BaseApplication.getInstance().retrofit
+            val imageUploadAPI = retro.create(ImageUploadAPI::class.java)
+            val call = imageUploadAPI.uploadImage(imageType, requestBodyFile)
+            call.enqueue(ssImageUploadCallback)
         } catch (e: Exception) {
-            MediaStore.Images.Media.insertImage(
-                contentResolver,
-                finalBitmap,
-                "Title",
-                null
-            )
+            removeProgressDialog()
+            showToast(getString(R.string.went_wrong))
+            FirebaseCrashlytics.getInstance().recordException(e)
+            Log.d("MC4kException", Log.getStackTraceString(e))
         }
-
-        imageUriTemp = Uri.parse(path)
-        file = FileUtils.getFile(this, imageUriTemp)
-
-        MEDIA_TYPE_PNG = "image/png".toMediaTypeOrNull()!!
-        requestBodyFile = file.asRequestBody(MEDIA_TYPE_PNG)
-        imageType = "4".toRequestBody("text/plain".toMediaTypeOrNull())
-        showProgressDialog(resources.getString(R.string.please_wait))
-        val call = imageUploadAPI.uploadImage(imageType, requestBodyFile)
-        call.enqueue(ssImageUploadCallback)
     }
 
     private val ssImageUploadCallback = object : Callback<ImageUploadResponse> {

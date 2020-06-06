@@ -447,21 +447,56 @@ public class NotificationCenterListAdapter extends BaseAdapter implements GroupM
                     pushEvent("NOTIFICATION_CENTER_VIDEO_LISTING");
                 }
                 break;
-                case AppConstants.NOTIFICATION_CENTER_CONTENT_COMMENTS:
-                case AppConstants.NOTIFICATION_CENTER_CONTENT_REPLY: {
-                    String articleId = notificationList.get(position).getId();
-                    String commentId = notificationList.get(position).getCommentId();
-                    String type = notificationList.get(position).getType();
+                case AppConstants.NOTIFICATION_CENTER_CONTENT_COMMENTS: {
                     String contentType = notificationList.get(position).getContentType();
+                    String contentId = null;
+                    if (AppConstants.CONTENT_TYPE_ARTICLE.equals(contentType)) {
+                        contentId = notificationList.get(position).getArticleId();
+                    } else if (AppConstants.CONTENT_TYPE_SHORT_STORY.equals(contentType)) {
+                        contentId = notificationList.get(position).getArticleId();
+                    } else if (AppConstants.CONTENT_TYPE_VIDEO.equals(contentType)) {
+                        contentId = notificationList.get(position).getVideoId();
+                    }
+                    if (StringUtils.isNullOrEmpty(contentId)) {
+                        return;
+                    }
+                    String commentId = notificationList.get(position).getCommentId();
                     String replyId = notificationList.get(position).getReplyId();
                     Intent commentReplyNotificationIntent = new Intent(mainContext,
                             ContentCommentReplyNotificationActivity.class);
-                    commentReplyNotificationIntent.putExtra("articleId", articleId);
+                    commentReplyNotificationIntent.putExtra("articleId", contentId);
                     commentReplyNotificationIntent.putExtra("commentId", commentId);
-                    commentReplyNotificationIntent.putExtra("type", type);
+                    commentReplyNotificationIntent.putExtra("type", "comment");
                     commentReplyNotificationIntent.putExtra("contentType", contentType);
                     commentReplyNotificationIntent.putExtra("replyId", replyId);
                     mainContext.startActivity(commentReplyNotificationIntent);
+                    pushEvent("NOTIFICATION_CENTER_CONTENT_COMMENTS");
+                }
+                break;
+                case AppConstants.NOTIFICATION_CENTER_CONTENT_REPLY: {
+                    String contentType = notificationList.get(position).getContentType();
+                    String contentId = null;
+                    if (AppConstants.CONTENT_TYPE_ARTICLE.equals(contentType)) {
+                        contentId = notificationList.get(position).getArticleId();
+                    } else if (AppConstants.CONTENT_TYPE_SHORT_STORY.equals(contentType)) {
+                        contentId = notificationList.get(position).getArticleId();
+                    } else if (AppConstants.CONTENT_TYPE_VIDEO.equals(contentType)) {
+                        contentId = notificationList.get(position).getVideoId();
+                    }
+                    if (StringUtils.isNullOrEmpty(contentId)) {
+                        return;
+                    }
+                    String commentId = notificationList.get(position).getCommentId();
+                    String replyId = notificationList.get(position).getReplyId();
+                    Intent commentReplyNotificationIntent = new Intent(mainContext,
+                            ContentCommentReplyNotificationActivity.class);
+                    commentReplyNotificationIntent.putExtra("articleId", contentId);
+                    commentReplyNotificationIntent.putExtra("commentId", commentId);
+                    commentReplyNotificationIntent.putExtra("type", "reply");
+                    commentReplyNotificationIntent.putExtra("contentType", contentType);
+                    commentReplyNotificationIntent.putExtra("replyId", replyId);
+                    mainContext.startActivity(commentReplyNotificationIntent);
+                    pushEvent("NOTIFICATION_CENTER_CONTENT_REPLY");
                 }
                 break;
                 default:

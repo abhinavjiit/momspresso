@@ -1357,7 +1357,9 @@ Thank you! We will be reviewing your story. You can expect to hear from us withi
   <string name="see_more_challenge">SEE MORE CHALLENGES</string>
   <string name="vlog_tutorial">Vlog Tutorial</string>
   <string name="no_facebook_friends">None of your friends are logged into momspresso using facebook</string>
-  <string name="spread_the_word">Spread the word</string>
+  <string name="share_app">শেয়ার আপ্প</string>
   <string name="choose_proof">Choose Proof</string>
   <string name="invite_friends_whatsapp">Invite via whatsapp</string>
+  <string name="share_app_msg">নমস্কার !! মমস্প্রেসো অ্যাপ দেখতে ভুলবেননা, যেখানে আমি আমার ভাবনা গল্প ও ভিডিওর মাধ্যমে ভাগ করে নিয়েছি। ডাউনলোড করুন আজই ! %1s</string>
+  <string name="invite_phone_contact">Invite contacts to follow you</string>
 </resources>

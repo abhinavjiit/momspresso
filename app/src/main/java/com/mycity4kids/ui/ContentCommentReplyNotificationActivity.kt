@@ -32,11 +32,11 @@ import com.mycity4kids.ui.fragment.ContentCommentReplyNotificationFragment
 import com.mycity4kids.ui.fragment.ReportContentDialogFragment
 import com.mycity4kids.utils.EndlessScrollListener
 import com.mycity4kids.utils.ToastUtils
+import java.util.ArrayList
 import okhttp3.ResponseBody
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
-import java.util.ArrayList
 
 class ContentCommentReplyNotificationActivity : BaseActivity(),
     ArticleCommentsRecyclerAdapter.RecyclerViewClickListener,
@@ -83,7 +83,6 @@ class ContentCommentReplyNotificationActivity : BaseActivity(),
             override fun onLoadMore(page: Int, totalItemsCount: Int, view: RecyclerView?) {
                 getComments("comment")
             }
-
         })
         commentToolbarTextView.setOnClickListener(this)
         rLayout.setOnClickListener(this)
@@ -141,7 +140,6 @@ class ContentCommentReplyNotificationActivity : BaseActivity(),
             }
         }
     }
-
 
     private fun showCommentFragment(commentId: String?) {
         commentId?.let {
@@ -261,7 +259,6 @@ class ContentCommentReplyNotificationActivity : BaseActivity(),
             }
         }
 
-
     override fun onStart() {
         super.onStart()
         commentsShimmerLayout.startShimmerAnimation()
@@ -271,7 +268,6 @@ class ContentCommentReplyNotificationActivity : BaseActivity(),
         super.onStop()
         commentsShimmerLayout.stopShimmerAnimation()
     }
-
 
     override fun onBackPressed() {
         val fragmentCount = supportFragmentManager.backStackEntryCount
@@ -295,14 +291,12 @@ class ContentCommentReplyNotificationActivity : BaseActivity(),
                     startActivity(intent)
                 }
                 else -> {
-
                 }
             }
             finish()
         } else {
             supportFragmentManager.popBackStack()
         }
-
     }
 
     fun deleteComment(commentId: String) {
@@ -365,7 +359,6 @@ class ContentCommentReplyNotificationActivity : BaseActivity(),
         val call =
             articleDetailsAPI.deleteCommentOrReply(commentList?.get(position)?.id)
         call.enqueue(deleteCommentResponseListener)
-
     }
 
     private val deleteCommentResponseListener: Callback<CommentListResponse> =
@@ -401,7 +394,6 @@ class ContentCommentReplyNotificationActivity : BaseActivity(),
                             this@ContentCommentReplyNotificationActivity,
                             "Failed to delete comment. Please try again"
                         )
-
                     }
                 } catch (e: Exception) {
                     ToastUtils.showToast(
@@ -498,7 +490,6 @@ class ContentCommentReplyNotificationActivity : BaseActivity(),
             addArticleCommentReplyDialogFragment.show(fm, "Add Comment")
         }
     }
-
 
     fun addComment(content: String) {
         showProgressDialog("Adding Comment")

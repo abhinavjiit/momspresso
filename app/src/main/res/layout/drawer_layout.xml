@@ -4,7 +4,6 @@
   android:layout_width="match_parent"
   android:layout_height="match_parent">
 
-
   <RelativeLayout
     android:id="@+id/layout_drawer"
     android:layout_width="match_parent"
@@ -83,7 +82,6 @@
       android:paddingLeft="30dp"
       android:paddingTop="12dp"
       android:paddingRight="16dp"
-
       android:paddingBottom="12dp"
       android:text="@string/myprofile.section.videos_label"
       android:textSize="14sp"
@@ -99,7 +97,6 @@
       android:gravity="center_vertical"
       android:paddingLeft="30dp"
       android:paddingTop="12dp"
-
       android:paddingRight="16dp"
       android:paddingBottom="12dp"
       android:text="@string/all_videos.tabbar.momspresso_label"
@@ -120,7 +117,6 @@
       android:paddingBottom="12dp"
       android:text="@string/myprofile.section.short_story_label"
       android:textSize="14sp"
-
       app:fontName="oswald.ttf" />
 
     <com.mycity4kids.widget.CustomFontTextView
@@ -134,7 +130,6 @@
       android:paddingLeft="30dp"
       android:paddingTop="12dp"
       android:paddingRight="16dp"
-
       android:paddingBottom="12dp"
       android:text="@string/groups.support_groups"
       android:textSize="14sp"
@@ -173,50 +168,6 @@
         android:src="@drawable/mymoney_logo" />
     </LinearLayout>
 
-
-    <!--<com.mycity4kids.widget.CustomFontTextView
-        android:id="@+id/rewardsTextView"
-        android:layout_width="wrap_content"
-        android:layout_height="50dp"
-        android:layout_below="@+id/groupsTextView"
-        android:drawableLeft="@drawable/ic_rupee_iconn"
-        android:background="@drawable/mymoney_logo"
-        android:drawablePadding="20dp"
-        android:visibility="gone"
-        android:drawableTint="@color/app_red"
-        android:gravity="center_vertical"
-        android:paddingLeft="30dp"
-        android:paddingTop="12dp"
-        android:paddingRight="16dp"
-        android:paddingBottom="12dp"
-        android:textAllCaps="true"
-        app:fontName="oswald.ttf" />-->
-
-
-    <LinearLayout
-      android:layout_width="wrap_content"
-      android:layout_height="@dimen/space_48"
-      android:layout_below="@+id/divider"
-      android:layout_alignParentRight="true">
-
-      <com.mycity4kids.widget.CustomFontTextView
-        android:id="@+id/newTextView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center_vertical"
-        android:layout_marginRight="25dp"
-        android:background="@drawable/new_drawer_bg"
-        android:paddingLeft="@dimen/space_10"
-        android:paddingTop="2dp"
-        android:paddingRight="@dimen/space_10"
-        android:paddingBottom="2dp"
-        android:text="@string/new_label"
-        android:textColor="@color/white_color"
-        android:textSize="12sp"
-        app:fontName="oswald.ttf" />
-    </LinearLayout>
-
-
     <com.mycity4kids.widget.CustomFontTextView
       android:id="@+id/referral"
       android:layout_width="match_parent"
@@ -224,7 +175,6 @@
       android:layout_below="@+id/rewardsTextView"
       android:drawablePadding="20dp"
       android:drawableTint="#d54058"
-
       android:gravity="center_vertical"
       android:paddingLeft="30dp"
       android:paddingTop="12dp"
@@ -246,7 +196,7 @@
       android:background="@color/app_nav_bg" />
 
     <com.mycity4kids.widget.CustomFontTextView
-      android:id="@+id/bookmarksTextView"
+      android:id="@+id/shareAppTextView"
       android:layout_width="match_parent"
       android:layout_height="60dp"
       android:layout_below="@+id/divider1"
@@ -254,24 +204,24 @@
       android:drawablePadding="25dp"
       android:drawableTint="#d54058"
       android:gravity="center_vertical"
-      android:textAllCaps="true"
       android:paddingLeft="30dp"
       android:paddingTop="12dp"
       android:paddingRight="16dp"
       android:paddingBottom="12dp"
-
-      android:text="@string/spread_the_word"
+      android:text="@string/share_app"
+      android:textAllCaps="true"
       android:textSize="14sp"
       app:fontName="oswald.ttf" />
 
     <LinearLayout
       android:layout_width="wrap_content"
-      android:layout_height="@dimen/space_58"
+      android:layout_height="@dimen/space_48"
       android:layout_below="@+id/divider1"
-      android:layout_alignParentRight="true">
+      android:layout_alignParentRight="true"
+      android:layout_marginTop="8dp">
 
       <com.mycity4kids.widget.CustomFontTextView
-        android:id="@+id/newTextView1"
+        android:id="@+id/newTextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center_vertical"
@@ -286,15 +236,15 @@
         android:textSize="12sp"
         app:fontName="oswald.ttf" />
     </LinearLayout>
+
     <View
       android:id="@+id/divider2"
       android:layout_width="match_parent"
       android:layout_height="1dp"
-      android:layout_below="@+id/bookmarksTextView"
+      android:layout_below="@+id/shareAppTextView"
       android:layout_marginLeft="25dp"
       android:layout_marginRight="25dp"
       android:background="@color/app_nav_bg" />
-
 
     <RelativeLayout
       android:id="@+id/languageLayout"
@@ -302,7 +252,6 @@
       android:layout_height="wrap_content"
       android:layout_below="@+id/divider2"
       android:layout_marginTop="16dp">
-
 
       <com.mycity4kids.widget.CustomFontTextView
         android:id="@+id/selectedLangtext"
@@ -319,7 +268,6 @@
         android:textAllCaps="true"
         android:textSize="14sp"
         app:fontName="oswald.ttf" />
-
 
       <com.mycity4kids.widget.CustomFontTextView
         android:id="@+id/langTextView"
@@ -358,9 +306,7 @@
         android:layout_alignParentStart="true"
         android:layout_alignParentLeft="true"
         android:layout_alignParentTop="true" />
-
     </RelativeLayout>
-
 
     <com.mycity4kids.widget.CustomFontTextView
       android:id="@+id/settingTextView"
@@ -371,7 +317,6 @@
       android:drawableTint="#d54058"
       android:gravity="center_vertical"
       android:paddingLeft="30dp"
-
       android:paddingRight="16dp"
       android:paddingBottom="12dp"
       android:text="@string/app_settings"
@@ -379,6 +324,4 @@
       android:textSize="14sp"
       app:fontName="oswald.ttf" />
   </RelativeLayout>
-
-
 </ScrollView>

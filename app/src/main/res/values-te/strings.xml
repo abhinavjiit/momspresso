@@ -1352,7 +1352,9 @@ Thank you! We will be reviewing your story. You can expect to hear from us withi
   <string name="see_more_challenge">SEE MORE CHALLENGES</string>
   <string name="vlog_tutorial">Vlog Tutorial</string>
   <string name="no_facebook_friends">None of your friends are logged into momspresso using facebook</string>
-  <string name="spread_the_word">Spread the word</string>
+  <string name="share_app">షేర్ అప్</string>
   <string name="choose_proof">Choose Proof</string>
   <string name="invite_friends_whatsapp">Invite via whatsapp</string>
+  <string name="share_app_msg">హాయ్! కథలు మరియు వీడియోల ద్వారా నేను ఉపయోగించే Momspresso యాప్ ని  ఇపుడు డౌన్లోడ్ చేసుకోండి. %1s</string>
+  <string name="invite_phone_contact">Invite contacts to follow you</string>
 </resources>

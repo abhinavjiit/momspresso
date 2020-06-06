@@ -203,16 +203,21 @@ public class ParallelFeedActivity extends BaseActivity implements View.OnClickLi
     };
 
     public void hitBookmarkFollowingStatusApi(String vidId) {
-        ArticleDetailRequest articleDetailRequest = new ArticleDetailRequest();
-        articleDetailRequest.setArticleId(vidId);
-        articleDetailRequest.setContentType("vlogs");
-        articleDetailRequest.setType("video");
-        Retrofit retro = BaseApplication.getInstance().getRetrofit();
-        VlogsListingAndDetailsAPI bookmarFollowingStatusApi = retro.create(VlogsListingAndDetailsAPI.class);
+        try {
+            ArticleDetailRequest articleDetailRequest = new ArticleDetailRequest();
+            articleDetailRequest.setArticleId(vidId);
+            articleDetailRequest.setContentType("vlogs");
+            articleDetailRequest.setType("video");
+            Retrofit retro = BaseApplication.getInstance().getRetrofit();
+            VlogsListingAndDetailsAPI bookmarFollowingStatusApi = retro.create(VlogsListingAndDetailsAPI.class);
 
-        Call<AddBookmarkResponse> callBookmark = bookmarFollowingStatusApi
-                .checkFollowingBookmarkStatus(articleDetailRequest);
-        callBookmark.enqueue(isBookmarkedFollowedResponseCallback);
+            Call<AddBookmarkResponse> callBookmark = bookmarFollowingStatusApi
+                    .checkFollowingBookmarkStatus(articleDetailRequest);
+            callBookmark.enqueue(isBookmarkedFollowedResponseCallback);
+        } catch (Exception e) {
+            FirebaseCrashlytics.getInstance().recordException(e);
+            Log.d("MC4kException", Log.getStackTraceString(e));
+        }
     }
 
     private void hitRelatedArticleApi(int startIndex) {

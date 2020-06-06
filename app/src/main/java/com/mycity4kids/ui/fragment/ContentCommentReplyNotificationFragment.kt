@@ -105,7 +105,6 @@ class ContentCommentReplyNotificationFragment : BaseFragment(),
         return view
     }
 
-
     private fun getComment() {
         articleId?.let { articleId ->
             commentId?.let { commentId ->
@@ -126,7 +125,7 @@ class ContentCommentReplyNotificationFragment : BaseFragment(),
                         if (200 == responseData?.code && Constants.SUCCESS == responseData.status) {
                             try {
                                 commentShimmerLayout.stopShimmerAnimation()
-                                commentShimmerLayout.visibility=View.GONE
+                                commentShimmerLayout.visibility = View.GONE
                                 val commentData = responseData.data?.get(0)
                                 setDataInToCommentContainer(commentData)
                             } catch (e: Exception) {
@@ -155,21 +154,20 @@ class ContentCommentReplyNotificationFragment : BaseFragment(),
                 commentDataTextView.text = (
                     (Html
                         .fromHtml(
-                            "<b>" + "<font color=\"#D54058\">" + it.userName + "</font>"
-                                + "</b>"
-                                + " "
-                                + "<font color=\"#4A4A4A\">" + it.message + "</font>"
-                            , Html.FROM_HTML_MODE_LEGACY
+                            "<b>" + "<font color=\"#D54058\">" + it.userName + "</font>" +
+                                "</b>" +
+                                " " +
+                                "<font color=\"#4A4A4A\">" + it.message + "</font>", Html.FROM_HTML_MODE_LEGACY
                         ))
                     )
             } else {
                 commentDataTextView.text = (
                     (Html
                         .fromHtml(
-                            "<b>" + "<font color=\"#D54058\">" + it.userName + "</font>"
-                                + "</b>"
-                                + " "
-                                + "<font color=\"#4A4A4A\">" + it.message + "</font>"
+                            "<b>" + "<font color=\"#D54058\">" + it.userName + "</font>" +
+                                "</b>" +
+                                " " +
+                                "<font color=\"#4A4A4A\">" + it.message + "</font>"
                         ))
                     )
             }
@@ -198,7 +196,6 @@ class ContentCommentReplyNotificationFragment : BaseFragment(),
             } else {
                 likeTextView.text = ""
             }
-
         }
     }
 
@@ -244,7 +241,6 @@ class ContentCommentReplyNotificationFragment : BaseFragment(),
         }
     }
 
-
     private fun getCommentAndReplyData() {
         val retrofit = BaseApplication.getInstance().retrofit
         val articleDetailApi = retrofit.create(ArticleDetailsAPI::class.java)
@@ -281,7 +277,6 @@ class ContentCommentReplyNotificationFragment : BaseFragment(),
                     Log.d("MC4kException", Log.getStackTraceString(e))
                 }
             }
-
         })
     }
 
@@ -326,9 +321,7 @@ class ContentCommentReplyNotificationFragment : BaseFragment(),
                         it,
                         false
                     )
-
                 }
-
             } else {
                 commentData.liked = true
                 val drawable =
@@ -351,7 +344,6 @@ class ContentCommentReplyNotificationFragment : BaseFragment(),
                         it,
                         true
                     )
-
                 }
             }
         } else if (v?.id == R.id.replyCommentTextView) {
@@ -368,8 +360,6 @@ class ContentCommentReplyNotificationFragment : BaseFragment(),
             val fm = childFragmentManager
             commentOptionsDialogFragment.show(fm, "Comment Options")
         }
-
-
     }
 
     fun openAddCommentReplyDialog(commentData: CommentListData) {
@@ -544,8 +534,6 @@ class ContentCommentReplyNotificationFragment : BaseFragment(),
                                 it
                             )
                         }
-
-
                     } else {
                         if (isAdded) {
                             ToastUtils.showToast(
@@ -592,7 +580,6 @@ class ContentCommentReplyNotificationFragment : BaseFragment(),
             val call = articleDetailsAPI
                 .deleteCommentOrReply(repliesData?.get(position)?.id)
             call.enqueue(deleteReplyResponseListener)
-
         } else {
 
             val retrofit = BaseApplication.getInstance().retrofit
@@ -602,11 +589,7 @@ class ContentCommentReplyNotificationFragment : BaseFragment(),
             val call =
                 articleDetailsAPI.deleteCommentOrReply(commentData.id)
             call.enqueue(deleteCommentResponseListener)
-
-
         }
-
-
     }
 
     private val deleteCommentResponseListener: Callback<CommentListResponse> =
@@ -693,7 +676,6 @@ class ContentCommentReplyNotificationFragment : BaseFragment(),
             reportContentDialogFragment.isCancelable = true
             reportContentDialogFragment.show(fm, "Report Content")
         }
-
     }
 
     override fun onResponseEdit(position: Int, responseType: String?) {
@@ -751,7 +733,6 @@ class ContentCommentReplyNotificationFragment : BaseFragment(),
                                 it
                             )
                         }
-
                     } else {
                         if (isAdded) {
                             ToastUtils.showToast(
@@ -787,7 +768,6 @@ class ContentCommentReplyNotificationFragment : BaseFragment(),
                 Log.d("MC4kException", Log.getStackTraceString(t))
             }
         }
-
 
     fun editComment(
         content: String,
@@ -856,5 +836,4 @@ class ContentCommentReplyNotificationFragment : BaseFragment(),
             }
         })
     }
-
 }

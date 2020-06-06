@@ -194,7 +194,7 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
     private TextView shortStoryTextView;
     private TextView momspressoTextView;
     private TextView groupsTextView;
-    private TextView bookmarksTextView;
+    private TextView shareAppTextView;
     private TextView settingTextView;
     private TextView referral;
     private LinearLayout drawerTopContainer;
@@ -327,7 +327,7 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
         momspressoTextView = findViewById(R.id.momspressoTextView);
         groupsTextView = findViewById(R.id.groupsTextView);
         rewardsTextView = findViewById(R.id.rewardsTextView);
-        bookmarksTextView = findViewById(R.id.bookmarksTextView);
+        shareAppTextView = findViewById(R.id.shareAppTextView);
         settingTextView = findViewById(R.id.settingTextView);
         usernameTextView = findViewById(R.id.usernameTextView);
         coachUsernameTextView = findViewById(R.id.coachUsernameTextView);
@@ -405,7 +405,7 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
         momspressoTextView.setOnClickListener(this);
         groupsTextView.setOnClickListener(this);
         rewardsTextView.setOnClickListener(this);
-        bookmarksTextView.setOnClickListener(this);
+        shareAppTextView.setOnClickListener(this);
         videosTextView.setOnClickListener(this);
         settingTextView.setOnClickListener(this);
         homeTextView.setOnClickListener(this);
@@ -2039,10 +2039,11 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
                 startActivity(cityIntent);
             }
             break;
-            case R.id.bookmarksTextView: {
-//                Intent cityIntent = new Intent(this, UsersBookmarkListActivity.class);
-//                startActivity(cityIntent);
-                AppUtils.shareGenericLinkWithSuccessStatus(this, "https://mycity4kids.app.link/");
+            case R.id.shareAppTextView: {
+                AppUtils.shareGenericLinkWithSuccessStatus(this,
+                        getString(R.string.share_app_msg, AppConstants.BRANCH_DEEPLINK));
+                Utils.pushGenericEvent(this, "Spreadtheword_GenericShare",
+                        SharedPrefUtils.getUserDetailModel(this).getDynamoId(), "Sidebar");
             }
             break;
             case R.id.referral:
@@ -2756,7 +2757,9 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
             if (matcher7.matches()) {
                 String[] separated = urlWithNoParams.split("#")[0].split("/");
                 Intent intent = new Intent(this, UserProfileActivity.class);
-                intent.putExtra(AppConstants.SHOW_INVITE_DIALOG_FLAG, true);
+                if (SharedPrefUtils.getUserDetailModel(this).getDynamoId().equals(separated[separated.length - 1])) {
+                    intent.putExtra(AppConstants.SHOW_INVITE_DIALOG_FLAG, true);
+                }
                 intent.putExtra(Constants.USER_ID, separated[separated.length - 1]);
                 startActivity(intent);
                 return true;
