@@ -326,24 +326,24 @@ public class ExoPlayerRecyclerView extends RecyclerView {
     }
 
     public void restart(boolean haveResumePosition, int resumeWindow, long resumePosition) {
-        BandwidthMeter bandwidthMeter = new DefaultBandwidthMeter();
-        TrackSelector trackSelector = new DefaultTrackSelector();
-        LoadControl loadControl = new DefaultLoadControl();
-        DefaultRenderersFactory rendererFactory = new DefaultRenderersFactory(context);
-
-        player = ExoPlayerFactory
-                .newSimpleInstance(appContext, rendererFactory, trackSelector, loadControl, null,
-                        bandwidthMeter);
-
-        player.setVideoScalingMode(C.VIDEO_SCALING_MODE_SCALE_TO_FIT_WITH_CROPPING);
-        videoSurfaceView.setUseController(true);
-        videoSurfaceView.setPlayer(player);
-        scrollScreen();
-
-        if (haveResumePosition) {
-            player.seekTo(resumeWindow, resumePosition);
-        }
         try {
+            BandwidthMeter bandwidthMeter = new DefaultBandwidthMeter();
+            TrackSelector trackSelector = new DefaultTrackSelector();
+            LoadControl loadControl = new DefaultLoadControl();
+            DefaultRenderersFactory rendererFactory = new DefaultRenderersFactory(context);
+
+            player = ExoPlayerFactory
+                    .newSimpleInstance(appContext, rendererFactory, trackSelector, loadControl, null,
+                            bandwidthMeter);
+
+            player.setVideoScalingMode(C.VIDEO_SCALING_MODE_SCALE_TO_FIT_WITH_CROPPING);
+            videoSurfaceView.setUseController(true);
+            videoSurfaceView.setPlayer(player);
+            scrollScreen();
+
+            if (haveResumePosition) {
+                player.seekTo(resumeWindow, resumePosition);
+            }
             player.prepare(videoSource);
             player.setPlayWhenReady(true);
         } catch (Exception e) {

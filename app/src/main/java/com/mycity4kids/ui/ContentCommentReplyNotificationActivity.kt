@@ -32,11 +32,11 @@ import com.mycity4kids.ui.fragment.ContentCommentReplyNotificationFragment
 import com.mycity4kids.ui.fragment.ReportContentDialogFragment
 import com.mycity4kids.utils.EndlessScrollListener
 import com.mycity4kids.utils.ToastUtils
+import java.util.ArrayList
 import okhttp3.ResponseBody
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
-import java.util.ArrayList
 
 class ContentCommentReplyNotificationActivity : BaseActivity(),
     ArticleCommentsRecyclerAdapter.RecyclerViewClickListener,
@@ -359,7 +359,6 @@ class ContentCommentReplyNotificationActivity : BaseActivity(),
                 val call = articleDetailArticle.addCommentOrReply(addEditCommentOrReplyRequest)
                 call.enqueue(object : Callback<CommentListResponse> {
                     override fun onFailure(call: Call<CommentListResponse>, t: Throwable) {
-
                     }
 
                     override fun onResponse(
@@ -367,7 +366,6 @@ class ContentCommentReplyNotificationActivity : BaseActivity(),
                         response: Response<CommentListResponse>
                     ) {
                         removeProgressDialog()
-
                     }
                 })
             }

@@ -70,9 +70,11 @@ public class VideoChallengeDetailListingAdapter extends RecyclerView.Adapter<Rec
                         .setText(articleDataModelsNew.get(position).getLike_count());
             }
             if (articleDataModelsNew.get(position).isIs_gold()) {
-                ((ViewHolderChallenge) holder).imageWinner.setImageResource(R.drawable.ic_trophy);
-            } else if (articleDataModelsNew.get(position).getWinner() == 1) {
+                ((ViewHolderChallenge) holder).imageWinner.setVisibility(View.VISIBLE);
                 ((ViewHolderChallenge) holder).imageWinner.setImageResource(R.drawable.ic_star_yellow);
+            } else if (articleDataModelsNew.get(position).getWinner() == 1) {
+                ((ViewHolderChallenge) holder).imageWinner.setVisibility(View.VISIBLE);
+                ((ViewHolderChallenge) holder).imageWinner.setImageResource(R.drawable.ic_trophy);
             } else {
                 ((ViewHolderChallenge) holder).imageWinner.setVisibility(View.GONE);
             }

@@ -1358,8 +1358,8 @@ Thank you! We will be reviewing your story. You can expect to hear from us withi
   <string name="video_upload_success">आपका वीडियो सफलता पूर्वक अपलोड हो गया है।</string>
   <string name="all_open">खोलें</string>
   <string name="watch_other_videos_text_in_mom_vlog_following_feed">जब तक हम आपकी व्यक्तिगत फीड  बना रहे हैं तब तक आप अन्य  बेहतरीन वीडियोज देखें</string>
-  <string name="follow_creators_feed_header_text_in_mom_vlog_feed">आप किसी को फोलो नहीं कर रहे हैं। मॉम्सप्रेस्सो पर सबसे अच्छे वीडियो देखने के लिए हमारे टॉप वी-लॉगर्स को फोलो करें।</string>
-  <string name="follow_the_best_vloggers_on_momspresso">बेस्ट वी-लॉगर्स को फोलो करें</string>
+  <string name="follow_creators_feed_header_text_in_mom_vlog_feed">आप किसी को फोलो नहीं कर रहे हैं। हमारे टॉप वी-लॉगर्स को फोलो करें और अपनी फीड बनाएं।</string>
+  <string name="follow_the_best_vloggers_on_momspresso">अपने पसंदीदा वी-लॉगर्स को फोलो करें</string>
   <string name="all_live_challenges">Live Challenges</string>
   <string name="view_comments">View Comments</string>
   <string name="add_vlogs_detail_select_tag">टैग चुनें</string>

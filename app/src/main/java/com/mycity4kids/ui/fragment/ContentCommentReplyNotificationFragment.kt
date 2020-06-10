@@ -157,7 +157,8 @@ class ContentCommentReplyNotificationFragment : BaseFragment(),
                             "<b>" + "<font color=\"#D54058\">" + it.userName + "</font>" +
                                 "</b>" +
                                 " " +
-                                "<font color=\"#4A4A4A\">" + it.message + "</font>", Html.FROM_HTML_MODE_LEGACY
+                                "<font color=\"#4A4A4A\">" + it.message + "</font>",
+                            Html.FROM_HTML_MODE_LEGACY
                         ))
                     )
             } else {
@@ -347,18 +348,28 @@ class ContentCommentReplyNotificationFragment : BaseFragment(),
                 }
             }
         } else if (v?.id == R.id.replyCommentTextView) {
-            openAddCommentReplyDialog(commentData)
+            try {
+                openAddCommentReplyDialog(commentData)
+            } catch (e: Exception) {
+                FirebaseCrashlytics.getInstance().recordException(e)
+                Log.d("MC4kException", Log.getStackTraceString(e))
+            }
         } else if (v?.id == R.id.moreOptionImageView) {
-            val args = Bundle()
-            args.putInt("position", 0)
-            args.putString("authorId", commentData.userId)
-            args.putString("responseType", "COMMENT")
-            val commentOptionsDialogFragment =
-                CommentOptionsDialogFragment()
-            commentOptionsDialogFragment.arguments = args
-            commentOptionsDialogFragment.isCancelable = true
-            val fm = childFragmentManager
-            commentOptionsDialogFragment.show(fm, "Comment Options")
+            try {
+                val args = Bundle()
+                args.putInt("position", 0)
+                args.putString("authorId", commentData.userId)
+                args.putString("responseType", "COMMENT")
+                val commentOptionsDialogFragment =
+                    CommentOptionsDialogFragment()
+                commentOptionsDialogFragment.arguments = args
+                commentOptionsDialogFragment.isCancelable = true
+                val fm = childFragmentManager
+                commentOptionsDialogFragment.show(fm, "Comment Options")
+            } catch (e: Exception) {
+                FirebaseCrashlytics.getInstance().recordException(e)
+                Log.d("MC4kException", Log.getStackTraceString(e))
+            }
         }
     }
 

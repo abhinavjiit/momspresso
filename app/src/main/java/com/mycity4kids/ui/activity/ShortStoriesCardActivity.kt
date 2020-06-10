@@ -385,11 +385,6 @@ class ShortStoriesCardActivity : BaseActivity() {
                     getBlogPage()
                 } else {
                     removeProgressDialog()
-                    if (StringUtils.isNullOrEmpty(responseModel.reason)) {
-                        //                        showToast(getString(R.string.toast_response_error));
-                    } else {
-                        //                        showToast(responseModel.getReason());
-                    }
                 }
             } catch (e: Exception) {
                 removeProgressDialog()

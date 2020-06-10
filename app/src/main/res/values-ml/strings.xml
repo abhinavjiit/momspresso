@@ -1381,8 +1381,8 @@ Thank you! We will be reviewing your story. You can expect to hear from us withi
   <string name="video_upload_success">വിജയകരമായി അപ്‌ലോഡ് ചെയ്തിരിക്കുന്നു</string>
   <string name="all_open">തുറക്കാം</string>
   <string name="watch_other_videos_text_in_mom_vlog_following_feed">ഞങ്ങൾ നിങ്ങളുടെ വ്യക്തിഗത ഫീഡ് തയാറാക്കുന്നു, അത് വരെ മറ്റ് വിഡിയോകൾ കാണൂ</string>
-  <string name="follow_creators_feed_header_text_in_mom_vlog_feed">നിങ്ങൾ ആരെയും ഫോളോ ചെയ്യുന്നില്ല. മികച്ച വിഡിയോകൾ കാണാൻ ടോപ് വ്ലോഗർമാരെ പിന്തുടരൂ! </string>
-  <string name="follow_the_best_vloggers_on_momspresso">മികച്ച വ്ലോഗർമാരെ പിന്തുടരൂ</string>
+  <string name="follow_creators_feed_header_text_in_mom_vlog_feed">നിങ്ങൾ ആരെയും ഫോളോ ചെയ്യുന്നില്ല. മികച്ച വിഡിയോകൾ നിങ്ങളുടെ ഫീഡിൽ കാണാൻ ടോപ് വ്ലോഗർമാരെ പിന്തുടരൂ!</string>
+  <string name="follow_the_best_vloggers_on_momspresso">നിങ്ങൾ ഇഷ്ടപെടുന്ന വ്ലോഗർമാരെ പിന്തുടരൂ</string>
   <string name="all_live_challenges">Live Challenges</string>
   <string name="view_comments">View Comments</string>
   <string name="add_vlogs_detail_select_tag">ടാഗ് തിരഞ്ഞെടുക്കൂ</string>
