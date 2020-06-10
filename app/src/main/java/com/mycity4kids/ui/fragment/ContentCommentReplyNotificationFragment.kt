@@ -530,7 +530,7 @@ class ContentCommentReplyNotificationFragment : BaseFragment(),
                             contentCommentReplyNotificationAdapter.notifyDataSetChanged()
                         }
                         commentId?.let {
-                            (activity as ContentCommentReplyNotificationActivity).addReply(
+                            (activity as ContentCommentReplyNotificationActivity).addReply(null,
                                 it
                             )
                         }

@@ -72,7 +72,8 @@ public class CommentOptionsDialogFragment extends DialogFragment implements OnCl
                     ICommentOptionAction iCommentOptionAction = (ICommentOptionAction) getActivity();
                     iCommentOptionAction.onResponseDelete(position, responseType);
                     dismiss();
-                } else {
+                }
+                else {
                     ICommentOptionAction iCommentOptionAction = (ICommentOptionAction) getParentFragment();
                     iCommentOptionAction.onResponseDelete(position, responseType);
                     dismiss();

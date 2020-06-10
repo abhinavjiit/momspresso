@@ -381,6 +381,10 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
     private int deleteCommentPosition;
     private int editCommentPosition;
     private String editContent;
+    private ArticleCommentRepliesDialogFragment articleCommentRepliesDialogFragment;
+    private String editReplyParentCommentId;
+    private String replyId;
+
 
     static {
         AppCompatDelegate.setCompatVectorFromResourcesEnabled(true);
@@ -946,8 +950,9 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
         Retrofit retrofit = BaseApplication.getInstance().getRetrofit();
         TopicsCategoryAPI topicsCategoryApi = retrofit.create(TopicsCategoryAPI.class);
         Call<MixFeedResponse> todaysBestCall = topicsCategoryApi
-                .getTodaysBestMixedFeed(DateTimeUtils.getKidsDOBNanoMilliTimestamp("" + System.currentTimeMillis()), 1, 6,
-                        SharedPrefUtils.getLanguageFilters(BaseApplication.getAppContext()),"0");
+                .getTodaysBestMixedFeed(DateTimeUtils.getKidsDOBNanoMilliTimestamp("" + System.currentTimeMillis()), 1,
+                        6,
+                        SharedPrefUtils.getLanguageFilters(BaseApplication.getAppContext()), "0");
         todaysBestCall.enqueue(new Callback<MixFeedResponse>() {
             @Override
             public void onResponse(Call<MixFeedResponse> call, Response<MixFeedResponse> response) {
@@ -1137,8 +1142,12 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
                 commentsList = new ArrayList<>(commentListResponse.getData());
                 if (commentListResponse.getCount() != 0) {
                     showComments(commentListResponse.getData());
+                    reportCommentContent1.setVisibility(View.VISIBLE);
+                    reportCommentContent2.setVisibility(View.VISIBLE);
                     commentContainer.setVisibility(View.VISIBLE);
                 } else {
+                    reportCommentContent1.setVisibility(View.GONE);
+                    reportCommentContent2.setVisibility(View.GONE);
                     getFbCommentsApi();
                 }
             } catch (Exception e) {
@@ -1179,8 +1188,6 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
                 if (responseData.getCode() == 200 && Constants.SUCCESS.equals(responseData.getStatus())) {
                     if (null != responseData.getData().getResult() && !responseData.getData().getResult().isEmpty()) {
                         fbCommentsList = responseData.getData().getResult();
-                        reportCommentContent1.setVisibility(View.GONE);
-                        reportCommentContent2.setVisibility(View.GONE);
                         showFbComments(fbCommentsList);
                         commentContainer.setVisibility(View.VISIBLE);
                     } else {
@@ -2380,27 +2387,29 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
                 case R.id.cancelFollowPopUp:
                     followPopUpBottomContainer.setVisibility(View.GONE);
                     break;
-                case R.id.replyCount2:
-                    if (commentsList.get(1).getRepliesCount() > 0) {
-                        Bundle args = new Bundle();
-                        args.putParcelable("commentReplies", commentsList.get(1));
-                        args.putInt("totalRepliesCount", commentsList.get(1).getRepliesCount());
-                        args.putInt("position", 1);
-                        ArticleCommentRepliesDialogFragment articleCommentRepliesDialogFragment =
-                                new ArticleCommentRepliesDialogFragment();
-                        articleCommentRepliesDialogFragment.setArguments(args);
-                        articleCommentRepliesDialogFragment.setCancelable(true);
-                        FragmentManager fm = getChildFragmentManager();
-                        articleCommentRepliesDialogFragment.show(fm, "View Replies");
-                    }
+                case R.id.replyCount2: {
+                    Bundle args = new Bundle();
+                    args.putParcelable("commentReplies", commentsList.get(1));
+                    args.putInt("totalRepliesCount", commentsList.get(1).getRepliesCount());
+                    args.putInt("position", 1);
+                    articleCommentRepliesDialogFragment =
+                            new ArticleCommentRepliesDialogFragment();
+                    articleCommentRepliesDialogFragment.setArguments(args);
+                    articleCommentRepliesDialogFragment.setCancelable(true);
+                    FragmentManager fm = getChildFragmentManager();
+                    articleCommentRepliesDialogFragment.show(fm, "View Replies");
+
                     break;
-                case R.id.replyCount:
-                    if (commentsList.get(0).getRepliesCount() > 0) {
+                }
+                case R.id.replyCount: {
+                    if (commentsList.get(0).getRepliesCount() == 0) {
+                        openAddCommentReplyDialog(commentsList.get(0));
+                    } else {
                         Bundle args = new Bundle();
                         args.putParcelable("commentReplies", commentsList.get(0));
                         args.putInt("totalRepliesCount", commentsList.get(0).getRepliesCount());
                         args.putInt("position", 0);
-                        ArticleCommentRepliesDialogFragment articleCommentRepliesDialogFragment
+                        articleCommentRepliesDialogFragment
                                 = new ArticleCommentRepliesDialogFragment();
                         articleCommentRepliesDialogFragment.setArguments(args);
                         articleCommentRepliesDialogFragment.setCancelable(true);
@@ -2408,6 +2417,7 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
                         articleCommentRepliesDialogFragment.show(fm, "View Replies");
                     }
                     break;
+                }
                 case R.id.menuItemImageView:
                     chooseOptionMenuItem(menuItemImageView);
                     break;
@@ -2741,6 +2751,98 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
         FragmentManager fm = getChildFragmentManager();
         addArticleCommentReplyDialogFragment.show(fm, "Add Replies");
     }
+
+    public void addReply(String content, String commentId) {
+        showProgressDialog("Adding Reply");
+        AddEditCommentOrReplyRequest addEditCommentOrReplyRequest = new AddEditCommentOrReplyRequest();
+        addEditCommentOrReplyRequest.setPost_id(articleId);
+        addEditCommentOrReplyRequest.setMessage(content);
+        addEditCommentOrReplyRequest.setParent_id(commentId);
+        addEditCommentOrReplyRequest.setType("article");
+        Retrofit retrofit = BaseApplication.getInstance().getRetrofit();
+        ArticleDetailsAPI articleDetailsAPI = retrofit.create(ArticleDetailsAPI.class);
+        Call<CommentListResponse> call = articleDetailsAPI.addCommentOrReply(addEditCommentOrReplyRequest);
+        call.enqueue(addReplyResponseListener);
+    }
+
+    private Callback<CommentListResponse> addReplyResponseListener = new Callback<CommentListResponse>() {
+        @Override
+        public void onResponse(Call<CommentListResponse> call, Response<CommentListResponse> response) {
+            removeProgressDialog();
+            if (null == response.body()) {
+                NetworkErrorException nee = new NetworkErrorException(response.raw().toString());
+                FirebaseCrashlytics.getInstance().recordException(nee);
+                if (isAdded()) {
+                    ((ArticleDetailsContainerActivity) getActivity())
+                            .showToast(getString(R.string.server_went_wrong));
+                }
+                return;
+            }
+            try {
+
+                CommentListResponse res = response.body();
+                if (null != res && 200 == res.getCode() && Constants.SUCCESS.equals(res.getStatus())) {
+                    CommentListData commentListData = new CommentListData();
+                    commentListData.setId(res.getData().get(0).getId());
+                    commentListData.setMessage(res.getData().get(0).getMessage());
+                    commentListData.setCreatedTime(res.getData().get(0).getCreatedTime());
+                    commentListData.setPostId(res.getData().get(0).getPostId());
+                    commentListData.setParentCommentId(res.getData().get(0).getParentCommentId());
+                    commentListData.setUserPic(res.getData().get(0).getUserPic());
+                    commentListData.setUserName(res.getData().get(0).getUserName());
+                    commentListData.setUserId(res.getData().get(0).getUserId());
+
+                    for (int i = 0; i < commentsList.size(); i++) {
+                        if (commentsList.get(i).getId().equals(res.getData().get(0).getParentCommentId())) {
+                            commentsList.get(i).getReplies().add(0, commentListData);
+                            commentsList.get(i).setRepliesCount(commentsList.get(i).getRepliesCount() + 1);
+                            if (i == 0) {
+                                replyCount1.setText("Reply(" + commentsList.get(i).getRepliesCount() + ")");
+                            } else {
+                                replyCount2.setText("Reply(" + commentsList.get(i).getRepliesCount() + ")");
+                            }
+                            break;
+                        }
+                    }
+                }
+            } catch (Exception e) {
+                FirebaseCrashlytics.getInstance().recordException(e);
+                Log.d("MC4kException", Log.getStackTraceString(e));
+            }
+        }
+
+        @Override
+        public void onFailure(Call<CommentListResponse> call, Throwable t) {
+            removeProgressDialog();
+            FirebaseCrashlytics.getInstance().recordException(t);
+            Log.d("MC4kException", Log.getStackTraceString(t));
+        }
+    };
+  /*  fun addReply(content: String?, parentCommentId: String?) {
+        showProgressDialog("Adding Reply")
+        val addEditCommentOrReplyRequest =
+                AddEditCommentOrReplyRequest()
+        addEditCommentOrReplyRequest.post_id = articleId
+        addEditCommentOrReplyRequest.message = content
+        addEditCommentOrReplyRequest.parent_id = parentCommentId
+        when (contentType) {
+            "2" -> {
+                addEditCommentOrReplyRequest.type = "video"
+            }
+            "0" -> {
+                addEditCommentOrReplyRequest.type = "article"
+            }
+            else -> {
+                addEditCommentOrReplyRequest.type = "story"
+            }
+        }
+        val ret = BaseApplication.getInstance().retrofit
+        val articleDetailsApi = ret.create(ArticleDetailsAPI::class.java)
+        val call: Call<CommentListResponse> =
+        articleDetailsApi.addCommentOrReply(addEditCommentOrReplyRequest)
+        call.enqueue(addReplyResponseListener)
+    }*/
+
 
     private void openCommentDialog(CommentsData comData, String opType) {
         try {
@@ -4482,4 +4584,151 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
         authorNameFollowPopUp.setText(detailData.getUserName());
         followPopUpBottomContainer.setVisibility(View.VISIBLE);
     }
+
+    void deleteReply(int commentPos, int replyPos) {
+        deleteCommentPosition = commentPos;
+        Retrofit retrofit = BaseApplication.getInstance().getRetrofit();
+        ArticleDetailsAPI articleDetailsAPI = retrofit.create(ArticleDetailsAPI.class);
+        Call<CommentListResponse> call = articleDetailsAPI
+                .deleteCommentOrReply(commentsList.get(commentPos).getReplies().get(replyPos).getId());
+        call.enqueue(deleteReplyResponseListener);
+    }
+
+    private Callback<CommentListResponse> deleteReplyResponseListener = new Callback<CommentListResponse>() {
+        @Override
+        public void onResponse(Call<CommentListResponse> call, retrofit2.Response<CommentListResponse> response) {
+            removeProgressDialog();
+            if (response.body() == null) {
+                NetworkErrorException nee = new NetworkErrorException(response.raw().toString());
+                FirebaseCrashlytics.getInstance().recordException(nee);
+                if (isAdded()) {
+                    ToastUtils.showToast(getActivity(), "Failed to add comment. Please try again");
+                }
+                return;
+            }
+            try {
+                CommentListResponse responseData = response.body();
+                if (responseData.getCode() == 200 && Constants.SUCCESS.equals(responseData.getStatus())) {
+                    if (deleteCommentPosition == 0) {
+                        commentsList.get(0).setRepliesCount(commentsList.get(0).getRepliesCount() - 1);
+                        if (commentsList.get(0).getRepliesCount() == 0) {
+                            replyCount1.setText("Reply");
+                        } else {
+                            replyCount1.setText("Reply(" + commentsList.get(0).getRepliesCount() + ")");
+                        }
+                    } else {
+                        commentsList.get(1).setRepliesCount(commentsList.get(1).getRepliesCount() - 1);
+                        if (commentsList.get(1).getRepliesCount() == 0) {
+                            replyCount2.setText("Reply");
+                        } else {
+                            replyCount2.setText("Reply(" + commentsList.get(1).getRepliesCount() + ")");
+                        }
+                    }
+                    commentsList.get(deleteCommentPosition).getReplies().remove(deleteCommentPosition);
+                    if (articleCommentRepliesDialogFragment != null) {
+                        articleCommentRepliesDialogFragment.updateRepliesList(commentsList.get(deleteCommentPosition));
+                        if (commentsList.get(deleteCommentPosition).getRepliesCount() == 0) {
+                            articleCommentRepliesDialogFragment.dismiss();
+                        }
+                    }
+                } else {
+                    if (isAdded()) {
+                        ToastUtils.showToast(getActivity(), "Failed to add comment. Please try again");
+                    }
+                }
+            } catch (Exception e) {
+                if (isAdded()) {
+                    ToastUtils.showToast(getActivity(), "Failed to add comment. Please try again");
+                }
+                FirebaseCrashlytics.getInstance().recordException(e);
+                Log.d("MC4kException", Log.getStackTraceString(e));
+            }
+        }
+
+        @Override
+        public void onFailure(Call<CommentListResponse> call, Throwable t) {
+            removeProgressDialog();
+            if (isAdded()) {
+                ToastUtils.showToast(getActivity(), "Failed to add comment. Please try again");
+            }
+            FirebaseCrashlytics.getInstance().recordException(t);
+            Log.d("MC4kException", Log.getStackTraceString(t));
+        }
+    };
+
+
+    void editReply(String content, String parentCommentId, String replyId) {
+        showProgressDialog("Editing Reply");
+        AddEditCommentOrReplyRequest addEditCommentOrReplyRequest = new AddEditCommentOrReplyRequest();
+        addEditCommentOrReplyRequest.setPost_id(articleId);
+        addEditCommentOrReplyRequest.setMessage(content);
+        Call<CommentListResponse> call = articleDetailsApi.editCommentOrReply(replyId, addEditCommentOrReplyRequest);
+        call.enqueue(editReplyResponseListener);
+        this.replyId = replyId;
+        editReplyParentCommentId = parentCommentId;
+        editContent = content;
+    }
+
+    private Callback<CommentListResponse> editReplyResponseListener = new Callback<CommentListResponse>() {
+        @Override
+        public void onResponse(Call<CommentListResponse> call, retrofit2.Response<CommentListResponse> response) {
+            removeProgressDialog();
+            if (response.body() == null) {
+                NetworkErrorException nee = new NetworkErrorException(response.raw().toString());
+                FirebaseCrashlytics.getInstance().recordException(nee);
+                if (isAdded()) {
+                    ToastUtils.showToast(getActivity(), "Failed to add comment. Please try again");
+                }
+                return;
+            }
+            try {
+                CommentListResponse responseData = response.body();
+                if (responseData.getCode() == 200 && Constants.SUCCESS.equals(responseData.getStatus())) {
+                    boolean isReplyUpdated = false;
+                    for (int i = 0; i < commentsList.size(); i++) {
+                        if (commentsList.get(i).getId().equals(editReplyParentCommentId)) {
+                            for (int j = 0; j < commentsList.get(i).getReplies().size(); j++) {
+                                if (commentsList.get(i).getReplies().get(j).getId().equals(replyId)) {
+                                    commentsList.get(i).getReplies().get(j).setMessage(editContent);
+                                    if (articleCommentRepliesDialogFragment != null) {
+                                        articleCommentRepliesDialogFragment.updateRepliesList(commentsList.get(i));
+                                    }
+                                    isReplyUpdated = true;
+                                    break;
+                                }
+                            }
+                        }
+                        if (isReplyUpdated) {
+                            break;
+                        }
+                    }
+
+                    if (isAdded()) {
+                        Utils.pushArticleCommentReplyChangeEvent(getActivity(), "DetailArticleScreen", userDynamoId,
+                                articleId, "edit", "reply");
+                    }
+                } else {
+                    if (isAdded()) {
+                        ToastUtils.showToast(getActivity(), "Failed to add comment. Please try again");
+                    }
+                }
+            } catch (Exception e) {
+                if (isAdded()) {
+                    ToastUtils.showToast(getActivity(), "Failed to add comment. Please try again");
+                }
+                FirebaseCrashlytics.getInstance().recordException(e);
+                Log.d("MC4kException", Log.getStackTraceString(e));
+            }
+        }
+
+        @Override
+        public void onFailure(Call<CommentListResponse> call, Throwable t) {
+            if (isAdded()) {
+                ToastUtils.showToast(getActivity(), "Failed to add comment. Please try again");
+            }
+            FirebaseCrashlytics.getInstance().recordException(t);
+            Log.d("MC4kException", Log.getStackTraceString(t));
+        }
+    };
+
 }

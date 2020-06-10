@@ -32,11 +32,11 @@ import com.mycity4kids.ui.fragment.ContentCommentReplyNotificationFragment
 import com.mycity4kids.ui.fragment.ReportContentDialogFragment
 import com.mycity4kids.utils.EndlessScrollListener
 import com.mycity4kids.utils.ToastUtils
-import java.util.ArrayList
 import okhttp3.ResponseBody
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
+import java.util.ArrayList
 
 class ContentCommentReplyNotificationActivity : BaseActivity(),
     ArticleCommentsRecyclerAdapter.RecyclerViewClickListener,
@@ -325,15 +325,51 @@ class ContentCommentReplyNotificationActivity : BaseActivity(),
         }
     }
 
-    fun addReply(commentId: String) {
-        commentList?.let {
-            for (i in 0 until it.size) {
-                if (it[i].id == commentId) {
-                    it[i].repliesCount = it[i].repliesCount.plus(1)
-                    articleCommentsRecyclerAdapter.setData(it)
+    fun addReply(content: String?, commentId: String) {
+        commentList?.let { commentList ->
+
+            for (i in 0 until commentList.size) {
+                if (commentList[i].id == commentId) {
+                    commentList[i].repliesCount = commentList[i].repliesCount.plus(1)
+                    articleCommentsRecyclerAdapter.setData(commentList)
                     articleCommentsRecyclerAdapter.notifyDataSetChanged()
                     break
                 }
+            }
+            content?.let { content ->
+                showProgressDialog("Adding Reply")
+                val addEditCommentOrReplyRequest =
+                    AddEditCommentOrReplyRequest()
+                addEditCommentOrReplyRequest.post_id = articleId
+                addEditCommentOrReplyRequest.message = content
+                addEditCommentOrReplyRequest.parent_id = commentId
+                when (contentType) {
+                    "2" -> {
+                        addEditCommentOrReplyRequest.type = "video"
+                    }
+                    "0" -> {
+                        addEditCommentOrReplyRequest.type = "article"
+                    }
+                    else -> {
+                        addEditCommentOrReplyRequest.type = "story"
+                    }
+                }
+                val retrofit = BaseApplication.getInstance().retrofit
+                val articleDetailArticle = retrofit.create(ArticleDetailsAPI::class.java)
+                val call = articleDetailArticle.addCommentOrReply(addEditCommentOrReplyRequest)
+                call.enqueue(object : Callback<CommentListResponse> {
+                    override fun onFailure(call: Call<CommentListResponse>, t: Throwable) {
+
+                    }
+
+                    override fun onResponse(
+                        call: Call<CommentListResponse>,
+                        response: Response<CommentListResponse>
+                    ) {
+                        removeProgressDialog()
+
+                    }
+                })
             }
         }
     }
