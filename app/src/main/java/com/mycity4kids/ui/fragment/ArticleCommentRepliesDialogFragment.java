@@ -348,7 +348,13 @@ public class ArticleCommentRepliesDialogFragment extends DialogFragment implemen
     public void onResponseDelete(int position, String responseType) {
         // position-1 to adjust for the comment added on the top of reply list
         if ("REPLY".equals(responseType)) {
-            ((ArticleCommentsFragment) getParentFragment()).deleteReply(commentPosition, position - 1);
+            if (getParentFragment() instanceof ArticleCommentsFragment) {
+                ((ArticleCommentsFragment) getParentFragment()).deleteReply(commentPosition, position - 1);
+            }
+            else if(getParentFragment() instanceof  ArticleDetailsFragment)
+            {
+                ((ArticleDetailsFragment) getParentFragment()).deleteReply(commentPosition, position - 1);
+            }
         } else {
             ((ArticleCommentsFragment) getParentFragment()).onResponseDelete(commentPosition, "COMMENT");
         }

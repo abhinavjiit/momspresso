@@ -170,6 +170,12 @@ public class AddArticleCommentReplyDialogFragment extends DialogFragment impleme
                                 ((ArticleCommentsFragment) parentOfParentFragment)
                                         .editReply(commentReplyEditText.getText().toString(),
                                                 commentOrReplyData.getParentCommentId(), commentOrReplyData.getId());
+                            } else if (parentOfParentFragment != null
+                                    && parentOfParentFragment instanceof ArticleDetailsFragment) {
+                                ((ArticleDetailsFragment) parentOfParentFragment)
+                                        .editReply(commentReplyEditText.getText().toString(),
+                                                commentOrReplyData.getParentCommentId(), commentOrReplyData.getId());
+
                             }
                         } else if (fragment != null
                                 && fragment instanceof ContentCommentReplyNotificationFragment) {
@@ -184,7 +190,8 @@ public class AddArticleCommentReplyDialogFragment extends DialogFragment impleme
                         if (commentOrReplyData == null) {
                             if (getActivity() != null
                                     && getActivity() instanceof ContentCommentReplyNotificationActivity) {
-                                ((ContentCommentReplyNotificationActivity)getActivity()).addComment(commentReplyEditText.getText().toString());
+                                ((ContentCommentReplyNotificationActivity) getActivity())
+                                        .addComment(commentReplyEditText.getText().toString());
 
                             } else {
                                 ((AddComments) this.getParentFragment())
@@ -204,7 +211,12 @@ public class AddArticleCommentReplyDialogFragment extends DialogFragment impleme
                                     getActivity() != null
                                             && (getActivity()) instanceof ContentCommentReplyNotificationActivity) {
                                 ((ContentCommentReplyNotificationActivity) getActivity())
-                                        .addReply(commentOrReplyData.getId());
+                                        .addReply(commentReplyEditText.getText().toString(),
+                                                commentOrReplyData.getId());
+                            } else if (getParentFragment() instanceof ArticleDetailsFragment) {
+                                ((ArticleDetailsFragment) getParentFragment())
+                                        .addReply(commentReplyEditText.getText().toString(),
+                                                commentOrReplyData.getId());
                             }
                         }
                     }
