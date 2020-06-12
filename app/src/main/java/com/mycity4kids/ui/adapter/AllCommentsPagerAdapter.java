@@ -4,7 +4,6 @@ import android.os.Bundle;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentStatePagerAdapter;
-
 import com.mycity4kids.constants.Constants;
 import com.mycity4kids.ui.fragment.ArticleCommentsFragment;
 import com.mycity4kids.ui.fragment.MyCityCommentsFragment;
@@ -13,23 +12,27 @@ import com.mycity4kids.ui.fragment.MyCityCommentsFragment;
  * Created by hemant on 24/5/17.
  */
 public class AllCommentsPagerAdapter extends FragmentStatePagerAdapter {
-    private final String articleId;
-    private int mNumOfTabs;
-    private String mycityCommentURL;
-    private String fbCommentURL;
-    private String author;
-    private String type;
-    private String titleSlug, blogSlug, userType;
 
-    public AllCommentsPagerAdapter(FragmentManager fm, int NumOfTabs, String mycityCommentURL, String fbCommentURL, String articleId, String author, String type,
-                                   String titleSlug, String blogSlug, String userType) {
+    private final String articleId;
+    private int numOfTabs;
+    private String mycityCommentUrl;
+    private String fbCommentUrl;
+    private String author;
+    private String contentType;
+    private String titleSlug;
+    private String blogSlug;
+    private String userType;
+
+    public AllCommentsPagerAdapter(FragmentManager fm, int numOfTabs, String mycityCommentUrl, String fbCommentUrl,
+            String articleId, String author, String contentType,
+            String titleSlug, String blogSlug, String userType) {
         super(fm);
-        this.mNumOfTabs = NumOfTabs;
-        this.mycityCommentURL = mycityCommentURL;
-        this.fbCommentURL = fbCommentURL;
+        this.numOfTabs = numOfTabs;
+        this.mycityCommentUrl = mycityCommentUrl;
+        this.fbCommentUrl = fbCommentUrl;
         this.articleId = articleId;
         this.author = author;
-        this.type = type;
+        this.contentType = contentType;
         this.userType = userType;
         this.titleSlug = titleSlug;
         this.blogSlug = blogSlug;
@@ -38,7 +41,7 @@ public class AllCommentsPagerAdapter extends FragmentStatePagerAdapter {
     @Override
     public Fragment getItem(int position) {
         Bundle bundle = new Bundle();
-        bundle.putString("type", type);
+        bundle.putString("contentType", contentType);
         bundle.putString(Constants.ARTICLE_ID, articleId);
         bundle.putString(Constants.AUTHOR, author);
         bundle.putString(Constants.TITLE_SLUG, titleSlug);
@@ -47,12 +50,12 @@ public class AllCommentsPagerAdapter extends FragmentStatePagerAdapter {
 
         if (position == 0) {
             ArticleCommentsFragment tab1 = new ArticleCommentsFragment();
-            bundle.putString("commentURL", fbCommentURL);
+            bundle.putString("commentURL", fbCommentUrl);
             tab1.setArguments(bundle);
             return tab1;
         } else {
             MyCityCommentsFragment tab1 = new MyCityCommentsFragment();
-            bundle.putString("commentURL", mycityCommentURL);
+            bundle.putString("commentURL", mycityCommentUrl);
             tab1.setArguments(bundle);
             return tab1;
         }
@@ -60,6 +63,6 @@ public class AllCommentsPagerAdapter extends FragmentStatePagerAdapter {
 
     @Override
     public int getCount() {
-        return mNumOfTabs;
+        return numOfTabs;
     }
 }

@@ -13,12 +13,9 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.view.Window;
-import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
-import androidx.appcompat.widget.Toolbar;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.FragmentManager;
 import com.google.firebase.crashlytics.FirebaseCrashlytics;
@@ -56,27 +53,19 @@ import retrofit2.Retrofit;
 public class MyCityCommentsFragment extends BaseFragment implements OnClickListener, ObservableScrollViewCallbacks,
         AddEditCommentReplyFragment.IAddCommentReply, AddEditCommentReplyDialogFragment.IAddCommentReply {
 
-    private final static int REPLY_LEVEL_PARENT = 1;
-    private final static int REPLY_LEVEL_CHILD = 2;
+    private static final int REPLY_LEVEL_PARENT = 1;
+    private static final int REPLY_LEVEL_CHILD = 2;
 
-    private Toolbar mToolbar;
-    private ProgressDialog mProgressDialog;
-    private ImageView closeImageView;
-    private TextView addCommentTextView, replyToTextView;
-    private View separator;
-    private EditText commentReplyEditText;
+    private ProgressDialog progressDialog;
     private LinearLayout commentLayout;
-    private ObservableScrollView mScrollView;
+    private ObservableScrollView observableScrollView;
     private TextView commentHeading;
-    //    private FloatingActionButton commentFloatingActionButton;
     private TextView noCommentsTextView;
 
     private boolean isLoading;
     private boolean isFbCommentHeadingAdded = false;
-    private CommentsData commentsData;
-    private String operation;
     private String author;
-    private String commentURL;
+    private String commentsUrl;
     private String userDynamoId;
     private String pagination = "";
     private String commentType = "db";
@@ -89,29 +78,27 @@ public class MyCityCommentsFragment extends BaseFragment implements OnClickListe
 
         final View rootView = inflater.inflate(R.layout.view_all_comment_fragment, container,
                 false);
-        mScrollView = (ObservableScrollView) rootView.findViewById(R.id.scroll_view);
-        commentLayout = ((LinearLayout) rootView.findViewById(R.id.commnetLout));
-        commentHeading = ((TextView) rootView.findViewById(R.id.commentsHeading));
-        noCommentsTextView = ((TextView) rootView.findViewById(R.id.noCommentsTextView));
-//        commentFloatingActionButton = (FloatingActionButton) rootView.findViewById(R.id.commentFloatingActionButton);
-//        commentFloatingActionButton.setOnClickListener(this);
+        observableScrollView = rootView.findViewById(R.id.scroll_view);
+        commentLayout = rootView.findViewById(R.id.commnetLout);
+        commentHeading = rootView.findViewById(R.id.commentsHeading);
+        noCommentsTextView = rootView.findViewById(R.id.noCommentsTextView);
 
-        userDynamoId = SharedPrefUtils.getUserDetailModel(getActivity()).getDynamoId();
+        userDynamoId = SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId();
 
-        mScrollView.setScrollViewCallbacks(this);
+        observableScrollView.setScrollViewCallbacks(this);
 
         Bundle extras = getArguments();
         if (extras != null) {
-            commentURL = extras.getString("commentURL");
+            commentsUrl = extras.getString("commentURL");
             articleId = extras.getString(Constants.ARTICLE_ID);
             author = extras.getString(Constants.AUTHOR);
             type = extras.getString("type");
         }
-        if (!StringUtils.isNullOrEmpty(commentURL) && commentURL.contains("http")) {
+        if (!StringUtils.isNullOrEmpty(commentsUrl) && commentsUrl.contains("http")) {
             getMoreComments();
         } else {
             commentType = "fb";
-            commentURL = "http";
+            commentsUrl = "http";
             getMoreComments();
         }
         return rootView;
@@ -119,11 +106,11 @@ public class MyCityCommentsFragment extends BaseFragment implements OnClickListe
 
     @Override
     public void onScrollChanged(int scrollY, boolean firstScroll, boolean dragging) {
-        View view = mScrollView.getChildAt(mScrollView.getChildCount() - 1);
+        View view = observableScrollView.getChildAt(observableScrollView.getChildCount() - 1);
         Rect scrollBounds = new Rect();
-        mScrollView.getHitRect(scrollBounds);
-        int diff = (view.getBottom() - (mScrollView.getHeight() + mScrollView.getScrollY()));
-        if (diff <= 10 && !isLoading && !StringUtils.isNullOrEmpty(commentURL) && commentURL.contains("http")
+        observableScrollView.getHitRect(scrollBounds);
+        int diff = (view.getBottom() - (observableScrollView.getHeight() + observableScrollView.getScrollY()));
+        if (diff <= 10 && !isLoading && !StringUtils.isNullOrEmpty(commentsUrl) && commentsUrl.contains("http")
                 && !AppConstants.PAGINATION_END_VALUE.equals(pagination)) {
             getMoreComments();
         }
@@ -141,25 +128,15 @@ public class MyCityCommentsFragment extends BaseFragment implements OnClickListe
 
     @Override
     public void onClick(View v) {
-
         switch (v.getId()) {
-//            case R.id.commentFloatingActionButton:
-//                openCommentDialog(null, "ADD");
-//                break;
-//            case R.id.txvCommentCellReply:
-//                openCommentDialog((CommentsData) ((View) v.getParent().getParent().getParent()).getTag(), "ADD");
-//                break;
-//            case R.id.txvReplyCellReply:
-//                openCommentDialog((CommentsData) ((View) v.getParent().getParent()).getTag(), "ADD");
-//                break;
             case R.id.txvCommentCellEdit: {
-                CommentsData cData = (CommentsData) ((View) v.getParent().getParent().getParent()).getTag();
-                openCommentDialog(cData, "EDIT");
+                CommentsData commentsData = (CommentsData) ((View) v.getParent().getParent().getParent()).getTag();
+                openCommentDialog(commentsData, "EDIT");
             }
             break;
             case R.id.txvReplyCellEdit: {
-                CommentsData cData = (CommentsData) ((View) v.getParent().getParent()).getTag();
-                openCommentDialog(cData, "EDIT");
+                CommentsData commentsData = (CommentsData) ((View) v.getParent().getParent()).getTag();
+                openCommentDialog(commentsData, "EDIT");
             }
             break;
             case R.id.txvCommentTitle:
@@ -185,8 +162,9 @@ public class MyCityCommentsFragment extends BaseFragment implements OnClickListe
                     startActivity(profileIntent);
                 }
             }
+            default:
+                break;
         }
-
     }
 
     private void openCommentDialog(CommentsData comData, String opType) {
@@ -194,14 +172,14 @@ public class MyCityCommentsFragment extends BaseFragment implements OnClickListe
             try {
                 AddEditCommentReplyFragment commentFrag = new AddEditCommentReplyFragment();
                 commentFrag.setTargetFragment(this, 0);
-                Bundle _args = new Bundle();
-                _args.putString(Constants.ARTICLE_ID, articleId);
-                _args.putString(Constants.AUTHOR, author);
-                _args.putString("opType", opType);
+                Bundle args = new Bundle();
+                args.putString(Constants.ARTICLE_ID, articleId);
+                args.putString(Constants.AUTHOR, author);
+                args.putString("opType", opType);
                 if (comData != null) {
-                    _args.putParcelable("commentData", comData);
+                    args.putParcelable("commentData", comData);
                 }
-                commentFrag.setArguments(_args);
+                commentFrag.setArguments(args);
                 ((ArticleDetailsContainerActivity) getActivity()).hideToolbarPerm();
                 ((ArticleDetailsContainerActivity) getActivity()).addFragment(commentFrag, null, "topToBottom");
             } catch (Exception e) {
@@ -212,15 +190,15 @@ public class MyCityCommentsFragment extends BaseFragment implements OnClickListe
             try {
                 AddEditCommentReplyDialogFragment commentFrag = new AddEditCommentReplyDialogFragment();
                 commentFrag.setTargetFragment(this, 0);
-                Bundle _args = new Bundle();
-                _args.putString(Constants.ARTICLE_ID, articleId);
-                _args.putString(Constants.AUTHOR, author);
-                _args.putString("opType", opType);
+                Bundle args = new Bundle();
+                args.putString(Constants.ARTICLE_ID, articleId);
+                args.putString(Constants.AUTHOR, author);
+                args.putString("opType", opType);
                 if (comData != null) {
-                    _args.putParcelable("commentData", comData);
-                    _args.putString("type", "video");
+                    args.putParcelable("commentData", comData);
+                    args.putString("type", "video");
                 }
-                commentFrag.setArguments(_args);
+                commentFrag.setArguments(args);
                 FragmentManager fm = getChildFragmentManager();
                 commentFrag.show(fm, "Replies");
             } catch (Exception e) {
@@ -233,48 +211,28 @@ public class MyCityCommentsFragment extends BaseFragment implements OnClickListe
 
 
     public void showProgressDialog(String bodyText) {
-        if (mProgressDialog == null) {
-            mProgressDialog = new ProgressDialog(getActivity());
-            mProgressDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-            mProgressDialog.setCancelable(false);
+        if (progressDialog == null) {
+            progressDialog = new ProgressDialog(getActivity());
+            progressDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+            progressDialog.setCancelable(false);
         }
 
-        mProgressDialog.setMessage(bodyText);
+        progressDialog.setMessage(bodyText);
 
-        if (!mProgressDialog.isShowing()) {
-            mProgressDialog.show();
+        if (!progressDialog.isShowing()) {
+            progressDialog.show();
         }
     }
 
     public void removeProgressDialog() {
         try {
-            if (mProgressDialog != null && mProgressDialog.isShowing()) {
-                mProgressDialog.dismiss();
+            if (progressDialog != null && progressDialog.isShowing()) {
+                progressDialog.dismiss();
             }
         } catch (Exception e) {
             e.printStackTrace();
         }
-
     }
-
-    private boolean isValid() {
-
-        if (StringUtils.isNullOrEmpty(addCommentTextView.getText().toString())) {
-            Toast.makeText(getActivity(), "Please add a reply", Toast.LENGTH_LONG).show();
-            return false;
-        }
-        return true;
-    }
-
-    public interface IAddCommentReply {
-
-        void onCommentAddition(CommentsData cd);
-
-        void onCommentReplyEditSuccess(CommentsData cd);
-
-        void onReplyAddition(CommentsData cd);
-    }
-
 
     private void getMoreComments() {
         isLoading = true;
@@ -282,18 +240,14 @@ public class MyCityCommentsFragment extends BaseFragment implements OnClickListe
             ((ArticleDetailsContainerActivity) getActivity()).showToast(getString(R.string.error_network));
             return;
         }
-//        mLodingView.setVisibility(View.VISIBLE);
         Retrofit retro = BaseApplication.getInstance().getRetrofit();
-//        ArticleDetailsAPI articleDetailsAPI = retro.create(ArticleDetailsAPI.class);
-//        Call<ResponseBody> call = articleDetailsAPI.getComments(commentURL);
-//        call.enqueue(commentsCallback);
         if ("db".equals(commentType)) {
-            ArticleDetailsAPI articleDetailsAPI = retro.create(ArticleDetailsAPI.class);
-            Call<ResponseBody> call = articleDetailsAPI.getComments(commentURL);
+            ArticleDetailsAPI articleDetailsApi = retro.create(ArticleDetailsAPI.class);
+            Call<ResponseBody> call = articleDetailsApi.getComments(commentsUrl);
             call.enqueue(commentsCallback);
         } else {
-            ArticleDetailsAPI articleDetailsAPI = retro.create(ArticleDetailsAPI.class);
-            Call<FBCommentResponse> call = articleDetailsAPI.getFBComments(articleId, pagination);
+            ArticleDetailsAPI articleDetailsApi = retro.create(ArticleDetailsAPI.class);
+            Call<FBCommentResponse> call = articleDetailsApi.getFBComments(articleId, pagination);
             call.enqueue(fbCommentsCallback);
         }
     }
@@ -311,7 +265,7 @@ public class MyCityCommentsFragment extends BaseFragment implements OnClickListe
                 ;
                 isLoading = false;
                 commentType = "fb";
-                commentURL = "http";
+                commentsUrl = "http";
                 return;
             }
             try {
@@ -319,28 +273,29 @@ public class MyCityCommentsFragment extends BaseFragment implements OnClickListe
                 String resData = new String(response.body().bytes());
                 ArrayList<CommentsData> arrayList = new ArrayList<>();
                 JSONArray commentsJson = new JSONArray(resData);
-                commentURL = "";
+                commentsUrl = "";
                 if (commentsJson.length() > 0) {
                     commentHeading.setVisibility(View.VISIBLE);
                 }
                 for (int i = 0; i < commentsJson.length(); i++) {
                     if (commentsJson.getJSONObject(i).has("next")) {
-                        commentURL = commentsJson.getJSONObject(i).getString("next");
+                        commentsUrl = commentsJson.getJSONObject(i).getString("next");
                     } else {
-                        CommentsData cData = new Gson().fromJson(commentsJson.get(i).toString(), CommentsData.class);
-                        arrayList.add(cData);
+                        CommentsData commentsData = new Gson()
+                                .fromJson(commentsJson.get(i).toString(), CommentsData.class);
+                        arrayList.add(commentsData);
                     }
                 }
-                if (StringUtils.isNullOrEmpty(commentURL)) {
+                if (StringUtils.isNullOrEmpty(commentsUrl)) {
                     commentType = "fb";
-                    commentURL = "http";
+                    commentsUrl = "http";
                 }
 
                 ViewHolder viewHolder = new ViewHolder();
                 for (int i = 0; i < arrayList.size(); i++) {
                     displayComments(viewHolder, arrayList.get(i), false);
                 }
-                if (commentLayout.getHeight() < mScrollView.getHeight()) {
+                if (commentLayout.getHeight() < observableScrollView.getHeight()) {
                     getMoreComments();
                 }
 
@@ -356,27 +311,25 @@ public class MyCityCommentsFragment extends BaseFragment implements OnClickListe
                 Log.d("MC4kException", Log.getStackTraceString(ex));
                 if (isAdded()) {
                     ((ArticleDetailsContainerActivity) getActivity()).showToast(getString(R.string.server_went_wrong));
-                    ;
                 }
             }
         }
 
         @Override
         public void onFailure(Call<ResponseBody> call, Throwable t) {
-//            mLodingView.setVisibility(View.GONE);
-//            handleExceptions(t);
+            FirebaseCrashlytics.getInstance().recordException(t);
+            Log.d("MC4kException", Log.getStackTraceString(t));
         }
     };
 
-    Callback<FBCommentResponse> fbCommentsCallback = new Callback<FBCommentResponse>() {
+    private Callback<FBCommentResponse> fbCommentsCallback = new Callback<FBCommentResponse>() {
         @Override
         public void onResponse(Call<FBCommentResponse> call, retrofit2.Response<FBCommentResponse> response) {
             removeProgressDialog();
-            if (response == null || null == response.body()) {
+            if (null == response.body()) {
                 if (isAdded()) {
                     ((ArticleDetailsContainerActivity) getActivity()).showToast(getString(R.string.server_went_wrong));
                 }
-                ;
                 return;
             }
 
@@ -431,8 +384,8 @@ public class MyCityCommentsFragment extends BaseFragment implements OnClickListe
 
         @Override
         public void onFailure(Call<FBCommentResponse> call, Throwable t) {
-//            mLodingView.setVisibility(View.GONE);
-//            handleExceptions(t);
+            FirebaseCrashlytics.getInstance().recordException(t);
+            Log.d("MC4kException", Log.getStackTraceString(t));
         }
     };
 
@@ -445,8 +398,6 @@ public class MyCityCommentsFragment extends BaseFragment implements OnClickListe
             holder.commentName = (TextView) view.findViewById(R.id.txvCommentTitle);
             holder.commentDescription = (TextView) view.findViewById(R.id.txvCommentDescription);
             holder.dateTxt = (TextView) view.findViewById(R.id.txvDate);
-//            holder.commentCellReplyTxt = (TextView) view.findViewById(R.id.txvCommentCellReply);
-//            holder.separatorView = view.findViewById(R.id.separatorView);
             holder.commentCellEditTxt = (TextView) view.findViewById(R.id.txvCommentCellEdit);
             holder.replyCommentView = (LinearLayout) view.findViewById(R.id.replyRelativeLayout);
 
@@ -454,23 +405,14 @@ public class MyCityCommentsFragment extends BaseFragment implements OnClickListe
             holder.commentName.setOnClickListener(this);
             holder.replyCommentView.setOnClickListener(this);
             holder.replyCommentView.setTag(commentList);
-
-//            holder.commentCellReplyTxt.setOnClickListener(this);
             holder.commentCellEditTxt.setOnClickListener(this);
 
             view.setTag(commentList);
 
             if (!"fb".equals(commentList.getComment_type()) && userDynamoId.equals(commentList.getUserId())) {
                 holder.commentCellEditTxt.setVisibility(View.VISIBLE);
-//                holder.commentCellReplyTxt.setVisibility(View.GONE);
             } else {
                 holder.commentCellEditTxt.setVisibility(View.GONE);
-                if ("fb".equals(commentList.getComment_type())) {
-//                    holder.commentCellReplyTxt.setVisibility(View.GONE);
-//                    holder.separatorView.setVisibility(View.GONE);
-                } else {
-//                    holder.commentCellReplyTxt.setVisibility(View.VISIBLE);
-                }
             }
 
             if (!StringUtils.isNullOrEmpty(commentList.getName())) {
@@ -532,33 +474,17 @@ public class MyCityCommentsFragment extends BaseFragment implements OnClickListe
         replyViewholder.commentName = (TextView) view.findViewById(R.id.txvReplyTitle);
         replyViewholder.commentDescription = (TextView) view.findViewById(R.id.txvCommentDescription);
         replyViewholder.dateTxt = (TextView) view.findViewById(R.id.txvDate);
-//        replyViewholder.replyCellReplyTxt = (TextView) view.findViewById(R.id.txvReplyCellReply);
-//        replyViewholder.separatorView = view.findViewById(R.id.separatorView);
         replyViewholder.replyCellEditTxt = (TextView) view.findViewById(R.id.txvReplyCellEdit);
         replyViewholder.replyCommentView = (LinearLayout) view.findViewById(R.id.replyRelativeLayout);
 
         replyViewholder.commentorsImage.setOnClickListener(this);
         replyViewholder.commentName.setOnClickListener(this);
-
-//        replyViewholder.replyCellReplyTxt.setOnClickListener(this);
         replyViewholder.replyCellEditTxt.setOnClickListener(this);
 
         if (!"fb".equals(replies.getComment_type()) && userDynamoId.equals(replies.getUserId())) {
             replyViewholder.replyCellEditTxt.setVisibility(View.VISIBLE);
-//            replyViewholder.replyCellReplyTxt.setVisibility(View.GONE);
         } else {
             replyViewholder.replyCellEditTxt.setVisibility(View.GONE);
-            if ("fb".equals(replies.getComment_type())) {
-//                replyViewholder.replyCellReplyTxt.setVisibility(View.GONE);
-//                replyViewholder.separatorView.setVisibility(View.GONE);
-            } else {
-                if (replyLevel == REPLY_LEVEL_CHILD) {
-//                    replyViewholder.replyCellReplyTxt.setVisibility(View.GONE);
-//                    replyViewholder.separatorView.setVisibility(View.GONE);
-                } else {
-//                    replyViewholder.replyCellReplyTxt.setVisibility(View.VISIBLE);
-                }
-            }
         }
 
         if (replyLevel == REPLY_LEVEL_PARENT && replyPos == 0) {
@@ -619,9 +545,6 @@ public class MyCityCommentsFragment extends BaseFragment implements OnClickListe
         private TextView commentName;
         private TextView commentDescription;
         private TextView dateTxt;
-        //        private TextView commentCellReplyTxt;
-//        private View separatorView;
-//        private TextView replyCellReplyTxt;
         private TextView commentCellEditTxt;
         private TextView replyCellEditTxt;
         private LinearLayout replyCommentView;
@@ -636,15 +559,15 @@ public class MyCityCommentsFragment extends BaseFragment implements OnClickListe
     @Override
     public void onReplyAddition(CommentsData updatedComment) {
         for (int i = 0; i < commentLayout.getChildCount(); i++) {
-            CommentsData cdata = (CommentsData) commentLayout.getChildAt(i).getTag();
-            CommentsData searchedData = recursiveSearch(cdata, updatedComment);
+            CommentsData commentsData = (CommentsData) commentLayout.getChildAt(i).getTag();
+            CommentsData searchedData = recursiveSearch(commentsData, updatedComment);
             if (searchedData != null) {
                 searchedData.getReplies().add(updatedComment);
                 ViewHolder viewHolder = new ViewHolder();
-                displayCommentsAtPosition(viewHolder, cdata, false, i);
+                displayCommentsAtPosition(viewHolder, commentsData, false, i);
                 break;
             } else {
-                Log.d("Nothing in comment ", cdata.getBody());
+                Log.d("Nothing in comment ", commentsData.getBody());
             }
         }
     }
@@ -652,14 +575,14 @@ public class MyCityCommentsFragment extends BaseFragment implements OnClickListe
     @Override
     public void onCommentReplyEditSuccess(CommentsData cd) {
         for (int i = 0; i < commentLayout.getChildCount(); i++) {
-            CommentsData cdata = (CommentsData) commentLayout.getChildAt(i).getTag();
-            CommentsData searchedData = recursiveSearch(cdata, cd);
+            CommentsData commentsData = (CommentsData) commentLayout.getChildAt(i).getTag();
+            CommentsData searchedData = recursiveSearch(commentsData, cd);
             if (searchedData != null) {
                 ViewHolder viewHolder = new ViewHolder();
-                displayCommentsAtPosition(viewHolder, cdata, false, i);
+                displayCommentsAtPosition(viewHolder, commentsData, false, i);
                 break;
             } else {
-                Log.d("Nothing in comment ", cdata.getBody());
+                Log.d("Nothing in comment ", commentsData.getBody());
             }
         }
     }
@@ -685,7 +608,6 @@ public class MyCityCommentsFragment extends BaseFragment implements OnClickListe
             holder.commentName = (TextView) view.findViewById(R.id.txvCommentTitle);
             holder.commentDescription = (TextView) view.findViewById(R.id.txvCommentDescription);
             holder.dateTxt = (TextView) view.findViewById(R.id.txvDate);
-//            holder.commentCellReplyTxt = (TextView) view.findViewById(R.id.txvCommentCellReply);
             holder.commentCellEditTxt = (TextView) view.findViewById(R.id.txvCommentCellEdit);
             holder.replyCommentView = (LinearLayout) view.findViewById(R.id.replyRelativeLayout);
 
@@ -693,8 +615,6 @@ public class MyCityCommentsFragment extends BaseFragment implements OnClickListe
             holder.commentName.setOnClickListener(this);
             holder.replyCommentView.setOnClickListener(this);
             holder.replyCommentView.setTag(commentList);
-
-//            holder.commentCellReplyTxt.setOnClickListener(this);
             holder.commentCellEditTxt.setOnClickListener(this);
 
             view.setTag(commentList);
@@ -704,18 +624,6 @@ public class MyCityCommentsFragment extends BaseFragment implements OnClickListe
             } else {
                 holder.commentCellEditTxt.setVisibility(View.INVISIBLE);
             }
-
-//            if ("fb".equals(commentList.getComment_type())) {
-//                holder.commentCellReplyTxt.setVisibility(View.INVISIBLE);
-//            } else {
-//                holder.commentCellReplyTxt.setVisibility(View.VISIBLE);
-//            }
-
-//            if (holder.commentCellEditTxt.getVisibility() == View.VISIBLE) {
-//                holder.commentCellReplyTxt.setVisibility(View.INVISIBLE);
-//            } else {
-//                holder.commentCellReplyTxt.setVisibility(View.VISIBLE);
-//            }
 
             if (!StringUtils.isNullOrEmpty(commentList.getName())) {
                 holder.commentName.setText(commentList.getName());

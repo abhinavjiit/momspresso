@@ -40,7 +40,6 @@ import com.squareup.picasso.Picasso;
 import java.util.ArrayList;
 import java.util.List;
 import okhttp3.ResponseBody;
-import org.json.JSONObject;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -81,7 +80,7 @@ public class ArticleCommentsFragment extends BaseFragment implements OnClickList
     private ArticleDetailsAPI articleDetailsApi;
     private ArticleCommentRepliesDialogFragment articleCommentRepliesDialogFragment;
     private TextView noCommentsTextView;
-    private String sourceType;
+    private String contentType;
     private ImageView userImageView;
 
     @Override
@@ -114,7 +113,7 @@ public class ArticleCommentsFragment extends BaseFragment implements OnClickList
             titleSlug = extras.getString(Constants.TITLE_SLUG);
             blogSlug = extras.getString(Constants.BLOG_SLUG);
             userType = extras.getString("userType");
-            sourceType = extras.getString("type");
+            contentType = extras.getString("contentType");
         }
 
         Retrofit retro = BaseApplication.getInstance().getRetrofit();
@@ -234,8 +233,10 @@ public class ArticleCommentsFragment extends BaseFragment implements OnClickList
         addEditCommentOrReplyRequest.setPost_id(articleId);
         addEditCommentOrReplyRequest.setMessage(content);
         addEditCommentOrReplyRequest.setParent_id("0");
-        if ("video".equals(sourceType)) {
+        if (AppConstants.CONTENT_TYPE_VIDEO.equals(contentType)) {
             addEditCommentOrReplyRequest.setType("video");
+        } else if (AppConstants.CONTENT_TYPE_SHORT_STORY.equals(contentType)) {
+            addEditCommentOrReplyRequest.setType("story");
         } else {
             addEditCommentOrReplyRequest.setType("article");
         }
@@ -379,8 +380,8 @@ public class ArticleCommentsFragment extends BaseFragment implements OnClickList
     @Override
     public void onResponseDelete(int position, String responseType) {
         Retrofit retrofit = BaseApplication.getInstance().getRetrofit();
-        ArticleDetailsAPI articleDetailsAPI = retrofit.create(ArticleDetailsAPI.class);
-        Call<CommentListResponse> call = articleDetailsAPI.deleteCommentOrReply(commentsList.get(position).getId());
+        ArticleDetailsAPI articleDetailsApi = retrofit.create(ArticleDetailsAPI.class);
+        Call<CommentListResponse> call = articleDetailsApi.deleteCommentOrReply(commentsList.get(position).getId());
         call.enqueue(deleteCommentResponseListener);
         actionItemPosition = position;
     }
@@ -401,13 +402,13 @@ public class ArticleCommentsFragment extends BaseFragment implements OnClickList
 
     @Override
     public void onResponseReport(int position, String responseType) {
+        Bundle args = new Bundle();
+        args.putString("postId", commentsList.get(position).getId());
+        args.putInt("type", AppConstants.REPORT_TYPE_COMMENT);
         ReportContentDialogFragment reportContentDialogFragment = new ReportContentDialogFragment();
-        FragmentManager fm = getChildFragmentManager();
-        Bundle _args = new Bundle();
-        _args.putString("postId", commentsList.get(position).getId());
-        _args.putInt("type", AppConstants.REPORT_TYPE_COMMENT);
-        reportContentDialogFragment.setArguments(_args);
+        reportContentDialogFragment.setArguments(args);
         reportContentDialogFragment.setCancelable(true);
+        FragmentManager fm = getChildFragmentManager();
         reportContentDialogFragment.show(fm, "Report Content");
     }
 
@@ -466,8 +467,10 @@ public class ArticleCommentsFragment extends BaseFragment implements OnClickList
         addEditCommentOrReplyRequest.setPost_id(articleId);
         addEditCommentOrReplyRequest.setMessage(content);
         addEditCommentOrReplyRequest.setParent_id(parentCommentId);
-        if ("video".equals(sourceType)) {
+        if (AppConstants.CONTENT_TYPE_VIDEO.equals(contentType)) {
             addEditCommentOrReplyRequest.setType("video");
+        } else if (AppConstants.CONTENT_TYPE_SHORT_STORY.equals(contentType)) {
+            addEditCommentOrReplyRequest.setType("story");
         } else {
             addEditCommentOrReplyRequest.setType("article");
         }
@@ -620,8 +623,8 @@ public class ArticleCommentsFragment extends BaseFragment implements OnClickList
         deleteCommentPos = commentPos;
         deleteReplyPos = replyPos;
         Retrofit retrofit = BaseApplication.getInstance().getRetrofit();
-        ArticleDetailsAPI articleDetailsAPI = retrofit.create(ArticleDetailsAPI.class);
-        Call<CommentListResponse> call = articleDetailsAPI
+        ArticleDetailsAPI articleDetailsApi = retrofit.create(ArticleDetailsAPI.class);
+        Call<CommentListResponse> call = articleDetailsApi
                 .deleteCommentOrReply(commentsList.get(commentPos).getReplies().get(replyPos).getId());
         call.enqueue(deleteReplyResponseListener);
     }
@@ -702,7 +705,6 @@ public class ArticleCommentsFragment extends BaseFragment implements OnClickList
         } catch (Exception e) {
             e.printStackTrace();
         }
-
     }
 
     @Override
@@ -716,8 +718,8 @@ public class ArticleCommentsFragment extends BaseFragment implements OnClickList
                     commentListData.setStatus("0");
                     commentsList.get(position).setLikeCount(commentsList.get(position).getLikeCount() - 1);
                     Retrofit retrofit = BaseApplication.getInstance().getRetrofit();
-                    ArticleDetailsAPI articleDetailsAPI = retrofit.create(ArticleDetailsAPI.class);
-                    Call<ResponseBody> call = articleDetailsAPI
+                    ArticleDetailsAPI articleDetailsApi = retrofit.create(ArticleDetailsAPI.class);
+                    Call<ResponseBody> call = articleDetailsApi
                             .likeDislikeComment(commentsList.get(position).getId(), commentListData);
                     call.enqueue(likeDisLikeCommentCallback);
 
@@ -728,8 +730,8 @@ public class ArticleCommentsFragment extends BaseFragment implements OnClickList
                     commentListData.setStatus("1");
                     commentsList.get(position).setLikeCount(commentsList.get(position).getLikeCount() + 1);
                     Retrofit retrofit = BaseApplication.getInstance().getRetrofit();
-                    ArticleDetailsAPI articleDetailsAPI = retrofit.create(ArticleDetailsAPI.class);
-                    Call<ResponseBody> call = articleDetailsAPI
+                    ArticleDetailsAPI articleDetailsApi = retrofit.create(ArticleDetailsAPI.class);
+                    Call<ResponseBody> call = articleDetailsApi
                             .likeDislikeComment(commentsList.get(position).getId(), commentListData);
                     call.enqueue(likeDisLikeCommentCallback);
                 }
@@ -753,11 +755,11 @@ public class ArticleCommentsFragment extends BaseFragment implements OnClickList
                     openAddCommentReplyDialog(commentsList.get(position));
                 } else {
                     articleCommentRepliesDialogFragment = new ArticleCommentRepliesDialogFragment();
-                    Bundle _args = new Bundle();
-                    _args.putParcelable("commentReplies", commentsList.get(position));
-                    _args.putInt("totalRepliesCount", commentsList.get(position).getRepliesCount());
-                    _args.putInt("position", position);
-                    articleCommentRepliesDialogFragment.setArguments(_args);
+                    Bundle args = new Bundle();
+                    args.putParcelable("commentReplies", commentsList.get(position));
+                    args.putInt("totalRepliesCount", commentsList.get(position).getRepliesCount());
+                    args.putInt("position", position);
+                    articleCommentRepliesDialogFragment.setArguments(args);
                     articleCommentRepliesDialogFragment.setCancelable(true);
                     FragmentManager fm = getChildFragmentManager();
                     articleCommentRepliesDialogFragment.show(fm, "View Replies");
@@ -772,26 +774,13 @@ public class ArticleCommentsFragment extends BaseFragment implements OnClickList
     private Callback<ResponseBody> likeDisLikeCommentCallback = new Callback<ResponseBody>() {
         @Override
         public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
-            if (response == null || null == response.body()) {
+            if (null == response.body()) {
                 NetworkErrorException nee = new NetworkErrorException(response.raw().toString());
                 FirebaseCrashlytics.getInstance().recordException(nee);
                 if (isAdded()) {
                     ToastUtils.showToast(getActivity(), getResources().getString(R.string.server_went_wrong));
                 }
-                return;
             }
-            try {
-                String resData = new String(response.body().bytes());
-                JSONObject jsonObject = new JSONObject(resData);
-                if (jsonObject.getJSONObject("status").toString().equals(Constants.SUCCESS) && jsonObject
-                        .getJSONObject("code").toString().equals("200")) {
-                }
-            } catch (Exception e) {
-                FirebaseCrashlytics.getInstance().recordException(e);
-                Log.d("MC4kException", Log.getStackTraceString(e));
-            }
-
-
         }
 
         @Override
@@ -819,18 +808,14 @@ public class ArticleCommentsFragment extends BaseFragment implements OnClickList
         addEditCommentOrReplyRequest.setPost_id(articleId);
         addEditCommentOrReplyRequest.setMessage(content);
         addEditCommentOrReplyRequest.setParent_id("0");
-        if ("video".equals(sourceType)) {
+        if (AppConstants.CONTENT_TYPE_VIDEO.equals(contentType)) {
             addEditCommentOrReplyRequest.setType("video");
+        } else if (AppConstants.CONTENT_TYPE_SHORT_STORY.equals(contentType)) {
+            addEditCommentOrReplyRequest.setType("story");
         } else {
             addEditCommentOrReplyRequest.setType("article");
         }
         Call<CommentListResponse> call = articleDetailsApi.addCommentOrReply(addEditCommentOrReplyRequest);
         call.enqueue(addCommentResponseListener);
-
-    }
-
-    @Override
-    public void onDestroy() {
-        super.onDestroy();
     }
 }
