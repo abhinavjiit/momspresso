@@ -664,6 +664,7 @@ public class ParallelFeedActivity extends BaseActivity implements View.OnClickLi
             args.putString(Constants.ARTICLE_ID, vidId);
             args.putString(Constants.AUTHOR_ID, authorId);
             args.putString(Constants.TITLE_SLUG, titleSlug);
+            args.putString("contentType", AppConstants.CONTENT_TYPE_VIDEO);
             ViewAllCommentsFragment commentFrag = new ViewAllCommentsFragment();
             this.addFragment(commentFrag, args);
         } catch (Exception e) {

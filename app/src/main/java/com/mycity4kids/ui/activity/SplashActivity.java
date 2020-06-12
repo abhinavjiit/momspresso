@@ -1,6 +1,5 @@
 package com.mycity4kids.ui.activity;
 
-import android.accounts.NetworkErrorException;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
@@ -9,7 +8,6 @@ import android.util.Log;
 import android.view.View;
 import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
-import com.facebook.applinks.AppLinkData;
 import com.google.firebase.analytics.FirebaseAnalytics;
 import com.google.firebase.crashlytics.FirebaseCrashlytics;
 import com.mixpanel.android.mpmetrics.MixpanelAPI;
@@ -17,15 +15,12 @@ import com.mycity4kids.R;
 import com.mycity4kids.application.BaseApplication;
 import com.mycity4kids.base.BaseActivity;
 import com.mycity4kids.constants.AppConstants;
-import com.mycity4kids.constants.Constants;
 import com.mycity4kids.gtmutils.GTMEventType;
 import com.mycity4kids.gtmutils.Utils;
-import com.mycity4kids.models.response.FollowUnfollowCategoriesResponse;
 import com.mycity4kids.models.user.UserInfo;
 import com.mycity4kids.newmodels.ForceUpdateModel;
 import com.mycity4kids.preference.SharedPrefUtils;
 import com.mycity4kids.retrofitAPIsInterfaces.ForceUpdateAPI;
-import com.mycity4kids.retrofitAPIsInterfaces.TopicsCategoryAPI;
 import com.mycity4kids.sync.CategorySyncService;
 import com.mycity4kids.sync.FetchAdvertisementInfoService;
 import com.mycity4kids.sync.PushTokenService;
@@ -35,9 +30,8 @@ import com.mycity4kids.utils.StringUtils;
 import com.mycity4kids.utils.WebViewLocaleHelper;
 import com.smartlook.sdk.smartlook.Smartlook;
 import io.branch.referral.Branch;
-import java.util.ArrayList;
+import io.branch.referral.BranchError;
 import java.util.Locale;
-import org.json.JSONException;
 import org.json.JSONObject;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -53,39 +47,17 @@ public class SplashActivity extends BaseActivity {
     private Handler handler;
     private Handler handler1;
 
-    // The onNewIntent() is overridden to get and resolve the data for deep linking
     @Override
     protected void onNewIntent(Intent intent) {
-        String action = intent.getAction();
-        String data = intent.getDataString();
-        if (Intent.ACTION_VIEW.equals(action) && data != null) {
-            deepLinkUrl = data;
-            try {
-                mixpanel = MixpanelAPI.getInstance(BaseApplication.getAppContext(), AppConstants.MIX_PANEL_TOKEN);
-                JSONObject jsonObject = new JSONObject();
-                jsonObject.put("userId",
-                        SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId());
-                jsonObject.put("_deeplinkurl", deepLinkUrl);
-                jsonObject.put("manufacturer", Build.MANUFACTURER);
-                jsonObject.put("model", Build.MODEL);
-                mixpanel.track("DeepLink", jsonObject);
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-
-            Log.i("deepLinkUrl", deepLinkUrl);
-            if (deepLinkUrl.contains(AppConstants.BRANCH_DEEPLINK) || deepLinkUrl
-                    .contains(AppConstants.BRANCH_DEEPLINK_URL)) {
-                BaseApplication.getInstance().setBranchLink("true");
-            }
-        }
+        super.onNewIntent(intent);
+        setIntent(intent);
+        Branch.sessionBuilder(this).withCallback(branchReferralInitListener).reInit();
     }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         Utils.pushAppOpenEvent(this, SharedPrefUtils.getUserDetailModel(this).getDynamoId() + "");
-        onNewIntent(getIntent());
         //AppUtils.printHashKey(this);
         extras = getIntent().getExtras();
         mixpanel = MixpanelAPI.getInstance(BaseApplication.getAppContext(), AppConstants.MIX_PANEL_TOKEN);
@@ -105,19 +77,52 @@ public class SplashActivity extends BaseActivity {
             View mlayout = findViewById(R.id.rootLayout);
             ((BaseApplication) getApplication()).setView(mlayout);
             ((BaseApplication) getApplication()).setActivity(this);
-            ImageView spin = (ImageView) findViewById(R.id.spin);
+            ImageView spin = findViewById(R.id.spin);
             spin.startAnimation(AnimationUtils.loadAnimation(this,
                     R.anim.rotate_indefinitely));
-            resumeSplash();
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
     @Override
-    protected void onResume() {
-        super.onResume();
+    public void onStart() {
+        super.onStart();
+        handler = new Handler();
+        String action = getIntent().getAction();
+        String data = getIntent().getDataString();
+        if (Intent.ACTION_VIEW.equals(action) && data != null) {
+            deepLinkUrl = data;
+        }
+        Branch.sessionBuilder(this).withCallback(branchReferralInitListener)
+                .withData(getIntent() != null ? getIntent().getData() : null).init();
     }
+
+    private Branch.BranchReferralInitListener branchReferralInitListener = new Branch.BranchReferralInitListener() {
+        @Override
+        public void onInitFinished(JSONObject linkProperties, BranchError error) {
+            if (error == null) {
+                Log.e("BRANCH_SDK", linkProperties.toString());
+                branchData = linkProperties.toString();
+                try {
+                    if (linkProperties.getBoolean("+clicked_branch_link")) {
+                        if (!StringUtils.isNullOrEmpty(linkProperties.getString("type"))) {
+                            BaseApplication.getInstance().setBranchData(branchData);
+                            BaseApplication.getInstance().setBranchLink("true");
+                        }
+                    }
+                    resumeSplash();
+                } catch (Exception e) {
+                    FirebaseCrashlytics.getInstance().recordException(e);
+                    Log.d("MC4kException", Log.getStackTraceString(e));
+                    resumeSplash();
+                }
+            } else {
+                Log.e("BRANCH SDK", error.getMessage());
+                resumeSplash();
+            }
+        }
+    };
 
     private void resumeSplash() {
         String version = AppUtils.getAppVersion(this);
@@ -138,51 +143,10 @@ public class SplashActivity extends BaseActivity {
         }
     }
 
-    @Override
-    public void onStart() {
-        super.onStart();
-        handler = new Handler();
-        handler.postDelayed(() -> Branch.getInstance().initSession((referringParams, error) -> {
-            if (error == null) {
-                String type = "";
-                Log.i("BRANCH_SDK", referringParams.toString());
-                branchData = referringParams.toString();
-                try {
-                    if (!StringUtils.isNullOrEmpty(referringParams.getString("type"))) {
-                        BaseApplication.getInstance().setBranchData(branchData);
-                        BaseApplication.getInstance().setBranchLink("true");
-                    }
-                } catch (Exception e) {
-                    Log.e("Branch_Tag", e.getMessage());
-                }
-            } else {
-                Log.i("BRANCH SDK", error.getMessage());
-            }
-        }, SplashActivity.this.getIntent().getData(), SplashActivity.this), 1000);
-
-        AppLinkData.fetchDeferredAppLinkData(this, new AppLinkData.CompletionHandler() {
-            @Override
-            public void onDeferredAppLinkDataFetched(AppLinkData appLinkData) {
-                Log.e("FBDeferredDeepLink", "" + appLinkData);
-                if (appLinkData != null) {
-                    JSONObject jsonObject = new JSONObject();
-                    try {
-                        jsonObject.put("type", "personal_info");
-                        BaseApplication.getInstance().setBranchData(jsonObject.toString());
-                        BaseApplication.getInstance().setBranchLink("true");
-                    } catch (JSONException e) {
-                        e.printStackTrace();
-                    }
-                }
-            }
-        });
-    }
-
-
     private void navigateToNextScreen() {
         UserInfo userInfo = SharedPrefUtils.getUserDetailModel(this);
         if (null != userInfo && !StringUtils.isNullOrEmpty(userInfo.getMc4kToken())
-                && AppConstants.VALIDATED_USER.equals(userInfo.getIsValidated())) { // if he signup
+                && AppConstants.VALIDATED_USER.equals(userInfo.getIsValidated())) {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
                 Intent intent5 = new Intent(this, PushTokenService.class);
                 startForegroundService(intent5);
@@ -205,11 +169,7 @@ public class SplashActivity extends BaseActivity {
                 Log.d("MC4kException", Log.getStackTraceString(e));
             }
 
-            Retrofit retrofit = BaseApplication.getInstance().getRetrofit();
-            TopicsCategoryAPI topicsCategoryApi = retrofit.create(TopicsCategoryAPI.class);
-            Call<FollowUnfollowCategoriesResponse> call = topicsCategoryApi.getFollowedCategories(
-                    SharedPrefUtils.getUserDetailModel(this).getDynamoId());
-            call.enqueue(getFollowedTopicsResponseCallback);
+            gotoDashboard();
         } else {
             Log.e("MYCITY4KIDS", "USER logged Out");
             if (SharedPrefUtils.getLogoutFlag(BaseApplication.getAppContext())) {
@@ -231,46 +191,6 @@ public class SplashActivity extends BaseActivity {
         }
         Log.d("GCM Token ", SharedPrefUtils.getDeviceToken(BaseApplication.getAppContext()));
     }
-
-    private Callback<FollowUnfollowCategoriesResponse> getFollowedTopicsResponseCallback =
-            new Callback<FollowUnfollowCategoriesResponse>() {
-                @Override
-                public void onResponse(Call<FollowUnfollowCategoriesResponse> call,
-                        retrofit2.Response<FollowUnfollowCategoriesResponse> response) {
-                    removeProgressDialog();
-                    if (null == response.body()) {
-                        NetworkErrorException nee = new NetworkErrorException(response.raw().toString());
-                        FirebaseCrashlytics.getInstance().recordException(nee);
-                        showToast(getString(R.string.server_went_wrong));
-                        gotoDashboard();
-                        return;
-                    }
-                    try {
-                        FollowUnfollowCategoriesResponse responseData = response.body();
-                        if (responseData.getCode() == 200 && Constants.SUCCESS.equals(responseData.getStatus())) {
-                            ArrayList<String> datalist = (ArrayList<String>) responseData.getData();
-                            SharedPrefUtils.setFollowedTopicsCount(BaseApplication.getAppContext(), datalist.size());
-                            gotoDashboard();
-                        } else {
-                            gotoDashboard();
-                            showToast(responseData.getReason());
-                        }
-                    } catch (Exception e) {
-                        FirebaseCrashlytics.getInstance().recordException(e);
-                        Log.d("MC4kException", Log.getStackTraceString(e));
-                        gotoDashboard();
-                    }
-                }
-
-                @Override
-                public void onFailure(Call<FollowUnfollowCategoriesResponse> call, Throwable t) {
-                    removeProgressDialog();
-                    FirebaseCrashlytics.getInstance().recordException(t);
-                    Log.d("MC4kException", Log.getStackTraceString(t));
-                    gotoDashboard();
-                    apiExceptions(t);
-                }
-            };
 
     private void gotoDashboard() {
         if (!StringUtils.isNullOrEmpty(deepLinkUrl) && (deepLinkUrl.contains(AppConstants.BRANCH_DEEPLINK)

@@ -46,8 +46,8 @@
       android:screenOrientation="portrait" />
     <activity
       android:name=".ui.mymoneytracker.activity.TrackerActivity"
-      android:screenOrientation="portrait"
       android:label="@string/title_activity_tracker"
+      android:screenOrientation="portrait"
       android:theme="@style/AppTheme.NoActionBar" />
 
     <meta-data
@@ -75,9 +75,9 @@
       android:name=".filechooser.com.ipaulpro.afilechooser.FileChooserActivity"
       android:enabled="@bool/use_activity"
       android:exported="true"
-      android:screenOrientation="portrait"
       android:icon="@drawable/ic_chooser"
-      android:label="@string/choose_file">
+      android:label="@string/choose_file"
+      android:screenOrientation="portrait">
       <intent-filter>
         <action android:name="android.intent.action.GET_CONTENT" />
 
@@ -91,60 +91,49 @@
       android:name=".ui.activity.SplashActivity"
       android:icon="@drawable/myicon"
       android:label="@string/app_name"
+      android:launchMode="singleTask"
       android:screenOrientation="portrait"
       android:theme="@style/transparent_status">
       <intent-filter>
         <action android:name="android.intent.action.MAIN" />
-
         <category android:name="android.intent.category.LAUNCHER" />
       </intent-filter>
 
-      <!-- The following intent filter is added to provide deep linking to the MC4K app -->
-      <intent-filter android:autoVerify="true">
+      <intent-filter>
         <data android:scheme="mc4k" />
-        <data android:scheme="mck" />
-        <data android:scheme="mycity4kids" />
-        <data android:scheme="momspresso" />
-        <data
-          android:host="www.mycity4kids.com"
-          android:scheme="http" />
-        <data
-          android:host="www.momspresso.com"
-          android:scheme="http" />
-        <data
-          android:host="*.momspresso.com"
-          android:scheme="http" />
-        <data
-          android:host="mycity4kids.com"
-          android:scheme="http" />
-        <data
-          android:host="momspresso.com"
-          android:scheme="http" />
-        <data
-          android:host="momspresso.com"
-          android:scheme="https" />
-        <data
-          android:host="www.mycity4kids.com"
-          android:scheme="https" />
-        <data
-          android:host="www.momspresso.com"
-          android:scheme="https" />
-        <data
-          android:host="*.momspresso.com"
-          android:scheme="https" />
-        <data
-          android:host="mycity4kids.app.link"
-          android:scheme="https" />
-        <data
-          android:host="mycity4kids-alternate.app.link"
-          android:scheme="https" />
-
-        <action android:name="android.intent.action.VIEW" />
 
         <category android:name="android.intent.category.BROWSABLE" />
         <category android:name="android.intent.category.DEFAULT" />
+
+        <action android:name="android.intent.action.VIEW" />
       </intent-filter>
-    </activity> <!-- Login Activity for facebook & app id -->
+
+      <intent-filter android:autoVerify="true">
+        <action android:name="android.intent.action.VIEW" />
+
+        <category android:name="android.intent.category.DEFAULT" />
+        <category android:name="android.intent.category.BROWSABLE" />
+
+        <data
+          android:host="momspr.app.link"
+          android:scheme="https" />
+        <data
+          android:host="momspr-alternate.app.link"
+          android:scheme="https" />
+      </intent-filter>
+
+      <intent-filter>
+        <action android:name="android.intent.action.VIEW" />
+
+        <category android:name="android.intent.category.DEFAULT" />
+        <category android:name="android.intent.category.BROWSABLE" />
+
+        <data
+          android:host="www.momspresso.com"
+          android:scheme="https" />
+      </intent-filter>
+    </activity>
+
     <activity
       android:name="com.facebook.FacebookActivity"
       android:configChanges="keyboard|keyboardHidden|screenLayout|screenSize|orientation"
@@ -480,21 +469,7 @@
 
     <meta-data
       android:name="io.branch.sdk.BranchKey"
-      android:value="key_live_kdGnDu8Q4xxqJJoBNp8prlpeAAndQfuJ" />
-    <meta-data
-      android:name="io.branch.sdk.BranchKey.test"
-      android:value="secret_live_CyBjdCPAJs7GDqcbXx7sYg6fGmcNIRS6" />
-    <meta-data
-      android:name="io.branch.sdk.TestMode"
-      android:value="false" /> <!-- Set to true to use Branch_Test_Key -->
-    <!-- Branch install referrer tracking (optional) -->
-    <receiver
-      android:name="io.branch.referral.InstallListener"
-      android:exported="true">
-      <intent-filter>
-        <action android:name="com.android.vending.INSTALL_REFERRER" />
-      </intent-filter>
-    </receiver>
+      android:value="key_live_biVD0NPXvtpWQHXCrmlrdibfwCcprbxK" />
 
     <activity
       android:name="com.yalantis.ucrop.UCropActivity"

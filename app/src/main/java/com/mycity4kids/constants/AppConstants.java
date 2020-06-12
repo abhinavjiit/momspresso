@@ -140,7 +140,7 @@ public class AppConstants {
     public static final String DEEPLINK_UPCOMING_EVENTS = "/Events_el";
     public static final String DEEPLINK_SETUP_BLOG = "setupablog";
     public static final String DEEPLINK_GROUPS = "momspresso.com/groups/";
-    public static final String BRANCH_DEEPLINK = "https://mycity4kids.app.link";
+    public static final String BRANCH_DEEPLINK = "https://momspr.app.link";
     public static final String BRANCH_DEEPLINK_URL = "https://www.momspresso.com://open?link_click_id=";
 
 

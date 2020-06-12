@@ -555,6 +555,7 @@ public class ShortStoryFragment extends BaseFragment implements View.OnClickList
                         bundle.putString(Constants.BLOG_SLUG, blogSlug);
                         bundle.putString(Constants.TITLE_SLUG, titleSlug);
                         bundle.putString(Constants.AUTHOR_ID, authorId);
+                        bundle.putString("contentType", AppConstants.CONTENT_TYPE_SHORT_STORY);
                         ViewAllCommentsFragment viewAllCommentsFragment = new ViewAllCommentsFragment();
                         viewAllCommentsFragment.setArguments(bundle);
                         if (isAdded()) {

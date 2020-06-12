@@ -2760,8 +2760,8 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
         addEditCommentOrReplyRequest.setParent_id(commentId);
         addEditCommentOrReplyRequest.setType("article");
         Retrofit retrofit = BaseApplication.getInstance().getRetrofit();
-        ArticleDetailsAPI articleDetailsAPI = retrofit.create(ArticleDetailsAPI.class);
-        Call<CommentListResponse> call = articleDetailsAPI.addCommentOrReply(addEditCommentOrReplyRequest);
+        ArticleDetailsAPI articleDetailsApi = retrofit.create(ArticleDetailsAPI.class);
+        Call<CommentListResponse> call = articleDetailsApi.addCommentOrReply(addEditCommentOrReplyRequest);
         call.enqueue(addReplyResponseListener);
     }
 
@@ -2818,31 +2818,6 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
             Log.d("MC4kException", Log.getStackTraceString(t));
         }
     };
-  /*  fun addReply(content: String?, parentCommentId: String?) {
-        showProgressDialog("Adding Reply")
-        val addEditCommentOrReplyRequest =
-                AddEditCommentOrReplyRequest()
-        addEditCommentOrReplyRequest.post_id = articleId
-        addEditCommentOrReplyRequest.message = content
-        addEditCommentOrReplyRequest.parent_id = parentCommentId
-        when (contentType) {
-            "2" -> {
-                addEditCommentOrReplyRequest.type = "video"
-            }
-            "0" -> {
-                addEditCommentOrReplyRequest.type = "article"
-            }
-            else -> {
-                addEditCommentOrReplyRequest.type = "story"
-            }
-        }
-        val ret = BaseApplication.getInstance().retrofit
-        val articleDetailsApi = ret.create(ArticleDetailsAPI::class.java)
-        val call: Call<CommentListResponse> =
-        articleDetailsApi.addCommentOrReply(addEditCommentOrReplyRequest)
-        call.enqueue(addReplyResponseListener)
-    }*/
-
 
     private void openCommentDialog(CommentsData comData, String opType) {
         try {
@@ -2883,6 +2858,7 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
             args.putString(Constants.BLOG_SLUG, detailData.getBlogTitleSlug());
             args.putString(Constants.TITLE_SLUG, detailData.getTitleSlug());
             args.putString("userType", detailData.getUserType());
+            args.putString("contentType", AppConstants.CONTENT_TYPE_ARTICLE);
             commentFrag.setArguments(args);
             ((ArticleDetailsContainerActivity) getActivity()).hideToolbarPerm();
             ((ArticleDetailsContainerActivity) getActivity())
@@ -4358,8 +4334,8 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
     @Override
     public void onResponseDelete(int position, String responseType) {
         Retrofit retrofit = BaseApplication.getInstance().getRetrofit();
-        ArticleDetailsAPI articleDetailsAPI = retrofit.create(ArticleDetailsAPI.class);
-        Call<CommentListResponse> call = articleDetailsAPI.deleteCommentOrReply(commentsList.get(position).getId());
+        ArticleDetailsAPI articleDetailsApi = retrofit.create(ArticleDetailsAPI.class);
+        Call<CommentListResponse> call = articleDetailsApi.deleteCommentOrReply(commentsList.get(position).getId());
         call.enqueue(deleteCommentResponseListener);
         deleteCommentPosition = position;
     }
@@ -4380,16 +4356,15 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
 
     @Override
     public void onResponseReport(int position, String responseType) {
+        Bundle args = new Bundle();
+        args.putString("postId", commentsList.get(position).getId());
+        args.putInt("type", AppConstants.REPORT_TYPE_COMMENT);
         ReportContentDialogFragment reportContentDialogFragment = new ReportContentDialogFragment();
-        FragmentManager fm = getChildFragmentManager();
-        Bundle _args = new Bundle();
-        _args.putString("postId", commentsList.get(position).getId());
-        _args.putInt("type", AppConstants.REPORT_TYPE_COMMENT);
-        reportContentDialogFragment.setArguments(_args);
+        reportContentDialogFragment.setArguments(args);
         reportContentDialogFragment.setCancelable(true);
+        FragmentManager fm = getChildFragmentManager();
         reportContentDialogFragment.show(fm, "Report Content");
     }
-
 
     public void editComment(String content, String responseId, int position) {
         showProgressDialog("Editing your response");
@@ -4412,7 +4387,6 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
                 if (isAdded()) {
                     ToastUtils.showToast(getActivity(), "Failed to add comment. Please try again");
                 }
-
                 return;
             }
             try {
@@ -4425,8 +4399,6 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
                                                 + "</font>" + "</b>"
                                                 + " "
                                                 + "<font color=\"#4A4A4A\">" + editContent + "</font>")));
-
-
                     } else {
                         commentatorNameAndCommentTextView1.setText((Html
                                 .fromHtml(
@@ -4435,7 +4407,6 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
                                                 + " "
                                                 + "<font color=\"#4A4A4A\">" + editContent + "</font>")));
                     }
-
                 } else {
                     if (isAdded()) {
                         ToastUtils.showToast(getActivity(), "Failed to add comment. Please try again");
@@ -4588,8 +4559,8 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
     void deleteReply(int commentPos, int replyPos) {
         deleteCommentPosition = commentPos;
         Retrofit retrofit = BaseApplication.getInstance().getRetrofit();
-        ArticleDetailsAPI articleDetailsAPI = retrofit.create(ArticleDetailsAPI.class);
-        Call<CommentListResponse> call = articleDetailsAPI
+        ArticleDetailsAPI articleDetailsApi = retrofit.create(ArticleDetailsAPI.class);
+        Call<CommentListResponse> call = articleDetailsApi
                 .deleteCommentOrReply(commentsList.get(commentPos).getReplies().get(replyPos).getId());
         call.enqueue(deleteReplyResponseListener);
     }

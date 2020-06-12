@@ -1328,7 +1328,7 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
                 } else if (tempDeepLinkUrl.endsWith(AppConstants.DEEPLINK_SELF_PROFILE_URL_1)
                         || tempDeepLinkUrl.endsWith(AppConstants.DEEPLINK_SELF_PROFILE_URL_2)) {
                     fragmentToLoad = Constants.PROFILE_FRAGMENT;
-                } else if (tempDeepLinkUrl.endsWith(AppConstants.DEEPLINK_PROFILE_INVITE_FRIENDS)) {
+                } else if (tempDeepLinkUrl.contains(AppConstants.DEEPLINK_PROFILE_INVITE_FRIENDS)) {
                     Intent intent = new Intent(this, UserProfileActivity.class);
                     intent.putExtra(AppConstants.SHOW_INVITE_DIALOG_FLAG, true);
                     startActivity(intent);
