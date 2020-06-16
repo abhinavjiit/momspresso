@@ -1,7 +1,6 @@
 package com.mycity4kids.ui.activity;
 
 import android.content.Intent;
-import android.content.pm.ResolveInfo;
 import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
@@ -17,7 +16,6 @@ import com.google.firebase.crashlytics.FirebaseCrashlytics;
 import com.mycity4kids.R;
 import com.mycity4kids.application.BaseApplication;
 import com.mycity4kids.base.BaseActivity;
-import com.mycity4kids.constants.AppConstants;
 import com.mycity4kids.constants.Constants;
 import com.mycity4kids.gtmutils.Utils;
 import com.mycity4kids.models.response.UserDetailResponse;
@@ -25,9 +23,6 @@ import com.mycity4kids.preference.SharedPrefUtils;
 import com.mycity4kids.retrofitAPIsInterfaces.BloggerDashboardAPI;
 import com.mycity4kids.utils.AppUtils;
 import com.mycity4kids.utils.StringUtils;
-import java.io.UnsupportedEncodingException;
-import java.net.URLEncoder;
-import java.util.List;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Retrofit;
@@ -38,8 +33,6 @@ import retrofit2.Retrofit;
 public class ArticleModerationOrShareActivity extends BaseActivity implements View.OnClickListener {
 
     private String shareUrl;
-    private String authorId;
-    private String authorName;
     private RelativeLayout root;
 
     @Override
@@ -50,24 +43,18 @@ public class ArticleModerationOrShareActivity extends BaseActivity implements Vi
         ((BaseApplication) getApplication()).setActivity(this);
 
         shareUrl = getIntent().getStringExtra("shareUrl");
-        authorId = SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId();
-        authorName = SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getFirst_name()
-                + " "
-                + SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getLast_name();
 
-        LinearLayout moderationContainer = (LinearLayout) findViewById(R.id.moderationContainer);
-        LinearLayout publishContainer = (LinearLayout) findViewById(R.id.publishContainer);
-        ImageView facebookImageView = (ImageView) findViewById(R.id.facebookImageView);
+        LinearLayout moderationContainer = findViewById(R.id.moderationContainer);
+        LinearLayout publishContainer = findViewById(R.id.publishContainer);
+        ImageView facebookImageView = findViewById(R.id.facebookImageView);
         facebookImageView.setOnClickListener(this);
-        ImageView whatsappImageView = (ImageView) findViewById(R.id.whatsappImageView);
+        ImageView whatsappImageView = findViewById(R.id.whatsappImageView);
         whatsappImageView.setOnClickListener(this);
-        ImageView twitterImageView = (ImageView) findViewById(R.id.twitterImageView);
-        twitterImageView.setOnClickListener(this);
-        ImageView instagramImageView = (ImageView) findViewById(R.id.instagramImageView);
-        instagramImageView.setOnClickListener(this);
-        TextView laterTextView = (TextView) findViewById(R.id.laterTextView);
+        ImageView genericImageView = findViewById(R.id.genericImageView);
+        genericImageView.setOnClickListener(this);
+        TextView laterTextView = findViewById(R.id.laterTextView);
         laterTextView.setOnClickListener(this);
-        TextView okayTextView = (TextView) findViewById(R.id.okayTextView);
+        TextView okayTextView = findViewById(R.id.okayTextView);
         okayTextView.setOnClickListener(this);
 
         if (StringUtils.isNullOrEmpty(shareUrl)) {
@@ -77,7 +64,6 @@ public class ArticleModerationOrShareActivity extends BaseActivity implements Vi
             moderationContainer.setVisibility(View.GONE);
             publishContainer.setVisibility(View.VISIBLE);
         }
-        instagramImageView.setVisibility(View.GONE);
     }
 
     @Override
@@ -95,11 +81,10 @@ public class ArticleModerationOrShareActivity extends BaseActivity implements Vi
         switch (v.getId()) {
             case R.id.facebookImageView:
                 if (ShareDialog.canShow(ShareLinkContent.class)) {
-                    Utils.pushShareArticleEvent(this, "PublishSuccessScreen",
-                            SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId() + "",
-                            shareUrl, authorId + "~" + authorName, "Facebook");
-                    ShareLinkContent content = new ShareLinkContent.Builder()
-                            .setContentUrl(Uri.parse(shareUrl))
+                    Utils.shareEventTracking(this, "Post creation",
+                            "Share_Android", "PCA_Facebook_Share");
+                    ShareLinkContent content = new ShareLinkContent.Builder().setContentUrl(Uri.parse(
+                            AppUtils.getUtmParamsAppendedShareUrl(shareUrl, "PCA_Facebook_Share", "Share_Android")))
                             .build();
                     new ShareDialog(this).show(content);
                 }
@@ -109,12 +94,13 @@ public class ArticleModerationOrShareActivity extends BaseActivity implements Vi
                     Toast.makeText(this, getString(R.string.moderation_or_share_whatsapp_fail), Toast.LENGTH_SHORT)
                             .show();
                 } else {
-                    Utils.pushShareArticleEvent(this, "PublishSuccessScreen", authorId + "", shareUrl,
-                            authorId + "~" + authorName, "Whatsapp");
+                    Utils.shareEventTracking(this, "Post creation",
+                            "Share_Android", "PCA_Whatsapp_Share");
                     Intent whatsappIntent = new Intent(Intent.ACTION_SEND);
                     whatsappIntent.setType("text/plain");
                     whatsappIntent.setPackage("com.whatsapp");
-                    whatsappIntent.putExtra(Intent.EXTRA_TEXT, getString(R.string.check_out_blog) + shareUrl);
+                    whatsappIntent.putExtra(Intent.EXTRA_TEXT, getString(R.string.check_out_blog) + AppUtils
+                            .getUtmParamsAppendedShareUrl(shareUrl, "PCA_Whatsapp_Share", "Share_Android"));
                     try {
                         startActivity(whatsappIntent);
                     } catch (android.content.ActivityNotFoundException ex) {
@@ -123,26 +109,13 @@ public class ArticleModerationOrShareActivity extends BaseActivity implements Vi
                     }
                 }
                 break;
-            case R.id.twitterImageView:
-                if (StringUtils.isNullOrEmpty(shareUrl)) {
-                    Toast.makeText(this, getString(R.string.moderation_or_share_twitter_fail), Toast.LENGTH_SHORT)
-                            .show();
-                } else {
-                    Utils.pushShareArticleEvent(this, "PublishSuccessScreen",
-                            SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId() + "",
-                            shareUrl, authorId + "~" + authorName, "Twitter");
-                    String tweetUrl = String.format("https://twitter.com/intent/tweet?text=%s&url=%s",
-                            urlEncode(getString(R.string.check_out_blog)),
-                            urlEncode(shareUrl));
-                    Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(tweetUrl));
-                    List<ResolveInfo> matches = this.getPackageManager().queryIntentActivities(intent, 0);
-                    for (ResolveInfo info : matches) {
-                        if (info.activityInfo.packageName.toLowerCase().startsWith("com.twitter")) {
-                            intent.setPackage(info.activityInfo.packageName);
-                        }
-                    }
-                    startActivity(intent);
-                }
+            case R.id.genericImageView:
+                Intent shareIntent = new Intent(Intent.ACTION_SEND);
+                shareIntent.setType("text/plain");
+                shareIntent.putExtra(Intent.EXTRA_TEXT, getString(R.string.check_out_blog) + AppUtils
+                        .getUtmParamsAppendedShareUrl(shareUrl, "PCA_Generic_Share", "Share_Android"));
+                startActivity(Intent.createChooser(shareIntent, "Momspresso"));
+                Utils.shareEventTracking(this, "Post creation", "Share_Android", "PCA_Generic_Share");
                 break;
             case R.id.laterTextView:
             case R.id.okayTextView:
@@ -184,13 +157,4 @@ public class ArticleModerationOrShareActivity extends BaseActivity implements Vi
             Log.d("MC4kException", Log.getStackTraceString(t));
         }
     };
-
-    private static String urlEncode(String s) {
-        try {
-            return URLEncoder.encode(s, "UTF-8");
-        } catch (UnsupportedEncodingException e) {
-            Log.d("UnsupEncodinException", "UTF-8 should always be supported");
-            throw new RuntimeException("URLEncoder.encode() failed for " + s);
-        }
-    }
 }

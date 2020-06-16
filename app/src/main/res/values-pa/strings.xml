@@ -1172,8 +1172,8 @@ Thank you! We will be reviewing your story. You can expect to hear from us withi
   <string name="drawer_referra_mymoney">Refer MyMoney</string>
   <string name="referral_screen_text">Invite a friend to join MyMoney by sharing your referral code. Both of you will earn Rs. 25 once she has successfully completed a MyMoney campaign.</string>
   <string name="share_referral_screen">Share your referral code and start earning</string>
-  <string name="referral_screen_whatsapp">WhatsApp</string>
-  <string name="referral_screen_facebook">ਫੇਸਬੁੱਕ</string>
+  <string name="all_whatsapp">WhatsApp</string>
+  <string name="all_facebook">ਫੇਸਬੁੱਕ</string>
   <string name="rewards_tab_fragment_personalInfo_text">PERSONAL INFO</string>
   <string name="rewards_tab_fragment_socialLink_text">SOCIAL LINKS</string>
   <string name="rewards_tab_fragment_paymentMode">PAYMENT MODE</string>
@@ -1418,4 +1418,7 @@ Thank you! We will be reviewing your story. You can expect to hear from us withi
   <string name="invite_friends_whatsapp">Invite via whatsapp</string>
   <string name="share_app_msg">ਨਮਸਕਾਰ ! ਮੌਮਸਪ੍ਰੈਸੋ ਐਪ ਦੇਖੋ, ਜਿਥੇ ਮੈਂ ਕਹਾਣੀਆਂ ਅਤੇ ਵਿਡੀਓਜ਼ ਦੁਆਰਾ ਆਪਣੇ ਮਨ ਦੇ ਭਾਵ ਪ੍ਰਗਟ ਕਰਦੀ ਹਾਂ. ਹੁਣੇ ਡਾਊਨਲੋਡ ਕਰੋ %1s</string>
   <string name="invite_phone_contact">Invite contacts to follow you</string>
+  <string name="share_the_app_via">Share the App via</string>
+  <string name="all_phonebook">Phonebook</string>
+  <string name="all_fb_msngr">Facebook Messenger</string>
 </resources>

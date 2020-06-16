@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+  xmlns:app="http://schemas.android.com/apk/res-auto"
+  android:layout_width="match_parent"
+  android:layout_height="match_parent"
+  android:background="@color/white_color">
+
+  <TextView
+    android:id="@+id/titleTextView"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_alignParentTop="true"
+    android:layout_marginTop="20dp"
+    android:gravity="center"
+    android:paddingStart="10dp"
+    android:paddingEnd="10dp"
+    android:text="@string/share_the_app_via"
+    android:textColor="@color/app_light_black"
+    android:textSize="22sp" />
+
+  <com.mycity4kids.widget.ShareButtonWidget
+    android:id="@+id/whatsappShareWidget"
+    android:layout_width="240dp"
+    android:layout_height="wrap_content"
+    android:layout_below="@+id/titleTextView"
+    android:layout_centerHorizontal="true"
+    android:layout_marginTop="20dp"
+    android:visibility="visible"
+    app:gravity="center"
+    app:radius="4dp"
+    app:shareBgColor="@color/all_whatsapp_share"
+    app:shareImage="@drawable/ic_share_whats_up"
+    app:shareImageTint="@color/white_color"
+    app:shareText="@string/all_whatsapp"
+    app:textSize="16sp" />
+
+  <com.mycity4kids.widget.ShareButtonWidget
+    android:id="@+id/facebookShareWidget"
+    android:layout_width="240dp"
+    android:layout_height="wrap_content"
+    android:layout_below="@+id/whatsappShareWidget"
+    android:layout_centerHorizontal="true"
+    android:layout_marginTop="20dp"
+    android:visibility="visible"
+    app:gravity="center"
+    app:radius="4dp"
+    app:shareBgColor="@color/all_fb_msngr_share"
+    app:shareImage="@drawable/ic_fb_msngr"
+    app:shareImageTint="@color/white_color"
+    app:shareText="@string/all_fb_msngr"
+    app:textSize="16sp" />
+
+  <com.mycity4kids.widget.ShareButtonWidget
+    android:id="@+id/contactShareWidget"
+    android:layout_width="240dp"
+    android:layout_height="wrap_content"
+    android:layout_below="@+id/facebookShareWidget"
+    android:layout_centerHorizontal="true"
+    android:layout_marginTop="20dp"
+    app:gravity="center"
+    app:radius="4dp"
+    app:shareBgColor="@color/all_phonebook"
+    app:shareImage="@drawable/ic_contact"
+    app:shareImageTint="@color/white_color"
+    app:shareText="@string/all_phonebook"
+    app:textSize="16sp" />
+
+  <com.mycity4kids.widget.ShareButtonWidget
+    android:id="@+id/shareLinkWidget"
+    android:layout_width="240dp"
+    android:layout_height="wrap_content"
+    android:layout_below="@+id/contactShareWidget"
+    android:layout_centerHorizontal="true"
+    android:layout_marginTop="20dp"
+    app:gravity="center"
+    app:radius="4dp"
+    app:shareBgColor="@color/all_invite_link"
+    app:shareImage="@drawable/ic_ss_generic"
+    app:shareImageTint="@color/white_color"
+    app:shareText="@string/ad.bottom_bar.generic_share"
+    app:textSize="16sp" />
+
+  <TextView
+    android:id="@+id/cancelTextView"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_below="@+id/shareLinkWidget"
+    android:layout_centerHorizontal="true"
+    android:layout_marginTop="20dp"
+    android:layout_marginBottom="40dp"
+    android:gravity="center"
+    android:padding="4dp"
+    android:text="@string/cancel"
+    android:textColor="@color/app_light_black"
+    android:textSize="14sp" />
+
+</RelativeLayout>

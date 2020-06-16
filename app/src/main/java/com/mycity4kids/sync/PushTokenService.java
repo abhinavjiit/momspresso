@@ -9,19 +9,16 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.os.Build;
 import android.util.Log;
-
 import androidx.annotation.RequiresApi;
 import androidx.core.app.NotificationCompat;
 import androidx.core.app.NotificationManagerCompat;
-
-import com.mycity4kids.utils.ConnectivityUtils;
-import com.mycity4kids.utils.StringUtils;
 import com.mycity4kids.R;
 import com.mycity4kids.application.BaseApplication;
 import com.mycity4kids.preference.SharedPrefUtils;
 import com.mycity4kids.retrofitAPIsInterfaces.LoginRegistrationAPI;
 import com.mycity4kids.utils.AppUtils;
-
+import com.mycity4kids.utils.ConnectivityUtils;
+import com.mycity4kids.utils.StringUtils;
 import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -33,7 +30,7 @@ import retrofit2.Retrofit;
  */
 public class PushTokenService extends IntentService {
 
-    private final static String TAG = PushTokenService.class.getSimpleName();
+    private static final String TAG = PushTokenService.class.getSimpleName();
 
     public PushTokenService() {
         super(TAG);
@@ -49,7 +46,7 @@ public class PushTokenService extends IntentService {
         NotificationCompat.Builder builder = new NotificationCompat.Builder(this, channelId);
         Notification notification = builder.setOngoing(true)
                 .setSmallIcon(R.drawable.icon_notify)
-                .setPriority(NotificationManagerCompat.IMPORTANCE_MIN)
+                .setPriority(NotificationManagerCompat.IMPORTANCE_DEFAULT)
                 .setCategory(Notification.CATEGORY_SERVICE).build();
         startForeground(1, notification);
     }
@@ -69,7 +66,6 @@ public class PushTokenService extends IntentService {
     protected void onHandleIntent(Intent intent) {
         if (ConnectivityUtils.isNetworkEnabled(this)) {
             if (!StringUtils.isNullOrEmpty(SharedPrefUtils.getDeviceToken(BaseApplication.getAppContext()))) {
-                // hit api
                 if (!SharedPrefUtils.getUserDetailModel(this).getId().equals("0")) {
                     hitApiRequest();
                 }
@@ -79,8 +75,8 @@ public class PushTokenService extends IntentService {
 
     private void hitApiRequest() {
         Retrofit retrofit = BaseApplication.getInstance().getRetrofit();
-        LoginRegistrationAPI loginRegistrationAPI = retrofit.create(LoginRegistrationAPI.class);
-        Call<ResponseBody> call = loginRegistrationAPI.updatePushToken(
+        LoginRegistrationAPI loginRegistrationApi = retrofit.create(LoginRegistrationAPI.class);
+        Call<ResponseBody> call = loginRegistrationApi.updatePushToken(
                 SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getId(),
                 SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId(),
                 AppUtils.getAppVersion(BaseApplication.getAppContext()), "android",

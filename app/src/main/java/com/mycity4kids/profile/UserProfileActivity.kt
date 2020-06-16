@@ -1011,22 +1011,19 @@ class UserProfileActivity : BaseActivity(),
             val shareText = getString(
                 R.string.profile_follow_author,
                 authorNameTextView.text.toString(),
-                (AppConstants.USER_PROFILE_SHARE_BASE_URL + authorId)
+                AppUtils.getUtmParamsAppendedShareUrl(
+                    AppConstants.USER_PROFILE_SHARE_BASE_URL + authorId,
+                    "PP_Generic_Share",
+                    "Share_Android"
+                )
             )
             AppUtils.shareGenericImageAndOrLinkViaWhatsapp(this, uri, shareText)
-            if (AppUtils.isPrivateProfile(authorId)) {
-                Utils.shareEventTracking(
-                    this,
-                    "Self Profile",
-                    "Share_Android",
-                    "SPC_Generic_Share"
-                )
-            } else {
+            if (!AppUtils.isPrivateProfile(authorId)) {
                 Utils.shareEventTracking(
                     this,
                     "Public Profile",
                     "Share_Android",
-                    "PPC_Generic_Share"
+                    "PP_Generic_Share"
                 )
             }
         } catch (e: Exception) {
@@ -1677,14 +1674,19 @@ class UserProfileActivity : BaseActivity(),
         when {
             data?.itemType == AppConstants.CONTENT_TYPE_ARTICLE -> {
                 val shareIntent = AppUtils.getArticleShareIntent(
-                    data.userType, data.blogTitleSlug, data.titleSlug,
-                    getString(R.string.check_out_blog), data.title, data.userName
+                    data.userType,
+                    data.blogTitleSlug,
+                    data.titleSlug,
+                    getString(R.string.check_out_blog),
+                    data.title,
+                    data.userName,
+                    "SPA_Generic_Share",
+                    "Share_Android"
                 )
                 startActivity(Intent.createChooser(shareIntent, "Momspresso"))
-                Utils.pushShareArticleEvent(
-                    this, "Profile",
-                    SharedPrefUtils.getUserDetailModel(this).dynamoId + "", data.id,
-                    data.userId + "~" + data.userName, "Generic"
+                Utils.shareEventTracking(
+                    this, "Public Profile",
+                    "Share_Android", "SPA_Generic_Share"
                 )
             }
             data?.itemType == AppConstants.CONTENT_TYPE_SHORT_STORY -> {
@@ -1696,7 +1698,7 @@ class UserProfileActivity : BaseActivity(),
                     data.title_slug,
                     getString(R.string.check_out_momvlog),
                     data.title,
-                    data.author?.firstName + " " + data.author?.lastName
+                    data.author?.firstName + " " + data.author?.lastName, "", ""
                 )
                 startActivity(Intent.createChooser(shareIntent, "Momspresso"))
                 Utils.pushShareVlogEvent(
@@ -1911,50 +1913,86 @@ class UserProfileActivity : BaseActivity(),
         when (shareMedium) {
             AppConstants.MEDIUM_FACEBOOK -> {
                 SharingUtils.shareViaFacebook(this, uri)
-                Utils.pushShareStoryEvent(
-                    this@UserProfileActivity, "TopicsShortStoriesTabFragment",
-                    authorId + "", sharedStoryItem.id,
-                    sharedStoryItem.userId + "~" + sharedStoryItem.userName, "Facebook"
-                )
+                if (AppUtils.isPrivateProfile(authorId)) {
+                    Utils.shareEventTracking(
+                        this@UserProfileActivity, "Self Profile",
+                        "Share_Android", "SPS_Facebook_Share"
+                    )
+                } else {
+                    Utils.shareEventTracking(
+                        this@UserProfileActivity, "Public Profile",
+                        "Share_Android", "PPS_Facebook_Share"
+                    )
+                }
             }
             AppConstants.MEDIUM_WHATSAPP -> {
+                val eventName: String
+                val screenName: String
+                if (AppUtils.isPrivateProfile(authorId)) {
+                    eventName = "SPS_Whatsapp_Share"
+                    screenName = "Self Profile"
+                } else {
+                    eventName = "PPS_Whatsapp_Share"
+                    screenName = "Public Profile"
+                }
                 if (AppUtils.shareImageWithWhatsApp(
                         this@UserProfileActivity, uri, getString(
                         R.string.ss_follow_author,
                         sharedStoryItem.userName,
-                        AppConstants.USER_PROFILE_SHARE_BASE_URL + sharedStoryItem.userId
+                        AppUtils.getUtmParamsAppendedShareUrl(
+                            AppConstants.USER_PROFILE_SHARE_BASE_URL + sharedStoryItem.userId,
+                            eventName,
+                            "Share_Android"
+                        )
                     )
                     )
                 ) {
-                    Utils.pushShareStoryEvent(
-                        this@UserProfileActivity, "TopicsShortStoriesTabFragment",
-                        authorId + "", sharedStoryItem.id,
-                        sharedStoryItem.userId + "~" + sharedStoryItem.userName, "Whatsapp"
+                    Utils.shareEventTracking(
+                        this@UserProfileActivity, screenName,
+                        "Share_Android", eventName
                     )
                 }
             }
             AppConstants.MEDIUM_INSTAGRAM -> {
                 if (AppUtils.shareImageWithInstagram(this@UserProfileActivity, uri)) {
-                    Utils.pushShareStoryEvent(
-                        this@UserProfileActivity, "TopicsShortStoriesTabFragment",
-                        authorId + "", sharedStoryItem.id,
-                        sharedStoryItem.userId + "~" + sharedStoryItem.userName, "Instagram"
-                    )
+                    if (AppUtils.isPrivateProfile(authorId)) {
+                        Utils.shareEventTracking(
+                            this@UserProfileActivity, "Self Profile",
+                            "Share_Android", "SPS_Instagram_Share"
+                        )
+                    } else {
+                        Utils.shareEventTracking(
+                            this@UserProfileActivity, "Public Profile",
+                            "Share_Android", "PPS_Instagram_Share"
+                        )
+                    }
                 }
             }
             AppConstants.MEDIUM_GENERIC -> {
+                val eventName: String
+                val screenName: String
+                if (AppUtils.isPrivateProfile(authorId)) {
+                    eventName = "SPS_Generic_Share"
+                    screenName = "Self Profile"
+                } else {
+                    eventName = "PPS_Generic_Share"
+                    screenName = "Public Profile"
+                }
                 if (AppUtils.shareGenericImageAndOrLink(
                         this@UserProfileActivity, uri, getString(
                         R.string.ss_follow_author,
                         sharedStoryItem.userName,
-                        AppConstants.USER_PROFILE_SHARE_BASE_URL + sharedStoryItem.userId
+                        AppUtils.getUtmParamsAppendedShareUrl(
+                            AppConstants.USER_PROFILE_SHARE_BASE_URL + sharedStoryItem.userId,
+                            eventName,
+                            "Share_Android"
+                        )
                     )
                     )
                 ) {
-                    Utils.pushShareStoryEvent(
-                        this@UserProfileActivity, "TopicsShortStoriesTabFragment",
-                        authorId + "", sharedStoryItem.id,
-                        sharedStoryItem.userId + "~" + sharedStoryItem.userName, "Generic"
+                    Utils.shareEventTracking(
+                        this@UserProfileActivity, screenName,
+                        "Share_Android", eventName
                     )
                 }
             }

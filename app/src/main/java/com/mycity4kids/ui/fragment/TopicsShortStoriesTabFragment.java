@@ -655,7 +655,9 @@ public class TopicsShortStoriesTabFragment extends BaseFragment implements View.
                 case AppConstants.MEDIUM_WHATSAPP: {
                     if (AppUtils.shareImageWithWhatsApp(getActivity(), uri, getString(R.string.ss_follow_author,
                             sharedStoryItem.getUserName(),
-                            AppConstants.USER_PROFILE_SHARE_BASE_URL + sharedStoryItem.getUserId()))) {
+                            AppUtils.getUtmParamsAppendedShareUrl(
+                                    AppConstants.USER_PROFILE_SHARE_BASE_URL + sharedStoryItem.getUserId(),
+                                    "WSL100_Whatsapp_Share", "Share_Android")))) {
                         Utils.shareEventTracking(getActivity(), "100WS Listing", "Share_Android",
                                 "WSL100_Whatsapp_Share");
                     }
@@ -671,7 +673,9 @@ public class TopicsShortStoriesTabFragment extends BaseFragment implements View.
                 case AppConstants.MEDIUM_GENERIC: {
                     if (AppUtils.shareGenericImageAndOrLink(getActivity(), uri, getString(R.string.ss_follow_author,
                             sharedStoryItem.getUserName(),
-                            AppConstants.USER_PROFILE_SHARE_BASE_URL + sharedStoryItem.getUserId()))) {
+                            AppUtils.getUtmParamsAppendedShareUrl(
+                                    AppConstants.USER_PROFILE_SHARE_BASE_URL + sharedStoryItem.getUserId(),
+                                    "WSL100_Generic_Share", "Share_Android")))) {
                         Utils.shareEventTracking(getActivity(), "100WS Listing", "Share_Android",
                                 "WSL100_Generic_Share");
                     }

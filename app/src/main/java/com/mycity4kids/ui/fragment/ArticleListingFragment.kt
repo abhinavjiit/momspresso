@@ -66,7 +66,6 @@ import com.mycity4kids.ui.activity.ExploreArticleListingTypeActivity
 import com.mycity4kids.ui.activity.ParallelFeedActivity
 import com.mycity4kids.ui.activity.ShortStoryContainerActivity
 import com.mycity4kids.ui.adapter.MainArticleRecyclerViewAdapter
-import com.mycity4kids.ui.campaign.activity.CampaignContainerActivity
 import com.mycity4kids.utils.AppUtils
 import com.mycity4kids.utils.ConnectivityUtils
 import com.mycity4kids.utils.DateTimeUtils
@@ -589,34 +588,6 @@ class ArticleListingFragment : BaseFragment(), View.OnClickListener,
     override fun onRecyclerItemClick(view: View, position: Int) {
         try {
             when (view.id) {
-                R.id.videoContainerFL1 -> launchVideoDetailsActivity(position, 0)
-                R.id.cardView1 -> {
-                    try {
-                        Utils.campaignEvent(
-                            activity,
-                            "HomeScreen",
-                            "HomeScreenCarousel",
-                            "CTA_Campaign_Carousel",
-                            "" + campaignListDataModels!![0].name,
-                            "android",
-                            SharedPrefUtils.getAppLocale(BaseApplication.getAppContext()),
-                            SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).dynamoId,
-                            System.currentTimeMillis().toString(),
-                            "CTA_Campaign_Carousel"
-                        )
-                    } catch (e: Exception) {
-                        FirebaseCrashlytics.getInstance().recordException(e)
-                        Log.d("MC4KException", Log.getStackTraceString(e))
-                    }
-                    val campaignIntent =
-                        Intent(activity, CampaignContainerActivity::class.java)
-                    campaignIntent.putExtra(
-                        "campaign_id",
-                        campaignListDataModels!![0].id.toString() + ""
-                    )
-                    campaignIntent.putExtra("campaign_detail", "campaign_detail")
-                    startActivity(campaignIntent)
-                }
                 R.id.headerArticleView, R.id.fbAdArticleView, R.id.storyHeaderView, R.id.storyImageView1 -> {
                     val page = position / LIMIT
                     val posSubList = position % LIMIT
@@ -688,11 +659,6 @@ class ArticleListingFragment : BaseFragment(), View.OnClickListener,
                             Constants.AUTHOR,
                             articleDataModelsSubList[posSubList].userId + "~" + articleDataModelsSubList[posSubList].userName
                         )
-                        val filteredResult = AppUtils
-                            .getFilteredContentList1(
-                                articleDataModelsSubList,
-                                AppConstants.CONTENT_TYPE_SHORT_STORY
-                            )
                         intent.putExtra(
                             Constants.ARTICLE_INDEX, "" + AppUtils
                             .getFilteredPosition1(
@@ -763,12 +729,6 @@ class ArticleListingFragment : BaseFragment(), View.OnClickListener,
                             Constants.AUTHOR,
                             articleDataModelsSubList[posSubList].userId + "~" + articleDataModelsSubList[posSubList].userName
                         )
-                        val filteredResult = AppUtils
-                            .getFilteredContentList1(
-                                articleDataModelsSubList,
-                                AppConstants.CONTENT_TYPE_ARTICLE
-                            )
-                        //                        intent.putParcelableArrayListExtra("pagerListData", filteredResult);
                         intent.putExtra(
                             Constants.ARTICLE_INDEX, "" + AppUtils
                             .getFilteredPosition1(
@@ -892,11 +852,6 @@ class ArticleListingFragment : BaseFragment(), View.OnClickListener,
                             Constants.AUTHOR,
                             articleDataModelsSubList[posSubList].userId + "~" + articleDataModelsSubList[posSubList].userName
                         )
-                        val filteredResult = AppUtils
-                            .getFilteredContentList1(
-                                articleDataModelsSubList,
-                                AppConstants.CONTENT_TYPE_SHORT_STORY
-                            )
                         intent.putExtra(
                             Constants.ARTICLE_INDEX, "" + AppUtils
                             .getFilteredPosition1(
@@ -975,11 +930,6 @@ class ArticleListingFragment : BaseFragment(), View.OnClickListener,
                             Constants.AUTHOR,
                             articleDataModelsSubList[posSubList].userId + "~" + articleDataModelsSubList[posSubList].userName
                         )
-                        val filteredResult = AppUtils
-                            .getFilteredContentList1(
-                                articleDataModelsSubList,
-                                AppConstants.CONTENT_TYPE_ARTICLE
-                            )
                         intent.putExtra(
                             Constants.ARTICLE_INDEX, "" + AppUtils
                             .getFilteredPosition1(
@@ -1272,34 +1222,6 @@ class ArticleListingFragment : BaseFragment(), View.OnClickListener,
         shimmerFrameLayout.stopShimmerAnimation()
     }
 
-    private fun launchVideoDetailsActivity(
-        position: Int,
-        videoIndex: Int
-    ) { //        MixPanelUtils.pushMomVlogClickEvent(mixpanel, videoIndex, "TrendingAll");
-        //        if (articleDataModelsNew.get(position).getCarouselVideoList() != null && !articleDataModelsNew.get(position)
-        //                .getCarouselVideoList().isEmpty()) {
-        //            if (isAdded()) {
-        //                Utils.momVlogEvent(getActivity(), "Home Screen", "Vlog_card_home_feed",
-        //                        "", "android", SharedPrefUtils.getAppLocale(BaseApplication.getAppContext()),
-        //                        SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId(),
-        //                        String.valueOf(System.currentTimeMillis()), "Show_Video_Listing", "", "");
-        //            }
-        //            VlogsListingAndDetailResult result = articleDataModelsNew.get(position).getCarouselVideoList()
-        //                    .get(videoIndex);
-        //            Intent intent = new Intent(getActivity(), ParallelFeedActivity.class);
-        //            intent.putExtra(Constants.VIDEO_ID, result.getId());
-        //            intent.putExtra(Constants.STREAM_URL, result.getUrl());
-        //            intent.putExtra(Constants.AUTHOR_ID, result.getAuthor().getId());
-        //            intent.putExtra(Constants.FROM_SCREEN, "Home Screen");
-        //            intent.putExtra(Constants.ARTICLE_OPENED_FROM, "Funny Videos");
-        //            intent.putExtra(Constants.ARTICLE_INDEX, "" + position);
-        //            intent.putExtra(Constants.AUTHOR,
-        //                    result.getAuthor().getId() + "~" + result.getAuthor().getFirstName() + " " + result.getAuthor()
-        //                            .getLastName());
-        //            startActivity(intent);
-        //        }
-    }
-
     @SuppressLint("RestrictedApi")
     private fun chooseMenuOptionsItem(view: View, position: Int) {
         val popupMenu = PopupMenu(
@@ -1559,37 +1481,61 @@ class ArticleListingFragment : BaseFragment(), View.OnClickListener,
             "file://" + BaseApplication.getAppContext().getExternalFilesDir(null) +
                 File.separator + AppConstants.STORY_SHARE_IMAGE_NAME + tempName + ".jpg"
         )
+        val screenName: String = when (sortType) {
+            Constants.KEY_TRENDING -> {
+                "Trending"
+            }
+            Constants.KEY_RECENT -> {
+                "Recent"
+            }
+            Constants.KEY_TODAYS_BEST -> {
+                "TodaysBest"
+            }
+            Constants.KEY_FOLLOWING -> {
+                "FollowingFeed"
+            }
+            else -> "NA"
+        }
         if (isAdded) {
             when (shareMedium) {
                 AppConstants.MEDIUM_FACEBOOK -> {
                     SharingUtils.shareViaFacebook(activity, uri)
-                    Utils.pushShareStoryEvent(
-                        activity, "ArticleListingFragment",
-                        userDynamoId + "", sharedStoryItem.id,
-                        sharedStoryItem.userId + "~" + sharedStoryItem.userName, "Facebook"
+                    Utils.shareEventTracking(
+                        activity,
+                        screenName,
+                        "Share_Android",
+                        "MFS_Facebook_Share"
                     )
                 }
                 AppConstants.MEDIUM_WHATSAPP -> {
                     if (AppUtils.shareImageWithWhatsApp(
-                            activity, uri, getString(
-                            R.string.ss_follow_author,
-                            sharedStoryItem!!.userName,
-                            AppConstants.USER_PROFILE_SHARE_BASE_URL + sharedStoryItem!!.userId
-                        )
+                            activity,
+                            uri,
+                            getString(
+                                R.string.ss_follow_author,
+                                sharedStoryItem.userName,
+                                AppUtils.getUtmParamsAppendedShareUrl(
+                                    AppConstants.USER_PROFILE_SHARE_BASE_URL + sharedStoryItem.userId,
+                                    "MFS_Whatsapp_Share",
+                                    "Share_Android"
+                                )
+                            )
                         )) {
-                        Utils.pushShareStoryEvent(
-                            activity, "ArticleListingFragment",
-                            userDynamoId + "", sharedStoryItem.id,
-                            sharedStoryItem.userId + "~" + sharedStoryItem.userName, "Whatsapp"
+                        Utils.shareEventTracking(
+                            activity,
+                            screenName,
+                            "Share_Android",
+                            "MFS_Whatsapp_Share"
                         )
                     }
                 }
                 AppConstants.MEDIUM_INSTAGRAM -> {
                     if (AppUtils.shareImageWithInstagram(activity, uri)) {
-                        Utils.pushShareStoryEvent(
-                            activity, "ArticleListingFragment",
-                            userDynamoId + "", sharedStoryItem.id,
-                            sharedStoryItem.userId + "~" + sharedStoryItem.userName, "Instagram"
+                        Utils.shareEventTracking(
+                            activity,
+                            screenName,
+                            "Share_Android",
+                            "MFS_Instagram_Share"
                         )
                     }
                 }
@@ -1597,14 +1543,19 @@ class ArticleListingFragment : BaseFragment(), View.OnClickListener,
                     if (AppUtils.shareGenericImageAndOrLink(
                             activity, uri, getString(
                             R.string.ss_follow_author,
-                            sharedStoryItem!!.userName,
-                            AppConstants.USER_PROFILE_SHARE_BASE_URL + sharedStoryItem!!.userId
+                            sharedStoryItem.userName,
+                            AppUtils.getUtmParamsAppendedShareUrl(
+                                AppConstants.USER_PROFILE_SHARE_BASE_URL + sharedStoryItem.userId,
+                                "MFS_Generic_Share",
+                                "Share_Android"
+                            )
                         )
                         )) {
-                        Utils.pushShareStoryEvent(
-                            activity, "ArticleListingFragment",
-                            userDynamoId + "", sharedStoryItem.id,
-                            sharedStoryItem.userId + "~" + sharedStoryItem.userName, "Generic"
+                        Utils.shareEventTracking(
+                            activity,
+                            screenName,
+                            "Share_Android",
+                            "MFS_Generic_Share"
                         )
                     }
                 }
@@ -1704,7 +1655,6 @@ class ArticleListingFragment : BaseFragment(), View.OnClickListener,
                 }
             }
             view.id == R.id.menuItemImageView -> {
-                //                showArticleMenuOptions(view, position)
             }
         }
     }

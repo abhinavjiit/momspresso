@@ -2,6 +2,8 @@ package com.mycity4kids.ui.activity;
 
 import android.content.Intent;
 import android.os.Build;
+import android.os.Build.VERSION;
+import android.os.Build.VERSION_CODES;
 import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
@@ -127,7 +129,11 @@ public class SplashActivity extends BaseActivity {
     private void resumeSplash() {
         String version = AppUtils.getAppVersion(this);
         Intent serviceIntent = new Intent(SplashActivity.this, CategorySyncService.class);
-        startService(serviceIntent);
+        if (VERSION.SDK_INT >= VERSION_CODES.O) {
+            startForegroundService(serviceIntent);
+        } else {
+            startService(serviceIntent);
+        }
         if (ConnectivityUtils.isNetworkEnabled(SplashActivity.this)) {
             Retrofit retrofit = BaseApplication.getInstance().getRetrofit();
             ForceUpdateAPI forceUpdateApi = retrofit.create(ForceUpdateAPI.class);
@@ -148,13 +154,13 @@ public class SplashActivity extends BaseActivity {
         if (null != userInfo && !StringUtils.isNullOrEmpty(userInfo.getMc4kToken())
                 && AppConstants.VALIDATED_USER.equals(userInfo.getIsValidated())) {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                Intent intent5 = new Intent(this, PushTokenService.class);
-                startForegroundService(intent5);
+                Intent intent = new Intent(this, PushTokenService.class);
+                startForegroundService(intent);
                 Intent adIntent = new Intent(this, FetchAdvertisementInfoService.class);
                 startForegroundService(adIntent);
             } else {
-                Intent intent5 = new Intent(this, PushTokenService.class);
-                startService(intent5);
+                Intent intent = new Intent(this, PushTokenService.class);
+                startService(intent);
                 Intent adIntent = new Intent(this, FetchAdvertisementInfoService.class);
                 startService(adIntent);
             }
@@ -168,7 +174,6 @@ public class SplashActivity extends BaseActivity {
                 FirebaseCrashlytics.getInstance().recordException(e);
                 Log.d("MC4kException", Log.getStackTraceString(e));
             }
-
             gotoDashboard();
         } else {
             Log.e("MYCITY4KIDS", "USER logged Out");

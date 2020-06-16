@@ -415,8 +415,9 @@ public class AppUtils {
     }
 
     public static Intent getArticleShareIntent(String userType, String blogSlug, String titleSlug,
-            String shareMsg, String title, String userName) {
-        String shareUrl = getShareUrl(userType, blogSlug, titleSlug);
+            String shareMsg, String title, String userName, String utmSource, String utmMedium) {
+        String shareUrl = getUtmParamsAppendedShareUrl(getShareUrl(userType, blogSlug, titleSlug), utmSource,
+                utmMedium);
         Intent shareIntent = new Intent(Intent.ACTION_SEND);
         shareIntent.setType("text/plain");
         String shareData;
@@ -430,8 +431,9 @@ public class AppUtils {
     }
 
     public static Intent getVlogsShareIntent(String userType, String blogSlug, String titleSlug,
-            String shareMsg, String title, String userName) {
-        String shareUrl = getVlogsShareUrl(userType, blogSlug, titleSlug);
+            String shareMsg, String title, String userName, String utmSource, String utmMedium) {
+        String shareUrl = getUtmParamsAppendedShareUrl(getVlogsShareUrl(userType, blogSlug, titleSlug), utmSource,
+                utmMedium);
         Intent shareIntent = new Intent(Intent.ACTION_SEND);
         shareIntent.setType("text/plain");
         String shareData;
@@ -1112,5 +1114,12 @@ public class AppUtils {
                 return Typeface.DEFAULT;
             }
         }
+    }
+
+    public static String getUtmParamsAppendedShareUrl(String shareUrl, String utmSource, String utmMedium) {
+        if (StringUtils.isNullOrEmpty(utmSource) || StringUtils.isNullOrEmpty(utmMedium)) {
+            return shareUrl;
+        }
+        return shareUrl + "?utm_source=" + utmSource + "&utm_medium=" + utmMedium;
     }
 }

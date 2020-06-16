@@ -6,6 +6,8 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
 import android.net.Uri;
+import android.os.Build.VERSION;
+import android.os.Build.VERSION_CODES;
 import android.os.Bundle;
 import android.os.Handler;
 import android.text.TextUtils;
@@ -688,7 +690,11 @@ public abstract class BaseActivity extends AppCompatActivity implements GroupMem
 
     public void startSyncingUserInfo() {
         Intent intent = new Intent(this, SyncUserInfoService.class);
-        startService(intent);
+        if (VERSION.SDK_INT >= VERSION_CODES.O) {
+            startForegroundService(intent);
+        } else {
+            startService(intent);
+        }
     }
 
     @Override

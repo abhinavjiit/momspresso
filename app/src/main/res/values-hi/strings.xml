@@ -993,8 +993,8 @@ Thank you! We will be reviewing your story. You can expect to hear from us withi
   <string name="drawer_referra_mymoney">MyMoney को रेफ़र करें</string>
   <string name="referral_screen_text">अपने दोस्त को अपने रेफ़रल कोड द्वारा MyMoney में हिस्सा लेने के लिए आमंत्रित करें . उसके MyMoney कैम्पेन को सफलतापूर्वक पूरा करने पर आप दोनों को 25 रुपये के हक़दार होंगे.</string>
   <string name="share_referral_screen">अपना रेफरल कोड शेयर करें और कमाना शुरू करें</string>
-  <string name="referral_screen_whatsapp">WhatsApp</string>
-  <string name="referral_screen_facebook">Facebook</string>
+  <string name="all_whatsapp">WhatsApp</string>
+  <string name="all_facebook">Facebook</string>
   <string name="rewards_tab_fragment_personalInfo_text">व्यक्तिगत जानकारी</string>
   <string name="rewards_tab_fragment_socialLink_text">सोशल लिंक्स</string>
   <string name="rewards_tab_fragment_paymentMode">पेमेंट मोड</string>
@@ -1378,4 +1378,7 @@ Thank you! We will be reviewing your story. You can expect to hear from us withi
   <string name="invite_friends_whatsapp">Invite via whatsapp</string>
   <string name="share_app_msg">नमस्कार , Momspresso एप्प पर मेरी पोस्ट्स व वीडियोज़ देखने के लिए एप्प अभी डाउनलोड करें %1s</string>
   <string name="invite_phone_contact">Invite contacts to follow you</string>
+  <string name="share_the_app_via">Share the App via</string>
+  <string name="all_phonebook">Phonebook</string>
+  <string name="all_fb_msngr">Facebook Messenger</string>
 </resources>
