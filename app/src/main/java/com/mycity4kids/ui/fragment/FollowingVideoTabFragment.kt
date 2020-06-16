@@ -180,13 +180,19 @@ class FollowingVideoTabFragment : BaseFragment(),
     }
 
     private fun getVlogs(start: Int) {
+        var end = 0
         this.start = start
+        if (start == 0) {
+            end = start + 9
+        } else {
+            end = start + 10
+        }
         val retrofit = BaseApplication.getInstance().retrofit
         val vlogsListingAndDetailsAPI = retrofit.create(VlogsListingAndDetailsAPI::class.java)
         val call = vlogsListingAndDetailsAPI.getVlogsData(
             SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).dynamoId,
             start,
-            start + 10
+            end
         )
         call.enqueue(object : Callback<MomVlogListingResponse> {
             override fun onFailure(call: Call<MomVlogListingResponse>, t: Throwable) {

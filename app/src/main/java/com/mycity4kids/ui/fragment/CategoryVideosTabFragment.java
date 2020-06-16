@@ -43,7 +43,9 @@ import com.mycity4kids.retrofitAPIsInterfaces.VlogsListingAndDetailsAPI;
 import com.mycity4kids.ui.adapter.MomVlogHorizontalRecyclerAdapter;
 import com.mycity4kids.ui.adapter.MomVlogListingAdapter;
 import com.mycity4kids.utils.ConnectivityUtils;
+import com.mycity4kids.vlogs.VlogsCategoryWiseChallengesResponse;
 import java.util.ArrayList;
+import java.util.Collections;
 import org.jetbrains.annotations.NotNull;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -118,7 +120,6 @@ public class CategoryVideosTabFragment extends BaseFragment implements View.OnCl
         }
 
         mixpanel = MixpanelAPI.getInstance(BaseApplication.getAppContext(), AppConstants.MIX_PANEL_TOKEN);
-
         popularSortFab.setOnClickListener(this);
         recentSortFab.setOnClickListener(this);
         subCategoriesTopicList = new ArrayList<>();
@@ -189,7 +190,8 @@ public class CategoryVideosTabFragment extends BaseFragment implements View.OnCl
             public void getItemOffsets(@NotNull Rect outRect, @NotNull View view, @NotNull RecyclerView parent,
                     @NotNull RecyclerView.State state) {
                 int position = parent.getChildAdapterPosition(view); // item position
-                if (articlesListingAdapter.getItemViewType(position) == 1) {
+                if (articlesListingAdapter.getItemViewType(position) == 1
+                        || articlesListingAdapter.getItemViewType(position) == 2) {
                     outRect.left = 0;
                     outRect.right = 0;
                     outRect.top = 0;
@@ -246,17 +248,24 @@ public class CategoryVideosTabFragment extends BaseFragment implements View.OnCl
     }
 
     private void hitArticleListingApi() {
+        int from;
+        int end;
         if (!ConnectivityUtils.isNetworkEnabled(getActivity())) {
             removeProgressDialog();
             return;
         }
-
-        int from = (nextPageNumber - 1) * limit;
+        from = (nextPageNumber - 1) * limit;
+        if (nextPageNumber == 1) {
+            end = from + limit - 2;
+        } else {
+            limit = 10;
+            end = from + limit - 1;
+        }
         Retrofit retrofit = BaseApplication.getInstance().getRetrofit();
         VlogsListingAndDetailsAPI vlogsListingAndDetailsApi = retrofit.create(VlogsListingAndDetailsAPI.class);
         Log.d("VIDEO CATEGORY", "--" + videoCategory);
         Call<VlogsListingResponse> callRecentVideoArticles = vlogsListingAndDetailsApi
-                .getVlogsList(from, from + limit - 1, sortType, 3, videoCategory);
+                .getVlogsList(from, end, sortType, 3, videoCategory);
         callRecentVideoArticles.enqueue(recentArticleResponseCallback);
     }
 
@@ -334,19 +343,19 @@ public class CategoryVideosTabFragment extends BaseFragment implements View.OnCl
             if (nextPageNumber == 1) {
                 articleDataModelsNew = dataList;
                 // forFollow = dataList;
-                articleDataModelsNew.add(new VlogsListingAndDetailResult(1));
+                getSingleChallenge();
             } else {
                 articleDataModelsNew.addAll(dataList);
                 if (dataList.size() >= 10) {
                     // forFollow = dataList;
                     // forFollow.add(new VlogsListingAndDetailResult(1));
                     articleDataModelsNew.add(new VlogsListingAndDetailResult(1));
+                    articlesListingAdapter.setNewListData(articleDataModelsNew);
+                    nextPageNumber = nextPageNumber + 1;
+                    articlesListingAdapter.notifyDataSetChanged();
                 }
             }
             // articlesListingAdapter.setTestData(forFollow);
-            articlesListingAdapter.setNewListData(articleDataModelsNew);
-            nextPageNumber = nextPageNumber + 1;
-            articlesListingAdapter.notifyDataSetChanged();
         }
     }
 
@@ -518,5 +527,74 @@ public class CategoryVideosTabFragment extends BaseFragment implements View.OnCl
 
         momVlogHorizontalRecyclerAdapter.setListData(subCategoriesTopicList);
         momVlogHorizontalRecyclerAdapter.notifyDataSetChanged();
+    }
+
+
+    private void getSingleChallenge() {
+        if (!ConnectivityUtils.isNetworkEnabled(getActivity())) {
+            removeProgressDialog();
+            return;
+        }
+        ArrayList<String> singleChallengeId = new ArrayList<String>();
+        singleChallengeId.add(videoCategory);
+        Retrofit retrofit = BaseApplication.getInstance().getRetrofit();
+        VlogsListingAndDetailsAPI vlogsListingAndDetailsApi = retrofit.create(VlogsListingAndDetailsAPI.class);
+        Call<VlogsCategoryWiseChallengesResponse> callRecentVideoArticles = vlogsListingAndDetailsApi
+                .getSingleChallenge(singleChallengeId);
+        callRecentVideoArticles.enqueue(vlogChallengeResponseCallBack);
+    }
+
+
+    private Callback<VlogsCategoryWiseChallengesResponse> vlogChallengeResponseCallBack =
+            new Callback<VlogsCategoryWiseChallengesResponse>() {
+                @Override
+                public void onResponse(Call<VlogsCategoryWiseChallengesResponse> call,
+                        retrofit2.Response<VlogsCategoryWiseChallengesResponse> response) {
+                    if (null == response.body()) {
+                        NetworkErrorException nee = new NetworkErrorException(response.raw().toString());
+                        FirebaseCrashlytics.getInstance().recordException(nee);
+                        return;
+                    }
+                    if (response.isSuccessful()) {
+                        try {
+                            VlogsCategoryWiseChallengesResponse responseData = response.body();
+                            if (responseData.getCode() == 200 && Constants.SUCCESS.equals(responseData.getStatus())) {
+                                processChallengesData(responseData.getData().getResult());
+                            }
+                        } catch (Exception e) {
+                            FirebaseCrashlytics.getInstance().recordException(e);
+                            Log.d("MC4kException", Log.getStackTraceString(e));
+                            articleDataModelsNew.add(new VlogsListingAndDetailResult(1));
+                            articlesListingAdapter.setNewListData(articleDataModelsNew);
+                            nextPageNumber = nextPageNumber + 1;
+                            articlesListingAdapter.notifyDataSetChanged();
+                        }
+                    }
+                }
+
+                @Override
+                public void onFailure(Call<VlogsCategoryWiseChallengesResponse> call, Throwable t) {
+                    FirebaseCrashlytics.getInstance().recordException(t);
+                    Log.d("MC4kException", Log.getStackTraceString(t));
+                    articleDataModelsNew.add(new VlogsListingAndDetailResult(1));
+                    articlesListingAdapter.setNewListData(articleDataModelsNew);
+                    nextPageNumber = nextPageNumber + 1;
+                    articlesListingAdapter.notifyDataSetChanged();
+                }
+            };
+
+    private void processChallengesData(ArrayList<Topics> catWiseChallengeList) {
+        if (null != articleDataModelsNew && !articleDataModelsNew.isEmpty()) {
+            if (articleDataModelsNew.size() >= 5) {
+                VlogsListingAndDetailResult item = new VlogsListingAndDetailResult(2);
+                item.setChallengeInfo(catWiseChallengeList.get(0));
+                articleDataModelsNew.add(item);
+                Collections.swap(articleDataModelsNew, 4, articleDataModelsNew.size()-1);
+            }
+            articleDataModelsNew.add(new VlogsListingAndDetailResult(1));
+            articlesListingAdapter.setNewListData(articleDataModelsNew);
+            nextPageNumber = nextPageNumber + 1;
+            articlesListingAdapter.notifyDataSetChanged();
+        }
     }
 }
