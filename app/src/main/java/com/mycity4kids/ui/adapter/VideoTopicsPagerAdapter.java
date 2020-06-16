@@ -45,8 +45,7 @@ public class VideoTopicsPagerAdapter extends FragmentPagerAdapter {
     public Fragment getItem(int position) {
         Bundle bundle = new Bundle();
         if (position == 0) {
-            FollowingVideoTabFragment followingVideoTabFragment = new FollowingVideoTabFragment();
-            return followingVideoTabFragment;
+            return new FollowingVideoTabFragment();
         } else if (subTopicsList != null && subTopicsList.get(position).getId() != null && subTopicsList.get(position)
                 .getId().equals("category-ee7ea82543bd4bc0a8dad288561f2beb")) {
             ChallengeCategoryVideoTabFragment tab2 = new ChallengeCategoryVideoTabFragment();

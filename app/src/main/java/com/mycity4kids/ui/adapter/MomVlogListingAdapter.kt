@@ -12,6 +12,7 @@ import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.RelativeLayout
 import android.widget.TextView
+import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
 import com.facebook.shimmer.ShimmerFrameLayout
@@ -30,8 +31,10 @@ import com.mycity4kids.profile.UserProfileActivity
 import com.mycity4kids.retrofitAPIsInterfaces.FollowAPI
 import com.mycity4kids.retrofitAPIsInterfaces.VlogsListingAndDetailsAPI
 import com.mycity4kids.ui.activity.ParallelFeedActivity
+import com.mycity4kids.ui.videochallengenewui.activity.NewVideoChallengeActivity
 import com.mycity4kids.utils.AppUtils
 import com.squareup.picasso.Picasso
+import kotlinx.android.synthetic.main.challenge_card_in_vlog_listing_layout.view.*
 import kotlinx.android.synthetic.main.mom_vlog_follow_following_carousal.view.*
 import kotlinx.android.synthetic.main.mom_vlog_listing_adapter.view.*
 import retrofit2.Call
@@ -40,6 +43,7 @@ import retrofit2.Response
 
 const val CATEGORY_VIDEOS = 0
 const val CAROUSAL = 1
+const val CHALLENGE = 2
 
 class MomVlogListingAdapter(val mContext: Context) :
     RecyclerView.Adapter<RecyclerView.ViewHolder>() {
@@ -52,15 +56,24 @@ class MomVlogListingAdapter(val mContext: Context) :
     var alternateCarousal = 0
     private var vlogersListData = ArrayList<UserDetailResult>()
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
-        return if (viewType == VIDEOS) {
-            val view =
-                LayoutInflater.from(parent.context)
-                    .inflate(R.layout.mom_vlog_listing_adapter, parent, false)
-            ListingViewHolder(view)
-        } else {
-            val view = LayoutInflater.from(parent.context)
-                .inflate(R.layout.mom_vlog_follow_following_carousal, parent, false)
-            FollowFollowingCarousal(view)
+        when (viewType) {
+            VIDEOS -> {
+                val view =
+                    LayoutInflater.from(parent.context)
+                        .inflate(R.layout.mom_vlog_listing_adapter, parent, false)
+                return ListingViewHolder(view)
+            }
+            CHALLENGE -> {
+                val view =
+                    LayoutInflater.from(parent.context)
+                        .inflate(R.layout.challenge_card_in_vlog_listing_layout, parent, false)
+                return ChallengeViewHolder(view)
+            }
+            else -> {
+                val view = LayoutInflater.from(parent.context)
+                    .inflate(R.layout.mom_vlog_follow_following_carousal, parent, false)
+                return FollowFollowingCarousal(view)
+            }
         }
     }
 
@@ -90,7 +103,8 @@ class MomVlogListingAdapter(val mContext: Context) :
                 holder.viewCountTextView1.text =
                     AppUtils.withSuffix(momVlogVideosOrCarousalList[position].view_count.toLong())
             } catch (e: Exception) {
-                holder.viewCountTextView1.text = momVlogVideosOrCarousalList[position].view_count
+                holder.viewCountTextView1.text =
+                    momVlogVideosOrCarousalList[position].view_count
             }
             when {
                 momVlogVideosOrCarousalList[position].winner == 1 -> {
@@ -117,13 +131,37 @@ class MomVlogListingAdapter(val mContext: Context) :
                 intent.putExtra(Constants.ARTICLE_OPENED_FROM, "Funny Videos")
                 intent.putExtra(
                     Constants.AUTHOR,
-                    momVlogVideosOrCarousalList.get(position).getAuthor().getId() + "~" + momVlogVideosOrCarousalList.get(
+                    momVlogVideosOrCarousalList[position].author.id + "~" + momVlogVideosOrCarousalList[position].author.firstName + " " + momVlogVideosOrCarousalList.get(
                         position
-                    ).getAuthor().getFirstName() + " " + momVlogVideosOrCarousalList.get(
-                        position
-                    ).getAuthor().getLastName()
+                    ).author.lastName
                 )
                 mContext.startActivity(intent)
+            }
+        } else if (holder is ChallengeViewHolder) {
+            val challengeData = momVlogVideosOrCarousalList[position].challengeInfo
+            holder.challengeTitleTextView.text = challengeData.title
+            Picasso.get().load(challengeData.extraData[0].challenge.imageUrl).error(R.drawable.default_article).into(
+                holder.challengeImageView
+            )
+            holder.challengeDescriptionTextView.text = challengeData.extraData[0].challenge.desc
+            holder.challengeCardView.setOnClickListener {
+                val intent = Intent(mContext, NewVideoChallengeActivity::class.java)
+                intent.putExtra("challenge", challengeData.id)
+                intent.putExtra("comingFrom", "vlog_listing")
+                mContext.startActivity(intent)
+                Utils.momVlogEvent(
+                    mContext,
+                    "Video Listing",
+                    "Challenge container",
+                    "",
+                    "android",
+                    SharedPrefUtils.getAppLocale(BaseApplication.getAppContext()),
+                    SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).dynamoId,
+                    System.currentTimeMillis().toString(),
+                    "Show_video_creation_categories",
+                    "",
+                    challengeData.id
+                )
             }
         } else if (holder is FollowFollowingCarousal) {
             Log.e(
@@ -400,10 +438,16 @@ class MomVlogListingAdapter(val mContext: Context) :
     }
 
     override fun getItemViewType(position: Int): Int {
-        return if (momVlogVideosOrCarousalList[position].itemType == 0) {
-            CATEGORY_VIDEOS
-        } else {
-            CAROUSAL
+        return when (momVlogVideosOrCarousalList[position].itemType) {
+            0 -> {
+                CATEGORY_VIDEOS
+            }
+            2 -> {
+                CHALLENGE
+            }
+            else -> {
+                CAROUSAL
+            }
         }
     }
 
@@ -625,6 +669,13 @@ class MomVlogListingAdapter(val mContext: Context) :
         val viewCountTextView1: TextView = view.viewCountTextView1
         val imageWinner: ImageView = view.imageWinner
         val container: RelativeLayout = view.container
+    }
+
+    class ChallengeViewHolder(view: View) : RecyclerView.ViewHolder(view) {
+        val challengeTitleTextView: TextView = view.challengeTitleTextView
+        val challengeImageView: ImageView = view.challengeImageView
+        val challengeDescriptionTextView: TextView = view.challengeDescriptionTextView
+        val challengeCardView: ConstraintLayout = view.challengeCardView
     }
 
     class FollowFollowingCarousal(view: View) : RecyclerView.ViewHolder(view) {
