@@ -29,6 +29,7 @@ import com.mycity4kids.ui.videochallengenewui.Adapter.VideoChallengePagerAdapter
 import com.mycity4kids.ui.videochallengenewui.activity.ExoplayerVideoChallengePlayViewActivity;
 import com.mycity4kids.ui.videochallengenewui.activity.NewVideoChallengeActivity;
 import com.mycity4kids.utils.AppUtils;
+import com.mycity4kids.utils.StringUtils;
 import com.mycity4kids.utils.ToastUtils;
 import com.mycity4kids.videotrimmer.utils.FileUtils;
 import com.squareup.picasso.Picasso;
@@ -55,6 +56,7 @@ public class ChallengeDetailFragment extends Fragment implements View.OnClickLis
     private ImageView thumbNail;
     private ImageView back;
     private String comingFrom = "";
+    private ImageView videoIndicatorImageView;
 
     @Nullable
     @Override
@@ -63,15 +65,15 @@ public class ChallengeDetailFragment extends Fragment implements View.OnClickLis
         View view = inflater.inflate(R.layout.challenge_detail_fragment_layout, container, false);
 
         saveTextView = view.findViewById(R.id.saveTextView);
-        tabs = (TabLayout) view.findViewById(R.id.id_tabs);
+        tabs = view.findViewById(R.id.id_tabs);
         back = view.findViewById(R.id.back);
-        thumbNail = (ImageView) view.findViewById(R.id.thumbNail);
+        thumbNail = view.findViewById(R.id.thumbNail);
         shareChallengeImageView = view.findViewById(R.id.shareChallengeImageView);
-        viewPager = (ViewPager) view.findViewById(R.id.id_viewpager);
-        toolbarTitleTextView = (TextView) view.findViewById(R.id.toolbarTitleTextView);
+        videoIndicatorImageView = view.findViewById(R.id.videoIndicatorImageView);
+        viewPager = view.findViewById(R.id.id_viewpager);
+        toolbarTitleTextView = view.findViewById(R.id.toolbarTitleTextView);
         toolbarTitleTextView.setText(getString(R.string.myprofile_section_videos_label));
         back.setOnClickListener(this);
-        thumbNail.setOnClickListener(this);
         shareChallengeImageView.setOnClickListener(this);
         if (getArguments() != null) {
             selectedName = getArguments().getString("selected_Name");
@@ -86,6 +88,11 @@ public class ChallengeDetailFragment extends Fragment implements View.OnClickLis
             if ("chooseVideoCategory".equals(comingFrom)) {
                 saveTextView.setVisibility(View.VISIBLE);
             }
+        }
+        if (!StringUtils.isNullOrEmpty(selectedStreamUrl)) {
+            thumbNail.setOnClickListener(this);
+        } else {
+            videoIndicatorImageView.setVisibility(View.GONE);
         }
         Picasso.get().load(selectedActiveUrl).fit()
                 .placeholder(R.drawable.default_article).error(R.drawable.default_article).into(thumbNail);

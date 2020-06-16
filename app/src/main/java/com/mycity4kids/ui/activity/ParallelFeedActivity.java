@@ -917,9 +917,12 @@ public class ParallelFeedActivity extends BaseActivity implements View.OnClickLi
 
     private void processChallengesData(ArrayList<Topics> catWiseChallengeList) {
         if (finalList.size() > 5) {
-            VlogsListingAndDetailResult item = new VlogsListingAndDetailResult(2);
-            item.setChallengeInfo(catWiseChallengeList.get(0));
-            finalList.add(5, item);
+            if (!StringUtils
+                    .isNullOrEmpty(catWiseChallengeList.get(0).getExtraData().get(0).getChallenge().getVideoUrl())) {
+                VlogsListingAndDetailResult item = new VlogsListingAndDetailResult(2);
+                item.setChallengeInfo(catWiseChallengeList.get(0));
+                finalList.add(5, item);
+            }
         }
         setRecycler();
         recyclerViewFeed.setVideoInfoList(ParallelFeedActivity.this, finalList);

@@ -51,6 +51,7 @@ import com.mycity4kids.models.response.VlogsListingAndDetailResult;
 import com.mycity4kids.preference.SharedPrefUtils;
 import com.mycity4kids.ui.activity.ParallelFeedActivity;
 import com.mycity4kids.ui.adapter.VideoRecyclerViewAdapter;
+import com.mycity4kids.utils.StringUtils;
 import com.mycity4kids.utils.VideoAnalytics;
 import java.util.ArrayList;
 import java.util.List;
@@ -279,7 +280,7 @@ public class ExoPlayerRecyclerView extends RecyclerView {
         } else {
             uriString = videoInfoList.get(targetPosition).getUrl();
         }
-        if (uriString != null) {
+        if (!StringUtils.isNullOrEmpty(uriString)) {
             String userAgent = Util.getUserAgent(appContext, appContext.getApplicationInfo().packageName);
             DefaultHttpDataSourceFactory httpDataSourceFactory = new DefaultHttpDataSourceFactory(userAgent, null,
                     DefaultHttpDataSource.DEFAULT_CONNECT_TIMEOUT_MILLIS,
