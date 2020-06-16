@@ -22,6 +22,7 @@ class CollectionsActivity : BaseActivity() {
     private var isPrivate: Boolean = true
     private lateinit var back: TextView
     private var userId: String? = null
+    private var comingFrom: String? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -33,12 +34,26 @@ class CollectionsActivity : BaseActivity() {
 
         if (AppUtils.isPrivateProfile(intent.getStringExtra("userId"))) {
             isPrivate = true
-            userId = SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId()
-            Utils.pushGenericEvent(this, "Show_Private_Collection_Listing", userId, "CollectionsActivity")
+            userId =
+                SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId()
+            Utils.pushGenericEvent(
+                this,
+                "Show_Private_Collection_Listing",
+                userId,
+                "CollectionsActivity"
+            )
+            comingFrom = intent.getStringExtra("comingFrom")
         } else {
             isPrivate = false
             userId = intent.getStringExtra("userId")
-            Utils.pushGenericEvent(this, "Show_Public_Collection_Listing", userId, "CollectionsActivity")
+            Utils.pushGenericEvent(
+                this,
+                "Show_Public_Collection_Listing",
+                userId,
+                "CollectionsActivity"
+            )
+            comingFrom = intent.getStringExtra("comingFrom")
+
         }
 
         back.setOnClickListener {
@@ -51,6 +66,13 @@ class CollectionsActivity : BaseActivity() {
             }
         } else {
             tabs.visibility = View.GONE
+        }
+        if ("followed" == comingFrom) {
+
+            collectionsViewPager.currentItem = 1
+        } else {
+            collectionsViewPager.currentItem = 0
+
         }
 
         adapter = CollectionPagerAdapter(supportFragmentManager, isPrivate, userId!!)

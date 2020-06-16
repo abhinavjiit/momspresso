@@ -27,7 +27,9 @@ import androidx.appcompat.widget.Toolbar
 import androidx.coordinatorlayout.widget.CoordinatorLayout
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
+import androidx.core.widget.NestedScrollView
 import androidx.fragment.app.FragmentManager
+import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.facebook.shimmer.ShimmerFrameLayout
@@ -47,12 +49,14 @@ import com.mycity4kids.editor.EditorPostActivity
 import com.mycity4kids.editor.NewEditor
 import com.mycity4kids.gtmutils.Utils
 import com.mycity4kids.models.collectionsModels.FeaturedOnModel
+import com.mycity4kids.models.collectionsModels.UserCollectionsListModel
 import com.mycity4kids.models.request.ArticleDetailRequest
 import com.mycity4kids.models.request.FollowUnfollowUserRequest
 import com.mycity4kids.models.request.RecommendUnrecommendArticleRequest
 import com.mycity4kids.models.response.AddBookmarkResponse
 import com.mycity4kids.models.response.ArticleDetailResponse
 import com.mycity4kids.models.response.ArticleDetailResult
+import com.mycity4kids.models.response.BaseResponseGeneric
 import com.mycity4kids.models.response.FollowUnfollowUserResponse
 import com.mycity4kids.models.response.LanguageRanksModel
 import com.mycity4kids.models.response.MixFeedResponse
@@ -79,7 +83,10 @@ import com.mycity4kids.ui.activity.RankingActivity
 import com.mycity4kids.ui.activity.ShortStoryContainerActivity
 import com.mycity4kids.ui.activity.UserDraftsContentActivity
 import com.mycity4kids.ui.activity.UserPublishedContentActivity
+import com.mycity4kids.ui.activity.collection.CollectionsActivity
 import com.mycity4kids.ui.activity.collection.UserCollectionItemListActivity
+import com.mycity4kids.ui.adapter.UserProfileCreatedCollectionsAdapter
+import com.mycity4kids.ui.adapter.UserProfileFollowedCollectionAdapter
 import com.mycity4kids.ui.fragment.AddCollectionAndCollectionItemDialogFragment
 import com.mycity4kids.ui.fragment.AddCollectionPopUpDialogFragment
 import com.mycity4kids.ui.fragment.InviteFriendsDialogFragment
@@ -96,19 +103,42 @@ import com.mycity4kids.widget.BadgesProfileWidget
 import com.mycity4kids.widget.ResizableTextView
 import com.mycity4kids.widget.StoryShareCardWidget
 import com.squareup.picasso.Picasso
-import java.io.File
-import java.net.SocketTimeoutException
-import java.net.UnknownHostException
+import io.reactivex.Observer
+import io.reactivex.android.schedulers.AndroidSchedulers
+import io.reactivex.disposables.Disposable
+import io.reactivex.schedulers.Schedulers
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
+import java.io.File
+import java.net.SocketTimeoutException
+import java.net.UnknownHostException
 
 class UserProfileActivity : BaseActivity(),
     UserContentAdapter.RecyclerViewClickListener, View.OnClickListener,
     UsersFeaturedContentAdapter.RecyclerViewClickListener,
     AddCollectionPopUpDialogFragment.AddCollectionInterface,
     UsersBookmarksAdapter.RecyclerViewClickListener,
-    ResizableTextView.SeeMore {
+    ResizableTextView.SeeMore,
+    UserProfileCreatedCollectionsAdapter.CollectionRecyclerViewClickListener,
+    UserProfileFollowedCollectionAdapter.CollectionRecyclerViewClickListener {
+    override fun onCollectionsClick(position: Int, id: String?) {
+        id?.let {
+            val intent =
+                Intent(this@UserProfileActivity, UserCollectionItemListActivity::class.java)
+            intent.putExtra("id", it)
+            startActivity(intent)
+        }
+    }
+
+    override fun onFollowedCollectionsClick(position: Int, id: String?) {
+        id?.let {
+            val intent =
+                Intent(this@UserProfileActivity, UserCollectionItemListActivity::class.java)
+            intent.putExtra("id", it)
+            startActivity(intent)
+        }
+    }
 
     private val EDITOR_TYPE = "editor_type"
     private val firebaseRemoteConfig = FirebaseRemoteConfig.getInstance()
@@ -138,6 +168,8 @@ class UserProfileActivity : BaseActivity(),
     private lateinit var rankContainer: LinearLayout
     private lateinit var postsCountContainer: LinearLayout
     private lateinit var recyclerView: RecyclerView
+    private lateinit var createdCollectionRecyclerView: RecyclerView
+    private lateinit var followedCollectionRecyclerView: RecyclerView
     private lateinit var followingCountTextView: TextView
     private lateinit var followerCountTextView: TextView
     private lateinit var rankCountTextView: TextView
@@ -162,6 +194,7 @@ class UserProfileActivity : BaseActivity(),
     private lateinit var badgesContainer: BadgesProfileWidget
     private lateinit var myCollectionsWidget: MyCollectionsWidget
     private lateinit var profileShareCardWidget: ProfileShareCardWidget
+    private lateinit var shimmer: ShimmerFrameLayout
 
     private var pastVisiblesItems: Int = 0
     private var visibleItemCount: Int = 0
@@ -182,6 +215,14 @@ class UserProfileActivity : BaseActivity(),
     private lateinit var storyShareCardWidget: StoryShareCardWidget
     private lateinit var shareStoryImageView: ImageView
     private lateinit var sharedStoryItem: MixFeedResult
+    private lateinit var userCollectionContainer: NestedScrollView
+    private lateinit var createdCollectionsViewAll: TextView
+    private lateinit var followedCollectionsViewAll: TextView
+    private lateinit var headerView: RelativeLayout
+    private lateinit var noCreatedCollectionsYet: TextView
+    private lateinit var noFollowedCollectionsYet: TextView
+    private lateinit var addCollectionTextView: TextView
+
 
     private val userContentAdapter: UserContentAdapter by lazy {
         UserContentAdapter(
@@ -189,6 +230,9 @@ class UserProfileActivity : BaseActivity(),
             AppUtils.isPrivateProfile(authorId)
         )
     }
+
+    private lateinit var userProfileCreatedCollectionAdapter: UserProfileCreatedCollectionsAdapter
+    private lateinit var userProfileFollowedCollectionAdapter: UserProfileFollowedCollectionAdapter
     private val usersFeaturedContentAdapter: UsersFeaturedContentAdapter by lazy {
         UsersFeaturedContentAdapter(
             this
@@ -236,7 +280,16 @@ class UserProfileActivity : BaseActivity(),
         bottomLoadingView = findViewById(R.id.bottomLoadingView)
         emptyListTextView = findViewById(R.id.emptyListTextView)
         profileShareCardWidget = findViewById(R.id.profileShareCardWidget)
-
+        createdCollectionRecyclerView = findViewById(R.id.createdCollectionRecyclerView)
+        followedCollectionRecyclerView = findViewById(R.id.followedCollectionRecyclerView)
+        userCollectionContainer = findViewById(R.id.userCollectionContainer)
+        followedCollectionsViewAll = findViewById(R.id.followedCollectionsViewAll)
+        createdCollectionsViewAll = findViewById(R.id.createdCollectionsViewAll)
+        headerView = findViewById(R.id.headerView)
+        noCreatedCollectionsYet = findViewById(R.id.noCreatedCollectionsYet)
+        noFollowedCollectionsYet = findViewById(R.id.noFollowedCollectionsYet)
+        addCollectionTextView = findViewById(R.id.addCollectionTextView)
+        shimmer = findViewById(R.id.shimmer)
         setSupportActionBar(toolbar)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
         supportActionBar?.setDisplayShowHomeEnabled(true)
@@ -296,6 +349,23 @@ class UserProfileActivity : BaseActivity(),
         recyclerView.layoutManager = llm
         recyclerView.adapter = userContentAdapter
 
+        val layoutManager = GridLayoutManager(this@UserProfileActivity, 2)
+        layoutManager.orientation = RecyclerView.VERTICAL
+        userProfileCreatedCollectionAdapter = UserProfileCreatedCollectionsAdapter(this)
+        createdCollectionRecyclerView.layoutManager = layoutManager
+        createdCollectionRecyclerView.adapter = userProfileCreatedCollectionAdapter
+
+        val followCollectionsLayoutManager = GridLayoutManager(this@UserProfileActivity, 2)
+        followCollectionsLayoutManager.orientation = RecyclerView.VERTICAL
+        userProfileFollowedCollectionAdapter = UserProfileFollowedCollectionAdapter(this)
+        followedCollectionRecyclerView.layoutManager = followCollectionsLayoutManager
+        followedCollectionRecyclerView.adapter = userProfileFollowedCollectionAdapter
+
+
+
+
+
+
         userContentList = ArrayList()
         userBookmarkList = ArrayList()
         userFeaturedOnList = ArrayList()
@@ -308,6 +378,9 @@ class UserProfileActivity : BaseActivity(),
         badgesContainer.setOnClickListener(this)
         postsCountContainer.setOnClickListener(this)
         appSettingsImageView.setOnClickListener(this)
+        addCollectionTextView.setOnClickListener(this)
+        createdCollectionsViewAll.setOnClickListener(this)
+        followedCollectionsViewAll.setOnClickListener(this)
 
         creatorTab.isSelected = true
         featuredTab.isSelected = false
@@ -335,7 +408,7 @@ class UserProfileActivity : BaseActivity(),
                             } else if (bookmarksTab.isSelected) {
                                 getUsersBookmark()
                             } else {
-                                getFeaturedContent()
+                                //     getFeaturedContent()
                             }
                         }
                     }
@@ -754,6 +827,132 @@ class UserProfileActivity : BaseActivity(),
         }
     }
 
+
+    private fun getUserCreatedCollections() {
+        authorId?.let {
+            val retrofit = BaseApplication.getInstance().retrofit
+            val collectionsAPI = retrofit.create(CollectionsAPI::class.java)
+            val call = collectionsAPI.getUserCreatedCollections(it, 0, 10, null)
+            call.enqueue(object : Callback<BaseResponseGeneric<UserCollectionsListModel>> {
+                override fun onFailure(
+                    call: Call<BaseResponseGeneric<UserCollectionsListModel>>,
+                    t: Throwable
+                ) {
+
+                }
+
+                override fun onResponse(
+                    call: Call<BaseResponseGeneric<UserCollectionsListModel>>,
+                    response: Response<BaseResponseGeneric<UserCollectionsListModel>>
+                ) {
+                    try {
+                        shimmer.stopShimmerAnimation()
+                        shimmer.visibility = View.GONE
+                        if (null == response.body()) {
+                            val nee = NetworkErrorException(response.raw().toString())
+                            FirebaseCrashlytics.getInstance().recordException(nee)
+                            return
+                        }
+                        val responsee = response.body()
+                        if (200 == responsee?.code && Constants.SUCCESS == responsee.status) {
+                            processCreatedCollectionData(responsee.data?.result)
+                        }
+
+                    } catch (e: Exception) {
+
+                    }
+                }
+
+            })
+        }
+
+
+    }
+
+    private fun getUserFollowedCollections() {
+        authorId?.let {
+            val retrofit =
+                BaseApplication.getInstance().retrofit.create(CollectionsAPI::class.java).getFollowedCollection(
+                    it,
+                    0,
+                    10
+                ).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(
+                    object : Observer<BaseResponseGeneric<UserCollectionsListModel>> {
+                        override fun onComplete() {
+                        }
+
+                        override fun onNext(response: BaseResponseGeneric<UserCollectionsListModel>) {
+                            try {
+                                shimmer.stopShimmerAnimation()
+                                shimmer.visibility = View.GONE
+                                if (response.code == 200 && response.status == Constants.SUCCESS && response.data?.result != null) {
+                                    //   shimmer1.stopShimmerAnimation()
+                                    // shimmer1.visibility = View.GONE
+                                    //  bottomLoadingView?.visibility = View.GONE
+                                    processFollowedCollectionData(response.data?.result)
+                                } else {
+                                    ToastUtils.showToast(
+                                        this@UserProfileActivity,
+                                        response.data?.msg
+                                    )
+                                }
+                            } catch (e: Exception) {
+                                FirebaseCrashlytics.getInstance().recordException(e)
+                                Log.d("MC4KException", Log.getStackTraceString(e))
+                            }
+                        }
+
+                        override fun onError(e: Throwable) {
+                        }
+
+                        override fun onSubscribe(d: Disposable) {
+                        }
+                    })
+        }
+    }
+
+    private fun processCreatedCollectionData(createdCollection: UserCollectionsListModel?) {
+        if (!createdCollection?.collectionsList.isNullOrEmpty()) {
+            createdCollection?.collectionsList?.let {
+                if (it.size > 6) {
+                    createdCollectionsViewAll.visibility = View.VISIBLE
+                } else {
+                    createdCollectionsViewAll.visibility = View.GONE
+                }
+                userProfileCreatedCollectionAdapter.createdCollectionsListData(it)
+                userProfileCreatedCollectionAdapter.notifyDataSetChanged()
+            }
+
+
+        } else {
+            createdCollectionRecyclerView.visibility = View.GONE
+            noCreatedCollectionsYet.visibility = View.VISIBLE
+            //show Text "no created collections yet"
+
+        }
+
+    }
+
+    private fun processFollowedCollectionData(followedCollection: UserCollectionsListModel?) {
+
+        if (!followedCollection?.collectionsList.isNullOrEmpty()) {
+            followedCollection?.collectionsList?.let {
+                if (it.size > 6) {
+                    followedCollectionsViewAll.visibility = View.VISIBLE
+                } else {
+                    followedCollectionsViewAll.visibility = View.GONE
+                }
+                userProfileFollowedCollectionAdapter.followedCollectionsListData(it)
+                userProfileFollowedCollectionAdapter.notifyDataSetChanged()
+            }
+
+        } else {
+            followedCollectionRecyclerView.visibility = View.GONE
+            noFollowedCollectionsYet.visibility = View.VISIBLE
+            //show Text "no followed collections yet"
+        }
+    }
+
     private fun getFeaturedContent() {
         val retrofit = BaseApplication.getInstance().retrofit
         val featureListAPI = retrofit.create(CollectionsAPI::class.java)
@@ -851,6 +1050,30 @@ class UserProfileActivity : BaseActivity(),
 
     override fun onClick(view: View?) {
         when {
+            view?.id == R.id.addCollectionTextView -> {
+                val addCollectionPopUpDialogFragment = AddCollectionPopUpDialogFragment()
+                val fm = supportFragmentManager
+                addCollectionPopUpDialogFragment.show(fm, "collectionAddPopUp")
+                Utils.pushProfileEvents(
+                    this@UserProfileActivity,
+                    "CTA_Add_Collection_From_Profile",
+                    "UserProfileActivity",
+                    "Add Collection",
+                    "-"
+                )
+            }
+            view?.id == R.id.createdCollectionsViewAll -> {
+                val intent = Intent(this@UserProfileActivity, CollectionsActivity::class.java)
+                intent.putExtra("userId", authorId)
+                intent.putExtra("comingFrom", "created")
+                startActivity(intent)
+            }
+            view?.id == R.id.followedCollectionsViewAll -> {
+                val intent = Intent(this@UserProfileActivity, CollectionsActivity::class.java)
+                intent.putExtra("userId", authorId)
+                intent.putExtra("comingFrom", "follow")
+                startActivity(intent)
+            }
             view?.id == R.id.contentLangContainer -> {
                 Log.e("hdwidhiwhdiw", "kdowkdokdow = " + AppUtils.getUniqueIdentifier(this))
                 if (AppUtils.getUniqueIdentifier(this) == "f505abfc782090be" ||
@@ -861,6 +1084,8 @@ class UserProfileActivity : BaseActivity(),
                 }
             }
             view?.id == R.id.creatorTab -> {
+                recyclerView.visibility = View.VISIBLE
+                userCollectionContainer.visibility = View.GONE
                 creatorTab.isSelected = true
                 featuredTab.isSelected = false
                 bookmarksTab.isSelected = false
@@ -875,15 +1100,32 @@ class UserProfileActivity : BaseActivity(),
                 getUsersCreatedContent()
             }
             view?.id == R.id.featuredTab -> {
+                emptyListTextView.visibility = View.GONE
                 creatorTab.isSelected = false
                 featuredTab.isSelected = true
                 bookmarksTab.isSelected = false
-                recyclerView.adapter = usersFeaturedContentAdapter
-                userFeaturedOnList?.clear()
-                start = 0
-                isLastPageReached = false
-                emptyListTextView.visibility = View.GONE
-                getFeaturedContent()
+                recyclerView.visibility = View.GONE
+                userCollectionContainer.visibility = View.VISIBLE
+                //  recyclerView.adapter = usersFeaturedContentAdapter
+                //  userFeaturedOnList?.clear()
+                //  start = 0
+                //   isLastPageReached = false
+                //   emptyListTextView.visibility = View.GONE
+                shimmer.startShimmerAnimation()
+                shimmer.visibility = View.VISIBLE
+                if (AppUtils.isPrivateProfile(authorId)) {
+                    getUserCreatedCollections()
+                    getUserFollowedCollections()
+                    createdCollectionRecyclerView.visibility = View.VISIBLE
+                    followedCollectionRecyclerView.visibility = View.VISIBLE
+                } else {
+                    headerView.visibility = View.GONE
+                    createdCollectionRecyclerView.visibility = View.GONE
+                    followedCollectionRecyclerView.visibility = View.VISIBLE
+                    getUserFollowedCollections()
+                }
+
+                //  getFeaturedContent()
                 if (AppUtils.isPrivateProfile(authorId)) {
                     Utils.pushProfileEvents(
                         this, "CTA_Private_Featured_Collections", "UserProfileActivity",
@@ -897,6 +1139,8 @@ class UserProfileActivity : BaseActivity(),
                 }
             }
             view?.id == R.id.bookmarksTab -> {
+                recyclerView.visibility = View.VISIBLE
+                userCollectionContainer.visibility = View.GONE
                 creatorTab.isSelected = false
                 featuredTab.isSelected = false
                 bookmarksTab.isSelected = true
@@ -1831,7 +2075,9 @@ class UserProfileActivity : BaseActivity(),
 
     override fun onCollectionAddSuccess() {
         Handler().postDelayed(Runnable {
-            myCollectionsWidget.refresh(authorId, AppUtils.isPrivateProfile(authorId))
+            shimmer.visibility = View.VISIBLE
+            shimmer.startShimmerAnimation()
+            getUserCreatedCollections()
         }, 1000)
     }
 

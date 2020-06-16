@@ -56,7 +56,6 @@
             android:layout_height="match_parent"
             android:animateLayoutChanges="true"
             android:visibility="visible">
-
             <include layout="@layout/profile_shimmer_layout" />
 
           </com.facebook.shimmer.ShimmerFrameLayout>
@@ -416,6 +415,7 @@
           android:id="@+id/myCollectionsWidget"
           android:layout_width="match_parent"
           android:layout_height="wrap_content"
+          android:visibility="gone"
           android:layout_below="@+id/headerCardView"
           android:background="@color/app_light_grey" />
       </RelativeLayout>
@@ -528,7 +528,161 @@
     android:id="@+id/recyclerView"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:visibility="visible"
     app:layout_behavior="@string/appbar_scrolling_view_behavior" />
+
+  <androidx.core.widget.NestedScrollView
+    android:id="@+id/userCollectionContainer"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:clipToPadding="false"
+    android:visibility="gone"
+    app:layout_behavior="@string/appbar_scrolling_view_behavior">
+    <RelativeLayout
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:visibility="visible">
+
+      <RelativeLayout
+        android:id="@+id/headerView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <com.mycity4kids.widget.CustomFontTextView
+          android:id="@+id/createdCollectionTextView"
+          android:layout_width="match_parent"
+          android:layout_height="wrap_content"
+          android:layout_centerVertical="true"
+          android:layout_marginStart="@dimen/space_12"
+          android:text="Created"
+          android:textColor="#515151"
+          android:textSize="@dimen/space_18"
+          android:textStyle="bold"
+          app:layout_behavior="@string/appbar_scrolling_view_behavior" />
+        <com.mycity4kids.widget.CustomFontTextView
+          android:id="@+id/addCollectionTextView"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:layout_alignParentEnd="true"
+          android:layout_centerVertical="true"
+          android:layout_marginEnd="16dp"
+          android:text="Add"
+          android:textColor="@color/app_red"
+          android:textSize="16sp"
+          android:textStyle="bold"
+          app:layout_behavior="@string/appbar_scrolling_view_behavior" />
+        <androidx.appcompat.widget.AppCompatImageView
+          android:layout_width="10dp"
+          android:layout_height="10dp"
+          android:layout_centerVertical="true"
+          android:layout_marginEnd="@dimen/space_2"
+          android:layout_toStartOf="@+id/addCollectionTextView"
+          app:layout_behavior="@string/appbar_scrolling_view_behavior"
+          app:srcCompat="@drawable/ic_plus"
+          app:tint="@color/app_red" />
+
+      </RelativeLayout>
+      <RelativeLayout
+        android:id="@+id/createdCollectionRecyclerContainer"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/headerView">
+        <androidx.recyclerview.widget.RecyclerView
+          android:id="@+id/createdCollectionRecyclerView"
+          android:layout_width="match_parent"
+          android:layout_height="wrap_content"
+          android:layout_marginLeft="16dp"
+          android:layout_marginTop="16dp"
+          android:layout_marginRight="16dp"
+          android:visibility="visible"
+          app:layout_behavior="@string/appbar_scrolling_view_behavior" />
+        <com.mycity4kids.widget.CustomFontTextView
+          android:id="@+id/noCreatedCollectionsYet"
+          android:layout_width="match_parent"
+          android:layout_height="300dp"
+          android:gravity="center"
+          android:text="no created collections yet"
+          android:visibility="gone" />
+      </RelativeLayout>
+
+      <com.mycity4kids.widget.CustomFontTextView
+        android:id="@+id/createdCollectionsViewAll"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/createdCollectionRecyclerContainer"
+        android:padding="@dimen/space_12"
+        android:text="View All"
+        android:textColor="@color/app_red"
+        android:visibility="gone" />
+      <com.mycity4kids.widget.CustomFontTextView
+        android:id="@+id/followedCollectionTextView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/createdCollectionsViewAll"
+        android:layout_marginStart="@dimen/space_12"
+        android:layout_marginTop="@dimen/space_10"
+        android:text="Followed"
+        android:textColor="#515151"
+        android:textSize="@dimen/space_18"
+        android:textStyle="bold"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior" />
+
+      <RelativeLayout
+        android:id="@+id/followedCollectionRecyclerContainer"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/followedCollectionTextView">
+        <androidx.recyclerview.widget.RecyclerView
+          android:id="@+id/followedCollectionRecyclerView"
+          android:layout_width="match_parent"
+          android:layout_height="wrap_content"
+          android:layout_marginLeft="16dp"
+          android:layout_marginTop="16dp"
+          android:layout_marginRight="16dp"
+          android:visibility="visible"
+          app:layout_behavior="@string/appbar_scrolling_view_behavior" />
+        <com.mycity4kids.widget.CustomFontTextView
+          android:id="@+id/noFollowedCollectionsYet"
+          android:layout_width="match_parent"
+          android:layout_height="300dp"
+          android:layout_centerVertical="true"
+          android:gravity="center"
+          android:text="no followed collections yet"
+          android:visibility="gone" />
+      </RelativeLayout>
+      <com.mycity4kids.widget.CustomFontTextView
+        android:id="@+id/followedCollectionsViewAll"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/followedCollectionRecyclerContainer"
+        android:padding="@dimen/space_12"
+        android:text="View All"
+        android:textColor="@color/app_red"
+        android:visibility="gone" />
+      <com.facebook.shimmer.ShimmerFrameLayout
+        android:id="@+id/shimmer"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/white"
+        android:visibility="visible"
+        app:duration="1000">
+
+        <LinearLayout
+          android:layout_width="match_parent"
+          android:layout_height="wrap_content"
+          android:orientation="vertical">
+
+          <include layout="@layout/mainshimmer_layout" />
+
+          <include layout="@layout/mainshimmer_layout" />
+
+          <include layout="@layout/mainshimmer_layout" />
+
+        </LinearLayout>
+
+      </com.facebook.shimmer.ShimmerFrameLayout>
+    </RelativeLayout>
+  </androidx.core.widget.NestedScrollView>
+
 
   <com.mycity4kids.widget.CustomFontTextView
     android:id="@+id/emptyListTextView"
