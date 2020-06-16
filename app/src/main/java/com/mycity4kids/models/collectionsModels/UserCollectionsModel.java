@@ -4,6 +4,7 @@ package com.mycity4kids.models.collectionsModels;
 import com.google.gson.annotations.SerializedName;
 
 public class UserCollectionsModel {
+
     @SerializedName("userCollectionId")
     private String userCollectionId;
     @SerializedName("created_at")
@@ -42,6 +43,7 @@ public class UserCollectionsModel {
     private String isFollowed;
     @SerializedName("user_info")
     private CollectionUserInfo user_info;
+
 
     public ItemInfoModel getItem_info() {
         return item_info;
@@ -197,6 +199,7 @@ public class UserCollectionsModel {
     }
 
     public class CollectionUserInfo {
+
         @SerializedName("id")
         private String id;
         @SerializedName("firstName")
