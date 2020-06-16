@@ -774,8 +774,9 @@ public class ShortStoryFragment extends BaseFragment implements View.OnClickList
                 break;
                 case AppConstants.MEDIUM_WHATSAPP: {
                     if (AppUtils.shareImageWithWhatsApp(getActivity(), uri, getString(R.string.ss_follow_author,
-                            sharedStoryItem.getUserName(),
-                            AppConstants.USER_PROFILE_SHARE_BASE_URL + sharedStoryItem.getUserId()))) {
+                            sharedStoryItem.getUserName(), AppUtils.getUtmParamsAppendedShareUrl(
+                                    AppConstants.USER_PROFILE_SHARE_BASE_URL + sharedStoryItem.getUserId(),
+                                    "WSD100_Whatsapp_Share", "Share_Android")))) {
                         Utils.shareEventTracking(getActivity(), "100WS Detail", "Share_Android",
                                 "WSD100_Whatsapp_Share");
                     }
@@ -789,9 +790,11 @@ public class ShortStoryFragment extends BaseFragment implements View.OnClickList
                 }
                 break;
                 case AppConstants.MEDIUM_GENERIC: {
-                    if (AppUtils.shareGenericImageAndOrLink(getActivity(), uri, getString(R.string.ss_follow_author,
-                            sharedStoryItem.getUserName(),
-                            AppConstants.USER_PROFILE_SHARE_BASE_URL + sharedStoryItem.getUserId()))) {
+                    if (AppUtils.shareGenericImageAndOrLink(getActivity(), uri,
+                            getString(R.string.ss_follow_author, sharedStoryItem.getUserName(),
+                                    AppUtils.getUtmParamsAppendedShareUrl(
+                                            AppConstants.USER_PROFILE_SHARE_BASE_URL + sharedStoryItem.getUserId(),
+                                            "WSD100_Generic_Share", "Share_Android")))) {
                         Utils.shareEventTracking(getActivity(), "100WS Detail", "Share_Android",
                                 "WSD100_Generic_Share");
                     }

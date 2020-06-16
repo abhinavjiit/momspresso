@@ -147,7 +147,7 @@ public class UserPublishedVideosListingAdapter extends BaseAdapter {
                             v.getContext().getString(R.string.check_out_momvlog),
                             articleDataModelsNew.get(position).getTitle(),
                             articleDataModelsNew.get(position).getAuthor().getFirstName() + " " + articleDataModelsNew
-                                    .get(position).getAuthor().getLastName()
+                                    .get(position).getAuthor().getLastName(), "", ""
                     );
                     v.getContext().startActivity(Intent.createChooser(shareIntent, "Momspresso"));
                     Utils.pushShareVlogEvent(

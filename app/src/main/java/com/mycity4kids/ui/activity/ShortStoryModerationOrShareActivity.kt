@@ -213,30 +213,35 @@ class ShortStoryModerationOrShareActivity : BaseActivity(), View.OnClickListener
         when (shareMedium) {
             AppConstants.MEDIUM_FACEBOOK -> {
                 SharingUtils.shareViaFacebook(this, uri)
-                Utils.pushShareStoryEvent(
-                    this, "ShortStoryModerationOrShareActivity",
-                    userId + "", shareUrl, "$userId~$authorName", "Facebook"
+                Utils.shareEventTracking(
+                    this, "Post creation",
+                    "Share_Android", "PCS_Facebook_Share"
                 )
             }
             AppConstants.MEDIUM_WHATSAPP -> {
                 if (AppUtils.shareImageWithWhatsApp(
                         this, uri, getString(
                         R.string.ss_follow_author,
-                        authorName, AppConstants.USER_PROFILE_SHARE_BASE_URL + userId
+                        authorName,
+                        AppUtils.getUtmParamsAppendedShareUrl(
+                            AppConstants.USER_PROFILE_SHARE_BASE_URL + userId,
+                            "PCS_Whatsapp_Share",
+                            "Share_Android"
+                        )
                     )
                     )
                 ) {
-                    Utils.pushShareStoryEvent(
-                        this, "ShortStoryModerationOrShareActivity", userId + "", shareUrl,
-                        "$userId~$authorName", "Whatsapp"
+                    Utils.shareEventTracking(
+                        this, "Post creation",
+                        "Share_Android", "PCS_Whatsapp_Share"
                     )
                 }
             }
             AppConstants.MEDIUM_INSTAGRAM -> {
                 if (AppUtils.shareImageWithInstagram(this, uri)) {
-                    Utils.pushShareStoryEvent(
-                        this, "ShortStoryModerationOrShareActivity", userId + "", shareUrl,
-                        "$userId~$authorName", "Instagram"
+                    Utils.shareEventTracking(
+                        this, "Post creation",
+                        "Share_Android", "PCS_Instagram_Share"
                     )
                 }
             }
@@ -244,13 +249,17 @@ class ShortStoryModerationOrShareActivity : BaseActivity(), View.OnClickListener
                 if (AppUtils.shareGenericImageAndOrLink(
                         this, uri, getString(
                         R.string.ss_follow_author,
-                        authorName, AppConstants.USER_PROFILE_SHARE_BASE_URL + userId
+                        authorName, AppUtils.getUtmParamsAppendedShareUrl(
+                        AppConstants.USER_PROFILE_SHARE_BASE_URL + userId,
+                        "PCS_Generic_Share",
+                        "Share_Android"
+                    )
                     )
                     )
                 ) {
-                    Utils.pushShareStoryEvent(
-                        this, "ShortStoryModerationOrShareActivity", userId + "", shareUrl,
-                        "$userId~$authorName", "Generic"
+                    Utils.shareEventTracking(
+                        this, "Post creation",
+                        "Share_Android", "PCS_Generic_Share"
                     )
                 }
             }

@@ -406,7 +406,7 @@ public class VideoRecyclerViewAdapter extends RecyclerView.Adapter<BaseViewHolde
                             responseData.getAuthor().getBlogTitleSlug(),
                             responseData.getTitleSlug(), view.getContext().getString(R.string.check_out_momvlog),
                             responseData.getTitle(), responseData.getAuthor().getFirstName() + " "
-                                    + responseData.getAuthor().getLastName());
+                                    + responseData.getAuthor().getLastName(), "VD_Generic_Share", "Share_Android");
                     view.getContext().startActivity(Intent.createChooser(shareIntent, "Momspresso"));
                     Utils.shareEventTracking(context, "Video Detail", "Share_Android", "VD_Generic_Share");
                 } catch (Exception e) {
@@ -453,7 +453,8 @@ public class VideoRecyclerViewAdapter extends RecyclerView.Adapter<BaseViewHolde
                             shareData = context.getString(R.string.check_out_momvlog) + "\"" + responseData.getTitle()
                                     + "\" by " + responseData.getAuthor().getFirstName() + " " + responseData
                                     .getAuthor()
-                                    .getLastName() + ".\nWatch Here: " + shareUrl;
+                                    .getLastName() + ".\nWatch Here: " + AppUtils
+                                    .getUtmParamsAppendedShareUrl(shareUrl, "VD_Whatsapp_Share", "Share_Android");
                         }
                         Intent whatsappIntent = new Intent(Intent.ACTION_SEND);
                         whatsappIntent.setType("text/plain");

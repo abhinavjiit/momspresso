@@ -179,7 +179,7 @@
                                 android:drawablePadding="5dp"
                                 android:drawableTint="@color/white_color"
                                 android:gravity="center"
-                                android:text="@string/referral_screen_whatsapp"
+                                android:text="@string/all_whatsapp"
                                 android:textColor="@color/white_color"
                                 android:textSize="20sp"
                                 app:fontName="OpenSans-Regular.ttf" />
@@ -212,7 +212,7 @@
                                 android:drawablePadding="1dp"
                                 android:drawableTint="@color/white_color"
                                 android:gravity="center"
-                                android:text="@string/referral_screen_facebook"
+                                android:text="@string/all_facebook"
                                 android:textColor="@color/white_color"
                                 android:textSize="20sp"
                                 app:fontName="OpenSans-Regular.ttf" />

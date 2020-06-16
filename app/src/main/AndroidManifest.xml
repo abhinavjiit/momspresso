@@ -129,8 +129,11 @@
         <category android:name="android.intent.category.BROWSABLE" />
 
         <data
-          android:host="www.momspresso.com"
+          android:host="*.momspresso.com"
           android:scheme="https" />
+        <data
+          android:host="momspresso.com"
+          android:scheme="http" />
       </intent-filter>
     </activity>
 

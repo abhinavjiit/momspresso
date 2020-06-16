@@ -2335,8 +2335,8 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
                 }
                 case R.id.facebookShareTextView:
                     if (ShareDialog.canShow(ShareLinkContent.class)) {
-                        ShareLinkContent content = new ShareLinkContent.Builder()
-                                .setContentUrl(Uri.parse(shareUrl))
+                        ShareLinkContent content = new ShareLinkContent.Builder().setContentUrl(Uri.parse(
+                                AppUtils.getUtmParamsAppendedShareUrl(shareUrl, "AD_Facebook_Share", "Share_Android")))
                                 .build();
                         if (getActivity() != null) {
                             new ShareDialog(getActivity()).show(content);
@@ -2353,10 +2353,10 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
                         whatsappIntent.setType("text/plain");
                         whatsappIntent.setPackage("com.whatsapp");
                         whatsappIntent.putExtra(Intent.EXTRA_TEXT,
-                                AppUtils.stripHtml("" + detailData.getExcerpt()) + "\n\n"
-                                        + BaseApplication.getAppContext()
-                                        .getString(R.string.ad_share_follow_author, author) + "\n"
-                                        + shareUrl);
+                                AppUtils.stripHtml("" + detailData.getExcerpt()) + "\n\n" + BaseApplication
+                                        .getAppContext().getString(R.string.ad_share_follow_author, author) + "\n"
+                                        + AppUtils
+                                        .getUtmParamsAppendedShareUrl(shareUrl, "AD_Whatsapp_Share", "Share_Android"));
                         try {
                             startActivity(whatsappIntent);
                         } catch (android.content.ActivityNotFoundException ex) {
@@ -2709,7 +2709,8 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
             } else if (menuItem.getItemId() == R.id.share) {
                 Intent shareIntent = new Intent(Intent.ACTION_SEND);
                 shareIntent.setType("text/plain");
-                shareIntent.putExtra(Intent.EXTRA_TEXT, shareUrl);
+                shareIntent.putExtra(Intent.EXTRA_TEXT,
+                        AppUtils.getUtmParamsAppendedShareUrl(shareUrl, "AD_Generic_Share", "Share_Android"));
                 startActivity(Intent.createChooser(shareIntent, "Momspresso"));
                 Utils.shareEventTracking(getActivity(), "Article Detail", "Share_Android", "AD_Generic_Share");
                 return true;

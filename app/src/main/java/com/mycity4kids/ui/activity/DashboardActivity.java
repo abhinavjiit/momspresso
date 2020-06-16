@@ -98,6 +98,7 @@ import com.mycity4kids.ui.fragment.FragmentMC4KHomeNew;
 import com.mycity4kids.ui.fragment.GroupsViewFragment;
 import com.mycity4kids.ui.fragment.InviteFriendsDialogFragment;
 import com.mycity4kids.ui.fragment.RateAppDialogFragment;
+import com.mycity4kids.ui.fragment.ShareAppDialogFragment;
 import com.mycity4kids.ui.fragment.UploadVideoInfoFragment;
 import com.mycity4kids.ui.rewards.activity.RewardsContainerActivity;
 import com.mycity4kids.ui.rewards.activity.RewardsShareReferralCodeActivity;
@@ -2040,10 +2041,7 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
             }
             break;
             case R.id.shareAppTextView: {
-                AppUtils.shareGenericLinkWithSuccessStatus(this,
-                        getString(R.string.share_app_msg, AppConstants.BRANCH_DEEPLINK));
-                Utils.pushGenericEvent(this, "Spreadtheword_GenericShare",
-                        SharedPrefUtils.getUserDetailModel(this).getDynamoId(), "Sidebar");
+                launchShareAppDialog();
             }
             break;
             case R.id.referral:
@@ -2062,6 +2060,15 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
             default:
                 break;
         }
+    }
+
+    private void launchShareAppDialog() {
+        ShareAppDialogFragment shareAppDialogFragment = new ShareAppDialogFragment();
+        Bundle args = new Bundle();
+        shareAppDialogFragment.setArguments(args);
+        shareAppDialogFragment.setCancelable(true);
+        FragmentManager fm = getSupportFragmentManager();
+        shareAppDialogFragment.show(fm, "Share App");
     }
 
     private void fireEventForVideoCreationIntent() {
