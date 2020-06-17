@@ -15,6 +15,7 @@ public class AppConstants {
     public static final String BRANCH_VIDEO_CATEGORY_CHALLENGE_SELECTION_SCREEN =
             "video_category_challenge_selection_screen";
     public static final String BRANCH_MOMVLOG_LISTING_SCREEN = "mom_vlog_listing_screen";
+    public static final String BRANCH_MYMONEY_REGISTRATION = "mymoney_registration";
 
     public static final String BASE_URL = LIVE_URL;
 
