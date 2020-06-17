@@ -585,11 +585,16 @@ public class CategoryVideosTabFragment extends BaseFragment implements View.OnCl
 
     private void processChallengesData(ArrayList<Topics> catWiseChallengeList) {
         if (null != articleDataModelsNew && !articleDataModelsNew.isEmpty()) {
-            if (articleDataModelsNew.size() >= 5) {
+            if (articleDataModelsNew.size() >= 5 && null != catWiseChallengeList && !catWiseChallengeList.isEmpty()) {
                 VlogsListingAndDetailResult item = new VlogsListingAndDetailResult(2);
-                item.setChallengeInfo(catWiseChallengeList.get(0));
+                for (int i = 0; i <= catWiseChallengeList.size(); i++) {
+                    if (catWiseChallengeList.get(i).getPublicVisibility().equals("1")) {
+                        item.setChallengeInfo(catWiseChallengeList.get(i));
+                        break;
+                    }
+                }
                 articleDataModelsNew.add(item);
-                Collections.swap(articleDataModelsNew, 4, articleDataModelsNew.size()-1);
+                Collections.swap(articleDataModelsNew, 4, articleDataModelsNew.size() - 1);
             }
             articleDataModelsNew.add(new VlogsListingAndDetailResult(1));
             articlesListingAdapter.setNewListData(articleDataModelsNew);
