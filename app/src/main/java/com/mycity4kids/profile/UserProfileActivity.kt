@@ -122,6 +122,7 @@ class UserProfileActivity : BaseActivity(),
     ResizableTextView.SeeMore,
     UserProfileCreatedCollectionsAdapter.CollectionRecyclerViewClickListener,
     UserProfileFollowedCollectionAdapter.CollectionRecyclerViewClickListener {
+
     override fun onCollectionsClick(position: Int, id: String?) {
         id?.let {
             val intent =
@@ -222,6 +223,7 @@ class UserProfileActivity : BaseActivity(),
     private lateinit var noCreatedCollectionsYet: TextView
     private lateinit var noFollowedCollectionsYet: TextView
     private lateinit var addCollectionTextView: TextView
+    private lateinit var plusAddButton: ImageView
 
 
     private val userContentAdapter: UserContentAdapter by lazy {
@@ -290,6 +292,7 @@ class UserProfileActivity : BaseActivity(),
         noFollowedCollectionsYet = findViewById(R.id.noFollowedCollectionsYet)
         addCollectionTextView = findViewById(R.id.addCollectionTextView)
         shimmer = findViewById(R.id.shimmer)
+        plusAddButton = findViewById(R.id.plusAddButton)
         setSupportActionBar(toolbar)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
         supportActionBar?.setDisplayShowHomeEnabled(true)
@@ -928,9 +931,7 @@ class UserProfileActivity : BaseActivity(),
             createdCollectionRecyclerView.visibility = View.GONE
             noCreatedCollectionsYet.visibility = View.VISIBLE
             //show Text "no created collections yet"
-
         }
-
     }
 
     private fun processFollowedCollectionData(followedCollection: UserCollectionsListModel?) {
@@ -1062,6 +1063,18 @@ class UserProfileActivity : BaseActivity(),
                     "-"
                 )
             }
+            view?.id == R.id.plusAddButton -> {
+                val addCollectionPopUpDialogFragment = AddCollectionPopUpDialogFragment()
+                val fm = supportFragmentManager
+                addCollectionPopUpDialogFragment.show(fm, "collectionAddPopUp")
+                Utils.pushProfileEvents(
+                    this@UserProfileActivity,
+                    "CTA_Add_Collection_From_Profile",
+                    "UserProfileActivity",
+                    "Add Collection",
+                    "-"
+                )
+            }
             view?.id == R.id.createdCollectionsViewAll -> {
                 val intent = Intent(this@UserProfileActivity, CollectionsActivity::class.java)
                 intent.putExtra("userId", authorId)
@@ -1119,10 +1132,11 @@ class UserProfileActivity : BaseActivity(),
                     createdCollectionRecyclerView.visibility = View.VISIBLE
                     followedCollectionRecyclerView.visibility = View.VISIBLE
                 } else {
-                    headerView.visibility = View.GONE
-                    createdCollectionRecyclerView.visibility = View.GONE
-                    followedCollectionRecyclerView.visibility = View.VISIBLE
-                    getUserFollowedCollections()
+                    plusAddButton.visibility = View.GONE
+                    addCollectionTextView.visibility = View.GONE
+                    createdCollectionRecyclerView.visibility = View.VISIBLE
+                    followedCollectionRecyclerView.visibility = View.GONE
+                    getUserCreatedCollections()
                 }
 
                 //  getFeaturedContent()
