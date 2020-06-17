@@ -443,8 +443,8 @@ class CampaignDetailFragment : BaseFragment() {
                         shimmer1.stopShimmerAnimation()
                         toolbar.visibility = View.VISIBLE
                         scrollView2.visibility = View.VISIBLE
-                        labelTextLayout.visibility = View.VISIBLE
-                        labelText.visibility = View.VISIBLE
+//                        labelTextLayout.visibility = View.VISIBLE
+//                        labelText.visibility = View.VISIBLE
                         bottomLayout.visibility = View.VISIBLE
                     }
                 } catch (e: Exception) {
