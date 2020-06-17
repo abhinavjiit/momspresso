@@ -70,16 +70,15 @@ import io.reactivex.Observer
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable
 import io.reactivex.schedulers.Schedulers
-import java.text.SimpleDateFormat
-import java.util.ArrayList
-import java.util.Calendar
-import java.util.regex.Pattern
 import kotlinx.coroutines.CoroutineExceptionHandler
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import retrofit2.Call
 import retrofit2.Callback
+import java.text.SimpleDateFormat
+import java.util.Calendar
+import java.util.regex.Pattern
 
 const val REWARDS_FILL_FORM_REQUEST = 1000
 const val SURVEY_CAMPAIGN_REQUEST = 10000
@@ -90,6 +89,7 @@ class CampaignDetailFragment : BaseFragment() {
     private lateinit var linearLayoutManager: LinearLayoutManager
     private lateinit var adapter: CampaignDetailAdapter
     private var apiGetResponse: CampaignDetailResult? = null
+    private var apiFeedbackResponse: CampaignFeedBack? = null
     private var defaultapigetResponse: CampaignDetailResult? = null
     private var apiGetParticipationResponse: BaseResponseModel? = null
     private lateinit var containerView: View
@@ -111,6 +111,8 @@ class CampaignDetailFragment : BaseFragment() {
     private lateinit var submitBtn: TextView
     private lateinit var backIcon: ImageView
     private lateinit var labelText: TextView
+    private lateinit var labelTextLayout: LinearLayout
+    private lateinit var viewDetailsText: TextView
     private lateinit var appliedTag: TextView
     private lateinit var unapplyCampaign: ImageView
     private lateinit var descText: TextView
@@ -391,6 +393,8 @@ class CampaignDetailFragment : BaseFragment() {
         shareText = containerView.findViewById(R.id.share)
         submitBtn = containerView.findViewById(R.id.submit_btn)
         labelText = containerView.findViewById(R.id.label_text)
+        labelTextLayout = containerView.findViewById(R.id.label_text_layout)
+        viewDetailsText = containerView.findViewById(R.id.view_details)
         descText = containerView.findViewById(R.id.desc_text)
         bottomLayout = containerView.findViewById(R.id.bottom_button)
         appliedTag = containerView.findViewById(R.id.applied_tag)
@@ -439,6 +443,7 @@ class CampaignDetailFragment : BaseFragment() {
                         shimmer1.stopShimmerAnimation()
                         toolbar.visibility = View.VISIBLE
                         scrollView2.visibility = View.VISIBLE
+                        labelTextLayout.visibility = View.VISIBLE
                         labelText.visibility = View.VISIBLE
                         bottomLayout.visibility = View.VISIBLE
                     }
@@ -515,6 +520,9 @@ class CampaignDetailFragment : BaseFragment() {
             showRewardText.visibility = View.GONE
         }
 
+        viewDetailsText.setOnClickListener {
+            getFeedback()
+        }
         unapplyCampaign.setOnClickListener {
             try {
                 val popupwindow_obj = popupDisplay()
@@ -920,6 +928,7 @@ class CampaignDetailFragment : BaseFragment() {
     }
 
     fun setLabels() {
+        labelTextLayout.visibility = View.VISIBLE
         labelText.visibility = View.VISIBLE
         appliedTag.visibility = View.GONE
         unapplyCampaign.visibility = View.GONE
@@ -967,6 +976,7 @@ class CampaignDetailFragment : BaseFragment() {
                     ).show()
                 }
             }
+            labelTextLayout.visibility = View.GONE
             labelText.visibility = View.GONE
             unapplyCampaign.visibility = View.VISIBLE
         } else if (status == 21) {
@@ -1001,6 +1011,7 @@ class CampaignDetailFragment : BaseFragment() {
                     Toast.LENGTH_SHORT
                 ).show()
             }
+            labelTextLayout.visibility = View.GONE
             labelText.visibility = View.GONE
             unapplyCampaign.visibility = View.VISIBLE
         } else if (status == 3) {
@@ -1082,6 +1093,8 @@ class CampaignDetailFragment : BaseFragment() {
             }
         } else if (status == 6) {
             hideShowReferral(status)
+            viewDetailsText.visibility = View.VISIBLE
+//            getFeedback()
             applicationStatus.setBackgroundResource(R.drawable.campaign_rejected)
             context?.let {
                 applicationStatus.text = it.resources.getString(R.string.campaign_details_rejected)
@@ -1128,6 +1141,8 @@ class CampaignDetailFragment : BaseFragment() {
             }
         } else if (status == 10) {
             hideShowReferral(status)
+            viewDetailsText.visibility = View.VISIBLE
+//            getFeedback()
             applicationStatus.setBackgroundResource(R.drawable.campaign_proof_rejected_bg)
             context?.let {
                 applicationStatus.text = it.resources.getString(R.string.campaign_list_proof_reject)
@@ -1152,6 +1167,58 @@ class CampaignDetailFragment : BaseFragment() {
         } else {
             txtTrackerStatus.visibility = View.VISIBLE
         }
+    }
+
+    private fun getFeedback() {
+        BaseApplication.getInstance().retrofit.create(CampaignAPI::class.java).getFeedback(
+            this.id!!
+        ).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(object :
+            Observer<BaseResponseGeneric<CampaignFeedBack>> {
+
+            override fun onComplete() {
+            }
+
+            override fun onSubscribe(d: Disposable) {
+            }
+
+            override fun onNext(response: BaseResponseGeneric<CampaignFeedBack>) {
+                try {
+                    if (response.code == 200 && Constants.SUCCESS == response.status && response.data != null) {
+                        apiFeedbackResponse = response.data!!.result
+                        var feedback = apiFeedbackResponse!!.feedback.get(0)
+                        feedback = "<font color=#D03F56>Feedback- </font>" + feedback
+                        showFeedbackDialog(feedback)
+                    }
+                } catch (e: Exception) {
+                    FirebaseCrashlytics.getInstance().recordException(e)
+                    Log.d("MC4kException", Log.getStackTraceString(e))
+                }
+            }
+
+            override fun onError(e: Throwable) {
+                activity?.let {
+                    ToastUtils.showToast(it, "something went wrong")
+                }
+                FirebaseCrashlytics.getInstance().recordException(e)
+                Log.e("exception in error", e.message.toString())
+            }
+        })
+    }
+
+    private fun showFeedbackDialog(feedback: String) {
+        val dialog = activity?.let { Dialog(it) }
+        dialog?.window!!.requestFeature(Window.FEATURE_NO_TITLE)
+        dialog.setContentView(R.layout.campaign_rejection_feedback)
+        dialog.setCancelable(false)
+        val rejectionText = dialog.findViewById<TextView>(R.id.rejection_text)
+        rejectionText.setText(Html.fromHtml(feedback))
+        val okBtn = dialog.findViewById<TextView>(R.id.cross)
+        okBtn.setOnClickListener {
+            dialog.cancel()
+        }
+        dialog.window!!.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+        dialog.show()
+
     }
 
     fun hideShowReferral(status: Int) {

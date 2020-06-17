@@ -1060,7 +1060,7 @@ Thank you! We will be reviewing your story. You can expect to hear from us withi
   <string name="label_campaign_not_started">Campaign starts on </string>
   <string name="label_campaign_reject">Please explore other campaigns to participate and earn.</string>
   <string name="label_campaign_proof_moderation">We will check your submitted proofs within 7 days. To add more, you can click below.</string>
-  <string name="label_campaign_proof_reject">Your proofs were rejected. Please check email for details.To resubmit after corrections, click below.</string>
+  <string name="label_campaign_proof_reject">Your Proofs were rejected. View rejection details and click below to re-submit the proofs.</string>
 
   <string name="toast_not_elegible">Sorry, you are not eligible for this campaign.</string>
   <string name="checking_elegiblity">We are checking your eligiblity</string>
@@ -1083,7 +1083,7 @@ Thank you! We will be reviewing your story. You can expect to hear from us withi
   <string name="detail_bottom_share">शेयर करें</string>
   <string name="payment_in_progress">प्रक्रिया में</string>
   <string name="detail_bottom_share_momspresso_reward">Share MyMoney</string>
-  <string name="detail_bottom_view_other">VIEW OTHER CAMPAIGNS</string>
+  <string name="detail_bottom_view_other">Your application was rejected. Please explore other campaigns to participate and earn.</string>
   <string name="payment_done">PAYMENT DONE</string>
   <string name="proof_sublitted">"PROOFS SUBMITTED"</string>
   <string name="detail_bottom_submit_proof">प्रूफ सबमित करें</string>
@@ -1378,6 +1378,8 @@ Thank you! We will be reviewing your story. You can expect to hear from us withi
   <string name="invite_friends_whatsapp">Invite via whatsapp</string>
   <string name="share_app_msg">नमस्कार , Momspresso एप्प पर मेरी पोस्ट्स व वीडियोज़ देखने के लिए एप्प अभी डाउनलोड करें %1s</string>
   <string name="invite_phone_contact">Invite contacts to follow you</string>
+  <string name="proof_rejection">Proof Rejection Details</string>
+  <string name="view_details">View details</string>
   <string name="share_the_app_via">Share the App via</string>
   <string name="all_phonebook">Phonebook</string>
   <string name="all_fb_msngr">Facebook Messenger</string>

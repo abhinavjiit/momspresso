@@ -56,6 +56,7 @@ class InviteFriendsDialogFragment : DialogFragment(), View.OnClickListener {
         facebookShareWidget.setOnClickListener(this)
         contactShareWidget.setOnClickListener(this)
         shareLinkWidget.setOnClickListener(this)
+        whatsappShareLinkWidget.setOnClickListener(this)
         cancelTextView.setOnClickListener(this)
     }
 
@@ -87,6 +88,20 @@ class InviteFriendsDialogFragment : DialogFragment(), View.OnClickListener {
                     }
                 }
                 view?.id == R.id.shareLinkWidget -> {
+                    if (activity is UserProfileActivity) {
+                        (activity as UserProfileActivity).shareGenericProfile()
+                        dismiss()
+                    } else {
+                        shareGenericProfileUrl()
+                        dismiss()
+                    }
+                    Utils.pushGenericEvent(
+                        context, "CTA_Share_Link",
+                        SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).dynamoId,
+                        "InviteFriendsDialogFragment"
+                    )
+                }
+                view?.id == R.id.whatsappShareLinkWidget -> {
                     if (activity is UserProfileActivity) {
                         (activity as UserProfileActivity).shareProfile()
                         dismiss()
@@ -122,6 +137,21 @@ class InviteFriendsDialogFragment : DialogFragment(), View.OnClickListener {
                 ).dynamoId
             )
             AppUtils.shareLinkWithSuccessStatusWhatsapp(it, shareText)
+        }
+    }
+
+    private fun shareGenericProfileUrl() {
+        activity?.let {
+            val shareText = getString(
+                R.string.profile_follow_author,
+                SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).first_name + " " + SharedPrefUtils.getUserDetailModel(
+                    BaseApplication.getAppContext()
+                ).last_name,
+                AppConstants.USER_PROFILE_SHARE_BASE_URL + SharedPrefUtils.getUserDetailModel(
+                    BaseApplication.getAppContext()
+                ).dynamoId
+            )
+            AppUtils.shareGenericLinkWithSuccessStatus(it, shareText)
         }
     }
 }
