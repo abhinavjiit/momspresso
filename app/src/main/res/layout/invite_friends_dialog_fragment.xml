@@ -75,6 +75,21 @@
     app:shareBgColor="@color/all_invite_link"
     app:shareImage="@drawable/ic_ss_generic"
     app:shareImageTint="@color/white_color"
+    app:shareText="@string/invite_friends_link"
+    app:textSize="16sp" />
+
+  <com.mycity4kids.widget.ShareButtonWidget
+    android:id="@+id/whatsappShareLinkWidget"
+    android:layout_width="240dp"
+    android:layout_height="wrap_content"
+    android:layout_below="@+id/shareLinkWidget"
+    android:layout_centerHorizontal="true"
+    android:layout_marginTop="20dp"
+    app:gravity="center"
+    app:radius="20dp"
+    app:shareBgColor="@color/all_whatsapp_share"
+    app:shareImage="@drawable/ic_whatsapp"
+    app:shareImageTint="@color/white_color"
     app:shareText="@string/invite_friends_whatsapp"
     app:textSize="16sp" />
 

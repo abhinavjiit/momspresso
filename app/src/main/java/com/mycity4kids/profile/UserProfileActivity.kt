@@ -1242,10 +1242,18 @@ class UserProfileActivity : BaseActivity(),
         if (createSharableImageWhileCheckingPermissions()) {
             return
         }
-        shareGenericImage()
+        shareGenericImage(false)
     }
 
-    private fun shareGenericImage() {
+    fun shareGenericProfile() {
+        shareCardType = "profile"
+        if (createSharableImageWhileCheckingPermissions()) {
+            return
+        }
+        shareGenericImage(true)
+    }
+
+    private fun shareGenericImage(genericShare: Boolean) {
         try {
             val uri =
                 Uri.parse(
@@ -1261,8 +1269,18 @@ class UserProfileActivity : BaseActivity(),
                     "Share_Android"
                 )
             )
-            AppUtils.shareGenericImageAndOrLinkViaWhatsapp(this, uri, shareText)
-            if (!AppUtils.isPrivateProfile(authorId)) {
+            if (genericShare)
+                AppUtils.shareGenericImageAndOrLink(this, uri, shareText)
+            else
+                AppUtils.shareGenericImageAndOrLinkViaWhatsapp(this, uri, shareText)
+            if (AppUtils.isPrivateProfile(authorId)) {
+                Utils.shareEventTracking(
+                    this,
+                    "Self Profile",
+                    "Share_Android",
+                    "SPC_Generic_Share"
+                )
+            } else {
                 Utils.shareEventTracking(
                     this,
                     "Public Profile",
@@ -2053,7 +2071,7 @@ class UserProfileActivity : BaseActivity(),
                 try {
                     if (shareCardType == "profile") {
                         AppUtils.getBitmapFromView(profileShareCardWidget, sharableProfileImageName)
-                        shareGenericImage()
+                        shareGenericImage(true)
                     } else {
                         createBitmapForSharingStory()
                     }

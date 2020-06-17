@@ -19,6 +19,7 @@ import com.mycity4kids.ui.campaign.BankNameModal
 import com.mycity4kids.ui.campaign.BasicResponse
 import com.mycity4kids.ui.campaign.DefaultData
 import com.mycity4kids.ui.campaign.PaymentModeListModal
+import com.mycity4kids.ui.campaign.fragment.CampaignFeedBack
 import com.mycity4kids.ui.campaign.fragment.ProofInstructionResult
 import com.mycity4kids.ui.mymoneytracker.model.TrackerDataModel
 import io.reactivex.Observable
@@ -140,4 +141,7 @@ interface CampaignAPI {
 
     @GET
     fun getAdSlotData(@Url url: String): Call<ResponseBody>
+
+    @GET("rewards/v1/campaigns/feedback/{campaignId}")
+    fun getFeedback(@Path("campaignId") campaignId: Int): Observable<BaseResponseGeneric<CampaignFeedBack>>
 }
