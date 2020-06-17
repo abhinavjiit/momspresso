@@ -1045,7 +1045,7 @@ Thank you! We will be reviewing your story. You can expect to hear from us withi
   <string name="label_campaign_completed">Congratulations! Your submission is approved. Your payment will be processed within 28 working days.</string>
   <string name="proofs_under_review">PROOFS UNDER REVIEW</string>
   <string name="label_campaign_not_started">Campaign starts on </string>
-  <string name="label_campaign_reject">Please explore other campaigns to participate and earn.</string>
+  <string name="label_campaign_reject">Your application was rejected. Please explore other campaigns to participate and earn.</string>
   <string name="label_campaign_proof_moderation">We will check your submitted proofs within 7 days. To add more, you can click below.</string>
   <string name="label_campaign_proof_reject">Your Proofs were rejected. View rejection details and click below to re-submit the proofs.</string>
   <string name="toast_not_elegible">Sorry, you are not eligible for this campaign.</string>
@@ -1070,7 +1070,7 @@ Thank you! We will be reviewing your story. You can expect to hear from us withi
   <string name="detail_bottom_share">SHARE</string>
 
   <string name="detail_bottom_share_momspresso_reward">Share MyMoney</string>
-  <string name="detail_bottom_view_other">Your application was rejected. Please explore other campaigns to participate and earn.</string>
+  <string name="detail_bottom_view_other">VIEW OTHER CAMPAIGNS</string>
   <string name="detail_bottom_submit_proof">SUBMIT PROOF</string>
   <string name="dialog_based_on_profile">Based on your Profile</string>
   <string name="dialog_you_can_get_reward_of">You can get reward of</string>
@@ -1466,7 +1466,7 @@ Thank you! We will be reviewing your story. You can expect to hear from us withi
   <string name="no_facebook_friends">None of your friends are logged into momspresso using facebook</string>
   <string name="share_app">સહારે અપ્પ</string>
   <string name="choose_proof">Choose Proof</string>
-  <string name="invite_friends_whatsapp">Invite via whatsapp</string>
+  <string name="invite_friends_whatsapp">વૉટ્સ એપ થી આમંત્રણ આપો</string>
   <string name="share_app_msg">કેમ છો! આજે જ ચકાસો મોમ્સ્પ્રેસો એપ જ્યાં હું મારી જાત ને વાર્તાઓ અને વિડીયો થકી વ્યક્ત કરવા સક્ષમ છું. મોમ્સ્પ્રેસો એપ અત્યારે જ ડાઉનલોડ કરો. %1s</string>
   <string name="invite_phone_contact">Invite contacts to follow you</string>
   <string name="proof_rejection">Proof Rejection Details</string>

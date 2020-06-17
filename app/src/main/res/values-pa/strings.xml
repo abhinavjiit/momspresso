@@ -1105,7 +1105,7 @@ Thank you! We will be reviewing your story. You can expect to hear from us withi
 
 
   <string name="label_campaign_not_started">Campaign starts on </string>
-  <string name="label_campaign_reject">Please explore other campaigns to participate and earn.</string>
+  <string name="label_campaign_reject">Your application was rejected. Please explore other campaigns to participate and earn.</string>
   <string name="label_campaign_proof_moderation">We will check your submitted proofs within 7 days. To add more, you can click below.</string>
   <string name="label_campaign_proof_reject">Your Proofs were rejected. View rejection details and click below to re-submit the proofs.</string>
 
@@ -1130,7 +1130,7 @@ Thank you! We will be reviewing your story. You can expect to hear from us withi
   <string name="detail_bottom_share">SHARE</string>
   <string name="payment_in_progress">PAYMENT IN PROCESS</string>
   <string name="detail_bottom_share_momspresso_reward">Share MyMoney</string>
-  <string name="detail_bottom_view_other">Your application was rejected. Please explore other campaigns to participate and earn.</string>
+  <string name="detail_bottom_view_other">VIEW OTHER CAMPAIGNS</string>
   <string name="payment_done">PAYMENT DONE</string>
   <string name="proof_sublitted">"PROOFS SUBMITTED"</string>
   <string name="detail_bottom_submit_proof">SUBMIT PROOF</string>
@@ -1415,7 +1415,7 @@ Thank you! We will be reviewing your story. You can expect to hear from us withi
   <string name="no_facebook_friends">None of your friends are logged into momspresso using facebook</string>
   <string name="share_app">ਸਹਾਰੇ ਅੱਪ</string>
   <string name="choose_proof">Choose Proof</string>
-  <string name="invite_friends_whatsapp">Invite via whatsapp</string>
+  <string name="invite_friends_whatsapp">ਵਹੱਟਸ ਐਪ ਰਾਹੀਂ ਸੱਦਾ ਦਿਓ</string>
   <string name="share_app_msg">ਨਮਸਕਾਰ ! ਮੌਮਸਪ੍ਰੈਸੋ ਐਪ ਦੇਖੋ, ਜਿਥੇ ਮੈਂ ਕਹਾਣੀਆਂ ਅਤੇ ਵਿਡੀਓਜ਼ ਦੁਆਰਾ ਆਪਣੇ ਮਨ ਦੇ ਭਾਵ ਪ੍ਰਗਟ ਕਰਦੀ ਹਾਂ. ਹੁਣੇ ਡਾਊਨਲੋਡ ਕਰੋ %1s</string>
   <string name="invite_phone_contact">Invite contacts to follow you</string>
   <string name="proof_rejection">Proof Rejection Details</string>
