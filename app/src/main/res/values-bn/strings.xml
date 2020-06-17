@@ -992,8 +992,8 @@ Thank you! We will be reviewing your story. You can expect to hear from us withi
   <string name="drawer_referra_mymoney">MyMoney উল্লেখ করুন</string>
   <string name="referral_screen_text">Invite a friend to join MyMoney by sharing your referral code. Both of you will earn Rs. 25 once she has successfully completed a MyMoney campaign.</string>
   <string name="share_referral_screen">Share your referral code and start earning</string>
-  <string name="all_whatsapp">WhatsApp</string>
-  <string name="all_facebook">Facebook</string>
+  <string name="referral_screen_whatsapp">WhatsApp</string>
+  <string name="referral_screen_facebook">Facebook</string>
   <string name="rewards_tab_fragment_personalInfo_text">PERSONAL INFO</string>
   <string name="rewards_tab_fragment_socialLink_text">SOCIAL LINKS</string>
   <string name="rewards_tab_fragment_paymentMode">PAYMENT MODE</string>

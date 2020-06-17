@@ -1242,6 +1242,11 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
                         .equals(AppConstants.BRANCH_MOMVLOG_LISTING_SCREEN)) {
                     Intent intent = new Intent(this, CategoryVideosListingActivity.class);
                     startActivity(intent);
+                } else if (!StringUtils.isNullOrEmpty(branchModel.getType()) && branchModel.getType()
+                        .equals(AppConstants.BRANCH_MYMONEY_REGISTRATION)) {
+                    Intent intent1 = new Intent(this, RewardsContainerActivity.class);
+                    intent1.putExtra("pageNumber", 1);
+                    startActivity(intent1);
                 }
             }
         } else {

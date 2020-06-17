@@ -1106,8 +1106,8 @@ Thank you! We will be reviewing your story. You can expect to hear from us withi
   <string name="drawer_referra_mymoney">માય મની ની  ભલામણ કરો</string>
   <string name="referral_screen_text">તમારા મિત્ર ને માય મની પર આમંત્રિત કરો, તમારો રેફરલ કોડ આપી. તેના માય મની પર એક કેમ્પેન પતાવ્યે તમને બંને ને ૨૫/- રુપયા ની કમાણી થશે.</string>
   <string name="share_referral_screen">તમારો રેફરલ કોડ શેયર કરી કમાણી ની શરૂઆત કરો</string>
-  <string name="all_whatsapp">WhatsApp</string>
-  <string name="all_facebook">Facebook</string>
+  <string name="referral_screen_whatsapp">WhatsApp</string>
+  <string name="referral_screen_facebook">Facebook</string>
   <string name="rewards_tab_fragment_personalInfo_text">વ્યક્તિગત જાણકારી</string>
   <string name="rewards_tab_fragment_socialLink_text">Sસોશિયલ  લિંક</string>
   <string name="rewards_tab_fragment_paymentMode">પેમેન્ટની રીત</string>
