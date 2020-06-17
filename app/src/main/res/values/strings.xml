@@ -1056,7 +1056,7 @@ Thank you! We will be reviewing your story. You can expect to hear from us withi
   <string name="label_campaign_apply"><![CDATA[By clicking on Apply Now, you agree to the <a href="https://www.momspresso.com/home/terms">Terms &amp; Conditions</a>.]]></string>
   <string name="label_campaign_completed">Congratulations! Your submission is approved. Your payment will be processed within 28 working days.</string>
   <string name="label_campaign_not_started">Campaign starts on </string>
-  <string name="label_campaign_reject">Please explore other campaigns to participate and earn.</string>
+  <string name="label_campaign_reject">Your application was rejected. Please explore other campaigns to participate and earn.</string>
   <string name="label_campaign_proof_moderation">We will check your submitted proofs within 7 days. To add more, you can click below.</string>
   <string name="label_campaign_proof_reject">Your Proofs were rejected. View rejection details and click below to re-submit the proofs.</string>
   <string name="toast_not_elegible">Sorry, you are not eligible for this campaign.</string>
@@ -1083,7 +1083,7 @@ Thank you! We will be reviewing your story. You can expect to hear from us withi
   <string name="detail_bottom_share">SHARE</string>
   <string name="payment_in_progress">PAYMENT IN PROCESS</string>
   <string name="detail_bottom_share_momspresso_reward">Share MyMoney</string>
-  <string name="detail_bottom_view_other">Your application was rejected. Please explore other campaigns to participate and earn.</string>
+  <string name="detail_bottom_view_other">VIEW OTHER CAMPAIGNS</string>
   <string name="payment_done">PAYMENT DONE</string>
   <string name="proof_sublitted">"PROOFS SUBMITTED"</string>
   <string name="detail_bottom_submit_proof">SUBMIT PROOF</string>
