@@ -999,7 +999,7 @@ class CampaignDetailFragment : BaseFragment() {
             }
             appliedTag.visibility = View.VISIBLE
             unapplyCampaign.visibility = View.VISIBLE
-        } else if (status == 22 || status == 16 || status == 17) {
+        } else if (status == 22 || status == 16) {
             hideShowReferral(status)
             applicationStatus.setBackgroundResource(R.drawable.campaign_subscription_open)
             context?.let {
@@ -1139,7 +1139,7 @@ class CampaignDetailFragment : BaseFragment() {
                 labelText.text = it.resources.getString(R.string.label_campaign_proof_moderation)
                 submitBtn.text = it.resources.getString(R.string.detail_bottom_submit_proof)
             }
-        } else if (status == 10) {
+        } else if (status == 10 || status == 17) {
             hideShowReferral(status)
             viewDetailsText.visibility = View.VISIBLE
 //            getFeedback()

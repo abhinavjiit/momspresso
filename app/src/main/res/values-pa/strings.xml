@@ -1107,7 +1107,7 @@ Thank you! We will be reviewing your story. You can expect to hear from us withi
   <string name="label_campaign_not_started">Campaign starts on </string>
   <string name="label_campaign_reject">Your application was rejected. Please explore other campaigns to participate and earn.</string>
   <string name="label_campaign_proof_moderation">We will check your submitted proofs within 7 days. To add more, you can click below.</string>
-  <string name="label_campaign_proof_reject">Your Proofs were rejected. View rejection details and click below to re-submit the proofs.</string>
+  <string name="label_campaign_proof_reject">Your proofs were rejected. To resubmit after corrections, click below.</string>
 
   <string name="toast_not_elegible">Sorry, you are not eligible for this campaign.</string>
   <string name="checking_elegiblity">We are checking your eligiblity</string>

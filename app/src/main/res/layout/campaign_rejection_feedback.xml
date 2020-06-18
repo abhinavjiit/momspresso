@@ -13,17 +13,17 @@
     android:layout_width="@dimen/space_35"
     android:layout_height="@dimen/space_35"
     android:layout_alignParentRight="true"
-    android:padding="@dimen/space_10"
     android:background="@drawable/ic_cross"
+    android:padding="@dimen/space_10"
     android:visibility="visible" />
 
   <com.mycity4kids.widget.CustomFontTextView
     android:id="@+id/header"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:layout_below="@id/cross"
     android:layout_marginBottom="@dimen/space_20"
     android:gravity="center"
-    android:layout_below="@id/cross"
     android:paddingLeft="@dimen/space_50"
     android:paddingRight="@dimen/space_50"
     android:text="@string/proof_rejection"
@@ -35,24 +35,29 @@
     android:id="@+id/view"
     android:layout_width="match_parent"
     android:layout_height="1dp"
-    android:background="@color/color_E2E2E2"
     android:layout_below="@id/header"
+    android:background="@color/color_E2E2E2"
     android:paddingLeft="@dimen/space_50"
     android:paddingRight="@dimen/space_50" />
 
-  <com.mycity4kids.widget.CustomFontTextView
-    android:id="@+id/rejection_text"
+  <ScrollView
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_marginTop="@dimen/space_15"
-    android:layout_marginBottom="@dimen/space_10"
-    android:gravity="center"
-    android:layout_below="@id/view"
-    android:paddingLeft="@dimen/space_50"
-    android:paddingRight="@dimen/space_50"
-    android:text="@string/dialog_register_proof_submitted_text"
-    android:textColor="@color/campaign_4A4A4A"
-    android:textSize="14sp"
-    app:fontName="open_sans.ttf" />
+    android:layout_below="@id/view">
 
+    <com.mycity4kids.widget.CustomFontTextView
+      android:id="@+id/rejection_text"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:layout_marginTop="@dimen/space_15"
+      android:layout_marginBottom="@dimen/space_10"
+      android:gravity="center"
+      android:paddingLeft="@dimen/space_50"
+      android:paddingRight="@dimen/space_50"
+      android:text="@string/dialog_register_proof_submitted_text"
+      android:textColor="@color/campaign_4A4A4A"
+      android:textSize="14sp"
+      app:fontName="open_sans.ttf" />
+
+  </ScrollView>
 </RelativeLayout>
