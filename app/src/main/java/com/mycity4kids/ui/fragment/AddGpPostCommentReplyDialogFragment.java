@@ -48,6 +48,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
+import androidx.core.content.FileProvider;
 import androidx.fragment.app.DialogFragment;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.auth.FirebaseAuth;
@@ -71,7 +72,6 @@ import com.mycity4kids.ui.activity.GroupDetailsActivity;
 import com.mycity4kids.ui.activity.GroupPostDetailActivity;
 import com.mycity4kids.ui.activity.NewsLetterWebviewActivity;
 import com.mycity4kids.ui.activity.ViewGroupPostCommentsRepliesActivity;
-import com.mycity4kids.utils.AppUtils;
 import com.mycity4kids.utils.AudioRecordView;
 import com.mycity4kids.utils.DateTimeUtils;
 import com.mycity4kids.utils.GenericFileProvider;
@@ -491,12 +491,8 @@ public class AddGpPostCommentReplyDialogFragment extends DialogFragment implemen
             Toast.makeText(getActivity(), R.string.hold_to_release, Toast.LENGTH_SHORT).show();
         } else if (recordTime >= 4) {
             stopRecording();
-            originalUri = Uri.parse(fileName);
-            contentUri = AppUtils
-                    .exportAudioToGallery(originalUri.getPath(), BaseApplication.getAppContext().getContentResolver(),
-                            getActivity());
-            contentUri = AppUtils.getAudioUriFromMediaProvider(originalUri.getPath(),
-                    BaseApplication.getAppContext().getContentResolver());
+            contentUri = FileProvider
+                    .getUriForFile(BaseApplication.getAppContext(), "com.momspresso.fileprovider", new File(fileName));
             uploadAudio();
             imgRecordCross.setVisibility(View.VISIBLE);
             Log.d("RecordTime", "" + recordTime);

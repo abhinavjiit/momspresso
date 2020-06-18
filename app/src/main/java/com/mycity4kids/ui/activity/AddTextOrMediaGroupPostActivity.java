@@ -41,6 +41,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatDelegate;
 import androidx.core.app.ActivityCompat;
+import androidx.core.content.FileProvider;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -61,7 +62,6 @@ import com.mycity4kids.preference.SharedPrefUtils;
 import com.mycity4kids.retrofitAPIsInterfaces.GroupsAPI;
 import com.mycity4kids.retrofitAPIsInterfaces.ImageUploadAPI;
 import com.mycity4kids.ui.fragment.ProcessBitmapTaskFragment;
-import com.mycity4kids.utils.AppUtils;
 import com.mycity4kids.utils.AudioRecordView;
 import com.mycity4kids.utils.GenericFileProvider;
 import com.mycity4kids.utils.PermissionUtil;
@@ -532,8 +532,8 @@ public class AddTextOrMediaGroupPostActivity extends BaseActivity implements Vie
 
     public void sendUploadProfileImageRequest(File file) {
         showProgressDialog(getString(R.string.please_wait));
-        MediaType MEDIA_TYPE_PNG = MediaType.parse("image/png");
-        RequestBody requestBodyFile = RequestBody.create(MEDIA_TYPE_PNG, file);
+        MediaType mediaType = MediaType.parse("image/png");
+        RequestBody requestBodyFile = RequestBody.create(mediaType, file);
         Log.e("requestBodyFile", new Gson().toJson(requestBodyFile.toString()));
         RequestBody imageType = RequestBody.create(MediaType.parse("text/plain"), "2");
         Retrofit retro = BaseApplication.getInstance().getRetrofit();
@@ -769,12 +769,7 @@ public class AddTextOrMediaGroupPostActivity extends BaseActivity implements Vie
             Toast.makeText(this, R.string.hold_to_release, Toast.LENGTH_SHORT).show();
         } else if (recordTime >= 4) {
             stopRecording();
-            originalUri = Uri.parse(fileName);
-            contentUri = AppUtils
-                    .exportAudioToGallery(originalUri.getPath(), BaseApplication.getAppContext().getContentResolver(),
-                            this);
-            contentUri = AppUtils.getAudioUriFromMediaProvider(originalUri.getPath(),
-                    BaseApplication.getAppContext().getContentResolver());
+            contentUri = FileProvider.getUriForFile(this, "com.momspresso.fileprovider", new File(fileName));
             uploadAudio(contentUri);
         } else {
             audioRecordView.disableClick(false);

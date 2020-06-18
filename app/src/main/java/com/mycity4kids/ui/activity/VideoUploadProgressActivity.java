@@ -44,7 +44,6 @@ import retrofit2.Retrofit;
  */
 public class VideoUploadProgressActivity extends BaseActivity implements View.OnClickListener {
 
-    private Toolbar mToolbar;
     RelativeLayout uploadFinishContainer, uploadingContainer;
     private TextView status, okayTextView, mTxtPercentage, mTxtVideoSize, mTxtVideoName, mTxtVideoExtension;
     private FirebaseAuth mAuth;
@@ -91,7 +90,6 @@ public class VideoUploadProgressActivity extends BaseActivity implements View.On
         comingFrom = getIntent().getStringExtra("comingFrom");
         if ("Challenge".equals(comingFrom)) {
             challengeId = getIntent().getStringExtra("ChallengeId");
-//            challengeName = getIntent().getStringExtra("ChallengeName");
         }
 
         uploadingContainer = (RelativeLayout) findViewById(R.id.uploadingContainer);

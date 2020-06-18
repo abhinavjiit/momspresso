@@ -15,7 +15,6 @@ import android.view.Gravity
 import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
-import android.view.ViewTreeObserver
 import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.RelativeLayout
@@ -244,15 +243,12 @@ class ShortStoriesCardActivity : BaseActivity() {
                 publishStory()
         }
 
-        rlLayout.viewTreeObserver.addOnGlobalLayoutListener(object :
-            ViewTreeObserver.OnGlobalLayoutListener {
-            override fun onGlobalLayout() {
-                val location = IntArray(2)
-                shortLayout.getLocationOnScreen(location)
-                x = location[0]
-                y = location[1]
-            }
-        })
+        rlLayout.viewTreeObserver.addOnGlobalLayoutListener {
+            val location = IntArray(2)
+            shortLayout.getLocationOnScreen(location)
+            x = location[0]
+            y = location[1]
+        }
 
         gotItTextView.setOnClickListener {
             if (moveTextCoachmark.visibility == View.VISIBLE) {

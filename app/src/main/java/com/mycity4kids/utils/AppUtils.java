@@ -7,8 +7,6 @@ import android.app.Activity;
 import android.content.ClipData;
 import android.content.ClipboardManager;
 import android.content.ComponentName;
-import android.content.ContentResolver;
-import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
@@ -26,7 +24,6 @@ import android.graphics.Typeface;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Environment;
-import android.provider.MediaStore;
 import android.provider.OpenableColumns;
 import android.provider.Settings;
 import android.telephony.TelephonyManager;
@@ -53,7 +50,6 @@ import com.mycity4kids.gtmutils.Utils;
 import com.mycity4kids.models.response.ArticleListingResult;
 import com.mycity4kids.models.response.MixFeedResult;
 import com.mycity4kids.preference.SharedPrefUtils;
-import com.mycity4kids.ui.activity.collection.CollectionsActivity;
 import com.mycity4kids.widget.Hashids;
 import com.squareup.picasso.Picasso;
 import java.io.BufferedReader;
@@ -199,48 +195,6 @@ public class AppUtils {
         }
         return result;
     }
-
-    public static Uri exportAudioToGallery(String filename, ContentResolver contentResolver,
-            Context context) {
-        // Save the name and description of a video in a ContentValues map.
-        final ContentValues values = new ContentValues(2);
-        values.put(MediaStore.Video.Media.MIME_TYPE, "audio/3gp");
-        values.put(MediaStore.Video.Media.DATA, filename);
-        // Add a new record (identified by uri)
-        final Uri uri = contentResolver.insert(MediaStore.Audio.Media.EXTERNAL_CONTENT_URI,
-                values);
-        context.sendBroadcast(new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE,
-                Uri.parse("file://" + filename)));
-        return uri;
-    }
-
-    public static final Uri getAudioUriFromMediaProvider(String videoFile,
-            ContentResolver contentResolver) {
-        String selection = MediaStore.Video.VideoColumns.DATA + "=?";
-        String[] selectArgs = {videoFile};
-        String[] projection = {MediaStore.Audio.AudioColumns._ID};
-        Cursor c = null;
-        try {
-            c = contentResolver.query(android.provider.MediaStore.Audio.Media.EXTERNAL_CONTENT_URI,
-                    projection, selection, selectArgs, null);
-            if (c.getCount() > 0) {
-                c.moveToFirst();
-                String id = c.getString(c
-                        .getColumnIndex(MediaStore.Audio.AudioColumns._ID));
-
-                return Uri
-                        .withAppendedPath(
-                                android.provider.MediaStore.Audio.Media.EXTERNAL_CONTENT_URI,
-                                id);
-            }
-            return null;
-        } finally {
-            if (c != null) {
-                c.close();
-            }
-        }
-    }
-
 
     public static void deleteDirectoryContent() {
         File dir = BaseApplication.getAppContext().getExternalFilesDir(null);

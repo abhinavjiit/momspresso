@@ -632,6 +632,9 @@ public class GroupDetailsActivity extends BaseActivity implements View.OnClickLi
 
     private void processSearchResultListing(GroupPostResponse postSearchResponse) {
         totalPostCount = postSearchResponse.getTotal();
+        if (totalPostCount == 0) {
+            return;
+        }
         ArrayList<GroupPostResult> dataList = (ArrayList<GroupPostResult>) postSearchResponse.getData().get(0)
                 .getResult();
         if (dataList.size() == 0) {

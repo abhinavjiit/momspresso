@@ -28,6 +28,7 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatDelegate;
 import androidx.core.app.ActivityCompat;
+import androidx.core.content.FileProvider;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -45,7 +46,6 @@ import com.mycity4kids.models.response.AddGroupPostResponse;
 import com.mycity4kids.models.response.GroupResult;
 import com.mycity4kids.preference.SharedPrefUtils;
 import com.mycity4kids.retrofitAPIsInterfaces.GroupsAPI;
-import com.mycity4kids.utils.AppUtils;
 import com.mycity4kids.utils.AudioPostRecordView;
 import com.mycity4kids.utils.PermissionUtil;
 import java.io.File;
@@ -339,12 +339,7 @@ public class AddAudioGroupPostActivity extends BaseActivity implements View.OnCl
             Toast.makeText(this, R.string.hold_to_release, Toast.LENGTH_SHORT).show();
         } else if (recordTime >= 4) {
             stopRecording();
-            originalUri = Uri.parse(fileName);
-            contentUri = AppUtils
-                    .exportAudioToGallery(originalUri.getPath(), BaseApplication.getAppContext().getContentResolver(),
-                            this);
-            contentUri = AppUtils.getAudioUriFromMediaProvider(originalUri.getPath(),
-                    BaseApplication.getAppContext().getContentResolver());
+            contentUri = FileProvider.getUriForFile(this, "com.momspresso.fileprovider", new File(fileName));
             uploadAudio(contentUri);
             Log.d("RecordTime", "" + recordTime);
         } else {
