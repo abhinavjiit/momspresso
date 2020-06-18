@@ -110,7 +110,7 @@ class InviteFriendsDialogFragment : DialogFragment(), View.OnClickListener {
                         dismiss()
                     }
                     Utils.pushGenericEvent(
-                        context, "CTA_Share_Link",
+                        context, "CTA_Invite_Whatsapp",
                         SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).dynamoId,
                         "InviteFriendsDialogFragment"
                     )

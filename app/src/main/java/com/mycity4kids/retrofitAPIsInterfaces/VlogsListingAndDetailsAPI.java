@@ -101,6 +101,14 @@ public interface VlogsListingAndDetailsAPI {
             @Query("category_id") String categoryId,
             @Query("$order_by") String orderBy);
 
+    @GET("v2/videos/")
+    Call<VlogsListingResponse> getWinnerVlogsAllLanguages(@Query("start") int start,
+            @Query("end") int end,
+            @Query("sort") int sort,
+            @Query("type") int type,
+            @Query("category_id") String categoryId,
+            @Query("winner") String winner);
+
     @POST("v2/videos/")
     Call<ResponseBody> publishHomeVideo(@Body UploadVideoRequest uploadVideoRequest);
 

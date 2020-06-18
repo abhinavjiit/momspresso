@@ -398,12 +398,15 @@ public class AppConstants {
     public static final String FOLLOW = "0";
     public static final String CONTENT_ID = "contentId";
 
+    public static final String MOMSPRESSO_DOMAIN_REGEX = "(http)(s?):\\/\\/([a-z]+[.])?momspresso.com\\/.*";
     public static final String OTP_REGEX = "(?<!\\d)\\d{6}(?!\\d)";
     public static final String COLLECTION_LIST_REGEX = ".+?(user\\/)[a-zA-Z0-9]+\\/(collections)$";
     public static final String COLLECTION_DETAIL_REGEX = ".+?(user\\/)[a-zA-Z0-9]+(\\/(collections\\/))[a-zA-Z0-9]+$";
     public static final String BADGES_LISTING_REGEX = ".+?(user\\/)[a-zA-Z0-9]+\\/(badges)$";
     public static final String BADGES_DETAIL_REGEX = ".+?(user\\/)[a-zA-Z0-9]+(\\/(badges\\/))[a-zA-Z0-9]+$";
     public static final String MILESTONE_DETAIL_REGEX = ".+?(user\\/)[a-zA-Z0-9]+(\\/(milestones\\/))[a-zA-Z0-9]+$";
+    public static final String ARTICLE_DETAIL_REGEX = ".+?(parenting\\/)[a-zA-Z0-9-]+(\\/(article\\/))[a-zA-Z0-9-]+$";
+    public static final String EDITORIAL_ARTICLE_DETAIL_REGEX = ".+?(parenting\\/article\\/)[a-zA-Z0-9-]+$";
     public static final String USER_PROFILE_REGEX = ".+?(user\\/)[a-zA-Z0-9]+$";
     public static final String USER_PROFILE_INVITE_FRIENDS_REGEX = ".+?(user\\/)[a-zA-Z0-9]+#INVITE";
     public static final String USER_ANALYTICS_REGEX = ".+?(user\\/)[a-zA-Z0-9]+\\/(rank)$";

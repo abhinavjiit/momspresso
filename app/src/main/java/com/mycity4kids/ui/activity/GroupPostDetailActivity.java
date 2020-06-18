@@ -471,6 +471,7 @@ public class GroupPostDetailActivity extends BaseActivity implements View.OnClic
             case R.id.commentRootView:
                 Bundle args = new Bundle();
                 args.putInt("commentType", completeResponseList.get(position).getCommentType());
+                args.putInt("commentPosition", position);
                 args.putInt("position", position);
                 args.putString("authorId", completeResponseList.get(position).getUserId());
                 args.putString(AppConstants.GROUP_MEMBER_TYPE, memberType);
@@ -1721,7 +1722,7 @@ public class GroupPostDetailActivity extends BaseActivity implements View.OnClic
                     deleteGpPostCommentOrReplyRequest);
             call.enqueue(deleteReplyResponseListener);
         } else {
-            actionItemPosition = replyPos;
+            actionItemPosition = commentPos;
             Call<AddGpPostCommentReplyResponse> call = groupsApi
                     .deleteCommentOrReply(completeResponseList.get(actionItemPosition).getId(),
                             deleteGpPostCommentOrReplyRequest);
@@ -1814,6 +1815,7 @@ public class GroupPostDetailActivity extends BaseActivity implements View.OnClic
             };
 
     public void onResponseEdit(int commentPosition, int position, String responseType) {
+        Log.e("vcvcvcvcv","vcvcvcvcv");
         Bundle args = new Bundle();
         if ("REPLY".equals(responseType)) {
             args.putString("action", "EDIT_REPLY");
@@ -1822,9 +1824,9 @@ public class GroupPostDetailActivity extends BaseActivity implements View.OnClic
                     completeResponseList.get(commentPosition).getChildData().get(position - 1));
         } else {
             args.putString("action", "EDIT_COMMENT");
-            args.putParcelable("parentCommentData", completeResponseList.get(position));
+            args.putParcelable("parentCommentData", completeResponseList.get(commentPosition));
         }
-        args.putInt("position", position);
+        args.putInt("position", commentPosition);
         AddGpPostCommentReplyDialogFragment addGpPostCommentReplyDialogFragment =
                 new AddGpPostCommentReplyDialogFragment();
         addGpPostCommentReplyDialogFragment.setArguments(args);

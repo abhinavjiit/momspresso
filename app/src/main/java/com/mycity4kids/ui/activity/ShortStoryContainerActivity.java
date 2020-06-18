@@ -1,6 +1,5 @@
 package com.mycity4kids.ui.activity;
 
-import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.MenuItem;
@@ -28,11 +27,10 @@ import java.util.ArrayList;
  */
 public class ShortStoryContainerActivity extends BaseActivity implements View.OnClickListener {
 
-    private ViewPager mViewPager;
-    private ShortStoryPagerAdapter mViewPagerAdapter;
-    private Toolbar mToolbar;
+    private ViewPager viewPager;
+    private ShortStoryPagerAdapter shortStoryPagerAdapter;
+    private Toolbar toolbar;
     private ImageView playTtsTextView;
-
     private String authorId;
     private String articleId;
     private ArrayList<ArticleListingResult> articleList;
@@ -52,13 +50,13 @@ public class ShortStoryContainerActivity extends BaseActivity implements View.On
         ((BaseApplication) getApplication()).setActivity(this);
         userDynamoId = SharedPrefUtils.getUserDetailModel(this).getDynamoId();
         Utils.pushOpenScreenEvent(this, "ShortStoryDetailContainerScreen", userDynamoId + "");
-        mToolbar = findViewById(R.id.anim_toolbar);
+        toolbar = findViewById(R.id.anim_toolbar);
         toolbarTitle = findViewById(R.id.toolbarTitle);
         playTtsTextView = findViewById(R.id.playTtsTextView);
         guideOverlay = findViewById(R.id.guideOverlay);
         guidetoolbar = findViewById(R.id.guidetoolbar);
 
-        setSupportActionBar(mToolbar);
+        setSupportActionBar(toolbar);
         getSupportActionBar().setTitle("");
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
@@ -78,7 +76,7 @@ public class ShortStoryContainerActivity extends BaseActivity implements View.On
             Utils.pushViewShortStoryEvent(this, screen, userDynamoId + "", articleId, listingType, index + "", author);
         }
 
-        mViewPager = (ViewPager) findViewById(R.id.pager);
+        viewPager = (ViewPager) findViewById(R.id.pager);
 
         if (articleList == null || articleList.isEmpty()) {
             articleId = bundle.getString(Constants.ARTICLE_ID);
@@ -96,11 +94,12 @@ public class ShortStoryContainerActivity extends BaseActivity implements View.On
         } else {
             final int pos = Integer.parseInt(bundle.getString(Constants.ARTICLE_INDEX));
 
-            mViewPagerAdapter = new ShortStoryPagerAdapter(getSupportFragmentManager(), articleList.size(), articleList,
+            shortStoryPagerAdapter = new ShortStoryPagerAdapter(getSupportFragmentManager(), articleList.size(),
+                    articleList,
                     fromScreen);
-            mViewPager.setAdapter(mViewPagerAdapter);
-            mViewPager.setCurrentItem(pos);
-            mViewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+            viewPager.setAdapter(shortStoryPagerAdapter);
+            viewPager.setCurrentItem(pos);
+            viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
                 @Override
                 public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
                     currPos = position;
@@ -128,9 +127,6 @@ public class ShortStoryContainerActivity extends BaseActivity implements View.On
         guideOverlay.setOnClickListener(this);
         guidetoolbar.setOnClickListener(this);
 
-        if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.ICE_CREAM_SANDWICH_MR1) {
-            playTtsTextView.setVisibility(View.GONE);
-        }
     }
 
     @Override
@@ -151,11 +147,12 @@ public class ShortStoryContainerActivity extends BaseActivity implements View.On
     }
 
     private void initializeViewPager() {
-        mViewPagerAdapter = new ShortStoryPagerAdapter(getSupportFragmentManager(), articleList.size(), articleList,
+        shortStoryPagerAdapter = new ShortStoryPagerAdapter(getSupportFragmentManager(), articleList.size(),
+                articleList,
                 "dw");
-        mViewPager.setAdapter(mViewPagerAdapter);
+        viewPager.setAdapter(shortStoryPagerAdapter);
 
-        mViewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+        viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
             public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
             }

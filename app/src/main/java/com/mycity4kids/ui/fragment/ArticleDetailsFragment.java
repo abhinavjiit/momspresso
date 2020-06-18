@@ -653,7 +653,7 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
                         if (request.getUrl() == null || request.getUrl().toString().isEmpty()) {
                             return true;
                         }
-                        if (request.getUrl().toString().startsWith(AppConstants.WEB_URL)) {
+                        if (AppUtils.isMomspressoDomain(request.getUrl().toString())) {
                             handleDeeplinks(request.getUrl().toString());
                         } else {
                             if (getActivity() != null) {
@@ -937,6 +937,15 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
                 intent.putExtra("detail", "rank");
                 intent.putExtra(Constants.USER_ID, separated[separated.length - 2]);
                 startActivity(intent);
+                return true;
+            }
+
+            Pattern pattern7 = Pattern.compile(AppConstants.ARTICLE_DETAIL_REGEX);
+            Pattern pattern8 = Pattern.compile(AppConstants.EDITORIAL_ARTICLE_DETAIL_REGEX);
+            Matcher matcher7 = pattern7.matcher(urlWithNoParams);
+            Matcher matcher8 = pattern8.matcher(urlWithNoParams);
+            if (matcher7.matches() || matcher8.matches()) {
+                getDeepLinkData(urlWithNoParams);
                 return true;
             }
         } catch (Exception e) {
@@ -1592,11 +1601,11 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
         }
     };
 
-    private void getDeepLinkData(Uri url) {
+    private void getDeepLinkData(String url) {
         Retrofit retrofit = BaseApplication.getInstance().getRetrofit();
         showProgressDialog("");
         DeepLinkingAPI deepLinkingApi = retrofit.create(DeepLinkingAPI.class);
-        Call<DeepLinkingResposnse> call = deepLinkingApi.getUrlDetails(url.toString());
+        Call<DeepLinkingResposnse> call = deepLinkingApi.getUrlDetails(url);
         call.enqueue(new Callback<DeepLinkingResposnse>() {
             @Override
             public void onResponse(Call<DeepLinkingResposnse> call,
@@ -1619,9 +1628,6 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
                                     responseData.getData().getResult().getAuthor_id() + "~" + responseData.getData()
                                             .getResult().getAuthor_name());
                             startActivity(intent);
-                        } else {
-                            Intent i = new Intent(Intent.ACTION_VIEW, url);
-                            startActivity(i);
                         }
                     }
                 } catch (Exception e) {

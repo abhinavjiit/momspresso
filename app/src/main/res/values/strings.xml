@@ -1514,7 +1514,7 @@ Thank you! We will be reviewing your story. You can expect to hear from us withi
   <string name="share_app">Share App</string>
   <string name="choose_proof">Choose Proof</string>
   <string name="no_facebook_friends">None of your friends are logged into momspresso using facebook</string>
-  <string name="invite_friends_whatsapp">Invite via whatsapp</string>
+  <string name="invite_friends_whatsapp">Invite via Whatsapp</string>
   <string name="share_app_msg">Hi! Check out the Momspresso app, where I express myself through Stories and Videos. Download now %1s</string>
   <string name="invite_phone_contact">Invite contacts to follow you</string>
   <string name="proof_rejection">Proof Rejection Details</string>

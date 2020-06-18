@@ -32,9 +32,7 @@ class UserProfileCreatedCollectionsAdapter(private val collectionRecyclerViewCli
             createdCollectionsList?.size!! >= 6 -> 6
             else -> createdCollectionsList?.size!!
         }
-
     }
-
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
         if (holder is ViewHolder) {
@@ -49,10 +47,7 @@ class UserProfileCreatedCollectionsAdapter(private val collectionRecyclerViewCli
                     createdCollectionsList?.get(position)?.userCollectionId
                 )
             }
-
-
         }
-
     }
 
     class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
@@ -69,5 +64,4 @@ class UserProfileCreatedCollectionsAdapter(private val collectionRecyclerViewCli
     fun createdCollectionsListData(createdCollectionData: ArrayList<UserCollectionsModel>) {
         createdCollectionsList = createdCollectionData
     }
-
 }

@@ -287,7 +287,7 @@ class ContentCommentReplyNotificationActivity : BaseActivity(),
 
                 "2" -> {
                     val intent = Intent(this, ParallelFeedActivity::class.java)
-                    intent.putExtra(Constants.ARTICLE_ID, articleId)
+                    intent.putExtra(Constants.VIDEO_ID, articleId)
                     startActivity(intent)
                 }
                 else -> {

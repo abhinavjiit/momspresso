@@ -34,7 +34,6 @@ class UserProfileFollowedCollectionAdapter(private val collectionRecyclerViewCli
         }
     }
 
-
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
         if (holder is ViewHolder) {
             try {
@@ -53,10 +52,7 @@ class UserProfileFollowedCollectionAdapter(private val collectionRecyclerViewCli
                     followedCollectionsList?.get(position)?.userCollectionId
                 )
             }
-
-
         }
-
     }
 
     class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
@@ -73,5 +69,4 @@ class UserProfileFollowedCollectionAdapter(private val collectionRecyclerViewCli
     fun followedCollectionsListData(createdCollectionData: ArrayList<UserCollectionsModel>) {
         followedCollectionsList = createdCollectionData
     }
-
 }

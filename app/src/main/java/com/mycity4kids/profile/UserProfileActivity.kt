@@ -107,12 +107,12 @@ import io.reactivex.Observer
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable
 import io.reactivex.schedulers.Schedulers
-import retrofit2.Call
-import retrofit2.Callback
-import retrofit2.Response
 import java.io.File
 import java.net.SocketTimeoutException
 import java.net.UnknownHostException
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
 
 class UserProfileActivity : BaseActivity(),
     UserContentAdapter.RecyclerViewClickListener, View.OnClickListener,
@@ -224,7 +224,6 @@ class UserProfileActivity : BaseActivity(),
     private lateinit var noFollowedCollectionsYet: TextView
     private lateinit var addCollectionTextView: TextView
     private lateinit var plusAddButton: ImageView
-
 
     private val userContentAdapter: UserContentAdapter by lazy {
         UserContentAdapter(
@@ -363,11 +362,6 @@ class UserProfileActivity : BaseActivity(),
         userProfileFollowedCollectionAdapter = UserProfileFollowedCollectionAdapter(this)
         followedCollectionRecyclerView.layoutManager = followCollectionsLayoutManager
         followedCollectionRecyclerView.adapter = userProfileFollowedCollectionAdapter
-
-
-
-
-
 
         userContentList = ArrayList()
         userBookmarkList = ArrayList()
@@ -830,7 +824,6 @@ class UserProfileActivity : BaseActivity(),
         }
     }
 
-
     private fun getUserCreatedCollections() {
         authorId?.let {
             val retrofit = BaseApplication.getInstance().retrofit
@@ -841,7 +834,6 @@ class UserProfileActivity : BaseActivity(),
                     call: Call<BaseResponseGeneric<UserCollectionsListModel>>,
                     t: Throwable
                 ) {
-
                 }
 
                 override fun onResponse(
@@ -860,16 +852,11 @@ class UserProfileActivity : BaseActivity(),
                         if (200 == responsee?.code && Constants.SUCCESS == responsee.status) {
                             processCreatedCollectionData(responsee.data?.result)
                         }
-
                     } catch (e: Exception) {
-
                     }
                 }
-
             })
         }
-
-
     }
 
     private fun getUserFollowedCollections() {
@@ -925,12 +912,10 @@ class UserProfileActivity : BaseActivity(),
                 userProfileCreatedCollectionAdapter.createdCollectionsListData(it)
                 userProfileCreatedCollectionAdapter.notifyDataSetChanged()
             }
-
-
         } else {
             createdCollectionRecyclerView.visibility = View.GONE
             noCreatedCollectionsYet.visibility = View.VISIBLE
-            //show Text "no created collections yet"
+            // show Text "no created collections yet"
         }
     }
 
@@ -946,11 +931,10 @@ class UserProfileActivity : BaseActivity(),
                 userProfileFollowedCollectionAdapter.followedCollectionsListData(it)
                 userProfileFollowedCollectionAdapter.notifyDataSetChanged()
             }
-
         } else {
             followedCollectionRecyclerView.visibility = View.GONE
             noFollowedCollectionsYet.visibility = View.VISIBLE
-            //show Text "no followed collections yet"
+            // show Text "no followed collections yet"
         }
     }
 

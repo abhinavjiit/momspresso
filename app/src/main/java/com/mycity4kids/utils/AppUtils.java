@@ -53,6 +53,7 @@ import com.mycity4kids.gtmutils.Utils;
 import com.mycity4kids.models.response.ArticleListingResult;
 import com.mycity4kids.models.response.MixFeedResult;
 import com.mycity4kids.preference.SharedPrefUtils;
+import com.mycity4kids.ui.activity.collection.CollectionsActivity;
 import com.mycity4kids.widget.Hashids;
 import com.squareup.picasso.Picasso;
 import java.io.BufferedReader;
@@ -79,6 +80,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Random;
 import java.util.concurrent.TimeUnit;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import okhttp3.ResponseBody;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -1121,5 +1124,11 @@ public class AppUtils {
             return shareUrl;
         }
         return shareUrl + "?utm_source=" + utmSource + "&utm_medium=" + utmMedium;
+    }
+
+    public static boolean isMomspressoDomain(String url) {
+        Pattern pattern = Pattern.compile(AppConstants.MOMSPRESSO_DOMAIN_REGEX);
+        Matcher matcher = pattern.matcher(url);
+        return matcher.matches();
     }
 }

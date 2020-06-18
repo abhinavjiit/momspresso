@@ -53,7 +53,6 @@ class CollectionsActivity : BaseActivity() {
                 "CollectionsActivity"
             )
             comingFrom = intent.getStringExtra("comingFrom")
-
         }
 
         back.setOnClickListener {
@@ -72,7 +71,6 @@ class CollectionsActivity : BaseActivity() {
             collectionsViewPager.currentItem = 1
         } else {
             collectionsViewPager.currentItem = 0
-
         }
 
         adapter = CollectionPagerAdapter(supportFragmentManager, isPrivate, userId!!)

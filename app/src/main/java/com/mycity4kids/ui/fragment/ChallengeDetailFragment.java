@@ -98,6 +98,7 @@ public class ChallengeDetailFragment extends Fragment implements View.OnClickLis
                 .placeholder(R.drawable.default_article).error(R.drawable.default_article).into(thumbNail);
         tabs.addTab(tabs.newTab().setText(getResources().getString(R.string.about_video)));
         tabs.addTab(tabs.newTab().setText(getResources().getString(R.string.all_videos_toolbar_title)));
+        tabs.addTab(tabs.newTab().setText("WINNERS"));
         AppUtils.changeTabsFont(tabs);
         View root = tabs.getChildAt(0);
         if (root instanceof LinearLayout) {

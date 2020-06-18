@@ -17,6 +17,7 @@ import com.google.firebase.crashlytics.FirebaseCrashlytics
 import com.mycity4kids.R
 import com.mycity4kids.application.BaseApplication
 import com.mycity4kids.constants.AppConstants
+import com.mycity4kids.gtmutils.Utils
 import com.mycity4kids.preference.SharedPrefUtils
 import com.mycity4kids.ui.activity.PhoneContactsActivity
 import com.mycity4kids.utils.AppUtils
@@ -67,6 +68,11 @@ class ShareAppDialogFragment : DialogFragment(), View.OnClickListener {
                         val shareText =
                             getString(R.string.share_app_msg, AppConstants.BRANCH_DEEPLINK)
                         AppUtils.shareLinkWithSuccessStatusWhatsapp(it, shareText)
+                        Utils.pushGenericEvent(
+                            context, "CTA_Shareapp_Whatsapp",
+                            SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).dynamoId,
+                            "ShareAppDialogFragment"
+                        )
                     }
                 }
                 view?.id == R.id.facebookShareWidget -> {
@@ -84,6 +90,11 @@ class ShareAppDialogFragment : DialogFragment(), View.OnClickListener {
                         sendIntent.setPackage("com.facebook.orca")
                         try {
                             startActivity(sendIntent)
+                            Utils.pushGenericEvent(
+                                context, "CTA_Shareapp_Facebook_Messenger",
+                                SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).dynamoId,
+                                "ShareAppDialogFragment"
+                            )
                         } catch (ex: ActivityNotFoundException) {
                             Toast.makeText(
                                 context,
@@ -97,6 +108,11 @@ class ShareAppDialogFragment : DialogFragment(), View.OnClickListener {
                     activity?.let {
                         val contactIntent = Intent(it, PhoneContactsActivity::class.java)
                         startActivity(contactIntent)
+                        Utils.pushGenericEvent(
+                            context, "CTA_Shareapp_Phonebook",
+                            SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).dynamoId,
+                            "ShareAppDialogFragment"
+                        )
                         dismiss()
                     }
                 }
@@ -105,6 +121,11 @@ class ShareAppDialogFragment : DialogFragment(), View.OnClickListener {
                         AppUtils.shareGenericLinkWithSuccessStatus(
                             it,
                             getString(R.string.share_app_msg, AppConstants.BRANCH_DEEPLINK)
+                        )
+                        Utils.pushGenericEvent(
+                            context, "CTA_Shareapp_Sharelink",
+                            SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).dynamoId,
+                            "ShareAppDialogFragment"
                         )
                     }
                 }

@@ -12,7 +12,6 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
-import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import androidx.annotation.NonNull;
@@ -39,12 +38,11 @@ import com.mycity4kids.ui.adapter.VideoChallengeDetailListingAdapter;
 import com.mycity4kids.ui.adapter.VideoChallengeDetailListingAdapter.RecyclerViewClickListener;
 import com.mycity4kids.utils.ConnectivityUtils;
 import java.util.ArrayList;
-import org.greenrobot.eventbus.EventBus;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Retrofit;
 
-public class VideoChallengeListing extends BaseFragment implements View.OnClickListener,
+public class WinnerVlogsListingTabFragment extends BaseFragment implements View.OnClickListener,
         SwipeRefreshLayout.OnRefreshListener, RecyclerViewClickListener {
 
     private RelativeLayout loadingView;
@@ -68,6 +66,7 @@ public class VideoChallengeListing extends BaseFragment implements View.OnClickL
     private int firstVisibleItem;
     private int visibleItemCount;
     private int totalItemCount;
+    private String tabType;
 
     @SuppressLint("ClickableViewAccessibility")
     @Nullable
@@ -86,11 +85,12 @@ public class VideoChallengeListing extends BaseFragment implements View.OnClickL
         fabSort = view.findViewById(R.id.fabSort);
         funnyvideosshimmer = view.findViewById(R.id.shimmer_funny_videos_article);
 
-        frameLayout.getBackground().setAlpha(0);
-
         if (getArguments() != null) {
             selectedId = getArguments().getString("selectedId");
+            tabType = getArguments().getString("tabType");
         }
+
+        frameLayout.getBackground().setAlpha(0);
 
         popularSortFab.setOnClickListener(this);
         recentSortFab.setOnClickListener(this);
@@ -209,8 +209,9 @@ public class VideoChallengeListing extends BaseFragment implements View.OnClickL
         int from = (nextPageNumber - 1) * limit;
         Retrofit retrofit = BaseApplication.getInstance().getRetrofit();
         VlogsListingAndDetailsAPI vlogsListingAndDetailsApi = retrofit.create(VlogsListingAndDetailsAPI.class);
-        Call<VlogsListingResponse> callRecentVideoArticles = vlogsListingAndDetailsApi
-                .getVlogsListForWinner(from, from + limit - 1, sortType, 3, selectedId, "-winner");
+        Call<VlogsListingResponse> callRecentVideoArticles;
+        callRecentVideoArticles = vlogsListingAndDetailsApi
+                .getWinnerVlogsAllLanguages(from, from + limit - 1, sortType, 3, selectedId, "1");
         callRecentVideoArticles.enqueue(recentArticleResponseCallback);
     }
 
@@ -218,9 +219,6 @@ public class VideoChallengeListing extends BaseFragment implements View.OnClickL
         @Override
         public void onResponse(Call<VlogsListingResponse> call, retrofit2.Response<VlogsListingResponse> response) {
             removeProgressDialog();
-            if (nextPageNumber == 1) {
-                EventBus.getDefault().post("showDialogBox");
-            }
             loadingView.setVisibility(View.GONE);
             isReuqestRunning = false;
             if (null == response.body()) {
