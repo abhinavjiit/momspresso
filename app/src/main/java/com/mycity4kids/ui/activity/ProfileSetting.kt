@@ -41,15 +41,15 @@ class ProfileSetting : BaseActivity(), GoogleApiClient.OnConnectionFailedListene
     View.OnClickListener {
 
     private var personal_info: TextView? = null
-    private var payment_details: TextView? = null
-    private var social_accounts: TextView? = null
+    private lateinit var payment_details: TextView
+    private lateinit var social_accounts: TextView
     private var help: TextView? = null
     private var inviteContactTextView: TextView? = null
     private var appSettingsTextView: TextView? = null
     private var report_spam: TextView? = null
     private var about: TextView? = null
     private var app_version: TextView? = null
-    private var myMoneyContainer: TextView? = null
+    private lateinit var myMoneyContainer: TextView
     private var logout_layout: LinearLayout? = null
     private var mGoogleApiClient: GoogleApiClient? = null
     private var totalPayout = 0
@@ -117,6 +117,12 @@ class ProfileSetting : BaseActivity(), GoogleApiClient.OnConnectionFailedListene
         setSupportActionBar(toolbar)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
         supportActionBar?.setDisplayShowHomeEnabled(true)
+
+        if (SharedPrefUtils.getIsRewardsAdded(BaseApplication.getAppContext()) == "0") {
+            myMoneyContainer.visibility = View.GONE
+            payment_details.visibility = View.GONE
+            social_accounts.visibility = View.GONE
+        }
 
         if (intent.extras!!.containsKey("isRewardAdded")) {
             isRewardAdded = intent.getStringExtra("isRewardAdded")
