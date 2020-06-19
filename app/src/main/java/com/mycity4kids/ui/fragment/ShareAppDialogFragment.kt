@@ -107,6 +107,7 @@ class ShareAppDialogFragment : DialogFragment(), View.OnClickListener {
                 view?.id == R.id.contactShareWidget -> {
                     activity?.let {
                         val contactIntent = Intent(it, PhoneContactsActivity::class.java)
+                        contactIntent.putExtra("source", "shareApp")
                         startActivity(contactIntent)
                         Utils.pushGenericEvent(
                             context, "CTA_Shareapp_Phonebook",

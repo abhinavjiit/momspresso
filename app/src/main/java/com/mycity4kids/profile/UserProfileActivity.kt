@@ -222,6 +222,7 @@ class UserProfileActivity : BaseActivity(),
     private lateinit var headerView: RelativeLayout
     private lateinit var noCreatedCollectionsYet: TextView
     private lateinit var noFollowedCollectionsYet: TextView
+    private lateinit var followedCollectionTextView: TextView
     private lateinit var addCollectionTextView: TextView
     private lateinit var plusAddButton: ImageView
 
@@ -283,6 +284,7 @@ class UserProfileActivity : BaseActivity(),
         profileShareCardWidget = findViewById(R.id.profileShareCardWidget)
         createdCollectionRecyclerView = findViewById(R.id.createdCollectionRecyclerView)
         followedCollectionRecyclerView = findViewById(R.id.followedCollectionRecyclerView)
+        followedCollectionTextView = findViewById(R.id.followedCollectionTextView)
         userCollectionContainer = findViewById(R.id.userCollectionContainer)
         followedCollectionsViewAll = findViewById(R.id.followedCollectionsViewAll)
         createdCollectionsViewAll = findViewById(R.id.createdCollectionsViewAll)
@@ -1072,7 +1074,6 @@ class UserProfileActivity : BaseActivity(),
                 startActivity(intent)
             }
             view?.id == R.id.contentLangContainer -> {
-                Log.e("hdwidhiwhdiw", "kdowkdokdow = " + AppUtils.getUniqueIdentifier(this))
                 if (AppUtils.getUniqueIdentifier(this) == "f505abfc782090be" ||
                     AppUtils.getUniqueIdentifier(this) == "314026a5cd73f2e2"
                 ) {
@@ -1103,11 +1104,6 @@ class UserProfileActivity : BaseActivity(),
                 bookmarksTab.isSelected = false
                 recyclerView.visibility = View.GONE
                 userCollectionContainer.visibility = View.VISIBLE
-                //  recyclerView.adapter = usersFeaturedContentAdapter
-                //  userFeaturedOnList?.clear()
-                //  start = 0
-                //   isLastPageReached = false
-                //   emptyListTextView.visibility = View.GONE
                 shimmer.startShimmerAnimation()
                 shimmer.visibility = View.VISIBLE
                 if (AppUtils.isPrivateProfile(authorId)) {
@@ -1116,14 +1112,13 @@ class UserProfileActivity : BaseActivity(),
                     createdCollectionRecyclerView.visibility = View.VISIBLE
                     followedCollectionRecyclerView.visibility = View.VISIBLE
                 } else {
+                    followedCollectionTextView.visibility = View.GONE
                     plusAddButton.visibility = View.GONE
                     addCollectionTextView.visibility = View.GONE
                     createdCollectionRecyclerView.visibility = View.VISIBLE
                     followedCollectionRecyclerView.visibility = View.GONE
                     getUserCreatedCollections()
                 }
-
-                //  getFeaturedContent()
                 if (AppUtils.isPrivateProfile(authorId)) {
                     Utils.pushProfileEvents(
                         this, "CTA_Private_Featured_Collections", "UserProfileActivity",

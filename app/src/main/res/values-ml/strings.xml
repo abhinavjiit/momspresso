@@ -1406,4 +1406,7 @@ Thank you! We will be reviewing your story. You can expect to hear from us withi
   <string name="share_the_app_via">Share the App via</string>
   <string name="all_phonebook">Phonebook</string>
   <string name="all_fb_msngr">Facebook Messenger</string>
+  <string name="all_winners">വിജയികൾ</string>
+  <string name="all_first_vlog_upload">വ്ലോഗ് അപ്‌ലോഡ് ചെയ്യുന്ന ആദ്യത്തെ ആളാകൂ!</string>
+  <string name="winner_empty_state">ചാലഞ്ച്വി വിജയികളെ ഇവിടെ അറിയാം!</string>
 </resources>

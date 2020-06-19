@@ -38,6 +38,7 @@ import com.mycity4kids.utils.AppUtils;
 import com.mycity4kids.utils.ConnectivityUtils;
 import com.mycity4kids.utils.DateTimeUtils;
 import com.mycity4kids.utils.StringUtils;
+import com.mycity4kids.utils.ToastUtils;
 import com.squareup.picasso.Picasso;
 import java.util.ArrayList;
 import okhttp3.ResponseBody;
@@ -237,7 +238,7 @@ public class MyCityCommentsFragment extends BaseFragment implements OnClickListe
     private void getMoreComments() {
         isLoading = true;
         if (isAdded() && !ConnectivityUtils.isNetworkEnabled(getActivity())) {
-            ((ArticleDetailsContainerActivity) getActivity()).showToast(getString(R.string.error_network));
+            ToastUtils.showToast(getActivity(), getString(R.string.error_network));
             return;
         }
         Retrofit retro = BaseApplication.getInstance().getRetrofit();
@@ -252,17 +253,16 @@ public class MyCityCommentsFragment extends BaseFragment implements OnClickListe
         }
     }
 
-    Callback<ResponseBody> commentsCallback = new Callback<ResponseBody>() {
+    private Callback<ResponseBody> commentsCallback = new Callback<ResponseBody>() {
         @Override
         public void onResponse(Call<ResponseBody> call, retrofit2.Response<ResponseBody> response) {
             removeProgressDialog();
-            if (response == null || null == response.body()) {
+            if (null == response.body()) {
                 NetworkErrorException nee = new NetworkErrorException(response.raw().toString());
                 FirebaseCrashlytics.getInstance().recordException(nee);
                 if (isAdded()) {
-                    ((ArticleDetailsContainerActivity) getActivity()).showToast(getString(R.string.server_went_wrong));
+                    ToastUtils.showToast(getActivity(), getString(R.string.server_went_wrong));
                 }
-                ;
                 isLoading = false;
                 commentType = "fb";
                 commentsUrl = "http";
@@ -303,14 +303,13 @@ public class MyCityCommentsFragment extends BaseFragment implements OnClickListe
                 FirebaseCrashlytics.getInstance().recordException(jsonexception);
                 Log.d("JSONException", Log.getStackTraceString(jsonexception));
                 if (isAdded()) {
-                    ((ArticleDetailsContainerActivity) getActivity()).showToast(getString(R.string.server_went_wrong));
+                    ToastUtils.showToast(getActivity(), getString(R.string.server_went_wrong));
                 }
-                ;
             } catch (Exception ex) {
                 FirebaseCrashlytics.getInstance().recordException(ex);
                 Log.d("MC4kException", Log.getStackTraceString(ex));
                 if (isAdded()) {
-                    ((ArticleDetailsContainerActivity) getActivity()).showToast(getString(R.string.server_went_wrong));
+                    ToastUtils.showToast(getActivity(), getString(R.string.server_went_wrong));
                 }
             }
         }
@@ -328,7 +327,7 @@ public class MyCityCommentsFragment extends BaseFragment implements OnClickListe
             removeProgressDialog();
             if (null == response.body()) {
                 if (isAdded()) {
-                    ((ArticleDetailsContainerActivity) getActivity()).showToast(getString(R.string.server_went_wrong));
+                    ToastUtils.showToast(getActivity(), getString(R.string.server_went_wrong));
                 }
                 return;
             }
@@ -369,15 +368,14 @@ public class MyCityCommentsFragment extends BaseFragment implements OnClickListe
                     }
                 } else {
                     if (isAdded()) {
-                        ((ArticleDetailsContainerActivity) getActivity())
-                                .showToast(getString(R.string.server_went_wrong));
+                        ToastUtils.showToast(getActivity(), getString(R.string.server_went_wrong));
                     }
                 }
             } catch (Exception e) {
                 FirebaseCrashlytics.getInstance().recordException(e);
                 Log.d("MC4kException", Log.getStackTraceString(e));
                 if (isAdded()) {
-                    ((ArticleDetailsContainerActivity) getActivity()).showToast(getString(R.string.went_wrong));
+                    ToastUtils.showToast(getActivity(), getString(R.string.went_wrong));
                 }
             }
         }

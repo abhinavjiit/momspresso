@@ -38,6 +38,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 import com.google.android.material.tabs.TabLayout;
+import com.google.android.material.tabs.TabLayout.TabView;
 import com.google.firebase.crashlytics.FirebaseCrashlytics;
 import com.google.firebase.remoteconfig.FirebaseRemoteConfig;
 import com.google.gson.Gson;
@@ -74,6 +75,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Random;
 import java.util.concurrent.TimeUnit;
 import java.util.regex.Matcher;
@@ -495,38 +497,34 @@ public class AppUtils {
         }
     }
 
-    public static void changeTabsFontInMomVlog(TabLayout tabLayout, Context context) {
-        Typeface myTypeface = Typeface
-                .createFromAsset(tabLayout.getContext().getAssets(), "fonts/" + "Roboto-Bold.ttf");
-        ViewGroup vg = (ViewGroup) tabLayout.getChildAt(0);
-        int tabsCount = vg.getChildCount();
-        for (int j = 0; j < tabsCount; j++) {
-            ViewGroup vgTab = (ViewGroup) vg.getChildAt(j);
-            int tabChildsCount = vgTab.getChildCount();
-            for (int i = 0; i < tabChildsCount; i++) {
-                View tabViewChild = vgTab.getChildAt(i);
-                if (tabViewChild instanceof TextView) {
-                    ((TextView) tabViewChild).setTypeface(myTypeface, Typeface.NORMAL);
-                    // ((TextView) tabViewChild).setTextColor(context.getResources().getColor(R.color.campaign_4A4A4A));
-                    if (((TextView) tabViewChild).getText().toString().equals("Challenges")
-                            || ((TextView) tabViewChild).getText().toString().equals("challenges")
-                            || ((TextView) tabViewChild).getText().toString().equals("चैलेंज")
-                            || ((TextView) tabViewChild).getText().toString().equals("চ্যালেঞ্জ")
-                            || ((TextView) tabViewChild).getText().toString().equals("ചാലഞ്ച്")
-                            || ((TextView) tabViewChild).getText().toString().equals("चॅलेंज")
-                            || ((TextView) tabViewChild).getText().toString().equals("சவால்கள்")
-                            || ((TextView) tabViewChild).getText().toString().equals("ఛాలెంజ్")
-                            || ((TextView) tabViewChild).getText().toString().equals("ಸವಾಲು")
-                            || ((TextView) tabViewChild).getText().toString().equals("પડકારો")
-                            || ((TextView) tabViewChild).getText().toString().equals("ਚੈਲੇੰਜਸ")) {
-                        Drawable drawable = tabLayout.getContext().getResources()
-                                .getDrawable(R.drawable.ic_winner_tablayout_icon);
-                        ((TextView) tabViewChild)
-                                .setCompoundDrawablesWithIntrinsicBounds(drawable, null, null, null);
-                        ((TextView) tabViewChild).setCompoundDrawablePadding(15);
+    public static void changeTabsFontInMomVlog(TabLayout tabLayout) {
+        try {
+            Typeface myTypeface = Typeface
+                    .createFromAsset(tabLayout.getContext().getAssets(), "fonts/" + "Roboto-Bold.ttf");
+            ViewGroup vg = (ViewGroup) tabLayout.getChildAt(0);
+            int tabsCount = vg.getChildCount();
+            for (int j = 0; j < tabsCount; j++) {
+                ViewGroup vgTab = (ViewGroup) vg.getChildAt(j);
+                int tabChildsCount = vgTab.getChildCount();
+                for (int i = 0; i < tabChildsCount; i++) {
+                    View tabViewChild = vgTab.getChildAt(i);
+                    if (tabViewChild instanceof TextView) {
+                        ((TextView) tabViewChild).setTypeface(myTypeface, Typeface.NORMAL);
+                        TabLayout.Tab tab = ((TabView) tabViewChild.getParent()).getTab();
+                        if (tab != null && tab.getTag() != null && AppConstants.VIDEO_CHALLENGE_ID
+                                .equals(tab.getTag().toString())) {
+                            Drawable drawable = tabLayout.getContext().getResources()
+                                    .getDrawable(R.drawable.ic_winner_tablayout_icon);
+                            ((TextView) tabViewChild)
+                                    .setCompoundDrawablesWithIntrinsicBounds(drawable, null, null, null);
+                            ((TextView) tabViewChild).setCompoundDrawablePadding(15);
+                        }
                     }
                 }
             }
+        } catch (Exception e) {
+            FirebaseCrashlytics.getInstance().recordException(e);
+            Log.d("MC4kException", Log.getStackTraceString(e));
         }
     }
 

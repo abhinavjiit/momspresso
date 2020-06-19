@@ -259,7 +259,7 @@ public class WinnerVlogsListingTabFragment extends BaseFragment implements View.
                 popularSortFab.setVisibility(View.GONE);
                 recentSortFab.setVisibility(View.GONE);
                 noBlogsTextView.setVisibility(View.VISIBLE);
-                noBlogsTextView.setText(getString(R.string.all_videos_funny_videos_no_videos));
+                noBlogsTextView.setText(getString(R.string.winner_empty_state));
                 articleDataModelsNew = dataList;
                 articlesListingAdapter.setNewListData(articleDataModelsNew);
                 articlesListingAdapter.notifyDataSetChanged();

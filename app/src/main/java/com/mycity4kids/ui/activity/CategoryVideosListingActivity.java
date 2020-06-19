@@ -195,20 +195,23 @@ public class CategoryVideosListingActivity extends BaseActivity implements View.
         Topics following = new Topics();
         following.setId(null);
         String followingLabel = "";
-        followingLabel = "Following";
+        followingLabel = getString(R.string.all_following).toUpperCase();
         following.setDisplay_name(followingLabel);
         following.setTitle(followingLabel);
         subTopicsList.add(0, following);
 
         for (int i = 0; i < subTopicsList.size(); i++) {
-            tabLayout.addTab(tabLayout.newTab().setText(subTopicsList.get(i).getDisplay_name()));
+            TabLayout.Tab tab = tabLayout.newTab();
+            tab.setText(subTopicsList.get(i).getDisplay_name());
+            tab.setTag(subTopicsList.get(i).getId());
+            tabLayout.addTab(tab);
             if (!StringUtils.isNullOrEmpty(subTopicsList.get(i).getId()) && subTopicsList.get(i).getId()
                     .equals(selectedTabCategoryId)) {
                 selectedTabIndex = i;
             }
         }
 
-        AppUtils.changeTabsFontInMomVlog(tabLayout, this);
+        AppUtils.changeTabsFontInMomVlog(tabLayout);
         pagerAdapter = new VideoTopicsPagerAdapter(getSupportFragmentManager(), tabLayout.getTabCount(), subTopicsList);
         viewPager.setAdapter(pagerAdapter);
         viewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabLayout));

@@ -96,9 +96,10 @@ public class ChallengeDetailFragment extends Fragment implements View.OnClickLis
         }
         Picasso.get().load(selectedActiveUrl).fit()
                 .placeholder(R.drawable.default_article).error(R.drawable.default_article).into(thumbNail);
-        tabs.addTab(tabs.newTab().setText(getResources().getString(R.string.about_video)));
-        tabs.addTab(tabs.newTab().setText(getResources().getString(R.string.all_videos_toolbar_title)));
-        tabs.addTab(tabs.newTab().setText("WINNERS"));
+        tabs.addTab(tabs.newTab().setText(tabs.getContext().getResources().getString(R.string.about_video)));
+        tabs.addTab(
+                tabs.newTab().setText(tabs.getContext().getResources().getString(R.string.all_videos_toolbar_title)));
+        tabs.addTab(tabs.newTab().setText(tabs.getContext().getResources().getString(R.string.all_winners)));
         AppUtils.changeTabsFont(tabs);
         View root = tabs.getChildAt(0);
         if (root instanceof LinearLayout) {

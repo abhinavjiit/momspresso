@@ -2687,63 +2687,69 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
         PopupMenu popupMenu = new PopupMenu(getActivity(), chooseOptionMenuItem);
         popupMenu.getMenuInflater().inflate(R.menu.article_detail_items_menu, popupMenu.getMenu());
         popupMenu.setOnMenuItemClickListener(menuItem -> {
-            if (menuItem.getItemId() == R.id.copyLink) {
-                AppUtils.copyToClipboard(
-                        AppUtils.getShareUrl(detailData.getUserType(), detailData.getBlogTitleSlug(),
-                                detailData.getTitleSlug())
-                );
-                ToastUtils.showToast(getActivity(), "Link Copied");
-                return true;
-            } else if (menuItem.getItemId() == R.id.addCollection) {
-                try {
-                    AddCollectionAndCollectionItemDialogFragment addCollectionAndCollectionitemDialogFragment =
-                            new AddCollectionAndCollectionItemDialogFragment();
-                    Bundle bundle = new Bundle();
-                    bundle.putString("articleId", articleId);
-                    bundle.putString("type", AppConstants.ARTICLE_COLLECTION_TYPE);
-                    addCollectionAndCollectionitemDialogFragment.setArguments(bundle);
-                    FragmentManager fm = getFragmentManager();
-                    addCollectionAndCollectionitemDialogFragment.setTargetFragment(ArticleDetailsFragment.this, 0);
-                    addCollectionAndCollectionitemDialogFragment.show(fm, "collectionAdd");
-                    Utils.pushProfileEvents(getActivity(), "CTA_Article_Add_To_Collection",
-                            "ArticleDetailsFragment", "Add to Collection", "-");
-                } catch (Exception e) {
-                    FirebaseCrashlytics.getInstance().recordException(e);
-                    Log.d("MC4kException", Log.getStackTraceString(e));
+            try {
+                if (menuItem.getItemId() == R.id.copyLink) {
+                    AppUtils.copyToClipboard(
+                            AppUtils.getShareUrl(detailData.getUserType(), detailData.getBlogTitleSlug(),
+                                    detailData.getTitleSlug())
+                    );
+                    ToastUtils.showToast(getActivity(), "Link Copied");
+                    return true;
+                } else if (menuItem.getItemId() == R.id.addCollection) {
+                    try {
+                        AddCollectionAndCollectionItemDialogFragment addCollectionAndCollectionitemDialogFragment =
+                                new AddCollectionAndCollectionItemDialogFragment();
+                        Bundle bundle = new Bundle();
+                        bundle.putString("articleId", articleId);
+                        bundle.putString("type", AppConstants.ARTICLE_COLLECTION_TYPE);
+                        addCollectionAndCollectionitemDialogFragment.setArguments(bundle);
+                        FragmentManager fm = getFragmentManager();
+                        addCollectionAndCollectionitemDialogFragment.setTargetFragment(ArticleDetailsFragment.this, 0);
+                        addCollectionAndCollectionitemDialogFragment.show(fm, "collectionAdd");
+                        Utils.pushProfileEvents(getActivity(), "CTA_Article_Add_To_Collection",
+                                "ArticleDetailsFragment", "Add to Collection", "-");
+                    } catch (Exception e) {
+                        FirebaseCrashlytics.getInstance().recordException(e);
+                        Log.d("MC4kException", Log.getStackTraceString(e));
+                    }
+                    return true;
+                } else if (menuItem.getItemId() == R.id.share) {
+                    Intent shareIntent = new Intent(Intent.ACTION_SEND);
+                    shareIntent.setType("text/plain");
+                    shareIntent.putExtra(Intent.EXTRA_TEXT,
+                            AppUtils.getUtmParamsAppendedShareUrl(shareUrl, "AD_Generic_Share", "Share_Android"));
+                    startActivity(Intent.createChooser(shareIntent, "Momspresso"));
+                    Utils.shareEventTracking(getActivity(), "Article Detail", "Share_Android", "AD_Generic_Share");
+                    return true;
+                } else if (menuItem.getItemId() == R.id.reportLang) {
+                    final ReportStoryOrCommentRequest reportStoryOrCommentRequest = new ReportStoryOrCommentRequest();
+                    reportStoryOrCommentRequest.setId(articleId);
+                    reportStoryOrCommentRequest.setType(AppConstants.REPORT_TYPE_ARTICLE);
+                    reportStoryOrCommentRequest.setReason("Incorrect Language");
+                    Retrofit retrofit = BaseApplication.getInstance().getRetrofit();
+                    final ShortStoryAPI shortStoryApi = retrofit.create(ShortStoryAPI.class);
+                    Call<ReportStoryOrCommentResponse> call = shortStoryApi
+                            .reportStoryOrComment(reportStoryOrCommentRequest);
+                    call.enqueue(new Callback<ReportStoryOrCommentResponse>() {
+                        @Override
+                        public void onResponse(Call<ReportStoryOrCommentResponse> call,
+                                Response<ReportStoryOrCommentResponse> response) {
+
+                        }
+
+                        @Override
+                        public void onFailure(Call<ReportStoryOrCommentResponse> call, Throwable t) {
+
+                        }
+                    });
+                    return true;
                 }
-                return true;
-            } else if (menuItem.getItemId() == R.id.share) {
-                Intent shareIntent = new Intent(Intent.ACTION_SEND);
-                shareIntent.setType("text/plain");
-                shareIntent.putExtra(Intent.EXTRA_TEXT,
-                        AppUtils.getUtmParamsAppendedShareUrl(shareUrl, "AD_Generic_Share", "Share_Android"));
-                startActivity(Intent.createChooser(shareIntent, "Momspresso"));
-                Utils.shareEventTracking(getActivity(), "Article Detail", "Share_Android", "AD_Generic_Share");
-                return true;
-            } else if (menuItem.getItemId() == R.id.reportLang) {
-                final ReportStoryOrCommentRequest reportStoryOrCommentRequest = new ReportStoryOrCommentRequest();
-                reportStoryOrCommentRequest.setId(articleId);
-                reportStoryOrCommentRequest.setType(AppConstants.REPORT_TYPE_ARTICLE);
-                reportStoryOrCommentRequest.setReason("Incorrect Language");
-                Retrofit retrofit = BaseApplication.getInstance().getRetrofit();
-                final ShortStoryAPI shortStoryApi = retrofit.create(ShortStoryAPI.class);
-                Call<ReportStoryOrCommentResponse> call = shortStoryApi
-                        .reportStoryOrComment(reportStoryOrCommentRequest);
-                call.enqueue(new Callback<ReportStoryOrCommentResponse>() {
-                    @Override
-                    public void onResponse(Call<ReportStoryOrCommentResponse> call,
-                            Response<ReportStoryOrCommentResponse> response) {
-
-                    }
-
-                    @Override
-                    public void onFailure(Call<ReportStoryOrCommentResponse> call, Throwable t) {
-
-                    }
-                });
-                return true;
+                return false;
+            } catch (Exception e) {
+                FirebaseCrashlytics.getInstance().recordException(e);
+                Log.d("NullPointerException", Log.getStackTraceString(e));
+                return false;
             }
-            return false;
         });
         popupMenu.show();
     }

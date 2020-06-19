@@ -52,6 +52,7 @@ class ShortStoryModerationOrShareActivity : BaseActivity(), View.OnClickListener
     private var storyAuthorTextView: TextView? = null
     private var shareMedium: String? = null
     private var shareUrl: String? = null
+    private var source: String? = null
     private var userId: String? = null
     private var authorName: String? = null
     private val storyCategoriesList = ArrayList<String>()
@@ -79,6 +80,7 @@ class ShortStoryModerationOrShareActivity : BaseActivity(), View.OnClickListener
         authorName = SharedPrefUtils.getUserDetailModel(this).first_name + " " +
             SharedPrefUtils.getUserDetailModel(this).last_name
         shareUrl = intent.getStringExtra("shareUrl")
+        source = intent.getStringExtra("source")
         val storyId: String? = intent.getStringExtra(Constants.ARTICLE_ID)
 
         setSupportActionBar(toolbar)
@@ -355,7 +357,9 @@ class ShortStoryModerationOrShareActivity : BaseActivity(), View.OnClickListener
     private fun launchHome() {
         val intent = Intent(this@ShortStoryModerationOrShareActivity, DashboardActivity::class.java)
         intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_NEW_TASK
-        intent.putExtra("showInviteDialog", true)
+        if (source == "publishFlow") {
+            intent.putExtra("showInviteDialog", true)
+        }
         startActivity(intent)
         finish()
     }

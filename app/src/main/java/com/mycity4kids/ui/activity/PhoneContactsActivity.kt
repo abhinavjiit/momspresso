@@ -36,6 +36,7 @@ class PhoneContactsActivity : BaseActivity(), EasyPermissions.PermissionCallback
     private var contactModelArrayList: ArrayList<ContactModel>? = null
     private var allPhoneList: ArrayList<String>? = null
     private lateinit var adapter: PhoneContactsAdapter
+    private var source: String? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -46,6 +47,8 @@ class PhoneContactsActivity : BaseActivity(), EasyPermissions.PermissionCallback
             supportActionBar?.setDisplayHomeAsUpEnabled(true)
             supportActionBar?.setDisplayShowHomeEnabled(true)
             sendInviteTextView?.setOnClickListener(this)
+
+            source = intent.getStringExtra("source")
 
             contactModelArrayList = ArrayList()
             allPhoneList = ArrayList()
@@ -223,7 +226,11 @@ class PhoneContactsActivity : BaseActivity(), EasyPermissions.PermissionCallback
         if (selectedContactList.isNotEmpty()) {
             val contactSynRequest = PhoneContactRequest()
             contactSynRequest.contactList = selectedContactList
-            contactSynRequest.notifType = "1"
+            if (source == "shareApp") {
+                contactSynRequest.notifType = "3"
+            } else {
+                contactSynRequest.notifType = "1"
+            }
             val retro = BaseApplication.getInstance().retrofit
             val contactSyncAPI = retro.create(ContactSyncAPI::class.java)
             val contactSyncCall = contactSyncAPI.sendInvite(contactSynRequest)

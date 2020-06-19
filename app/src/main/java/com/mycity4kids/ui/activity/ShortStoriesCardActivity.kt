@@ -692,6 +692,7 @@ class ShortStoriesCardActivity : BaseActivity() {
                 ShortStoryModerationOrShareActivity::class.java
             )
             intent.putExtra("shareUrl", "" + shareUrl)
+            intent.putExtra("source", "publishFlow")
             intent.putExtra(Constants.ARTICLE_ID, draftId)
             startActivity(intent)
         }

@@ -258,10 +258,11 @@ public class VideoChallengeListing extends BaseFragment implements View.OnClickL
             if (null == articleDataModelsNew || articleDataModelsNew.isEmpty()) {
                 fabSort.setVisibility(View.GONE);
                 fabMenu.setVisibility(View.GONE);
+                listView.setVisibility(View.GONE);
                 popularSortFab.setVisibility(View.GONE);
                 recentSortFab.setVisibility(View.GONE);
                 noBlogsTextView.setVisibility(View.VISIBLE);
-                noBlogsTextView.setText(getString(R.string.all_videos_funny_videos_no_videos));
+                noBlogsTextView.setText(getString(R.string.all_first_vlog_upload));
                 articleDataModelsNew = dataList;
                 articlesListingAdapter.setNewListData(articleDataModelsNew);
                 articlesListingAdapter.notifyDataSetChanged();
