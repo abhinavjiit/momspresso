@@ -1070,7 +1070,7 @@ class UserProfileActivity : BaseActivity(),
             view?.id == R.id.followedCollectionsViewAll -> {
                 val intent = Intent(this@UserProfileActivity, CollectionsActivity::class.java)
                 intent.putExtra("userId", authorId)
-                intent.putExtra("comingFrom", "follow")
+                intent.putExtra("comingFrom", "followed")
                 startActivity(intent)
             }
             view?.id == R.id.contentLangContainer -> {
