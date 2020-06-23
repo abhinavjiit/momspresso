@@ -3,6 +3,7 @@ package com.mycity4kids.ui.activity.collection
 import android.os.Bundle
 import android.view.View
 import android.widget.TextView
+import androidx.core.content.ContextCompat
 import androidx.viewpager.widget.ViewPager
 import com.google.android.material.tabs.TabLayout
 import com.mycity4kids.R
@@ -66,18 +67,25 @@ class CollectionsActivity : BaseActivity() {
         } else {
             tabs.visibility = View.GONE
         }
-        if ("followed" == comingFrom) {
 
+
+        adapter = CollectionPagerAdapter(supportFragmentManager, isPrivate, userId!!)
+        collectionsViewPager.adapter = adapter
+        if ("followed" == comingFrom) {
             collectionsViewPager.currentItem = 1
         } else {
             collectionsViewPager.currentItem = 0
         }
-
-        adapter = CollectionPagerAdapter(supportFragmentManager, isPrivate, userId!!)
-        collectionsViewPager.adapter = adapter
         collectionsViewPager.addOnPageChangeListener(TabLayout.TabLayoutOnPageChangeListener(tabs))
         tabs.addOnTabSelectedListener(object : TabLayout.OnTabSelectedListener {
-            override fun onTabReselected(tab: TabLayout.Tab?) {}
+            override fun onTabReselected(tab: TabLayout.Tab?) {
+                collectionsViewPager.currentItem = tab!!.position
+                val tabb = tabs.getTabAt(tab.position)
+                tabs.setTabTextColors(
+                    ContextCompat.getColor(this@CollectionsActivity, R.color.grey_faded),
+                    ContextCompat.getColor(this@CollectionsActivity, R.color.all_drafts_title)
+                )
+            }
 
             override fun onTabUnselected(tab: TabLayout.Tab?) {}
 

@@ -195,6 +195,7 @@ public class ArticleCommentsFragment extends BaseFragment implements OnClickList
                 noCommentsTextView.setVisibility(View.VISIBLE);
             }
         } else {
+            noCommentsTextView.setVisibility(View.GONE);
             for (int i = 0; i < commentList.size(); i++) {
                 commentsList.add(commentList.get(i));
             }
@@ -273,6 +274,9 @@ public class ArticleCommentsFragment extends BaseFragment implements OnClickList
                     commentModel.setUserId(responseData.getData().get(0).getUserId());
 
                     commentsList.add(0, commentModel);
+                    if (noCommentsTextView.getVisibility() == View.VISIBLE) {
+                        noCommentsTextView.setVisibility(View.GONE);
+                    }
                     articleCommentsRecyclerAdapter.notifyDataSetChanged();
                     if (!StringUtils.isNullOrEmpty(userType) && !StringUtils.isNullOrEmpty(titleSlug) && !StringUtils
                             .isNullOrEmpty(blogSlug)) {
@@ -430,6 +434,9 @@ public class ArticleCommentsFragment extends BaseFragment implements OnClickList
                     commentsList.remove(actionItemPosition);
                     if (articleCommentRepliesDialogFragment != null) {
                         articleCommentRepliesDialogFragment.dismiss();
+                    }
+                    if (commentsList.isEmpty()) {
+                        noCommentsTextView.setVisibility(View.VISIBLE);
                     }
                     articleCommentsRecyclerAdapter.notifyDataSetChanged();
                     if (isAdded()) {
