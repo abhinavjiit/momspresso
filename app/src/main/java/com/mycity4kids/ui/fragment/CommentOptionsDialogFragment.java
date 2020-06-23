@@ -20,7 +20,6 @@ import com.mycity4kids.ui.ContentCommentReplyNotificationActivity;
  */
 public class CommentOptionsDialogFragment extends DialogFragment implements OnClickListener {
 
-    //    private IConfirmationResult iConfirmationResult;
     private int position;
     private String responseType;
     private String authorId;
@@ -60,52 +59,49 @@ public class CommentOptionsDialogFragment extends DialogFragment implements OnCl
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-//        iConfirmationResult = (IConfirmationResult) context;
     }
 
     @Override
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.deleteCommentTextView: {
-                if (getActivity() != null
-                        && getActivity() instanceof ContentCommentReplyNotificationActivity) {
-                    ICommentOptionAction iCommentOptionAction = (ICommentOptionAction) getActivity();
-                    iCommentOptionAction.onResponseDelete(position, responseType);
+                if (getActivity() != null && getActivity() instanceof ContentCommentReplyNotificationActivity) {
+                    ICommentOptionAction commentOptionAction = (ICommentOptionAction) getActivity();
+                    commentOptionAction.onResponseDelete(position, responseType);
                     dismiss();
-                }
-                else {
-                    ICommentOptionAction iCommentOptionAction = (ICommentOptionAction) getParentFragment();
-                    iCommentOptionAction.onResponseDelete(position, responseType);
+                } else {
+                    ICommentOptionAction commentOptionAction = (ICommentOptionAction) getParentFragment();
+                    commentOptionAction.onResponseDelete(position, responseType);
                     dismiss();
                 }
             }
             break;
             case R.id.editCommentTextView: {
-                if (getActivity() != null
-                        && getActivity() instanceof ContentCommentReplyNotificationActivity) {
-                    ICommentOptionAction iCommentOptionAction = (ICommentOptionAction) getActivity();
-                    iCommentOptionAction.onResponseEdit(position, responseType);
+                if (getActivity() != null && getActivity() instanceof ContentCommentReplyNotificationActivity) {
+                    ICommentOptionAction commentOptionAction = (ICommentOptionAction) getActivity();
+                    commentOptionAction.onResponseEdit(position, responseType);
                     dismiss();
                 } else {
-                    ICommentOptionAction iCommentOptionAction = (ICommentOptionAction) getParentFragment();
-                    iCommentOptionAction.onResponseEdit(position, responseType);
+                    ICommentOptionAction commentOptionAction = (ICommentOptionAction) getParentFragment();
+                    commentOptionAction.onResponseEdit(position, responseType);
                     dismiss();
                 }
             }
             break;
             case R.id.reportCommentTextView: {
-                if (getActivity() != null
-                        && getActivity() instanceof ContentCommentReplyNotificationActivity) {
-                    ICommentOptionAction iCommentOptionAction = (ICommentOptionAction) getActivity();
-                    iCommentOptionAction.onResponseReport(position, responseType);
+                if (getActivity() != null && getActivity() instanceof ContentCommentReplyNotificationActivity) {
+                    ICommentOptionAction commentOptionAction = (ICommentOptionAction) getActivity();
+                    commentOptionAction.onResponseReport(position, responseType);
                     dismiss();
                 } else {
-                    ICommentOptionAction iCommentOptionAction = (ICommentOptionAction) getParentFragment();
-                    iCommentOptionAction.onResponseReport(position, responseType);
+                    ICommentOptionAction commentOptionAction = (ICommentOptionAction) getParentFragment();
+                    commentOptionAction.onResponseReport(position, responseType);
                     dismiss();
                 }
             }
             break;
+            default:
+                break;
         }
     }
 

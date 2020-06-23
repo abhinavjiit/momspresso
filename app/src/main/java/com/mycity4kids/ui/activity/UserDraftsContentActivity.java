@@ -2,21 +2,18 @@ package com.mycity4kids.ui.activity;
 
 import android.content.Intent;
 import android.os.Bundle;
-
-import com.google.android.material.tabs.TabLayout;
-
-import androidx.viewpager.widget.ViewPager;
-import androidx.appcompat.widget.Toolbar;
-
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-
-import com.mycity4kids.base.BaseActivity;
+import androidx.appcompat.widget.Toolbar;
+import androidx.viewpager.widget.ViewPager;
+import com.google.android.material.tabs.TabLayout;
 import com.mycity4kids.R;
 import com.mycity4kids.application.BaseApplication;
+import com.mycity4kids.base.BaseActivity;
+import com.mycity4kids.constants.AppConstants;
 import com.mycity4kids.constants.Constants;
 import com.mycity4kids.ui.adapter.UserDraftsContentPagerAdapter;
 import com.mycity4kids.utils.AppUtils;
@@ -33,6 +30,7 @@ public class UserDraftsContentActivity extends BaseActivity implements View.OnCl
     private TextView toolbarTitleTextView;
     private String contentType;
     private RelativeLayout root;
+    private int selectedTabIndex = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -53,9 +51,9 @@ public class UserDraftsContentActivity extends BaseActivity implements View.OnCl
         contentType = getIntent().getStringExtra("contentType");
         searchAllImageView.setOnClickListener(this);
 
-        String authorId = getIntent().getStringExtra(Constants.AUTHOR_ID);
-        boolean isPrivateProfile = getIntent().getBooleanExtra("isPrivateProfile", false);
-
+        if (AppConstants.CONTENT_TYPE_SHORT_STORY.equals(contentType)) {
+            selectedTabIndex = 1;
+        }
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
@@ -63,8 +61,12 @@ public class UserDraftsContentActivity extends BaseActivity implements View.OnCl
         tabLayout.addTab(tabLayout.newTab().setText(getString(R.string.search_article_topic_tab_label)));
         tabLayout.addTab(tabLayout.newTab().setText(getString(R.string.lang_setting_stories_label)));
         AppUtils.changeTabsFont(tabLayout);
-//        toolbarTitleTextView.setText(getString(R.string.myprofile_section_short_story_label));
-        UserDraftsContentPagerAdapter adapter = new UserDraftsContentPagerAdapter(getSupportFragmentManager(), tabLayout.getTabCount(), authorId, isPrivateProfile);
+
+        String authorId = getIntent().getStringExtra(Constants.AUTHOR_ID);
+        boolean isPrivateProfile = getIntent().getBooleanExtra("isPrivateProfile", false);
+
+        UserDraftsContentPagerAdapter adapter = new UserDraftsContentPagerAdapter(getSupportFragmentManager(),
+                tabLayout.getTabCount(), authorId, isPrivateProfile);
         viewPager.setAdapter(adapter);
 
         viewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabLayout));
@@ -84,9 +86,7 @@ public class UserDraftsContentActivity extends BaseActivity implements View.OnCl
 
             }
         });
-
-
-//        viewPager.setCurrentItem(0);
+        viewPager.setCurrentItem(selectedTabIndex);
     }
 
     @Override
@@ -107,6 +107,8 @@ public class UserDraftsContentActivity extends BaseActivity implements View.OnCl
                 searchIntent.putExtra(Constants.FILTER_NAME, "");
                 searchIntent.putExtra(Constants.TAB_POSITION, 0);
                 startActivity(searchIntent);
+                break;
+            default:
                 break;
         }
     }

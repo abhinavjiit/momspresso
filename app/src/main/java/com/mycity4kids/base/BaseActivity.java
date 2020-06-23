@@ -26,24 +26,40 @@ import android.widget.TextView;
 import android.widget.Toast;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.browser.customtabs.CustomTabsIntent;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.crashlytics.FirebaseCrashlytics;
+import com.google.gson.Gson;
 import com.mycity4kids.BuildConfig;
 import com.mycity4kids.MessageEvent;
 import com.mycity4kids.R;
 import com.mycity4kids.application.BaseApplication;
 import com.mycity4kids.constants.AppConstants;
 import com.mycity4kids.constants.Constants;
+import com.mycity4kids.editor.EditorPostActivity;
+import com.mycity4kids.editor.NewEditor;
 import com.mycity4kids.listener.OnButtonClicked;
+import com.mycity4kids.models.response.DeepLinkingResposnse;
+import com.mycity4kids.models.response.DeepLinkingResult;
 import com.mycity4kids.models.response.GroupsMembershipResponse;
+import com.mycity4kids.models.response.ShortStoryDetailResult;
+import com.mycity4kids.models.response.UserDetailResponse;
 import com.mycity4kids.preference.SharedPrefUtils;
 import com.mycity4kids.profile.UserProfileActivity;
+import com.mycity4kids.retrofitAPIsInterfaces.BloggerDashboardAPI;
+import com.mycity4kids.retrofitAPIsInterfaces.DeepLinkingAPI;
+import com.mycity4kids.retrofitAPIsInterfaces.ShortStoryAPI;
 import com.mycity4kids.sync.SyncUserInfoService;
 import com.mycity4kids.ui.GroupMembershipStatus;
+import com.mycity4kids.ui.activity.AddShortStoryActivity;
 import com.mycity4kids.ui.activity.AppSettingsActivity;
 import com.mycity4kids.ui.activity.ArticleDetailsContainerActivity;
+import com.mycity4kids.ui.activity.BadgeActivity;
+import com.mycity4kids.ui.activity.BlogSetupActivity;
+import com.mycity4kids.ui.activity.CategoryVideosListingActivity;
+import com.mycity4kids.ui.activity.DashboardActivity;
 import com.mycity4kids.ui.activity.GroupDetailsActivity;
 import com.mycity4kids.ui.activity.GroupMembershipActivity;
 import com.mycity4kids.ui.activity.GroupPostDetailActivity;
@@ -51,19 +67,33 @@ import com.mycity4kids.ui.activity.GroupsReportedContentActivity;
 import com.mycity4kids.ui.activity.GroupsSummaryActivity;
 import com.mycity4kids.ui.activity.LoadWebViewActivity;
 import com.mycity4kids.ui.activity.ParallelFeedActivity;
+import com.mycity4kids.ui.activity.ShortStoriesListingContainerActivity;
 import com.mycity4kids.ui.activity.ShortStoryContainerActivity;
+import com.mycity4kids.ui.activity.SuggestedTopicsActivity;
+import com.mycity4kids.ui.activity.UserDraftsContentActivity;
 import com.mycity4kids.ui.activity.ViewGroupPostCommentsRepliesActivity;
+import com.mycity4kids.ui.activity.collection.CollectionsActivity;
+import com.mycity4kids.ui.activity.collection.UserCollectionItemListActivity;
 import com.mycity4kids.ui.campaign.activity.CampaignContainerActivity;
 import com.mycity4kids.ui.rewards.activity.RewardsContainerActivity;
+import com.mycity4kids.ui.videochallengenewui.activity.NewVideoChallengeActivity;
+import com.mycity4kids.utils.AppUtils;
+import com.mycity4kids.utils.ConnectivityUtils;
+import com.mycity4kids.utils.CustomTabsHelper;
 import com.mycity4kids.utils.StringUtils;
 import com.squareup.picasso.Picasso;
 import java.net.SocketTimeoutException;
 import java.net.UnknownHostException;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 import org.json.JSONException;
 import org.json.JSONObject;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Retrofit;
 
 /**
  * This class is used as base-class for application-base-activity.
@@ -867,4 +897,487 @@ public abstract class BaseActivity extends AppCompatActivity implements GroupMem
         FirebaseCrashlytics.getInstance().recordException(t);
         Log.d("MC4kException", Log.getStackTraceString(t));
     }
+
+    public void handleDeeplinks(String tempDeepLinkUrl) {
+        if (matchRegex(tempDeepLinkUrl)) {
+            // need to optimize this code
+        } else if (tempDeepLinkUrl.endsWith(AppConstants.DEEPLINK_SELF_PROFILE_URL_1)
+                || tempDeepLinkUrl.endsWith(AppConstants.DEEPLINK_SELF_PROFILE_URL_2)
+                || tempDeepLinkUrl.contains(AppConstants.DEEPLINK_PROFILE_URL)
+                || tempDeepLinkUrl.contains(AppConstants.DEEPLINK_MOMSPRESSO_PROFILE_URL)) {
+            Intent profileIntent = new Intent(this, UserProfileActivity.class);
+            startActivity(profileIntent);
+        } else if (tempDeepLinkUrl.contains(AppConstants.DEEPLINK_ADD_FUNNY_VIDEO_URL)
+                || tempDeepLinkUrl
+                .contains(AppConstants.DEEPLINK_MOMSPRESSO_ADD_FUNNY_VIDEO_URL)) {
+            if (this instanceof DashboardActivity) {
+                ((DashboardActivity) this).launchAddVideoOptions();
+            }
+        } else if (tempDeepLinkUrl.contains(AppConstants.DEEPLINK_EDITOR_URL)
+                || tempDeepLinkUrl.contains(AppConstants.DEEPLINK_MOMSPRESSO_EDITOR_URL)) {
+            launchEditor();
+        } else if (tempDeepLinkUrl.contains(AppConstants.DEEPLINK_EDIT_SHORT_DRAFT_URL)) {
+            Intent ssIntent = new Intent(this, UserDraftsContentActivity.class);
+            ssIntent.putExtra("isPrivateProfile", true);
+            ssIntent.putExtra("contentType", AppConstants.CONTENT_TYPE_SHORT_STORY);
+            ssIntent.putExtra(Constants.AUTHOR_ID,
+                    SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId());
+            startActivity(ssIntent);
+        } else if (tempDeepLinkUrl.contains(AppConstants.DEEPLINK_PROFILE_INVITE_FRIENDS)) {
+            Intent intent = new Intent(this, UserProfileActivity.class);
+            intent.putExtra(AppConstants.SHOW_INVITE_DIALOG_FLAG, true);
+            startActivity(intent);
+        } else if (tempDeepLinkUrl.contains(AppConstants.DEEPLINK_EDIT_SHORT_STORY_URL)) {
+            final String storyId = tempDeepLinkUrl
+                    .substring(tempDeepLinkUrl.lastIndexOf("/") + 1,
+                            tempDeepLinkUrl.length());
+            Retrofit retrofit = BaseApplication.getInstance().getRetrofit();
+            ShortStoryAPI shortStoryApi = retrofit.create(ShortStoryAPI.class);
+            Call<ShortStoryDetailResult> call = shortStoryApi
+                    .getShortStoryDetails(storyId, "articleId");
+            call.enqueue(ssDetailResponseCallback);
+        } else if (tempDeepLinkUrl.contains(AppConstants.DEEPLINK_SUGGESTED_TOPIC_URL)
+                || tempDeepLinkUrl
+                .contains(AppConstants.DEEPLINK_MOMSPRESSO_SUGGESTED_TOPIC_URL)) {
+            Intent suggestedIntent = new Intent(this, SuggestedTopicsActivity.class);
+            startActivity(suggestedIntent);
+        } else if (tempDeepLinkUrl.endsWith(AppConstants.DEEPLINK_SETUP_BLOG)) {
+            checkIsBlogSetup();
+        } else if (tempDeepLinkUrl.contains(AppConstants.DEEPLINK_MOMSPRESSO_REWARD_PAGE)) {
+            Intent rewardForm = new Intent(this, RewardsContainerActivity.class);
+            final String referralCode = tempDeepLinkUrl
+                    .substring(tempDeepLinkUrl.lastIndexOf("=") + 1,
+                            tempDeepLinkUrl.length());
+            rewardForm.putExtra("pageLimit", 1);
+            rewardForm.putExtra("pageNumber", 1);
+            rewardForm.putExtra("referral", referralCode);
+            startActivity(rewardForm);
+        } else if (tempDeepLinkUrl
+                .contains(AppConstants.DEEPLINK_MOMSPRESSO_REWARD_MYMONEY)) {
+            Intent campaignIntent = new Intent(this, CampaignContainerActivity.class);
+            startActivity(campaignIntent);
+        } else if (tempDeepLinkUrl.contains(AppConstants.DEEPLINK_MOMSPRESSO_CAMPAIGN)) {
+            if (tempDeepLinkUrl.contains("?")) {
+                final String campaignID = tempDeepLinkUrl
+                        .substring(tempDeepLinkUrl.lastIndexOf("/") + 1,
+                                tempDeepLinkUrl.indexOf("?"));
+                if (!StringUtils.isNullOrEmpty(campaignID)) {
+                    Intent campaignIntent = new Intent(this,
+                            CampaignContainerActivity.class);
+                    campaignIntent.putExtra("campaignID", Integer.parseInt(campaignID));
+                    startActivity(campaignIntent);
+                }
+            } else {
+                final String campaignID = tempDeepLinkUrl
+                        .substring(tempDeepLinkUrl.lastIndexOf("/") + 1);
+                if (!StringUtils.isNullOrEmpty(campaignID)) {
+                    Intent campaignIntent = new Intent(this,
+                            CampaignContainerActivity.class);
+                    campaignIntent.putExtra("campaignID", Integer.parseInt(campaignID));
+                    startActivity(campaignIntent);
+                }
+            }
+        } else if (tempDeepLinkUrl.contains(AppConstants.DEEPLINK_GROUPS)) {
+            String[] separated = tempDeepLinkUrl.split("/");
+            if (separated[separated.length - 1].startsWith("comment-")) {
+                String[] commArray = separated[separated.length - 1].split("-");
+                long commentId = AppUtils.getIdFromHash(commArray[1]);
+                String[] postArray = separated[separated.length - 2].split("-");
+                long postId = AppUtils.getIdFromHash(postArray[1]);
+                String[] groupArray = separated[separated.length - 3].split("-");
+                long groupId = AppUtils.getIdFromHash(groupArray[groupArray.length - 1]);
+                Intent gpPostIntent = new Intent(this, GroupPostDetailActivity.class);
+                gpPostIntent.putExtra("postId", (int) postId);
+                gpPostIntent.putExtra("groupId", (int) groupId);
+                gpPostIntent.putExtra("responseId", (int) commentId);
+                startActivity(gpPostIntent);
+            } else if (separated[separated.length - 1].startsWith("post-")) {
+                String[] postArray = separated[separated.length - 1].split("-");
+                long postId = AppUtils.getIdFromHash(postArray[1]);
+                String[] groupArray = separated[separated.length - 2].split("-");
+                long groupId = AppUtils.getIdFromHash(groupArray[groupArray.length - 1]);
+                Intent gpPostIntent = new Intent(this, GroupPostDetailActivity.class);
+                gpPostIntent.putExtra("postId", (int) postId);
+                gpPostIntent.putExtra("groupId", (int) groupId);
+                startActivity(gpPostIntent);
+            } else if (separated[separated.length - 1].equals("join")) {
+                String[] groupArray = separated[separated.length - 2].split("-");
+                long groupId = AppUtils.getIdFromHash(groupArray[groupArray.length - 1]);
+                GroupMembershipStatus groupMembershipStatus = new GroupMembershipStatus(
+                        this);
+                groupMembershipStatus.checkMembershipStatus((int) groupId,
+                        SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext())
+                                .getDynamoId());
+            } else {
+                String[] groupArray;
+                long groupId;
+                if (separated[separated.length - 1].contains("?")) {
+                    groupArray = separated[separated.length - 1].split("[?]");
+                    groupArray = groupArray[0].split("-");
+                    groupId = AppUtils.getIdFromHash(groupArray[groupArray.length - 1]);
+                } else {
+                    groupArray = separated[separated.length - 1].split("-");
+                    groupId = AppUtils.getIdFromHash(groupArray[groupArray.length - 1]);
+                }
+                if (groupId == -1) {
+                    return;
+                }
+                GroupMembershipStatus groupMembershipStatus = new GroupMembershipStatus(
+                        this);
+                groupMembershipStatus.checkMembershipStatus((int) groupId,
+                        SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext())
+                                .getDynamoId());
+            }
+        } else if (tempDeepLinkUrl.contains(AppConstants.DEEPLINK_MOMSPRESSO_REFERRAL)) {
+            Intent intent1 = new Intent(this, RewardsContainerActivity.class);
+            intent1.putExtra("pageNumber", 1);
+            startActivity(intent1);
+        } else if (tempDeepLinkUrl.contains(AppConstants.DEEPLINK_ADD_SHORT_STORY_URL)
+                || tempDeepLinkUrl.contains(AppConstants.DEEPLINK_ADD_SHORT_STORY_URL_1)) {
+            Intent ssIntent = new Intent(this, AddShortStoryActivity.class);
+            startActivity(ssIntent);
+        } else {
+            getDeepLinkData(tempDeepLinkUrl);
+        }
+    }
+
+    private Boolean matchRegex(String tempDeepLinkUrl) {
+        try {
+            String urlWithNoParams = tempDeepLinkUrl.split("\\?")[0];
+            if (urlWithNoParams.endsWith("/")) {
+                urlWithNoParams = urlWithNoParams.substring(0, urlWithNoParams.length() - 1);
+            }
+            Pattern pattern = Pattern.compile(AppConstants.COLLECTION_LIST_REGEX);
+            Matcher matcher = pattern.matcher(urlWithNoParams);
+            if (matcher.matches()) {
+                String[] separated = urlWithNoParams.split("/");
+                Intent intent = new Intent(this, CollectionsActivity.class);
+                intent.putExtra("userId", separated[separated.length - 2]);
+                startActivity(intent);
+                return true;
+            }
+
+            Pattern pattern1 = Pattern.compile(AppConstants.COLLECTION_DETAIL_REGEX);
+            Matcher matcher1 = pattern1.matcher(urlWithNoParams);
+            if (matcher1.matches()) {
+                String[] separated = urlWithNoParams.split("/");
+                Intent intent = new Intent(this, UserCollectionItemListActivity.class);
+                intent.putExtra("id", separated[separated.length - 1]);
+                startActivity(intent);
+                return true;
+            }
+
+            Pattern pattern2 = Pattern.compile(AppConstants.BADGES_LISTING_REGEX);
+            Matcher matcher2 = pattern2.matcher(urlWithNoParams);
+            if (matcher2.matches()) {
+                String[] separated = urlWithNoParams.split("/");
+                Intent intent = new Intent(this, BadgeActivity.class);
+                intent.putExtra(Constants.USER_ID, separated[separated.length - 2]);
+                startActivity(intent);
+                return true;
+            }
+
+            Pattern pattern3 = Pattern.compile(AppConstants.BADGES_DETAIL_REGEX);
+            Matcher matcher3 = pattern3.matcher(urlWithNoParams);
+            if (matcher3.matches()) {
+                String[] separated = urlWithNoParams.split("/");
+                Intent intent = new Intent(this, UserProfileActivity.class);
+                intent.putExtra(AppConstants.BADGE_ID, separated[separated.length - 1]);
+                intent.putExtra(Constants.USER_ID, separated[separated.length - 3]);
+                startActivity(intent);
+                return true;
+            }
+
+            Pattern pattern4 = Pattern.compile(AppConstants.MILESTONE_DETAIL_REGEX);
+            Matcher matcher4 = pattern4.matcher(urlWithNoParams);
+            if (matcher4.matches()) {
+                String[] separated = urlWithNoParams.split("/");
+                Intent intent = new Intent(this, UserProfileActivity.class);
+                intent.putExtra(AppConstants.MILESTONE_ID, separated[separated.length - 1]);
+                intent.putExtra(Constants.USER_ID, separated[separated.length - 3]);
+                startActivity(intent);
+                return true;
+            }
+
+            Pattern pattern5 = Pattern.compile(AppConstants.USER_PROFILE_REGEX);
+            Matcher matcher5 = pattern5.matcher(urlWithNoParams);
+            if (matcher5.matches()) {
+                String[] separated = urlWithNoParams.split("/");
+                Intent intent = new Intent(this, UserProfileActivity.class);
+                intent.putExtra(Constants.USER_ID, separated[separated.length - 1]);
+                startActivity(intent);
+                return true;
+            }
+
+            Pattern pattern6 = Pattern.compile(AppConstants.USER_ANALYTICS_REGEX);
+            Matcher matcher6 = pattern6.matcher(urlWithNoParams);
+            if (matcher6.matches()) {
+                String[] separated = urlWithNoParams.split("/");
+                Intent intent = new Intent(this, UserProfileActivity.class);
+                intent.putExtra("detail", "rank");
+                intent.putExtra(Constants.USER_ID, separated[separated.length - 2]);
+                startActivity(intent);
+                return true;
+            }
+
+            Pattern pattern7 = Pattern.compile(AppConstants.USER_PROFILE_INVITE_FRIENDS_REGEX);
+            Matcher matcher7 = pattern7.matcher(urlWithNoParams);
+            if (matcher7.matches()) {
+                String[] separated = urlWithNoParams.split("#")[0].split("/");
+                Intent intent = new Intent(this, UserProfileActivity.class);
+                if (SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId()
+                        .equals(separated[separated.length - 1])) {
+                    intent.putExtra(AppConstants.SHOW_INVITE_DIALOG_FLAG, true);
+                }
+                intent.putExtra(Constants.USER_ID, separated[separated.length - 1]);
+                startActivity(intent);
+                return true;
+            }
+
+            Pattern pattern8 = Pattern.compile(AppConstants.VLOG_CATEGORY_LISTING_REGEX);
+            Matcher matcher8 = pattern8.matcher(urlWithNoParams);
+            if (matcher8.matches()) {
+                Intent intent = new Intent(this, CategoryVideosListingActivity.class);
+                startActivity(intent);
+                return true;
+            }
+
+            Pattern pattern9 = Pattern.compile(AppConstants.VLOGS_CHALLENGE_LISTING_REGEX);
+            Matcher matcher9 = pattern9.matcher(urlWithNoParams);
+            if (matcher9.matches()) {
+                Intent intent = new Intent(this, CategoryVideosListingActivity.class);
+                intent.putExtra("categoryId", AppConstants.VIDEO_CHALLENGE_ID);
+                startActivity(intent);
+                return true;
+            }
+
+            Pattern pattern10 = Pattern.compile(AppConstants.VLOGS_CHALLENGE_DETAIL_REGEX);
+            Matcher matcher10 = pattern10.matcher(urlWithNoParams);
+            if (matcher10.matches()) {
+                String[] separated = urlWithNoParams.split("/");
+                Intent intent = new Intent(this, NewVideoChallengeActivity.class);
+                intent.putExtra(Constants.CHALLENGE_ID, separated[separated.length - 1]);
+                intent.putExtra("comingFrom", "deeplink");
+                startActivity(intent);
+                return true;
+            }
+
+            Pattern pattern11 = Pattern.compile(AppConstants.STORY_CATEGORY_LISTING_REGEX);
+            Matcher matcher11 = pattern11.matcher(urlWithNoParams);
+            if (matcher11.matches()) {
+                Intent intent = new Intent(this, ShortStoriesListingContainerActivity.class);
+                startActivity(intent);
+                return true;
+            }
+        } catch (Exception e) {
+            FirebaseCrashlytics.getInstance().recordException(e);
+            Log.d("MC4kException", Log.getStackTraceString(e));
+        }
+        return false;
+    }
+
+    private void getDeepLinkData(final String deepLinkUrl) {
+        Retrofit retrofit = BaseApplication.getInstance().getRetrofit();
+        showProgressDialog("");
+        DeepLinkingAPI deepLinkingApi = retrofit.create(DeepLinkingAPI.class);
+        if (!ConnectivityUtils.isNetworkEnabled(this)) {
+            removeProgressDialog();
+            showToast(getString(R.string.error_network));
+            return;
+        }
+        Call<DeepLinkingResposnse> call = deepLinkingApi.getUrlDetails(deepLinkUrl);
+        call.enqueue(new Callback<DeepLinkingResposnse>() {
+            @Override
+            public void onResponse(Call<DeepLinkingResposnse> call,
+                    retrofit2.Response<DeepLinkingResposnse> response) {
+                removeProgressDialog();
+                try {
+                    DeepLinkingResposnse responseData = response.body();
+                    if (responseData.getCode() == 200 && Constants.SUCCESS
+                            .equals(responseData.getStatus())) {
+                        identifyTargetScreen(responseData.getData().getResult());
+                    } else {
+                        launchChromeTabs(deepLinkUrl);
+                    }
+                } catch (Exception e) {
+                    launchChromeTabs(deepLinkUrl);
+                }
+            }
+
+            @Override
+            public void onFailure(Call<DeepLinkingResposnse> call, Throwable t) {
+                removeProgressDialog();
+                launchChromeTabs(deepLinkUrl);
+                FirebaseCrashlytics.getInstance().recordException(t);
+                Log.d("MC4kException", Log.getStackTraceString(t));
+            }
+        });
+    }
+
+    private void launchChromeTabs(String deepLinkUrl) {
+        try {
+            CustomTabsIntent.Builder builder = new CustomTabsIntent.Builder();
+            CustomTabsIntent customTabsIntent = builder.build();
+            String packageName = CustomTabsHelper.getPackageNameToUse(this);
+            if (packageName != null) {
+                customTabsIntent.intent.setPackage(packageName);
+            }
+            customTabsIntent.launchUrl(BaseActivity.this, Uri.parse(deepLinkUrl));
+        } catch (Exception e) {
+            FirebaseCrashlytics.getInstance().recordException(e);
+            Log.d("MC4kException", Log.getStackTraceString(e));
+        }
+    }
+
+    private void identifyTargetScreen(DeepLinkingResult data) {
+        switch (data.getType()) {
+            case AppConstants.DEEP_LINK_ARTICLE_DETAIL:
+                renderArticleDetailScreen(data);
+                break;
+            case AppConstants.DEEP_LINK_VLOG_DETAIL:
+                renderVlogDetailScreen(data);
+                break;
+            case AppConstants.DEEP_LINK_STORY_DETAILS:
+                navigateToShortStory(data);
+                break;
+            default:
+                break;
+        }
+    }
+
+    private void renderArticleDetailScreen(DeepLinkingResult data) {
+        if (!StringUtils.isNullOrEmpty(data.getArticle_id())) {
+            Intent intent = new Intent(this, ArticleDetailsContainerActivity.class);
+            intent.putExtra(Constants.AUTHOR_ID, data.getAuthor_id());
+            intent.putExtra(Constants.ARTICLE_ID, data.getArticle_id());
+            intent.putExtra(Constants.ARTICLE_OPENED_FROM, "DeepLinking");
+            intent.putExtra(Constants.ARTICLE_INDEX, "-1");
+            intent.putExtra(Constants.FROM_SCREEN, "DeepLinking");
+            intent.putExtra(Constants.AUTHOR, data.getAuthor_id() + "~" + data.getAuthor_name());
+            startActivity(intent);
+        }
+    }
+
+    private void renderVlogDetailScreen(DeepLinkingResult data) {
+        if (!StringUtils.isNullOrEmpty(data.getId())) {
+            Intent intent = new Intent(this, ParallelFeedActivity.class);
+            intent.putExtra(Constants.VIDEO_ID, data.getId());
+            intent.putExtra(Constants.ARTICLE_OPENED_FROM, "Deep Linking");
+            intent.putExtra(Constants.ARTICLE_INDEX, "-1");
+            intent.putExtra(Constants.FROM_SCREEN, "Deep Linking");
+            intent.putExtra(Constants.AUTHOR, data.getAuthor_id() + "~" + data.getAuthor_name());
+            startActivity(intent);
+        }
+    }
+
+    private void navigateToShortStory(DeepLinkingResult data) {
+        if (!StringUtils.isNullOrEmpty(data.getArticle_id())) {
+            Intent intent = new Intent(this, ShortStoryContainerActivity.class);
+            intent.putExtra(Constants.AUTHOR_ID, data.getAuthor_id());
+            intent.putExtra(Constants.ARTICLE_ID, data.getArticle_id());
+            intent.putExtra(Constants.ARTICLE_OPENED_FROM, "DeepLinking");
+            intent.putExtra(Constants.ARTICLE_INDEX, "-1");
+            intent.putExtra(Constants.FROM_SCREEN, "DeepLinking");
+            intent.putExtra(Constants.AUTHOR, data.getAuthor_id() + "~" + data.getAuthor_name());
+            startActivity(intent);
+        }
+    }
+
+    Callback<ShortStoryDetailResult> ssDetailResponseCallback = new Callback<ShortStoryDetailResult>() {
+        @Override
+        public void onResponse(Call<ShortStoryDetailResult> call,
+                retrofit2.Response<ShortStoryDetailResult> response) {
+            removeProgressDialog();
+            if (response.body() == null) {
+                return;
+            }
+            try {
+                ShortStoryDetailResult responseData = response.body();
+                Intent intent = new Intent(BaseActivity.this, AddShortStoryActivity.class);
+                intent.putExtra("from", "publishedList");
+                intent.putExtra("title", responseData.getTitle());
+                intent.putExtra("body", responseData.getBody());
+                intent.putExtra("articleId", responseData.getId());
+                intent.putExtra("tag", new Gson().toJson(responseData.getTags()));
+                intent.putExtra("cities", new Gson().toJson(responseData.getCities()));
+                startActivity(intent);
+            } catch (Exception e) {
+                removeProgressDialog();
+                FirebaseCrashlytics.getInstance().recordException(e);
+                Log.d("MC4kException", Log.getStackTraceString(e));
+            }
+        }
+
+        @Override
+        public void onFailure(Call<ShortStoryDetailResult> call, Throwable t) {
+            removeProgressDialog();
+            FirebaseCrashlytics.getInstance().recordException(t);
+            apiExceptions(t);
+            Log.d("MC4kException", Log.getStackTraceString(t));
+        }
+    };
+
+    private void checkIsBlogSetup() {
+        showProgressDialog(getResources().getString(R.string.please_wait));
+        Retrofit retrofit = BaseApplication.getInstance().getRetrofit();
+        BloggerDashboardAPI bloggerDashboardApi = retrofit.create(BloggerDashboardAPI.class);
+        Call<UserDetailResponse> call = bloggerDashboardApi
+                .getBloggerData(SharedPrefUtils.getUserDetailModel(this).getDynamoId());
+        call.enqueue(getUserDetailsResponseCallback);
+    }
+
+    Callback<UserDetailResponse> getUserDetailsResponseCallback = new Callback<UserDetailResponse>() {
+        @Override
+        public void onResponse(Call<UserDetailResponse> call, retrofit2.Response<UserDetailResponse> response) {
+            Log.d("SUCCESS", "" + response);
+            removeProgressDialog();
+            if (response.body() == null) {
+                showToast(getString(R.string.went_wrong));
+                return;
+            }
+
+            UserDetailResponse responseData = response.body();
+            if (responseData.getCode() == 200 && Constants.SUCCESS.equals(responseData.getStatus())) {
+                if (StringUtils.isNullOrEmpty(responseData.getData().get(0).getResult().getBlogTitleSlug())) {
+                    launchBlogSetup(responseData);
+                } else if (!StringUtils.isNullOrEmpty(responseData.getData().get(0).getResult().getBlogTitleSlug())) {
+                    if (StringUtils.isNullOrEmpty(responseData.getData().get(0).getResult().getEmail())) {
+                        launchBlogSetup(responseData);
+                    } else if (!StringUtils.isNullOrEmpty(responseData.getData().get(0).getResult().getEmail())) {
+                        launchEditor();
+                    }
+                }
+            }
+        }
+
+        @Override
+        public void onFailure(Call<UserDetailResponse> call, Throwable t) {
+            removeProgressDialog();
+            FirebaseCrashlytics.getInstance().recordException(t);
+            Log.d("MC4kException", Log.getStackTraceString(t));
+        }
+    };
+
+    private void launchBlogSetup(UserDetailResponse responseData) {
+        Intent intent = new Intent(this, BlogSetupActivity.class);
+        intent.putExtra("BlogTitle", responseData.getData().get(0).getResult().getBlogTitle());
+        intent.putExtra("email", responseData.getData().get(0).getResult().getEmail());
+        intent.putExtra("comingFrom", "ShortStoryAndArticle");
+        startActivity(intent);
+    }
+
+    private void launchEditor() {
+        Bundle bundle = new Bundle();
+        bundle.putString(EditorPostActivity.TITLE_PARAM, "");
+        bundle.putString(EditorPostActivity.CONTENT_PARAM, "");
+        bundle.putString(EditorPostActivity.TITLE_PLACEHOLDER_PARAM,
+                getString(R.string.example_post_title_placeholder));
+        bundle.putString(EditorPostActivity.CONTENT_PLACEHOLDER_PARAM,
+                getString(R.string.example_post_content_placeholder));
+        bundle.putInt(EditorPostActivity.EDITOR_PARAM, EditorPostActivity.USE_NEW_EDITOR);
+        Intent intent = new Intent(this, NewEditor.class);
+        intent.putExtras(bundle);
+        startActivity(intent);
+    }
+
 }

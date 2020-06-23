@@ -67,8 +67,6 @@ class CollectionsActivity : BaseActivity() {
         } else {
             tabs.visibility = View.GONE
         }
-
-
         adapter = CollectionPagerAdapter(supportFragmentManager, isPrivate, userId!!)
         collectionsViewPager.adapter = adapter
         if ("followed" == comingFrom) {

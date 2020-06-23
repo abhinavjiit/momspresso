@@ -36,7 +36,6 @@ import com.mycity4kids.constants.Constants;
 import com.mycity4kids.filechooser.com.ipaulpro.afilechooser.utils.FileUtils;
 import com.mycity4kids.gtmutils.Utils;
 import com.mycity4kids.models.request.UpdateUserDetailsRequest;
-import com.mycity4kids.models.response.CityInfoItem;
 import com.mycity4kids.models.response.ImageUploadResponse;
 import com.mycity4kids.models.response.UserDetailResponse;
 import com.mycity4kids.preference.SharedPrefUtils;
@@ -55,7 +54,6 @@ import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
@@ -86,22 +84,25 @@ public class BlogSetupActivity extends BaseActivity implements View.OnClickListe
 
     private static final int MAX_WORDS = 200;
 
-    private String mCurrentPhotoPath;
+    private String currentPhotoPath;
     private File photoFile;
     private Uri imageUri;
-    public ArrayList<CityInfoItem> mDatalist;
 
     private LinearLayout introLinearLayout;
     private RelativeLayout detailsRelativeLayout;
     private TextView okayTextView;
     private TextView cityTextView;
     private TextView savePublishTextView;
-    private EditText blogTitleEditText, aboutSelfEditText;
+    private EditText blogTitleEditText;
+    private EditText aboutSelfEditText;
     private EditText phoneEditText;
-    private ImageView profilePicImageView, changeProfilePicImageView;
-    private View mLayout;
-    TextView emailLabelTextView, blogTitlesLabelTextView, blogHandleLabelTextView;
-    EditText emailEditText;
+    private ImageView profilePicImageView;
+    private ImageView changeProfilePicImageView;
+    private View mainLayout;
+    private TextView emailLabelTextView;
+    private TextView blogTitlesLabelTextView;
+    private TextView blogHandleLabelTextView;
+    private EditText emailEditText;
     private String comingFrom = "Normal";
     private String blogTitle;
     private String email;
@@ -116,8 +117,8 @@ public class BlogSetupActivity extends BaseActivity implements View.OnClickListe
 
         Utils.pushOpenScreenEvent(this, "BlogSetupScreen", SharedPrefUtils.getUserDetailModel(this).getDynamoId() + "");
 
-        mLayout = findViewById(R.id.rootLayout);
-        ((BaseApplication) getApplication()).setView(mLayout);
+        mainLayout = findViewById(R.id.rootLayout);
+        ((BaseApplication) getApplication()).setView(mainLayout);
         introLinearLayout = (LinearLayout) findViewById(R.id.introLinearLayout);
         detailsRelativeLayout = (RelativeLayout) findViewById(R.id.detailsRelativeLayout);
         okayTextView = (TextView) findViewById(R.id.okayTextView);
@@ -169,12 +170,12 @@ public class BlogSetupActivity extends BaseActivity implements View.OnClickListe
             emailLabelTextView.setVisibility(View.GONE);
         }
         Retrofit retrofit = BaseApplication.getInstance().getRetrofit();
-        BloggerDashboardAPI bloggerDashboardAPI = retrofit.create(BloggerDashboardAPI.class);
-        Call<UserDetailResponse> call = bloggerDashboardAPI
+        BloggerDashboardAPI bloggerDashboardApi = retrofit.create(BloggerDashboardAPI.class);
+        Call<UserDetailResponse> call = bloggerDashboardApi
                 .getBloggerData(SharedPrefUtils.getUserDetailModel(this).getDynamoId());
         call.enqueue(getUserDetailsResponseCallback);
 
-        if (comingFrom.equals("Videos")) {
+        if ("Videos".equals(comingFrom)) {
             blogHandleLabelTextView.setVisibility(View.VISIBLE);
             blogTitlesLabelTextView.setVisibility(View.GONE);
             aboutSelfEditText.setText("Hey,I Am A Vlogger");
@@ -210,9 +211,8 @@ public class BlogSetupActivity extends BaseActivity implements View.OnClickListe
                         .getResult().getUserBio().isEmpty()) {
                     aboutSelfEditText.setText(responseData.getData().get(0).getResult().getUserBio());
                 }
-                if (null == responseData.getData().get(0).getResult().getPhone() || StringUtils
+                if (null != responseData.getData().get(0).getResult().getPhone() && !StringUtils
                         .isNullOrEmpty(responseData.getData().get(0).getResult().getPhone().getMobile())) {
-                } else {
                     if (responseData.getData().get(0).getResult().getPhone().getMobile().contains("+91")) {
                         phoneEditText.setText(
                                 responseData.getData().get(0).getResult().getPhone().getMobile().replace("+91", ""));
@@ -223,7 +223,6 @@ public class BlogSetupActivity extends BaseActivity implements View.OnClickListe
                 if (!StringUtils.isNullOrEmpty(responseData.getData().get(0).getResult().getCityName())) {
                     cityTextView.setText(responseData.getData().get(0).getResult().getCityName());
                 }
-            } else {
             }
         }
 
@@ -288,6 +287,8 @@ public class BlogSetupActivity extends BaseActivity implements View.OnClickListe
                     chooseImageOptionPopUp(profilePicImageView);
                 }
                 break;
+            default:
+                break;
         }
     }
 
@@ -298,7 +299,7 @@ public class BlogSetupActivity extends BaseActivity implements View.OnClickListe
                 Manifest.permission.WRITE_EXTERNAL_STORAGE) || ActivityCompat.shouldShowRequestPermissionRationale(this,
                 Manifest.permission.CAMERA)) {
 
-            Snackbar.make(mLayout, R.string.permission_storage_rationale,
+            Snackbar.make(mainLayout, R.string.permission_storage_rationale,
                     Snackbar.LENGTH_INDEFINITE)
                     .setAction(R.string.ok, new View.OnClickListener() {
                         @Override
@@ -317,7 +318,7 @@ public class BlogSetupActivity extends BaseActivity implements View.OnClickListe
     private void requestCameraPermission() {
         if (ActivityCompat.shouldShowRequestPermissionRationale(this,
                 Manifest.permission.CAMERA)) {
-            Snackbar.make(mLayout, R.string.permission_camera_rationale,
+            Snackbar.make(mainLayout, R.string.permission_camera_rationale,
                     Snackbar.LENGTH_INDEFINITE)
                     .setAction(R.string.ok, new View.OnClickListener() {
                         @Override
@@ -339,23 +340,23 @@ public class BlogSetupActivity extends BaseActivity implements View.OnClickListe
             @NonNull int[] grantResults) {
         if (requestCode == REQUEST_CAMERA) {
             if (grantResults.length == 1 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                Snackbar.make(mLayout, R.string.permision_available_camera,
+                Snackbar.make(mainLayout, R.string.permision_available_camera,
                         Snackbar.LENGTH_SHORT).show();
                 chooseImageOptionPopUp(profilePicImageView);
             } else {
-                Snackbar.make(mLayout, R.string.permissions_not_granted,
+                Snackbar.make(mainLayout, R.string.permissions_not_granted,
                         Snackbar.LENGTH_SHORT).show();
 
             }
         } else if (requestCode == REQUEST_EDIT_PICTURE) {
             if (PermissionUtil.verifyPermissions(grantResults)) {
-                Snackbar.make(mLayout, R.string.permision_available_storage,
+                Snackbar.make(mainLayout, R.string.permision_available_storage,
                         Snackbar.LENGTH_SHORT)
                         .show();
                 chooseImageOptionPopUp(profilePicImageView);
             } else {
                 Log.i("Permissions", "storage permissions were NOT granted.");
-                Snackbar.make(mLayout, R.string.permissions_not_granted,
+                Snackbar.make(mainLayout, R.string.permissions_not_granted,
                         Snackbar.LENGTH_SHORT)
                         .show();
             }
@@ -415,7 +416,7 @@ public class BlogSetupActivity extends BaseActivity implements View.OnClickListe
         );
 
         // Save a file: path for use with ACTION_VIEW intents
-        mCurrentPhotoPath = "file:" + image.getAbsolutePath();
+        currentPhotoPath = "file:" + image.getAbsolutePath();
         return image;
     }
 
@@ -434,8 +435,9 @@ public class BlogSetupActivity extends BaseActivity implements View.OnClickListe
         }
         if (comingFrom.equals("ShortStoryAndArticle")) {
             if (countWords(aboutSelfEditText.getText().toString()) > MAX_WORDS) {
-                Toast.makeText(this, getString(R.string.app_settings_edit_profile_toast_user_bio_max)
-                                + " " + MAX_WORDS + " " + getString(R.string.app_settings_edit_profile_toast_user_bio_words),
+                Toast.makeText(this,
+                        getString(R.string.app_settings_edit_profile_toast_user_bio_max) + " " + MAX_WORDS + " "
+                                + getString(R.string.app_settings_edit_profile_toast_user_bio_words),
                         Toast.LENGTH_SHORT).show();
                 return false;
             }
@@ -487,8 +489,8 @@ public class BlogSetupActivity extends BaseActivity implements View.OnClickListe
 
         Retrofit retrofit = BaseApplication.getInstance().getRetrofit();
         showProgressDialog(getResources().getString(R.string.please_wait));
-        UserAttributeUpdateAPI userAttributeUpdateAPI = retrofit.create(UserAttributeUpdateAPI.class);
-        Call<ResponseBody> call = userAttributeUpdateAPI.updateBlogProfile(updateUserDetail);
+        UserAttributeUpdateAPI userAttributeUpdateApi = retrofit.create(UserAttributeUpdateAPI.class);
+        Call<ResponseBody> call = userAttributeUpdateApi.updateBlogProfile(updateUserDetail);
         call.enqueue(userDetailsUpdateResponseListener);
     }
 
@@ -548,7 +550,7 @@ public class BlogSetupActivity extends BaseActivity implements View.OnClickListe
             case ADD_MEDIA_CAMERA_ACTIVITY_REQUEST_CODE:
                 if (resultCode == Activity.RESULT_OK) {
                     try {
-                        startCropActivity(Uri.parse(mCurrentPhotoPath));
+                        startCropActivity(Uri.parse(currentPhotoPath));
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
@@ -573,6 +575,9 @@ public class BlogSetupActivity extends BaseActivity implements View.OnClickListe
                     final Throwable cropError = UCrop.getError(data);
                 }
             }
+            break;
+            default:
+                break;
         }
     }
 
@@ -580,47 +585,44 @@ public class BlogSetupActivity extends BaseActivity implements View.OnClickListe
         showProgressDialog(getString(R.string.please_wait));
         ByteArrayOutputStream bao = new ByteArrayOutputStream();
         Retrofit retro = BaseApplication.getInstance().getRetrofit();
-        MediaType MEDIA_TYPE_PNG = MediaType.parse("image/png");
-        RequestBody requestBodyFile = RequestBody.create(MEDIA_TYPE_PNG, file);
+        MediaType mediaTypePng = MediaType.parse("image/png");
+        RequestBody requestBodyFile = RequestBody.create(mediaTypePng, file);
         RequestBody imageType = RequestBody.create(MediaType.parse("text/plain"), "0");
-        // prepare call in Retrofit 2.0
-        ImageUploadAPI imageUploadAPI = retro.create(ImageUploadAPI.class);
+        ImageUploadAPI imageUploadApi = retro.create(ImageUploadAPI.class);
+        Call<ImageUploadResponse> call = imageUploadApi.uploadImage(imageType, requestBodyFile);
+        call.enqueue(
+                new Callback<ImageUploadResponse>() {
+                    @Override
+                    public void onResponse(Call<ImageUploadResponse> call,
+                            retrofit2.Response<ImageUploadResponse> response) {
+                        ImageUploadResponse responseModel = response.body();
+                        removeProgressDialog();
+                        if (responseModel.getCode() != 200) {
+                            showToast(getString(R.string.toast_response_error));
+                        } else {
+                            if (!StringUtils.isNullOrEmpty(responseModel.getData().getResult().getUrl())) {
+                                Log.i("IMAGE_UPLOAD_REQUEST", responseModel.getData().getResult().getUrl());
+                            }
+                            setProfileImage(responseModel.getData().getResult().getUrl());
+                            Picasso.get().invalidate(SharedPrefUtils.getProfileImgUrl(BaseApplication.getAppContext()));
+                            Picasso.get().load(responseModel.getData().getResult().getUrl())
+                                    .memoryPolicy(MemoryPolicy.NO_CACHE).networkPolicy(NetworkPolicy.NO_CACHE)
+                                    .placeholder(R.drawable.family_xxhdpi)
+                                    .error(R.drawable.family_xxhdpi).transform(new RoundedTransformation())
+                                    .into(profilePicImageView);
+                            SharedPrefUtils.setProfileImgUrl(BaseApplication.getAppContext(),
+                                    responseModel.getData().getResult().getUrl());
+                            showToast(getString(R.string.image_upload_success));
+                        }
+                    }
 
-        Call<ImageUploadResponse> call = imageUploadAPI.uploadImage(//userId,
-                imageType,
-                requestBodyFile);
-        //asynchronous call
-        call.enqueue(new Callback<ImageUploadResponse>() {
-                         @Override
-                         public void onResponse(Call<ImageUploadResponse> call, retrofit2.Response<ImageUploadResponse> response) {
-                             ImageUploadResponse responseModel = response.body();
-                             removeProgressDialog();
-                             if (responseModel.getCode() != 200) {
-                                 showToast(getString(R.string.toast_response_error));
-                             } else {
-                                 if (!StringUtils.isNullOrEmpty(responseModel.getData().getResult().getUrl())) {
-                                     Log.i("IMAGE_UPLOAD_REQUEST", responseModel.getData().getResult().getUrl());
-                                 }
-                                 setProfileImage(responseModel.getData().getResult().getUrl());
-                                 Picasso.get().invalidate(SharedPrefUtils.getProfileImgUrl(BaseApplication.getAppContext()));
-                                 Picasso.get().load(responseModel.getData().getResult().getUrl())
-                                         .memoryPolicy(MemoryPolicy.NO_CACHE).networkPolicy(NetworkPolicy.NO_CACHE)
-                                         .placeholder(R.drawable.family_xxhdpi)
-                                         .error(R.drawable.family_xxhdpi).transform(new RoundedTransformation())
-                                         .into(profilePicImageView);
-                                 SharedPrefUtils.setProfileImgUrl(BaseApplication.getAppContext(),
-                                         responseModel.getData().getResult().getUrl());
-                                 showToast(getString(R.string.image_upload_success));
-                             }
-                         }
-
-                         @Override
-                         public void onFailure(Call<ImageUploadResponse> call, Throwable t) {
-                             showToast(getString(R.string.image_upload_fail));
-                             FirebaseCrashlytics.getInstance().recordException(t);
-                             Log.d("MC4kException", Log.getStackTraceString(t));
-                         }
-                     }
+                    @Override
+                    public void onFailure(Call<ImageUploadResponse> call, Throwable t) {
+                        showToast(getString(R.string.image_upload_fail));
+                        FirebaseCrashlytics.getInstance().recordException(t);
+                        Log.d("MC4kException", Log.getStackTraceString(t));
+                    }
+                }
         );
     }
 
@@ -630,8 +632,8 @@ public class BlogSetupActivity extends BaseActivity implements View.OnClickListe
         updateUserDetail.setAttributeValue(url);
         updateUserDetail.setAttributeType("S");
         Retrofit retrofit = BaseApplication.getInstance().getRetrofit();
-        UserAttributeUpdateAPI userAttributeUpdateAPI = retrofit.create(UserAttributeUpdateAPI.class);
-        Call<UserDetailResponse> call = userAttributeUpdateAPI.updateProfilePic(updateUserDetail);
+        UserAttributeUpdateAPI userAttributeUpdateApi = retrofit.create(UserAttributeUpdateAPI.class);
+        Call<UserDetailResponse> call = userAttributeUpdateApi.updateProfilePic(updateUserDetail);
         call.enqueue(new Callback<UserDetailResponse>() {
             @Override
             public void onResponse(Call<UserDetailResponse> call, retrofit2.Response<UserDetailResponse> response) {
@@ -651,9 +653,9 @@ public class BlogSetupActivity extends BaseActivity implements View.OnClickListe
     private void startCropActivity(@NonNull Uri uri) {
         String destinationFileName = SAMPLE_CROPPED_IMAGE_NAME + ".jpg";
         Log.e("instartCropActivity", "test");
-        UCrop uCrop = UCrop.of(uri, Uri.fromFile(new File(getCacheDir(), destinationFileName)));
-        uCrop.withAspectRatio(1, 1);
-        uCrop.withMaxResultSize(300, 300);
-        uCrop.start(BlogSetupActivity.this);
+        UCrop ucrop = UCrop.of(uri, Uri.fromFile(new File(getCacheDir(), destinationFileName)));
+        ucrop.withAspectRatio(1, 1);
+        ucrop.withMaxResultSize(300, 300);
+        ucrop.start(BlogSetupActivity.this);
     }
 }

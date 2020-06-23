@@ -155,7 +155,6 @@ public class AddGpPostCommentReplyDialogFragment extends DialogFragment implemen
     private MediaRecorder mediaRecorder;
     private String fileName;
     private FirebaseAuth firebaseAuth;
-    private Uri originalUri;
     private Uri contentUri;
     private long suffixName;
     private MediaPlayer mediaPlayer;
@@ -185,6 +184,7 @@ public class AddGpPostCommentReplyDialogFragment extends DialogFragment implemen
     private ImageView micImg;
     private ArrayList<String> audioCommentList;
     private boolean isLocked = false;
+    private int isAnonymousAllowed;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -287,6 +287,7 @@ public class AddGpPostCommentReplyDialogFragment extends DialogFragment implemen
         position = extras.getInt("position");
         groupId = extras.getInt("groupId");
         postId = extras.getInt("postId");
+        isAnonymousAllowed = extras.getInt("isAnonymousAllowed");
 
         addCommentTextView.setOnClickListener(this);
         closeImageView.setOnClickListener(this);
@@ -310,6 +311,13 @@ public class AddGpPostCommentReplyDialogFragment extends DialogFragment implemen
             anonymousCheckbox.setChecked(false);
         }
 
+        if (isAnonymousAllowed == 0) {
+            anonymousCheckbox.setChecked(false);
+            anonymousCheckbox.setVisibility(View.INVISIBLE);
+            anonymousImageView.setVisibility(View.INVISIBLE);
+            anonymousTextView.setVisibility(View.INVISIBLE);
+        }
+
         if (commentOrReplyData == null) {
             commentReplyEditText.setText(SharedPrefUtils.getSavedReplyData(BaseApplication.getAppContext(), groupId,
                     postId, 0));
@@ -317,6 +325,9 @@ public class AddGpPostCommentReplyDialogFragment extends DialogFragment implemen
             relativeMainContainer.setVisibility(View.GONE);
         } else {
             if ("EDIT_COMMENT".equals(actionType) || "EDIT_REPLY".equals(actionType)) {
+                anonymousCheckbox.setVisibility(View.INVISIBLE);
+                anonymousImageView.setVisibility(View.INVISIBLE);
+                anonymousTextView.setVisibility(View.INVISIBLE);
                 headingTextView.setText(BaseApplication.getAppContext().getString(R.string.ad_comments_edit_label));
                 relativeMainContainer.setVisibility(View.GONE);
                 commentReplyEditText.setText(commentOrReplyData.getContent());

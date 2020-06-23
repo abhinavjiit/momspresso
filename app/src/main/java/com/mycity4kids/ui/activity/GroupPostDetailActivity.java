@@ -148,6 +148,7 @@ public class GroupPostDetailActivity extends BaseActivity implements View.OnClic
     private MediaPlayer mediaPlayer;
     private RelativeLayout root;
     private View loadingView;
+    private int isAnonymousAllowed = 1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -988,6 +989,7 @@ public class GroupPostDetailActivity extends BaseActivity implements View.OnClic
                     groupPostDetailsAndCommentsRecyclerAdapter.releasePlayer();
                     args.putInt("groupId", groupId);
                     args.putInt("postId", postId);
+                    args.putInt("isAnonymousAllowed", isAnonymousAllowed);
                     AddGpPostCommentReplyDialogFragment addGpPostCommentReplyDialogFragment =
                             new AddGpPostCommentReplyDialogFragment();
                     addGpPostCommentReplyDialogFragment.setArguments(args);
@@ -1815,7 +1817,6 @@ public class GroupPostDetailActivity extends BaseActivity implements View.OnClic
             };
 
     public void onResponseEdit(int commentPosition, int position, String responseType) {
-        Log.e("vcvcvcvcv","vcvcvcvcv");
         Bundle args = new Bundle();
         if ("REPLY".equals(responseType)) {
             args.putString("action", "EDIT_REPLY");
@@ -1904,6 +1905,9 @@ public class GroupPostDetailActivity extends BaseActivity implements View.OnClic
                 memberType = AppConstants.GROUP_MEMBER_TYPE_ADMIN;
             } else if (body.getData().getResult().get(0).getIsModerator() == 1) {
                 memberType = AppConstants.GROUP_MEMBER_TYPE_MODERATOR;
+            }
+            if (body.getData().getResult().get(0).getGroupInfo() != null) {
+                isAnonymousAllowed = body.getData().getResult().get(0).getGroupInfo().getAnnonAllowed();
             }
             getPostDetails();
         } else if (AppConstants.GROUP_MEMBERSHIP_STATUS_PENDING_MODERATION
