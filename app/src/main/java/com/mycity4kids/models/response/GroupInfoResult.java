@@ -2,20 +2,20 @@ package com.mycity4kids.models.response;
 
 import android.os.Parcel;
 import android.os.Parcelable;
-
 import com.google.gson.annotations.SerializedName;
-
-import java.util.ArrayList;
 
 /**
  * Created by hemant on 28/5/18.
  */
 
 public class GroupInfoResult implements Parcelable {
+
     @SerializedName("title")
     private String title;
     @SerializedName("color")
     private String color;
+    @SerializedName("annonAllowed")
+    private int annonAllowed = 0;
 
     public String getName() {
         return title;
@@ -33,10 +33,18 @@ public class GroupInfoResult implements Parcelable {
         this.color = color;
     }
 
+    public int getAnnonAllowed() {
+        return annonAllowed;
+    }
+
+    public void setAnnonAllowed(int annonAllowed) {
+        this.annonAllowed = annonAllowed;
+    }
 
     protected GroupInfoResult(Parcel in) {
         title = in.readString();
         color = in.readString();
+        annonAllowed = in.readInt();
     }
 
     public static final Creator<GroupInfoResult> CREATOR = new Creator<GroupInfoResult>() {
@@ -60,5 +68,6 @@ public class GroupInfoResult implements Parcelable {
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeString(title);
         dest.writeString(color);
+        dest.writeInt(annonAllowed);
     }
 }

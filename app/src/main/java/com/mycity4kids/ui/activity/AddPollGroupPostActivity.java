@@ -13,7 +13,6 @@ import android.view.View;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.core.app.ActivityCompat;
@@ -61,11 +60,8 @@ public class AddPollGroupPostActivity extends BaseActivity implements View.OnCli
 
     private static String[] PERMISSIONS_INIT = {Manifest.permission.READ_EXTERNAL_STORAGE,
             Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.CAMERA};
-
     private static final String SAMPLE_CROPPED_IMAGE_NAME = "SampleCropImage";
-
     private static final int REQUEST_INIT_PERMISSION = 1;
-
     public static final int ADD_MEDIA_ACTIVITY_REQUEST_CODE = 1111;
 
     private AddImagePollRecyclerGridAdapter imagePollAdapter;
@@ -79,10 +75,9 @@ public class AddPollGroupPostActivity extends BaseActivity implements View.OnCli
     private boolean isRequestRunning = false;
 
     private TextView addChoiceTextView;
-    private LinearLayout choicesContainer;
-    private ImageView imagePollOptionImageView;
-    private RecyclerView recyclerGridView, recyclerView;
-    private View mLayout;
+    private RecyclerView recyclerGridView;
+    private RecyclerView recyclerView;
+    private View mainLayout;
     private ImageView currentImageView;
     private EditText pollQuestionEditText;
     private ImageView togglePollOptionImageView;
@@ -90,7 +85,6 @@ public class AddPollGroupPostActivity extends BaseActivity implements View.OnCli
     private ImageView closeEditorImageView;
     private TextView togglePollOptionTextView;
     private CheckBox anonymousCheckbox;
-    private ImageView addMediaTextView;
     private TextView anonymousTextView;
     private ImageView anonymousImageView;
 
@@ -100,31 +94,37 @@ public class AddPollGroupPostActivity extends BaseActivity implements View.OnCli
         setContentView(R.layout.add_poll_group_post_activity);
         ((BaseApplication) getApplication()).setActivity(this);
 
-        mLayout = findViewById(R.id.rootView);
-        ((BaseApplication) getApplication()).setView(mLayout);
-        addChoiceTextView = (TextView) findViewById(R.id.addChoiceTextView);
-        publishTextView = (TextView) findViewById(R.id.publishTextView);
-        togglePollOptionImageView = (ImageView) findViewById(R.id.togglePollOptionImageView);
-        togglePollOptionTextView = (TextView) findViewById(R.id.togglePollOptionTextView);
-        recyclerGridView = (RecyclerView) findViewById(R.id.recyclerGridView);
-        recyclerView = (RecyclerView) findViewById(R.id.recyclerView);
-        pollQuestionEditText = (EditText) findViewById(R.id.pollQuestionEditText);
-        closeEditorImageView = (ImageView) findViewById(R.id.closeEditorImageView);
-        anonymousTextView = (TextView) findViewById(R.id.anonymousTextView);
-        anonymousCheckbox = (CheckBox) findViewById(R.id.anonymousCheckbox);
-        anonymousImageView = (ImageView) findViewById(R.id.anonymousImageView);
-
-        selectedGroup = (GroupResult) getIntent().getParcelableExtra("groupItem");
+        mainLayout = findViewById(R.id.rootView);
+        ((BaseApplication) getApplication()).setView(mainLayout);
+        addChoiceTextView = findViewById(R.id.addChoiceTextView);
+        publishTextView = findViewById(R.id.publishTextView);
+        togglePollOptionImageView = findViewById(R.id.togglePollOptionImageView);
+        recyclerGridView = findViewById(R.id.recyclerGridView);
+        recyclerView = findViewById(R.id.recyclerView);
+        pollQuestionEditText = findViewById(R.id.pollQuestionEditText);
+        closeEditorImageView = findViewById(R.id.closeEditorImageView);
+        togglePollOptionTextView = findViewById(R.id.togglePollOptionTextView);
+        anonymousTextView = findViewById(R.id.anonymousTextView);
+        anonymousCheckbox = findViewById(R.id.anonymousCheckbox);
+        anonymousImageView = findViewById(R.id.anonymousImageView);
 
         togglePollOptionImageView.setOnClickListener(this);
         togglePollOptionTextView.setOnClickListener(this);
         addChoiceTextView.setOnClickListener(this);
-        togglePollOptionTextView.setOnClickListener(this);
         publishTextView.setOnClickListener(this);
         closeEditorImageView.setOnClickListener(this);
         anonymousImageView.setOnClickListener(this);
         anonymousTextView.setOnClickListener(this);
         anonymousCheckbox.setOnClickListener(this);
+
+        selectedGroup = getIntent().getParcelableExtra("groupItem");
+
+        if (selectedGroup != null && selectedGroup.getAnnonAllowed() == 0) {
+            anonymousCheckbox.setChecked(false);
+            anonymousCheckbox.setVisibility(View.GONE);
+            anonymousImageView.setVisibility(View.GONE);
+            anonymousTextView.setVisibility(View.GONE);
+        }
 
         pollQuestionEditText
                 .setText(SharedPrefUtils.getSavedPostData(BaseApplication.getAppContext(), selectedGroup.getId()));
@@ -160,7 +160,6 @@ public class AddPollGroupPostActivity extends BaseActivity implements View.OnCli
         } else {
             anonymousCheckbox.setChecked(false);
         }
-
     }
 
     @Override
@@ -174,7 +173,6 @@ public class AddPollGroupPostActivity extends BaseActivity implements View.OnCli
             case ADD_MEDIA_ACTIVITY_REQUEST_CODE:
                 if (resultCode == Activity.RESULT_OK) {
                     try {
-                        Log.e("inImagePick", "test");
                         startCropActivity(imageUri);
                     } catch (Exception e) {
                         e.printStackTrace();
@@ -184,115 +182,88 @@ public class AddPollGroupPostActivity extends BaseActivity implements View.OnCli
             case UCrop.REQUEST_CROP: {
                 if (resultCode == RESULT_OK) {
                     final Uri resultUri = UCrop.getOutput(data);
-                    Log.e("resultUri", resultUri.toString());
                     File file2 = FileUtils.getFile(this, resultUri);
                     sendUploadProfileImageRequest(file2);
                 } else if (resultCode == UCrop.RESULT_ERROR) {
                     final Throwable cropError = UCrop.getError(data);
                 }
             }
+            break;
+            default:
+                break;
         }
     }
 
     private void startCropActivity(@NonNull Uri uri) {
         String destinationFileName = SAMPLE_CROPPED_IMAGE_NAME + ".jpg";
         Log.e("instartCropActivity", "test");
-        UCrop uCrop = UCrop.of(uri, Uri.fromFile(new File(getCacheDir(), destinationFileName)));
-        uCrop.withAspectRatio(16, 10);
-        uCrop.withMaxResultSize(720, 450);
-        uCrop.start(AddPollGroupPostActivity.this);
+        UCrop ucrop = UCrop.of(uri, Uri.fromFile(new File(getCacheDir(), destinationFileName)));
+        ucrop.withAspectRatio(16, 10);
+        ucrop.withMaxResultSize(720, 450);
+        ucrop.start(AddPollGroupPostActivity.this);
     }
-
 
     public void sendUploadProfileImageRequest(File file) {
         showProgressDialog(getString(R.string.please_wait));
-        MediaType MEDIA_TYPE_PNG = MediaType.parse("image/png");
-        RequestBody requestBodyFile = RequestBody.create(MEDIA_TYPE_PNG, file);
+        MediaType mediaType = MediaType.parse("image/png");
+        RequestBody requestBodyFile = RequestBody.create(mediaType, file);
         Log.e("requestBodyFile", requestBodyFile.toString());
-        //   RequestBody userId = RequestBody.create(MediaType.parse("text/plain"), "" + userModel.getUser().getId());
         RequestBody imageType = RequestBody.create(MediaType.parse("text/plain"), "2");
-        // prepare call in Retrofit 2.0
 
         Retrofit retro = BaseApplication.getInstance().getRetrofit();
-        ImageUploadAPI imageUploadAPI = retro.create(ImageUploadAPI.class);
-        Call<ImageUploadResponse> call = imageUploadAPI.uploadImage(//userId,
-                //  imageType,
-                imageType,
-                requestBodyFile);
-        //asynchronous call
-        call.enqueue(new Callback<ImageUploadResponse>() {
-                         @Override
-                         public void onResponse(Call<ImageUploadResponse> call, retrofit2.Response<ImageUploadResponse> response) {
-                             removeProgressDialog();
-                             if (response == null || response.body() == null) {
-                                 showToast(getString(R.string.server_went_wrong));
-                                 return;
-                             }
-                             ImageUploadResponse responseModel = response.body();
-                             if (responseModel.getCode() != 200) {
-                                 showToast(getString(R.string.toast_response_error));
-                                 return;
-                             } else {
-                                 if (!StringUtils.isNullOrEmpty(responseModel.getData().getResult().getUrl())) {
-                                     Log.i("IMAGE_UPLOAD_REQUEST", responseModel.getData().getResult().getUrl());
-                                 }
+        ImageUploadAPI imageUploadApi = retro.create(ImageUploadAPI.class);
+        Call<ImageUploadResponse> call = imageUploadApi.uploadImage(imageType, requestBodyFile);
+        call.enqueue(
+                new Callback<ImageUploadResponse>() {
+                    @Override
+                    public void onResponse(Call<ImageUploadResponse> call,
+                            retrofit2.Response<ImageUploadResponse> response) {
+                        removeProgressDialog();
+                        if (response.body() == null) {
+                            showToast(getString(R.string.server_went_wrong));
+                            return;
+                        }
+                        ImageUploadResponse responseModel = response.body();
+                        if (responseModel.getCode() != 200) {
+                            showToast(getString(R.string.toast_response_error));
+                        } else {
+                            if (!StringUtils.isNullOrEmpty(responseModel.getData().getResult().getUrl())) {
+                                Log.i("IMAGE_UPLOAD_REQUEST", responseModel.getData().getResult().getUrl());
+                            }
 
-                                 Picasso.get().load(responseModel.getData().getResult().getUrl()).error(R.drawable.default_article)
-                                         .into(currentImageView);
-//                                 currentImageView.setVisibility(View.VISIBLE);
-                                 urlList.set(currentImagePosition, responseModel.getData().getResult().getUrl());
-                                 imagePollAdapter.notifyDataSetChanged();
-                                 showToast(getString(R.string.image_upload_success));
-                             }
-                         }
+                            Picasso.get().load(responseModel.getData().getResult().getUrl())
+                                    .error(R.drawable.default_article)
+                                    .into(currentImageView);
+                            urlList.set(currentImagePosition, responseModel.getData().getResult().getUrl());
+                            imagePollAdapter.notifyDataSetChanged();
+                            showToast(getString(R.string.image_upload_success));
+                        }
+                    }
 
-                         @Override
-                         public void onFailure(Call<ImageUploadResponse> call, Throwable t) {
-                             FirebaseCrashlytics.getInstance().recordException(t);
-                             Log.d("MC4KException", Log.getStackTraceString(t));
-                             apiExceptions(t);
-//                             showToast(getString(R.string.went_wrong));
-                         }
-                     }
+                    @Override
+                    public void onFailure(Call<ImageUploadResponse> call, Throwable t) {
+                        FirebaseCrashlytics.getInstance().recordException(t);
+                        Log.d("MC4KException", Log.getStackTraceString(t));
+                        apiExceptions(t);
+                    }
+                }
         );
     }
 
-
     private void requestPermissions() {
-        // BEGIN_INCLUDE(contacts_permission_request)
         if (ActivityCompat.shouldShowRequestPermissionRationale(this,
                 Manifest.permission.READ_EXTERNAL_STORAGE)
                 || ActivityCompat.shouldShowRequestPermissionRationale(this,
                 Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
-
-            // Provide an additional rationale to the user if the permission was not granted
-            // and the user would benefit from additional context for the use of the permission.
-            // For example, if the request has been denied previously.
-            Log.i("Permissions",
-                    "Displaying storage permission rationale to provide additional context.");
-
-            // Display a SnackBar with an explanation and a button to trigger the request.
-            Snackbar.make(mLayout, R.string.permission_storage_rationale,
+            Snackbar.make(mainLayout, R.string.permission_storage_rationale,
                     Snackbar.LENGTH_INDEFINITE)
-                    .setAction(R.string.ok, new View.OnClickListener() {
-                        @Override
-                        public void onClick(View view) {
-                            requestUngrantedPermissions();
-                        }
-                    })
+                    .setAction(R.string.ok, view -> requestUngrantedPermissions())
                     .show();
         } else if (ActivityCompat.shouldShowRequestPermissionRationale(this,
                 Manifest.permission.CAMERA)) {
-
-            // Display a SnackBar with an explanation and a button to trigger the request.
-            Snackbar.make(mLayout, R.string.permission_camera_rationale,
+            Snackbar.make(mainLayout, R.string.permission_camera_rationale,
                     Snackbar.LENGTH_INDEFINITE)
-                    .setAction(R.string.ok, new View.OnClickListener() {
-                        @Override
-                        public void onClick(View view) {
-                            requestUngrantedPermissions();
-                        }
-                    })
+                    .setAction(R.string.ok, view -> requestUngrantedPermissions())
                     .show();
         } else {
             requestUngrantedPermissions();
@@ -310,29 +281,19 @@ public class AddPollGroupPostActivity extends BaseActivity implements View.OnCli
         ActivityCompat.requestPermissions(this, requiredPermission, REQUEST_INIT_PERMISSION);
     }
 
-    /**
-     * Callback received when a permissions request has been completed.
-     */
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions,
             @NonNull int[] grantResults) {
-
         if (requestCode == REQUEST_INIT_PERMISSION) {
-            Log.i("Permissions", "Received response for storage permissions request.");
-
-            // We have requested multiple permissions for contacts, so all of them need to be
-            // checked.
             if (PermissionUtil.verifyPermissions(grantResults)) {
-                // All required permissions have been granted, display contacts fragment.
-                Snackbar.make(mLayout, R.string.permision_available_init,
+                Snackbar.make(mainLayout, R.string.permision_available_init,
                         Snackbar.LENGTH_SHORT)
                         .show();
                 Intent intent1 = new Intent(Intent.ACTION_PICK);
                 intent1.setType("image/*");
                 startActivityForResult(intent1, ADD_MEDIA_ACTIVITY_REQUEST_CODE);
             } else {
-                Log.i("Permissions", "storage permissions were NOT granted.");
-                Snackbar.make(mLayout, R.string.permissions_not_granted,
+                Snackbar.make(mainLayout, R.string.permissions_not_granted,
                         Snackbar.LENGTH_SHORT)
                         .show();
             }
@@ -373,7 +334,6 @@ public class AddPollGroupPostActivity extends BaseActivity implements View.OnCli
                 break;
             case R.id.publishTextView:
                 if (!isRequestRunning && validateParams()) {
-//                    showToast("Valid Poll");
                     isRequestRunning = true;
                     publishPoll();
                 }
@@ -394,12 +354,14 @@ public class AddPollGroupPostActivity extends BaseActivity implements View.OnCli
                             ContextCompat.getDrawable(AddPollGroupPostActivity.this, R.drawable.ic_incognito));
                 }
                 break;
+            default:
+                break;
         }
     }
 
     private void publishPoll() {
         Retrofit retrofit = BaseApplication.getInstance().getGroupsRetrofit();
-        GroupsAPI groupsAPI = retrofit.create(GroupsAPI.class);
+        GroupsAPI groupsApi = retrofit.create(GroupsAPI.class);
         if (recyclerView.getVisibility() == View.VISIBLE) {
             AddGroupPostRequest addGroupPostRequest = new AddGroupPostRequest();
             addGroupPostRequest.setContent(pollQuestionEditText.getText().toString());
@@ -415,7 +377,7 @@ public class AddPollGroupPostActivity extends BaseActivity implements View.OnCli
                 pollOptionsMap.put("option" + (i + 1), textChoiceList.get(i));
             }
             addGroupPostRequest.setPollOptions(pollOptionsMap);
-            Call<AddGroupPostResponse> call = groupsAPI.createPost(addGroupPostRequest);
+            Call<AddGroupPostResponse> call = groupsApi.createPost(addGroupPostRequest);
             call.enqueue(postAdditionResponseCallback);
         } else {
             AddGroupPostRequest addGroupPostRequest = new AddGroupPostRequest();
@@ -432,7 +394,7 @@ public class AddPollGroupPostActivity extends BaseActivity implements View.OnCli
                 pollOptionsMap.put("option" + (i + 1), urlList.get(i));
             }
             addGroupPostRequest.setPollOptions(pollOptionsMap);
-            Call<AddGroupPostResponse> call = groupsAPI.createPost(addGroupPostRequest);
+            Call<AddGroupPostResponse> call = groupsApi.createPost(addGroupPostRequest);
             call.enqueue(postAdditionResponseCallback);
         }
     }
@@ -441,21 +403,16 @@ public class AddPollGroupPostActivity extends BaseActivity implements View.OnCli
         @Override
         public void onResponse(Call<AddGroupPostResponse> call, retrofit2.Response<AddGroupPostResponse> response) {
             isRequestRunning = false;
-            if (response == null || response.body() == null) {
-                if (response != null && response.raw() != null) {
-                    NetworkErrorException nee = new NetworkErrorException(response.raw().toString());
-                    FirebaseCrashlytics.getInstance().recordException(nee);
-                }
+            if (response.body() == null) {
+                NetworkErrorException nee = new NetworkErrorException(response.raw().toString());
+                FirebaseCrashlytics.getInstance().recordException(nee);
                 return;
             }
             try {
                 if (response.isSuccessful()) {
-                    AddGroupPostResponse responseModel = response.body();
                     setResult(RESULT_OK);
                     pollQuestionEditText.setText("");
                     onBackPressed();
-                } else {
-
                 }
             } catch (Exception e) {
                 FirebaseCrashlytics.getInstance().recordException(e);
@@ -505,6 +462,8 @@ public class AddPollGroupPostActivity extends BaseActivity implements View.OnCli
                     addChoiceTextView.setVisibility(View.VISIBLE);
                 }
                 break;
+            default:
+                break;
         }
     }
 
@@ -540,6 +499,8 @@ public class AddPollGroupPostActivity extends BaseActivity implements View.OnCli
                 } else {
                     startActivityForResult(intent1, ADD_MEDIA_ACTIVITY_REQUEST_CODE);
                 }
+                break;
+            default:
                 break;
         }
     }

@@ -52,6 +52,7 @@ import com.mixpanel.android.mpmetrics.MixpanelAPI;
 import com.mycity4kids.BuildConfig;
 import com.mycity4kids.R;
 import com.mycity4kids.application.BaseApplication;
+import com.mycity4kids.base.BaseActivity;
 import com.mycity4kids.base.BaseFragment;
 import com.mycity4kids.constants.AppConstants;
 import com.mycity4kids.constants.Constants;
@@ -78,7 +79,6 @@ import com.mycity4kids.models.response.ArticleRecommendationStatusResponse;
 import com.mycity4kids.models.response.CommentListData;
 import com.mycity4kids.models.response.CommentListResponse;
 import com.mycity4kids.models.response.CrownDataResponse;
-import com.mycity4kids.models.response.DeepLinkingResposnse;
 import com.mycity4kids.models.response.FBCommentResponse;
 import com.mycity4kids.models.response.FollowUnfollowCategoriesResponse;
 import com.mycity4kids.models.response.FollowUnfollowUserResponse;
@@ -99,25 +99,18 @@ import com.mycity4kids.preference.SharedPrefUtils;
 import com.mycity4kids.profile.UserProfileActivity;
 import com.mycity4kids.retrofitAPIsInterfaces.ArticleDetailsAPI;
 import com.mycity4kids.retrofitAPIsInterfaces.BloggerDashboardAPI;
-import com.mycity4kids.retrofitAPIsInterfaces.DeepLinkingAPI;
 import com.mycity4kids.retrofitAPIsInterfaces.FollowAPI;
 import com.mycity4kids.retrofitAPIsInterfaces.ShortStoryAPI;
 import com.mycity4kids.retrofitAPIsInterfaces.TopicsCategoryAPI;
 import com.mycity4kids.retrofitAPIsInterfaces.TorcaiAdsAPI;
 import com.mycity4kids.ui.GroupMembershipStatus;
 import com.mycity4kids.ui.activity.ArticleDetailsContainerActivity;
-import com.mycity4kids.ui.activity.BadgeActivity;
-import com.mycity4kids.ui.activity.CategoryVideosListingActivity;
 import com.mycity4kids.ui.activity.DashboardActivity;
 import com.mycity4kids.ui.activity.FilteredTopicsArticleListingActivity;
 import com.mycity4kids.ui.activity.GroupDetailsActivity;
 import com.mycity4kids.ui.activity.GroupsSummaryActivity;
-import com.mycity4kids.ui.activity.ShortStoriesListingContainerActivity;
-import com.mycity4kids.ui.activity.collection.CollectionsActivity;
-import com.mycity4kids.ui.activity.collection.UserCollectionItemListActivity;
 import com.mycity4kids.ui.campaign.activity.CampaignContainerActivity;
 import com.mycity4kids.ui.fragment.CommentOptionsDialogFragment.ICommentOptionAction;
-import com.mycity4kids.ui.videochallengenewui.activity.NewVideoChallengeActivity;
 import com.mycity4kids.utils.AppUtils;
 import com.mycity4kids.utils.ArrayAdapterFactory;
 import com.mycity4kids.utils.DateTimeUtils;
@@ -141,8 +134,6 @@ import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 import okhttp3.ResponseBody;
 import org.apmem.tools.layouts.FlowLayout;
 import org.json.JSONArray;
@@ -654,7 +645,9 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
                             return true;
                         }
                         if (AppUtils.isMomspressoDomain(request.getUrl().toString())) {
-                            handleDeeplinks(request.getUrl().toString());
+                            if (getActivity() != null) {
+                                ((BaseActivity) getActivity()).handleDeeplinks(request.getUrl().toString());
+                            }
                         } else {
                             if (getActivity() != null) {
                                 CustomTabsIntent.Builder builder = new CustomTabsIntent.Builder();
@@ -822,137 +815,6 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
             Log.d("MC4kException", Log.getStackTraceString(e));
         }
         return fragmentView;
-    }
-
-
-    private void handleDeeplinks(String tempDeepLinkUrl) {
-        String tempDeepLinkUrlWithoutSlash = "";
-        if ((tempDeepLinkUrl.endsWith("/"))) {
-            tempDeepLinkUrlWithoutSlash = tempDeepLinkUrl.substring(0, tempDeepLinkUrl.lastIndexOf("/"));
-        }
-        if (matchRegex(tempDeepLinkUrl)) {
-            // need to optimize this code
-        } else if (tempDeepLinkUrl.equals(AppConstants.MOM_VLOG_LISTING_SCREEN) || tempDeepLinkUrlWithoutSlash
-                .equals(AppConstants.MOM_VLOG_LISTING_SCREEN)) {
-            Intent intent = new Intent(getActivity(), CategoryVideosListingActivity.class);
-            startActivity(intent);
-        } else if (tempDeepLinkUrl.equals(AppConstants.SHORT_STORY_LISTING_SCREEN)
-                || tempDeepLinkUrlWithoutSlash
-                .equals(AppConstants.SHORT_STORY_LISTING_SCREEN)) {
-            Intent intent = new Intent(getActivity(), ShortStoriesListingContainerActivity.class);
-            startActivity(intent);
-        } else if (tempDeepLinkUrl.equals(AppConstants.VLOG_CHALLENGES_BASE_SHARE_URL) || tempDeepLinkUrl
-                .equals(AppConstants.VLOG_CHALLENGES_BASE_SHARE_URL
-                        .substring(0, AppConstants.VLOG_CHALLENGES_BASE_SHARE_URL.length() - 1))) {
-            Intent intent = new Intent(getActivity(), CategoryVideosListingActivity.class);
-            intent.putExtra("categoryId", AppConstants.VIDEO_CHALLENGE_ID);
-            startActivity(intent);
-        } else if (tempDeepLinkUrl.startsWith(AppConstants.VLOG_CHALLENGES_BASE_SHARE_URL)) {
-            String challengeId = tempDeepLinkUrl.replace(AppConstants.VLOG_CHALLENGES_BASE_SHARE_URL, "")
-                    .replace("/", "");
-            Intent intent = new Intent(getActivity(), NewVideoChallengeActivity.class);
-            intent.putExtra(Constants.CHALLENGE_ID, challengeId);
-            intent.putExtra("comingFrom", "deeplink");
-            startActivity(intent);
-        } else if (tempDeepLinkUrl.endsWith(AppConstants.DEEPLINK_SELF_PROFILE_URL_1)
-                || tempDeepLinkUrl.endsWith(AppConstants.DEEPLINK_SELF_PROFILE_URL_2)) {
-            Intent profileIntent = new Intent(getActivity(), UserProfileActivity.class);
-            startActivity(profileIntent);
-        }
-    }
-
-    private Boolean matchRegex(String tempDeepLinkUrl) {
-        try {
-            String urlWithNoParams = tempDeepLinkUrl.split("\\?")[0];
-            if (urlWithNoParams.endsWith("/")) {
-                urlWithNoParams = urlWithNoParams.substring(0, urlWithNoParams.length() - 1);
-            }
-            Pattern pattern = Pattern.compile(AppConstants.COLLECTION_LIST_REGEX);
-            Matcher matcher = pattern.matcher(urlWithNoParams);
-            if (matcher.matches()) {
-                String[] separated = urlWithNoParams.split("/");
-                Intent intent = new Intent(getActivity(), CollectionsActivity.class);
-                intent.putExtra("userId", separated[separated.length - 2]);
-                startActivity(intent);
-                return true;
-            }
-
-            Pattern pattern1 = Pattern.compile(AppConstants.COLLECTION_DETAIL_REGEX);
-            Matcher matcher1 = pattern1.matcher(urlWithNoParams);
-            if (matcher1.matches()) {
-                String[] separated = urlWithNoParams.split("/");
-                Intent intent = new Intent(getActivity(), UserCollectionItemListActivity.class);
-                intent.putExtra("id", separated[separated.length - 1]);
-                startActivity(intent);
-                return true;
-            }
-
-            Pattern pattern2 = Pattern.compile(AppConstants.BADGES_LISTING_REGEX);
-            Matcher matcher2 = pattern2.matcher(urlWithNoParams);
-            if (matcher2.matches()) {
-                String[] separated = urlWithNoParams.split("/");
-                Intent intent = new Intent(getActivity(), BadgeActivity.class);
-                intent.putExtra(Constants.USER_ID, separated[separated.length - 2]);
-                startActivity(intent);
-                return true;
-            }
-
-            Pattern pattern3 = Pattern.compile(AppConstants.BADGES_DETAIL_REGEX);
-            Matcher matcher3 = pattern3.matcher(urlWithNoParams);
-            if (matcher3.matches()) {
-                String[] separated = urlWithNoParams.split("/");
-                Intent intent = new Intent(getActivity(), UserProfileActivity.class);
-                intent.putExtra(AppConstants.BADGE_ID, separated[separated.length - 1]);
-                intent.putExtra(Constants.USER_ID, separated[separated.length - 3]);
-                startActivity(intent);
-                return true;
-            }
-
-            Pattern pattern4 = Pattern.compile(AppConstants.MILESTONE_DETAIL_REGEX);
-            Matcher matcher4 = pattern4.matcher(urlWithNoParams);
-            if (matcher4.matches()) {
-                String[] separated = urlWithNoParams.split("/");
-                Intent intent = new Intent(getActivity(), UserProfileActivity.class);
-                intent.putExtra(AppConstants.MILESTONE_ID, separated[separated.length - 1]);
-                intent.putExtra(Constants.USER_ID, separated[separated.length - 3]);
-                startActivity(intent);
-                return true;
-            }
-
-            Pattern pattern5 = Pattern.compile(AppConstants.USER_PROFILE_REGEX);
-            Matcher matcher5 = pattern5.matcher(urlWithNoParams);
-            if (matcher5.matches()) {
-                String[] separated = urlWithNoParams.split("/");
-                Intent intent = new Intent(getActivity(), UserProfileActivity.class);
-                intent.putExtra(Constants.USER_ID, separated[separated.length - 1]);
-                startActivity(intent);
-                return true;
-            }
-
-            Pattern pattern6 = Pattern.compile(AppConstants.USER_ANALYTICS_REGEX);
-            Matcher matcher6 = pattern6.matcher(urlWithNoParams);
-            if (matcher6.matches()) {
-                String[] separated = urlWithNoParams.split("/");
-                Intent intent = new Intent(getActivity(), UserProfileActivity.class);
-                intent.putExtra("detail", "rank");
-                intent.putExtra(Constants.USER_ID, separated[separated.length - 2]);
-                startActivity(intent);
-                return true;
-            }
-
-            Pattern pattern7 = Pattern.compile(AppConstants.ARTICLE_DETAIL_REGEX);
-            Pattern pattern8 = Pattern.compile(AppConstants.EDITORIAL_ARTICLE_DETAIL_REGEX);
-            Matcher matcher7 = pattern7.matcher(urlWithNoParams);
-            Matcher matcher8 = pattern8.matcher(urlWithNoParams);
-            if (matcher7.matches() || matcher8.matches()) {
-                getDeepLinkData(urlWithNoParams);
-                return true;
-            }
-        } catch (Exception e) {
-            FirebaseCrashlytics.getInstance().recordException(e);
-            Log.d("MC4kException", Log.getStackTraceString(e));
-        }
-        return false;
     }
 
     private void getTodaysBestArticles() {
@@ -1179,18 +1041,16 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
         call.enqueue(fbCommentsCallback);
     }
 
-    Callback<FBCommentResponse> fbCommentsCallback = new Callback<FBCommentResponse>() {
+    private Callback<FBCommentResponse> fbCommentsCallback = new Callback<FBCommentResponse>() {
         @Override
         public void onResponse(Call<FBCommentResponse> call, retrofit2.Response<FBCommentResponse> response) {
             removeProgressDialog();
-            if (response == null || null == response.body()) {
+            if (null == response.body()) {
                 if (isAdded()) {
                     ((ArticleDetailsContainerActivity) getActivity()).showToast(getString(R.string.server_went_wrong));
                 }
-                ;
                 return;
             }
-
             try {
                 FBCommentResponse responseData = response.body();
                 fbCommentsList = new ArrayList<>();
@@ -1601,49 +1461,6 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
         }
     };
 
-    private void getDeepLinkData(String url) {
-        Retrofit retrofit = BaseApplication.getInstance().getRetrofit();
-        showProgressDialog("");
-        DeepLinkingAPI deepLinkingApi = retrofit.create(DeepLinkingAPI.class);
-        Call<DeepLinkingResposnse> call = deepLinkingApi.getUrlDetails(url);
-        call.enqueue(new Callback<DeepLinkingResposnse>() {
-            @Override
-            public void onResponse(Call<DeepLinkingResposnse> call,
-                    retrofit2.Response<DeepLinkingResposnse> response) {
-                removeProgressDialog();
-                try {
-                    DeepLinkingResposnse responseData = response.body();
-                    if (responseData != null && responseData.getCode() == 200 && Constants.SUCCESS
-                            .equals(responseData.getStatus())) {
-                        if (AppConstants.DEEP_LINK_ARTICLE_DETAIL
-                                .equals(responseData.getData().getResult().getType())) {
-                            Intent intent = new Intent(getActivity(),
-                                    ArticleDetailsContainerActivity.class);
-                            intent.putExtra(Constants.AUTHOR_ID, responseData.getData().getResult().getAuthor_id());
-                            intent.putExtra(Constants.ARTICLE_ID, responseData.getData().getResult().getArticle_id());
-                            intent.putExtra(Constants.ARTICLE_OPENED_FROM, "DeepLinking");
-                            intent.putExtra(Constants.ARTICLE_INDEX, "-1");
-                            intent.putExtra(Constants.FROM_SCREEN, "DeepLinking");
-                            intent.putExtra(Constants.AUTHOR,
-                                    responseData.getData().getResult().getAuthor_id() + "~" + responseData.getData()
-                                            .getResult().getAuthor_name());
-                            startActivity(intent);
-                        }
-                    }
-                } catch (Exception e) {
-                    FirebaseCrashlytics.getInstance().recordException(e);
-                    Log.d("MC4kException", Log.getStackTraceString(e));
-                }
-            }
-
-            @Override
-            public void onFailure(Call<DeepLinkingResposnse> call, Throwable t) {
-                removeProgressDialog();
-                FirebaseCrashlytics.getInstance().recordException(t);
-                Log.d("MC4kException", Log.getStackTraceString(t));
-            }
-        });
-    }
 
     @Override
     public void onResume() {

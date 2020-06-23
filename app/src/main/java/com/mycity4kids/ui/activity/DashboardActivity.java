@@ -4,7 +4,6 @@ import android.Manifest;
 import android.accounts.NetworkErrorException;
 import android.app.Dialog;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
@@ -60,16 +59,12 @@ import com.mycity4kids.constants.AppConstants;
 import com.mycity4kids.constants.Constants;
 import com.mycity4kids.editor.EditorPostActivity;
 import com.mycity4kids.editor.NewEditor;
-import com.mycity4kids.gtmutils.GTMEventType;
 import com.mycity4kids.gtmutils.Utils;
 import com.mycity4kids.models.BranchModel;
 import com.mycity4kids.models.Topics;
 import com.mycity4kids.models.TopicsResponse;
 import com.mycity4kids.models.request.VlogsEventRequest;
 import com.mycity4kids.models.response.AllDraftsResponse;
-import com.mycity4kids.models.response.BlogPageResponse;
-import com.mycity4kids.models.response.DeepLinkingResposnse;
-import com.mycity4kids.models.response.DeepLinkingResult;
 import com.mycity4kids.models.response.DraftListResult;
 import com.mycity4kids.models.response.GroupsMembershipResponse;
 import com.mycity4kids.models.response.ShortStoryDetailResult;
@@ -79,10 +74,7 @@ import com.mycity4kids.preference.SharedPrefUtils;
 import com.mycity4kids.profile.MyMoneyRegistrationDialogFragment;
 import com.mycity4kids.profile.UserProfileActivity;
 import com.mycity4kids.retrofitAPIsInterfaces.ArticleDraftAPI;
-import com.mycity4kids.retrofitAPIsInterfaces.BlogPageAPI;
 import com.mycity4kids.retrofitAPIsInterfaces.BloggerDashboardAPI;
-import com.mycity4kids.retrofitAPIsInterfaces.DeepLinkingAPI;
-import com.mycity4kids.retrofitAPIsInterfaces.ShortStoryAPI;
 import com.mycity4kids.retrofitAPIsInterfaces.TopicsCategoryAPI;
 import com.mycity4kids.retrofitAPIsInterfaces.VlogsListingAndDetailsAPI;
 import com.mycity4kids.ui.ContentCommentReplyNotificationActivity;
@@ -105,11 +97,9 @@ import com.mycity4kids.ui.rewards.activity.RewardsShareReferralCodeActivity;
 import com.mycity4kids.ui.videochallengenewui.activity.NewVideoChallengeActivity;
 import com.mycity4kids.utils.AppUtils;
 import com.mycity4kids.utils.ArrayAdapterFactory;
-import com.mycity4kids.utils.ConnectivityUtils;
 import com.mycity4kids.utils.MixPanelUtils;
 import com.mycity4kids.utils.PermissionUtil;
 import com.mycity4kids.utils.StringUtils;
-import com.mycity4kids.utils.ToastUtils;
 import com.mycity4kids.videotrimmer.utils.FileUtils;
 import com.mycity4kids.vlogs.VideoCategoryAndChallengeSelectionActivity;
 import com.squareup.picasso.Picasso;
@@ -690,12 +680,6 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
         } else if (Constants.SUGGESTED_TOPICS_FRAGMENT.equals(fragmentToLoad)) {
             Intent suggestedIntent = new Intent(this, SuggestedTopicsActivity.class);
             startActivity(suggestedIntent);
-        } else if (Constants.SHORT_STOY_FRAGMENT.equals(fragmentToLoad)) {
-            TopicsShortStoriesContainerFragment fragment1 = new TopicsShortStoriesContainerFragment();
-            Bundle bundle = new Bundle();
-            bundle.putString("parentTopicId", AppConstants.SHORT_STORY_CATEGORYID);
-            fragment1.setArguments(bundle);
-            addFragment(fragment1, bundle);
         } else if (Constants.GROUP_LISTING_FRAGMENT.equals(fragmentToLoad)) {
             GroupsViewFragment fragment1 = new GroupsViewFragment();
             Bundle bundle = new Bundle();
@@ -1268,250 +1252,7 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
                     Log.d("DeepLinkUrlWithoutSlash", tempDeepLinkUrlWithoutSlash);
                 }
                 Log.d("tempDeepLinkUrl", tempDeepLinkUrl);
-                if (matchRegex(tempDeepLinkUrl)) {
-                    //////// need to optimize this code
-                } else if (tempDeepLinkUrl.equals(AppConstants.MOM_VLOG_LISTING_SCREEN) || tempDeepLinkUrlWithoutSlash
-                        .equals(AppConstants.MOM_VLOG_LISTING_SCREEN)) {
-                    Intent intent = new Intent(this, CategoryVideosListingActivity.class);
-                    startActivity(intent);
-                } else if (tempDeepLinkUrl.equals(AppConstants.SHORT_STORY_LISTING_SCREEN)
-                        || tempDeepLinkUrlWithoutSlash
-                        .equals(AppConstants.SHORT_STORY_LISTING_SCREEN)) {
-                    Intent intent = new Intent(this, ShortStoriesListingContainerActivity.class);
-                    startActivity(intent);
-                } else if (tempDeepLinkUrl.equals(AppConstants.VLOG_CHALLENGES_BASE_SHARE_URL) || tempDeepLinkUrl
-                        .equals(AppConstants.VLOG_CHALLENGES_BASE_SHARE_URL
-                                .substring(0, AppConstants.VLOG_CHALLENGES_BASE_SHARE_URL.length() - 1))) {
-                    Intent intent = new Intent(this, CategoryVideosListingActivity.class);
-                    intent.putExtra("categoryId", AppConstants.VIDEO_CHALLENGE_ID);
-                    startActivity(intent);
-                } else if (tempDeepLinkUrl.startsWith(AppConstants.VLOG_CHALLENGES_BASE_SHARE_URL)) {
-                    String challengeId = tempDeepLinkUrl.replace(AppConstants.VLOG_CHALLENGES_BASE_SHARE_URL, "")
-                            .replace("/", "");
-                    Intent intent = new Intent(this, NewVideoChallengeActivity.class);
-                    intent.putExtra(Constants.CHALLENGE_ID, challengeId);
-                    intent.putExtra("comingFrom", "deeplink");
-                    startActivity(intent);
-                } else if (tempDeepLinkUrl.contains(AppConstants.DEEPLINK_EDITOR_URL)
-                        || tempDeepLinkUrl.contains(AppConstants.DEEPLINK_MOMSPRESSO_EDITOR_URL)) {
-                    final String bloggerId = tempDeepLinkUrl
-                            .substring(tempDeepLinkUrl.lastIndexOf("/") + 1);
-                    if (!StringUtils.isNullOrEmpty(bloggerId) && !bloggerId
-                            .equals(SharedPrefUtils.getUserDetailModel(this).getDynamoId())) {
-                        showAlertDialog("Message",
-                                "Logged in as " + SharedPrefUtils.getUserDetailModel(this)
-                                        .getFirst_name() + " " + SharedPrefUtils
-                                        .getUserDetailModel(this).getLast_name(),
-                                buttonId -> {
-                                    Utils.pushEvent(DashboardActivity.this,
-                                            GTMEventType.ADD_BLOG_CLICKED_EVENT,
-                                            SharedPrefUtils
-                                                    .getUserDetailModel(DashboardActivity.this)
-                                                    .getDynamoId() + "", "Mobile Deep Link");
-                                    launchEditor();
-                                });
-                    } else {
-                        Utils.pushEvent(DashboardActivity.this, GTMEventType.ADD_BLOG_CLICKED_EVENT,
-                                SharedPrefUtils.getUserDetailModel(DashboardActivity.this)
-                                        .getDynamoId() + "", "Mobile Deep Link");
-                        launchEditor();
-                    }
-                } else if (tempDeepLinkUrl.contains(AppConstants.DEEPLINK_ADD_FUNNY_VIDEO_URL)
-                        || tempDeepLinkUrl
-                        .contains(AppConstants.DEEPLINK_MOMSPRESSO_ADD_FUNNY_VIDEO_URL)) {
-                    final String bloggerId = tempDeepLinkUrl
-                            .substring(tempDeepLinkUrl.lastIndexOf("/") + 1);
-                    if (!StringUtils.isNullOrEmpty(bloggerId) && !bloggerId
-                            .equals(SharedPrefUtils.getUserDetailModel(this).getDynamoId())) {
-                        showAlertDialog("Message",
-                                "Logged in as " + SharedPrefUtils.getUserDetailModel(this)
-                                        .getFirst_name() + " " + SharedPrefUtils
-                                        .getUserDetailModel(this).getLast_name(),
-                                buttonId -> launchAddVideoOptions());
-                    } else {
-                        launchAddVideoOptions();
-                    }
-                } else if (tempDeepLinkUrl.endsWith(AppConstants.DEEPLINK_SELF_PROFILE_URL_1)
-                        || tempDeepLinkUrl.endsWith(AppConstants.DEEPLINK_SELF_PROFILE_URL_2)) {
-                    fragmentToLoad = Constants.PROFILE_FRAGMENT;
-                } else if (tempDeepLinkUrl.contains(AppConstants.DEEPLINK_PROFILE_INVITE_FRIENDS)) {
-                    Intent intent = new Intent(this, UserProfileActivity.class);
-                    intent.putExtra(AppConstants.SHOW_INVITE_DIALOG_FLAG, true);
-                    startActivity(intent);
-                } else if (tempDeepLinkUrl.contains(AppConstants.DEEPLINK_PROFILE_URL)
-                        || tempDeepLinkUrl.contains(AppConstants.DEEPLINK_MOMSPRESSO_PROFILE_URL)) {
-                    final String bloggerId = tempDeepLinkUrl
-                            .substring(tempDeepLinkUrl.lastIndexOf("/") + 1);
-                    if (!StringUtils.isNullOrEmpty(bloggerId) && !bloggerId
-                            .equals(SharedPrefUtils.getUserDetailModel(this).getDynamoId())) {
-                        showAlertDialog("Message",
-                                "Logged in as " + SharedPrefUtils.getUserDetailModel(this)
-                                        .getFirst_name() + " " + SharedPrefUtils
-                                        .getUserDetailModel(this).getLast_name(),
-                                buttonId -> fragmentToLoad = Constants.PROFILE_FRAGMENT);
-                    } else {
-                        fragmentToLoad = Constants.PROFILE_FRAGMENT;
-                    }
-                } else if (tempDeepLinkUrl.contains(AppConstants.DEEPLINK_ADD_SHORT_STORY_URL)) {
-                    final String deepLinkChallengeId = tempDeepLinkUrl
-                            .substring(tempDeepLinkUrl.lastIndexOf("/") + 1);
-                    if (StringUtils.isNullOrEmpty(deepLinkChallengeId)) {
-                        Intent ssIntent = new Intent(this, AddShortStoryActivity.class);
-                        startActivity(ssIntent);
-                    } else {
-                        findValues(deepLinkChallengeId);
-                        if (StringUtils.isNullOrEmpty(shortStoryChallengesList) && StringUtils
-                                .isNullOrEmpty(deepLinkDisplayName) && StringUtils
-                                .isNullOrEmpty(deepLinkImageUrl) && shortStoriesTopicList != null
-                                && !shortStoriesTopicList.isEmpty()) {
-                            Intent deepLinkIntent = new Intent(this,
-                                    ShortStoryChallengeDetailActivity.class);
-                            deepLinkIntent.putExtra("selectedrequest", fromDeepLink);
-                            deepLinkIntent.putExtra("Display_Name", deepLinkDisplayName);
-                            deepLinkIntent.putExtra("challenge", shortStoryChallengesList);
-                            deepLinkIntent.putExtra("position", 0);
-                            deepLinkIntent.putExtra("topics",
-                                    shortStoriesTopicList.get(0).getDisplay_name());
-                            deepLinkIntent
-                                    .putExtra("parentId", shortStoriesTopicList.get(0).getId());
-                            deepLinkIntent.putExtra("StringUrl", deepLinkImageUrl);
-                            startActivity(deepLinkIntent);
-                        } else {
-                            Intent deepLinkIntent = new Intent(this,
-                                    ShortStoryChallengeDetailActivity.class);
-                            deepLinkIntent.putExtra("selectedrequest", fromDeepLink);
-                            deepLinkIntent.putExtra("Display_Name", deepLinkDisplayName);
-                            deepLinkIntent.putExtra("challenge", shortStoryChallengesList);
-                            deepLinkIntent.putExtra("position", 0);
-                            deepLinkIntent.putExtra("topics",
-                                    shortStoriesTopicList.get(0).getDisplay_name());
-                            deepLinkIntent
-                                    .putExtra("parentId", shortStoriesTopicList.get(0).getId());
-                            deepLinkIntent.putExtra("StringUrl", deepLinkImageUrl);
-                            startActivity(deepLinkIntent);
-                            ToastUtils.showToast(this, "server problem, please try again later");
-                        }
-                    }
-                } else if (tempDeepLinkUrl.contains(AppConstants.DEEPLINK_EDIT_SHORT_DRAFT_URL)) {
-                    Intent ssIntent = new Intent(this, UserDraftsContentActivity.class);
-                    ssIntent.putExtra("isPrivateProfile", true);
-                    ssIntent.putExtra("contentType", "shortStory");
-                    ssIntent.putExtra(Constants.AUTHOR_ID,
-                            SharedPrefUtils.getUserDetailModel(this).getDynamoId());
-                    startActivity(ssIntent);
-                } else if (tempDeepLinkUrl.contains(AppConstants.DEEPLINK_EDIT_SHORT_STORY_URL)) {
-                    final String storyId = tempDeepLinkUrl
-                            .substring(tempDeepLinkUrl.lastIndexOf("/") + 1,
-                                    tempDeepLinkUrl.length());
-                    Retrofit retrofit = BaseApplication.getInstance().getRetrofit();
-                    ShortStoryAPI shortStoryApi = retrofit.create(ShortStoryAPI.class);
-                    Call<ShortStoryDetailResult> call = shortStoryApi
-                            .getShortStoryDetails(storyId, "articleId");
-                    call.enqueue(ssDetailResponseCallback);
-                } else if (tempDeepLinkUrl.contains(AppConstants.DEEPLINK_SUGGESTED_TOPIC_URL)
-                        || tempDeepLinkUrl
-                        .contains(AppConstants.DEEPLINK_MOMSPRESSO_SUGGESTED_TOPIC_URL)) {
-                    fragmentToLoad = Constants.SUGGESTED_TOPICS_FRAGMENT;
-                } else if (tempDeepLinkUrl.contains(AppConstants.DEEPLINK_SETUP_BLOG)) {
-                    SharedPreferences pref = getSharedPreferences(COMMON_PREF_FILE, MODE_PRIVATE);
-                    boolean blogSetup = pref.getBoolean("blogSetup", false);
-                    if (!blogSetup) {
-                        checkIsBlogSetup();
-                    } else {
-                        launchEditor();
-                    }
-                } else if (tempDeepLinkUrl.contains(AppConstants.DEEPLINK_MOMSPRESSO_REWARD_PAGE)) {
-                    Intent rewardForm = new Intent(this, RewardsContainerActivity.class);
-                    final String referralCode = tempDeepLinkUrl
-                            .substring(tempDeepLinkUrl.lastIndexOf("=") + 1,
-                                    tempDeepLinkUrl.length());
-                    rewardForm.putExtra("pageLimit", 1);
-                    rewardForm.putExtra("pageNumber", 1);
-                    rewardForm.putExtra("referral", referralCode);
-                    startActivity(rewardForm);
-                } else if (tempDeepLinkUrl
-                        .contains(AppConstants.DEEPLINK_MOMSPRESSO_REWARD_MYMONEY)) {
-                    Intent campaignIntent = new Intent(this, CampaignContainerActivity.class);
-                    startActivity(campaignIntent);
-                } else if (tempDeepLinkUrl.contains(AppConstants.DEEPLINK_MOMSPRESSO_CAMPAIGN)) {
-                    if (tempDeepLinkUrl.contains("?")) {
-                        final String campaignID = tempDeepLinkUrl
-                                .substring(tempDeepLinkUrl.lastIndexOf("/") + 1,
-                                        tempDeepLinkUrl.indexOf("?"));
-                        if (!StringUtils.isNullOrEmpty(campaignID)) {
-                            Intent campaignIntent = new Intent(this,
-                                    CampaignContainerActivity.class);
-                            campaignIntent.putExtra("campaignID", Integer.parseInt(campaignID));
-                            startActivity(campaignIntent);
-                        }
-                    } else {
-                        final String campaignID = tempDeepLinkUrl
-                                .substring(tempDeepLinkUrl.lastIndexOf("/") + 1);
-                        if (!StringUtils.isNullOrEmpty(campaignID)) {
-                            Intent campaignIntent = new Intent(this,
-                                    CampaignContainerActivity.class);
-                            campaignIntent.putExtra("campaignID", Integer.parseInt(campaignID));
-                            startActivity(campaignIntent);
-                        }
-                    }
-                } else if (tempDeepLinkUrl.contains(AppConstants.DEEPLINK_GROUPS)) {
-                    String[] separated = tempDeepLinkUrl.split("/");
-                    if (separated[separated.length - 1].startsWith("comment-")) {
-                        String[] commArray = separated[separated.length - 1].split("-");
-                        long commentId = AppUtils.getIdFromHash(commArray[1]);
-                        String[] postArray = separated[separated.length - 2].split("-");
-                        long postId = AppUtils.getIdFromHash(postArray[1]);
-                        String[] groupArray = separated[separated.length - 3].split("-");
-                        long groupId = AppUtils.getIdFromHash(groupArray[groupArray.length - 1]);
-                        Intent gpPostIntent = new Intent(this, GroupPostDetailActivity.class);
-                        gpPostIntent.putExtra("postId", (int) postId);
-                        gpPostIntent.putExtra("groupId", (int) groupId);
-                        gpPostIntent.putExtra("responseId", (int) commentId);
-                        startActivity(gpPostIntent);
-                    } else if (separated[separated.length - 1].startsWith("post-")) {
-                        String[] postArray = separated[separated.length - 1].split("-");
-                        long postId = AppUtils.getIdFromHash(postArray[1]);
-                        String[] groupArray = separated[separated.length - 2].split("-");
-                        long groupId = AppUtils.getIdFromHash(groupArray[groupArray.length - 1]);
-                        Intent gpPostIntent = new Intent(this, GroupPostDetailActivity.class);
-                        gpPostIntent.putExtra("postId", (int) postId);
-                        gpPostIntent.putExtra("groupId", (int) groupId);
-                        startActivity(gpPostIntent);
-                    } else if (separated[separated.length - 1].equals("join")) {
-                        String[] groupArray = separated[separated.length - 2].split("-");
-                        long groupId = AppUtils.getIdFromHash(groupArray[groupArray.length - 1]);
-                        GroupMembershipStatus groupMembershipStatus = new GroupMembershipStatus(
-                                this);
-                        groupMembershipStatus.checkMembershipStatus((int) groupId,
-                                SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext())
-                                        .getDynamoId());
-                    } else {
-                        String[] groupArray;
-                        long groupId;
-                        if (separated[separated.length - 1].contains("?")) {
-                            groupArray = separated[separated.length - 1].split("[?]");
-                            groupArray = groupArray[0].split("-");
-                            groupId = AppUtils.getIdFromHash(groupArray[groupArray.length - 1]);
-                        } else {
-                            groupArray = separated[separated.length - 1].split("-");
-                            groupId = AppUtils.getIdFromHash(groupArray[groupArray.length - 1]);
-                        }
-                        if (groupId == -1) {
-                            return;
-                        }
-                        GroupMembershipStatus groupMembershipStatus = new GroupMembershipStatus(
-                                this);
-                        groupMembershipStatus.checkMembershipStatus((int) groupId,
-                                SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext())
-                                        .getDynamoId());
-                    }
-                } else if (tempDeepLinkUrl.contains(AppConstants.DEEPLINK_MOMSPRESSO_REFERRAL)) {
-                    Intent intent1 = new Intent(this, RewardsContainerActivity.class);
-                    intent1.putExtra("pageNumber", 1);
-                    startActivity(intent1);
-                } else {
-                    getDeepLinkData(tempDeepLinkUrl);
-                }
+                handleDeeplinks(tempDeepLinkUrl);
             }
             deepLinkUrl = newIntent.getStringExtra(AppConstants.DEEP_LINK_URL);
         }
@@ -1705,51 +1446,6 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
             FirebaseCrashlytics.getInstance().recordException(t);
             apiExceptions(t);
             Log.d("MC4kException", Log.getStackTraceString(t));
-        }
-    };
-
-    private void checkIsBlogSetup() {
-        showProgressDialog(getResources().getString(R.string.please_wait));
-        Retrofit retrofit = BaseApplication.getInstance().getRetrofit();
-        BlogPageAPI getBlogPageApi = retrofit.create(BlogPageAPI.class);
-
-        Call<BlogPageResponse> call = getBlogPageApi
-                .getUserBlogPage(SharedPrefUtils.getUserDetailModel(this).getDynamoId());
-        call.enqueue(blogPageSetUpResponseListener);
-    }
-
-    private Callback<BlogPageResponse> blogPageSetUpResponseListener = new Callback<BlogPageResponse>() {
-        @Override
-        public void onResponse(Call<BlogPageResponse> call,
-                retrofit2.Response<BlogPageResponse> response) {
-            removeProgressDialog();
-            if (response.body() == null) {
-                NetworkErrorException nee = new NetworkErrorException(
-                        response.raw().toString());
-                FirebaseCrashlytics.getInstance().recordException(nee);
-                return;
-            }
-            BlogPageResponse responseModel = response.body();
-            if (responseModel.getCode() == 200 && Constants.SUCCESS
-                    .equals(responseModel.getStatus())) {
-                if (responseModel.getData().getResult().getIsSetup() == 1) {
-                    SharedPreferences pref = getApplicationContext()
-                            .getSharedPreferences(COMMON_PREF_FILE, MODE_PRIVATE);
-                    SharedPreferences.Editor editor = pref.edit();
-                    editor.putBoolean("blogSetup", true);
-                    editor.commit();
-                    launchEditor();
-                } else if (responseModel.getData().getResult().getIsSetup() == 0) {
-                    Intent intent = new Intent(DashboardActivity.this, BlogSetupActivity.class);
-                    startActivity(intent);
-                }
-            }
-        }
-
-        @Override
-        public void onFailure(Call<BlogPageResponse> call, Throwable t) {
-            removeProgressDialog();
-            apiExceptions(t);
         }
     };
 
@@ -2173,158 +1869,6 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
             startActivity(intent);
         } else {
             showToast(getString(R.string.choose_mp4_file));
-        }
-    }
-
-    private void getDeepLinkData(final String deepLinkUrl) {
-        Retrofit retrofit = BaseApplication.getInstance().getRetrofit();
-        showProgressDialog("");
-        DeepLinkingAPI deepLinkingApi = retrofit.create(DeepLinkingAPI.class);
-        if (!ConnectivityUtils.isNetworkEnabled(this)) {
-            removeProgressDialog();
-            showToast(getString(R.string.error_network));
-            return;
-        }
-        Call<DeepLinkingResposnse> call = deepLinkingApi.getUrlDetails(deepLinkUrl);
-        call.enqueue(new Callback<DeepLinkingResposnse>() {
-            @Override
-            public void onResponse(Call<DeepLinkingResposnse> call,
-                    retrofit2.Response<DeepLinkingResposnse> response) {
-                removeProgressDialog();
-                try {
-                    DeepLinkingResposnse responseData = response.body();
-                    if (responseData.getCode() == 200 && Constants.SUCCESS
-                            .equals(responseData.getStatus())) {
-                        identifyTargetScreen(responseData.getData().getResult());
-                    } else {
-                        showToast(getString(R.string.toast_response_error));
-                    }
-                } catch (Exception e) {
-                    showToast(getString(R.string.toast_response_error));
-                }
-            }
-
-            @Override
-            public void onFailure(Call<DeepLinkingResposnse> call, Throwable t) {
-                removeProgressDialog();
-                showToast(getString(R.string.server_went_wrong));
-                FirebaseCrashlytics.getInstance().recordException(t);
-                apiExceptions(t);
-                Log.d("MC4kException", Log.getStackTraceString(t));
-            }
-        });
-    }
-
-    private void identifyTargetScreen(DeepLinkingResult data) {
-        switch (data.getType()) {
-            case AppConstants.DEEP_LINK_AUTHOR_LISTING:
-                renderAuthorListingScreen(data);
-                break;
-            case AppConstants.DEEP_LINK_BLOGGER_LISTING:
-                renderBloggerListingScreen(data);
-                break;
-            case AppConstants.DEEP_LINK_ARTICLE_DETAIL:
-                renderArticleDetailScreen(data);
-                break;
-            case AppConstants.DEEP_LINK_AUTHOR_DETAIL:
-                renderAuthorDetailScreen(data);
-                break;
-            case AppConstants.DEEP_LINK_VLOG_DETAIL:
-                renderVlogDetailScreen(data);
-                break;
-            case AppConstants.APP_SETTINGS_DEEPLINK:
-                renderAppSettingsScreen(data);
-                break;
-            case AppConstants.DEEP_LINK_STORY_DETAILS:
-                navigateToShortStory(data);
-                break;
-            default:
-                break;
-        }
-    }
-
-    private void navigateToShortStory(DeepLinkingResult data) {
-        if (!StringUtils.isNullOrEmpty(data.getArticle_id())) {
-            Intent intent = new Intent(DashboardActivity.this, ShortStoryContainerActivity.class);
-            intent.putExtra(Constants.AUTHOR_ID, data.getAuthor_id());
-            intent.putExtra(Constants.ARTICLE_ID, data.getArticle_id());
-            intent.putExtra(Constants.DEEPLINK_URL, deepLinkUrl);
-            intent.putExtra(Constants.ARTICLE_OPENED_FROM, "DeepLinking");
-            intent.putExtra(Constants.ARTICLE_INDEX, "-1");
-            intent.putExtra(Constants.FROM_SCREEN, "DeepLinking");
-            intent.putExtra(Constants.AUTHOR, data.getAuthor_id() + "~" + data.getAuthor_name());
-            startActivity(intent);
-        }
-    }
-
-    private void renderAuthorDetailScreen(DeepLinkingResult data) {
-        if (!StringUtils.isNullOrEmpty(data.getAuthor_id())) {
-            Intent intent = new Intent(DashboardActivity.this, UserProfileActivity.class);
-            intent.putExtra(AppConstants.PUBLIC_PROFILE_FLAG, true);
-            intent.putExtra(Constants.USER_ID, data.getAuthor_id());
-            intent.putExtra(AppConstants.AUTHOR_NAME, "" + data.getAuthor_name());
-            intent.putExtra(Constants.FROM_SCREEN, "Deep Linking");
-            startActivity(intent);
-        }
-    }
-
-    private void renderAuthorListingScreen(DeepLinkingResult data) {
-        if (!StringUtils.isNullOrEmpty(data.getAuthor_name())) {
-            Intent authorListIntent = new Intent(DashboardActivity.this,
-                    UserProfileActivity.class);
-            authorListIntent.putExtra(Constants.USER_ID, data.getAuthor_id());
-            authorListIntent.putExtra(Constants.DEEPLINK_URL, deepLinkUrl);
-            authorListIntent.putExtra(AppConstants.AUTHOR_NAME, "" + data.getAuthor_name());
-            authorListIntent.putExtra(Constants.FROM_SCREEN, "Deep Linking");
-            startActivity(authorListIntent);
-        }
-    }
-
-    private void renderBloggerListingScreen(DeepLinkingResult data) {
-        if (!StringUtils.isNullOrEmpty(data.getBlog_title())) {
-            Intent bloggerListIntent = new Intent(DashboardActivity.this,
-                    UserProfileActivity.class);
-            bloggerListIntent.putExtra(Constants.USER_ID, data.getAuthor_id());
-            bloggerListIntent.putExtra(Constants.DEEPLINK_URL, deepLinkUrl);
-            bloggerListIntent.putExtra(AppConstants.AUTHOR_NAME, "" + data.getAuthor_name());
-            bloggerListIntent.putExtra(Constants.FROM_SCREEN, "Deep Linking");
-            startActivity(bloggerListIntent);
-        }
-    }
-
-    private void renderArticleDetailScreen(DeepLinkingResult data) {
-        if (!StringUtils.isNullOrEmpty(data.getArticle_id())) {
-            Intent intent = new Intent(DashboardActivity.this,
-                    ArticleDetailsContainerActivity.class);
-            intent.putExtra(Constants.AUTHOR_ID, data.getAuthor_id());
-            intent.putExtra(Constants.ARTICLE_ID, data.getArticle_id());
-            intent.putExtra(Constants.DEEPLINK_URL, deepLinkUrl);
-            intent.putExtra(Constants.ARTICLE_OPENED_FROM, "DeepLinking");
-            intent.putExtra(Constants.ARTICLE_INDEX, "-1");
-            intent.putExtra(Constants.FROM_SCREEN, "DeepLinking");
-            intent.putExtra(Constants.AUTHOR, data.getAuthor_id() + "~" + data.getAuthor_name());
-            startActivity(intent);
-        }
-    }
-
-    private void renderVlogDetailScreen(DeepLinkingResult data) {
-        if (!StringUtils.isNullOrEmpty(data.getId())) {
-            Intent intent = new Intent(DashboardActivity.this, ParallelFeedActivity.class);
-            intent.putExtra(Constants.VIDEO_ID, data.getId());
-            intent.putExtra(Constants.DEEPLINK_URL, deepLinkUrl);
-            intent.putExtra(Constants.ARTICLE_OPENED_FROM, "Deep Linking");
-            intent.putExtra(Constants.ARTICLE_INDEX, "-1");
-            intent.putExtra(Constants.FROM_SCREEN, "Deep Linking");
-            intent.putExtra(Constants.AUTHOR, data.getAuthor_id() + "~" + data.getAuthor_name());
-            startActivity(intent);
-        }
-    }
-
-    private void renderAppSettingsScreen(DeepLinkingResult data) {
-        if (!StringUtils.isNullOrEmpty(data.getId())) {
-            Intent intent = new Intent(DashboardActivity.this, AppSettingsActivity.class);
-            intent.putExtra("load_fragment", Constants.SETTINGS_FRAGMENT);
-            startActivity(intent);
         }
     }
 

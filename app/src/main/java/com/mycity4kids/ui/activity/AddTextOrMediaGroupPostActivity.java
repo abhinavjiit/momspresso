@@ -169,29 +169,35 @@ public class AddTextOrMediaGroupPostActivity extends BaseActivity implements Vie
 
         rootLayout = findViewById(R.id.rootLayout);
         handler = new Handler(this);
-        postContentEditText = (EditText) findViewById(R.id.postContentEditText);
-        closeEditorImageView = (ImageView) findViewById(R.id.closeEditorImageView);
-        anonymousImageView = (ImageView) findViewById(R.id.anonymousImageView);
-        anonymousTextView = (TextView) findViewById(R.id.anonymousTextView);
-        anonymousCheckbox = (CheckBox) findViewById(R.id.anonymousCheckbox);
-        addMediaImageView = (ImageView) findViewById(R.id.addMediaImageView);
-        addMediaTextView = (TextView) findViewById(R.id.addMediaTextView);
-        publishTextView = (TextView) findViewById(R.id.publishTextView);
-        chooseMediaTypeContainer = (RelativeLayout) findViewById(R.id.chooseMediaTypeContainer);
-        mediaContainer = (LinearLayout) findViewById(R.id.mediaContainer);
-        imageCameraTextView = (TextView) findViewById(R.id.imageCameraTextView);
-        imageGalleryTextView = (TextView) findViewById(R.id.imageGalleryTextView);
-        cancelTextView = (TextView) findViewById(R.id.cancelTextView);
-
-        audioRecordView = (AudioRecordView) findViewById(R.id.recordingView);
+        postContentEditText = findViewById(R.id.postContentEditText);
+        closeEditorImageView = findViewById(R.id.closeEditorImageView);
+        anonymousImageView = findViewById(R.id.anonymousImageView);
+        anonymousTextView = findViewById(R.id.anonymousTextView);
+        anonymousCheckbox = findViewById(R.id.anonymousCheckbox);
+        addMediaImageView = findViewById(R.id.addMediaImageView);
+        addMediaTextView = findViewById(R.id.addMediaTextView);
+        publishTextView = findViewById(R.id.publishTextView);
+        chooseMediaTypeContainer = findViewById(R.id.chooseMediaTypeContainer);
+        mediaContainer = findViewById(R.id.mediaContainer);
+        imageCameraTextView = findViewById(R.id.imageCameraTextView);
+        imageGalleryTextView = findViewById(R.id.imageGalleryTextView);
+        cancelTextView = findViewById(R.id.cancelTextView);
+        audioRecordView = findViewById(R.id.recordingView);
         slideDownAnim = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.anim_slide_down_from_top);
-        playAudioImageView = (ImageView) findViewById(R.id.playAudioImageView);
-        pauseAudioImageView = (ImageView) findViewById(R.id.pauseAudioImageView);
-        audioSeekBar = (SeekBar) findViewById(R.id.audioSeekBar);
-        audioTimeElapsedComment = (TextView) findViewById(R.id.audioTimeElapsed);
+        playAudioImageView = findViewById(R.id.playAudioImageView);
+        pauseAudioImageView = findViewById(R.id.pauseAudioImageView);
+        audioSeekBar = findViewById(R.id.audioSeekBar);
+        audioTimeElapsedComment = findViewById(R.id.audioTimeElapsed);
 
-        selectedGroup = (GroupResult) getIntent().getParcelableExtra("groupItem");
+        selectedGroup = getIntent().getParcelableExtra("groupItem");
         firebaseAuth = FirebaseAuth.getInstance();
+
+        if (selectedGroup != null && selectedGroup.getAnnonAllowed() == 0) {
+            anonymousCheckbox.setChecked(false);
+            anonymousCheckbox.setVisibility(View.GONE);
+            anonymousImageView.setVisibility(View.GONE);
+            anonymousTextView.setVisibility(View.GONE);
+        }
 
         fileName = BaseApplication.getAppContext().getExternalFilesDir(null) + File.separator;
         fileName += "audiorecordtest.m4a";
@@ -279,8 +285,6 @@ public class AddTextOrMediaGroupPostActivity extends BaseActivity implements Vie
                 onBackPressed();
                 break;
             case R.id.cancelTextView:
-                chooseMediaTypeContainer.setVisibility(View.GONE);
-                break;
             case R.id.chooseMediaTypeContainer:
                 chooseMediaTypeContainer.setVisibility(View.GONE);
                 break;

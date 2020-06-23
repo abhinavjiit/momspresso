@@ -283,53 +283,7 @@ public class GroupDetailsActivity extends BaseActivity implements View.OnClickLi
         shareGroupImageView.setOnClickListener(this);
         shareGroupImageViewLinearLayoutContainer.setOnClickListener(this);
 
-        if (justJoined) {
-            dialog = new Dialog(GroupDetailsActivity.this);
-            dialog.getWindow().requestFeature(Window.FEATURE_NO_TITLE);
-            dialog.setContentView(R.layout.dialog_group_yourself);
-            dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
-            dialog.show();
-
-            justJoinedPostTextView = dialog.findViewById(R.id.post_edit);
-            anonymousCheckbox = dialog.findViewById(R.id.anonymousCheckbox);
-
-            if (SharedPrefUtils.isUserAnonymous(BaseApplication.getAppContext())) {
-                anonymousCheckbox.setChecked(true);
-            } else {
-                anonymousCheckbox.setChecked(false);
-            }
-
-            anonymousCheckbox.setOnClickListener(view -> {
-                if (anonymousCheckbox.isChecked()) {
-                    SharedPrefUtils.setUserAnonymous(BaseApplication.getAppContext(), true);
-                } else {
-                    SharedPrefUtils.setUserAnonymous(BaseApplication.getAppContext(), false);
-                }
-
-            });
-            dialog.findViewById(R.id.cross).setOnClickListener(view -> dialog.dismiss());
-            dialog.findViewById(R.id.postTextView).setOnClickListener(view -> {
-                if (!isRequestRunning && validateParams()) {
-                    isRequestRunning = true;
-                    publishPost();
-                }
-            });
-
-            dialog.show();
-        }
         getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
-        try {
-            Toast toast = Toast
-                    .makeText(this, getResources().getString(R.string.group_detail_activity_toast_text),
-                            Toast.LENGTH_LONG);
-            LinearLayout toastLayout = (LinearLayout) toast.getView();
-            TextView toastTV = (TextView) toastLayout.getChildAt(0);
-            toastTV.setTextSize(16);
-            toast.show();
-        } catch (Exception e) {
-            FirebaseCrashlytics.getInstance().recordException(e);
-            Log.d("MC4kException", Log.getStackTraceString(e));
-        }
         bottomSheetStateChange();
         String[] sections = {
                 getString(R.string.groups_sections_about), getString(R.string.groups_sections_discussions),
@@ -550,6 +504,54 @@ public class GroupDetailsActivity extends BaseActivity implements View.OnClickLi
                     groupAboutRecyclerAdapter.setData(selectedGroup);
                     TabLayout.Tab tab = groupPostTabLayout.getTabAt(1);
                     tab.select();
+                    try {
+                        if (selectedGroup.getAnnonAllowed() != 0) {
+                            if (justJoined) {
+                                dialog = new Dialog(GroupDetailsActivity.this);
+                                dialog.getWindow().requestFeature(Window.FEATURE_NO_TITLE);
+                                dialog.setContentView(R.layout.dialog_group_yourself);
+                                dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+                                dialog.show();
+
+                                justJoinedPostTextView = dialog.findViewById(R.id.post_edit);
+                                anonymousCheckbox = dialog.findViewById(R.id.anonymousCheckbox);
+
+                                if (SharedPrefUtils.isUserAnonymous(BaseApplication.getAppContext())) {
+                                    anonymousCheckbox.setChecked(true);
+                                } else {
+                                    anonymousCheckbox.setChecked(false);
+                                }
+
+                                anonymousCheckbox.setOnClickListener(view -> {
+                                    if (anonymousCheckbox.isChecked()) {
+                                        SharedPrefUtils.setUserAnonymous(BaseApplication.getAppContext(), true);
+                                    } else {
+                                        SharedPrefUtils.setUserAnonymous(BaseApplication.getAppContext(), false);
+                                    }
+
+                                });
+                                dialog.findViewById(R.id.cross).setOnClickListener(view -> dialog.dismiss());
+                                dialog.findViewById(R.id.postTextView).setOnClickListener(view -> {
+                                    if (!isRequestRunning && validateParams()) {
+                                        isRequestRunning = true;
+                                        publishPost();
+                                    }
+                                });
+
+                                dialog.show();
+                            }
+                            Toast toast = Toast.makeText(GroupDetailsActivity.this,
+                                    getResources().getString(R.string.group_detail_activity_toast_text),
+                                    Toast.LENGTH_LONG);
+                            LinearLayout toastLayout = (LinearLayout) toast.getView();
+                            TextView toastTV = (TextView) toastLayout.getChildAt(0);
+                            toastTV.setTextSize(16);
+                            toast.show();
+                        }
+                    } catch (Exception e) {
+                        FirebaseCrashlytics.getInstance().recordException(e);
+                        Log.d("MC4kException", Log.getStackTraceString(e));
+                    }
                 }
             } catch (Exception e) {
                 FirebaseCrashlytics.getInstance().recordException(e);
@@ -1672,7 +1674,6 @@ public class GroupDetailsActivity extends BaseActivity implements View.OnClickLi
                 shareIntent.putExtra(android.content.Intent.EXTRA_TEXT, shareUrl);
                 startActivity(Intent.createChooser(shareIntent, "Momspresso"));
                 break;
-
             case R.id.whatsappShare:
                 String shareUrlWhatsapp = AppConstants.WEB_URL + postList.get(position).getUrl();
                 AppUtils.shareCampaignWithWhatsApp(GroupDetailsActivity.this, shareUrlWhatsapp, "", "", "", "", "");

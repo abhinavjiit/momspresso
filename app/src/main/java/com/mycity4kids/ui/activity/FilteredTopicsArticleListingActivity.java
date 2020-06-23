@@ -13,9 +13,7 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
-import android.view.animation.TranslateAnimation;
 import android.widget.FrameLayout;
-import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -68,25 +66,15 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Retrofit;
 
-/**
- * @author Hemant Parmar
- */
-
-/*
- * Used for Listing of Topics Article Listing, Language Specific Article Listing, Momspresso Article Listing
- *
- * */
-
 public class FilteredTopicsArticleListingActivity extends BaseActivity implements OnClickListener,
-        SwipeRefreshLayout.OnRefreshListener,
-        FilterTopicsDialogFragment.OnTopicsSelectionComplete, /*FeedNativeAd.AdLoadingListener,*/
+        SwipeRefreshLayout.OnRefreshListener, FilterTopicsDialogFragment.OnTopicsSelectionComplete,
         MainArticleRecyclerViewAdapter.RecyclerViewClickListener {
 
     private MainArticleRecyclerViewAdapter recyclerAdapter;
 
     private Menu menu;
     private ArrayList<ArticleListingResult> articleDataModelsNew;
-    private RelativeLayout mLodingView;
+    private RelativeLayout loadingView;
     private FrameLayout frameLayout;
     private FloatingActionsMenu fabMenu;
     private SwipeRefreshLayout swipeRefreshLayout;
@@ -101,15 +89,17 @@ public class FilteredTopicsArticleListingActivity extends BaseActivity implement
     private TextView sortTextView;
     private TextView filterTextView;
 
-    private Toolbar mToolbar;
+    private Toolbar toolbar;
     private FrameLayout sortBgLayout;
     private int limit = 15;
-    private FloatingActionButton popularSortFAB, recentSortFAB, fabSort;
-    private TextView bottomMenuRecentSort, bottomMenuPopularSort;
+    private FloatingActionButton popularSortFab;
+    private FloatingActionButton recentSortFab;
+    private FloatingActionButton fabSort;
+    private TextView bottomMenuRecentSort;
+    private TextView bottomMenuPopularSort;
     private RelativeLayout bottomOptionMenu;
     private TextView titleTextView;
     private TextView followUnfollowTextView;
-    private LinearLayout sortingLayout;
 
     private int sortType = 0;
     private String displayName;
@@ -121,13 +111,13 @@ public class FilteredTopicsArticleListingActivity extends BaseActivity implement
     private HashMap<Topics, List<Topics>> allTopicsMap;
     private ArrayList<Topics> subAndSubSubTopicsList;
 
-    //    private Animation bottomUp, bottomDown;
     private String filteredTopics;
     private String topicLevel;
     private boolean isLanguageListing;
     private String categoryName;
-    private String fromScreen;
-    private int pastVisiblesItems, visibleItemCount, totalItemCount;
+    private int pastVisiblesItems;
+    private int visibleItemCount;
+    private int totalItemCount;
     private RecyclerView recyclerView;
     private TextView toolbarTitle;
     private RelativeLayout root;
@@ -140,28 +130,25 @@ public class FilteredTopicsArticleListingActivity extends BaseActivity implement
         ((BaseApplication) getApplication()).setView(root);
         ((BaseApplication) getApplication()).setActivity(this);
 
-        mToolbar = (Toolbar) findViewById(R.id.toolbar);
+        toolbar = (Toolbar) findViewById(R.id.toolbar);
         toolbarTitle = (TextView) findViewById(R.id.toolbarTitle);
 
-        setSupportActionBar(mToolbar);
+        setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setTitle("Topics");
         Utils.pushOpenScreenEvent(FilteredTopicsArticleListingActivity.this, "TopicArticlesListingScreen",
                 SharedPrefUtils.getUserDetailModel(this).getDynamoId() + "");
 
         recyclerView = (RecyclerView) findViewById(R.id.recyclerView);
-        mLodingView = (RelativeLayout) findViewById(R.id.relativeLoadingView);
-        sortingLayout = (LinearLayout) findViewById(R.id.sortingLayout);
+        loadingView = (RelativeLayout) findViewById(R.id.relativeLoadingView);
         noBlogsTextView = (TextView) findViewById(R.id.noBlogsTextView);
         sortTextView = (TextView) findViewById(R.id.sortTextView);
         filterTextView = (TextView) findViewById(R.id.filterTextView);
         progressBar = (ProgressBar) findViewById(R.id.progressBar);
         swipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.swipe_refresh_layout);
         bookmarkInfoView = (RelativeLayout) findViewById(R.id.bookmarkInfoView);
-
         titleTextView = (TextView) findViewById(R.id.titleTextView);
         followUnfollowTextView = (TextView) findViewById(R.id.followUnfollowTextView);
-
         bottomOptionMenu = (RelativeLayout) findViewById(R.id.bottomOptionMenu);
         bottomMenuRecentSort = (TextView) findViewById(R.id.recentSort);
         bottomMenuPopularSort = (TextView) findViewById(R.id.popularSort);
@@ -177,19 +164,16 @@ public class FilteredTopicsArticleListingActivity extends BaseActivity implement
         frameLayout = (FrameLayout) findViewById(R.id.frame_layout);
         frameLayout.getBackground().setAlpha(0);
         fabMenu = (FloatingActionsMenu) findViewById(R.id.fab_menu);
-        popularSortFAB = (FloatingActionButton) findViewById(R.id.popularSortFAB);
-        recentSortFAB = (FloatingActionButton) findViewById(R.id.recentSortFAB);
-        popularSortFAB.setOnClickListener(this);
-        recentSortFAB.setOnClickListener(this);
+        popularSortFab = (FloatingActionButton) findViewById(R.id.popularSortFAB);
+        recentSortFab = (FloatingActionButton) findViewById(R.id.recentSortFAB);
+        popularSortFab.setOnClickListener(this);
+        recentSortFab.setOnClickListener(this);
         fabSort = (FloatingActionButton) findViewById(R.id.fabSort);
-        fabSort.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (fabMenu.isExpanded()) {
-                    fabMenu.collapse();
-                } else {
-                    fabMenu.expand();
-                }
+        fabSort.setOnClickListener(v -> {
+            if (fabMenu.isExpanded()) {
+                fabMenu.collapse();
+            } else {
+                fabMenu.expand();
             }
         });
         slideDownAnim = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.anim_slide_down_from_top);
@@ -201,12 +185,7 @@ public class FilteredTopicsArticleListingActivity extends BaseActivity implement
 
             @Override
             public void onAnimationEnd(Animation animation) {
-                new Handler().postDelayed(new Runnable() {
-                    @Override
-                    public void run() {
-                        bookmarkInfoView.setVisibility(View.GONE);
-                    }
-                }, 2000);
+                new Handler().postDelayed(() -> bookmarkInfoView.setVisibility(View.GONE), 2000);
             }
 
             @Override
@@ -220,7 +199,6 @@ public class FilteredTopicsArticleListingActivity extends BaseActivity implement
         displayName = getIntent().getStringExtra("displayName");
         categoryName = getIntent().getStringExtra("categoryName");
         isLanguageListing = getIntent().getBooleanExtra("isLanguage", false);
-        fromScreen = getIntent().getStringExtra(Constants.FROM_SCREEN);
 
         try {
             allTopicsList = BaseApplication.getTopicList();
@@ -242,8 +220,8 @@ public class FilteredTopicsArticleListingActivity extends BaseActivity implement
             FirebaseCrashlytics.getInstance().recordException(e);
             Log.d("FileNotFoundException", Log.getStackTraceString(e));
             Retrofit retro = BaseApplication.getInstance().getRetrofit();
-            final TopicsCategoryAPI topicsAPI = retro.create(TopicsCategoryAPI.class);
-            Call<ResponseBody> caller = topicsAPI.downloadTopicsJSON();
+            final TopicsCategoryAPI topicsApi = retro.create(TopicsCategoryAPI.class);
+            Call<ResponseBody> caller = topicsApi.downloadTopicsJSON();
             caller.enqueue(new Callback<ResponseBody>() {
                 @Override
                 public void onResponse(Call<ResponseBody> call, retrofit2.Response<ResponseBody> response) {
@@ -287,8 +265,7 @@ public class FilteredTopicsArticleListingActivity extends BaseActivity implement
         }
 
         if (null != displayName) {
-            if (AppConstants.MOMSPRESSO_CATEGORYID.equals(selectedTopics) ||
-                    isLanguageListing) {
+            if (AppConstants.MOMSPRESSO_CATEGORYID.equals(selectedTopics) || isLanguageListing) {
                 toolbarTitle.setText(displayName.toUpperCase());
             } else {
                 toolbarTitle.setText("");
@@ -334,8 +311,7 @@ public class FilteredTopicsArticleListingActivity extends BaseActivity implement
         recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
             public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
-                if (dy > 0) //check for scroll down
-                {
+                if (dy > 0) {
                     visibleItemCount = llm.getChildCount();
                     totalItemCount = llm.getItemCount();
                     pastVisiblesItems = llm.findFirstVisibleItemPosition();
@@ -343,7 +319,7 @@ public class FilteredTopicsArticleListingActivity extends BaseActivity implement
                     if (!isReuqestRunning && !isLastPageReached) {
                         if ((visibleItemCount + pastVisiblesItems) >= totalItemCount) {
                             isReuqestRunning = true;
-                            mLodingView.setVisibility(View.VISIBLE);
+                            loadingView.setVisibility(View.VISIBLE);
                             hitFilteredTopicsArticleListingApi(sortType);
                         }
                     }
@@ -364,23 +340,23 @@ public class FilteredTopicsArticleListingActivity extends BaseActivity implement
         }
 
         Retrofit retrofit = BaseApplication.getInstance().getRetrofit();
-        TopicsCategoryAPI topicsAPI = retrofit.create(TopicsCategoryAPI.class);
+        TopicsCategoryAPI topicsApi = retrofit.create(TopicsCategoryAPI.class);
 
         int from = (nextPageNumber - 1) * limit + 1;
         if (StringUtils.isNullOrEmpty(filteredTopics)) {
             Call<ArticleListingResponse> filterCall;
             if (AppConstants.MOMSPRESSO_CATEGORYID.equals(selectedTopics)) {
-                filterCall = topicsAPI.getArticlesForCategory(selectedTopics, sortType, from, from + limit - 1,
+                filterCall = topicsApi.getArticlesForCategory(selectedTopics, sortType, from, from + limit - 1,
                         SharedPrefUtils.getLanguageFilters(BaseApplication.getAppContext()));
             } else if (isLanguageListing) {
-                filterCall = topicsAPI.getArticlesForCategory(selectedTopics, sortType, from, from + limit - 1, "");
+                filterCall = topicsApi.getArticlesForCategory(selectedTopics, sortType, from, from + limit - 1, "");
             } else {
-                filterCall = topicsAPI.getArticlesForCategory(selectedTopics, sortType, from, from + limit - 1,
+                filterCall = topicsApi.getArticlesForCategory(selectedTopics, sortType, from, from + limit - 1,
                         SharedPrefUtils.getLanguageFilters(BaseApplication.getAppContext()));
             }
             filterCall.enqueue(articleListingResponseCallback);
         } else {
-            Call<ArticleListingResponse> filterCall = topicsAPI
+            Call<ArticleListingResponse> filterCall = topicsApi
                     .getArticlesForCategory(filteredTopics, sortType, from, from + limit - 1,
                             SharedPrefUtils.getLanguageFilters(BaseApplication.getAppContext()));
             filterCall.enqueue(articleListingResponseCallback);
@@ -392,8 +368,8 @@ public class FilteredTopicsArticleListingActivity extends BaseActivity implement
         public void onResponse(Call<ArticleListingResponse> call, retrofit2.Response<ArticleListingResponse> response) {
             isReuqestRunning = false;
             progressBar.setVisibility(View.INVISIBLE);
-            if (mLodingView.getVisibility() == View.VISIBLE) {
-                mLodingView.setVisibility(View.GONE);
+            if (loadingView.getVisibility() == View.VISIBLE) {
+                loadingView.setVisibility(View.GONE);
             }
             if (response == null || response.body() == null) {
                 showToast(getString(R.string.server_went_wrong));
@@ -416,8 +392,8 @@ public class FilteredTopicsArticleListingActivity extends BaseActivity implement
 
         @Override
         public void onFailure(Call<ArticleListingResponse> call, Throwable t) {
-            if (mLodingView.getVisibility() == View.VISIBLE) {
-                mLodingView.setVisibility(View.GONE);
+            if (loadingView.getVisibility() == View.VISIBLE) {
+                loadingView.setVisibility(View.GONE);
             }
             progressBar.setVisibility(View.INVISIBLE);
             FirebaseCrashlytics.getInstance().recordException(t);
@@ -494,23 +470,14 @@ public class FilteredTopicsArticleListingActivity extends BaseActivity implement
                 sortBgLayout.setVisibility(View.GONE);
                 break;
             case R.id.sortTextView:
-//                sortingLayout.setAnimation(bottomUp);
-//                sortingLayout.startAnimation(bottomUp);
                 sortBgLayout.setVisibility(View.VISIBLE);
                 break;
             case R.id.filterTextView:
                 openFilterDialog();
                 break;
+            default:
+                break;
         }
-    }
-
-    public static Animation inFromBottomAnimation(long durationMillis) {
-        Animation inFromBottom = new TranslateAnimation(
-                Animation.RELATIVE_TO_PARENT, 0.0f, Animation.RELATIVE_TO_PARENT, 0.0f,
-                Animation.RELATIVE_TO_PARENT, +1.0f, Animation.RELATIVE_TO_PARENT, 0.0f
-        );
-        inFromBottom.setDuration(durationMillis);
-        return inFromBottom;
     }
 
     private void openFilterDialog() {
@@ -539,9 +506,8 @@ public class FilteredTopicsArticleListingActivity extends BaseActivity implement
             String fileContent = convertStreamToString(fileInputStream);
             FollowTopics[] res = new Gson().fromJson(fileContent, FollowTopics[].class);
             if (!checkCurrentCategoryExists(res)) {
-                if (AppConstants.TOPIC_LEVEL_SUB_CATEGORY.equals(topicLevel) || AppConstants.TOPIC_LEVEL_MAIN_CATEGORY
+                if (!AppConstants.TOPIC_LEVEL_SUB_CATEGORY.equals(topicLevel) && !AppConstants.TOPIC_LEVEL_MAIN_CATEGORY
                         .equals(topicLevel)) {
-                } else {
                     titleTextView.setVisibility(View.GONE);
                 }
                 followUnfollowTextView.setVisibility(View.GONE);
@@ -551,24 +517,21 @@ public class FilteredTopicsArticleListingActivity extends BaseActivity implement
             FirebaseCrashlytics.getInstance().recordException(e);
             Log.d("FileNotFoundException", Log.getStackTraceString(e));
             Retrofit retro = BaseApplication.getInstance().getRetrofit();
-            final TopicsCategoryAPI topicsAPI = retro.create(TopicsCategoryAPI.class);
-
-            Call<ResponseBody> call = topicsAPI.downloadCategoriesJSON();
-            call.enqueue(downloadFollowTopicsJSONCallback);
+            final TopicsCategoryAPI topicsApi = retro.create(TopicsCategoryAPI.class);
+            Call<ResponseBody> call = topicsApi.downloadCategoriesJSON();
+            call.enqueue(downloadFollowTopicsJsonCallback);
         } catch (Exception e) {
             FirebaseCrashlytics.getInstance().recordException(e);
             Log.d("Exception", Log.getStackTraceString(e));
             Retrofit retro = BaseApplication.getInstance().getRetrofit();
-            final TopicsCategoryAPI topicsAPI = retro.create(TopicsCategoryAPI.class);
-
-            Call<ResponseBody> call = topicsAPI.downloadCategoriesJSON();
-            call.enqueue(downloadFollowTopicsJSONCallback);
+            final TopicsCategoryAPI topicsApi = retro.create(TopicsCategoryAPI.class);
+            Call<ResponseBody> call = topicsApi.downloadCategoriesJSON();
+            call.enqueue(downloadFollowTopicsJsonCallback);
         }
 
         Retrofit retro = BaseApplication.getInstance().getRetrofit();
-        TopicsCategoryAPI topicFollowingStatusAPI = retro.create(TopicsCategoryAPI.class);
-
-        Call<TopicsFollowingStatusResponse> callBookmark = topicFollowingStatusAPI
+        TopicsCategoryAPI topicFollowingStatusApi = retro.create(TopicsCategoryAPI.class);
+        Call<TopicsFollowingStatusResponse> callBookmark = topicFollowingStatusApi
                 .checkTopicsFollowingStatus(SharedPrefUtils.getUserDetailModel(this).getDynamoId(),
                         selectedTopics);
         callBookmark.enqueue(isTopicFollowedResponseCallback);
@@ -578,7 +541,6 @@ public class FilteredTopicsArticleListingActivity extends BaseActivity implement
         for (int i = 0; i < res.length; i++) {
             for (int j = 0; j < res[i].getChild().size(); j++) {
                 if (selectedTopics.equals(res[i].getChild().get(j).getId())) {
-                    Log.d("lkkmk", "iuink");
                     return true;
                 }
             }
@@ -618,26 +580,24 @@ public class FilteredTopicsArticleListingActivity extends BaseActivity implement
                 }
             }
         }
-
     }
 
-    Callback<ResponseBody> downloadFollowTopicsJSONCallback = new Callback<ResponseBody>() {
+    Callback<ResponseBody> downloadFollowTopicsJsonCallback = new Callback<ResponseBody>() {
         @Override
         public void onResponse(Call<ResponseBody> call, retrofit2.Response<ResponseBody> response) {
             progressBar.setVisibility(View.GONE);
-            if (response == null || response.body() == null) {
+            if (response.body() == null) {
                 showToast(getString(R.string.server_went_wrong));
                 return;
             }
             try {
                 String resData = new String(response.body().bytes());
                 JSONObject jsonObject = new JSONObject(resData);
-
                 Retrofit retro = BaseApplication.getInstance().getRetrofit();
-                final TopicsCategoryAPI topicsAPI = retro.create(TopicsCategoryAPI.class);
-                String popularURL = jsonObject.getJSONObject("data").getJSONObject("result").getJSONObject("category")
+                final TopicsCategoryAPI topicsApi = retro.create(TopicsCategoryAPI.class);
+                String popularUrl = jsonObject.getJSONObject("data").getJSONObject("result").getJSONObject("category")
                         .getString("popularLocation");
-                Call<ResponseBody> caller = topicsAPI.downloadTopicsListForFollowUnfollow(popularURL);
+                Call<ResponseBody> caller = topicsApi.downloadTopicsListForFollowUnfollow(popularUrl);
 
                 caller.enqueue(new Callback<ResponseBody>() {
                     @Override
@@ -684,36 +644,37 @@ public class FilteredTopicsArticleListingActivity extends BaseActivity implement
         }
     };
 
-    private Callback<TopicsFollowingStatusResponse> isTopicFollowedResponseCallback = new Callback<TopicsFollowingStatusResponse>() {
-        @Override
-        public void onResponse(Call<TopicsFollowingStatusResponse> call,
-                retrofit2.Response<TopicsFollowingStatusResponse> response) {
-            if (response == null || null == response.body()) {
-                showToast(getString(R.string.server_went_wrong));
-                return;
-            }
+    private Callback<TopicsFollowingStatusResponse> isTopicFollowedResponseCallback =
+            new Callback<TopicsFollowingStatusResponse>() {
+                @Override
+                public void onResponse(Call<TopicsFollowingStatusResponse> call,
+                        retrofit2.Response<TopicsFollowingStatusResponse> response) {
+                    if (null == response.body()) {
+                        showToast(getString(R.string.server_went_wrong));
+                        return;
+                    }
 
-            TopicsFollowingStatusResponse responseData = response.body();
-            if (responseData.getCode() == 200 && Constants.SUCCESS.equals(responseData.getStatus())) {
-                followingTopicStatus = responseData.getData().getStatus();
-                if ("0".equals(followingTopicStatus)) {
-                    followUnfollowTextView.setText(getString(R.string.ad_follow_author));
-                    isTopicFollowed = 0;
-                } else {
-                    followUnfollowTextView.setText(getString(R.string.ad_following_author));
-                    isTopicFollowed = 1;
+                    TopicsFollowingStatusResponse responseData = response.body();
+                    if (responseData.getCode() == 200 && Constants.SUCCESS.equals(responseData.getStatus())) {
+                        followingTopicStatus = responseData.getData().getStatus();
+                        if ("0".equals(followingTopicStatus)) {
+                            followUnfollowTextView.setText(getString(R.string.ad_follow_author));
+                            isTopicFollowed = 0;
+                        } else {
+                            followUnfollowTextView.setText(getString(R.string.ad_following_author));
+                            isTopicFollowed = 1;
+                        }
+                    } else {
+                        showToast(getString(R.string.server_went_wrong));
+                    }
                 }
-            } else {
-                showToast(getString(R.string.server_went_wrong));
-            }
-        }
 
-        @Override
-        public void onFailure(Call<TopicsFollowingStatusResponse> call, Throwable t) {
-            FirebaseCrashlytics.getInstance().recordException(t);
-            Log.d("MC4KException", Log.getStackTraceString(t));
-        }
-    };
+                @Override
+                public void onFailure(Call<TopicsFollowingStatusResponse> call, Throwable t) {
+                    FirebaseCrashlytics.getInstance().recordException(t);
+                    Log.d("MC4KException", Log.getStackTraceString(t));
+                }
+            };
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
@@ -740,8 +701,6 @@ public class FilteredTopicsArticleListingActivity extends BaseActivity implement
     }
 
     private void followUnfollowTopics() {
-        Retrofit retro = BaseApplication.getInstance().getRetrofit();
-        TopicsCategoryAPI topicsCategoryAPI = retro.create(TopicsCategoryAPI.class);
         FollowUnfollowCategoriesRequest followUnfollowCategoriesRequest = new FollowUnfollowCategoriesRequest();
         ArrayList<String> topicIdLList = new ArrayList<>();
         topicIdLList.add(selectedTopics);
@@ -761,45 +720,46 @@ public class FilteredTopicsArticleListingActivity extends BaseActivity implement
             followUnfollowTextView.setText(getString(R.string.ad_follow_author));
             isTopicFollowed = 0;
         }
-        Call<FollowUnfollowCategoriesResponse> call = topicsCategoryAPI
+        Retrofit retro = BaseApplication.getInstance().getRetrofit();
+        TopicsCategoryAPI topicsCategoryApi = retro.create(TopicsCategoryAPI.class);
+        Call<FollowUnfollowCategoriesResponse> call = topicsCategoryApi
                 .followCategories(SharedPrefUtils.getUserDetailModel(this).getDynamoId(),
                         followUnfollowCategoriesRequest);
         call.enqueue(followUnfollowCategoriesResponseCallback);
     }
 
-    private Callback<FollowUnfollowCategoriesResponse> followUnfollowCategoriesResponseCallback = new Callback<FollowUnfollowCategoriesResponse>() {
-        @Override
-        public void onResponse(Call<FollowUnfollowCategoriesResponse> call,
-                retrofit2.Response<FollowUnfollowCategoriesResponse> response) {
-            removeProgressDialog();
-            if (response == null || null == response.body()) {
-                NetworkErrorException nee = new NetworkErrorException(response.raw().toString());
-                FirebaseCrashlytics.getInstance().recordException(nee);
-                showToast(getString(R.string.went_wrong));
-                return;
-            }
-            try {
-                FollowUnfollowCategoriesResponse responseData = response.body();
-                if (responseData.getCode() == 200 && Constants.SUCCESS.equals(responseData.getStatus())) {
-
-                } else {
-                    showToast(responseData.getReason());
+    private Callback<FollowUnfollowCategoriesResponse> followUnfollowCategoriesResponseCallback =
+            new Callback<FollowUnfollowCategoriesResponse>() {
+                @Override
+                public void onResponse(Call<FollowUnfollowCategoriesResponse> call,
+                        retrofit2.Response<FollowUnfollowCategoriesResponse> response) {
+                    removeProgressDialog();
+                    if (null == response.body()) {
+                        NetworkErrorException nee = new NetworkErrorException(response.raw().toString());
+                        FirebaseCrashlytics.getInstance().recordException(nee);
+                        showToast(getString(R.string.went_wrong));
+                        return;
+                    }
+                    try {
+                        FollowUnfollowCategoriesResponse responseData = response.body();
+                        if (responseData.getCode() != 200 || !Constants.SUCCESS.equals(responseData.getStatus())) {
+                            showToast(responseData.getReason());
+                        }
+                    } catch (Exception e) {
+                        FirebaseCrashlytics.getInstance().recordException(e);
+                        Log.d("MC4kException", Log.getStackTraceString(e));
+                        showToast(getString(R.string.went_wrong));
+                    }
                 }
-            } catch (Exception e) {
-                FirebaseCrashlytics.getInstance().recordException(e);
-                Log.d("MC4kException", Log.getStackTraceString(e));
-                showToast(getString(R.string.went_wrong));
-            }
-        }
 
-        @Override
-        public void onFailure(Call<FollowUnfollowCategoriesResponse> call, Throwable t) {
-            removeProgressDialog();
-            FirebaseCrashlytics.getInstance().recordException(t);
-            Log.d("MC4kException", Log.getStackTraceString(t));
-            showToast(getString(R.string.went_wrong));
-        }
-    };
+                @Override
+                public void onFailure(Call<FollowUnfollowCategoriesResponse> call, Throwable t) {
+                    removeProgressDialog();
+                    FirebaseCrashlytics.getInstance().recordException(t);
+                    Log.d("MC4kException", Log.getStackTraceString(t));
+                    showToast(getString(R.string.went_wrong));
+                }
+            };
 
     @Override
     public void onRefresh() {
@@ -838,7 +798,7 @@ public class FilteredTopicsArticleListingActivity extends BaseActivity implement
     private void createTopicsData(TopicsResponse responseData) {
         try {
             progressBar.setVisibility(View.GONE);
-            allTopicsMap = new HashMap<Topics, List<Topics>>();
+            allTopicsMap = new HashMap<>();
             allTopicsList = new ArrayList<>();
 
             //Prepare structure for multi-expandable listview.
@@ -873,11 +833,10 @@ public class FilteredTopicsArticleListingActivity extends BaseActivity implement
 
                             // create duplicate entry for subcategories with no child
                             if (responseData.getData().get(i).getChild().get(k).getChild().isEmpty()) {
-                                ArrayList<Topics> duplicateEntry = new ArrayList<Topics>();
-                                //adding exact same object adds the object recursively producing stackoverflow exception when writing for Parcel.
-                                //So need to create different object with same params
+                                //adding exact same object adds the object recursively producing stackoverflow
+                                //exception when writing for Parcel.So need to create different object with same params
                                 Topics dupChildTopic = new Topics();
-                                dupChildTopic.setChild(new ArrayList<Topics>());
+                                dupChildTopic.setChild(new ArrayList<>());
                                 dupChildTopic.setId(responseData.getData().get(i).getChild().get(k).getId());
                                 dupChildTopic
                                         .setIsSelected(responseData.getData().get(i).getChild().get(k).isSelected());
@@ -893,6 +852,7 @@ public class FilteredTopicsArticleListingActivity extends BaseActivity implement
                                         .setShowInMenu(responseData.getData().get(i).getChild().get(k).getShowInMenu());
                                 dupChildTopic.setSlug(responseData.getData().get(i).getChild().get(k).getSlug());
                                 dupChildTopic.setTitle(responseData.getData().get(i).getChild().get(k).getTitle());
+                                ArrayList<Topics> duplicateEntry = new ArrayList<>();
                                 duplicateEntry.add(dupChildTopic);
                                 responseData.getData().get(i).getChild().get(k).setChild(duplicateEntry);
                             }
@@ -935,7 +895,6 @@ public class FilteredTopicsArticleListingActivity extends BaseActivity implement
                         ArticleDetailsContainerActivity.class);
                 intent.putExtra(Constants.ARTICLE_ID, articleDataModelsNew.get(position).getId());
                 intent.putExtra(Constants.AUTHOR_ID, articleDataModelsNew.get(position).getUserId());
-                intent.putExtra(Constants.ARTICLE_COVER_IMAGE, articleDataModelsNew.get(position).getImageUrl());
                 intent.putExtra(Constants.BLOG_SLUG, articleDataModelsNew.get(position).getBlogPageSlug());
                 intent.putExtra(Constants.TITLE_SLUG, articleDataModelsNew.get(position).getTitleSlug());
                 if (StringUtils.isNullOrEmpty(categoryName)) {

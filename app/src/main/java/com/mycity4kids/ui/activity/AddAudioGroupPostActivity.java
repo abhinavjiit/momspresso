@@ -118,21 +118,27 @@ public class AddAudioGroupPostActivity extends BaseActivity implements View.OnCl
 
         rootLayout = findViewById(R.id.rootLayout);
         handler = new Handler(this);
-        closeEditorImageView = (ImageView) findViewById(R.id.closeEditorImageView);
-        anonymousImageView = (ImageView) findViewById(R.id.anonymousImageView);
-        anonymousTextView = (TextView) findViewById(R.id.anonymousTextView);
-        anonymousCheckbox = (CheckBox) findViewById(R.id.anonymousCheckbox);
-        publishTextView = (TextView) findViewById(R.id.publishTextView);
-        mediaContainer = (LinearLayout) findViewById(R.id.mediaContainer);
-
-        audioRecordView = (AudioPostRecordView) findViewById(R.id.recordingView);
+        closeEditorImageView = findViewById(R.id.closeEditorImageView);
+        anonymousImageView = findViewById(R.id.anonymousImageView);
+        anonymousTextView = findViewById(R.id.anonymousTextView);
+        anonymousCheckbox = findViewById(R.id.anonymousCheckbox);
+        publishTextView = findViewById(R.id.publishTextView);
+        mediaContainer = findViewById(R.id.mediaContainer);
+        audioRecordView = findViewById(R.id.recordingView);
         slideDownAnim = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.anim_slide_down_from_top);
-        playAudioImageView = (ImageView) findViewById(R.id.playAudioImageView);
-        pauseAudioImageView = (ImageView) findViewById(R.id.pauseAudioImageView);
-        audioSeekBar = (SeekBar) findViewById(R.id.audioSeekBar);
-        audioTimeElapsedComment = (TextView) findViewById(R.id.audioTimeElapsed);
+        playAudioImageView = findViewById(R.id.playAudioImageView);
+        pauseAudioImageView = findViewById(R.id.pauseAudioImageView);
+        audioSeekBar = findViewById(R.id.audioSeekBar);
+        audioTimeElapsedComment = findViewById(R.id.audioTimeElapsed);
 
-        selectedGroup = (GroupResult) getIntent().getParcelableExtra("groupItem");
+        selectedGroup = getIntent().getParcelableExtra("groupItem");
+
+        if (selectedGroup != null && selectedGroup.getAnnonAllowed() == 0) {
+            anonymousCheckbox.setChecked(false);
+            anonymousCheckbox.setVisibility(View.GONE);
+            anonymousImageView.setVisibility(View.GONE);
+            anonymousTextView.setVisibility(View.GONE);
+        }
         firebaseAuth = FirebaseAuth.getInstance();
 
         fileName = BaseApplication.getAppContext().getExternalFilesDir(null) + File.separator;
@@ -152,7 +158,6 @@ public class AddAudioGroupPostActivity extends BaseActivity implements View.OnCl
         } else {
             anonymousCheckbox.setChecked(false);
         }
-
     }
 
     @Override
@@ -236,10 +241,8 @@ public class AddAudioGroupPostActivity extends BaseActivity implements View.OnCl
         public void onResponse(Call<AddGroupPostResponse> call, retrofit2.Response<AddGroupPostResponse> response) {
             isRequestRunning = false;
             if (response.body() == null) {
-                if (response.raw() != null) {
-                    NetworkErrorException nee = new NetworkErrorException(response.raw().toString());
-                    FirebaseCrashlytics.getInstance().recordException(nee);
-                }
+                NetworkErrorException nee = new NetworkErrorException(response.raw().toString());
+                FirebaseCrashlytics.getInstance().recordException(nee);
                 return;
             }
             try {

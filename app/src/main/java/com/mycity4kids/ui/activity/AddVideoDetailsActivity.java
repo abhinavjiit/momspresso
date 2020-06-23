@@ -51,8 +51,6 @@ import retrofit2.Retrofit;
  */
 public class AddVideoDetailsActivity extends BaseActivity implements View.OnClickListener, EasyVideoCallback {
 
-    public static final String COMMON_PREF_FILE = "my_city_prefs";
-
     private EditText videoTitleEditText;
     private Toolbar toolbar;
     private TextView saveUploadTextView;
@@ -372,11 +370,6 @@ public class AddVideoDetailsActivity extends BaseActivity implements View.OnClic
                 } else if (responseData.getData().get(0).getResult().getBlogTitleSlug() != null || !responseData
                         .getData().get(0).getResult().getBlogTitleSlug().isEmpty()) {
                     showProgressDialog(getResources().getString(R.string.please_wait));
-                    pref = getApplicationContext().getSharedPreferences(COMMON_PREF_FILE, MODE_PRIVATE);
-                    SharedPreferences.Editor editor = pref.edit();
-                    editor.putBoolean("blogSetup", true);
-                    Log.e("blog setup in update ui", true + "");
-                    editor.commit();
                     launchUploadInBackground();
                 }
             }
