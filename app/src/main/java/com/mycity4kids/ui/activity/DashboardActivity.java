@@ -431,9 +431,7 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
         NavigationView navigationView = findViewById(R.id.navigation_view);
         navigationView.setNavigationItemSelectedListener(
                 menuItem -> {
-                    // set item as selected to persist highlight
                     menuItem.setChecked(true);
-                    // close drawer when item is tapped
                     drawerLayout.closeDrawers();
                     return true;
                 });
@@ -458,60 +456,7 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
                     drawerMyMoneyContainer.requestLayout();
                     drawerSettingsContainer.requestLayout();
                     drawerProfileCoachmark.setVisibility(View.VISIBLE);
-                    if (AppConstants.LOCALE_ENGLISH.equals(SharedPrefUtils
-                            .getAppLocale(BaseApplication.getAppContext()))) {
-                        langTextView.setText(getString(R.string.language_label_english));
-                        selectedlangGuideTextView
-                                .setText(getString(R.string.language_label_english));
-                    } else if (AppConstants.LOCALE_HINDI.equals(SharedPrefUtils
-                            .getAppLocale(BaseApplication.getAppContext()))) {
-                        langTextView.setText(getString(R.string.language_label_hindi));
-                        selectedlangGuideTextView.setText(getString(R.string.language_label_hindi));
-                    } else if (AppConstants.LOCALE_MARATHI.equals(SharedPrefUtils
-                            .getAppLocale(BaseApplication.getAppContext()))) {
-                        langTextView.setText(getString(R.string.language_label_marathi));
-                        selectedlangGuideTextView
-                                .setText(getString(R.string.language_label_marathi));
-                    } else if (AppConstants.LOCALE_BENGALI.equals(SharedPrefUtils
-                            .getAppLocale(BaseApplication.getAppContext()))) {
-                        langTextView.setText(getString(R.string.language_label_bengali));
-                        selectedlangGuideTextView
-                                .setText(getString(R.string.language_label_bengali));
-                    } else if (AppConstants.LOCALE_TAMIL.equals(SharedPrefUtils
-                            .getAppLocale(BaseApplication.getAppContext()))) {
-                        langTextView.setText(getString(R.string.language_label_tamil));
-                        selectedlangGuideTextView.setText(getString(R.string.language_label_tamil));
-                    } else if (AppConstants.LOCALE_TELUGU.equals(SharedPrefUtils
-                            .getAppLocale(BaseApplication.getAppContext()))) {
-                        langTextView.setText(getString(R.string.language_label_telegu));
-                        selectedlangGuideTextView
-                                .setText(getString(R.string.language_label_telegu));
-                    } else if (AppConstants.LOCALE_KANNADA.equals(SharedPrefUtils
-                            .getAppLocale(BaseApplication.getAppContext()))) {
-                        selectedLangTextView.setText(getString(R.string.language_label_kannada));
-                        langTextView.setText(getString(R.string.language_label_kannada));
-                        selectedlangGuideTextView
-                                .setText(getString(R.string.language_label_kannada));
-                    } else if (AppConstants.LOCALE_MALAYALAM.equals(SharedPrefUtils
-                            .getAppLocale(BaseApplication.getAppContext()))) {
-                        langTextView.setText(getString(R.string.language_label_malayalam));
-                        selectedlangGuideTextView
-                                .setText(getString(R.string.language_label_malayalam));
-                    } else if (AppConstants.LOCALE_GUJARATI.equals(SharedPrefUtils
-                            .getAppLocale(BaseApplication.getAppContext()))) {
-                        langTextView.setText(getString(R.string.language_label_gujarati));
-                        selectedlangGuideTextView
-                                .setText(getString(R.string.language_label_gujarati));
-                    } else if (AppConstants.LOCALE_PUNJABI.equals(SharedPrefUtils
-                            .getAppLocale(BaseApplication.getAppContext()))) {
-                        langTextView.setText(getString(R.string.language_label_punjabi));
-                        selectedlangGuideTextView
-                                .setText(getString(R.string.language_label_punjabi));
-                    } else {
-                        langTextView.setText(getString(R.string.language_label_english));
-                        selectedlangGuideTextView
-                                .setText(getString(R.string.language_label_english));
-                    }
+                    changeDrawerLanguageText();
                 }
             }
 
@@ -521,53 +466,10 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
 
             @Override
             public void onDrawerStateChanged(int newState) {
-                if (AppConstants.LOCALE_ENGLISH
-                        .equals(SharedPrefUtils.getAppLocale(BaseApplication.getAppContext()))) {
-                    langTextView.setText(getString(R.string.language_label_english));
-                    selectedlangGuideTextView.setText(getString(R.string.language_label_english));
-                } else if (AppConstants.LOCALE_HINDI
-                        .equals(SharedPrefUtils.getAppLocale(BaseApplication.getAppContext()))) {
-                    langTextView.setText(getString(R.string.language_label_hindi));
-                    selectedlangGuideTextView.setText(getString(R.string.language_label_hindi));
-                } else if (AppConstants.LOCALE_MARATHI
-                        .equals(SharedPrefUtils.getAppLocale(BaseApplication.getAppContext()))) {
-                    langTextView.setText(getString(R.string.language_label_marathi));
-                    selectedlangGuideTextView.setText(getString(R.string.language_label_marathi));
-                } else if (AppConstants.LOCALE_BENGALI
-                        .equals(SharedPrefUtils.getAppLocale(BaseApplication.getAppContext()))) {
-                    langTextView.setText(getString(R.string.language_label_bengali));
-                    selectedlangGuideTextView.setText(getString(R.string.language_label_bengali));
-                } else if (AppConstants.LOCALE_TAMIL
-                        .equals(SharedPrefUtils.getAppLocale(BaseApplication.getAppContext()))) {
-                    langTextView.setText(getString(R.string.language_label_tamil));
-                    selectedlangGuideTextView.setText(getString(R.string.language_label_tamil));
-                } else if (AppConstants.LOCALE_TELUGU
-                        .equals(SharedPrefUtils.getAppLocale(BaseApplication.getAppContext()))) {
-                    langTextView.setText(getString(R.string.language_label_telegu));
-                    selectedlangGuideTextView.setText(getString(R.string.language_label_telegu));
-                } else if (AppConstants.LOCALE_KANNADA
-                        .equals(SharedPrefUtils.getAppLocale(BaseApplication.getAppContext()))) {
-                    selectedLangTextView.setText(getString(R.string.language_label_kannada));
-                    langTextView.setText(getString(R.string.language_label_kannada));
-                    selectedlangGuideTextView.setText(getString(R.string.language_label_kannada));
-                } else if (AppConstants.LOCALE_MALAYALAM
-                        .equals(SharedPrefUtils.getAppLocale(BaseApplication.getAppContext()))) {
-                    langTextView.setText(getString(R.string.language_label_malayalam));
-                    selectedlangGuideTextView.setText(getString(R.string.language_label_malayalam));
-                } else if (AppConstants.LOCALE_GUJARATI
-                        .equals(SharedPrefUtils.getAppLocale(BaseApplication.getAppContext()))) {
-                    langTextView.setText(getString(R.string.language_label_gujarati));
-                    selectedlangGuideTextView.setText(getString(R.string.language_label_gujarati));
-                } else if (AppConstants.LOCALE_PUNJABI
-                        .equals(SharedPrefUtils.getAppLocale(BaseApplication.getAppContext()))) {
-                    langTextView.setText(getString(R.string.language_label_punjabi));
-                    selectedlangGuideTextView.setText(getString(R.string.language_label_punjabi));
-                } else {
-                    langTextView.setText(getString(R.string.language_label_english));
-                    selectedlangGuideTextView.setText(getString(R.string.language_label_english));
-                }
+                changeDrawerLanguageText();
             }
         });
+
         if (!StringUtils
                 .isNullOrEmpty(SharedPrefUtils.getProfileImgUrl(BaseApplication.getAppContext()))) {
             Picasso.get().load(SharedPrefUtils.getProfileImgUrl(BaseApplication.getAppContext()))
@@ -718,6 +620,63 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
             launchInviteFriendsDialog();
         }
         getUsersData();
+    }
+
+    private void changeDrawerLanguageText() {
+        if (AppConstants.LOCALE_ENGLISH.equals(SharedPrefUtils
+                .getAppLocale(BaseApplication.getAppContext()))) {
+            langTextView.setText(getString(R.string.language_label_english));
+            selectedlangGuideTextView
+                    .setText(getString(R.string.language_label_english));
+        } else if (AppConstants.LOCALE_HINDI.equals(SharedPrefUtils
+                .getAppLocale(BaseApplication.getAppContext()))) {
+            langTextView.setText(getString(R.string.language_label_hindi));
+            selectedlangGuideTextView.setText(getString(R.string.language_label_hindi));
+        } else if (AppConstants.LOCALE_MARATHI.equals(SharedPrefUtils
+                .getAppLocale(BaseApplication.getAppContext()))) {
+            langTextView.setText(getString(R.string.language_label_marathi));
+            selectedlangGuideTextView
+                    .setText(getString(R.string.language_label_marathi));
+        } else if (AppConstants.LOCALE_BENGALI.equals(SharedPrefUtils
+                .getAppLocale(BaseApplication.getAppContext()))) {
+            langTextView.setText(getString(R.string.language_label_bengali));
+            selectedlangGuideTextView
+                    .setText(getString(R.string.language_label_bengali));
+        } else if (AppConstants.LOCALE_TAMIL.equals(SharedPrefUtils
+                .getAppLocale(BaseApplication.getAppContext()))) {
+            langTextView.setText(getString(R.string.language_label_tamil));
+            selectedlangGuideTextView.setText(getString(R.string.language_label_tamil));
+        } else if (AppConstants.LOCALE_TELUGU.equals(SharedPrefUtils
+                .getAppLocale(BaseApplication.getAppContext()))) {
+            langTextView.setText(getString(R.string.language_label_telegu));
+            selectedlangGuideTextView
+                    .setText(getString(R.string.language_label_telegu));
+        } else if (AppConstants.LOCALE_KANNADA.equals(SharedPrefUtils
+                .getAppLocale(BaseApplication.getAppContext()))) {
+            selectedLangTextView.setText(getString(R.string.language_label_kannada));
+            langTextView.setText(getString(R.string.language_label_kannada));
+            selectedlangGuideTextView
+                    .setText(getString(R.string.language_label_kannada));
+        } else if (AppConstants.LOCALE_MALAYALAM.equals(SharedPrefUtils
+                .getAppLocale(BaseApplication.getAppContext()))) {
+            langTextView.setText(getString(R.string.language_label_malayalam));
+            selectedlangGuideTextView
+                    .setText(getString(R.string.language_label_malayalam));
+        } else if (AppConstants.LOCALE_GUJARATI.equals(SharedPrefUtils
+                .getAppLocale(BaseApplication.getAppContext()))) {
+            langTextView.setText(getString(R.string.language_label_gujarati));
+            selectedlangGuideTextView
+                    .setText(getString(R.string.language_label_gujarati));
+        } else if (AppConstants.LOCALE_PUNJABI.equals(SharedPrefUtils
+                .getAppLocale(BaseApplication.getAppContext()))) {
+            langTextView.setText(getString(R.string.language_label_punjabi));
+            selectedlangGuideTextView
+                    .setText(getString(R.string.language_label_punjabi));
+        } else {
+            langTextView.setText(getString(R.string.language_label_english));
+            selectedlangGuideTextView
+                    .setText(getString(R.string.language_label_english));
+        }
     }
 
     private void launchInviteFriendsDialog() {
@@ -920,322 +879,12 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
         super.onNewIntent(newIntent);
         Bundle notificationExtras = newIntent.getParcelableExtra("notificationExtras");
         if (notificationExtras != null) {
-            try {
-                for (String key : notificationExtras.keySet()) {
-                    Log.e("notificationExtras",
-                            key + " : " + (notificationExtras.get(key) != null ? notificationExtras
-                                    .get(key) : "NULL"));
-                }
-            } catch (Exception e) {
-                FirebaseCrashlytics.getInstance().recordException(e);
-                Log.d("MC4KException", Log.getStackTraceString(e));
-            }
-            String notificationType = notificationExtras.getString("type");
-            if (AppConstants.NOTIFICATION_TYPE_REMOTE_CONFIG_SILENT_UPDATE.equalsIgnoreCase(notificationType)) {
-                showProgressDialog(getString(R.string.please_wait));
-                firebaseRemoteConfig.fetch(0)
-                        .addOnCompleteListener(this, task -> {
-                            removeProgressDialog();
-                            firebaseRemoteConfig.activate();
-                            SharedPrefUtils.setFirebaseRemoteConfigUpdateFlag(
-                                    BaseApplication.getAppContext(), false);
-                        });
-            } else if (AppConstants.NOTIFICATION_TYPE_CONTENT_COMMENTS.equalsIgnoreCase(notificationType)
-                    || AppConstants.NOTIFICATION_TYPE_CONTENT_REPLY.equalsIgnoreCase(notificationType)) {
-                String articleId = notificationExtras.getString("id");
-                String commentId = notificationExtras.getString("commentId");
-                String type = notificationExtras.getString("type");
-                String contentType = notificationExtras.getString("contentType");//replyId
-                String replyId = notificationExtras.getString("replyId");
-                Intent commentReplyNotificationIntent = new Intent(this,
-                        ContentCommentReplyNotificationActivity.class);
-                commentReplyNotificationIntent.putExtra("articleId", articleId);
-                commentReplyNotificationIntent.putExtra("commentId", commentId);
-                commentReplyNotificationIntent.putExtra("type", type);
-                commentReplyNotificationIntent.putExtra("contentType", contentType);
-                commentReplyNotificationIntent.putExtra("replyId", replyId);
-                startActivity(commentReplyNotificationIntent);
-            } else if (AppConstants.NOTIFICATION_TYPE_ARTICLE_DETAILS.equalsIgnoreCase(notificationType)) {
-                pushEvent("article_details");
-                String articleId = notificationExtras.getString("id");
-                String authorId = notificationExtras.getString("userId");
-                String blogSlug = notificationExtras.getString("blogSlug");
-                String titleSlug = notificationExtras.getString("titleSlug");
-                Intent intent1 = new Intent(DashboardActivity.this,
-                        ArticleDetailsContainerActivity.class);
-                intent1.putExtra(Constants.ARTICLE_ID, articleId);
-                intent1.putExtra(Constants.AUTHOR_ID, authorId);
-                intent1.putExtra(Constants.BLOG_SLUG, blogSlug);
-                intent1.putExtra(Constants.TITLE_SLUG, titleSlug);
-                intent1.putExtra(Constants.ARTICLE_OPENED_FROM, "Notification Popup");
-                intent1.putExtra(Constants.FROM_SCREEN, "Notification");
-                intent1.putExtra(Constants.ARTICLE_INDEX, "-1");
-                intent1.putExtra(Constants.AUTHOR, authorId + "~");
-                startActivity(intent1);
-            } else if (AppConstants.NOTIFICATION_TYPE_COLLECTION_DETAILS.equalsIgnoreCase(notificationType)) {
-                pushEvent("collection_detail");
-                Intent intent = new Intent(DashboardActivity.this,
-                        UserCollectionItemListActivity.class);
-                intent.putExtra("id", notificationExtras.getString(AppConstants.COLLECTION_ID));
-                startActivity(intent);
-            } else if (AppConstants.NOTIFICATION_TYPE_CREATE_CONTENT_PROMPT.equalsIgnoreCase(notificationType)) {
-                pushEvent("create_content_prompt");
-                fragmentToLoad = Constants.CREATE_CONTENT_PROMPT;
-            } else if (AppConstants.NOTIFICATION_TYPE_MOMSIGHT_REWARD_LISTING.equalsIgnoreCase(notificationType)) {
-                pushEvent("momsights_screen");
-                Intent intent1 = new Intent(DashboardActivity.this, RewardsContainerActivity.class);
-                startActivity(intent1);
-            } else if (AppConstants.NOTIFICATION_TYPE_CAMPAIGN_LISTING.equalsIgnoreCase(notificationType)) {
-                pushEvent("campaign_listing");
-                Intent campaignIntent = new Intent(this, CampaignContainerActivity.class);
-                campaignIntent.putExtra("campaign_listing", "campaign_listing");
-                startActivity(campaignIntent);
-            } else if (AppConstants.NOTIFICATION_TYPE_CHOOSE_VIDEO_CATEGORY.equalsIgnoreCase(notificationType)) {
-                pushEvent("choose_video_category");
-                Intent createVideoIntent = new Intent(this, VideoCategoryAndChallengeSelectionActivity.class);
-                createVideoIntent.putExtra("comingFrom", "notification");
-                startActivity(createVideoIntent);
-            } else if (AppConstants.NOTIFICATION_TYPE_VIDEO_CHALLENGE_DETAILS.equalsIgnoreCase(notificationType)) {
-                pushEvent("video_challenge_details");
-                Intent videoChallengeIntent = new Intent(this, NewVideoChallengeActivity.class);
-                videoChallengeIntent.putExtra(Constants.CHALLENGE_ID,
-                        "" + notificationExtras.getString("challengeId"));
-                videoChallengeIntent.putExtra("comingFrom", "notification");
-                startActivity(videoChallengeIntent);
-            } else if (AppConstants.NOTIFICATION_TYPE_CAMPAIGN_DETAIL.equalsIgnoreCase(notificationType)) {
-                pushEvent("campaign_detail");
-                Intent campaignIntent = new Intent(this, CampaignContainerActivity.class);
-                campaignIntent.putExtra("campaign_id", notificationExtras.getString("campaign_id"));
-                campaignIntent.putExtra("campaign_detail", "campaign_detail");
-                campaignIntent.putExtra("fromNotification", true);
-                startActivity(campaignIntent);
-            } else if (AppConstants.NOTIFICATION_TYPE_CAMPAIGN_SUBMIT_PROOF.equalsIgnoreCase(notificationType)) {
-                pushEvent("campaign_submit_proof");
-                Intent campaignIntent = new Intent(this, CampaignContainerActivity.class);
-                campaignIntent.putExtra("campaign_Id", notificationExtras.getString("campaign_id"));
-                campaignIntent.putExtra("campaign_submit_proof", "campaign_submit_proof");
-                startActivity(campaignIntent);
-            } else if (AppConstants.NOTIFICATION_TYPE_CAMPAIGN_BANKDETAILS.equalsIgnoreCase(notificationType)) {
-                pushEvent("mymoney_bankdetails");
-                Intent campaignIntent = new Intent(this, RewardsContainerActivity.class);
-                campaignIntent.putExtra("isComingfromCampaign", true);
-                campaignIntent.putExtra("pageLimit", 4);
-                campaignIntent.putExtra("pageNumber", 4);
-                campaignIntent.putExtra("mymoney_bankdetails", "mymoney_bankdetails");
-                startActivity(campaignIntent);
-            } else if (AppConstants.NOTIFICATION_TYPE_SHORT_STORY_DETAILS.equalsIgnoreCase(notificationType)) {
-                pushEvent("shortStoryDetails");
-                Intent ssIntent = new Intent(DashboardActivity.this,
-                        ShortStoryContainerActivity.class);
-                ssIntent.putExtra(Constants.AUTHOR_ID, notificationExtras.getString("userId"));
-                ssIntent.putExtra(Constants.ARTICLE_ID, notificationExtras.getString("id"));
-                ssIntent.putExtra(Constants.ARTICLE_OPENED_FROM, "Notification Popup");
-                ssIntent.putExtra(Constants.BLOG_SLUG, notificationExtras.getString("blogSlug"));
-                ssIntent.putExtra(Constants.TITLE_SLUG, notificationExtras.getString("titleSlug"));
-                ssIntent.putExtra(Constants.FROM_SCREEN, "Notification");
-                ssIntent.putExtra(Constants.ARTICLE_INDEX, "-1");
-                ssIntent.putExtra(Constants.AUTHOR, notificationExtras.getString("userId") + "~");
-                startActivity(ssIntent);
-            } else if (AppConstants.NOTIFICATION_TYPE_VIDEO_DETAILS.equalsIgnoreCase(notificationType)) {
-                pushEvent("video_details");
-                String articleId = notificationExtras.getString("id");
-                String authorId = notificationExtras.getString("userId");
-                Intent intent1 = new Intent(DashboardActivity.this, ParallelFeedActivity.class);
-                intent1.putExtra("fromNotification", true);
-                intent1.putExtra(Constants.VIDEO_ID, articleId);
-                intent1.putExtra(Constants.AUTHOR_ID, authorId);
-                intent1.putExtra(Constants.ARTICLE_OPENED_FROM, "Notification Popup");
-                intent1.putExtra(Constants.FROM_SCREEN, "Notification");
-                intent1.putExtra(Constants.ARTICLE_INDEX, "-1");
-                intent1.putExtra(Constants.AUTHOR, authorId + "~");
-                startActivity(intent1);
-            } else if ("group_membership".equalsIgnoreCase(notificationType)
-                    || "group_new_post".equalsIgnoreCase(notificationType)
-                    || "group_admin_group_edit".equalsIgnoreCase(notificationType)
-                    || "group_admin".equalsIgnoreCase(notificationType)) {
-                pushEvent(notificationExtras.getString("type"));
-                GroupMembershipStatus groupMembershipStatus = new GroupMembershipStatus(this);
-                groupMembershipStatus.checkMembershipStatus(
-                        Integer.parseInt(notificationExtras.getString("groupId")),
-                        SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext())
-                                .getDynamoId());
-            } else if ("group_new_response".equalsIgnoreCase(notificationType)) {
-                pushEvent("group_new_response");
-                Intent gpPostIntent = new Intent(this, GroupPostDetailActivity.class);
-                gpPostIntent.putExtra("postId",
-                        Integer.parseInt(notificationExtras.getString("postId")));
-                gpPostIntent.putExtra("groupId",
-                        Integer.parseInt(notificationExtras.getString("groupId")));
-                gpPostIntent.putExtra("responseId",
-                        Integer.parseInt(notificationExtras.getString("responseId")));
-                startActivity(gpPostIntent);
-            } else if ("group_new_reply".equalsIgnoreCase(notificationType)) {
-                pushEvent("group_new_reply");
-                Intent gpPostIntent = new Intent(this, ViewGroupPostCommentsRepliesActivity.class);
-                gpPostIntent.putExtra("postId",
-                        Integer.parseInt(notificationExtras.getString("postId")));
-                gpPostIntent.putExtra("groupId",
-                        Integer.parseInt(notificationExtras.getString("groupId")));
-                gpPostIntent.putExtra("responseId",
-                        Integer.parseInt(notificationExtras.getString("responseId")));
-                startActivity(gpPostIntent);
-            } else if ("group_admin_membership".equalsIgnoreCase(notificationType)) {
-                pushEvent("group_admin_membership");
-                Intent memberIntent = new Intent(this, GroupMembershipActivity.class);
-                memberIntent.putExtra("groupId",
-                        Integer.parseInt(notificationExtras.getString("groupId")));
-                startActivity(memberIntent);
-            } else if ("group_admin_reported".equalsIgnoreCase(notificationType)) {
-                pushEvent("group_admin_reported");
-                Intent reportIntent = new Intent(this, GroupsReportedContentActivity.class);
-                reportIntent.putExtra("groupId",
-                        Integer.parseInt(notificationExtras.getString("groupId")));
-                startActivity(reportIntent);
-            } else if (AppConstants.NOTIFICATION_TYPE_WEBVIEW.equalsIgnoreCase(notificationType)) {
-                pushEvent("webView");
-                String url = notificationExtras.getString("url");
-                Intent intent1 = new Intent(this, LoadWebViewActivity.class);
-                intent1.putExtra("fromNotification", true);
-                intent1.putExtra(Constants.WEB_VIEW_URL, url);
-                startActivity(intent1);
-            } else if ("write_blog".equalsIgnoreCase(notificationType)) {
-                pushEvent("write_blog");
-                launchEditor();
-            } else if (AppConstants.NOTIFICATION_TYPE_PROFILE.equalsIgnoreCase(notificationType)) {
-                pushEvent("profile");
-                String userId = notificationExtras.getString("userId");
-                if (!SharedPrefUtils.getUserDetailModel(this).getDynamoId().equals(userId)) {
-                    Intent intent = new Intent(this, UserProfileActivity.class);
-                    intent.putExtra("fromNotification", true);
-                    intent.putExtra(Constants.USER_ID, userId);
-                    intent.putExtra(AppConstants.BADGE_ID, notificationExtras.getString(AppConstants.BADGE_ID));
-                    intent.putExtra(AppConstants.MILESTONE_ID, notificationExtras.getString(AppConstants.MILESTONE_ID));
-                    intent.putExtra(Constants.FROM_SCREEN, "Notification");
-                    startActivity(intent);
-                } else {
-                    fragmentToLoad = Constants.PROFILE_FRAGMENT;
-                }
-            } else if (AppConstants.NOTIFICATION_TYPE_BADGE_LIST.equalsIgnoreCase(notificationType)) {
-                pushEvent("badge_list");
-                Intent badgeIntent = new Intent(this, BadgeActivity.class);
-                startActivity(badgeIntent);
-            } else if (AppConstants.NOTIFICATION_TYPE_SUGGESTED_TOPICS.equalsIgnoreCase(notificationType)) {
-                pushEvent("suggested_topics");
-                fragmentToLoad = Constants.SUGGESTED_TOPICS_FRAGMENT;
-            } else if (AppConstants.NOTIFICATION_TYPE_APP_SETTINGS.equalsIgnoreCase(notificationType)) {
-                pushEvent(AppConstants.NOTIFICATION_TYPE_APP_SETTINGS);
-                Intent intent1 = new Intent(this, AppSettingsActivity.class);
-                intent1.putExtra("fromNotification", true);
-                intent1.putExtra("load_fragment", Constants.SETTINGS_FRAGMENT);
-                startActivity(intent1);
-            } else if (AppConstants.NOTIFICATION_TYPE_MY_MONEY_EARNINGS.equalsIgnoreCase(notificationType)) {
-                pushEvent("my_money_earnings");
-                Intent intent1 = new Intent(this, MyTotalEarningActivity.class);
-                startActivity(intent1);
-            } else if (AppConstants.NOTIFICATION_TYPE_MY_MONEY_PROFILE.equalsIgnoreCase(notificationType)) {
-                pushEvent("my_money_profile");
-                //Add my money profile edit option
-            } else if (AppConstants.NOTIFICATION_TYPE_CATEGORY_LISTING.equalsIgnoreCase(notificationType)) {
-                pushEvent("category_listing");
-                Intent intent1 = new Intent(this, TopicsListingActivity.class);
-                intent1.putExtra("parentTopicId", notificationExtras.getString("categoryId"));
-                startActivity(intent1);
-            } else if (AppConstants.NOTIFICATION_TYPE_SHORT_STORY_LIST.equalsIgnoreCase(notificationType)) {
-                pushEvent("shortStoryListing");
-                Intent intent1 = new Intent(this, ShortStoriesListingContainerActivity.class);
-                intent1.putExtra("parentTopicId", AppConstants.SHORT_STORY_CATEGORYID);
-                intent1.putExtra("selectedTabCategoryId", notificationExtras.getString("categoryId"));
-                startActivity(intent1);
-            } else if (AppConstants.NOTIFICATION_TYPE_STORY_LIST_IN_CHALLENGE.equalsIgnoreCase(notificationType)) {
-                pushEvent("shortStoryListingInChallenge");
-                if (StringUtils.isNullOrEmpty(notificationExtras.getString("categoryId"))) {
-                    return;
-                }
-                findValues(notificationExtras.getString("categoryId"));
-                Intent intent1 = new Intent(this, ShortStoryChallengeDetailActivity.class);
-                intent1.putExtra("Display_Name", deepLinkDisplayName);
-                intent1.putExtra("challenge", shortStoryChallengesList);
-                intent1.putExtra("position", 0);
-                intent1.putExtra("topics", shortStoriesTopicList.get(0).getDisplay_name());
-                intent1.putExtra("parentId", shortStoriesTopicList.get(0).getId());
-                intent1.putExtra("StringUrl", deepLinkImageUrl);
-                startActivity(intent1);
-            } else if (AppConstants.NOTIFICATION_TYPE_GROUP_LISTING.equalsIgnoreCase(notificationType)) {
-                pushEvent("group_listing");
-                fragmentToLoad = Constants.GROUP_LISTING_FRAGMENT;
-            } else if (AppConstants.NOTIFICATION_TYPE_STORY_PUBLISH_SUCCESS.equalsIgnoreCase(notificationType)) {
-                pushEvent("shortStoryPublishSuccess");
-                Intent intent1 = new Intent(this, ShortStoryModerationOrShareActivity.class);
-                intent1.putExtra("shareUrl", "");
-                intent1.putExtra(Constants.ARTICLE_ID, notificationExtras.getString("id"));
-                startActivity(intent1);
-            } else if (AppConstants.NOTIFICATION_TYPE_INVITE_FRIENDS.equalsIgnoreCase(notificationType)) {
-                pushEvent("inviteFriendsDialog");
-                Intent intent1 = new Intent(this, UserProfileActivity.class);
-                intent1.putExtra(AppConstants.SHOW_INVITE_DIALOG_FLAG, true);
-                startActivity(intent1);
-            } else if (AppConstants.NOTIFICATION_TYPE_VIDEO_LISTING.equalsIgnoreCase(notificationType)) {
-                pushEvent("videoListing");
-                Intent intent1 = new Intent(this, CategoryVideosListingActivity.class);
-                intent1.putExtra("categoryId", notificationExtras.getString("categoryId"));
-                startActivity(intent1);
-            }
+            handleNotificationsTypewise(notificationExtras);
         } else if (newIntent.hasExtra("branchLink")
                 || newIntent.hasExtra(AppConstants.BRANCH_DEEPLINK_URL)) {
-            String branchdata = BaseApplication.getInstance().getBranchData();
-            JsonParser parser = new JsonParser();
-            JsonElement jsonElement = parser.parse(branchdata);
-            Gson gson = new Gson();
-            BranchModel branchModel = gson.fromJson(jsonElement, BranchModel.class);
-
-            Log.i("MixFeedData", branchdata + ":");
-            if (!StringUtils.isNullOrEmpty(branchdata)) {
-                if (!StringUtils.isNullOrEmpty(branchModel.getType()) && branchModel.getType()
-                        .equals(AppConstants.BRANCH__CAMPAIGN_LISTING)) {
-                    Intent intent1 = new Intent(DashboardActivity.this,
-                            CampaignContainerActivity.class);
-                    startActivity(intent1);
-                } else if (!StringUtils.isNullOrEmpty(branchModel.getType()) && branchModel
-                        .getType().equals(AppConstants.BRANCH_CAMPAIGN_DETAIL)) {
-                    String campaignID = branchModel.getId();
-                    Intent campaignIntent = new Intent(DashboardActivity.this,
-                            CampaignContainerActivity.class);
-                    campaignIntent.putExtra("campaignID", Integer.parseInt(campaignID));
-                    startActivity(campaignIntent);
-                } else if (!StringUtils.isNullOrEmpty(branchModel.getType()) && branchModel
-                        .getType().equals(AppConstants.BRANCH_MOMVLOGS)) {
-                    String challengeId = branchModel.getId();
-                    Intent challengeIntent = new Intent(DashboardActivity.this,
-                            NewVideoChallengeActivity.class);
-                    challengeIntent.putExtra("challenge", challengeId);
-                    challengeIntent.putExtra("mappedId", branchModel.getMapped_category());
-                    challengeIntent.putExtra("comingFrom", "branch_deep_link");
-                    startActivity(challengeIntent);
-                } else if (!StringUtils.isNullOrEmpty(branchModel.getType()) && branchModel
-                        .getType().equals(AppConstants.BRANCH_PERSONALINFO)) {
-                    Intent intent1 = new Intent(DashboardActivity.this,
-                            RewardsContainerActivity.class);
-                    intent1.putExtra("showProfileInfo", true);
-                    startActivity(intent1);
-                } else if ((!StringUtils.isNullOrEmpty(branchModel.getType()) && branchModel
-                        .getType().equals(AppConstants.BRANCH_VIDEO_CATEGORY_CHALLENGE_SELECTION_SCREEN))) {
-                    Intent videoCategorySelectionIntent = new Intent(this,
-                            VideoCategoryAndChallengeSelectionActivity.class);
-                    startActivity(videoCategorySelectionIntent);
-                } else if (!StringUtils.isNullOrEmpty(branchModel.getType()) && branchModel.getType()
-                        .equals(AppConstants.BRANCH_MOMVLOG_LISTING_SCREEN)) {
-                    Intent intent = new Intent(this, CategoryVideosListingActivity.class);
-                    startActivity(intent);
-                } else if (!StringUtils.isNullOrEmpty(branchModel.getType()) && branchModel.getType()
-                        .equals(AppConstants.BRANCH_MYMONEY_REGISTRATION)) {
-                    Intent intent1 = new Intent(this, RewardsContainerActivity.class);
-                    intent1.putExtra("pageNumber", 1);
-                    startActivity(intent1);
-                }
-            }
-        } else {
+            handleBranchDeeplinks();
+        } else if (newIntent.hasExtra(AppConstants.DEEP_LINK_URL)) {
             String tempDeepLinkUrl = newIntent.getStringExtra(AppConstants.DEEP_LINK_URL);
-            String tempDeepLinkUrlWithoutSlash = "";
             try {
                 JSONObject jsonObject = new JSONObject();
                 jsonObject.put("userId",
@@ -1247,14 +896,336 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
                 e.printStackTrace();
             }
             if (!StringUtils.isNullOrEmpty(tempDeepLinkUrl)) {
-                if ((tempDeepLinkUrl.endsWith("/"))) {
-                    tempDeepLinkUrlWithoutSlash = tempDeepLinkUrl.substring(0, tempDeepLinkUrl.lastIndexOf("/"));
-                    Log.d("DeepLinkUrlWithoutSlash", tempDeepLinkUrlWithoutSlash);
-                }
                 Log.d("tempDeepLinkUrl", tempDeepLinkUrl);
                 handleDeeplinks(tempDeepLinkUrl);
             }
-            deepLinkUrl = newIntent.getStringExtra(AppConstants.DEEP_LINK_URL);
+            deepLinkUrl = tempDeepLinkUrl;
+        } else if (newIntent.hasExtra(AppConstants.HOME_SELECTED_TAB)) {
+            if (Constants.GROUP_LISTING_FRAGMENT.equals(newIntent.getStringExtra(AppConstants.HOME_SELECTED_TAB))) {
+                fragmentToLoad = Constants.GROUP_LISTING_FRAGMENT;
+            } else if (Constants.CREATE_CONTENT_PROMPT
+                    .equals(newIntent.getStringExtra(AppConstants.HOME_SELECTED_TAB))) {
+                fragmentToLoad = Constants.CREATE_CONTENT_PROMPT;
+            } else if (Constants.DISCOVER_CONTENT.equals(newIntent.getStringExtra(AppConstants.HOME_SELECTED_TAB))) {
+                fragmentToLoad = Constants.DISCOVER_CONTENT;
+            }
+        }
+    }
+
+    private void handleBranchDeeplinks() {
+        String branchdata = BaseApplication.getInstance().getBranchData();
+        JsonParser parser = new JsonParser();
+        JsonElement jsonElement = parser.parse(branchdata);
+        Gson gson = new Gson();
+        BranchModel branchModel = gson.fromJson(jsonElement, BranchModel.class);
+
+        Log.i("MixFeedData", branchdata + ":");
+        if (!StringUtils.isNullOrEmpty(branchdata)) {
+            if (!StringUtils.isNullOrEmpty(branchModel.getType()) && branchModel.getType()
+                    .equals(AppConstants.BRANCH__CAMPAIGN_LISTING)) {
+                Intent intent1 = new Intent(DashboardActivity.this,
+                        CampaignContainerActivity.class);
+                startActivity(intent1);
+            } else if (!StringUtils.isNullOrEmpty(branchModel.getType()) && branchModel
+                    .getType().equals(AppConstants.BRANCH_CAMPAIGN_DETAIL)) {
+                String campaignID = branchModel.getId();
+                Intent campaignIntent = new Intent(DashboardActivity.this,
+                        CampaignContainerActivity.class);
+                campaignIntent.putExtra("campaignID", Integer.parseInt(campaignID));
+                startActivity(campaignIntent);
+            } else if (!StringUtils.isNullOrEmpty(branchModel.getType()) && branchModel
+                    .getType().equals(AppConstants.BRANCH_MOMVLOGS)) {
+                String challengeId = branchModel.getId();
+                Intent challengeIntent = new Intent(DashboardActivity.this,
+                        NewVideoChallengeActivity.class);
+                challengeIntent.putExtra("challenge", challengeId);
+                challengeIntent.putExtra("mappedId", branchModel.getMapped_category());
+                challengeIntent.putExtra("comingFrom", "branch_deep_link");
+                startActivity(challengeIntent);
+            } else if (!StringUtils.isNullOrEmpty(branchModel.getType()) && branchModel
+                    .getType().equals(AppConstants.BRANCH_PERSONALINFO)) {
+                Intent intent1 = new Intent(DashboardActivity.this,
+                        RewardsContainerActivity.class);
+                intent1.putExtra("showProfileInfo", true);
+                startActivity(intent1);
+            } else if ((!StringUtils.isNullOrEmpty(branchModel.getType()) && branchModel
+                    .getType().equals(AppConstants.BRANCH_VIDEO_CATEGORY_CHALLENGE_SELECTION_SCREEN))) {
+                Intent videoCategorySelectionIntent = new Intent(this,
+                        VideoCategoryAndChallengeSelectionActivity.class);
+                startActivity(videoCategorySelectionIntent);
+            } else if (!StringUtils.isNullOrEmpty(branchModel.getType()) && branchModel.getType()
+                    .equals(AppConstants.BRANCH_MOMVLOG_LISTING_SCREEN)) {
+                Intent intent = new Intent(this, CategoryVideosListingActivity.class);
+                startActivity(intent);
+            } else if (!StringUtils.isNullOrEmpty(branchModel.getType()) && branchModel.getType()
+                    .equals(AppConstants.BRANCH_MYMONEY_REGISTRATION)) {
+                Intent intent1 = new Intent(this, RewardsContainerActivity.class);
+                intent1.putExtra("pageNumber", 1);
+                startActivity(intent1);
+            }
+        }
+    }
+
+    private void handleNotificationsTypewise(Bundle notificationExtras) {
+        try {
+            for (String key : notificationExtras.keySet()) {
+                Log.e("notificationExtras",
+                        key + " : " + (notificationExtras.get(key) != null ? notificationExtras
+                                .get(key) : "NULL"));
+            }
+        } catch (Exception e) {
+            FirebaseCrashlytics.getInstance().recordException(e);
+            Log.d("MC4KException", Log.getStackTraceString(e));
+        }
+        String notificationType = notificationExtras.getString("type");
+        if (AppConstants.NOTIFICATION_TYPE_REMOTE_CONFIG_SILENT_UPDATE.equalsIgnoreCase(notificationType)) {
+            showProgressDialog(getString(R.string.please_wait));
+            firebaseRemoteConfig.fetch(0)
+                    .addOnCompleteListener(this, task -> {
+                        removeProgressDialog();
+                        firebaseRemoteConfig.activate();
+                        SharedPrefUtils.setFirebaseRemoteConfigUpdateFlag(
+                                BaseApplication.getAppContext(), false);
+                    });
+        } else if (AppConstants.NOTIFICATION_TYPE_CONTENT_COMMENTS.equalsIgnoreCase(notificationType)
+                || AppConstants.NOTIFICATION_TYPE_CONTENT_REPLY.equalsIgnoreCase(notificationType)) {
+            String articleId = notificationExtras.getString("id");
+            String commentId = notificationExtras.getString("commentId");
+            String type = notificationExtras.getString("type");
+            String contentType = notificationExtras.getString("contentType");//replyId
+            String replyId = notificationExtras.getString("replyId");
+            Intent commentReplyNotificationIntent = new Intent(this,
+                    ContentCommentReplyNotificationActivity.class);
+            commentReplyNotificationIntent.putExtra("articleId", articleId);
+            commentReplyNotificationIntent.putExtra("commentId", commentId);
+            commentReplyNotificationIntent.putExtra("type", type);
+            commentReplyNotificationIntent.putExtra("contentType", contentType);
+            commentReplyNotificationIntent.putExtra("replyId", replyId);
+            startActivity(commentReplyNotificationIntent);
+        } else if (AppConstants.NOTIFICATION_TYPE_ARTICLE_DETAILS.equalsIgnoreCase(notificationType)) {
+            pushEvent("article_details");
+            String articleId = notificationExtras.getString("id");
+            String authorId = notificationExtras.getString("userId");
+            String blogSlug = notificationExtras.getString("blogSlug");
+            String titleSlug = notificationExtras.getString("titleSlug");
+            Intent intent1 = new Intent(DashboardActivity.this,
+                    ArticleDetailsContainerActivity.class);
+            intent1.putExtra(Constants.ARTICLE_ID, articleId);
+            intent1.putExtra(Constants.AUTHOR_ID, authorId);
+            intent1.putExtra(Constants.BLOG_SLUG, blogSlug);
+            intent1.putExtra(Constants.TITLE_SLUG, titleSlug);
+            intent1.putExtra(Constants.ARTICLE_OPENED_FROM, "Notification Popup");
+            intent1.putExtra(Constants.FROM_SCREEN, "Notification");
+            intent1.putExtra(Constants.ARTICLE_INDEX, "-1");
+            intent1.putExtra(Constants.AUTHOR, authorId + "~");
+            startActivity(intent1);
+        } else if (AppConstants.NOTIFICATION_TYPE_COLLECTION_DETAILS.equalsIgnoreCase(notificationType)) {
+            pushEvent("collection_detail");
+            Intent intent = new Intent(DashboardActivity.this,
+                    UserCollectionItemListActivity.class);
+            intent.putExtra("id", notificationExtras.getString(AppConstants.COLLECTION_ID));
+            startActivity(intent);
+        } else if (AppConstants.NOTIFICATION_TYPE_CREATE_CONTENT_PROMPT.equalsIgnoreCase(notificationType)) {
+            pushEvent("create_content_prompt");
+            fragmentToLoad = Constants.CREATE_CONTENT_PROMPT;
+        } else if (AppConstants.NOTIFICATION_TYPE_MOMSIGHT_REWARD_LISTING.equalsIgnoreCase(notificationType)) {
+            pushEvent("momsights_screen");
+            Intent intent1 = new Intent(DashboardActivity.this, RewardsContainerActivity.class);
+            startActivity(intent1);
+        } else if (AppConstants.NOTIFICATION_TYPE_CAMPAIGN_LISTING.equalsIgnoreCase(notificationType)) {
+            pushEvent("campaign_listing");
+            Intent campaignIntent = new Intent(this, CampaignContainerActivity.class);
+            campaignIntent.putExtra("campaign_listing", "campaign_listing");
+            startActivity(campaignIntent);
+        } else if (AppConstants.NOTIFICATION_TYPE_CHOOSE_VIDEO_CATEGORY.equalsIgnoreCase(notificationType)) {
+            pushEvent("choose_video_category");
+            Intent createVideoIntent = new Intent(this, VideoCategoryAndChallengeSelectionActivity.class);
+            createVideoIntent.putExtra("comingFrom", "notification");
+            startActivity(createVideoIntent);
+        } else if (AppConstants.NOTIFICATION_TYPE_VIDEO_CHALLENGE_DETAILS.equalsIgnoreCase(notificationType)) {
+            pushEvent("video_challenge_details");
+            Intent videoChallengeIntent = new Intent(this, NewVideoChallengeActivity.class);
+            videoChallengeIntent.putExtra(Constants.CHALLENGE_ID,
+                    "" + notificationExtras.getString("challengeId"));
+            videoChallengeIntent.putExtra("comingFrom", "notification");
+            startActivity(videoChallengeIntent);
+        } else if (AppConstants.NOTIFICATION_TYPE_CAMPAIGN_DETAIL.equalsIgnoreCase(notificationType)) {
+            pushEvent("campaign_detail");
+            Intent campaignIntent = new Intent(this, CampaignContainerActivity.class);
+            campaignIntent.putExtra("campaign_id", notificationExtras.getString("campaign_id"));
+            campaignIntent.putExtra("campaign_detail", "campaign_detail");
+            campaignIntent.putExtra("fromNotification", true);
+            startActivity(campaignIntent);
+        } else if (AppConstants.NOTIFICATION_TYPE_CAMPAIGN_SUBMIT_PROOF.equalsIgnoreCase(notificationType)) {
+            pushEvent("campaign_submit_proof");
+            Intent campaignIntent = new Intent(this, CampaignContainerActivity.class);
+            campaignIntent.putExtra("campaign_Id", notificationExtras.getString("campaign_id"));
+            campaignIntent.putExtra("campaign_submit_proof", "campaign_submit_proof");
+            startActivity(campaignIntent);
+        } else if (AppConstants.NOTIFICATION_TYPE_CAMPAIGN_BANKDETAILS.equalsIgnoreCase(notificationType)) {
+            pushEvent("mymoney_bankdetails");
+            Intent campaignIntent = new Intent(this, RewardsContainerActivity.class);
+            campaignIntent.putExtra("isComingfromCampaign", true);
+            campaignIntent.putExtra("pageLimit", 4);
+            campaignIntent.putExtra("pageNumber", 4);
+            campaignIntent.putExtra("mymoney_bankdetails", "mymoney_bankdetails");
+            startActivity(campaignIntent);
+        } else if (AppConstants.NOTIFICATION_TYPE_SHORT_STORY_DETAILS.equalsIgnoreCase(notificationType)) {
+            pushEvent("shortStoryDetails");
+            Intent ssIntent = new Intent(DashboardActivity.this,
+                    ShortStoryContainerActivity.class);
+            ssIntent.putExtra(Constants.AUTHOR_ID, notificationExtras.getString("userId"));
+            ssIntent.putExtra(Constants.ARTICLE_ID, notificationExtras.getString("id"));
+            ssIntent.putExtra(Constants.ARTICLE_OPENED_FROM, "Notification Popup");
+            ssIntent.putExtra(Constants.BLOG_SLUG, notificationExtras.getString("blogSlug"));
+            ssIntent.putExtra(Constants.TITLE_SLUG, notificationExtras.getString("titleSlug"));
+            ssIntent.putExtra(Constants.FROM_SCREEN, "Notification");
+            ssIntent.putExtra(Constants.ARTICLE_INDEX, "-1");
+            ssIntent.putExtra(Constants.AUTHOR, notificationExtras.getString("userId") + "~");
+            startActivity(ssIntent);
+        } else if (AppConstants.NOTIFICATION_TYPE_VIDEO_DETAILS.equalsIgnoreCase(notificationType)) {
+            pushEvent("video_details");
+            String articleId = notificationExtras.getString("id");
+            String authorId = notificationExtras.getString("userId");
+            Intent intent1 = new Intent(DashboardActivity.this, ParallelFeedActivity.class);
+            intent1.putExtra("fromNotification", true);
+            intent1.putExtra(Constants.VIDEO_ID, articleId);
+            intent1.putExtra(Constants.AUTHOR_ID, authorId);
+            intent1.putExtra(Constants.ARTICLE_OPENED_FROM, "Notification Popup");
+            intent1.putExtra(Constants.FROM_SCREEN, "Notification");
+            intent1.putExtra(Constants.ARTICLE_INDEX, "-1");
+            intent1.putExtra(Constants.AUTHOR, authorId + "~");
+            startActivity(intent1);
+        } else if ("group_membership".equalsIgnoreCase(notificationType)
+                || "group_new_post".equalsIgnoreCase(notificationType)
+                || "group_admin_group_edit".equalsIgnoreCase(notificationType)
+                || "group_admin".equalsIgnoreCase(notificationType)) {
+            pushEvent(notificationExtras.getString("type"));
+            GroupMembershipStatus groupMembershipStatus = new GroupMembershipStatus(this);
+            groupMembershipStatus.checkMembershipStatus(
+                    Integer.parseInt(notificationExtras.getString("groupId")),
+                    SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext())
+                            .getDynamoId());
+        } else if ("group_new_response".equalsIgnoreCase(notificationType)) {
+            pushEvent("group_new_response");
+            Intent gpPostIntent = new Intent(this, GroupPostDetailActivity.class);
+            gpPostIntent.putExtra("postId",
+                    Integer.parseInt(notificationExtras.getString("postId")));
+            gpPostIntent.putExtra("groupId",
+                    Integer.parseInt(notificationExtras.getString("groupId")));
+            gpPostIntent.putExtra("responseId",
+                    Integer.parseInt(notificationExtras.getString("responseId")));
+            startActivity(gpPostIntent);
+        } else if ("group_new_reply".equalsIgnoreCase(notificationType)) {
+            pushEvent("group_new_reply");
+            Intent gpPostIntent = new Intent(this, ViewGroupPostCommentsRepliesActivity.class);
+            gpPostIntent.putExtra("postId",
+                    Integer.parseInt(notificationExtras.getString("postId")));
+            gpPostIntent.putExtra("groupId",
+                    Integer.parseInt(notificationExtras.getString("groupId")));
+            gpPostIntent.putExtra("responseId",
+                    Integer.parseInt(notificationExtras.getString("responseId")));
+            startActivity(gpPostIntent);
+        } else if ("group_admin_membership".equalsIgnoreCase(notificationType)) {
+            pushEvent("group_admin_membership");
+            Intent memberIntent = new Intent(this, GroupMembershipActivity.class);
+            memberIntent.putExtra("groupId",
+                    Integer.parseInt(notificationExtras.getString("groupId")));
+            startActivity(memberIntent);
+        } else if ("group_admin_reported".equalsIgnoreCase(notificationType)) {
+            pushEvent("group_admin_reported");
+            Intent reportIntent = new Intent(this, GroupsReportedContentActivity.class);
+            reportIntent.putExtra("groupId",
+                    Integer.parseInt(notificationExtras.getString("groupId")));
+            startActivity(reportIntent);
+        } else if (AppConstants.NOTIFICATION_TYPE_WEBVIEW.equalsIgnoreCase(notificationType)) {
+            pushEvent("webView");
+            String url = notificationExtras.getString("url");
+            Intent intent1 = new Intent(this, LoadWebViewActivity.class);
+            intent1.putExtra("fromNotification", true);
+            intent1.putExtra(Constants.WEB_VIEW_URL, url);
+            startActivity(intent1);
+        } else if ("write_blog".equalsIgnoreCase(notificationType)) {
+            pushEvent("write_blog");
+            launchEditor();
+        } else if (AppConstants.NOTIFICATION_TYPE_PROFILE.equalsIgnoreCase(notificationType)) {
+            pushEvent("profile");
+            String userId = notificationExtras.getString("userId");
+            if (!SharedPrefUtils.getUserDetailModel(this).getDynamoId().equals(userId)) {
+                Intent intent = new Intent(this, UserProfileActivity.class);
+                intent.putExtra("fromNotification", true);
+                intent.putExtra(Constants.USER_ID, userId);
+                intent.putExtra(AppConstants.BADGE_ID, notificationExtras.getString(AppConstants.BADGE_ID));
+                intent.putExtra(AppConstants.MILESTONE_ID, notificationExtras.getString(AppConstants.MILESTONE_ID));
+                intent.putExtra(Constants.FROM_SCREEN, "Notification");
+                startActivity(intent);
+            } else {
+                fragmentToLoad = Constants.PROFILE_FRAGMENT;
+            }
+        } else if (AppConstants.NOTIFICATION_TYPE_BADGE_LIST.equalsIgnoreCase(notificationType)) {
+            pushEvent("badge_list");
+            Intent badgeIntent = new Intent(this, BadgeActivity.class);
+            startActivity(badgeIntent);
+        } else if (AppConstants.NOTIFICATION_TYPE_SUGGESTED_TOPICS.equalsIgnoreCase(notificationType)) {
+            pushEvent("suggested_topics");
+            fragmentToLoad = Constants.SUGGESTED_TOPICS_FRAGMENT;
+        } else if (AppConstants.NOTIFICATION_TYPE_APP_SETTINGS.equalsIgnoreCase(notificationType)) {
+            pushEvent(AppConstants.NOTIFICATION_TYPE_APP_SETTINGS);
+            Intent intent1 = new Intent(this, AppSettingsActivity.class);
+            intent1.putExtra("fromNotification", true);
+            intent1.putExtra("load_fragment", Constants.SETTINGS_FRAGMENT);
+            startActivity(intent1);
+        } else if (AppConstants.NOTIFICATION_TYPE_MY_MONEY_EARNINGS.equalsIgnoreCase(notificationType)) {
+            pushEvent("my_money_earnings");
+            Intent intent1 = new Intent(this, MyTotalEarningActivity.class);
+            startActivity(intent1);
+        } else if (AppConstants.NOTIFICATION_TYPE_MY_MONEY_PROFILE.equalsIgnoreCase(notificationType)) {
+            pushEvent("my_money_profile");
+            //Add my money profile edit option
+        } else if (AppConstants.NOTIFICATION_TYPE_CATEGORY_LISTING.equalsIgnoreCase(notificationType)) {
+            pushEvent("category_listing");
+            Intent intent1 = new Intent(this, TopicsListingActivity.class);
+            intent1.putExtra("parentTopicId", notificationExtras.getString("categoryId"));
+            startActivity(intent1);
+        } else if (AppConstants.NOTIFICATION_TYPE_SHORT_STORY_LIST.equalsIgnoreCase(notificationType)) {
+            pushEvent("shortStoryListing");
+            Intent intent1 = new Intent(this, ShortStoriesListingContainerActivity.class);
+            intent1.putExtra("parentTopicId", AppConstants.SHORT_STORY_CATEGORYID);
+            intent1.putExtra("selectedTabCategoryId", notificationExtras.getString("categoryId"));
+            startActivity(intent1);
+        } else if (AppConstants.NOTIFICATION_TYPE_STORY_LIST_IN_CHALLENGE.equalsIgnoreCase(notificationType)) {
+            pushEvent("shortStoryListingInChallenge");
+            if (StringUtils.isNullOrEmpty(notificationExtras.getString("categoryId"))) {
+                return;
+            }
+            findValues(notificationExtras.getString("categoryId"));
+            Intent intent1 = new Intent(this, ShortStoryChallengeDetailActivity.class);
+            intent1.putExtra("Display_Name", deepLinkDisplayName);
+            intent1.putExtra("challenge", shortStoryChallengesList);
+            intent1.putExtra("position", 0);
+            intent1.putExtra("topics", shortStoriesTopicList.get(0).getDisplay_name());
+            intent1.putExtra("parentId", shortStoriesTopicList.get(0).getId());
+            intent1.putExtra("StringUrl", deepLinkImageUrl);
+            startActivity(intent1);
+        } else if (AppConstants.NOTIFICATION_TYPE_GROUP_LISTING.equalsIgnoreCase(notificationType)) {
+            pushEvent("group_listing");
+            fragmentToLoad = Constants.GROUP_LISTING_FRAGMENT;
+        } else if (AppConstants.NOTIFICATION_TYPE_STORY_PUBLISH_SUCCESS.equalsIgnoreCase(notificationType)) {
+            pushEvent("shortStoryPublishSuccess");
+            Intent intent1 = new Intent(this, ShortStoryModerationOrShareActivity.class);
+            intent1.putExtra("shareUrl", "");
+            intent1.putExtra(Constants.ARTICLE_ID, notificationExtras.getString("id"));
+            startActivity(intent1);
+        } else if (AppConstants.NOTIFICATION_TYPE_INVITE_FRIENDS.equalsIgnoreCase(notificationType)) {
+            pushEvent("inviteFriendsDialog");
+            Intent intent1 = new Intent(this, UserProfileActivity.class);
+            intent1.putExtra(AppConstants.SHOW_INVITE_DIALOG_FLAG, true);
+            startActivity(intent1);
+        } else if (AppConstants.NOTIFICATION_TYPE_VIDEO_LISTING.equalsIgnoreCase(notificationType)) {
+            pushEvent("videoListing");
+            Intent intent1 = new Intent(this, CategoryVideosListingActivity.class);
+            intent1.putExtra("categoryId", notificationExtras.getString("categoryId"));
+            startActivity(intent1);
         }
     }
 

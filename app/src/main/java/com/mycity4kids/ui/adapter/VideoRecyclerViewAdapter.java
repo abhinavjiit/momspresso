@@ -76,21 +76,20 @@ public class VideoRecyclerViewAdapter extends RecyclerView.Adapter<BaseViewHolde
     private Context context;
     private ViewHolder viewHolder;
     private String likeStatus;
-    private String userDynamoId;
     private VideoFeedRecyclerViewClick videoFeedRecyclerViewClick;
+    private String collectionId;
     FragmentManager fm;
     private int start = 0;
     private String challengeId;
     private int end = 0;
-    private Badge badge;
     private ArrayList<VlogsListingAndDetailResult> vlogsListingAndDetailResults;
 
     public VideoRecyclerViewAdapter(VideoFeedRecyclerViewClick videoFeedRecyclerViewClick, Context context,
-            FragmentManager fm) {
+            FragmentManager fm, String collectionId) {
         this.fm = fm;
         this.context = context;
         this.videoFeedRecyclerViewClick = videoFeedRecyclerViewClick;
-        userDynamoId = SharedPrefUtils.getUserDetailModel(context).getDynamoId();
+        this.collectionId = collectionId;
     }
 
     public void setListUpdate(int updatePos, ArrayList<VlogsListingAndDetailResult> infoList) {
@@ -301,6 +300,18 @@ public class VideoRecyclerViewAdapter extends RecyclerView.Adapter<BaseViewHolde
             collectionAdd = itemView.findViewById(R.id.collectionAdd);
             moreOptionImageView = itemView.findViewById(R.id.moreOptionImageView);
             parent = itemView;
+
+            if (!StringUtils.isNullOrEmpty(collectionId)) {
+                commentIndicator.setVisibility(View.GONE);
+                commentCount.setVisibility(View.GONE);
+                comment.setVisibility(View.GONE);
+                viewsCount.setVisibility(View.GONE);
+                heart.setVisibility(View.GONE);
+                share.setVisibility(View.GONE);
+                whatsapp.setVisibility(View.GONE);
+                moreOptionImageView.setVisibility(View.GONE);
+                collectionAdd.setVisibility(View.GONE);
+            }
         }
 
         protected void clear() {
@@ -334,7 +345,7 @@ public class VideoRecyclerViewAdapter extends RecyclerView.Adapter<BaseViewHolde
                 userImage.setImageResource(R.drawable.default_blogger_profile_img);
             }
             try {
-                if (Integer.parseInt(responseData.getComment_count()) > 0) {
+                if (Integer.parseInt(responseData.getComment_count()) > 0 && StringUtils.isNullOrEmpty(collectionId)) {
                     commentIndicator.setVisibility(View.VISIBLE);
                 } else {
                     commentIndicator.setVisibility(View.INVISIBLE);

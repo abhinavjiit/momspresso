@@ -1,9 +1,6 @@
 package com.mycity4kids.ui.activity;
 
-import android.content.Context;
 import android.content.Intent;
-import android.net.ConnectivityManager;
-import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
@@ -108,16 +105,14 @@ public class ContributorListActivity extends BaseActivity implements View.OnClic
         noBlogsTextView = (TextView) findViewById(R.id.noBlogsTextView);
         contributorTitleTextView = (TextView) findViewById(R.id.contributorTitleTextView);
 
-        addItemsToSpinner();
-
         frameLayout.getBackground().setAlpha(0);
         findViewById(R.id.imgLoader).startAnimation(AnimationUtils.loadAnimation(this, R.anim.rotate_indefinitely));
         contributorArrayList = new ArrayList<>();
         rankFab.setOnClickListener(ContributorListActivity.this);
         nameFab.setOnClickListener(this);
 
-        showProgressDialog(getString(R.string.please_wait));
-        hitBloggerApiRequest(sortType, type);
+        contributorListAdapter = new ContributorListAdapter(this, contributorArrayList);
+        blogListing.setAdapter(contributorListAdapter);
 
         blogListing.setOnScrollListener(new AbsListView.OnScrollListener() {
             @Override
@@ -128,13 +123,11 @@ public class ContributorListActivity extends BaseActivity implements View.OnClic
             @Override
             public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
                 boolean loadMore = firstVisibleItem + visibleItemCount >= totalItemCount;
-                if (isOnline()) {
-                    if (visibleItemCount != 0 && loadMore && firstVisibleItem != 0 && !isReuqestRunning
-                            && nextPageNumber < totalPageCount && !isLastPageReached) {
-                        isReuqestRunning = true;
-                        loadingView.setVisibility(View.VISIBLE);
-                        hitBloggerApiRequest(sortType, type);
-                    }
+                if (visibleItemCount != 0 && loadMore && firstVisibleItem != 0 && !isReuqestRunning
+                        && nextPageNumber < totalPageCount && !isLastPageReached) {
+                    isReuqestRunning = true;
+                    loadingView.setVisibility(View.VISIBLE);
+                    hitBloggerApiRequest(sortType, type);
                 }
             }
         });
@@ -146,8 +139,7 @@ public class ContributorListActivity extends BaseActivity implements View.OnClic
             startActivity(profileIntent);
         });
 
-        contributorListAdapter = new ContributorListAdapter(ContributorListActivity.this, contributorArrayList);
-        blogListing.setAdapter(contributorListAdapter);
+        addItemsToSpinner();
 
         floatingActionsMenu
                 .setOnFloatingActionsMenuUpdateListener(new FloatingActionsMenu.OnFloatingActionsMenuUpdateListener() {
@@ -169,12 +161,12 @@ public class ContributorListActivity extends BaseActivity implements View.OnClic
     }
 
     public void addItemsToSpinner() {
-
-        list = new ArrayList<String>();
+        list = new ArrayList<>();
         languageConfigModelArrayList = new ArrayList<>();
         list.add("English");
         LanguageConfigModel languageConfigModel = new LanguageConfigModel();
         languageConfigModel.setName("English");
+        languageConfigModel.setLangKey("0");
         languageConfigModel.setDisplay_name("English");
         languageConfigModel.setId(AppConstants.LANG_KEY_ENGLISH);
         languageConfigModelArrayList.add(languageConfigModel);
@@ -208,13 +200,12 @@ public class ContributorListActivity extends BaseActivity implements View.OnClic
                 } else {
                     floatingActionsMenu.setVisibility(View.GONE);
                 }
-                // On selecting a spinner item
-                String item = adapter.getItemAtPosition(position).toString();
-                // Showing selected spinner item
                 contributorArrayList.clear();
                 paginationValue = "";
+                sortType = 2;
                 langKey = languageConfigModelArrayList.get(position).getLangKey();
-                hitBloggerApiRequest(2, AppConstants.USER_TYPE_BLOGGER);
+                contributorListAdapter.setLangKey(langKey);
+                hitBloggerApiRequest(sortType, AppConstants.USER_TYPE_BLOGGER);
             }
 
             @Override
@@ -240,12 +231,6 @@ public class ContributorListActivity extends BaseActivity implements View.OnClic
         }, 1000);
     }
 
-    @Override
-    public void onResume() {
-        super.onResume();
-        blogListing.invalidate();
-    }
-
     public void hitBloggerApiRequest(int sortType, String type) {
         showProgressDialog(getResources().getString(R.string.please_wait));
         Retrofit retrofit = BaseApplication.getInstance().getRetrofit();
@@ -269,11 +254,13 @@ public class ContributorListActivity extends BaseActivity implements View.OnClic
                 isReuqestRunning = false;
                 loadingView.setVisibility(View.GONE);
                 ContributorListResponse responseModel = response.body();
-                if (responseModel.getCode() == 200 && Constants.SUCCESS.equals(responseModel.getStatus())) {
-                    processResponse(responseModel);
-                } else {
-                    showToast(getString(R.string.toast_response_error));
-                    loadingView.setVisibility(View.GONE);
+                if (responseModel != null) {
+                    if (responseModel.getCode() == 200 && Constants.SUCCESS.equals(responseModel.getStatus())) {
+                        processResponse(responseModel);
+                    } else {
+                        showToast(getString(R.string.toast_response_error));
+                        loadingView.setVisibility(View.GONE);
+                    }
                 }
             } catch (Exception e) {
                 FirebaseCrashlytics.getInstance().recordException(e);
@@ -289,25 +276,13 @@ public class ContributorListActivity extends BaseActivity implements View.OnClic
         }
     };
 
-    public boolean isOnline() {
-        ConnectivityManager cm =
-                (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
-        NetworkInfo netInfo = cm.getActiveNetworkInfo();
-        return netInfo != null && netInfo.isConnected();
-    }
-
     public void processResponse(ContributorListResponse responseModel) {
         ArrayList<ContributorListResult> dataList = responseModel.getData().getResult();
-        if (dataList.size() == 0) {
-
+        if (dataList == null || dataList.size() == 0) {
             isLastPageReached = true;
-            if (null != contributorArrayList && !contributorArrayList.isEmpty()) {
-                //No more next results for search from pagination
-
-            } else {
+            if (null == contributorArrayList || contributorArrayList.isEmpty()) {
                 // No results for search
-                contributorArrayList.clear();
-                contributorArrayList.addAll(dataList);
+                contributorArrayList = dataList;
                 contributorListAdapter.notifyDataSetChanged();
                 noBlogsTextView.setVisibility(View.VISIBLE);
                 noBlogsTextView.setText(getString(R.string.no_result_txt));

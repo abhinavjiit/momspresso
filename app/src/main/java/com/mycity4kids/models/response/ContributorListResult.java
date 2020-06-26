@@ -1,11 +1,13 @@
 package com.mycity4kids.models.response;
 
 import com.google.gson.annotations.SerializedName;
+import java.util.ArrayList;
 
 /**
  * Created by anshul on 8/7/16.
  */
 public class ContributorListResult {
+
     @SerializedName("firstName")
     private String firstName;
     @SerializedName("lastName")
@@ -24,6 +26,8 @@ public class ContributorListResult {
     private String colorCode;
     @SerializedName("rank")
     private String rank;
+    @SerializedName("ranks")
+    private ArrayList<LanguageRanksModel> ranks;
     @SerializedName("profilePicUrl")
     private ProfilePic profilePicUrl;
 
@@ -105,5 +109,13 @@ public class ContributorListResult {
 
     public void setFirstName(String firstName) {
         this.firstName = firstName;
+    }
+
+    public ArrayList<LanguageRanksModel> getRanks() {
+        return ranks;
+    }
+
+    public void setRanks(ArrayList<LanguageRanksModel> ranks) {
+        this.ranks = ranks;
     }
 }

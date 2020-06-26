@@ -6,7 +6,7 @@
   android:layout_height="wrap_content"
   android:background="@color/video_feed_bg">
 
-  <RelativeLayout
+  <androidx.constraintlayout.widget.ConstraintLayout
     android:id="@+id/item_top_layout"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
@@ -28,20 +28,24 @@
       app:civ_border_width="0dp"
       app:civ_shadow="true"
       app:civ_shadow_color="@color/grey"
-      app:civ_shadow_radius="4" />
+      app:civ_shadow_radius="4"
+      app:layout_constraintStart_toStartOf="parent"
+      app:layout_constraintTop_toTopOf="parent" />
 
     <com.mycity4kids.widget.CustomFontTextView
       android:id="@+id/userHandle"
-      android:layout_width="wrap_content"
+      android:layout_width="0dp"
       android:layout_height="wrap_content"
       android:layout_centerVertical="true"
-      android:layout_toEndOf="@+id/user_image"
-      android:letterSpacing="-0.02"
       android:padding="10dp"
       android:text=""
       android:textColor="#E6FFFFFF"
       android:textSize="14sp"
-      android:textStyle="bold" />
+      android:textStyle="bold"
+      app:layout_constraintEnd_toStartOf="@+id/follow_textview"
+      app:layout_constraintHorizontal_bias="0.0"
+      app:layout_constraintStart_toEndOf="@+id/user_image"
+      app:layout_constraintTop_toTopOf="parent" />
 
     <com.mycity4kids.widget.CustomFontTextView
       android:id="@+id/follow_textview"
@@ -49,7 +53,6 @@
       android:layout_height="wrap_content"
       android:layout_centerVertical="true"
       android:layout_marginEnd="8dp"
-      android:layout_toStartOf="@+id/moreOptionImageView"
       android:background="@drawable/update_profile_bg"
       android:paddingStart="16dp"
       android:paddingTop="5dp"
@@ -58,7 +61,11 @@
       android:text="@string/all_follow"
       android:textColor="@color/white_color"
       android:textSize="12sp"
-      android:textStyle="bold" />
+      android:textStyle="bold"
+      app:layout_constraintBottom_toBottomOf="parent"
+      app:layout_constraintEnd_toStartOf="@+id/moreOptionImageView"
+      app:layout_constraintHorizontal_bias="1.0"
+      app:layout_constraintTop_toTopOf="parent" />
 
     <ImageView
       android:id="@+id/moreOptionImageView"
@@ -70,8 +77,11 @@
       android:padding="12dp"
       android:src="@drawable/ic_more_vert_black_24dp"
       android:tint="#FFFFFF"
-      android:visibility="visible" />
-  </RelativeLayout>
+      android:visibility="visible"
+      app:layout_constraintBottom_toBottomOf="parent"
+      app:layout_constraintEnd_toEndOf="parent"
+      app:layout_constraintTop_toTopOf="parent" />
+  </androidx.constraintlayout.widget.ConstraintLayout>
 
   <RelativeLayout
     android:id="@+id/video_layout"

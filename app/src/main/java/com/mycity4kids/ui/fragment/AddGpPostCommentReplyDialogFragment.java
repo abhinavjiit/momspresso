@@ -305,17 +305,18 @@ public class AddGpPostCommentReplyDialogFragment extends DialogFragment implemen
         imgRecordButton.setOnClickListener(this);
         cancelTextView.setOnClickListener(this);
 
-        if (SharedPrefUtils.isUserAnonymous(BaseApplication.getAppContext())) {
-            anonymousCheckbox.setChecked(true);
-        } else {
-            anonymousCheckbox.setChecked(false);
-        }
-
         if (isAnonymousAllowed == 0) {
+            SharedPrefUtils.setUserAnonymous(BaseApplication.getAppContext(), false);
             anonymousCheckbox.setChecked(false);
             anonymousCheckbox.setVisibility(View.INVISIBLE);
             anonymousImageView.setVisibility(View.INVISIBLE);
             anonymousTextView.setVisibility(View.INVISIBLE);
+        } else {
+            if (SharedPrefUtils.isUserAnonymous(BaseApplication.getAppContext())) {
+                anonymousCheckbox.setChecked(true);
+            } else {
+                anonymousCheckbox.setChecked(false);
+            }
         }
 
         if (commentOrReplyData == null) {
@@ -533,19 +534,18 @@ public class AddGpPostCommentReplyDialogFragment extends DialogFragment implemen
 
     private void resetIcons() {
         final Handler handler = new Handler();
-        handler.postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                commentReplyEditText.setVisibility(View.VISIBLE);
-                addMediaImageView.setVisibility(View.VISIBLE);
+        handler.postDelayed(() -> {
+            commentReplyEditText.setVisibility(View.VISIBLE);
+            addMediaImageView.setVisibility(View.VISIBLE);
+            if (isAnonymousAllowed != 0) {
                 anonymousCheckbox.setVisibility(View.VISIBLE);
                 anonymousImageView.setVisibility(View.VISIBLE);
                 anonymousTextView.setVisibility(View.VISIBLE);
-                ViewGroup.LayoutParams params = audioRecordView.getLayoutParams();
-                params.width = ViewGroup.LayoutParams.WRAP_CONTENT;
-                audioRecordView.setLayoutParams(params);
-                audioRecordView.disableClick(true);
             }
+            ViewGroup.LayoutParams params = audioRecordView.getLayoutParams();
+            params.width = ViewGroup.LayoutParams.WRAP_CONTENT;
+            audioRecordView.setLayoutParams(params);
+            audioRecordView.disableClick(true);
         }, 500);
     }
 
@@ -717,9 +717,11 @@ public class AddGpPostCommentReplyDialogFragment extends DialogFragment implemen
                                 linearBottomSheet.setVisibility(View.GONE);
                                 commentReplyEditText.setVisibility(View.VISIBLE);
                                 addMediaImageView.setVisibility(View.VISIBLE);
-                                anonymousCheckbox.setVisibility(View.VISIBLE);
-                                anonymousImageView.setVisibility(View.VISIBLE);
-                                anonymousTextView.setVisibility(View.VISIBLE);
+                                if (isAnonymousAllowed != 0) {
+                                    anonymousCheckbox.setVisibility(View.VISIBLE);
+                                    anonymousImageView.setVisibility(View.VISIBLE);
+                                    anonymousTextView.setVisibility(View.VISIBLE);
+                                }
                                 addAudioImageView.setEnabled(true);
                                 addMediaImageView.setEnabled(true);
                                 addMediaTextView.setEnabled(true);
@@ -1466,9 +1468,9 @@ public class AddGpPostCommentReplyDialogFragment extends DialogFragment implemen
         commentReplyEditText.setVisibility(View.GONE);
         addAudioImageView.setVisibility(View.GONE);
         addMediaImageView.setVisibility(View.GONE);
-        anonymousCheckbox.setVisibility(View.GONE);
-        anonymousImageView.setVisibility(View.GONE);
-        anonymousTextView.setVisibility(View.GONE);
+        anonymousCheckbox.setVisibility(View.INVISIBLE);
+        anonymousImageView.setVisibility(View.INVISIBLE);
+        anonymousTextView.setVisibility(View.INVISIBLE);
         mediaRecorder.setAudioSource(MediaRecorder.AudioSource.MIC);
         mediaRecorder.setOutputFormat(MediaRecorder.OutputFormat.MPEG_4);
         mediaRecorder.setAudioEncoder(MediaRecorder.AudioEncoder.AAC);
@@ -1508,9 +1510,11 @@ public class AddGpPostCommentReplyDialogFragment extends DialogFragment implemen
                             addMediaTextView.setEnabled(false);
                             commentReplyEditText.setVisibility(View.VISIBLE);
                             addMediaImageView.setVisibility(View.VISIBLE);
-                            anonymousCheckbox.setVisibility(View.VISIBLE);
-                            anonymousImageView.setVisibility(View.VISIBLE);
-                            anonymousTextView.setVisibility(View.VISIBLE);
+                            if (isAnonymousAllowed != 0) {
+                                anonymousCheckbox.setVisibility(View.VISIBLE);
+                                anonymousImageView.setVisibility(View.VISIBLE);
+                                anonymousTextView.setVisibility(View.VISIBLE);
+                            }
                             ViewGroup.LayoutParams params = audioRecordView.getLayoutParams();
                             params.width = ViewGroup.LayoutParams.WRAP_CONTENT;
                             audioRecordView.setLayoutParams(params);

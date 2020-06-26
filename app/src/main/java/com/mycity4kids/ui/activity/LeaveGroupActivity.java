@@ -14,6 +14,7 @@ import com.mycity4kids.R;
 import com.mycity4kids.application.BaseApplication;
 import com.mycity4kids.base.BaseActivity;
 import com.mycity4kids.constants.AppConstants;
+import com.mycity4kids.constants.Constants;
 import com.mycity4kids.models.request.UpdateGroupMembershipRequest;
 import com.mycity4kids.models.response.GroupResult;
 import com.mycity4kids.models.response.GroupsMembershipResponse;
@@ -60,99 +61,90 @@ public class LeaveGroupActivity extends BaseActivity implements View.OnClickList
             case R.id.leaveGroupTextView:
                 checkMembership(groupItem.getId());
                 break;
+            default:
+                break;
         }
     }
 
 
     private void checkMembership(int id) {
         Retrofit retrofit = BaseApplication.getInstance().getGroupsRetrofit();
-        GroupsAPI groupsAPI = retrofit.create(GroupsAPI.class);
+        GroupsAPI groupsApi = retrofit.create(GroupsAPI.class);
 
-        Call<GroupsMembershipResponse> call = groupsAPI
+        Call<GroupsMembershipResponse> call = groupsApi
                 .getUsersMembershipDetailsForGroup(id, SharedPrefUtils.getUserDetailModel(this).getDynamoId());
         call.enqueue(groupMembershipResponseCallback);
     }
 
-    private Callback<GroupsMembershipResponse> groupMembershipResponseCallback = new Callback<GroupsMembershipResponse>() {
-        @Override
-        public void onResponse(Call<GroupsMembershipResponse> call,
-                retrofit2.Response<GroupsMembershipResponse> response) {
-            if (response == null || response.body() == null) {
-                if (response != null && response.raw() != null) {
-                    NetworkErrorException nee = new NetworkErrorException(response.raw().toString());
-                    FirebaseCrashlytics.getInstance().recordException(nee);
+    private Callback<GroupsMembershipResponse> groupMembershipResponseCallback =
+            new Callback<GroupsMembershipResponse>() {
+                @Override
+                public void onResponse(Call<GroupsMembershipResponse> call,
+                        retrofit2.Response<GroupsMembershipResponse> response) {
+                    if (response.body() == null) {
+                        NetworkErrorException nee = new NetworkErrorException(response.raw().toString());
+                        FirebaseCrashlytics.getInstance().recordException(nee);
+                        return;
+                    }
+                    try {
+                        if (response.isSuccessful()) {
+                            GroupsMembershipResponse groupsMembershipResponse = response.body();
+                            Retrofit retrofit = BaseApplication.getInstance().getGroupsRetrofit();
+                            GroupsAPI groupsApi = retrofit.create(GroupsAPI.class);
+                            UpdateGroupMembershipRequest updateGroupMembershipRequest =
+                                    new UpdateGroupMembershipRequest();
+                            updateGroupMembershipRequest
+                                    .setUserId(
+                                            SharedPrefUtils.getUserDetailModel(LeaveGroupActivity.this).getDynamoId());
+                            updateGroupMembershipRequest.setStatus(AppConstants.GROUP_MEMBERSHIP_STATUS_LEFT);
+                            Call<GroupsMembershipResponse> call1 = groupsApi
+                                    .updateMember(groupsMembershipResponse.getData().getResult().get(0).getId(),
+                                            updateGroupMembershipRequest);
+                            call1.enqueue(updateGroupMembershipResponseCallback);
+                        }
+                    } catch (Exception e) {
+                        FirebaseCrashlytics.getInstance().recordException(e);
+                        Log.d("MC4kException", Log.getStackTraceString(e));
+                    }
                 }
-                return;
-            }
-            try {
-                if (response.isSuccessful()) {
-                    GroupsMembershipResponse groupsMembershipResponse = response.body();
 
-//                    if (groupsMembershipResponse.getData().getResult().get(0).getIsAdmin() == 1) {
-//                        memberType = AppConstants.GROUP_MEMBER_TYPE_ADMIN;
-//                    } else if (groupsMembershipResponse.getData().getResult().get(0).getIsModerator() == 1) {
-//                        memberType = AppConstants.GROUP_MEMBER_TYPE_MODERATOR;
-//                    }
-
-                    Retrofit retrofit = BaseApplication.getInstance().getGroupsRetrofit();
-                    GroupsAPI groupsAPI = retrofit.create(GroupsAPI.class);
-                    UpdateGroupMembershipRequest updateGroupMembershipRequest = new UpdateGroupMembershipRequest();
-                    updateGroupMembershipRequest
-                            .setUserId(SharedPrefUtils.getUserDetailModel(LeaveGroupActivity.this).getDynamoId());
-                    updateGroupMembershipRequest.setStatus(AppConstants.GROUP_MEMBERSHIP_STATUS_LEFT);
-                    Call<GroupsMembershipResponse> call1 = groupsAPI
-                            .updateMember(groupsMembershipResponse.getData().getResult().get(0).getId(),
-                                    updateGroupMembershipRequest);
-                    call1.enqueue(updateGroupMembershipResponseCallback);
-                } else {
-
+                @Override
+                public void onFailure(Call<GroupsMembershipResponse> call, Throwable t) {
+                    FirebaseCrashlytics.getInstance().recordException(t);
+                    Log.d("MC4kException", Log.getStackTraceString(t));
                 }
-            } catch (Exception e) {
-                FirebaseCrashlytics.getInstance().recordException(e);
-                Log.d("MC4kException", Log.getStackTraceString(e));
-            }
-        }
+            };
 
-        @Override
-        public void onFailure(Call<GroupsMembershipResponse> call, Throwable t) {
-            FirebaseCrashlytics.getInstance().recordException(t);
-            Log.d("MC4kException", Log.getStackTraceString(t));
-        }
-    };
-
-    private Callback<GroupsMembershipResponse> updateGroupMembershipResponseCallback = new Callback<GroupsMembershipResponse>() {
-        @Override
-        public void onResponse(Call<GroupsMembershipResponse> call,
-                retrofit2.Response<GroupsMembershipResponse> response) {
-            if (response == null || response.body() == null) {
-                if (response != null && response.raw() != null) {
-                    NetworkErrorException nee = new NetworkErrorException(response.raw().toString());
-                    FirebaseCrashlytics.getInstance().recordException(nee);
+    private Callback<GroupsMembershipResponse> updateGroupMembershipResponseCallback =
+            new Callback<GroupsMembershipResponse>() {
+                @Override
+                public void onResponse(Call<GroupsMembershipResponse> call,
+                        retrofit2.Response<GroupsMembershipResponse> response) {
+                    if (response.body() == null) {
+                        NetworkErrorException nee = new NetworkErrorException(response.raw().toString());
+                        FirebaseCrashlytics.getInstance().recordException(nee);
+                        return;
+                    }
+                    try {
+                        if (response.isSuccessful()) {
+                            Intent intent = new Intent(LeaveGroupActivity.this, DashboardActivity.class);
+                            intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
+                            intent.putExtra(AppConstants.HOME_SELECTED_TAB, Constants.GROUP_LISTING_FRAGMENT);
+                            startActivity(intent);
+                            finish();
+                        }
+                    } catch (Exception e) {
+                        FirebaseCrashlytics.getInstance().recordException(e);
+                        Log.d("MC4kException", Log.getStackTraceString(e));
+                    }
                 }
-                return;
-            }
-            try {
-                if (response.isSuccessful()) {
-                    GroupsMembershipResponse groupsMembershipResponse = response.body();
-                    Intent intent = new Intent(LeaveGroupActivity.this, DashboardActivity.class);
-                    intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
-                    startActivity(intent);
-                    finish();
-                } else {
 
+                @Override
+                public void onFailure(Call<GroupsMembershipResponse> call, Throwable t) {
+                    FirebaseCrashlytics.getInstance().recordException(t);
+                    Log.d("MC4kException", Log.getStackTraceString(t));
                 }
-            } catch (Exception e) {
-                FirebaseCrashlytics.getInstance().recordException(e);
-                Log.d("MC4kException", Log.getStackTraceString(e));
-            }
-        }
-
-        @Override
-        public void onFailure(Call<GroupsMembershipResponse> call, Throwable t) {
-            FirebaseCrashlytics.getInstance().recordException(t);
-            Log.d("MC4kException", Log.getStackTraceString(t));
-        }
-    };
+            };
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {

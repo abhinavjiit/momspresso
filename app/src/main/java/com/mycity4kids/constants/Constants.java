@@ -52,6 +52,7 @@ public class Constants {
     public static String PROFILE_FRAGMENT = "fragment_profile";
     public static String GROUP_LISTING_FRAGMENT = "fragment_group_listing";
     public static String CREATE_CONTENT_PROMPT = "createContentPrompt";
+    public static String DISCOVER_CONTENT = "discoverContent";
 
     //API Failure status
     public static String FAILURE = "failure";

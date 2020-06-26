@@ -21,7 +21,9 @@ import com.mycity4kids.gtmutils.Utils;
 import com.mycity4kids.models.request.FollowUnfollowUserRequest;
 import com.mycity4kids.models.response.ContributorListResult;
 import com.mycity4kids.models.response.FollowUnfollowUserResponse;
+import com.mycity4kids.models.response.LanguageRanksModel;
 import com.mycity4kids.preference.SharedPrefUtils;
+import com.mycity4kids.utils.AppUtils;
 import com.mycity4kids.utils.RoundedTransformation;
 import com.mycity4kids.utils.StringUtils;
 import com.squareup.picasso.Picasso;
@@ -43,6 +45,7 @@ public class ContributorListAdapter extends BaseAdapter {
 
     Context context;
     ArrayList<ContributorListResult> datalist;
+    private String langKey;
 
     public ContributorListAdapter(Context context, ArrayList<ContributorListResult> datalist) {
         this.context = context;
@@ -101,11 +104,6 @@ public class ContributorListAdapter extends BaseAdapter {
                 case AppConstants.USER_TYPE_CITY_ADMIN:
                     holder.authorType.setText("City Admin");
                     holder.authorType.setTextColor(ContextCompat.getColor(context, R.color.black_color));
-                    break;
-                case AppConstants.USER_TYPE_BLOGGER:
-                    holder.authorType.setText("Blogger");
-                    holder.authorType
-                            .setTextColor(ContextCompat.getColor(context, R.color.authortype_colorcode_blogger));
                     break;
                 case AppConstants.USER_TYPE_BUSINESS:
                     holder.authorType.setText("Business");
@@ -172,8 +170,8 @@ public class ContributorListAdapter extends BaseAdapter {
             holder.bloggerBio.setText(datalist.get(position).getAbout());
         }
 
-        if (!StringUtils.isNullOrEmpty(String.valueOf(datalist.get(position).getRank()))) {
-            holder.authorRank.setText(String.valueOf(datalist.get(position).getRank()));
+        if (datalist.get(position).getRanks() != null && !datalist.get(position).getRanks().isEmpty()) {
+            holder.authorRank.setText(getCurrentLanguageRank(datalist.get(position).getRanks()));
         } else {
             holder.authorRank.setText("--");
         }
@@ -190,6 +188,15 @@ public class ContributorListAdapter extends BaseAdapter {
         });
 
         return view;
+    }
+
+    private String getCurrentLanguageRank(ArrayList<LanguageRanksModel> rankArray) {
+        for (int i = 0; i < rankArray.size(); i++) {
+            if (rankArray.get(i).getLangKey().equals(langKey)) {
+                return "" + rankArray.get(i).getRank();
+            }
+        }
+        return "--";
     }
 
     private void followUserApi(int position, ViewHolder holder) {
@@ -216,6 +223,10 @@ public class ContributorListAdapter extends BaseAdapter {
         }
     }
 
+    public void setLangKey(String langKey) {
+        this.langKey = langKey;
+    }
+
     public static class ViewHolder {
 
         TextView bloggerName;
@@ -232,13 +243,11 @@ public class ContributorListAdapter extends BaseAdapter {
 
     private class FollowUnfollowAsyncTask extends AsyncTask<String, String, String> {
 
-        // The variable is moved here, we only need it here while displaying the
-        // progress dialog.
         ViewHolder viewHolder;
         String type;
         int pos;
 
-        public FollowUnfollowAsyncTask(ViewHolder viewHolder, String type, int position) {
+        FollowUnfollowAsyncTask(ViewHolder viewHolder, String type, int position) {
             this.viewHolder = viewHolder;
             this.type = type;
             pos = position;
@@ -363,7 +372,5 @@ public class ContributorListAdapter extends BaseAdapter {
                 datalist.get(position).setFollowersCount(datalist.get(position).getFollowersCount() + 1);
             }
         }
-
     }
-
 }

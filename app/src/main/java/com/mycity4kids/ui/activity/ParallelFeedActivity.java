@@ -160,7 +160,7 @@ public class ParallelFeedActivity extends BaseActivity implements View.OnClickLi
             hitArticleDetailsS3Api();
         }
         videoRecyclerViewAdapter = new VideoRecyclerViewAdapter(this, ParallelFeedActivity.this,
-                getSupportFragmentManager());
+                getSupportFragmentManager(), collectionId);
         mixpanel.timeEvent("Player_Start");
         recyclerViewFeed.scrollToPosition(0);
     }
@@ -299,13 +299,12 @@ public class ParallelFeedActivity extends BaseActivity implements View.OnClickLi
                     try {
                         BaseResponseGeneric<TutorialCollectionsListModel> responseData = response.body();
                         if (response.isSuccessful()) {
-                            ArrayList<VlogsListingAndDetailResult> vlogList = convertCollectionModetToVideoModel(
+                            ArrayList<VlogsListingAndDetailResult> vlogList = convertCollectionModelToVideoModel(
                                     responseData.getData().getResult().getCollectionItems());
                             if (vlogList == null || vlogList.size() == 0 || vlogList.size() < PAGINATION_SIZE) {
                                 isLastPageReached = true;
                             }
-                            dataList = convertCollectionModetToVideoModel(
-                                    responseData.getData().getResult().getCollectionItems());
+                            dataList = vlogList;
 
                             if (dataList == null) {
                                 return;
@@ -320,13 +319,8 @@ public class ParallelFeedActivity extends BaseActivity implements View.OnClickLi
                             if (!fromLoadMore) {
                                 dataList.addAll(0, dataListHeader);
                                 finalList = dataList;
-                                finalList.add(new VlogsListingAndDetailResult(1));
-                                getChallenges();
                             } else {
                                 finalList.addAll(dataList);
-                                if (dataList.size() > 10) {
-                                    finalList.add(new VlogsListingAndDetailResult(1));
-                                }
                                 recyclerViewFeed.setVideoInfoList(ParallelFeedActivity.this, finalList);
                                 videoRecyclerViewAdapter.updateList(finalList);
                             }
@@ -347,11 +341,10 @@ public class ParallelFeedActivity extends BaseActivity implements View.OnClickLi
                 }
             };
 
-    private ArrayList<VlogsListingAndDetailResult> convertCollectionModetToVideoModel(
+    private ArrayList<VlogsListingAndDetailResult> convertCollectionModelToVideoModel(
             ArrayList<TutorialCollectionsModel> collectionItems) {
         ArrayList<VlogsListingAndDetailResult> arrayList = new ArrayList<>();
         for (int i = 0; i < collectionItems.size(); i++) {
-            VlogsListingAndDetailResult vlogsListingAndDetailResult = new VlogsListingAndDetailResult();
             arrayList.add(collectionItems.get(i).getItem_info());
         }
         return arrayList;

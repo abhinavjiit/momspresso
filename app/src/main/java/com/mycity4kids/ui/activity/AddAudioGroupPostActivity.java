@@ -134,10 +134,17 @@ public class AddAudioGroupPostActivity extends BaseActivity implements View.OnCl
         selectedGroup = getIntent().getParcelableExtra("groupItem");
 
         if (selectedGroup != null && selectedGroup.getAnnonAllowed() == 0) {
+            SharedPrefUtils.setUserAnonymous(BaseApplication.getAppContext(), false);
             anonymousCheckbox.setChecked(false);
-            anonymousCheckbox.setVisibility(View.GONE);
-            anonymousImageView.setVisibility(View.GONE);
-            anonymousTextView.setVisibility(View.GONE);
+            anonymousCheckbox.setVisibility(View.INVISIBLE);
+            anonymousImageView.setVisibility(View.INVISIBLE);
+            anonymousTextView.setVisibility(View.INVISIBLE);
+        } else {
+            if (SharedPrefUtils.isUserAnonymous(this)) {
+                anonymousCheckbox.setChecked(true);
+            } else {
+                anonymousCheckbox.setChecked(false);
+            }
         }
         firebaseAuth = FirebaseAuth.getInstance();
 
@@ -152,12 +159,6 @@ public class AddAudioGroupPostActivity extends BaseActivity implements View.OnCl
         anonymousCheckbox.setOnClickListener(this);
         publishTextView.setOnClickListener(this);
         closeEditorImageView.setOnClickListener(this);
-
-        if (SharedPrefUtils.isUserAnonymous(this)) {
-            anonymousCheckbox.setChecked(true);
-        } else {
-            anonymousCheckbox.setChecked(false);
-        }
     }
 
     @Override
@@ -374,9 +375,11 @@ public class AddAudioGroupPostActivity extends BaseActivity implements View.OnCl
         handler.postDelayed(new Runnable() {
             @Override
             public void run() {
-                anonymousCheckbox.setVisibility(View.VISIBLE);
-                anonymousImageView.setVisibility(View.VISIBLE);
-                anonymousTextView.setVisibility(View.VISIBLE);
+                if (selectedGroup != null && selectedGroup.getAnnonAllowed() != 0) {
+                    anonymousCheckbox.setVisibility(View.VISIBLE);
+                    anonymousImageView.setVisibility(View.VISIBLE);
+                    anonymousTextView.setVisibility(View.VISIBLE);
+                }
                 ViewGroup.LayoutParams params = audioRecordView.getLayoutParams();
                 params.width = ViewGroup.LayoutParams.WRAP_CONTENT;
                 audioRecordView.setLayoutParams(params);
@@ -393,9 +396,9 @@ public class AddAudioGroupPostActivity extends BaseActivity implements View.OnCl
         params.width = ViewGroup.LayoutParams.MATCH_PARENT;
         audioRecordView.setLayoutParams(params);
         mediaRecorder = new MediaRecorder();
-        anonymousCheckbox.setVisibility(View.GONE);
-        anonymousImageView.setVisibility(View.GONE);
-        anonymousTextView.setVisibility(View.GONE);
+        anonymousCheckbox.setVisibility(View.INVISIBLE);
+        anonymousImageView.setVisibility(View.INVISIBLE);
+        anonymousTextView.setVisibility(View.INVISIBLE);
         mediaRecorder.setAudioSource(MediaRecorder.AudioSource.MIC);
         mediaRecorder.setOutputFormat(MediaRecorder.OutputFormat.MPEG_4);
         mediaRecorder.setAudioEncoder(MediaRecorder.AudioEncoder.AAC);
@@ -420,9 +423,11 @@ public class AddAudioGroupPostActivity extends BaseActivity implements View.OnCl
                 mediaRecorder.release();
                 showProgressDialog(getString(R.string.please_wait));
                 mediaRecorder = null;
-                anonymousCheckbox.setVisibility(View.VISIBLE);
-                anonymousImageView.setVisibility(View.VISIBLE);
-                anonymousTextView.setVisibility(View.VISIBLE);
+                if (selectedGroup != null && selectedGroup.getAnnonAllowed() != 0) {
+                    anonymousCheckbox.setVisibility(View.VISIBLE);
+                    anonymousImageView.setVisibility(View.VISIBLE);
+                    anonymousTextView.setVisibility(View.VISIBLE);
+                }
                 ViewGroup.LayoutParams params = audioRecordView.getLayoutParams();
                 params.width = ViewGroup.LayoutParams.WRAP_CONTENT;
                 audioRecordView.setLayoutParams(params);
@@ -434,9 +439,11 @@ public class AddAudioGroupPostActivity extends BaseActivity implements View.OnCl
                     @Override
                     public void onAnimationEnd(Animation animation) {
                         new Handler().postDelayed(() -> {
-                            anonymousCheckbox.setVisibility(View.VISIBLE);
-                            anonymousImageView.setVisibility(View.VISIBLE);
-                            anonymousTextView.setVisibility(View.VISIBLE);
+                            if (selectedGroup != null && selectedGroup.getAnnonAllowed() != 0) {
+                                anonymousCheckbox.setVisibility(View.VISIBLE);
+                                anonymousImageView.setVisibility(View.VISIBLE);
+                                anonymousTextView.setVisibility(View.VISIBLE);
+                            }
                             ViewGroup.LayoutParams params1 = audioRecordView.getLayoutParams();
                             params1.width = ViewGroup.LayoutParams.WRAP_CONTENT;
                             audioRecordView.setLayoutParams(params1);

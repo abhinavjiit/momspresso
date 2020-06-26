@@ -505,41 +505,10 @@ public class GroupDetailsActivity extends BaseActivity implements View.OnClickLi
                     TabLayout.Tab tab = groupPostTabLayout.getTabAt(1);
                     tab.select();
                     try {
+                        if (justJoined) {
+                            showFirstTimeJoinerDialog();
+                        }
                         if (selectedGroup.getAnnonAllowed() != 0) {
-                            if (justJoined) {
-                                dialog = new Dialog(GroupDetailsActivity.this);
-                                dialog.getWindow().requestFeature(Window.FEATURE_NO_TITLE);
-                                dialog.setContentView(R.layout.dialog_group_yourself);
-                                dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
-                                dialog.show();
-
-                                justJoinedPostTextView = dialog.findViewById(R.id.post_edit);
-                                anonymousCheckbox = dialog.findViewById(R.id.anonymousCheckbox);
-
-                                if (SharedPrefUtils.isUserAnonymous(BaseApplication.getAppContext())) {
-                                    anonymousCheckbox.setChecked(true);
-                                } else {
-                                    anonymousCheckbox.setChecked(false);
-                                }
-
-                                anonymousCheckbox.setOnClickListener(view -> {
-                                    if (anonymousCheckbox.isChecked()) {
-                                        SharedPrefUtils.setUserAnonymous(BaseApplication.getAppContext(), true);
-                                    } else {
-                                        SharedPrefUtils.setUserAnonymous(BaseApplication.getAppContext(), false);
-                                    }
-
-                                });
-                                dialog.findViewById(R.id.cross).setOnClickListener(view -> dialog.dismiss());
-                                dialog.findViewById(R.id.postTextView).setOnClickListener(view -> {
-                                    if (!isRequestRunning && validateParams()) {
-                                        isRequestRunning = true;
-                                        publishPost();
-                                    }
-                                });
-
-                                dialog.show();
-                            }
                             Toast toast = Toast.makeText(GroupDetailsActivity.this,
                                     getResources().getString(R.string.group_detail_activity_toast_text),
                                     Toast.LENGTH_LONG);
@@ -565,6 +534,51 @@ public class GroupDetailsActivity extends BaseActivity implements View.OnClickLi
             Log.d("MC4kException", Log.getStackTraceString(t));
         }
     };
+
+    private void showFirstTimeJoinerDialog() {
+        dialog = new Dialog(GroupDetailsActivity.this);
+        dialog.getWindow().requestFeature(Window.FEATURE_NO_TITLE);
+        dialog.setContentView(R.layout.dialog_group_yourself);
+        dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+        dialog.show();
+
+        justJoinedPostTextView = dialog.findViewById(R.id.post_edit);
+        anonymousCheckbox = dialog.findViewById(R.id.anonymousCheckbox);
+        ImageView anonymousImageView = dialog.findViewById(R.id.anonymousImageView);
+        TextView anonymousTextView = dialog.findViewById(R.id.anonymousTextView);
+
+        if (selectedGroup.getAnnonAllowed() != 0) {
+            SharedPrefUtils.setUserAnonymous(BaseApplication.getAppContext(), false);
+            anonymousCheckbox.setChecked(false);
+            anonymousCheckbox.setVisibility(View.INVISIBLE);
+            anonymousImageView.setVisibility(View.INVISIBLE);
+            anonymousTextView.setVisibility(View.INVISIBLE);
+        } else {
+            if (SharedPrefUtils.isUserAnonymous(BaseApplication.getAppContext())) {
+                anonymousCheckbox.setChecked(true);
+            } else {
+                anonymousCheckbox.setChecked(false);
+            }
+        }
+
+        anonymousCheckbox.setOnClickListener(view -> {
+            if (anonymousCheckbox.isChecked()) {
+                SharedPrefUtils.setUserAnonymous(BaseApplication.getAppContext(), true);
+            } else {
+                SharedPrefUtils.setUserAnonymous(BaseApplication.getAppContext(), false);
+            }
+
+        });
+        dialog.findViewById(R.id.cross).setOnClickListener(view -> dialog.dismiss());
+        dialog.findViewById(R.id.postTextView).setOnClickListener(view -> {
+            if (!isRequestRunning && validateParams()) {
+                isRequestRunning = true;
+                publishPost();
+            }
+        });
+
+        dialog.show();
+    }
 
     private void getGroupPosts() {
         Retrofit retrofit = BaseApplication.getInstance().getGroupsRetrofit();

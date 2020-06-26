@@ -120,10 +120,17 @@ public class AddPollGroupPostActivity extends BaseActivity implements View.OnCli
         selectedGroup = getIntent().getParcelableExtra("groupItem");
 
         if (selectedGroup != null && selectedGroup.getAnnonAllowed() == 0) {
+            SharedPrefUtils.setUserAnonymous(BaseApplication.getAppContext(), false);
             anonymousCheckbox.setChecked(false);
-            anonymousCheckbox.setVisibility(View.GONE);
-            anonymousImageView.setVisibility(View.GONE);
-            anonymousTextView.setVisibility(View.GONE);
+            anonymousCheckbox.setVisibility(View.INVISIBLE);
+            anonymousImageView.setVisibility(View.INVISIBLE);
+            anonymousTextView.setVisibility(View.INVISIBLE);
+        } else {
+            if (SharedPrefUtils.isUserAnonymous(BaseApplication.getAppContext())) {
+                anonymousCheckbox.setChecked(true);
+            } else {
+                anonymousCheckbox.setChecked(false);
+            }
         }
 
         pollQuestionEditText
@@ -154,12 +161,6 @@ public class AddPollGroupPostActivity extends BaseActivity implements View.OnCli
         imagePollAdapter = new AddImagePollRecyclerGridAdapter(this, this);
         imagePollAdapter.setNewListData(urlList);
         recyclerGridView.setAdapter(imagePollAdapter);
-
-        if (SharedPrefUtils.isUserAnonymous(BaseApplication.getAppContext())) {
-            anonymousCheckbox.setChecked(true);
-        } else {
-            anonymousCheckbox.setChecked(false);
-        }
     }
 
     @Override
