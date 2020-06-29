@@ -122,6 +122,7 @@ public class ArticleCommentsRecyclerAdapter extends
             replyCountTextView.setOnClickListener(this);
             likeTextView.setOnClickListener(this);
             moreOptionImageView.setOnClickListener(this);
+            commentorImageView.setOnClickListener(this);
         }
 
         @Override

@@ -583,6 +583,11 @@ public class ShortStoryFragment extends BaseFragment implements View.OnClickList
     @Override
     public void onClick(View view, int position, View whatsappShare) {
         switch (view.getId()) {
+            case R.id.commentorImageView:
+                Intent intent = new Intent(getActivity(), UserProfileActivity.class);
+                intent.putExtra(Constants.USER_ID, consolidatedList.get(position).ssComment.getUserId());
+                startActivity(intent);
+                break;
             case R.id.likeTextView:
                 if (consolidatedList.get(position).getSsComment().getLiked()) {
                     consolidatedList.get(position).getSsComment().setLiked(false);
