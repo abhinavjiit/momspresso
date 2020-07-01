@@ -489,8 +489,6 @@ public class ShortStoryChallengeDetailActivity extends BaseActivity implements V
                 intent.putExtra(Constants.TITLE_SLUG, articleListingResults.get(position).getTitleSlug());
                 intent.putExtra(Constants.ARTICLE_OPENED_FROM, "" + parentName);
                 intent.putExtra(Constants.FROM_SCREEN, "TopicArticlesListingScreen");
-                intent.putExtra(Constants.ARTICLE_INDEX, "" + position);
-                intent.putParcelableArrayListExtra("pagerListData", articleListingResults);
                 intent.putExtra(Constants.AUTHOR,
                         articleListingResults.get(position).getUserId() + "~" + articleListingResults.get(position)
                                 .getUserName());

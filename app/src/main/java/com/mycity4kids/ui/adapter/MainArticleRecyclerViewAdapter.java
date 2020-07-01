@@ -41,7 +41,6 @@ import com.mycity4kids.models.response.VlogsListingResponse;
 import com.mycity4kids.preference.SharedPrefUtils;
 import com.mycity4kids.ui.GroupMembershipStatus;
 import com.mycity4kids.ui.activity.DashboardActivity;
-import com.mycity4kids.ui.activity.FilteredTopicsArticleListingActivity;
 import com.mycity4kids.ui.activity.GroupDetailsActivity;
 import com.mycity4kids.ui.activity.GroupsSummaryActivity;
 import com.mycity4kids.ui.fragment.GroupsViewFragment;
@@ -1401,12 +1400,6 @@ public class MainArticleRecyclerViewAdapter extends RecyclerView.Adapter<Recycle
                                 } else if (viewHolder instanceof JoinGroupViewHolder) {
                                     ((JoinGroupViewHolder) viewHolder).bookmarkArticleImageView.setImageDrawable(
                                             ContextCompat.getDrawable(mainContext, R.drawable.ic_bookmarked));
-                                }
-                                if (mainContext instanceof DashboardActivity) {
-                                    ((DashboardActivity) mainContext).showBookmarkConfirmationTooltip();
-                                } else if (mainContext instanceof FilteredTopicsArticleListingActivity) {
-                                    ((FilteredTopicsArticleListingActivity) mainContext)
-                                            .showBookmarkConfirmationTooltip();
                                 }
                             } else if ("unbookmarkArticle".equals(type)) {
                                 articleDataModelsNew.get(i).setIs_bookmark("0");

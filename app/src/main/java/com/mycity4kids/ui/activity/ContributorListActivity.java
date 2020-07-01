@@ -78,6 +78,7 @@ public class ContributorListActivity extends BaseActivity implements View.OnClic
     ArrayList<String> list;
     ArrayList<LanguageConfigModel> languageConfigModelArrayList;
     private String langKey = "0";
+    private boolean isSpinnerInitializationFinish = false;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -188,18 +189,13 @@ public class ContributorListActivity extends BaseActivity implements View.OnClic
             Log.d("MC4kException", Log.getStackTraceString(ffe));
         }
 
-        CustomSpinnerAdapter spinAdapter = new CustomSpinnerAdapter(
-                getApplicationContext(), list);
+        CustomSpinnerAdapter spinAdapter = new CustomSpinnerAdapter(getApplicationContext(), list);
         spinnerNav.setAdapter(spinAdapter);
         spinnerNav.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> adapter, View v,
                     int position, long id) {
-                if (position == 0) {
-                    floatingActionsMenu.setVisibility(View.VISIBLE);
-                } else {
-                    floatingActionsMenu.setVisibility(View.GONE);
-                }
+                floatingActionsMenu.setVisibility(View.GONE);
                 contributorArrayList.clear();
                 paginationValue = "";
                 sortType = 2;
@@ -212,23 +208,38 @@ public class ContributorListActivity extends BaseActivity implements View.OnClic
             public void onNothingSelected(AdapterView<?> arg0) {
             }
         });
-
-        new Handler().postDelayed(() -> {
-            if (AppConstants.LOCALE_ENGLISH.equals(SharedPrefUtils.getAppLocale(BaseApplication.getAppContext()))) {
-                spinnerNav.setSelection(0);
-            } else if (AppConstants.LOCALE_HINDI
-                    .equals(SharedPrefUtils.getAppLocale(BaseApplication.getAppContext()))) {
-                spinnerNav.setSelection(1);
-            } else if (AppConstants.LOCALE_MARATHI
-                    .equals(SharedPrefUtils.getAppLocale(BaseApplication.getAppContext()))) {
-                spinnerNav.setSelection(2);
-            } else if (AppConstants.LOCALE_BENGALI
-                    .equals(SharedPrefUtils.getAppLocale(BaseApplication.getAppContext()))) {
-                spinnerNav.setSelection(3);
-            } else {
-                spinnerNav.setSelection(0);
-            }
-        }, 1000);
+        if (AppConstants.LOCALE_ENGLISH.equals(SharedPrefUtils.getAppLocale(BaseApplication.getAppContext()))) {
+            spinnerNav.setSelection(0);
+        } else if (AppConstants.LOCALE_HINDI
+                .equals(SharedPrefUtils.getAppLocale(BaseApplication.getAppContext()))) {
+            spinnerNav.setSelection(1);
+        } else if (AppConstants.LOCALE_MARATHI
+                .equals(SharedPrefUtils.getAppLocale(BaseApplication.getAppContext()))) {
+            spinnerNav.setSelection(2);
+        } else if (AppConstants.LOCALE_BENGALI
+                .equals(SharedPrefUtils.getAppLocale(BaseApplication.getAppContext()))) {
+            spinnerNav.setSelection(3);
+        } else if (AppConstants.LOCALE_TAMIL
+                .equals(SharedPrefUtils.getAppLocale(BaseApplication.getAppContext()))) {
+            spinnerNav.setSelection(4);
+        } else if (AppConstants.LOCALE_TELUGU
+                .equals(SharedPrefUtils.getAppLocale(BaseApplication.getAppContext()))) {
+            spinnerNav.setSelection(5);
+        } else if (AppConstants.LOCALE_KANNADA
+                .equals(SharedPrefUtils.getAppLocale(BaseApplication.getAppContext()))) {
+            spinnerNav.setSelection(6);
+        } else if (AppConstants.LOCALE_MALAYALAM
+                .equals(SharedPrefUtils.getAppLocale(BaseApplication.getAppContext()))) {
+            spinnerNav.setSelection(7);
+        } else if (AppConstants.LOCALE_GUJARATI
+                .equals(SharedPrefUtils.getAppLocale(BaseApplication.getAppContext()))) {
+            spinnerNav.setSelection(8);
+        } else if (AppConstants.LOCALE_PUNJABI
+                .equals(SharedPrefUtils.getAppLocale(BaseApplication.getAppContext()))) {
+            spinnerNav.setSelection(9);
+        } else {
+            spinnerNav.setSelection(0);
+        }
     }
 
     public void hitBloggerApiRequest(int sortType, String type) {

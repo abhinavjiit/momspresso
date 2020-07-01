@@ -28,6 +28,7 @@ import android.provider.OpenableColumns;
 import android.provider.Settings;
 import android.telephony.TelephonyManager;
 import android.text.Html;
+import android.text.SpannableString;
 import android.text.Spanned;
 import android.text.TextUtils;
 import android.util.Base64;
@@ -339,11 +340,16 @@ public class AppUtils {
     @SuppressWarnings("deprecation")
     public static Spanned fromHtml(String html) {
         Spanned result;
-        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.N) {
-            result = Html.fromHtml(html, Html.FROM_HTML_MODE_LEGACY);
-        } else {
-            result = Html.fromHtml(html);
+        try {
+            if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.N) {
+                result = Html.fromHtml(html, Html.FROM_HTML_MODE_LEGACY);
+            } else {
+                result = Html.fromHtml(html);
+            }
+        } catch (Exception e) {
+            result = new SpannableString("");
         }
+
         return result;
     }
 

@@ -3,9 +3,7 @@ package com.mycity4kids.retrofitAPIsInterfaces;
 import com.mycity4kids.models.request.NotificationReadRequest;
 import com.mycity4kids.models.response.NotificationCenterListResponse;
 import com.mycity4kids.models.response.NotificationSettingsResponse;
-
 import java.util.HashMap;
-
 import retrofit2.Call;
 import retrofit2.http.Body;
 import retrofit2.http.GET;
@@ -24,10 +22,10 @@ public interface NotificationsAPI {
     @PUT("/v1/users/settings/notifications/")
     Call<NotificationSettingsResponse> updateNotificationSettings(@Body HashMap<String, String> body);
 
-    @GET("/v1/notifications/{userId}")
+    @GET("/v2/notifications/{userId}")
     Call<NotificationCenterListResponse> getNotificationCenterList(@Path("userId") String userId,
-                                                                   @Query("limit") int limit,
-                                                                   @Query("pagination") String pagination);
+            @Query("limit") int limit,
+            @Query("pagination") String pagination);
 
     @GET("/v1/notifications/centre/{userId}")
     Call<NotificationCenterListResponse> getUnreadNotificationCount(@Path("userId") String userId);

@@ -405,8 +405,6 @@ public class TopicsShortStoriesTabFragment extends BaseFragment implements View.
                 intent.putExtra(Constants.ARTICLE_OPENED_FROM,
                         "" + currentSubTopic.getParentName());
                 intent.putExtra(Constants.FROM_SCREEN, "TopicsShortStoryTabFragment");
-                intent.putExtra(Constants.ARTICLE_INDEX, "" + position);
-                intent.putParcelableArrayListExtra("pagerListData", articleListingResults);
                 intent.putExtra(Constants.AUTHOR,
                         articleListingResults.get(position).getUserId() + "~" + articleListingResults.get(position)
                                 .getUserName());

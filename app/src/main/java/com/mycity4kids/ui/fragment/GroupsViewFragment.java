@@ -1,25 +1,29 @@
 package com.mycity4kids.ui.fragment;
 
+import static android.app.Activity.RESULT_OK;
+
+
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import androidx.viewpager.widget.ViewPager;
 import com.google.android.material.tabs.TabLayout;
-import com.mycity4kids.base.BaseFragment;
 import com.mycity4kids.R;
+import com.mycity4kids.base.BaseFragment;
 import com.mycity4kids.ui.activity.GroupsListingActivity;
 import com.mycity4kids.utils.AppUtils;
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
-import androidx.viewpager.widget.ViewPager;
-import static android.app.Activity.RESULT_OK;
 
 public class GroupsViewFragment extends BaseFragment {
+
     private TabLayout tabLayout;
     private ViewPager viewPager;
     private com.getbase.floatingactionbutton.FloatingActionButton createFabButton;
+    private String selectedTab = "";
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -34,6 +38,9 @@ public class GroupsViewFragment extends BaseFragment {
             startActivityForResult(intent, 2000);
         });
 
+        if (getArguments() != null) {
+            selectedTab = getArguments().getString("selectedTab");
+        }
         tabLayout.addTab(tabLayout.newTab().setText(getString(R.string.groups_groups_myfeed)));
         tabLayout.addTab(tabLayout.newTab().setText(getString(R.string.groups_sections_myfeed)));
         tabLayout.addTab(tabLayout.newTab().setText(getString(R.string.groups_sections_polls)));
@@ -67,9 +74,15 @@ public class GroupsViewFragment extends BaseFragment {
             }
         });
 
-        GroupsViewFragmentPagerAdapter adapter = new GroupsViewFragmentPagerAdapter(getChildFragmentManager(), tabLayout.getTabCount());
+        GroupsViewFragmentPagerAdapter adapter = new GroupsViewFragmentPagerAdapter(getChildFragmentManager(),
+                tabLayout.getTabCount());
         viewPager.setAdapter(adapter);
-        viewPager.setCurrentItem(1);
+        if ("group_list".equals(selectedTab)) {
+            viewPager.setCurrentItem(0);
+        } else {
+            viewPager.setCurrentItem(1);
+        }
+
         return fragmentView;
     }
 
@@ -80,7 +93,8 @@ public class GroupsViewFragment extends BaseFragment {
         if (resultCode == RESULT_OK) {
             if (requestCode == 2000) {
 
-                GroupsViewFragmentPagerAdapter adapter = new GroupsViewFragmentPagerAdapter(getChildFragmentManager(), tabLayout.getTabCount());
+                GroupsViewFragmentPagerAdapter adapter = new GroupsViewFragmentPagerAdapter(getChildFragmentManager(),
+                        tabLayout.getTabCount());
                 viewPager.setAdapter(adapter);
                 viewPager.setCurrentItem(1);
 

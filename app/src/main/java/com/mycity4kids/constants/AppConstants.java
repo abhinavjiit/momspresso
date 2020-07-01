@@ -195,6 +195,7 @@ public class AppConstants {
     public static final String NOTIFICATION_CENTER_VIDEO_LISTING = "33";
     public static final String NOTIFICATION_CENTER_CONTENT_COMMENTS = "34";
     public static final String NOTIFICATION_CENTER_CONTENT_REPLY = "35";
+    public static final String NOTIFICATION_CENTER_CONTENT_LIKE = "36";
 
     public static final String VIDEO_STATUS_DRAFT = "0";
     public static final String VIDEO_STATUS_APPROVAL_PENDING = "1";
@@ -371,4 +372,14 @@ public class AppConstants {
     public static final String MOM_VLOG_TUTORIAL_COLLECTION = "5ec53266e0dfff57de575526";
     public static final String MOGI_ANALYTICS_ID = "5e1e0683238a2648efba8cc0";
     public static final String HOME_SELECTED_TAB = "homeSelectedTab";
+
+    public static final String NOTIFICATION_ACTION_TYPE = "notificationActionType";
+    public static final String NOTIFICATION_ACTION_SHARE_BADGE = "notificationActionShareBadge";
+    public static final String NOTIFICATION_ACTION_SHARE_MILESTONE = "notificationActionShareMilestone";
+    public static final String NOTIFICATION_ACTION_FOLLOW_AUTHOR = "notificationActionFollowAuthor";
+    public static final String NOTIFICATION_ACTION_VLOG_CHALLENGE = "notificationActionVlogChallenge";
+    public static final String NOTIFICATION_ACTION_STORY_CHALLENGE = "notificationActionStoryChallenge";
+
+    public static final String NOTIFICATION_CENTER_RECENT_HEADER = "recent";
+    public static final String NOTIFICATION_CENTER_EARLIER_HEADER = "earlier";
 }

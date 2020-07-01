@@ -23,7 +23,6 @@ import com.google.firebase.remoteconfig.FirebaseRemoteConfig;
 import com.mycity4kids.R;
 import com.mycity4kids.application.BaseApplication;
 import com.mycity4kids.base.BaseFragment;
-import com.mycity4kids.constants.AppConstants;
 import com.mycity4kids.constants.Constants;
 import com.mycity4kids.editor.EditorPostActivity;
 import com.mycity4kids.editor.NewEditor;
@@ -56,14 +55,16 @@ public class LeafTopicArticlesTabFragment extends BaseFragment implements View.O
     private boolean isReuqestRunning = false;
     private boolean isLastPageReached = false;
     private int sortType = 0;
-    private ArrayList<ArticleListingResult> mDatalist;
+    private ArrayList<ArticleListingResult> mdatalist;
     private Topics currentSubTopic;
     private Topics selectedTopic;
-    private int pastVisiblesItems, visibleItemCount, totalItemCount;
+    private int pastVisiblesItems;
+    private int visibleItemCount;
+    private int totalItemCount;
 
     private MainArticleRecyclerViewAdapter recyclerAdapter;
     private SwipeRefreshLayout swipeRefresh;
-    private RelativeLayout mLodingView;
+    private RelativeLayout loadingView;
     private FrameLayout frameLayout;
     private FloatingActionsMenu fabMenu;
     private FloatingActionButton popularSortFab;
@@ -80,7 +81,7 @@ public class LeafTopicArticlesTabFragment extends BaseFragment implements View.O
         View view = inflater.inflate(R.layout.topics_articles_tab_fragment, container, false);
         swipeRefresh = (SwipeRefreshLayout) view.findViewById(R.id.swipeRefresh);
         recyclerView = (RecyclerView) view.findViewById(R.id.recyclerView);
-        mLodingView = (RelativeLayout) view.findViewById(R.id.relativeLoadingView);
+        loadingView = (RelativeLayout) view.findViewById(R.id.relativeLoadingView);
         guideOverlay = (RelativeLayout) view.findViewById(R.id.guideOverlay);
         writeArticleCell = (RelativeLayout) view.findViewById(R.id.writeArticleCell);
 
@@ -97,6 +98,7 @@ public class LeafTopicArticlesTabFragment extends BaseFragment implements View.O
         fabSort.setVisibility(View.GONE);
         popularSortFab.setOnClickListener(this);
         recentSortFab.setOnClickListener(this);
+
         fabSort.setOnClickListener(v -> {
             if (fabMenu.isExpanded()) {
                 fabMenu.collapse();
@@ -106,13 +108,11 @@ public class LeafTopicArticlesTabFragment extends BaseFragment implements View.O
         });
 
         swipeRefresh.setOnRefreshListener(() -> {
-
-            mDatalist.clear();
+            mdatalist.clear();
             recyclerAdapter.notifyDataSetChanged();
             nextPageNumber = 1;
             hitFilteredTopicsArticleListingApi(sortType);
             swipeRefresh.setRefreshing(false);
-
         });
 
         fabMenu.setOnFloatingActionsMenuUpdateListener(new FloatingActionsMenu.OnFloatingActionsMenuUpdateListener() {
@@ -137,13 +137,13 @@ public class LeafTopicArticlesTabFragment extends BaseFragment implements View.O
             selectedTopic = currentSubTopic;
         }
 
-        mDatalist = new ArrayList<>();
+        mdatalist = new ArrayList<>();
         recyclerAdapter = new MainArticleRecyclerViewAdapter(getActivity(), this, false,
                 selectedTopic.getId() + "~" + selectedTopic.getDisplay_name(), false);
         final LinearLayoutManager llm = new LinearLayoutManager(getActivity());
         llm.setOrientation(RecyclerView.VERTICAL);
         recyclerView.setLayoutManager(llm);
-        recyclerAdapter.setNewListData(mDatalist);
+        recyclerAdapter.setNewListData(mdatalist);
         recyclerView.setAdapter(recyclerAdapter);
 
         recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
@@ -157,14 +157,14 @@ public class LeafTopicArticlesTabFragment extends BaseFragment implements View.O
                     if (!isReuqestRunning && !isLastPageReached) {
                         if ((visibleItemCount + pastVisiblesItems) >= totalItemCount) {
                             isReuqestRunning = true;
-                            mLodingView.setVisibility(View.VISIBLE);
+                            loadingView.setVisibility(View.VISIBLE);
                             hitFilteredTopicsArticleListingApi(sortType);
                         }
                     }
                 }
             }
         });
-
+        hitFilteredTopicsArticleListingApi(sortType);
         return view;
     }
 
@@ -175,10 +175,10 @@ public class LeafTopicArticlesTabFragment extends BaseFragment implements View.O
 
     private void hitFilteredTopicsArticleListingApi(int sortType) {
         Retrofit retrofit = BaseApplication.getInstance().getRetrofit();
-        TopicsCategoryAPI topicsAPI = retrofit.create(TopicsCategoryAPI.class);
+        TopicsCategoryAPI topicsApi = retrofit.create(TopicsCategoryAPI.class);
 
         int from = (nextPageNumber - 1) * limit + 1;
-        Call<ArticleListingResponse> filterCall = topicsAPI
+        Call<ArticleListingResponse> filterCall = topicsApi
                 .getArticlesForCategory(selectedTopic.getId(), sortType, from, from + limit - 1,
                         SharedPrefUtils.getLanguageFilters(BaseApplication.getAppContext()));
         filterCall.enqueue(articleListingResponseCallback);
@@ -188,8 +188,8 @@ public class LeafTopicArticlesTabFragment extends BaseFragment implements View.O
         @Override
         public void onResponse(Call<ArticleListingResponse> call, retrofit2.Response<ArticleListingResponse> response) {
             isReuqestRunning = false;
-            if (mLodingView.getVisibility() == View.VISIBLE) {
-                mLodingView.setVisibility(View.GONE);
+            if (loadingView.getVisibility() == View.VISIBLE) {
+                loadingView.setVisibility(View.GONE);
             }
             if (response.body() == null) {
                 return;
@@ -207,8 +207,8 @@ public class LeafTopicArticlesTabFragment extends BaseFragment implements View.O
 
         @Override
         public void onFailure(Call<ArticleListingResponse> call, Throwable t) {
-            if (mLodingView.getVisibility() == View.VISIBLE) {
-                mLodingView.setVisibility(View.GONE);
+            if (loadingView.getVisibility() == View.VISIBLE) {
+                loadingView.setVisibility(View.GONE);
             }
             FirebaseCrashlytics.getInstance().recordException(t);
             Log.d("MC4KException", Log.getStackTraceString(t));
@@ -219,24 +219,24 @@ public class LeafTopicArticlesTabFragment extends BaseFragment implements View.O
         ArrayList<ArticleListingResult> dataList = responseData.getData().get(0).getResult();
         if (dataList.size() == 0) {
             isLastPageReached = false;
-            if (null != mDatalist && !mDatalist.isEmpty()) {
+            if (null != mdatalist && !mdatalist.isEmpty()) {
                 //No more next results for search from pagination
                 isLastPageReached = true;
             } else {
                 // No results for search
                 writeArticleCell.setVisibility(View.VISIBLE);
-                mDatalist = dataList;
-                recyclerAdapter.setNewListData(mDatalist);
+                mdatalist = dataList;
+                recyclerAdapter.setNewListData(mdatalist);
                 recyclerAdapter.notifyDataSetChanged();
             }
         } else {
             writeArticleCell.setVisibility(View.GONE);
             if (nextPageNumber == 1) {
-                mDatalist = dataList;
+                mdatalist = dataList;
             } else {
-                mDatalist.addAll(dataList);
+                mdatalist.addAll(dataList);
             }
-            recyclerAdapter.setNewListData(mDatalist);
+            recyclerAdapter.setNewListData(mdatalist);
             nextPageNumber = nextPageNumber + 1;
             recyclerAdapter.notifyDataSetChanged();
         }
@@ -285,17 +285,19 @@ public class LeafTopicArticlesTabFragment extends BaseFragment implements View.O
                 break;
             case R.id.recentSortFAB:
                 fabMenu.collapse();
-                mDatalist.clear();
+                mdatalist.clear();
                 recyclerAdapter.notifyDataSetChanged();
                 sortType = 0;
                 nextPageNumber = 1;
                 break;
             case R.id.popularSortFAB:
                 fabMenu.collapse();
-                mDatalist.clear();
+                mdatalist.clear();
                 recyclerAdapter.notifyDataSetChanged();
                 sortType = 1;
                 nextPageNumber = 1;
+                break;
+            default:
                 break;
         }
     }
@@ -304,37 +306,27 @@ public class LeafTopicArticlesTabFragment extends BaseFragment implements View.O
     public void onRecyclerItemClick(View view, int position) {
         switch (view.getId()) {
             default:
-                if ("1".equals(mDatalist.get(position).getContentType())) {
+                if ("1".equals(mdatalist.get(position).getContentType())) {
                     Intent intent = new Intent(getActivity(), ShortStoryContainerActivity.class);
-                    intent.putExtra(Constants.ARTICLE_ID, mDatalist.get(position).getId());
-                    intent.putExtra(Constants.AUTHOR_ID, mDatalist.get(position).getUserId());
-                    intent.putExtra(Constants.BLOG_SLUG, mDatalist.get(position).getBlogPageSlug());
-                    intent.putExtra(Constants.TITLE_SLUG, mDatalist.get(position).getTitleSlug());
+                    intent.putExtra(Constants.ARTICLE_ID, mdatalist.get(position).getId());
+                    intent.putExtra(Constants.AUTHOR_ID, mdatalist.get(position).getUserId());
+                    intent.putExtra(Constants.BLOG_SLUG, mdatalist.get(position).getBlogPageSlug());
+                    intent.putExtra(Constants.TITLE_SLUG, mdatalist.get(position).getTitleSlug());
                     intent.putExtra(Constants.ARTICLE_OPENED_FROM, "" + currentSubTopic.getParentName());
                     intent.putExtra(Constants.FROM_SCREEN, "TopicArticlesListingScreen");
                     intent.putExtra(Constants.AUTHOR,
-                            mDatalist.get(position).getUserId() + "~" + mDatalist.get(position).getUserName());
-                    ArrayList<ArticleListingResult> filteredResult = AppUtils
-                            .getFilteredContentList(mDatalist, AppConstants.CONTENT_TYPE_SHORT_STORY);
-                    intent.putParcelableArrayListExtra("pagerListData", filteredResult);
-                    intent.putExtra(Constants.ARTICLE_INDEX, "" + AppUtils
-                            .getFilteredPosition(position, mDatalist, AppConstants.CONTENT_TYPE_SHORT_STORY));
+                            mdatalist.get(position).getUserId() + "~" + mdatalist.get(position).getUserName());
                     startActivity(intent);
                 } else {
                     Intent intent = new Intent(getActivity(), ArticleDetailsContainerActivity.class);
-                    intent.putExtra(Constants.ARTICLE_ID, mDatalist.get(position).getId());
-                    intent.putExtra(Constants.AUTHOR_ID, mDatalist.get(position).getUserId());
-                    intent.putExtra(Constants.BLOG_SLUG, mDatalist.get(position).getBlogPageSlug());
-                    intent.putExtra(Constants.TITLE_SLUG, mDatalist.get(position).getTitleSlug());
+                    intent.putExtra(Constants.ARTICLE_ID, mdatalist.get(position).getId());
+                    intent.putExtra(Constants.AUTHOR_ID, mdatalist.get(position).getUserId());
+                    intent.putExtra(Constants.BLOG_SLUG, mdatalist.get(position).getBlogPageSlug());
+                    intent.putExtra(Constants.TITLE_SLUG, mdatalist.get(position).getTitleSlug());
                     intent.putExtra(Constants.ARTICLE_OPENED_FROM, "" + currentSubTopic.getParentName());
                     intent.putExtra(Constants.FROM_SCREEN, "TopicArticlesListingScreen");
                     intent.putExtra(Constants.AUTHOR,
-                            mDatalist.get(position).getUserId() + "~" + mDatalist.get(position).getUserName());
-                    ArrayList<ArticleListingResult> filteredResult = AppUtils
-                            .getFilteredContentList(mDatalist, AppConstants.CONTENT_TYPE_ARTICLE);
-                    intent.putParcelableArrayListExtra("pagerListData", filteredResult);
-                    intent.putExtra(Constants.ARTICLE_INDEX,
-                            "" + AppUtils.getFilteredPosition(position, mDatalist, AppConstants.CONTENT_TYPE_ARTICLE));
+                            mdatalist.get(position).getUserId() + "~" + mdatalist.get(position).getUserName());
                     startActivity(intent);
                 }
                 break;
@@ -348,7 +340,7 @@ public class LeafTopicArticlesTabFragment extends BaseFragment implements View.O
             dialog.setContentView(R.layout.dialog_sort_by);
             dialog.setCancelable(true);
             dialog.findViewById(R.id.linearSortByPopular).setOnClickListener(view -> {
-                mDatalist.clear();
+                mdatalist.clear();
                 recyclerAdapter.notifyDataSetChanged();
                 sortType = 1;
                 nextPageNumber = 1;
@@ -357,7 +349,7 @@ public class LeafTopicArticlesTabFragment extends BaseFragment implements View.O
             });
 
             dialog.findViewById(R.id.linearSortByRecent).setOnClickListener(view -> {
-                mDatalist.clear();
+                mdatalist.clear();
                 recyclerAdapter.notifyDataSetChanged();
                 sortType = 0;
                 nextPageNumber = 1;

@@ -69,10 +69,10 @@ import io.reactivex.Observer
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable
 import io.reactivex.schedulers.Schedulers
-import org.apmem.tools.layouts.FlowLayout
 import java.util.ArrayList
 import java.util.Calendar
 import java.util.Collections
+import org.apmem.tools.layouts.FlowLayout
 
 const val VERIFY_NUMBER_ACCOUNTKIT_REQUEST_CODE = 1000
 const val REQUEST_SELECT_PLACE = 2000

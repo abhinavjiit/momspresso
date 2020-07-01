@@ -17,7 +17,6 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 import androidx.annotation.Nullable;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -28,32 +27,23 @@ import com.getbase.floatingactionbutton.FloatingActionsMenu;
 import com.google.firebase.crashlytics.FirebaseCrashlytics;
 import com.google.firebase.remoteconfig.FirebaseRemoteConfig;
 import com.google.gson.Gson;
-import com.mycity4kids.BuildConfig;
 import com.mycity4kids.R;
 import com.mycity4kids.application.BaseApplication;
 import com.mycity4kids.base.BaseFragment;
-import com.mycity4kids.constants.AppConstants;
 import com.mycity4kids.constants.Constants;
-import com.mycity4kids.editor.EditorPostActivity;
 import com.mycity4kids.editor.NewEditor;
 import com.mycity4kids.models.Topics;
 import com.mycity4kids.models.response.ArticleListingResponse;
 import com.mycity4kids.models.response.ArticleListingResult;
-import com.mycity4kids.models.response.GroupsMembershipResponse;
 import com.mycity4kids.preference.SharedPrefUtils;
 import com.mycity4kids.retrofitAPIsInterfaces.TopicsCategoryAPI;
-import com.mycity4kids.ui.GroupMembershipStatus;
 import com.mycity4kids.ui.activity.ArticleDetailsContainerActivity;
-import com.mycity4kids.ui.activity.GroupDetailsActivity;
-import com.mycity4kids.ui.activity.GroupsSummaryActivity;
 import com.mycity4kids.ui.activity.LeafNodeTopicArticlesActivity;
 import com.mycity4kids.ui.activity.ShortStoryContainerActivity;
 import com.mycity4kids.ui.activity.TopicsListingActivity;
 import com.mycity4kids.ui.adapter.MainArticleRecyclerViewAdapter;
 import com.mycity4kids.utils.AppUtils;
 import com.mycity4kids.utils.ConnectivityUtils;
-import com.mycity4kids.utils.GroupIdCategoryMap;
-import com.mycity4kids.utils.StringUtils;
 import com.mycity4kids.utils.ToastUtils;
 import java.util.ArrayList;
 import org.apmem.tools.layouts.FlowLayout;
@@ -65,21 +55,16 @@ import retrofit2.Retrofit;
  * Created by hemant on 29/5/17.
  */
 public class TopicsArticlesTabFragment extends BaseFragment implements View.OnClickListener,
-        MainArticleRecyclerViewAdapter.RecyclerViewClickListener, GroupIdCategoryMap.GroupCategoryInterface,
-        GroupMembershipStatus.IMembershipStatus {
+        MainArticleRecyclerViewAdapter.RecyclerViewClickListener {
 
     private static final String EDITOR_TYPE = "editor_type";
     private FirebaseRemoteConfig firebaseRemoteConfig = FirebaseRemoteConfig.getInstance();
-    private int groupId;
-    private String gpsubHeading;
-    private String gpHeading;
-    private String gpImageUrl;
     private int nextPageNumber = 1;
     private int limit = 15;
     private boolean isReuqestRunning = false;
     private boolean isLastPageReached = false;
     private int sortType = 0;
-    private ArrayList<ArticleListingResult> mDatalist;
+    private ArrayList<ArticleListingResult> articleListingResults;
     private Topics currentSubTopic;
     private Topics selectedTopic;
     private boolean isHeaderVisible = false;
@@ -157,7 +142,7 @@ public class TopicsArticlesTabFragment extends BaseFragment implements View.OnCl
             }
         });
         swipeRefreshLayout.setOnRefreshListener(() -> {
-            mDatalist.clear();
+            articleListingResults.clear();
             recyclerAdapter.notifyDataSetChanged();
             nextPageNumber = 1;
             hitFilteredTopicsArticleListingApi(sortType);
@@ -171,13 +156,13 @@ public class TopicsArticlesTabFragment extends BaseFragment implements View.OnCl
         currentSubTopic = new Gson().fromJson(jsonMyObject, Topics.class);
         selectedTopic = currentSubTopic;
 
-        mDatalist = new ArrayList<>();
+        articleListingResults = new ArrayList<>();
         recyclerAdapter = new MainArticleRecyclerViewAdapter(getActivity(), this, false,
                 selectedTopic.getId() + "~" + selectedTopic.getDisplay_name(), false);
         final LinearLayoutManager llm = new LinearLayoutManager(getActivity());
         llm.setOrientation(RecyclerView.VERTICAL);
         recyclerView.setLayoutManager(llm);
-        recyclerAdapter.setNewListData(mDatalist);
+        recyclerAdapter.setNewListData(articleListingResults);
         recyclerView.setAdapter(recyclerAdapter);
         DisplayMetrics displayMetrics = new DisplayMetrics();
         ((Activity) getContext()).getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
@@ -209,23 +194,22 @@ public class TopicsArticlesTabFragment extends BaseFragment implements View.OnCl
             allCatTextView.setText(allCategoryLabel);
             allCatTextView.measure(0, 0);
             allSubsubLL.setTag(currentSubTopic);
-            width = width - allCatTextView.getMeasuredWidth() - allSubsubLL.getPaddingLeft() - allSubsubLL
-                    .getPaddingRight();
+            width = width - allCatTextView.getMeasuredWidth() - allSubsubLL.getPaddingStart() - allSubsubLL
+                    .getPaddingEnd();
             if (width < 0) {
                 lineCount++;
-                width = displayMetrics.widthPixels - allCatTextView.getMeasuredWidth() - allSubsubLL.getPaddingLeft()
-                        - allSubsubLL.getPaddingRight();
+                width = displayMetrics.widthPixels - allCatTextView.getMeasuredWidth() - allSubsubLL.getPaddingStart()
+                        - allSubsubLL.getPaddingEnd();
                 if (lineCount == 1) {
-                    width = width - AppUtils.dpTopx(50) - expandImageView.getPaddingLeft() - expandImageView
-                            .getPaddingRight();
+                    width = width - AppUtils.dpTopx(50) - expandImageView.getPaddingStart() - expandImageView
+                            .getPaddingEnd();
                 }
             }
 
             if (lineCount == 2) {
                 lineCount++;
-                FlowLayout.LayoutParams layoutParams
-                        = new FlowLayout.LayoutParams
-                        (FlowLayout.LayoutParams.WRAP_CONTENT, FlowLayout.LayoutParams.WRAP_CONTENT);
+                FlowLayout.LayoutParams layoutParams = new FlowLayout.LayoutParams(FlowLayout.LayoutParams.WRAP_CONTENT,
+                        FlowLayout.LayoutParams.WRAP_CONTENT);
                 layoutParams.setNewLine(true);
                 allSubsubLL.setLayoutParams(layoutParams);
                 expandImageView.setVisibility(View.VISIBLE);
@@ -234,9 +218,8 @@ public class TopicsArticlesTabFragment extends BaseFragment implements View.OnCl
                     ((TopicsListingActivity) getActivity()).showGuideTopLayer();
                 }
             } else {
-                FlowLayout.LayoutParams layoutParams
-                        = new FlowLayout.LayoutParams
-                        (FlowLayout.LayoutParams.WRAP_CONTENT, FlowLayout.LayoutParams.WRAP_CONTENT);
+                FlowLayout.LayoutParams layoutParams = new FlowLayout.LayoutParams(FlowLayout.LayoutParams.WRAP_CONTENT,
+                        FlowLayout.LayoutParams.WRAP_CONTENT);
                 layoutParams.setNewLine(false);
                 allSubsubLL.setLayoutParams(layoutParams);
             }
@@ -254,22 +237,21 @@ public class TopicsArticlesTabFragment extends BaseFragment implements View.OnCl
                 catTextView.setText(currentSubTopic.getChild().get(i).getDisplay_name().toUpperCase());
                 catTextView.measure(0, 0);
                 subsubLL.setTag(currentSubTopic.getChild().get(i));
-                width = width - catTextView.getMeasuredWidth() - subsubLL.getPaddingLeft() - subsubLL.getPaddingRight();
+                width = width - catTextView.getMeasuredWidth() - subsubLL.getPaddingStart() - subsubLL.getPaddingEnd();
                 if (width < 0) {
                     lineCount++;
-                    width = displayMetrics.widthPixels - catTextView.getMeasuredWidth() - subsubLL.getPaddingLeft()
-                            - subsubLL.getPaddingRight();
+                    width = displayMetrics.widthPixels - catTextView.getMeasuredWidth() - subsubLL.getPaddingStart()
+                            - subsubLL.getPaddingEnd();
                     if (lineCount == 1) {
-                        width = width - AppUtils.dpTopx(50) - expandImageView.getPaddingLeft() - expandImageView
-                                .getPaddingRight();
+                        width = width - AppUtils.dpTopx(50) - expandImageView.getPaddingStart() - expandImageView
+                                .getPaddingEnd();
                     }
                 }
 
                 if (lineCount == 2) {
                     lineCount++;
-                    FlowLayout.LayoutParams layoutParams
-                            = new FlowLayout.LayoutParams
-                            (FlowLayout.LayoutParams.WRAP_CONTENT, FlowLayout.LayoutParams.WRAP_CONTENT);
+                    FlowLayout.LayoutParams layoutParams = new FlowLayout.LayoutParams(
+                            FlowLayout.LayoutParams.WRAP_CONTENT, FlowLayout.LayoutParams.WRAP_CONTENT);
                     layoutParams.setNewLine(true);
                     subsubLL.setLayoutParams(layoutParams);
                     expandImageView.setVisibility(View.VISIBLE);
@@ -278,9 +260,8 @@ public class TopicsArticlesTabFragment extends BaseFragment implements View.OnCl
                         ((TopicsListingActivity) getActivity()).showGuideTopLayer();
                     }
                 } else {
-                    FlowLayout.LayoutParams layoutParams
-                            = new FlowLayout.LayoutParams
-                            (FlowLayout.LayoutParams.WRAP_CONTENT, FlowLayout.LayoutParams.WRAP_CONTENT);
+                    FlowLayout.LayoutParams layoutParams = new FlowLayout.LayoutParams(
+                            FlowLayout.LayoutParams.WRAP_CONTENT, FlowLayout.LayoutParams.WRAP_CONTENT);
                     layoutParams.setNewLine(false);
                     subsubLL.setLayoutParams(layoutParams);
                 }
@@ -309,7 +290,7 @@ public class TopicsArticlesTabFragment extends BaseFragment implements View.OnCl
                 Log.d("MC4KException", Log.getStackTraceString(e));
             }
         }
-        getGroupIdForCurrentCategory();
+        hitFilteredTopicsArticleListingApi(sortType);
 
         recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
@@ -351,22 +332,6 @@ public class TopicsArticlesTabFragment extends BaseFragment implements View.OnCl
         startActivity(intent);
     }
 
-    private void getGroupIdForCurrentCategory() {
-        GroupIdCategoryMap groupIdCategoryMap = new GroupIdCategoryMap(selectedTopic.getId(), this, "listing");
-        groupIdCategoryMap.getGroupIdForCurrentCategory();
-    }
-
-    @Override
-    public void onGroupMappingResult(int groupId, String gpHeading, String gpsubHeading, String gpImageUrl) {
-        this.groupId = groupId;
-        this.gpHeading = gpHeading;
-        this.gpsubHeading = gpsubHeading;
-        this.gpImageUrl = gpImageUrl;
-        recyclerAdapter.setGroupInfo(groupId, gpHeading, gpsubHeading, gpImageUrl);
-        recyclerAdapter.notifyDataSetChanged();
-        hitFilteredTopicsArticleListingApi(sortType);
-    }
-
     @Override
     public void onResume() {
         super.onResume();
@@ -381,10 +346,10 @@ public class TopicsArticlesTabFragment extends BaseFragment implements View.OnCl
             }
 
             Retrofit retrofit = BaseApplication.getInstance().getRetrofit();
-            TopicsCategoryAPI topicsAPI = retrofit.create(TopicsCategoryAPI.class);
+            TopicsCategoryAPI topicsApi = retrofit.create(TopicsCategoryAPI.class);
 
             int from = (nextPageNumber - 1) * limit + 1;
-            Call<ArticleListingResponse> filterCall = topicsAPI
+            Call<ArticleListingResponse> filterCall = topicsApi
                     .getArticlesForCategory(selectedTopic.getId(), sortType, from, from + limit - 1,
                             SharedPrefUtils.getLanguageFilters(BaseApplication.getAppContext()));
             filterCall.enqueue(articleListingResponseCallback);
@@ -430,24 +395,24 @@ public class TopicsArticlesTabFragment extends BaseFragment implements View.OnCl
 
         if (dataList.size() == 0) {
             isLastPageReached = false;
-            if (null != mDatalist && !mDatalist.isEmpty()) {
+            if (null != articleListingResults && !articleListingResults.isEmpty()) {
                 //No more next results for search from pagination
                 isLastPageReached = true;
             } else {
                 // No results for search
                 writeArticleCell.setVisibility(View.VISIBLE);
-                mDatalist = dataList;
-                recyclerAdapter.setNewListData(mDatalist);
+                articleListingResults = dataList;
+                recyclerAdapter.setNewListData(articleListingResults);
                 recyclerAdapter.notifyDataSetChanged();
             }
         } else {
             writeArticleCell.setVisibility(View.GONE);
             if (nextPageNumber == 1) {
-                mDatalist = dataList;
+                articleListingResults = dataList;
             } else {
-                mDatalist.addAll(dataList);
+                articleListingResults.addAll(dataList);
             }
-            recyclerAdapter.setNewListData(mDatalist);
+            recyclerAdapter.setNewListData(articleListingResults);
             nextPageNumber = nextPageNumber + 1;
             recyclerAdapter.notifyDataSetChanged();
         }
@@ -467,35 +432,18 @@ public class TopicsArticlesTabFragment extends BaseFragment implements View.OnCl
         switch (view.getId()) {
             case R.id.writeArticleCell:
                 if (isAdded()) {
-                    String editorType = firebaseRemoteConfig.getString(EDITOR_TYPE);
-                    if ((!StringUtils.isNullOrEmpty(editorType) && "1".equals(editorType)) || AppUtils
-                            .isUserBucketedInNewEditor(firebaseRemoteConfig)) {
-                        Intent intent1 = new Intent(getActivity(), NewEditor.class);
-                        Bundle bundle5 = new Bundle();
-                        bundle5.putString("TITLE_PARAM", "");
-                        bundle5.putString("CONTENT_PARAM", "");
-                        bundle5.putString("TITLE_PLACEHOLDER_PARAM",
-                                getString(R.string.example_post_title_placeholder));
-                        bundle5.putString("CONTENT_PLACEHOLDER_PARAM",
-                                getString(R.string.example_post_content_placeholder));
-                        bundle5.putInt("EDITOR_PARAM", NewEditor.USE_NEW_EDITOR);
-                        bundle5.putString("from", "TopicArticlesListingScreen");
-                        intent1.putExtras(bundle5);
-                        startActivity(intent1);
-                    } else {
-                        Intent intent1 = new Intent(getActivity(), EditorPostActivity.class);
-                        Bundle bundle5 = new Bundle();
-                        bundle5.putString(EditorPostActivity.TITLE_PARAM, "");
-                        bundle5.putString(EditorPostActivity.CONTENT_PARAM, "");
-                        bundle5.putString(EditorPostActivity.TITLE_PLACEHOLDER_PARAM,
-                                getString(R.string.example_post_title_placeholder));
-                        bundle5.putString(EditorPostActivity.CONTENT_PLACEHOLDER_PARAM,
-                                getString(R.string.example_post_content_placeholder));
-                        bundle5.putInt(EditorPostActivity.EDITOR_PARAM, EditorPostActivity.USE_NEW_EDITOR);
-                        bundle5.putString("from", "TopicArticlesListingScreen");
-                        intent1.putExtras(bundle5);
-                        startActivity(intent1);
-                    }
+                    Bundle bundle5 = new Bundle();
+                    bundle5.putString("TITLE_PARAM", "");
+                    bundle5.putString("CONTENT_PARAM", "");
+                    bundle5.putString("TITLE_PLACEHOLDER_PARAM",
+                            getString(R.string.example_post_title_placeholder));
+                    bundle5.putString("CONTENT_PLACEHOLDER_PARAM",
+                            getString(R.string.example_post_content_placeholder));
+                    bundle5.putInt("EDITOR_PARAM", NewEditor.USE_NEW_EDITOR);
+                    bundle5.putString("from", "TopicArticlesListingScreen");
+                    Intent intent1 = new Intent(getActivity(), NewEditor.class);
+                    intent1.putExtras(bundle5);
+                    startActivity(intent1);
                 }
                 break;
             case R.id.guideOverlay:
@@ -507,21 +455,23 @@ public class TopicsArticlesTabFragment extends BaseFragment implements View.OnCl
                 shimmerFrameLayout.startShimmerAnimation();
                 shimmerFrameLayout.setVisibility(View.VISIBLE);
                 fabMenu.collapse();
-                mDatalist.clear();
+                articleListingResults.clear();
                 recyclerAdapter.notifyDataSetChanged();
                 sortType = 0;
                 nextPageNumber = 1;
-                getGroupIdForCurrentCategory();
+                hitFilteredTopicsArticleListingApi(sortType);
                 break;
             case R.id.popularSortFAB:
                 shimmerFrameLayout.startShimmerAnimation();
                 shimmerFrameLayout.setVisibility(View.VISIBLE);
                 fabMenu.collapse();
-                mDatalist.clear();
+                articleListingResults.clear();
                 recyclerAdapter.notifyDataSetChanged();
                 sortType = 1;
                 nextPageNumber = 1;
-                getGroupIdForCurrentCategory();
+                hitFilteredTopicsArticleListingApi(sortType);
+                break;
+            default:
                 break;
         }
     }
@@ -530,125 +480,58 @@ public class TopicsArticlesTabFragment extends BaseFragment implements View.OnCl
         shimmerFrameLayout.startShimmerAnimation();
         shimmerFrameLayout.setVisibility(View.VISIBLE);
         fabMenu.collapse();
-        mDatalist.clear();
+        articleListingResults.clear();
         recyclerAdapter.notifyDataSetChanged();
         sortType = 0;
         nextPageNumber = 1;
-        getGroupIdForCurrentCategory();
+        hitFilteredTopicsArticleListingApi(sortType);
     }
 
     private void hitArticleListingSortByPopular() {
         shimmerFrameLayout.startShimmerAnimation();
         shimmerFrameLayout.setVisibility(View.VISIBLE);
         fabMenu.collapse();
-        mDatalist.clear();
+        articleListingResults.clear();
         recyclerAdapter.notifyDataSetChanged();
         sortType = 1;
         nextPageNumber = 1;
-        getGroupIdForCurrentCategory();
+        hitFilteredTopicsArticleListingApi(sortType);
     }
 
     @Override
     public void onRecyclerItemClick(View view, int position) {
         switch (view.getId()) {
             default:
-                if ("1".equals(mDatalist.get(position).getContentType())) {
+                if ("1".equals(articleListingResults.get(position).getContentType())) {
                     Intent intent = new Intent(getActivity(), ShortStoryContainerActivity.class);
-                    intent.putExtra(Constants.ARTICLE_ID, mDatalist.get(position).getId());
-                    intent.putExtra(Constants.AUTHOR_ID, mDatalist.get(position).getUserId());
-                    intent.putExtra(Constants.BLOG_SLUG, mDatalist.get(position).getBlogPageSlug());
-                    intent.putExtra(Constants.TITLE_SLUG, mDatalist.get(position).getTitleSlug());
+                    intent.putExtra(Constants.ARTICLE_ID, articleListingResults.get(position).getId());
+                    intent.putExtra(Constants.AUTHOR_ID, articleListingResults.get(position).getUserId());
+                    intent.putExtra(Constants.BLOG_SLUG, articleListingResults.get(position).getBlogPageSlug());
+                    intent.putExtra(Constants.TITLE_SLUG, articleListingResults.get(position).getTitleSlug());
                     intent.putExtra(Constants.ARTICLE_OPENED_FROM, "" + currentSubTopic.getParentName());
                     intent.putExtra(Constants.FROM_SCREEN, "TopicArticlesListingScreen");
                     intent.putExtra(Constants.AUTHOR,
-                            mDatalist.get(position).getUserId() + "~" + mDatalist.get(position).getUserName());
-
-                    ArrayList<ArticleListingResult> filteredResult = AppUtils
-                            .getFilteredContentList(mDatalist, AppConstants.CONTENT_TYPE_SHORT_STORY);
-                    intent.putParcelableArrayListExtra("pagerListData", filteredResult);
-                    intent.putExtra(Constants.ARTICLE_INDEX, "" + AppUtils
-                            .getFilteredPosition(position, mDatalist, AppConstants.CONTENT_TYPE_SHORT_STORY));
+                            articleListingResults.get(position).getUserId() + "~" + articleListingResults.get(position)
+                                    .getUserName());
                     startActivity(intent);
                 } else {
                     Intent intent = new Intent(getActivity(), ArticleDetailsContainerActivity.class);
-                    intent.putExtra(Constants.ARTICLE_ID, mDatalist.get(position).getId());
-                    intent.putExtra(Constants.AUTHOR_ID, mDatalist.get(position).getUserId());
-                    intent.putExtra(Constants.BLOG_SLUG, mDatalist.get(position).getBlogPageSlug());
-                    intent.putExtra(Constants.TITLE_SLUG, mDatalist.get(position).getTitleSlug());
+                    intent.putExtra(Constants.ARTICLE_ID, articleListingResults.get(position).getId());
+                    intent.putExtra(Constants.AUTHOR_ID, articleListingResults.get(position).getUserId());
+                    intent.putExtra(Constants.BLOG_SLUG, articleListingResults.get(position).getBlogPageSlug());
+                    intent.putExtra(Constants.TITLE_SLUG, articleListingResults.get(position).getTitleSlug());
                     intent.putExtra(Constants.ARTICLE_OPENED_FROM, "" + currentSubTopic.getParentName());
                     intent.putExtra("id", selectedTopic.getId());
                     intent.putExtra(Constants.FROM_SCREEN, "TopicArticlesListingScreen");
                     intent.putExtra(Constants.AUTHOR,
-                            mDatalist.get(position).getUserId() + "~" + mDatalist.get(position).getUserName());
-
-                    ArrayList<ArticleListingResult> filteredResult = AppUtils
-                            .getFilteredContentList(mDatalist, AppConstants.CONTENT_TYPE_ARTICLE);
-                    intent.putParcelableArrayListExtra("pagerListData", filteredResult);
-                    intent.putExtra(Constants.ARTICLE_INDEX,
-                            "" + AppUtils.getFilteredPosition(position, mDatalist, AppConstants.CONTENT_TYPE_ARTICLE));
+                            articleListingResults.get(position).getUserId() + "~" + articleListingResults.get(position)
+                                    .getUserName());
                     startActivity(intent);
                 }
                 break;
         }
     }
 
-    @Override
-    public void onMembershipStatusFetchSuccess(GroupsMembershipResponse body, int groupId) {
-        String userType = null;
-        if (isAdded()) {
-            if (body.getData().getResult() != null && !body.getData().getResult().isEmpty()) {
-                if (body.getData().getResult().get(0).getIsAdmin() == 1) {
-                    userType = AppConstants.GROUP_MEMBER_TYPE_ADMIN;
-                } else if (body.getData().getResult().get(0).getIsModerator() == 1) {
-                    userType = AppConstants.GROUP_MEMBER_TYPE_MODERATOR;
-                }
-            }
-
-            if (!AppConstants.GROUP_MEMBER_TYPE_MODERATOR.equals(userType) && !AppConstants.GROUP_MEMBER_TYPE_ADMIN
-                    .equals(userType)) {
-                if ("male".equalsIgnoreCase(
-                        SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getGender()) ||
-                        "m".equalsIgnoreCase(
-                                SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getGender())) {
-                    if (isAdded()) {
-                        Toast.makeText(getActivity(), getString(R.string.women_only), Toast.LENGTH_SHORT).show();
-                    }
-                    if (!BuildConfig.DEBUG && !AppConstants.DEBUGGING_USER_ID.contains(
-                            SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId())) {
-                        return;
-                    }
-                }
-            }
-
-            if (body.getData().getResult() == null || body.getData().getResult().isEmpty()) {
-                Intent intent = new Intent(getActivity(), GroupsSummaryActivity.class);
-                intent.putExtra("groupId", groupId);
-                intent.putExtra(AppConstants.GROUP_MEMBER_TYPE, userType);
-                startActivity(intent);
-            } else if (AppConstants.GROUP_MEMBERSHIP_STATUS_BLOCKED
-                    .equals(body.getData().getResult().get(0).getStatus())) {
-                Toast.makeText(getActivity(), getString(R.string.groups_user_blocked_msg), Toast.LENGTH_SHORT).show();
-            } else if (AppConstants.GROUP_MEMBERSHIP_STATUS_MEMBER
-                    .equals(body.getData().getResult().get(0).getStatus())) {
-                Intent intent = new Intent(getActivity(), GroupDetailsActivity.class);
-                intent.putExtra("groupId", groupId);
-                intent.putExtra(AppConstants.GROUP_MEMBER_TYPE, userType);
-                startActivity(intent);
-            } else if (AppConstants.GROUP_MEMBERSHIP_STATUS_PENDING_MODERATION
-                    .equals(body.getData().getResult().get(0).getStatus())) {
-                Intent intent = new Intent(getActivity(), GroupsSummaryActivity.class);
-                intent.putExtra("groupId", groupId);
-                intent.putExtra("pendingMembershipFlag", true);
-                intent.putExtra(AppConstants.GROUP_MEMBER_TYPE, userType);
-                startActivity(intent);
-            } else {
-                Intent intent = new Intent(getActivity(), GroupsSummaryActivity.class);
-                intent.putExtra("groupId", groupId);
-                intent.putExtra(AppConstants.GROUP_MEMBER_TYPE, userType);
-                startActivity(intent);
-            }
-        }
-    }
 
     public void showSortedByDialog() {
         if (getActivity() != null) {
@@ -670,11 +553,6 @@ public class TopicsArticlesTabFragment extends BaseFragment implements View.OnCl
             dialog.findViewById(R.id.textUpdate).setOnClickListener(view -> dialog.dismiss());
             dialog.show();
         }
-    }
-
-    @Override
-    public void onMembershipStatusFetchFail() {
-
     }
 
     @Override

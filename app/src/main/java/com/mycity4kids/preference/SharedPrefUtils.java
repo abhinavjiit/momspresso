@@ -80,6 +80,7 @@ public class SharedPrefUtils {
     private static final String ANONYMOUS_FLAG = "anonymousFlag";
 
     private static final String NOTIFICATION_CENTER_FLAG = "notificationCenterFlag";
+    private static final String NOTIFICATION_CENTER_VISIT_TIMESTAMP = "notificationCenterVisitTimestamp";
     private static final String FOLLOW_TOPIC_APPROACH_FLAG = "followTopicApproachFlag";
     private static final String LAST_LOGIN_TIMESTAMP = "lastLoginTimestamp";
     private static final String USER_SKIPPED_FOLLOW_TOPIC_FLAG = "userSkippedFollowTopicFlag";
@@ -497,6 +498,19 @@ public class SharedPrefUtils {
         SharedPreferences sharedPref = context.getSharedPreferences(COMMON_PREF_FILE, Context.MODE_PRIVATE);
         String language = (sharedPref.getString(NOTIFICATION_CENTER_FLAG, "0"));
         return language;
+    }
+
+    public static void setNotificationCenterVisitTimestamp(Context context, long timestamp) {
+        SharedPreferences sharedPref = context.getSharedPreferences(COMMON_PREF_FILE, Context.MODE_PRIVATE);
+        Editor editor = sharedPref.edit();
+        editor.putLong(NOTIFICATION_CENTER_VISIT_TIMESTAMP, timestamp);
+        editor.commit();
+    }
+
+    public static long getNotificationCenterVisitTimestamp(Context context) {
+        SharedPreferences sharedPref = context.getSharedPreferences(COMMON_PREF_FILE, Context.MODE_PRIVATE);
+        long timestamp = (sharedPref.getLong(NOTIFICATION_CENTER_VISIT_TIMESTAMP, 0L));
+        return timestamp;
     }
 
     public static boolean getFollowTopicApproachChangeFlag(Context context) {

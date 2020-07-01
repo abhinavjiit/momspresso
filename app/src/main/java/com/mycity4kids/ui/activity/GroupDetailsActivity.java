@@ -1620,8 +1620,6 @@ public class GroupDetailsActivity extends BaseActivity implements View.OnClickLi
                 intent.putExtra(Constants.TITLE_SLUG, articleDataModelsNew.get(position).getTitleSlug());
                 intent.putExtra(Constants.ARTICLE_OPENED_FROM, "GroupDetailsArticleListing");
                 intent.putExtra(Constants.FROM_SCREEN, "GroupDetailActivity");
-                intent.putExtra(Constants.ARTICLE_INDEX, "" + position);
-                intent.putParcelableArrayListExtra("pagerListData", articleDataModelsNew);
                 intent.putExtra(Constants.AUTHOR,
                         articleDataModelsNew.get(position).getUserId() + "~" + articleDataModelsNew.get(position)
                                 .getUserName());

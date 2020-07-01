@@ -9,7 +9,6 @@ import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
-import android.os.Handler;
 import android.provider.MediaStore;
 import android.util.Log;
 import android.view.Gravity;
@@ -143,10 +142,8 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
     private ArrayList<Topics> shortStoriesTopicList;
     public boolean filter = false;
     private Tracker tracker;
-    private String deepLinkUrl;
     private String mainToolbarTitle = "";
     private String fragmentToLoad = "";
-    private Animation slideDownAnim;
     private DrawerLayout drawerLayout;
     private Toolbar mainToolbar;
     private TextView toolbarTitleTextView;
@@ -168,8 +165,6 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
     private RelativeLayout secondCoachmark;
     private TextView selectedlangGuideTextView;
     private MixpanelAPI mixpanel;
-    private RelativeLayout bookmarkInfoView;
-    private TextView viewBookmarkedArticleTextView;
     private ImageView profileImageView;
     private Animation slideAnim;
     private Animation fadeAnim;
@@ -303,8 +298,6 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
         secondCoachmark = findViewById(R.id.secondCoachmark);
         transparentLayerToolbar = findViewById(R.id.transparentLayerToolbar);
         transparentLayerNavigation = findViewById(R.id.transparentLayerNavigation);
-        bookmarkInfoView = findViewById(R.id.bookmarkInfoView);
-        viewBookmarkedArticleTextView = findViewById(R.id.viewBookmarkedArticleTextView);
         drawerLayout = findViewById(R.id.drawer_layout);
         profileImageView = findViewById(R.id.profileImageView);
         actionItemContainer = findViewById(R.id.actionItemContainer);
@@ -404,29 +397,10 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
         groupCoachmark.setOnClickListener(this);
         firstCoachmark.setOnClickListener(this);
         secondCoachmark.setOnClickListener(this);
-        viewBookmarkedArticleTextView.setOnClickListener(this);
         profileImageView.setOnClickListener(this);
         drawerTopContainer.setOnClickListener(this);
         slideAnim = AnimationUtils.loadAnimation(this, R.anim.appear_from_bottom);
         fadeAnim = AnimationUtils.loadAnimation(this, R.anim.alpha_anim);
-        slideDownAnim = AnimationUtils
-                .loadAnimation(getApplicationContext(), R.anim.anim_slide_down_from_top);
-        slideDownAnim.setAnimationListener(new Animation.AnimationListener() {
-            @Override
-            public void onAnimationStart(Animation animation) {
-
-            }
-
-            @Override
-            public void onAnimationEnd(Animation animation) {
-                new Handler().postDelayed(() -> bookmarkInfoView.setVisibility(View.GONE), 2000);
-            }
-
-            @Override
-            public void onAnimationRepeat(Animation animation) {
-
-            }
-        });
 
         NavigationView navigationView = findViewById(R.id.navigation_view);
         navigationView.setNavigationItemSelectedListener(
@@ -585,6 +559,7 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
         } else if (Constants.GROUP_LISTING_FRAGMENT.equals(fragmentToLoad)) {
             GroupsViewFragment fragment1 = new GroupsViewFragment();
             Bundle bundle = new Bundle();
+            bundle.putString("selectedTab", "group_list");
             fragment1.setArguments(bundle);
             addFragment(fragment1, bundle);
         } else if (Constants.CREATE_CONTENT_PROMPT.equals(fragmentToLoad)) {
@@ -899,7 +874,6 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
                 Log.d("tempDeepLinkUrl", tempDeepLinkUrl);
                 handleDeeplinks(tempDeepLinkUrl);
             }
-            deepLinkUrl = tempDeepLinkUrl;
         } else if (newIntent.hasExtra(AppConstants.HOME_SELECTED_TAB)) {
             if (Constants.GROUP_LISTING_FRAGMENT.equals(newIntent.getStringExtra(AppConstants.HOME_SELECTED_TAB))) {
                 fragmentToLoad = Constants.GROUP_LISTING_FRAGMENT;
@@ -1558,12 +1532,6 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
                 showMyMoneyRegistrationPrompt(getIntent());
             }
             break;
-            case R.id.viewBookmarkedArticleTextView: {
-                drawerLayout.closeDrawers();
-                Intent cityIntent = new Intent(this, UsersBookmarkListActivity.class);
-                startActivity(cityIntent);
-            }
-            break;
             case R.id.homeTextView:
                 drawerLayout.closeDrawers();
                 hideCreateContentView();
@@ -2095,11 +2063,6 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
     @Override
     public void onMembershipStatusFetchFail() {
 
-    }
-
-    public void showBookmarkConfirmationTooltip() {
-        bookmarkInfoView.setVisibility(View.VISIBLE);
-        bookmarkInfoView.startAnimation(slideDownAnim);
     }
 
     @Override
