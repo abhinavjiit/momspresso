@@ -19,6 +19,8 @@ data class RewardsDetailsResultResonse(
     @SerializedName("email")
     @Expose
     var email: String? = null,
+    @SerializedName("isValidated")
+    var isValidated: String? = null,
     @SerializedName("family_type")
     @Expose
     var familyType: Int? = null,
