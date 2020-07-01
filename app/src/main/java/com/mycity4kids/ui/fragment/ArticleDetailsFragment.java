@@ -634,6 +634,8 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
             reportCommentContent1.setOnClickListener(this);
             reportCommentContent2.setOnClickListener(this);
             moreArticlesTextView.setOnClickListener(this);
+            commentatorImageView1.setOnClickListener(this);
+            commentatorImageView2.setOnClickListener(this);
 
             mainWebChromeClient = new MyWebChromeClient();
             mainWebView.setWebChromeClient(mainWebChromeClient);
@@ -2315,6 +2317,16 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
                     break;
                 case R.id.reportCommentContent2:
                     reportComment(1);
+                    break;
+                case R.id.commentatorImageView:
+                    Intent profileIntent1 = new Intent(getActivity(), UserProfileActivity.class);
+                    profileIntent1.putExtra(Constants.USER_ID, commentsList.get(0).getUserId());
+                    startActivity(profileIntent1);
+                    break;
+                case R.id.commentatorImageView2:
+                    Intent profileIntent2 = new Intent(getActivity(), UserProfileActivity.class);
+                    profileIntent2.putExtra(Constants.USER_ID, commentsList.get(1).getUserId());
+                    startActivity(profileIntent2);
                     break;
                 default:
                     break;

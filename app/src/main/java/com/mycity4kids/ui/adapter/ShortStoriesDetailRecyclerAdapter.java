@@ -278,6 +278,7 @@ public class ShortStoriesDetailRecyclerAdapter extends RecyclerView.Adapter<Recy
             replyCommentTextView.setOnClickListener(this);
             likeTextView.setOnClickListener(this);
             underlineView = view.findViewById(R.id.underlineView);
+            commentorImageView.setOnClickListener(this);
         }
 
         @Override

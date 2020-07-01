@@ -2,6 +2,7 @@ package com.mycity4kids.ui.fragment;
 
 import android.accounts.NetworkErrorException;
 import android.app.ProgressDialog;
+import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
@@ -31,6 +32,7 @@ import com.mycity4kids.models.response.CommentListData;
 import com.mycity4kids.models.response.CommentListResponse;
 import com.mycity4kids.models.response.LikeReactionModel;
 import com.mycity4kids.preference.SharedPrefUtils;
+import com.mycity4kids.profile.UserProfileActivity;
 import com.mycity4kids.retrofitAPIsInterfaces.ArticleDetailsAPI;
 import com.mycity4kids.ui.adapter.ArticleCommentsRecyclerAdapter;
 import com.mycity4kids.utils.AppUtils;
@@ -717,6 +719,11 @@ public class ArticleCommentsFragment extends BaseFragment implements OnClickList
     @Override
     public void onRecyclerItemClick(View view, int position) {
         switch (view.getId()) {
+            case R.id.commentorImageView:
+                Intent intent = new Intent(getActivity(), UserProfileActivity.class);
+                intent.putExtra(Constants.USER_ID, commentsList.get(position).getUserId());
+                startActivity(intent);
+                break;
             case R.id.likeTextView:
                 if (commentsList.get(position).getLiked()) {
                     commentsList.get(position).setLiked(false);
