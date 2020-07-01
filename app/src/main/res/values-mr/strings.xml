@@ -1363,4 +1363,5 @@ Thank you! We will be reviewing your story. You can expect to hear from us withi
   <string name="all_winners">विजेते</string>
   <string name="all_first_vlog_upload">सगळ्यात प्रथम आपला व्हिलॉग अपलोड करा!</string>
   <string name="winner_empty_state">इथे आपल्याला व्हिडिओ चॅलेंजचे विजेते बघता येतील</string>
+  <string name="all_earlier">Earlier</string>
 </resources>

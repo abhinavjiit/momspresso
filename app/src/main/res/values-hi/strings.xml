@@ -1386,4 +1386,5 @@ Thank you! We will be reviewing your story. You can expect to hear from us withi
   <string name="all_winners">विजेता</string>
   <string name="all_first_vlog_upload">सबसे पहले अपना वी-लॉग  अपलोड करें </string>
   <string name="winner_empty_state">यहां देखें सभी चैलेंजस के विजेता</string>
+  <string name="all_earlier">Earlier</string>
 </resources>

@@ -49,7 +49,6 @@ import com.mycity4kids.ui.adapter.UserPublishedShortStoriesAdapter;
 import com.mycity4kids.utils.AppUtils;
 import com.mycity4kids.utils.ConnectivityUtils;
 import com.mycity4kids.utils.StringUtils;
-import com.mycity4kids.widget.FeedNativeAd;
 import java.util.ArrayList;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -66,7 +65,7 @@ public class UserPublishedArticleTabFragment extends BaseFragment implements Vie
     private FirebaseRemoteConfig firebaseRemoteConfig = FirebaseRemoteConfig.getInstance();
     private ArrayList<ArticleListingResult> articleDataModelsNew;
     private RecyclerView recyclerView;
-    private RelativeLayout mLodingView;
+    private RelativeLayout loadingView;
     private TextView noBlogsTextView;
 
     private UserPublishedArticleAdapter adapter;
@@ -76,9 +75,9 @@ public class UserPublishedArticleTabFragment extends BaseFragment implements Vie
     private boolean isReuqestRunning = false;
     private boolean isPrivateProfile;
     private String authorId;
-    private int pastVisiblesItems, visibleItemCount, totalItemCount;
-
-    private FeedNativeAd feedNativeAd;
+    private int pastVisiblesItems;
+    private int visibleItemCount;
+    private int totalItemCount;
     private String contentType;
     private String userDynamoId;
 
@@ -88,9 +87,9 @@ public class UserPublishedArticleTabFragment extends BaseFragment implements Vie
         View view = inflater.inflate(R.layout.user_published_article_tab_fragment, container, false);
 
         userDynamoId = SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId();
-        recyclerView = (RecyclerView) view.findViewById(R.id.recyclerView);
-        mLodingView = (RelativeLayout) view.findViewById(R.id.relativeLoadingView);
-        noBlogsTextView = (TextView) view.findViewById(R.id.noBlogsTextView);
+        recyclerView = view.findViewById(R.id.recyclerView);
+        loadingView = view.findViewById(R.id.relativeLoadingView);
+        noBlogsTextView = view.findViewById(R.id.noBlogsTextView);
 
         if (getArguments() != null) {
             authorId = getArguments().getString(Constants.AUTHOR_ID);
@@ -110,7 +109,7 @@ public class UserPublishedArticleTabFragment extends BaseFragment implements Vie
             recyclerView.setAdapter(shortStoriesAdapter);
             getUserPublishedShortStories();
         } else {
-            adapter = new UserPublishedArticleAdapter(getActivity(), this, this, isPrivateProfile, feedNativeAd);
+            adapter = new UserPublishedArticleAdapter(getActivity(), this, this, isPrivateProfile);
             recyclerView.setAdapter(adapter);
             getUserPublishedArticles();
         }
@@ -126,7 +125,7 @@ public class UserPublishedArticleTabFragment extends BaseFragment implements Vie
                     if (!isReuqestRunning) {
                         if ((visibleItemCount + pastVisiblesItems) >= totalItemCount) {
                             isReuqestRunning = true;
-                            mLodingView.setVisibility(View.VISIBLE);
+                            loadingView.setVisibility(View.VISIBLE);
                             if ("shortStory".equals(contentType)) {
                                 getUserPublishedShortStories();
                             } else {
@@ -148,9 +147,9 @@ public class UserPublishedArticleTabFragment extends BaseFragment implements Vie
         }
 
         Retrofit retro = BaseApplication.getInstance().getRetrofit();
-        ShortStoryAPI shortStoryAPI = retro.create(ShortStoryAPI.class);
+        ShortStoryAPI shortStoryApi = retro.create(ShortStoryAPI.class);
         int from = 15 * nextPageNumber + 1;
-        final Call<ArticleListingResponse> call = shortStoryAPI
+        final Call<ArticleListingResponse> call = shortStoryApi
                 .getAuthorsPublishedStories(authorId, 0, from, from + 14);
         call.enqueue(userPublishedArticleResponseListener);
     }
@@ -164,44 +163,46 @@ public class UserPublishedArticleTabFragment extends BaseFragment implements Vie
         }
 
         Retrofit retro = BaseApplication.getInstance().getRetrofit();
-        BloggerDashboardAPI userpublishedArticlesAPI = retro.create(BloggerDashboardAPI.class);
+        BloggerDashboardAPI userpublishedArticlesApi = retro.create(BloggerDashboardAPI.class);
         int from = 15 * nextPageNumber + 1;
-        final Call<ArticleListingResponse> call = userpublishedArticlesAPI
+        final Call<ArticleListingResponse> call = userpublishedArticlesApi
                 .getAuthorsPublishedArticles(authorId, 0, from, from + 14);
         call.enqueue(userPublishedArticleResponseListener);
     }
 
-    private Callback<ArticleListingResponse> userPublishedArticleResponseListener = new Callback<ArticleListingResponse>() {
-        @Override
-        public void onResponse(Call<ArticleListingResponse> call, retrofit2.Response<ArticleListingResponse> response) {
-            removeProgressDialog();
-            isReuqestRunning = false;
-            mLodingView.setVisibility(View.GONE);
-            if (response.body() == null) {
-                return;
-            }
-            try {
-                ArticleListingResponse responseData = response.body();
-                if (responseData.getCode() == 200 && Constants.SUCCESS.equals(responseData.getStatus())) {
-                    if ("shortStory".equals(contentType)) {
-                        processPublishedStoriesResponse(responseData);
-                    } else {
-                        processPublisedArticlesResponse(responseData);
+    private Callback<ArticleListingResponse> userPublishedArticleResponseListener =
+            new Callback<ArticleListingResponse>() {
+                @Override
+                public void onResponse(Call<ArticleListingResponse> call,
+                        retrofit2.Response<ArticleListingResponse> response) {
+                    removeProgressDialog();
+                    isReuqestRunning = false;
+                    loadingView.setVisibility(View.GONE);
+                    if (response.body() == null) {
+                        return;
+                    }
+                    try {
+                        ArticleListingResponse responseData = response.body();
+                        if (responseData.getCode() == 200 && Constants.SUCCESS.equals(responseData.getStatus())) {
+                            if ("shortStory".equals(contentType)) {
+                                processPublishedStoriesResponse(responseData);
+                            } else {
+                                processPublisedArticlesResponse(responseData);
+                            }
+                        }
+                    } catch (Exception e) {
+                        FirebaseCrashlytics.getInstance().recordException(e);
+                        Log.d("MC4kException", Log.getStackTraceString(e));
                     }
                 }
-            } catch (Exception e) {
-                FirebaseCrashlytics.getInstance().recordException(e);
-                Log.d("MC4kException", Log.getStackTraceString(e));
-            }
-        }
 
-        @Override
-        public void onFailure(Call<ArticleListingResponse> call, Throwable t) {
-            mLodingView.setVisibility(View.GONE);
-            FirebaseCrashlytics.getInstance().recordException(t);
-            Log.d("MC4kException", Log.getStackTraceString(t));
-        }
-    };
+                @Override
+                public void onFailure(Call<ArticleListingResponse> call, Throwable t) {
+                    loadingView.setVisibility(View.GONE);
+                    FirebaseCrashlytics.getInstance().recordException(t);
+                    Log.d("MC4kException", Log.getStackTraceString(t));
+                }
+            };
 
     private void processPublishedStoriesResponse(ArticleListingResponse responseData) {
         ArrayList<ArticleListingResult> dataList = responseData.getData().get(0).getResult();
@@ -276,8 +277,6 @@ public class UserPublishedArticleTabFragment extends BaseFragment implements Vie
                     intent.putExtra(Constants.ARTICLE_OPENED_FROM, "PublicPublishedArticles");
                     intent.putExtra(Constants.FROM_SCREEN, "PublicUserArticlesScreen");
                 }
-                intent.putExtra(Constants.ARTICLE_INDEX, "" + position);
-                intent.putParcelableArrayListExtra("pagerListData", articleDataModelsNew);
                 intent.putExtra(Constants.AUTHOR,
                         articleDataModelsNew.get(position).getUserId() + "~" + articleDataModelsNew.get(position)
                                 .getUserName());
@@ -285,8 +284,8 @@ public class UserPublishedArticleTabFragment extends BaseFragment implements Vie
                 break;
             case R.id.editPublishedTextView:
                 Retrofit retrofit = BaseApplication.getInstance().getRetrofit();
-                ArticleDetailsAPI articleDetailsAPI = retrofit.create(ArticleDetailsAPI.class);
-                Call<ArticleDetailResult> call = articleDetailsAPI
+                ArticleDetailsAPI articleDetailsApi = retrofit.create(ArticleDetailsAPI.class);
+                Call<ArticleDetailResult> call = articleDetailsApi
                         .getArticleDetailsFromRedis(articleDataModelsNew.get(position).getId(), "articleId");
                 call.enqueue(articleDetailResponseCallback);
                 break;
@@ -298,12 +297,12 @@ public class UserPublishedArticleTabFragment extends BaseFragment implements Vie
                         articleDataModelsNew.get(position).getTitleSlug());
                 String shareMessage;
                 if (StringUtils.isNullOrEmpty(shareUrl)) {
-                    shareMessage = getString(R.string.check_out_blog) + "\"" +
-                            articleDataModelsNew.get(position).getTitle() + "\" by " + articleDataModelsNew
+                    shareMessage = getString(R.string.check_out_blog) + "\""
+                            + articleDataModelsNew.get(position).getTitle() + "\" by " + articleDataModelsNew
                             .get(position).getUserName() + ".";
                 } else {
-                    shareMessage = getString(R.string.check_out_blog) + "\"" +
-                            articleDataModelsNew.get(position).getTitle() + "\" by " + articleDataModelsNew
+                    shareMessage = getString(R.string.check_out_blog) + "\""
+                            + articleDataModelsNew.get(position).getTitle() + "\" by " + articleDataModelsNew
                             .get(position).getUserName() + ".\nRead Here: " + shareUrl;
                 }
                 shareIntent.putExtra(android.content.Intent.EXTRA_TEXT, shareMessage);
@@ -405,8 +404,6 @@ public class UserPublishedArticleTabFragment extends BaseFragment implements Vie
                     intent.putExtra(Constants.ARTICLE_OPENED_FROM, "PublicPublishedArticles");
                     intent.putExtra(Constants.FROM_SCREEN, "PublicUserArticlesScreen");
                 }
-                intent.putExtra(Constants.ARTICLE_INDEX, "" + position);
-                intent.putParcelableArrayListExtra("pagerListData", articleDataModelsNew);
                 intent.putExtra(Constants.AUTHOR,
                         articleDataModelsNew.get(position).getUserId() + "~" + articleDataModelsNew.get(position)
                                 .getUserName());
@@ -414,8 +411,8 @@ public class UserPublishedArticleTabFragment extends BaseFragment implements Vie
                 break;
             case R.id.editPublishedTextView:
                 Retrofit retrofit = BaseApplication.getInstance().getRetrofit();
-                ShortStoryAPI shortStoryAPI = retrofit.create(ShortStoryAPI.class);
-                Call<ShortStoryDetailResult> call = shortStoryAPI
+                ShortStoryAPI shortStoryApi = retrofit.create(ShortStoryAPI.class);
+                Call<ShortStoryDetailResult> call = shortStoryApi
                         .getShortStoryDetails(articleDataModelsNew.get(position).getId(), "articleId");
                 call.enqueue(ssDetailResponseCallbackRedis);
                 break;
@@ -428,12 +425,12 @@ public class UserPublishedArticleTabFragment extends BaseFragment implements Vie
                         articleDataModelsNew.get(position).getTitleSlug());
                 String shareMessage;
                 if (StringUtils.isNullOrEmpty(shareUrl)) {
-                    shareMessage = getString(R.string.check_out_short_story) + "\"" +
-                            articleDataModelsNew.get(position).getTitle() + "\" by " + articleDataModelsNew
+                    shareMessage = getString(R.string.check_out_short_story) + "\""
+                            + articleDataModelsNew.get(position).getTitle() + "\" by " + articleDataModelsNew
                             .get(position).getUserName() + ".";
                 } else {
-                    shareMessage = getString(R.string.check_out_short_story) + "\"" +
-                            articleDataModelsNew.get(position).getTitle() + "\" by " + articleDataModelsNew
+                    shareMessage = getString(R.string.check_out_short_story) + "\""
+                            + articleDataModelsNew.get(position).getTitle() + "\" by " + articleDataModelsNew
                             .get(position).getUserName() + ".\nRead Here: " + shareUrl;
                 }
                 shareIntent.putExtra(android.content.Intent.EXTRA_TEXT, shareMessage);
@@ -447,6 +444,8 @@ public class UserPublishedArticleTabFragment extends BaseFragment implements Vie
                             articleDataModelsNew.get(position).getId(),
                             authorId + "~" + articleDataModelsNew.get(position).getUserName(), "-");
                 }
+                break;
+            default:
                 break;
         }
     }
@@ -505,14 +504,14 @@ public class UserPublishedArticleTabFragment extends BaseFragment implements Vie
                 if (i == R.id.edit_vlog) {
                     if ("shortStory".equals(contentType)) {
                         Retrofit retrofit = BaseApplication.getInstance().getRetrofit();
-                        ShortStoryAPI shortStoryAPI = retrofit.create(ShortStoryAPI.class);
-                        Call<ShortStoryDetailResult> call = shortStoryAPI
+                        ShortStoryAPI shortStoryApi = retrofit.create(ShortStoryAPI.class);
+                        Call<ShortStoryDetailResult> call = shortStoryApi
                                 .getShortStoryDetails(articleDataModelsNew.get(position).getId(), "articleId");
                         call.enqueue(ssDetailResponseCallbackRedis);
                     } else {
                         Retrofit retrofit = BaseApplication.getInstance().getRetrofit();
-                        ArticleDetailsAPI articleDetailsAPI = retrofit.create(ArticleDetailsAPI.class);
-                        Call<ArticleDetailResult> call = articleDetailsAPI
+                        ArticleDetailsAPI articleDetailsApi = retrofit.create(ArticleDetailsAPI.class);
+                        Call<ArticleDetailResult> call = articleDetailsApi
                                 .getArticleDetailsFromRedis(articleDataModelsNew.get(position).getId(), "articleId");
                         call.enqueue(articleDetailResponseCallback);
                     }

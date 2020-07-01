@@ -123,6 +123,16 @@
       </intent-filter>
 
       <intent-filter>
+        <data
+          android:host="open"
+          android:scheme="momspr" />
+        <action android:name="android.intent.action.VIEW" />
+
+        <category android:name="android.intent.category.DEFAULT" />
+        <category android:name="android.intent.category.BROWSABLE" />
+      </intent-filter>
+
+      <intent-filter>
         <action android:name="android.intent.action.VIEW" />
 
         <category android:name="android.intent.category.DEFAULT" />
@@ -382,9 +392,6 @@
       android:screenOrientation="portrait" />
     <activity
       android:name=".ui.activity.NotificationActivity"
-      android:screenOrientation="portrait" />
-    <activity
-      android:name=".ui.activity.UsersBookmarkListActivity"
       android:screenOrientation="portrait" />
     <activity
       android:name=".ui.activity.ChangePasswordActivity"

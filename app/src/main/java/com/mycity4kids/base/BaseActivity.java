@@ -1177,6 +1177,10 @@ public abstract class BaseActivity extends AppCompatActivity implements GroupMem
     }
 
     private void getDeepLinkData(final String deepLinkUrl) {
+        String urlWithNoParams = deepLinkUrl.split("\\?")[0];
+        if (urlWithNoParams.endsWith("/")) {
+            urlWithNoParams = urlWithNoParams.substring(0, urlWithNoParams.length() - 1);
+        }
         Retrofit retrofit = BaseApplication.getInstance().getRetrofit();
         showProgressDialog("");
         DeepLinkingAPI deepLinkingApi = retrofit.create(DeepLinkingAPI.class);
@@ -1185,7 +1189,8 @@ public abstract class BaseActivity extends AppCompatActivity implements GroupMem
             showToast(getString(R.string.error_network));
             return;
         }
-        Call<DeepLinkingResposnse> call = deepLinkingApi.getUrlDetails(deepLinkUrl);
+        Call<DeepLinkingResposnse> call = deepLinkingApi.getUrlDetails(urlWithNoParams);
+        String finalUrlWithNoParams = urlWithNoParams;
         call.enqueue(new Callback<DeepLinkingResposnse>() {
             @Override
             public void onResponse(Call<DeepLinkingResposnse> call,
@@ -1197,10 +1202,10 @@ public abstract class BaseActivity extends AppCompatActivity implements GroupMem
                             .equals(responseData.getStatus())) {
                         identifyTargetScreen(responseData.getData().getResult());
                     } else {
-                        launchChromeTabs(deepLinkUrl);
+                        launchChromeTabs(finalUrlWithNoParams);
                     }
                 } catch (Exception e) {
-                    launchChromeTabs(deepLinkUrl);
+                    launchChromeTabs(finalUrlWithNoParams);
                 }
             }
 

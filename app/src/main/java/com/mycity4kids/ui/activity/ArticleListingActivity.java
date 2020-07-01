@@ -42,8 +42,7 @@ import retrofit2.Retrofit;
  * Created by hemant on 4/8/16.
  */
 public class ArticleListingActivity extends BaseActivity implements View.OnClickListener,
-        SwipeRefreshLayout.OnRefreshListener,  /*FeedNativeAd.AdLoadingListener,*/
-        MainArticleRecyclerViewAdapter.RecyclerViewClickListener {
+        SwipeRefreshLayout.OnRefreshListener, MainArticleRecyclerViewAdapter.RecyclerViewClickListener {
 
     private MainArticleRecyclerViewAdapter recyclerAdapter;
     private ArrayList<ArticleListingResult> articleDataModelsNew;
@@ -56,11 +55,13 @@ public class ArticleListingActivity extends BaseActivity implements View.OnClick
     private int limit = 15;
     private String chunks = "";
     private String fromScreen;
-    private int pastVisiblesItems, visibleItemCount, totalItemCount;
+    private int pastVisiblesItems;
+    private int visibleItemCount;
+    private int totalItemCount;
 
-    private RelativeLayout mLodingView;
+    private RelativeLayout loadingView;
     private TextView noBlogsTextView;
-    private Toolbar mToolbar;
+    private Toolbar toolbar;
     private TextView toolbarTitleTextView;
     private RecyclerView recyclerView;
     private LinearLayout addTopicsLayout;
@@ -75,46 +76,54 @@ public class ArticleListingActivity extends BaseActivity implements View.OnClick
         root = findViewById(R.id.root);
         ((BaseApplication) getApplication()).setActivity(this);
 
-        recyclerView = (RecyclerView) findViewById(R.id.recyclerView);
-        ashimmerFrameLayout = (ShimmerFrameLayout) findViewById(R.id.shimmer_article_listing);
-        mLodingView = (RelativeLayout) findViewById(R.id.relativeLoadingView);
-        noBlogsTextView = (TextView) findViewById(R.id.noBlogsTextView);
-        progressBar = (ProgressBar) findViewById(R.id.progressBar);
-        mToolbar = (Toolbar) findViewById(R.id.toolbar);
-        toolbarTitleTextView = (TextView) mToolbar.findViewById(R.id.toolbarTitle);
-        addTopicsLayout = (LinearLayout) findViewById(R.id.addTopicsLayout);
-        headerArticleCardLayout = (FrameLayout) findViewById(R.id.headerArticleView);
+        recyclerView = findViewById(R.id.recyclerView);
+        ashimmerFrameLayout = findViewById(R.id.shimmer_article_listing);
+        loadingView = findViewById(R.id.relativeLoadingView);
+        noBlogsTextView = findViewById(R.id.noBlogsTextView);
+        progressBar = findViewById(R.id.progressBar);
+        toolbar = findViewById(R.id.toolbar);
+        toolbarTitleTextView = toolbar.findViewById(R.id.toolbarTitle);
+        addTopicsLayout = findViewById(R.id.addTopicsLayout);
+        headerArticleCardLayout = findViewById(R.id.headerArticleView);
 
         addTopicsLayout.setOnClickListener(this);
 
-        mToolbar.setVisibility(View.VISIBLE);
+        toolbar.setVisibility(View.VISIBLE);
 
         findViewById(R.id.imgLoader).startAnimation(AnimationUtils.loadAnimation(this, R.anim.rotate_indefinitely));
 
         sortType = getIntent().getStringExtra(Constants.SORT_TYPE);
         fromScreen = getIntent().getStringExtra(Constants.FROM_SCREEN);
 
-        if (sortType.equals(Constants.KEY_RECENT)) {
-            toolbarTitleTextView.setText(getString(R.string.article_listing_toolbar_title_recent));
-        } else if (sortType.equals(Constants.KEY_POPULAR)) {
-            toolbarTitleTextView.setText(getString(R.string.article_listing_toolbar_title_popular));
-        } else if (sortType.equals(Constants.KEY_TRENDING)) {
-            toolbarTitleTextView.setText(getString(R.string.article_listing_toolbar_title_trending));
-        } else if (sortType.equals(Constants.KEY_FOR_YOU)) {
-            Utils.timeSpending(this, SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId());
-            toolbarTitleTextView.setText(getString(R.string.article_listing_toolbar_title_for_you));
-        } else if (sortType.equals(Constants.KEY_TODAYS_BEST)) {
-            toolbarTitleTextView.setText(getString(R.string.article_listing_toolbar_title_todays_best));
-        } else {
-            toolbarTitleTextView.setText(getString(R.string.article_listing_toolbar_title_editor_picks));
+        switch (sortType) {
+            case Constants.KEY_RECENT:
+                toolbarTitleTextView.setText(getString(R.string.article_listing_toolbar_title_recent));
+                break;
+            case Constants.KEY_POPULAR:
+                toolbarTitleTextView.setText(getString(R.string.article_listing_toolbar_title_popular));
+                break;
+            case Constants.KEY_TRENDING:
+                toolbarTitleTextView.setText(getString(R.string.article_listing_toolbar_title_trending));
+                break;
+            case Constants.KEY_FOR_YOU:
+                Utils.timeSpending(this,
+                        SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId());
+                toolbarTitleTextView.setText(getString(R.string.article_listing_toolbar_title_for_you));
+                break;
+            case Constants.KEY_TODAYS_BEST:
+                toolbarTitleTextView.setText(getString(R.string.article_listing_toolbar_title_todays_best));
+                break;
+            default:
+                toolbarTitleTextView.setText(getString(R.string.article_listing_toolbar_title_editor_picks));
+                break;
         }
-        setSupportActionBar(mToolbar);
+        setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
 
-        articleDataModelsNew = new ArrayList<ArticleListingResult>();
+        articleDataModelsNew = new ArrayList<>();
         nextPageNumber = 1;
-        hitArticleListingApi(nextPageNumber, sortType, false);
+        hitArticleListingApi(sortType);
 
         recyclerAdapter = new MainArticleRecyclerViewAdapter(this, this, false, sortType, false);
         final LinearLayoutManager llm = new LinearLayoutManager(this);
@@ -126,8 +135,7 @@ public class ArticleListingActivity extends BaseActivity implements View.OnClick
         recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
             public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
-                if (dy > 0) //check for scroll down
-                {
+                if (dy > 0) {
                     visibleItemCount = llm.getChildCount();
                     totalItemCount = llm.getItemCount();
                     pastVisiblesItems = llm.findFirstVisibleItemPosition();
@@ -135,8 +143,8 @@ public class ArticleListingActivity extends BaseActivity implements View.OnClick
                     if (!isReuqestRunning && !isLastPageReached) {
                         if ((visibleItemCount + pastVisiblesItems) >= totalItemCount) {
                             isReuqestRunning = true;
-                            mLodingView.setVisibility(View.VISIBLE);
-                            hitArticleListingApi(nextPageNumber, sortType, false);
+                            loadingView.setVisibility(View.VISIBLE);
+                            hitArticleListingApi(sortType);
                         }
                     }
                 }
@@ -145,7 +153,7 @@ public class ArticleListingActivity extends BaseActivity implements View.OnClick
 
     }
 
-    private void hitArticleListingApi(int pPageCount, String sortKey, boolean isCacheRequired) {
+    private void hitArticleListingApi(String sortKey) {
         if (!ConnectivityUtils.isNetworkEnabled(this)) {
             removeProgressDialog();
             showToast(getString(R.string.error_network));
@@ -153,78 +161,80 @@ public class ArticleListingActivity extends BaseActivity implements View.OnClick
         }
         if (Constants.KEY_FOR_YOU.equals(sortKey)) {
             Retrofit retrofit = BaseApplication.getInstance().getRetrofit();
-            RecommendationAPI recommendationAPI = retrofit.create(RecommendationAPI.class);
+            RecommendationAPI recommendationApi = retrofit.create(RecommendationAPI.class);
             progressBar.setVisibility(View.VISIBLE);
-            Call<ArticleListingResponse> call = recommendationAPI
+            Call<ArticleListingResponse> call = recommendationApi
                     .getRecommendedArticlesList(SharedPrefUtils.getUserDetailModel(this).getDynamoId(), 10, chunks,
                             SharedPrefUtils.getLanguageFilters(BaseApplication.getAppContext()));
             call.enqueue(recommendedArticlesResponseCallback);
         } else if (Constants.KEY_EDITOR_PICKS.equals(sortKey)) {
             Retrofit retrofit = BaseApplication.getInstance().getRetrofit();
-            TopicsCategoryAPI topicsAPI = retrofit.create(TopicsCategoryAPI.class);
+            TopicsCategoryAPI topicsApi = retrofit.create(TopicsCategoryAPI.class);
 
             int from = (nextPageNumber - 1) * limit + 1;
-            Call<ArticleListingResponse> filterCall = topicsAPI
+            Call<ArticleListingResponse> filterCall = topicsApi
                     .getArticlesForCategory(AppConstants.EDITOR_PICKS_CATEGORY_ID, 0, from, from + limit - 1,
                             SharedPrefUtils.getLanguageFilters(BaseApplication.getAppContext()));
             filterCall.enqueue(articleListingResponseCallback);
         } else if (Constants.KEY_TODAYS_BEST.equals(sortKey)) {
             Retrofit retrofit = BaseApplication.getInstance().getRetrofit();
-            TopicsCategoryAPI topicsAPI = retrofit.create(TopicsCategoryAPI.class);
+            TopicsCategoryAPI topicsApi = retrofit.create(TopicsCategoryAPI.class);
 
             int from = (nextPageNumber - 1) * limit + 1;
-            Call<ArticleListingResponse> filterCall = topicsAPI
+            Call<ArticleListingResponse> filterCall = topicsApi
                     .getTodaysBestArticles(DateTimeUtils.getKidsDOBNanoMilliTimestamp("" + System.currentTimeMillis()),
                             from, from + limit - 1,
                             SharedPrefUtils.getLanguageFilters(BaseApplication.getAppContext()));
             filterCall.enqueue(articleListingResponseCallback);
         } else {
             Retrofit retrofit = BaseApplication.getInstance().getRetrofit();
-            TopicsCategoryAPI topicsAPI = retrofit.create(TopicsCategoryAPI.class);
+            TopicsCategoryAPI topicsApi = retrofit.create(TopicsCategoryAPI.class);
 
             int from = (nextPageNumber - 1) * limit + 1;
-            Call<ArticleListingResponse> filterCall = topicsAPI.getRecentArticles(from, from + limit - 1,
+            Call<ArticleListingResponse> filterCall = topicsApi.getRecentArticles(from, from + limit - 1,
                     SharedPrefUtils.getLanguageFilters(BaseApplication.getAppContext()));
             filterCall.enqueue(articleListingResponseCallback);
         }
     }
 
-    private Callback<ArticleListingResponse> recommendedArticlesResponseCallback = new Callback<ArticleListingResponse>() {
-        @Override
-        public void onResponse(Call<ArticleListingResponse> call, retrofit2.Response<ArticleListingResponse> response) {
-            progressBar.setVisibility(View.GONE);
-            mLodingView.setVisibility(View.GONE);
-            isReuqestRunning = false;
-            if (response == null || null == response.body()) {
-                NetworkErrorException nee = new NetworkErrorException(response.raw().toString());
-                FirebaseCrashlytics.getInstance().recordException(nee);
-                showToast(getString(R.string.server_went_wrong));
-                return;
-            }
-            try {
-                ArticleListingResponse responseData = response.body();
-                if (responseData.getCode() == 200 && Constants.SUCCESS.equals(responseData.getStatus())) {
-                    processForYouResponse(responseData);
-                } else {
-                    showToast(responseData.getReason());
+    private Callback<ArticleListingResponse> recommendedArticlesResponseCallback =
+            new Callback<ArticleListingResponse>() {
+                @Override
+                public void onResponse(Call<ArticleListingResponse> call,
+                        retrofit2.Response<ArticleListingResponse> response) {
+                    progressBar.setVisibility(View.GONE);
+                    loadingView.setVisibility(View.GONE);
+                    isReuqestRunning = false;
+                    if (null == response.body()) {
+                        NetworkErrorException nee = new NetworkErrorException(response.raw().toString());
+                        FirebaseCrashlytics.getInstance().recordException(nee);
+                        showToast(getString(R.string.server_went_wrong));
+                        return;
+                    }
+                    try {
+                        ArticleListingResponse responseData = response.body();
+                        if (responseData.getCode() == 200 && Constants.SUCCESS.equals(responseData.getStatus())) {
+                            processForYouResponse(responseData);
+                        } else {
+                            showToast(responseData.getReason());
+                        }
+                    } catch (Exception e) {
+                        FirebaseCrashlytics.getInstance().recordException(e);
+                        Log.d("MC4kException", Log.getStackTraceString(e));
+                        showToast(getString(R.string.went_wrong));
+                    }
                 }
-            } catch (Exception e) {
-                FirebaseCrashlytics.getInstance().recordException(e);
-                Log.d("MC4kException", Log.getStackTraceString(e));
-                showToast(getString(R.string.went_wrong));
-            }
-        }
 
-        @Override
-        public void onFailure(Call<ArticleListingResponse> call, Throwable t) {
-            progressBar.setVisibility(View.GONE);
-            mLodingView.setVisibility(View.GONE);
-            isReuqestRunning = false;
-            FirebaseCrashlytics.getInstance().recordException(t);
-            Log.d("MC4kException", Log.getStackTraceString(t));
-            showToast(getString(R.string.went_wrong));
-        }
-    };
+                @Override
+                public void onFailure(Call<ArticleListingResponse> call, Throwable t) {
+                    progressBar.setVisibility(View.GONE);
+                    loadingView.setVisibility(View.GONE);
+                    isReuqestRunning = false;
+                    FirebaseCrashlytics.getInstance().recordException(t);
+                    Log.d("MC4kException", Log.getStackTraceString(t));
+                    showToast(getString(R.string.went_wrong));
+                }
+            };
 
     private void processForYouResponse(ArticleListingResponse responseData) {
         try {
@@ -238,10 +248,7 @@ public class ArticleListingActivity extends BaseActivity implements View.OnClick
             ArrayList<ArticleListingResult> dataList = responseData.getData().get(0).getResult();
             if (dataList.size() == 0) {
                 isLastPageReached = true;
-                if (null != articleDataModelsNew && !articleDataModelsNew.isEmpty()) {
-                    //No more next results from pagination
-                } else {
-                    // No results
+                if (null == articleDataModelsNew || articleDataModelsNew.isEmpty()) {
                     articleDataModelsNew = dataList;
                     recyclerAdapter.setNewListData(dataList);
                     recyclerAdapter.notifyDataSetChanged();
@@ -252,7 +259,6 @@ public class ArticleListingActivity extends BaseActivity implements View.OnClick
                 noBlogsTextView.setVisibility(View.GONE);
                 if ("".equals(chunks)) {
                     articleDataModelsNew.clear();
-//                    articleDataModelsNew.addAll(dataList);
                     for (int j = 0; j < dataList.size(); j++) {
                         if (!StringUtils.isNullOrEmpty(dataList.get(j).getId())) {
                             articleDataModelsNew.add(dataList.get(j));
@@ -276,7 +282,7 @@ public class ArticleListingActivity extends BaseActivity implements View.OnClick
                 recyclerAdapter.notifyDataSetChanged();
             }
         } catch (Exception ex) {
-            mLodingView.setVisibility(View.GONE);
+            loadingView.setVisibility(View.GONE);
             FirebaseCrashlytics.getInstance().recordException(ex);
             Log.d("MC4kException", Log.getStackTraceString(ex));
         }
@@ -288,10 +294,10 @@ public class ArticleListingActivity extends BaseActivity implements View.OnClick
         public void onResponse(Call<ArticleListingResponse> call, retrofit2.Response<ArticleListingResponse> response) {
             isReuqestRunning = false;
             progressBar.setVisibility(View.GONE);
-            if (mLodingView.getVisibility() == View.VISIBLE) {
-                mLodingView.setVisibility(View.GONE);
+            if (loadingView.getVisibility() == View.VISIBLE) {
+                loadingView.setVisibility(View.GONE);
             }
-            if (response == null || response.body() == null) {
+            if (response.body() == null) {
                 return;
             }
             try {
@@ -300,7 +306,6 @@ public class ArticleListingActivity extends BaseActivity implements View.OnClick
                     processArticleListingResponse(responseData);
                     ashimmerFrameLayout.stopShimmerAnimation();
                     ashimmerFrameLayout.setVisibility(View.GONE);
-                } else {
                 }
             } catch (Exception e) {
                 FirebaseCrashlytics.getInstance().recordException(e);
@@ -310,8 +315,8 @@ public class ArticleListingActivity extends BaseActivity implements View.OnClick
 
         @Override
         public void onFailure(Call<ArticleListingResponse> call, Throwable t) {
-            if (mLodingView.getVisibility() == View.VISIBLE) {
-                mLodingView.setVisibility(View.GONE);
+            if (loadingView.getVisibility() == View.VISIBLE) {
+                loadingView.setVisibility(View.GONE);
             }
             isReuqestRunning = false;
             progressBar.setVisibility(View.GONE);
@@ -321,19 +326,14 @@ public class ArticleListingActivity extends BaseActivity implements View.OnClick
     };
 
     private void processArticleListingResponse(ArticleListingResponse responseData) {
-
         ArrayList<ArticleListingResult> dataList = responseData.getData().get(0).getResult();
-
         if (dataList.size() == 0) {
             isLastPageReached = false;
             if (null != articleDataModelsNew && !articleDataModelsNew.isEmpty()) {
-                //No more next results for search from pagination
                 isLastPageReached = true;
             } else {
-                // No results for search
                 noBlogsTextView.setVisibility(View.VISIBLE);
                 noBlogsTextView.setText(getString(R.string.no_articles_found));
-//                writeArticleCell.setVisibility(View.VISIBLE);
                 articleDataModelsNew = dataList;
                 recyclerAdapter.setNewListData(articleDataModelsNew);
                 recyclerAdapter.notifyDataSetChanged();
@@ -349,7 +349,6 @@ public class ArticleListingActivity extends BaseActivity implements View.OnClick
             nextPageNumber = nextPageNumber + 1;
             recyclerAdapter.notifyDataSetChanged();
         }
-
     }
 
     @Override
@@ -362,7 +361,7 @@ public class ArticleListingActivity extends BaseActivity implements View.OnClick
         isLastPageReached = false;
         chunks = "";
         nextPageNumber = 1;
-        hitArticleListingApi(nextPageNumber, sortType, false);
+        hitArticleListingApi(sortType);
     }
 
     @Override
@@ -370,6 +369,8 @@ public class ArticleListingActivity extends BaseActivity implements View.OnClick
         switch (item.getItemId()) {
             case android.R.id.home:
                 finish();
+                break;
+            default:
                 break;
         }
         return true;
@@ -391,12 +392,10 @@ public class ArticleListingActivity extends BaseActivity implements View.OnClick
             intent.putExtra(Constants.ARTICLE_OPENED_FROM, "TodaysBestScreen");
             intent.putExtra(Constants.FROM_SCREEN, "TodaysBestScreen");
         }
-        intent.putParcelableArrayListExtra("pagerListData", articleDataModelsNew);
         intent.putExtra(Constants.ARTICLE_ID, articleDataModelsNew.get(position).getId());
         intent.putExtra(Constants.AUTHOR_ID, articleDataModelsNew.get(position).getUserId());
         intent.putExtra(Constants.BLOG_SLUG, articleDataModelsNew.get(position).getBlogPageSlug());
         intent.putExtra(Constants.TITLE_SLUG, articleDataModelsNew.get(position).getTitleSlug());
-        intent.putExtra(Constants.ARTICLE_INDEX, "" + position);
         intent.putExtra(Constants.AUTHOR,
                 articleDataModelsNew.get(position).getUserId() + "~" + articleDataModelsNew.get(position)
                         .getUserName());
@@ -411,6 +410,8 @@ public class ArticleListingActivity extends BaseActivity implements View.OnClick
                 intent1.putExtra("fragType", "search");
                 intent1.putExtra("source", "foryou");
                 startActivity(intent1);
+                break;
+            default:
                 break;
         }
     }

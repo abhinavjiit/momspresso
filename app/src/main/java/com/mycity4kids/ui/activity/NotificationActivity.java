@@ -3,19 +3,18 @@ package com.mycity4kids.ui.activity;
 import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
-import androidx.fragment.app.Fragment;
-import androidx.core.content.ContextCompat;
-import androidx.appcompat.widget.Toolbar;
 import android.view.MenuItem;
 import android.widget.LinearLayout;
-
-import com.mycity4kids.base.BaseActivity;
+import androidx.appcompat.widget.Toolbar;
+import androidx.core.content.ContextCompat;
 import com.mycity4kids.R;
 import com.mycity4kids.application.BaseApplication;
+import com.mycity4kids.base.BaseActivity;
 import com.mycity4kids.ui.fragment.NotificationFragment;
 
 public class NotificationActivity extends BaseActivity {
-    private Toolbar mToolbar;
+
+    private Toolbar toolbar;
     private LinearLayout root;
 
     @Override
@@ -26,18 +25,17 @@ public class NotificationActivity extends BaseActivity {
         ((BaseApplication) getApplication()).setView(root);
         ((BaseApplication) getApplication()).setActivity(this);
 
-        mToolbar = (Toolbar) findViewById(R.id.toolbar);
+        toolbar = findViewById(R.id.toolbar);
 
-        setSupportActionBar(mToolbar);
+        setSupportActionBar(toolbar);
         final Drawable upArrow = ContextCompat.getDrawable(this, R.drawable.back_arroow);
         upArrow.setColorFilter(ContextCompat.getColor(this, R.color.black_color), PorterDuff.Mode.SRC_ATOP);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setHomeAsUpIndicator(upArrow);
-        final Fragment topFragment = getSupportFragmentManager().findFragmentById(R.id.content_frame);
         NotificationFragment fragment = new NotificationFragment();
-        Bundle mBundle = new Bundle();
-        fragment.setArguments(mBundle);
-        addFragment(fragment, mBundle);
+        Bundle bundle = new Bundle();
+        fragment.setArguments(bundle);
+        addFragment(fragment, bundle);
     }
 
     @Override

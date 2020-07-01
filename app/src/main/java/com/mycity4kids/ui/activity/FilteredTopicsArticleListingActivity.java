@@ -3,7 +3,6 @@ package com.mycity4kids.ui.activity;
 import android.accounts.NetworkErrorException;
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.Handler;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.Menu;
@@ -11,7 +10,6 @@ import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.FrameLayout;
 import android.widget.ProgressBar;
@@ -79,8 +77,6 @@ public class FilteredTopicsArticleListingActivity extends BaseActivity implement
     private FloatingActionsMenu fabMenu;
     private SwipeRefreshLayout swipeRefreshLayout;
     private int nextPageNumber;
-    private Animation slideDownAnim;
-    private RelativeLayout bookmarkInfoView;
 
     private boolean isReuqestRunning = false;
     private ProgressBar progressBar;
@@ -146,7 +142,6 @@ public class FilteredTopicsArticleListingActivity extends BaseActivity implement
         filterTextView = (TextView) findViewById(R.id.filterTextView);
         progressBar = (ProgressBar) findViewById(R.id.progressBar);
         swipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.swipe_refresh_layout);
-        bookmarkInfoView = (RelativeLayout) findViewById(R.id.bookmarkInfoView);
         titleTextView = (TextView) findViewById(R.id.titleTextView);
         followUnfollowTextView = (TextView) findViewById(R.id.followUnfollowTextView);
         bottomOptionMenu = (RelativeLayout) findViewById(R.id.bottomOptionMenu);
@@ -176,23 +171,7 @@ public class FilteredTopicsArticleListingActivity extends BaseActivity implement
                 fabMenu.expand();
             }
         });
-        slideDownAnim = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.anim_slide_down_from_top);
-        slideDownAnim.setAnimationListener(new Animation.AnimationListener() {
-            @Override
-            public void onAnimationStart(Animation animation) {
 
-            }
-
-            @Override
-            public void onAnimationEnd(Animation animation) {
-                new Handler().postDelayed(() -> bookmarkInfoView.setVisibility(View.GONE), 2000);
-            }
-
-            @Override
-            public void onAnimationRepeat(Animation animation) {
-
-            }
-        });
         findViewById(R.id.imgLoader).startAnimation(AnimationUtils.loadAnimation(this, R.anim.rotate_indefinitely));
 
         selectedTopics = getIntent().getStringExtra("selectedTopics");
@@ -902,8 +881,6 @@ public class FilteredTopicsArticleListingActivity extends BaseActivity implement
                 }
                 intent.putExtra(Constants.ARTICLE_OPENED_FROM, categoryName + "~" + selectedTopics);
                 intent.putExtra(Constants.FROM_SCREEN, "TopicArticlesListingScreen");
-                intent.putExtra(Constants.ARTICLE_INDEX, "" + position);
-                intent.putParcelableArrayListExtra("pagerListData", articleDataModelsNew);
                 intent.putExtra(Constants.AUTHOR,
                         articleDataModelsNew.get(position).getUserId() + "~" + articleDataModelsNew.get(position)
                                 .getUserName());
@@ -912,8 +889,4 @@ public class FilteredTopicsArticleListingActivity extends BaseActivity implement
         }
     }
 
-    public void showBookmarkConfirmationTooltip() {
-        bookmarkInfoView.setVisibility(View.VISIBLE);
-        bookmarkInfoView.startAnimation(slideDownAnim);
-    }
 }

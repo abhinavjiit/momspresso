@@ -299,7 +299,7 @@ class BadgesDialogFragment : DialogFragment(), View.OnClickListener {
     private fun shareWithGeneric() {
         activity?.let {
             if (AppUtils.shareGenericLinkWithSuccessStatus(
-                    activity,
+                    it,
                     badgeData?.badge_sharing_url
                 )
             ) {

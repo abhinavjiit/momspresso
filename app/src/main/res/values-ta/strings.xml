@@ -1361,4 +1361,5 @@ Thank you! We will be reviewing your story. You can expect to hear from us withi
   <string name="all_winners">வெற்றியாளர்கள்</string>
   <string name="all_first_vlog_upload">முதல் நபராக விலாகை பதிவேற்றுங்கள் !</string>
   <string name="winner_empty_state">சவாலின் வெற்றியாளர்களைப் பற்றி இங்கே நீங்கள் அறிந்து கொள்ளலாம்!</string>
+  <string name="all_earlier">Earlier</string>
 </resources>

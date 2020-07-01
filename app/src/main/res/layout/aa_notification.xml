@@ -6,8 +6,8 @@
     android:background="@color/white_color"
     android:orientation="vertical">
 
-    <ListView
-        android:id="@+id/notificationListView"
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/notificationRecyclerView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:divider="@color/light_grey1"
