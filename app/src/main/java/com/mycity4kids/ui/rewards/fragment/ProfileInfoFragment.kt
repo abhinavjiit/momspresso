@@ -308,8 +308,11 @@ class ProfileInfoFragment : BaseFragment(),
             editAddNumber.visibility = View.VISIBLE
         }
 
-        if (apiGetResponse.emailValidated.equals("1")) {
+        if (!apiGetResponse.email.isNullOrBlank()){
             editEmail.setText(apiGetResponse.email)
+        }
+
+        if (apiGetResponse.emailValidated.equals("1")) {
             editEmail.isEnabled = false
         } /*else {
             editEmail.setText(SharedPrefUtils.getUserDetailModel(activity)?.email)
