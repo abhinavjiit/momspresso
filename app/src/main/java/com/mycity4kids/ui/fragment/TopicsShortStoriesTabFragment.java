@@ -503,8 +503,7 @@ public class TopicsShortStoriesTabFragment extends BaseFragment implements View.
             Call<ResponseBody> followUnfollowUserResponseCall = followApi.unfollowUserInShortStoryListingV2(request);
             followUnfollowUserResponseCall.enqueue(unfollowUserResponseCallback);
         } else {
-            Utils.pushGenericEvent(getActivity(), "CTA_Follow_100WS_Detail", userDynamoId,
-                    "TopicsShortStoryTabFragment");
+            Utils.shareEventTracking(getActivity(), "100WS Listing", "Follow_Android", "StoryListing_Follow");
             Call<ResponseBody> followUnfollowUserResponseCall = followApi.followUserInShortStoryListingV2(request);
             followUnfollowUserResponseCall.enqueue(followUserResponseCallback);
         }

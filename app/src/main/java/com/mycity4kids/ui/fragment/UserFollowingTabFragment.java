@@ -56,7 +56,7 @@ public class UserFollowingTabFragment extends BaseFragment {
 
         datalist = new ArrayList<>();
         followerFollowingListView.setVisibility(View.VISIBLE);
-        followerFollowingListAdapter = new FollowerFollowingListAdapter(getActivity());
+        followerFollowingListAdapter = new FollowerFollowingListAdapter(getActivity(), "SelfProfile_Following_Follow");
         followerFollowingListAdapter.setData(datalist);
         followerFollowingListView.setAdapter(followerFollowingListAdapter);
         fetchFollowing();

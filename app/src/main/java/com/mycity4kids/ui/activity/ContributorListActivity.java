@@ -78,7 +78,6 @@ public class ContributorListActivity extends BaseActivity implements View.OnClic
     ArrayList<String> list;
     ArrayList<LanguageConfigModel> languageConfigModelArrayList;
     private String langKey = "0";
-    private boolean isSpinnerInitializationFinish = false;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {

@@ -28,7 +28,6 @@ import com.mycity4kids.models.response.ContributorListResponse
 import com.mycity4kids.models.response.ContributorListResult
 import com.mycity4kids.models.response.FollowUnfollowUserResponse
 import com.mycity4kids.models.response.MixFeedResult
-import com.mycity4kids.preference.SharedPrefUtils
 import com.mycity4kids.retrofitAPIsInterfaces.ContributorListAPI
 import com.mycity4kids.retrofitAPIsInterfaces.FollowAPI
 import com.mycity4kids.utils.AppUtils
@@ -1099,18 +1098,11 @@ class UserContentAdapter(
         index: Int,
         followFollowingTextView: TextView
     ) {
-        Utils.momVlogEvent(
+        Utils.shareEventTracking(
             followFollowingTextView.context,
-            "Following Feed",
-            "Follow_CTA",
-            "",
-            "android",
-            SharedPrefUtils.getAppLocale(BaseApplication.getAppContext()),
-            SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).dynamoId,
-            System.currentTimeMillis().toString(),
-            "Following",
-            "",
-            ""
+            "Main Follow Feed",
+            "Follow_Android",
+            "MainFollowFeed_C_Follow"
         )
         mixFeedList?.get(position)?.carouselBloggerList?.get(index)?.isFollowed = 1
         updateTextViewForFollowUnfollow(followFollowingTextView, 1)

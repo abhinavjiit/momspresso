@@ -359,6 +359,7 @@ class ShortStoryModerationOrShareActivity : BaseActivity(), View.OnClickListener
         intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_NEW_TASK
         if (source == "publishFlow") {
             intent.putExtra("showInviteDialog", true)
+            intent.putExtra("source", AppConstants.CONTENT_TYPE_SHORT_STORY)
         }
         startActivity(intent)
         finish()

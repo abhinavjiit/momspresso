@@ -1406,7 +1406,7 @@ public class ShortStoryFragment extends BaseFragment implements View.OnClickList
             isFollowing = true;
             adapter.setAuthorFollowingStatus(AppConstants.STATUS_FOLLOWING);
             adapter.notifyItemChanged(0);
-            Utils.pushGenericEvent(getActivity(), "CTA_Follow_100WS_Detail", userDynamoId, "ShortStoryFragment");
+            Utils.shareEventTracking(getActivity(), "100WS Detail", "Follow_Android", "StoryDetail_Follow");
             Call<FollowUnfollowUserResponse> followUnfollowUserResponseCall = followApi.followUserV2(request);
             followUnfollowUserResponseCall.enqueue(followUserResponseCallback);
         }

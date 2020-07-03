@@ -352,7 +352,7 @@ public class AppConstants {
     public static final String VLOGS_CHALLENGE_DETAIL_REGEX =
             ".+?(parenting\\/videos\\/challenges\\/category-)[a-zA-Z0-9]+";
     public static final String VLOG_CATEGORY_LISTING_REGEX = ".+?(parenting\\/videos)";
-    public static final String STORY_CATEGORY_LISTING_REGEX = ".+?(parenting\\/topic\\/short-stories)";
+    public static final String STORY_CATEGORY_LISTING_REGEX = ".+?(parenting\\/topic\\/short-stories)(\\/[a-z]+)?";
 
     public static final String BADGE_ID = "badgeId";
     public static final String MILESTONE_ID = "milestoneId";

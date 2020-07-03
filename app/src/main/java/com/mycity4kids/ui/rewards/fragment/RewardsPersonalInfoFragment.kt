@@ -286,7 +286,7 @@ class RewardsPersonalInfoFragment : BaseFragment(),
             editAddNumber.visibility = View.VISIBLE
         }
 
-        if (!apiGetResponse.email.isNullOrBlank()){
+        if (!apiGetResponse.email.isNullOrBlank()) {
             editEmail.setText(apiGetResponse.email)
         }
 

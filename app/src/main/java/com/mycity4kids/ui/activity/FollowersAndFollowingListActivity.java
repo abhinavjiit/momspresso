@@ -111,7 +111,7 @@ public class FollowersAndFollowingListActivity extends BaseActivity {
             }
             followerFollowingListView.setVisibility(View.VISIBLE);
             collectionFollowFollowingListView.setVisibility(View.GONE);
-            followerFollowingListAdapter = new FollowerFollowingListAdapter(this);
+            followerFollowingListAdapter = new FollowerFollowingListAdapter(this, "SelfProfile_Followers_Follow");
             followerFollowingListAdapter.setData(datalist);
             followerFollowingListView.setAdapter(followerFollowingListAdapter);
             getFollowerFollowingList();

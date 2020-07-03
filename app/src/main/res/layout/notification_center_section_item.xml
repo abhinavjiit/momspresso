@@ -1,9 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
-<TextView xmlns:android="http://schemas.android.com/apk/res/android"
+<com.mycity4kids.widget.CustomFontTextView xmlns:android="http://schemas.android.com/apk/res/android"
+  xmlns:app="http://schemas.android.com/apk/res-auto"
   android:id="@+id/sectionTextView"
   android:layout_width="match_parent"
   android:layout_height="wrap_content"
   android:background="#F6F6F6"
-  android:padding="16dp"
-  android:text="DWAWADAWD"
-  android:textColor="#AAAAAA" />
+  android:paddingStart="16dp"
+  android:paddingTop="12sp"
+  android:paddingEnd="16sp"
+  android:paddingBottom="12sp"
+  android:text=""
+  android:textColor="#AAAAAA"
+  android:textSize="16sp"
+  app:fontName="Roboto-Medium.ttf" />

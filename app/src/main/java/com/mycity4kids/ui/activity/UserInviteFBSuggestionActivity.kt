@@ -17,6 +17,7 @@ import com.mycity4kids.application.BaseApplication
 import com.mycity4kids.base.BaseActivity
 import com.mycity4kids.constants.Constants
 import com.mycity4kids.facebook.FacebookUtils
+import com.mycity4kids.gtmutils.Utils
 import com.mycity4kids.interfaces.IFacebookUser
 import com.mycity4kids.models.request.FacebookFriendsRequest
 import com.mycity4kids.models.request.FacebookInviteFriendsRequest
@@ -44,6 +45,8 @@ class UserInviteFBSuggestionActivity : BaseActivity(),
     private var callbackManager: CallbackManager? = null
     private lateinit var toolbar: androidx.appcompat.widget.Toolbar
     private val facebookFriendList = mutableListOf<FacebookInviteFriendsData>()
+    private var eventSuffix: String? = ""
+    private var eventScreen: String? = ""
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -58,6 +61,9 @@ class UserInviteFBSuggestionActivity : BaseActivity(),
         setSupportActionBar(toolbar)
         supportActionBar!!.setDisplayHomeAsUpEnabled(true)
         supportActionBar!!.setDisplayShowHomeEnabled(true)
+
+        eventScreen = intent.getStringExtra("eventScreen")
+        eventSuffix = intent.getStringExtra("eventSuffix")
 
         callbackManager = CallbackManager.Factory.create()
         adapter = FBInviteFriendsAdapter(this)
@@ -146,10 +152,17 @@ class UserInviteFBSuggestionActivity : BaseActivity(),
     override fun onClick(view: View, position: Int) {
         when {
             view.id == R.id.inviteButton -> {
-                if (facebookFriendList.get(position).isInvited != "1") {
-                    facebookFriendList.get(position).isInvited = "1"
+                if (facebookFriendList[position].isInvited != "1") {
+                    facebookFriendList[position].isInvited = "1"
                     adapter?.notifyDataSetChanged()
-                    facebookFriendList.get(position).id?.let { hitInviteAPI(it) }
+                    facebookFriendList[position].id?.let {
+                        hitInviteAPI(it)
+
+                        Utils.shareEventTracking(
+                            this, eventScreen, "Invite_Android",
+                            "CTA_Final_InviteFBFriend_$eventSuffix"
+                        )
+                    }
                 }
             }
             view.id == R.id.authorNameTextView || view.id == R.id.authorImageView -> {

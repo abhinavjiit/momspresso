@@ -42,15 +42,17 @@ public class FollowerFollowingListAdapter extends BaseAdapter {
     private Context context;
     private ArrayList<FollowersFollowingResult> dataList;
     String currentUserId;
+    private String eventName;
 
-    public FollowerFollowingListAdapter(Context context) {
+    public FollowerFollowingListAdapter(Context context, String eventName) {
         layoutInflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         this.context = context;
         currentUserId = SharedPrefUtils.getUserDetailModel(context).getDynamoId();
+        this.eventName = eventName;
     }
 
-    public void setData(ArrayList<FollowersFollowingResult> mDataList) {
-        this.dataList = mDataList;
+    public void setData(ArrayList<FollowersFollowingResult> dataList) {
+        this.dataList = dataList;
     }
 
     @Override
@@ -148,8 +150,7 @@ public class FollowerFollowingListAdapter extends BaseAdapter {
             holder.followingTextView.setVisibility(View.INVISIBLE);
             holder.followTextView.setVisibility(View.INVISIBLE);
             String jsonString = new Gson().toJson(followUnfollowUserRequest);
-            Utils.pushGenericEvent(context, "CTA_Follow_Profile_Followers",
-                    SharedPrefUtils.getUserDetailModel(context).getDynamoId(), "FollowerFollowingListAdapter");
+            Utils.shareEventTracking(holder.followTextView.getContext(), "Self Profile", "Follow_Android", eventName);
             new FollowUnfollowAsyncTask(holder, "follow", position).execute(jsonString, "follow");
         } else {
             holder.relativeLoadingView.setVisibility(View.VISIBLE);

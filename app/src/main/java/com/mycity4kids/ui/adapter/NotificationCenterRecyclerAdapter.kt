@@ -83,8 +83,14 @@ class NotificationCenterRecyclerAdapter(
             is EarlierHeaderViewHolder -> {
             }
             is NotificationViewHolder -> {
-                holder.notificationBodyTextView.text =
-                    AppUtils.fromHtml("<b>" + notificationList[position].title + ".</b> " + notificationList[position].htmlBody)
+                if (notificationList[position].title.isNullOrBlank()) {
+                    holder.notificationBodyTextView.text =
+                        AppUtils.fromHtml(notificationList[position].htmlBody)
+                } else {
+                    holder.notificationBodyTextView.text =
+                        AppUtils.fromHtml("<b>" + notificationList[position].title + "</b> " + notificationList[position].htmlBody)
+                }
+
                 holder.notificationDateTextView.text = "" + DateTimeUtils.getMMMDDFormatDate(
                     notificationList[position].createdTime
                 )

@@ -302,18 +302,11 @@ class FollowingVideoTabFragment : BaseFragment(),
             if (vlogersListData?.get(position)?.following == true) {
                 unFollowApiCall(vlogersListData?.get(position)?.dynamoId!!, position)
             } else {
-                Utils.momVlogEvent(
+                Utils.shareEventTracking(
                     activity,
-                    "Following Feed",
-                    "Follow_CTA",
-                    "",
-                    "android",
-                    SharedPrefUtils.getAppLocale(context),
-                    SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).dynamoId,
-                    System.currentTimeMillis().toString(),
-                    "Following",
-                    "",
-                    ""
+                    "Vlog Follow Feed",
+                    "Follow_Android",
+                    "VlogFollowFeed_G_Follow"
                 )
                 followApiCall(vlogersListData?.get(position)?.dynamoId!!, position)
             }

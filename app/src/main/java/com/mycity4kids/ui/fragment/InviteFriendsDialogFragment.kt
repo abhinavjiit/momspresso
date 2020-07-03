@@ -25,16 +25,18 @@ import kotlinx.android.synthetic.main.invite_friends_dialog_fragment.*
 
 class InviteFriendsDialogFragment : DialogFragment(), View.OnClickListener {
 
+    private lateinit var eventSuffix: String
+    private lateinit var screenName: String
+
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        val rootView = inflater.inflate(
+        return inflater.inflate(
             R.layout.invite_friends_dialog_fragment, container,
             false
         )
-        return rootView
     }
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
@@ -58,31 +60,96 @@ class InviteFriendsDialogFragment : DialogFragment(), View.OnClickListener {
         shareLinkWidget.setOnClickListener(this)
         whatsappShareLinkWidget.setOnClickListener(this)
         cancelTextView.setOnClickListener(this)
+
+        activity?.let {
+            if (arguments != null && arguments?.getString("source") != null) {
+                when {
+                    arguments?.getString("source") == AppConstants.CONTENT_TYPE_ARTICLE -> {
+                        Utils.shareEventTracking(
+                            it, "Post creation",
+                            "Invite_Android",
+                            "Show_InvitePopup_PostBlogCreation"
+                        )
+                        eventSuffix = "_PBC"
+                        screenName = "Post creation"
+                    }
+                    arguments?.getString("source") == AppConstants.CONTENT_TYPE_SHORT_STORY -> {
+                        Utils.shareEventTracking(
+                            it, "Post creation",
+                            "Invite_Android",
+                            "Show_InvitePopup_Post100WSCreation"
+                        )
+                        eventSuffix = "_PSC"
+                        screenName = "Post creation"
+                    }
+                    arguments?.getString("source") == AppConstants.CONTENT_TYPE_VIDEO -> {
+                        Utils.shareEventTracking(
+                            it, "Post creation",
+                            "Invite_Android",
+                            "Show_InvitePopup_PostVlogCreation"
+                        )
+                        eventSuffix = "_PVC"
+                        screenName = "Post creation"
+                    }
+                    arguments?.getString("source") == "profile" -> {
+                        Utils.shareEventTracking(
+                            it, "Self Profile",
+                            "Invite_Android",
+                            "Show_InvitePopup_FromProfile"
+                        )
+                        eventSuffix = "_FSP"
+                        screenName = "Self Profile"
+                    }
+                    arguments?.getString("source") == "notification" -> {
+                        Utils.shareEventTracking(
+                            it, "Self Profile",
+                            "Invite_Android",
+                            "Show_InvitePopup_ViaNotif"
+                        )
+                        eventSuffix = "_VN"
+                        screenName = "Self Profile"
+                    }
+                    arguments?.getString("source") == "deeplink" -> {
+                        Utils.shareEventTracking(
+                            it, "Self Profile",
+                            "Invite_Android",
+                            "Show_InvitePopup_ViaDeeplink"
+                        )
+                        eventSuffix = "_VD"
+                        screenName = "Self Profile"
+                    }
+                }
+            }
+        }
     }
 
     override fun onClick(view: View?) {
         try {
             when {
                 view?.id == R.id.facebookShareWidget -> {
-                    Utils.pushGenericEvent(
-                        context, "CTA_Invite_Facebook_Friends",
-                        SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).dynamoId,
-                        "InviteFriendsDialogFragment"
-                    )
                     activity?.let {
                         val intent = Intent(it, UserInviteFBSuggestionActivity::class.java)
+                        intent.putExtra("eventScreen", screenName)
+                        intent.putExtra("eventSuffix", eventSuffix)
                         startActivity(intent)
+                        Utils.shareEventTracking(
+                            it, screenName,
+                            "Invite_Android",
+                            "CTA_Invite_Facebook_Friends$eventSuffix"
+                        )
                         dismiss()
                     }
                 }
                 view?.id == R.id.contactShareWidget -> {
                     activity?.let {
                         val contactIntent = Intent(it, PhoneContactsActivity::class.java)
+                        contactIntent.putExtra("eventScreen", screenName)
+                        contactIntent.putExtra("eventSuffix", eventSuffix)
                         startActivity(contactIntent)
-                        Utils.pushGenericEvent(
-                            it, "CTA_Invite_Phone_Contacts",
-                            SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).dynamoId,
-                            "InviteFriendsDialogFragment"
+                        Utils.shareEventTracking(
+                            it, screenName,
+                            "Invite_Android",
+                            "CTA_Invite_Phone_Contacts$eventSuffix"
                         )
                         dismiss()
                     }
@@ -95,10 +162,10 @@ class InviteFriendsDialogFragment : DialogFragment(), View.OnClickListener {
                         shareGenericProfileUrl()
                         dismiss()
                     }
-                    Utils.pushGenericEvent(
-                        context, "CTA_Share_Link",
-                        SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).dynamoId,
-                        "InviteFriendsDialogFragment"
+                    Utils.shareEventTracking(
+                        context, screenName,
+                        "Invite_Android",
+                        "CTA_Share_Link$eventSuffix"
                     )
                 }
                 view?.id == R.id.whatsappShareLinkWidget -> {
@@ -109,10 +176,10 @@ class InviteFriendsDialogFragment : DialogFragment(), View.OnClickListener {
                         shareProfileUrl()
                         dismiss()
                     }
-                    Utils.pushGenericEvent(
-                        context, "CTA_Invite_Whatsapp",
-                        SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).dynamoId,
-                        "InviteFriendsDialogFragment"
+                    Utils.shareEventTracking(
+                        context, screenName,
+                        "Invite_Android",
+                        "CTA_Invite_Whatsapp$eventSuffix"
                     )
                 }
                 view?.id == R.id.cancelTextView -> {

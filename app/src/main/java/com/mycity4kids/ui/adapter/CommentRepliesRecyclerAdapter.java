@@ -22,15 +22,15 @@ public class CommentRepliesRecyclerAdapter extends RecyclerView.Adapter<Recycler
 
     private static final int RESPONSE_TYPE_COMMENT = 0;
     private static final int RESPONSE_TYPE_REPLY = 1;
-    private final Context mContext;
-    private final LayoutInflater mInflator;
+    private final Context context;
+    private final LayoutInflater layoutInflater;
     private ArrayList<CommentListData> repliesList;
-    private RecyclerViewClickListener mListener;
+    private RecyclerViewClickListener recyclerViewClickListener;
 
-    public CommentRepliesRecyclerAdapter(Context pContext, RecyclerViewClickListener listener) {
-        mContext = pContext;
-        mInflator = (LayoutInflater) pContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        mListener = listener;
+    public CommentRepliesRecyclerAdapter(Context context, RecyclerViewClickListener listener) {
+        this.context = context;
+        layoutInflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        recyclerViewClickListener = listener;
     }
 
     public void setData(ArrayList<CommentListData> repliesList) {
@@ -54,10 +54,10 @@ public class CommentRepliesRecyclerAdapter extends RecyclerView.Adapter<Recycler
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         if (viewType == RESPONSE_TYPE_REPLY) {
-            View v0 = mInflator.inflate(R.layout.ss_comment_replies_item, parent, false);
+            View v0 = layoutInflater.inflate(R.layout.ss_comment_replies_item, parent, false);
             return new RepliesViewHolder(v0);
         } else {
-            View v0 = mInflator.inflate(R.layout.ss_comment_item, parent, false);
+            View v0 = layoutInflater.inflate(R.layout.ss_comment_item, parent, false);
             return new CommentsViewHolder(v0);
         }
     }
@@ -67,7 +67,6 @@ public class CommentRepliesRecyclerAdapter extends RecyclerView.Adapter<Recycler
         if (holder instanceof CommentsViewHolder) {
             CommentsViewHolder commentsViewHolder = (CommentsViewHolder) holder;
             commentsViewHolder.commentorUsernameTextView.setText(repliesList.get(position).getUserName());
-            //  commentsViewHolder.commentDataTextView.setText(repliesList.get(position).getMessage());
             commentsViewHolder.commentDataTextView.setText((Html
                     .fromHtml(
                             "<b>" + "<font color=\"#D54058\">" + repliesList.get(position).getUserName() + "</font>"
@@ -75,18 +74,16 @@ public class CommentRepliesRecyclerAdapter extends RecyclerView.Adapter<Recycler
                                     + " "
                                     + "<font color=\"#4A4A4A\">" + repliesList.get(position).getMessage()
                                     + "</font>")));
-            commentsViewHolder.DateTextView.setText(DateTimeUtils
+            commentsViewHolder.dateTextView.setText(DateTimeUtils
                     .getDateFromNanoMilliTimestamp(Long.parseLong(repliesList.get(position).getCreatedTime())));
             if (repliesList.get(position).getReplies() == null || repliesList.get(position).getReplies().isEmpty()
                     || repliesList.get(position).getRepliesCount() == 0) {
-                commentsViewHolder.replyCommentTextView.setText(mContext.getString(R.string.reply));
+                commentsViewHolder.replyCommentTextView.setText(context.getString(R.string.reply));
             } else {
                 commentsViewHolder.replyCommentTextView.setText(
-                        mContext.getString(R.string.reply) + "(" + repliesList.get(position)
+                        context.getString(R.string.reply) + "(" + repliesList.get(position)
                                 .getRepliesCount() + ")");
             }
-            //  commentsViewHolder.commentDateTextView.setText(DateTimeUtils
-            //   .getDateFromNanoMilliTimestamp(Long.parseLong(repliesList.get(position).getCreatedTime())));
             try {
                 Picasso.get().load(repliesList.get(position).getUserPic().getClientAppMin())
                         .placeholder(R.drawable.default_commentor_img).into((commentsViewHolder.commentorImageView));
@@ -107,7 +104,6 @@ public class CommentRepliesRecyclerAdapter extends RecyclerView.Adapter<Recycler
             }
             if (repliesList.get(position).getLikeCount() <= 0) {
                 commentsViewHolder.likeTextView.setText("");
-
             } else {
                 commentsViewHolder.likeTextView.setText(repliesList.get(position).getLikeCount() + "");
 
@@ -160,7 +156,7 @@ public class CommentRepliesRecyclerAdapter extends RecyclerView.Adapter<Recycler
         TextView replyCommentTextView;
         TextView commentDateTextView;
         TextView replyCountTextView;
-        TextView DateTextView;
+        TextView dateTextView;
         TextView likeTextView;
         ImageView moreOptionImageView;
 
@@ -175,26 +171,27 @@ public class CommentRepliesRecyclerAdapter extends RecyclerView.Adapter<Recycler
             commentDateTextView = (TextView) view.findViewById(R.id.commentDateTextView);
             likeTextView = (TextView) view.findViewById(R.id.likeTextView);
             replyCountTextView = (TextView) view.findViewById(R.id.replyCountTextView);
-            DateTextView = (TextView) view.findViewById(R.id.DateTextView);
+            dateTextView = (TextView) view.findViewById(R.id.DateTextView);
             moreOptionImageView = (ImageView) view.findViewById(R.id.moreOptionImageView);
             moreOptionImageView.setOnClickListener(this);
             replyCommentTextView.setVisibility(View.GONE);
             likeTextView.setOnClickListener(this);
+            commentorImageView.setOnClickListener(this);
             view.setOnLongClickListener(this);
         }
 
         @Override
         public void onClick(View v) {
             if (v.getId() == R.id.moreOptionImageView) {
-                mListener.onRecyclerItemLongClick(v, getAdapterPosition());
+                recyclerViewClickListener.onRecyclerItemLongClick(v, getAdapterPosition());
             } else {
-                mListener.onRecyclerItemClick(v, getAdapterPosition());
+                recyclerViewClickListener.onRecyclerItemClick(v, getAdapterPosition());
             }
         }
 
         @Override
         public boolean onLongClick(View v) {
-            mListener.onRecyclerItemLongClick(v, getAdapterPosition());
+            recyclerViewClickListener.onRecyclerItemLongClick(v, getAdapterPosition());
             return true;
         }
     }
@@ -206,7 +203,7 @@ public class CommentRepliesRecyclerAdapter extends RecyclerView.Adapter<Recycler
         TextView commentorUsernameTextView;
         TextView commentDataTextView;
         TextView commentDateTextView;
-        TextView DateTextView;
+        TextView dateTextView;
         TextView likeTextView;
         TextView replyCommentTextView;
         ImageView moreOptionRepliesImageView;
@@ -214,7 +211,7 @@ public class CommentRepliesRecyclerAdapter extends RecyclerView.Adapter<Recycler
         RepliesViewHolder(View view) {
             super(view);
             commentorImageView = (ImageView) view.findViewById(R.id.commentorImageView);
-            DateTextView = (TextView) view.findViewById(R.id.DateTextView);
+            dateTextView = (TextView) view.findViewById(R.id.DateTextView);
             commentorUsernameTextView = (TextView) view.findViewById(R.id.commentorUsernameTextView);
             commentDataTextView = (TextView) view.findViewById(R.id.commentDataTextView);
             commentDateTextView = (TextView) view.findViewById(R.id.commentDateTextView);
@@ -223,21 +220,22 @@ public class CommentRepliesRecyclerAdapter extends RecyclerView.Adapter<Recycler
             moreOptionRepliesImageView = (ImageView) view.findViewById(R.id.moreOptionRepliesImageView);
             moreOptionRepliesImageView.setOnClickListener(this);
             likeTextView.setOnClickListener(this);
+            commentorImageView.setOnClickListener(this);
             view.setOnLongClickListener(this);
         }
 
         @Override
         public void onClick(View v) {
             if (v.getId() == R.id.moreOptionRepliesImageView) {
-                mListener.onRecyclerItemLongClick(v, getAdapterPosition());
+                recyclerViewClickListener.onRecyclerItemLongClick(v, getAdapterPosition());
             } else {
-                mListener.onRecyclerItemClick(v, getAdapterPosition());
+                recyclerViewClickListener.onRecyclerItemClick(v, getAdapterPosition());
             }
         }
 
         @Override
         public boolean onLongClick(View v) {
-            mListener.onRecyclerItemLongClick(v, getAdapterPosition());
+            recyclerViewClickListener.onRecyclerItemLongClick(v, getAdapterPosition());
             return true;
         }
     }

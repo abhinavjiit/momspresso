@@ -568,18 +568,11 @@ class MomVlogFollowingAndVideosAdapter(val context: Context) :
         index: Int,
         followFollowingTextView: TextView
     ) {
-        Utils.momVlogEvent(
+        Utils.shareEventTracking(
             followFollowingTextView.context,
-            "Following Feed",
-            "Follow_CTA",
-            "",
-            "android",
-            SharedPrefUtils.getAppLocale(context),
-            SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).dynamoId,
-            System.currentTimeMillis().toString(),
-            "Following",
-            "",
-            ""
+            "Vlog Follow Feed",
+            "Follow_Android",
+            "VlogFollowFeed_C_Follow"
         )
         momVlogVideosOrFollowingList?.get(position)?.carouselVideoList?.get(index)?.following = true
         followFollowingTextView.text = context.getString(R.string.ad_following_author)
