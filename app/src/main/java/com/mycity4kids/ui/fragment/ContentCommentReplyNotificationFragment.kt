@@ -1,6 +1,7 @@
 package com.mycity4kids.ui.fragment
 
 import android.accounts.NetworkErrorException
+import android.content.Intent
 import android.os.Build
 import android.os.Bundle
 import android.text.Html
@@ -25,6 +26,7 @@ import com.mycity4kids.models.request.AddEditCommentOrReplyRequest
 import com.mycity4kids.models.response.CommentListData
 import com.mycity4kids.models.response.CommentListResponse
 import com.mycity4kids.models.response.LikeReactionModel
+import com.mycity4kids.profile.UserProfileActivity
 import com.mycity4kids.retrofitAPIsInterfaces.ArticleDetailsAPI
 import com.mycity4kids.ui.ContentCommentReplyNotificationActivity
 import com.mycity4kids.ui.adapter.ContentCommentReplyNotificationAdapter
@@ -61,6 +63,7 @@ class ContentCommentReplyNotificationFragment : BaseFragment(),
     private var contentType: String? = null
     private var deleteReplyPos: Int = 0
     private lateinit var commentShimmerLayout: ShimmerFrameLayout
+
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -102,6 +105,7 @@ class ContentCommentReplyNotificationFragment : BaseFragment(),
         likeTextView.setOnClickListener(this)
         replyCommentTextView.setOnClickListener(this)
         moreOptionImageView.setOnClickListener(this)
+        commentorImageView.setOnClickListener(this)
         return view
     }
 
@@ -140,6 +144,7 @@ class ContentCommentReplyNotificationFragment : BaseFragment(),
     }
 
     private fun setDataInToCommentContainer(listData: CommentListData?) {
+
         listData?.let {
             try {
                 commentData = it
@@ -370,6 +375,12 @@ class ContentCommentReplyNotificationFragment : BaseFragment(),
                 FirebaseCrashlytics.getInstance().recordException(e)
                 Log.d("MC4kException", Log.getStackTraceString(e))
             }
+        } else if (v?.id == R.id.commentorImageView) {
+            context?.let { it ->
+                val intent = Intent(it, UserProfileActivity::class.java)
+                intent.putExtra(Constants.USER_ID, commentData.userId)
+                startActivity(intent)
+            }
         }
     }
 
@@ -427,6 +438,14 @@ class ContentCommentReplyNotificationFragment : BaseFragment(),
             commentOptionsDialogFragment.arguments = _args
             commentOptionsDialogFragment.isCancelable = true
             commentOptionsDialogFragment.show(fm, "Comment Options")
+        } else if (v?.id == R.id.replierImageView) {
+            context?.let { context ->
+                repliesData?.let { repliesData ->
+                    val intent = Intent(context, UserProfileActivity::class.java)
+                    intent.putExtra(Constants.USER_ID, repliesData[position].userId)
+                    startActivity(intent)
+                }
+            }
         }
     }
 
@@ -541,7 +560,8 @@ class ContentCommentReplyNotificationFragment : BaseFragment(),
                             contentCommentReplyNotificationAdapter.notifyDataSetChanged()
                         }
                         commentId?.let {
-                            (activity as ContentCommentReplyNotificationActivity).addReply(null,
+                            (activity as ContentCommentReplyNotificationActivity).addReply(
+                                null,
                                 it
                             )
                         }
