@@ -78,7 +78,6 @@ import com.mycity4kids.models.response.ArticleListingResult;
 import com.mycity4kids.models.response.ArticleRecommendationStatusResponse;
 import com.mycity4kids.models.response.CommentListData;
 import com.mycity4kids.models.response.CommentListResponse;
-import com.mycity4kids.models.response.CrownDataResponse;
 import com.mycity4kids.models.response.FBCommentResponse;
 import com.mycity4kids.models.response.FollowUnfollowCategoriesResponse;
 import com.mycity4kids.models.response.FollowUnfollowUserResponse;
@@ -155,8 +154,6 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
     private MixpanelAPI mixpanel;
     private ISwipeRelated swipeRelated;
     private ArticleDetailResult detailData;
-    private Bitmap defaultBloggerBitmap;
-    private Bitmap resized;
     private ArticleDetailsAPI articleDetailsApi;
     private ArrayList<ImageData> imageList;
     private ArrayList<VideoData> videoList;
@@ -184,9 +181,7 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
     private int followTopicChangeNewUser = 0;
 
     private ObservableScrollView observableScrollView;
-    private TextView followClick;
     private TextView recentAuthorArticleHeading;
-    private LinearLayout trendingArticles;
     private LinearLayout recentAuthorArticles;
     private WebView mainWebView;
     private RelatedArticlesView relatedArticles1;
@@ -208,14 +203,12 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
     private ImageView likeArticleTextView;
     private CustomFontTextView bookmarkArticleTextView;
     private TextView articleTitle;
-    private TextView authorType;
     private TextView articleViewCountTextView;
     private TextView articleCommentCountTextView;
     private TextView articleRecommendationCountTextView;
     private TextView viewAllTagsTextView;
     private TextView swipeNextTextView;
     private ImageView coverImage;
-    private ImageView floatingActionButton;
     private RelativeLayout loadingView;
     private FlowLayout tagsLayout;
     private Rect scrollBounds;
@@ -238,7 +231,6 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
     private LinearLayout progressBarContainer;
     private boolean newArticleDetailFlag;
     private String webViewUrl;
-    private ImageView crownImageView;
     private YouTubePlayerView youTubePlayerView;
     private WebView bottomAdSlotWebView;
     private WebView topAdSlotWebView;
@@ -253,7 +245,6 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
     private MomspressoButtonWidget followTextViewFollowContainer;
     private TextView postsCountTextView;
     private TextView likeCountTextView;
-    private RelativeLayout userFollowViewContainer;
     private ImageView dot;
     private ShareButtonWidget writeCommentTextView;
     private TextView viewMoreTextView;
@@ -389,8 +380,8 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
         fragmentView = inflater.inflate(R.layout.article_details_fragment, container, false);
         Utils.pushOpenScreenEvent(getActivity(), "articleDetailFragment",
                 SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId());
-        userDynamoId = SharedPrefUtils.getUserDetailModel(getActivity()).getDynamoId();
-        deepLinkUrl = "";// getIntent().getStringExtra(Constants.DEEPLINK_URL);
+        userDynamoId = SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId();
+        deepLinkUrl = "";
         try {
             mixpanel = MixpanelAPI
                     .getInstance(BaseApplication.getAppContext(), AppConstants.MIX_PANEL_TOKEN);
@@ -531,7 +522,6 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
             authorNameFollowPopUp = (TextView) fragmentView.findViewById(R.id.authorNameFollowPopUp);
             authorImageViewFollowPopUp = (ImageView) fragmentView.findViewById(R.id.authorImageViewFollowPopUp);
             followText = (TextView) fragmentView.findViewById(R.id.followText);
-            floatingActionButton = (ImageView) fragmentView.findViewById(R.id.user_image);
             mainWebView = (WebView) fragmentView.findViewById(R.id.articleWebView);
             viewAllTagsTextView = (TextView) fragmentView.findViewById(R.id.viewAllTagsTextView);
             bottomToolbarLL = (LinearLayout) fragmentView.findViewById(R.id.bottomToolbarLL);
@@ -545,8 +535,6 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
             sponsoredTextView = (TextView) fragmentView.findViewById(R.id.sponseredText);
             badge = (ImageView) fragmentView.findViewById(R.id.badge);
             progressBarContainer = (LinearLayout) fragmentView.findViewById(R.id.progressBarContainer);
-            authorType = (TextView) fragmentView.findViewById(R.id.blogger_type);
-            followClick = (TextView) fragmentView.findViewById(R.id.follow_click);
             articleTitle = (TextView) fragmentView.findViewById(R.id.article_title);
             recentAuthorArticleHeading = (TextView) fragmentView.findViewById(R.id.recentAuthorArticleHeading);
             relatedArticles1 = (RelatedArticlesView) fragmentView.findViewById(R.id.relatedArticles1);
@@ -555,7 +543,6 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
             trendingRelatedArticles1 = (RelatedArticlesView) fragmentView.findViewById(R.id.trendingRelatedArticles1);
             trendingRelatedArticles2 = (RelatedArticlesView) fragmentView.findViewById(R.id.trendingRelatedArticles2);
             trendingRelatedArticles3 = (RelatedArticlesView) fragmentView.findViewById(R.id.trendingRelatedArticles3);
-            trendingArticles = (LinearLayout) fragmentView.findViewById(R.id.trendingArticles);
             recentAuthorArticles = (LinearLayout) fragmentView.findViewById(R.id.recentAuthorArticles);
             relatedTrendingSeparator = (View) fragmentView.findViewById(R.id.relatedTrendingSeparator);
             tagsLayout = (FlowLayout) fragmentView.findViewById(R.id.tagsLayout);
@@ -572,15 +559,12 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
             groupSubHeadingTextView = fragmentView.findViewById(R.id.groupSubHeadingTextView);
             observableScrollView = fragmentView.findViewById(R.id.scroll_view);
             loadingView = fragmentView.findViewById(R.id.relativeLoadingView);
-            crownImageView = fragmentView.findViewById(R.id.crownImageView);
             youTubePlayerView = fragmentView.findViewById(R.id.youtube_player_view);
             bottomAdSlotWebView = fragmentView.findViewById(R.id.bottomAdSlotWebView);
             topAdSlotWebView = fragmentView.findViewById(R.id.topAdSlotWebView);
             authorName = fragmentView.findViewById(R.id.authorName);
             userTypeBadgeTextView = fragmentView.findViewById(R.id.userTypeBadgeTextView);
 
-            fragmentView.findViewById(R.id.user_name).setOnClickListener(this);
-            floatingActionButton.setOnClickListener(this);
             relatedArticles1.setOnClickListener(this);
             relatedArticles2.setOnClickListener(this);
             relatedArticles3.setOnClickListener(this);
@@ -595,8 +579,6 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
             bookmarkArticleTextView.setOnClickListener(this);
             viewCommentsTextView.setOnClickListener(this);
             groupHeaderView.setOnClickListener(this);
-            followClick.setOnClickListener(this);
-            followClick.setEnabled(false);
             cancelFollowPopUp.setOnClickListener(this);
             followText.setOnClickListener(this);
             authorName.setOnClickListener(this);
@@ -694,11 +676,6 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
             }
             density = getResources().getDisplayMetrics().density;
             width = getResources().getDisplayMetrics().widthPixels;
-            defaultBloggerBitmap = BitmapFactory
-                    .decodeResource(getResources(), R.drawable.default_blogger_profile_img);
-            //resizing image because of crash .image size is large.
-            resized = Bitmap.createScaledBitmap(defaultBloggerBitmap, 96, 96, true);
-            floatingActionButton.setImageDrawable(new BitmapDrawable(getResources(), resized));
 
             try {
                 FileInputStream fileInputStream = BaseApplication.getAppContext()
@@ -1495,13 +1472,6 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
         call.enqueue(getViewCountResponseCallback);
     }
 
-    private void getCrownData() {
-        Retrofit retro = BaseApplication.getInstance().getRetrofit();
-        articleDetailsApi = retro.create(ArticleDetailsAPI.class);
-        Call<CrownDataResponse> call = articleDetailsApi.getCrownData(authorId);
-        call.enqueue(getCrownDataResponse);
-    }
-
     private void hitBookmarkFollowingStatusApi() {
         ArticleDetailRequest articleDetailRequest = new ArticleDetailRequest();
         articleDetailRequest.setArticleId(articleId);
@@ -1568,7 +1538,6 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
         videoList = detailData.getBody().getVideo();
         author = detailData.getUserName();
         isMomspresso = detailData.getIsMomspresso();
-        getCrownData();
 
         if (!StringUtils.isNullOrEmpty(detailData.getImageUrl().getThumbMax())) {
             Picasso.get().load(detailData.getImageUrl().getThumbMax())
@@ -1583,12 +1552,6 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
         try {
             if (!StringUtils.isNullOrEmpty(detailData.getUserType())) {
                 if (AppConstants.USER_TYPE_BLOGGER.equals(detailData.getUserType())) {
-                    if (isAdded()) {
-                        authorType.setText(
-                                AppUtils.getString(getActivity(), R.string.author_type_blogger));
-                    } else {
-                        authorType.setText(AppConstants.AUTHOR_TYPE_BLOGGER.toUpperCase());
-                    }
                     if (StringUtils.isNullOrEmpty(deepLinkUrl)) {
                         shareUrl = AppConstants.ARTICLE_SHARE_URL + detailData.getBlogTitleSlug()
                                 .trim() + "/article/" + detailData.getTitleSlug();
@@ -1599,12 +1562,6 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
                         shareUrl = deepLinkUrl;
                     }
                 } else if (AppConstants.USER_TYPE_EXPERT.equals(detailData.getUserType())) {
-                    if (isAdded()) {
-                        authorType.setText(
-                                AppUtils.getString(getActivity(), R.string.author_type_expert));
-                    } else {
-                        authorType.setText(AppConstants.AUTHOR_TYPE_EXPERT.toUpperCase());
-                    }
                     if (StringUtils.isNullOrEmpty(deepLinkUrl)) {
                         shareUrl = AppConstants.ARTICLE_SHARE_URL + "article/" + detailData
                                 .getTitleSlug();
@@ -1614,12 +1571,6 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
                         shareUrl = deepLinkUrl;
                     }
                 } else if (AppConstants.USER_TYPE_EDITOR.equals(detailData.getUserType())) {
-                    if (isAdded()) {
-                        authorType.setText(
-                                AppUtils.getString(getActivity(), R.string.author_type_editor));
-                    } else {
-                        authorType.setText(AppConstants.AUTHOR_TYPE_EDITOR.toUpperCase());
-                    }
                     if (StringUtils.isNullOrEmpty(deepLinkUrl)) {
                         shareUrl = AppConstants.ARTICLE_SHARE_URL + "article/" + detailData
                                 .getTitleSlug();
@@ -1630,12 +1581,6 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
                     }
                 } else if (AppConstants.USER_TYPE_EDITORIAL.equals(detailData.getUserType())) {
                     userTypeBadgeTextView.setVisibility(View.VISIBLE);
-                    if (isAdded()) {
-                        authorType.setText(
-                                AppUtils.getString(getActivity(), R.string.author_type_editorial));
-                    } else {
-                        authorType.setText(AppConstants.AUTHOR_TYPE_EDITORIAL.toUpperCase());
-                    }
                     if (StringUtils.isNullOrEmpty(deepLinkUrl)) {
                         shareUrl = AppConstants.ARTICLE_SHARE_URL + "article/" + detailData
                                 .getTitleSlug();
@@ -1645,12 +1590,6 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
                         shareUrl = deepLinkUrl;
                     }
                 } else if (AppConstants.USER_TYPE_FEATURED.equals(detailData.getUserType())) {
-                    if (isAdded()) {
-                        authorType.setText(
-                                AppUtils.getString(getActivity(), R.string.author_type_featured));
-                    } else {
-                        authorType.setText(AppConstants.AUTHOR_TYPE_FEATURED.toUpperCase());
-                    }
                     if (StringUtils.isNullOrEmpty(deepLinkUrl)) {
                         shareUrl = AppConstants.ARTICLE_SHARE_URL + "article/" + detailData
                                 .getTitleSlug();
@@ -1660,13 +1599,6 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
                         shareUrl = deepLinkUrl;
                     }
                 } else if (AppConstants.USER_TYPE_COLLABORATION.equals(detailData.getUserType())) {
-                    if (isAdded()) {
-                        authorType.setText(AppUtils.getString(getActivity(),
-                                R.string.author_type_collaboration));
-                    } else {
-                        authorType.setText(AppConstants.AUTHOR_TYPE_COLLABORATION.toUpperCase());
-                    }
-
                     if (StringUtils.isNullOrEmpty(deepLinkUrl)) {
                         shareUrl = AppConstants.ARTICLE_SHARE_URL + "article/" + detailData
                                 .getTitleSlug();
@@ -1676,12 +1608,6 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
                         shareUrl = deepLinkUrl;
                     }
                 } else {
-                    if (isAdded()) {
-                        authorType.setText(
-                                AppUtils.getString(getActivity(), R.string.author_type_user));
-                    } else {
-                        authorType.setText(AppConstants.AUTHOR_TYPE_USER.toUpperCase());
-                    }
                     if (StringUtils.isNullOrEmpty(deepLinkUrl)) {
                         shareUrl = AppConstants.ARTICLE_SHARE_URL + detailData.getBlogTitleSlug()
                                 .trim() + "/article/" + detailData.getTitleSlug();
@@ -1693,13 +1619,6 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
                     }
                 }
             } else {
-                // Default Author type set to Blogger
-                if (isAdded()) {
-                    authorType.setText(
-                            AppUtils.getString(getActivity(), R.string.author_type_blogger));
-                } else {
-                    authorType.setText(AppConstants.AUTHOR_TYPE_BLOGGER.toUpperCase());
-                }
                 if (StringUtils.isNullOrEmpty(deepLinkUrl)) {
                     shareUrl = AppConstants.ARTICLE_SHARE_URL + detailData.getBlogTitleSlug().trim()
                             + "/article/" + detailData.getTitleSlug();
@@ -1716,8 +1635,6 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
         }
 
         if (!StringUtils.isNullOrEmpty(detailData.getUserName())) {
-            ((TextView) fragmentView.findViewById(R.id.user_name))
-                    .setText(detailData.getUserName());
             authorName.setText(detailData.getUserName());
             authorNameTextViewFollowContainer.setText(detailData.getUserName());
         }
@@ -1860,30 +1777,6 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
             mainWebView.loadUrl(webViewUrl);
         }
 
-        final Target target = new Target() {
-            @Override
-            public void onBitmapLoaded(Bitmap bitmap, Picasso.LoadedFrom from) {
-                floatingActionButton.setPadding(-1, -1, -1, -1);
-                if (isAdded()) {
-                    floatingActionButton
-                            .setImageDrawable(new BitmapDrawable(getResources(), bitmap));
-                }
-            }
-
-            @Override
-            public void onBitmapFailed(Exception e, Drawable errorDrawable) {
-
-            }
-
-            @Override
-            public void onPrepareLoad(Drawable placeHolderDrawable) {
-            }
-        };
-
-        floatingActionButton.setTag(target);
-        if (!StringUtils.isNullOrEmpty(detailData.getProfilePic().getClientApp())) {
-            Picasso.get().load(detailData.getProfilePic().getClientApp()).into(target);
-        }
         if (!StringUtils.isNullOrEmpty(detailData.getProfilePic().getClientApp())) {
             Picasso.get().load(detailData.getProfilePic().getClientApp()).into(authorImageViewFollowContainer);
         }
@@ -2060,12 +1953,12 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
                     }
                     break;
                 case R.id.followTextViewFollowContainer:
-                case R.id.follow_click:
+                    followApiCall("ArticleDetail_PC_Follow");
+                    break;
                 case R.id.followText:
-                    followApiCall();
+                    followApiCall("ArticleDetail_PL_Follow");
                     break;
                 case R.id.user_image:
-                case R.id.user_name:
                 case R.id.authorName:
                 case R.id.userFollowView:
                     Intent profileIntent = new Intent(getActivity(), UserProfileActivity.class);
@@ -2953,14 +2846,13 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
 
     }
 
-    private void followApiCall() {
+    private void followApiCall(String eventName) {
         Retrofit retrofit = BaseApplication.getInstance().getRetrofit();
         FollowAPI followApi = retrofit.create(FollowAPI.class);
         FollowUnfollowUserRequest request = new FollowUnfollowUserRequest();
         request.setFollowee_id(authorId);
         if (isFollowing) {
             isFollowing = false;
-            followClick.setText(getString(R.string.ad_follow_author));
             followTextViewFollowContainer.setText(getString(R.string.ad_follow_author));
             Utils.pushGenericEvent(getActivity(), "CTA_Unfollow_Article_Detail", userDynamoId,
                     "ArticleDetailsFragment");
@@ -2973,9 +2865,7 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
             }
             isFollowing = true;
             followTextViewFollowContainer.setText(getString(R.string.ad_following_author));
-            followClick.setText(getString(R.string.ad_following_author));
-            Utils.pushGenericEvent(getActivity(), "CTA_Follow_Article_Detail", userDynamoId,
-                    "ArticleDetailsFragment");
+            Utils.shareEventTracking(getActivity(), "Article Detail", "Follow_Android", eventName);
             Call<FollowUnfollowUserResponse> followUnfollowUserResponseCall = followApi
                     .followUserV2(request);
             followUnfollowUserResponseCall.enqueue(followUserResponseCallback);
@@ -3208,39 +3098,6 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
             Log.d("MC4kException", Log.getStackTraceString(t));
         }
     };
-
-    private Callback<CrownDataResponse> getCrownDataResponse = new Callback<CrownDataResponse>() {
-        @Override
-        public void onResponse(Call<CrownDataResponse> call,
-                retrofit2.Response<CrownDataResponse> response) {
-            if (response.body() == null) {
-                return;
-            }
-            try {
-                CrownDataResponse responseData = response.body();
-                if (responseData.getCode() == 200 && Constants.SUCCESS
-                        .equals(responseData.getStatus())) {
-                    setCrownData(responseData.getData().getResult().getImage_url());
-                }
-            } catch (Exception e) {
-                FirebaseCrashlytics.getInstance().recordException(e);
-                Log.d("MC4kException", Log.getStackTraceString(e));
-            }
-        }
-
-        @Override
-        public void onFailure(Call<CrownDataResponse> call, Throwable t) {
-            FirebaseCrashlytics.getInstance().recordException(t);
-            Log.d("MC4kException", Log.getStackTraceString(t));
-        }
-    };
-
-    private void setCrownData(String imageUrl) {
-        if (!StringUtils.isNullOrEmpty(imageUrl)) {
-            crownImageView.setVisibility(View.VISIBLE);
-            Picasso.get().load(imageUrl).placeholder(R.drawable.default_article).fit().into(crownImageView);
-        }
-    }
 
     private void getArticleDetailsWebserviceApi() {
         Call<ArticleDetailWebserviceResponse> call = articleDetailsApi
@@ -3871,7 +3728,6 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
                             bookmarkId = responseData.getData().getResult().getBookmarkId();
                         }
                         if (userDynamoId.equals(authorId)) {
-                            followClick.setVisibility(View.INVISIBLE);
                             userFollowView.setVisibility(View.GONE);
                         } else {
                             if (!responseData.getData().getResult().getIsFollowed()) {
@@ -4107,8 +3963,6 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
                         FollowUnfollowUserResponse responseData = response.body();
                         if (responseData.getCode() != 200 || !Constants.SUCCESS
                                 .equals(responseData.getStatus())) {
-                            followClick.setText(
-                                    BaseApplication.getAppContext().getString(R.string.ad_follow_author));
                             isFollowing = false;
                         }
                     } catch (Exception e) {
@@ -4148,8 +4002,6 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
                         FollowUnfollowUserResponse responseData = response.body();
                         if (responseData.getCode() != 200 || !Constants.SUCCESS
                                 .equals(responseData.getStatus())) {
-                            followClick.setText(BaseApplication.getAppContext()
-                                    .getString(R.string.ad_following_author));
                             isFollowing = true;
                         }
                     } catch (Exception e) {

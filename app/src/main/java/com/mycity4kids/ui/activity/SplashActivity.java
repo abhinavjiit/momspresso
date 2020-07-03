@@ -5,7 +5,6 @@ import android.os.Build;
 import android.os.Build.VERSION;
 import android.os.Build.VERSION_CODES;
 import android.os.Bundle;
-import android.os.Handler;
 import android.util.Log;
 import android.view.View;
 import android.view.animation.AnimationUtils;
@@ -46,8 +45,6 @@ public class SplashActivity extends BaseActivity {
     FirebaseAnalytics firebaseAnalytics;
     MixpanelAPI mixpanel;
     private String branchData;
-    private Handler handler;
-    private Handler handler1;
 
     @Override
     protected void onNewIntent(Intent intent) {
@@ -59,6 +56,14 @@ public class SplashActivity extends BaseActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        if (!isTaskRoot()
+                && getIntent().hasCategory(Intent.CATEGORY_LAUNCHER)
+                && getIntent().getAction() != null
+                && getIntent().getAction().equals(Intent.ACTION_MAIN)) {
+
+            finish();
+            return;
+        }
         Utils.pushAppOpenEvent(this, SharedPrefUtils.getUserDetailModel(this).getDynamoId() + "");
         //AppUtils.printHashKey(this);
         extras = getIntent().getExtras();
@@ -90,7 +95,6 @@ public class SplashActivity extends BaseActivity {
     @Override
     public void onStart() {
         super.onStart();
-        handler = new Handler();
         String action = getIntent().getAction();
         String data = getIntent().getDataString();
         if (Intent.ACTION_VIEW.equals(action) && data != null) {
@@ -185,13 +189,10 @@ public class SplashActivity extends BaseActivity {
             } else {
                 Smartlook.setupAndStartRecording(getString(R.string.smart_look_key));
                 Smartlook.enableCrashlytics(true);
-                handler1 = new Handler();
-                handler1.postDelayed(() -> runOnUiThread(() -> {
-                    Intent intent = new Intent(SplashActivity.this, LanguageSelectionActivity.class);
-                    intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                    startActivity(intent);
-                    finish();
-                }), 1000);
+                Intent intent = new Intent(SplashActivity.this, LanguageSelectionActivity.class);
+                intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                startActivity(intent);
+                finish();
             }
         }
         Log.d("GCM Token ", SharedPrefUtils.getDeviceToken(BaseApplication.getAppContext()));
@@ -200,14 +201,11 @@ public class SplashActivity extends BaseActivity {
     private void gotoDashboard() {
         if (!StringUtils.isNullOrEmpty(deepLinkUrl) && (deepLinkUrl.contains(AppConstants.BRANCH_DEEPLINK)
                 || deepLinkUrl.contains(AppConstants.BRANCH_DEEPLINK_URL))) {
-            handler1 = new Handler();
-            handler1.postDelayed(() -> runOnUiThread(() -> {
-                Intent intent = new Intent(SplashActivity.this, DashboardActivity.class);
-                intent.putExtra("branchLink", deepLinkUrl);
-                intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
-                startActivity(intent);
-                finish();
-            }), 1000);
+            Intent intent = new Intent(SplashActivity.this, DashboardActivity.class);
+            intent.putExtra("branchLink", deepLinkUrl);
+            intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
+            startActivity(intent);
+            finish();
         } else {
             Intent intent = new Intent(SplashActivity.this, DashboardActivity.class);
             if (!StringUtils.isNullOrEmpty(deepLinkUrl)) {
@@ -265,7 +263,6 @@ public class SplashActivity extends BaseActivity {
                 showToast(getString(R.string.went_wrong));
                 FirebaseCrashlytics.getInstance().recordException(e);
                 Log.d("MC4KException", Log.getStackTraceString(e));
-                //Uncomment to run on phoenix
                 SharedPrefUtils.setAppUgrade(BaseApplication.getAppContext(), false);
                 navigateToNextScreen();
             }
@@ -277,16 +274,4 @@ public class SplashActivity extends BaseActivity {
             apiExceptions(t);
         }
     };
-
-    @Override
-    protected void onDestroy() {
-        mixpanel.flush();
-        if (handler != null) {
-            handler.removeCallbacksAndMessages(null);
-        }
-        if (handler1 != null) {
-            handler1.removeCallbacksAndMessages(null);
-        }
-        super.onDestroy();
-    }
 }

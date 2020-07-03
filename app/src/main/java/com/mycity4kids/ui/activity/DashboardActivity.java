@@ -78,7 +78,6 @@ import com.mycity4kids.retrofitAPIsInterfaces.TopicsCategoryAPI;
 import com.mycity4kids.retrofitAPIsInterfaces.VlogsListingAndDetailsAPI;
 import com.mycity4kids.ui.ContentCommentReplyNotificationActivity;
 import com.mycity4kids.ui.GroupMembershipStatus;
-import com.mycity4kids.ui.activity.collection.CollectionsActivity;
 import com.mycity4kids.ui.activity.collection.UserCollectionItemListActivity;
 import com.mycity4kids.ui.adapter.UserAllDraftsRecyclerAdapter;
 import com.mycity4kids.ui.campaign.activity.CampaignContainerActivity;
@@ -107,9 +106,8 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Locale;
 import java.util.Map;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 import okhttp3.ResponseBody;
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -130,7 +128,6 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
     private static final String EDITOR_TYPE = "editor_type";
     private static final int REQUEST_CAMERA_PERMISSION = 1;
     private static final int REQUEST_GALLERY_PERMISSION = 2;
-    public static final String COMMON_PREF_FILE = "my_city_prefs";
     private static String[] PERMISSIONS_STORAGE_CAMERA = {Manifest.permission.READ_EXTERNAL_STORAGE,
             Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.CAMERA};
     private FirebaseRemoteConfig firebaseRemoteConfig = FirebaseRemoteConfig.getInstance();
@@ -138,7 +135,6 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
     private String shortStoryChallengesList;
     private String deepLinkDisplayName;
     private String deepLinkImageUrl;
-    private String fromDeepLink = "FromDeepLink";
     private ArrayList<Topics> shortStoriesTopicList;
     public boolean filter = false;
     private Tracker tracker;
@@ -259,6 +255,15 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
 
         mixpanel = MixpanelAPI
                 .getInstance(BaseApplication.getAppContext(), AppConstants.MIX_PANEL_TOKEN);
+        try {
+            JSONObject prop = new JSONObject();
+            prop.put("userId", SharedPrefUtils.getUserDetailModel(this).getDynamoId());
+            prop.put("Language", Locale.getDefault().getLanguage());
+            mixpanel.registerSuperProperties(prop);
+        } catch (Exception e) {
+            FirebaseCrashlytics.getInstance().recordException(e);
+            Log.d("MC4kException", Log.getStackTraceString(e));
+        }
         Utils.pushGenericEvent(this, "Dashboard_event",
                 SharedPrefUtils.getUserDetailModel(this).getDynamoId(), "DashboardActivity", "firebase");
         try {
@@ -592,7 +597,7 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
                     .show(getFragmentManager(), rateAppDialogFragment.getClass().getSimpleName());
         }
         if (getIntent().getBooleanExtra("showInviteDialog", false)) {
-            launchInviteFriendsDialog();
+            launchInviteFriendsDialog(getIntent().getStringExtra("source"));
         }
         getUsersData();
     }
@@ -654,16 +659,14 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
         }
     }
 
-    private void launchInviteFriendsDialog() {
+    private void launchInviteFriendsDialog(String contentType) {
         InviteFriendsDialogFragment inviteFriendsDialogFragment = new InviteFriendsDialogFragment();
         Bundle args = new Bundle();
+        args.putString("source", contentType);
         inviteFriendsDialogFragment.setArguments(args);
         inviteFriendsDialogFragment.setCancelable(true);
         FragmentManager fm = getSupportFragmentManager();
         inviteFriendsDialogFragment.show(fm, "Invite Friends");
-        Utils.pushGenericEvent(this, "Show_InvitePopup_PostCreation",
-                SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId(),
-                "DashboardActivity");
     }
 
     private void showMyMoneyRegistrationPrompt(Intent mymoneyIntent) {
@@ -1194,6 +1197,7 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
             pushEvent("inviteFriendsDialog");
             Intent intent1 = new Intent(this, UserProfileActivity.class);
             intent1.putExtra(AppConstants.SHOW_INVITE_DIALOG_FLAG, true);
+            intent1.putExtra("source", "notification");
             startActivity(intent1);
         } else if (AppConstants.NOTIFICATION_TYPE_VIDEO_LISTING.equalsIgnoreCase(notificationType)) {
             pushEvent("videoListing");
@@ -2161,103 +2165,5 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
                 }
             }
         }
-    }
-
-    private Boolean matchRegex(String tempDeepLinkUrl) {
-        try {
-            String urlWithNoParams = tempDeepLinkUrl.split("\\?")[0];
-            if (urlWithNoParams.endsWith("/")) {
-                urlWithNoParams = urlWithNoParams.substring(0, urlWithNoParams.length() - 1);
-            }
-            Pattern pattern = Pattern.compile(AppConstants.COLLECTION_LIST_REGEX);
-            Matcher matcher = pattern.matcher(urlWithNoParams);
-            if (matcher.matches()) {
-                String[] separated = urlWithNoParams.split("/");
-                Intent intent = new Intent(this, CollectionsActivity.class);
-                intent.putExtra("userId", separated[separated.length - 2]);
-                startActivity(intent);
-                return true;
-            }
-
-            Pattern pattern1 = Pattern.compile(AppConstants.COLLECTION_DETAIL_REGEX);
-            Matcher matcher1 = pattern1.matcher(urlWithNoParams);
-            if (matcher1.matches()) {
-                String[] separated = urlWithNoParams.split("/");
-                Intent intent = new Intent(this, UserCollectionItemListActivity.class);
-                intent.putExtra("id", separated[separated.length - 1]);
-                startActivity(intent);
-                return true;
-            }
-
-            Pattern pattern2 = Pattern.compile(AppConstants.BADGES_LISTING_REGEX);
-            Matcher matcher2 = pattern2.matcher(urlWithNoParams);
-            if (matcher2.matches()) {
-                String[] separated = urlWithNoParams.split("/");
-                Intent intent = new Intent(this, BadgeActivity.class);
-                intent.putExtra(Constants.USER_ID, separated[separated.length - 2]);
-                startActivity(intent);
-                return true;
-            }
-
-            Pattern pattern3 = Pattern.compile(AppConstants.BADGES_DETAIL_REGEX);
-            Matcher matcher3 = pattern3.matcher(urlWithNoParams);
-            if (matcher3.matches()) {
-                String[] separated = urlWithNoParams.split("/");
-                Intent intent = new Intent(this, UserProfileActivity.class);
-                intent.putExtra(AppConstants.BADGE_ID, separated[separated.length - 1]);
-                intent.putExtra(Constants.USER_ID, separated[separated.length - 3]);
-                startActivity(intent);
-                return true;
-            }
-
-            Pattern pattern4 = Pattern.compile(AppConstants.MILESTONE_DETAIL_REGEX);
-            Matcher matcher4 = pattern4.matcher(urlWithNoParams);
-            if (matcher4.matches()) {
-                String[] separated = urlWithNoParams.split("/");
-                Intent intent = new Intent(this, UserProfileActivity.class);
-                intent.putExtra(AppConstants.MILESTONE_ID, separated[separated.length - 1]);
-                intent.putExtra(Constants.USER_ID, separated[separated.length - 3]);
-                startActivity(intent);
-                return true;
-            }
-
-            Pattern pattern5 = Pattern.compile(AppConstants.USER_PROFILE_REGEX);
-            Matcher matcher5 = pattern5.matcher(urlWithNoParams);
-            if (matcher5.matches()) {
-                String[] separated = urlWithNoParams.split("/");
-                Intent intent = new Intent(this, UserProfileActivity.class);
-                intent.putExtra(Constants.USER_ID, separated[separated.length - 1]);
-                startActivity(intent);
-                return true;
-            }
-
-            Pattern pattern6 = Pattern.compile(AppConstants.USER_ANALYTICS_REGEX);
-            Matcher matcher6 = pattern6.matcher(urlWithNoParams);
-            if (matcher6.matches()) {
-                String[] separated = urlWithNoParams.split("/");
-                Intent intent = new Intent(this, UserProfileActivity.class);
-                intent.putExtra("detail", "rank");
-                intent.putExtra(Constants.USER_ID, separated[separated.length - 2]);
-                startActivity(intent);
-                return true;
-            }
-
-            Pattern pattern7 = Pattern.compile(AppConstants.USER_PROFILE_INVITE_FRIENDS_REGEX);
-            Matcher matcher7 = pattern7.matcher(urlWithNoParams);
-            if (matcher7.matches()) {
-                String[] separated = urlWithNoParams.split("#")[0].split("/");
-                Intent intent = new Intent(this, UserProfileActivity.class);
-                if (SharedPrefUtils.getUserDetailModel(this).getDynamoId().equals(separated[separated.length - 1])) {
-                    intent.putExtra(AppConstants.SHOW_INVITE_DIALOG_FLAG, true);
-                }
-                intent.putExtra(Constants.USER_ID, separated[separated.length - 1]);
-                startActivity(intent);
-                return true;
-            }
-        } catch (Exception e) {
-            FirebaseCrashlytics.getInstance().recordException(e);
-            Log.d("MC4kException", Log.getStackTraceString(e));
-        }
-        return false;
     }
 }

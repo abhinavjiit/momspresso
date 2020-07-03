@@ -3,7 +3,7 @@ package com.mycity4kids.gtmutils;
 import android.content.Context;
 import android.os.Bundle;
 import android.util.Log;
-import androidx.fragment.app.FragmentActivity;
+import android.widget.Toast;
 import com.google.android.gms.tagmanager.DataLayer;
 import com.google.android.gms.tagmanager.TagManager;
 import com.google.firebase.analytics.FirebaseAnalytics;
@@ -11,6 +11,7 @@ import com.mixpanel.android.mpmetrics.MixpanelAPI;
 import com.mycity4kids.application.BaseApplication;
 import com.mycity4kids.constants.AppConstants;
 import com.mycity4kids.preference.SharedPrefUtils;
+import com.mycity4kids.utils.ToastUtils;
 import org.json.JSONObject;
 
 /**
@@ -22,7 +23,7 @@ public class Utils {
         // private constructor.G
     }
 
-    private static final String BADGE_NAME = "Badge name";
+    private static final String BADGE_NAME = "Badge_name";
 
     public static void initialLanguageSelection(Context context, String currentScreen, String source, String CTA,
             String platform, String lang, String userId, String timestamp, String event) {
@@ -1556,12 +1557,23 @@ public class Utils {
     public static void shareEventTracking(Context context, String screen, String objective, String event) {
         Log.e("ANALYTICS", "share event = " + screen + " --- " + objective + " --- " + event);
         try {
-            MixpanelAPI mixpanel = MixpanelAPI
-                    .getInstance(BaseApplication.getAppContext(), AppConstants.MIX_PANEL_TOKEN);
+            if ("264beeefef8a4425b8a70bed954e91c5"
+                    .equals(SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId())) {
+                ToastUtils.showToast(context,
+                        "screen = " + screen + "  ||  objective = " + objective + "  ||  event = " + event,
+                        Toast.LENGTH_LONG);
+            }
+        } catch (Exception e) {
+            Log.d("dwad", "dwd");
+        }
+
+        try {
             JSONObject jsonObject = new JSONObject();
             jsonObject.put("Screen", screen);
             jsonObject.put("Objective", objective);
             jsonObject.put("Language", "" + SharedPrefUtils.getAppLocale(BaseApplication.getAppContext()));
+            MixpanelAPI mixpanel = MixpanelAPI
+                    .getInstance(BaseApplication.getAppContext(), AppConstants.MIX_PANEL_TOKEN);
             mixpanel.track(event, jsonObject);
         } catch (Exception e) {
             e.printStackTrace();

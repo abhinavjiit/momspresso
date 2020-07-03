@@ -16,6 +16,7 @@ import com.google.firebase.crashlytics.FirebaseCrashlytics;
 import com.mycity4kids.R;
 import com.mycity4kids.application.BaseApplication;
 import com.mycity4kids.base.BaseActivity;
+import com.mycity4kids.constants.AppConstants;
 import com.mycity4kids.constants.Constants;
 import com.mycity4kids.gtmutils.Utils;
 import com.mycity4kids.models.response.UserDetailResponse;
@@ -143,6 +144,7 @@ public class ArticleModerationOrShareActivity extends BaseActivity implements Vi
                 Intent intent = new Intent(ArticleModerationOrShareActivity.this, DashboardActivity.class);
                 intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
                 intent.putExtra("showInviteDialog", true);
+                intent.putExtra("source", AppConstants.CONTENT_TYPE_ARTICLE);
                 startActivity(intent);
                 finish();
             } else {

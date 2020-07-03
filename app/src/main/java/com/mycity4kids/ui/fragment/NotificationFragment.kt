@@ -81,6 +81,7 @@ class NotificationFragment : BaseFragment(), IMembershipStatus,
     private var totalItemCount = 0
     private var recentTimestamp: Long = 0L
     private var isEarlierAdded: Boolean = false
+    private var isRecentAdded: Boolean = false
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -214,9 +215,10 @@ class NotificationFragment : BaseFragment(), IMembershipStatus,
                                 AppConstants.NOTIFICATION_CENTER_RECENT_HEADER
                             )
                         )
+                        isRecentAdded = true
                     }
                     for (i in 0 until dataList.size) {
-                        if (!isEarlierAdded && dataList[i].createdTime.toLong() <= recentTimestamp) {
+                        if (isRecentAdded && !isEarlierAdded && dataList[i].createdTime.toLong() <= recentTimestamp) {
                             notificationCenterResultArrayList!!.add(
                                 NotificationCenterResult(
                                     AppConstants.NOTIFICATION_CENTER_EARLIER_HEADER
@@ -234,7 +236,7 @@ class NotificationFragment : BaseFragment(), IMembershipStatus,
                     }
                 } else {
                     for (i in 0 until dataList.size) {
-                        if (!isEarlierAdded && dataList[i].createdTime.toLong() <= recentTimestamp) {
+                        if (isRecentAdded && !isEarlierAdded && dataList[i].createdTime.toLong() <= recentTimestamp) {
                             notificationCenterResultArrayList!!.add(NotificationCenterResult("earlier"))
                             isEarlierAdded = true
                         }
@@ -739,6 +741,7 @@ class NotificationFragment : BaseFragment(), IMembershipStatus,
                     val profileIntent =
                         Intent(activity, UserProfileActivity::class.java)
                     profileIntent.putExtra(AppConstants.SHOW_INVITE_DIALOG_FLAG, true)
+                    profileIntent.putExtra("source", "notification")
                     startActivity(profileIntent)
                     pushEvent("NOTIFICATION_CENTER_INVITE_FRIENDS")
                 }
@@ -909,6 +912,21 @@ class NotificationFragment : BaseFragment(), IMembershipStatus,
     }
 
     private fun followAuthorAPI(notificationCenterResult: NotificationCenterResult) {
+        if (notificationCenterResult.serviceType == "followers_mapping") {
+            Utils.shareEventTracking(
+                activity,
+                "Notification Centre",
+                "Follow_Android",
+                "Notif_FollowBack_Follow"
+            )
+        } else {
+            Utils.shareEventTracking(
+                activity,
+                "Notification Centre",
+                "Follow_Android",
+                "Notif_Invite_Follow"
+            )
+        }
         val retrofit = BaseApplication.getInstance().retrofit
         val followApi = retrofit.create(FollowAPI::class.java)
         val request = FollowUnfollowUserRequest()

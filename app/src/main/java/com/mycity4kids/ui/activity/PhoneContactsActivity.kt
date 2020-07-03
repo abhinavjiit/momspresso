@@ -17,6 +17,7 @@ import com.google.firebase.crashlytics.FirebaseCrashlytics
 import com.mycity4kids.R
 import com.mycity4kids.application.BaseApplication
 import com.mycity4kids.base.BaseActivity
+import com.mycity4kids.gtmutils.Utils
 import com.mycity4kids.models.ContactModel
 import com.mycity4kids.models.request.PhoneContactRequest
 import com.mycity4kids.retrofitAPIsInterfaces.ContactSyncAPI
@@ -37,6 +38,8 @@ class PhoneContactsActivity : BaseActivity(), EasyPermissions.PermissionCallback
     private var allPhoneList: ArrayList<String>? = null
     private lateinit var adapter: PhoneContactsAdapter
     private var source: String? = null
+    private var eventScreen: String? = ""
+    private var eventSuffix: String? = ""
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -49,6 +52,8 @@ class PhoneContactsActivity : BaseActivity(), EasyPermissions.PermissionCallback
             sendInviteTextView?.setOnClickListener(this)
 
             source = intent.getStringExtra("source")
+            eventScreen = intent.getStringExtra("eventScreen")
+            eventSuffix = intent.getStringExtra("eventSuffix")
 
             contactModelArrayList = ArrayList()
             allPhoneList = ArrayList()
@@ -107,7 +112,7 @@ class PhoneContactsActivity : BaseActivity(), EasyPermissions.PermissionCallback
 
             var phone: Cursor? = null
             try {
-                phone = getContentResolver().query(
+                phone = contentResolver.query(
                     ContactsContract.CommonDataKinds.Phone.CONTENT_URI,
                     projection,
                     null,
@@ -224,6 +229,14 @@ class PhoneContactsActivity : BaseActivity(), EasyPermissions.PermissionCallback
         }
 
         if (selectedContactList.isNotEmpty()) {
+
+            Utils.shareEventTracking(
+                this,
+                eventScreen,
+                "Invite_Android",
+                "CTA_Final_InviteContact_$eventSuffix"
+            )
+
             val contactSynRequest = PhoneContactRequest()
             contactSynRequest.contactList = selectedContactList
             if (source == "shareApp") {

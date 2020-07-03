@@ -477,6 +477,7 @@ public class MyFcmListenerService extends FirebaseMessagingService {
                         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                         intent.putExtra("fromNotification", true);
                         intent.putExtra(AppConstants.SHOW_INVITE_DIALOG_FLAG, true);
+                        intent.putExtra("source", "notification");
                         intent.putExtra(Constants.FROM_SCREEN, "Notification");
                         TaskStackBuilder stackBuilder = TaskStackBuilder.create(this);
                         stackBuilder.addParentStack(UserProfileActivity.class);

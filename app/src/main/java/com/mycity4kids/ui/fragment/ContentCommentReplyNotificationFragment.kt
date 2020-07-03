@@ -64,7 +64,6 @@ class ContentCommentReplyNotificationFragment : BaseFragment(),
     private var deleteReplyPos: Int = 0
     private lateinit var commentShimmerLayout: ShimmerFrameLayout
 
-
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,

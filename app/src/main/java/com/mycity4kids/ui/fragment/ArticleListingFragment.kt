@@ -958,9 +958,24 @@ class ArticleListingFragment : BaseFragment(), View.OnClickListener,
                 followApi.unfollowUserInShortStoryListingV2(request)
             followUnfollowUserResponseCall.enqueue(followUnfollowUserResponseCallback)
         } else {
-            Utils.pushGenericEvent(
-                activity, "CTA_Follow_100WS_Detail", userDynamoId,
-                "ArticleListingFragment"
+            val screenName: String = when (sortType) {
+                Constants.KEY_TRENDING -> {
+                    "Trending"
+                }
+                Constants.KEY_RECENT -> {
+                    "Recent"
+                }
+                Constants.KEY_TODAYS_BEST -> {
+                    "TodaysBest"
+                }
+                Constants.KEY_FOLLOWING -> {
+                    "FollowingFeed"
+                }
+                else -> "NA"
+            }
+            Utils.shareEventTracking(
+                activity, screenName, "Follow_Android",
+                "MixedFeedStory_Follow"
             )
             mixfeedList!![position].isfollowing = "1"
             mixfeedAdapter.notifyDataSetChanged()

@@ -230,7 +230,15 @@ class ProfileSetting : BaseActivity(), GoogleApiClient.OnConnectionFailedListene
             }
             R.id.inviteContactTextView -> {
                 val searchIntent = Intent(this, PhoneContactsActivity::class.java)
+                searchIntent.putExtra("eventScreen", "Self Profile")
+                searchIntent.putExtra("eventSuffix", "_S")
                 startActivity(searchIntent)
+                Utils.shareEventTracking(
+                    this,
+                    "Self Profile",
+                    "Invite_Android",
+                    "CTA_Invite_Phone_Contacts_S"
+                )
             }
         }
     }

@@ -37,13 +37,10 @@ import com.squareup.picasso.Picasso;
 public class AddArticleCommentReplyDialogFragment extends DialogFragment implements View.OnClickListener {
 
     private CommentListData commentOrReplyData;
-
-    private ProgressDialog mProgressDialog;
+    private ProgressDialog progressDialog;
     private ImageView closeImageView;
     private TextView postCommentReplyTextView;
     private EditText commentReplyEditText;
-    private TextView replyToTextView;
-    private View separator;
     private RelativeLayout relativeMainContainer;
     private ImageView commentorImageView;
     private TextView commentorUsernameTextView;
@@ -72,7 +69,6 @@ public class AddArticleCommentReplyDialogFragment extends DialogFragment impleme
         headingTextView = (TextView) rootView.findViewById(R.id.headingTextView);
 
         Bundle extras = getArguments();
-//        String responseType = extras.getString("responseType");
         commentOrReplyData = (CommentListData) extras.get("parentCommentData");
         actionType = (String) extras.get("action");
         position = extras.getInt("position");
@@ -138,70 +134,57 @@ public class AddArticleCommentReplyDialogFragment extends DialogFragment impleme
                 if (isValid()) {
                     Fragment parentFragment = getParentFragment();
                     if ("EDIT_COMMENT".equals(actionType)) {
-                        if (null != parentFragment && parentFragment instanceof ArticleCommentsFragment) {
+                        if (parentFragment instanceof ArticleCommentsFragment) {
                             ((ArticleCommentsFragment) getParentFragment())
                                     .editComment(commentReplyEditText.getText().toString(), commentOrReplyData.getId(),
                                             position);
-                        } else if (null != parentFragment && parentFragment instanceof ArticleDetailsFragment) {
+                        } else if (parentFragment instanceof ArticleDetailsFragment) {
                             ((ArticleDetailsFragment) getParentFragment())
                                     .editComment(commentReplyEditText.getText().toString(), commentOrReplyData.getId(),
                                             position);
-
-
-                        } else if (parentFragment != null
-                                && parentFragment instanceof ContentCommentReplyNotificationFragment) {
+                        } else if (parentFragment instanceof ContentCommentReplyNotificationFragment) {
                             ((ContentCommentReplyNotificationFragment) getParentFragment())
-                                    .editComment(commentReplyEditText.getText().toString()
-                                            , commentOrReplyData.getId(), position);
+                                    .editComment(commentReplyEditText.getText().toString(), commentOrReplyData.getId(),
+                                            position);
                         } else if (getActivity() != null
                                 && getActivity() instanceof ContentCommentReplyNotificationActivity) {
                             ((ContentCommentReplyNotificationActivity) getActivity())
-                                    .editComment(commentReplyEditText.getText().toString()
-                                            , commentOrReplyData.getId(), position);
+                                    .editComment(commentReplyEditText.getText().toString(), commentOrReplyData.getId(),
+                                            position);
                         }
-
-
                     } else if ("EDIT_REPLY".equals(actionType)) {
                         Fragment fragment = getParentFragment();
-                        if (fragment != null && fragment instanceof ArticleCommentsFragment) {
+                        if (fragment instanceof ArticleCommentsFragment) {
                             ((ArticleCommentsFragment) getParentFragment())
                                     .editReply(commentReplyEditText.getText().toString(),
                                             commentOrReplyData.getParentCommentId(), commentOrReplyData.getId());
-                        } else if (fragment != null && fragment instanceof ArticleCommentRepliesDialogFragment) {
+                        } else if (fragment instanceof ArticleCommentRepliesDialogFragment) {
                             Fragment parentOfParentFragment = fragment.getParentFragment();
-                            if (parentOfParentFragment != null
-                                    && parentOfParentFragment instanceof ArticleCommentsFragment) {
+                            if (parentOfParentFragment instanceof ArticleCommentsFragment) {
                                 ((ArticleCommentsFragment) parentOfParentFragment)
                                         .editReply(commentReplyEditText.getText().toString(),
                                                 commentOrReplyData.getParentCommentId(), commentOrReplyData.getId());
-                            } else if (parentOfParentFragment != null
-                                    && parentOfParentFragment instanceof ArticleDetailsFragment) {
+                            } else if (parentOfParentFragment instanceof ArticleDetailsFragment) {
                                 ((ArticleDetailsFragment) parentOfParentFragment)
                                         .editReply(commentReplyEditText.getText().toString(),
                                                 commentOrReplyData.getParentCommentId(), commentOrReplyData.getId());
-
                             }
-                        } else if (fragment != null
-                                && fragment instanceof ContentCommentReplyNotificationFragment) {
-
+                        } else if (fragment instanceof ContentCommentReplyNotificationFragment) {
                             ((ContentCommentReplyNotificationFragment) getParentFragment())
                                     .editReply(commentReplyEditText.getText().toString(),
                                             commentOrReplyData.getParentCommentId(), commentOrReplyData.getId(),
                                             position);
                         }
-
                     } else {
                         if (commentOrReplyData == null) {
                             if (getActivity() != null
                                     && getActivity() instanceof ContentCommentReplyNotificationActivity) {
                                 ((ContentCommentReplyNotificationActivity) getActivity())
                                         .addComment(commentReplyEditText.getText().toString());
-
                             } else {
                                 ((AddComments) this.getParentFragment())
                                         .addComments(commentReplyEditText.getText().toString());
                             }
-
                         } else {
                             if (getParentFragment() instanceof ArticleCommentsFragment) {
                                 ((ArticleCommentsFragment) getParentFragment())
@@ -211,9 +194,8 @@ public class AddArticleCommentReplyDialogFragment extends DialogFragment impleme
                                 ((ContentCommentReplyNotificationFragment) getParentFragment())
                                         .addReply(commentReplyEditText.getText().toString(),
                                                 commentOrReplyData.getId());
-                            } else if (
-                                    getActivity() != null
-                                            && (getActivity()) instanceof ContentCommentReplyNotificationActivity) {
+                            } else if (getActivity() != null
+                                    && (getActivity()) instanceof ContentCommentReplyNotificationActivity) {
                                 ((ContentCommentReplyNotificationActivity) getActivity())
                                         .addReply(commentReplyEditText.getText().toString(),
                                                 commentOrReplyData.getId());
@@ -234,27 +216,30 @@ public class AddArticleCommentReplyDialogFragment extends DialogFragment impleme
                 Intent intent = new Intent(getActivity(), UserProfileActivity.class);
                 intent.putExtra(Constants.USER_ID, commentOrReplyData.getUserId());
                 startActivity(intent);
+                break;
+            default:
+                break;
         }
     }
 
     public void showProgressDialog(String bodyText) {
-        if (mProgressDialog == null) {
-            mProgressDialog = new ProgressDialog(getActivity());
-            mProgressDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-            mProgressDialog.setCancelable(false);
+        if (progressDialog == null) {
+            progressDialog = new ProgressDialog(getActivity());
+            progressDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+            progressDialog.setCancelable(false);
         }
 
-        mProgressDialog.setMessage(bodyText);
+        progressDialog.setMessage(bodyText);
 
-        if (!mProgressDialog.isShowing()) {
-            mProgressDialog.show();
+        if (!progressDialog.isShowing()) {
+            progressDialog.show();
         }
     }
 
     public void removeProgressDialog() {
         try {
-            if (mProgressDialog != null && mProgressDialog.isShowing()) {
-                mProgressDialog.dismiss();
+            if (progressDialog != null && progressDialog.isShowing()) {
+                progressDialog.dismiss();
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -277,6 +262,4 @@ public class AddArticleCommentReplyDialogFragment extends DialogFragment impleme
 
         void addComments(String comment);
     }
-
-
 }

@@ -80,8 +80,8 @@ class ContentCommentReplyNotificationAdapter(val recyclerViewClickListner: Recyc
         holder.moreOptionImageView.setOnClickListener {
             recyclerViewClickListner.onclick(it, position)
         }
-        holder.replierImageView.setOnClickListener{
-            recyclerViewClickListner.onclick(it,position)
+        holder.replierImageView.setOnClickListener {
+            recyclerViewClickListner.onclick(it, position)
         }
     }
 

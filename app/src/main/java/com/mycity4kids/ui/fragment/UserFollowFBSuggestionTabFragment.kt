@@ -190,8 +190,11 @@ class UserFollowFBSuggestionTabFragment : BaseFragment(), View.OnClickListener,
             val followUnfollowUserResponseCall = followAPI.followUserV2(request)
             followUnfollowUserResponseCall.enqueue(followUnfollowUserResponseCallback)
             activity?.let {
-                Utils.pushProfileEvents(
-                    it, "CTA_Follow_Profile", "UserFollowFBSuggestionTabFragment", "Follow", "-"
+                Utils.shareEventTracking(
+                    it,
+                    "Self Profile",
+                    "Follow_Android",
+                    "SelfProfile_FollowingSuggestions_Follow"
                 )
             }
         }

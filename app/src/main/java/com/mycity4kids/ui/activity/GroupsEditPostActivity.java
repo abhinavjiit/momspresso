@@ -137,8 +137,20 @@ public class GroupsEditPostActivity extends BaseActivity implements View.OnClick
         publishTextView.setOnClickListener(this);
 
         postData = getIntent().getParcelableExtra("postData");
-
         postContentEditText.setText(postData.getContent());
+        if (postData.getGroupInfo() != null && postData.getGroupInfo().getAnnonAllowed() == 0) {
+            SharedPrefUtils.setUserAnonymous(BaseApplication.getAppContext(), false);
+            anonymousCheckbox.setChecked(false);
+            anonymousCheckbox.setVisibility(View.INVISIBLE);
+            anonymousImageView.setVisibility(View.INVISIBLE);
+            anonymousTextView.setVisibility(View.INVISIBLE);
+        } else {
+            if (SharedPrefUtils.isUserAnonymous(BaseApplication.getAppContext())) {
+                anonymousCheckbox.setChecked(true);
+            } else {
+                anonymousCheckbox.setChecked(false);
+            }
+        }
 
         getWindow().setSoftInputMode(
                 WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
@@ -185,12 +197,6 @@ public class GroupsEditPostActivity extends BaseActivity implements View.OnClick
                 }
             }
         });
-
-        if (SharedPrefUtils.isUserAnonymous(BaseApplication.getAppContext())) {
-            anonymousCheckbox.setChecked(true);
-        } else {
-            anonymousCheckbox.setChecked(false);
-        }
     }
 
     private void addImageToContainer(String url) {

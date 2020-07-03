@@ -621,18 +621,11 @@ class MomVlogListingAdapter(val mContext: Context) :
         index: Int,
         followFollowingTextView: TextView
     ) {
-        Utils.momVlogEvent(
+        Utils.shareEventTracking(
             followFollowingTextView.context,
-            "Video Listing",
-            "Follow",
-            "",
-            "android",
-            SharedPrefUtils.getAppLocale(BaseApplication.getAppContext()),
-            SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).dynamoId,
-            System.currentTimeMillis().toString(),
-            "Following",
-            "",
-            ""
+            "Vlog Feeds",
+            "Follow_Android",
+            "VlogFeeds_C_Follow"
         )
         momVlogVideosOrCarousalList[position].carouselVideoList[index].following = true
         followFollowingTextView.setTextColor(ContextCompat.getColor(mContext, R.color.color_BABABA))

@@ -309,7 +309,7 @@ class UserProfileActivity : BaseActivity(),
             intent.getBooleanExtra(AppConstants.SHOW_INVITE_DIALOG_FLAG, false)
 
         if (showInviteDialogFlag) {
-            launchInviteFriendsDialog()
+            launchInviteFriendsDialog(intent.getStringExtra("source"))
         }
 
         if (!deeplinkBadgeId.isNullOrBlank()) {
@@ -423,7 +423,7 @@ class UserProfileActivity : BaseActivity(),
         call.enqueue(object : Callback<UserDetailResponse> {
             override fun onResponse(
                 call: Call<UserDetailResponse>,
-                response: retrofit2.Response<UserDetailResponse>
+                response: Response<UserDetailResponse>
             ) {
                 if (null == response.body()) {
                     return
@@ -474,7 +474,7 @@ class UserProfileActivity : BaseActivity(),
         callBookmark.enqueue(object : Callback<ArticleDetailResponse> {
             override fun onResponse(
                 call: Call<ArticleDetailResponse>,
-                response: retrofit2.Response<ArticleDetailResponse>
+                response: Response<ArticleDetailResponse>
             ) {
                 if (null == response.body()) {
                     showToast(getString(R.string.server_went_wrong))
@@ -484,9 +484,11 @@ class UserProfileActivity : BaseActivity(),
                 if (responseData!!.code == 200 && Constants.SUCCESS == responseData.status) {
                     isFollowing = if (!responseData.data.result.isFollowed) {
                         followAuthorTextView.setText(R.string.ad_follow_author)
+                        updateFollowingStatusInList("0")
                         false
                     } else {
                         followAuthorTextView.setText(R.string.ad_following_author)
+                        updateFollowingStatusInList("1")
                         true
                     }
                 } else {
@@ -506,12 +508,13 @@ class UserProfileActivity : BaseActivity(),
         })
     }
 
-    private fun hitFollowUnfollowAPI() {
+    private fun hitFollowUnfollowAPI(eventName: String) {
         val retrofit = BaseApplication.getInstance().retrofit
         val followAPI = retrofit.create(FollowAPI::class.java)
         val request = FollowUnfollowUserRequest()
         request.followee_id = authorId
         if (isFollowing) {
+            updateFollowingStatusInList("0")
             isFollowing = false
             followAuthorTextView.setText(R.string.ad_follow_author)
             val followUnfollowUserResponseCall = followAPI.unfollowUserV2(request)
@@ -521,14 +524,31 @@ class UserProfileActivity : BaseActivity(),
                 "Unfollow", "-"
             )
         } else {
+            updateFollowingStatusInList("1")
             isFollowing = true
             followAuthorTextView.setText(R.string.ad_following_author)
             val followUnfollowUserResponseCall = followAPI.followUserV2(request)
             followUnfollowUserResponseCall.enqueue(followUserResponseCallback)
-            Utils.pushProfileEvents(
-                this, "CTA_Follow_Profile", "UserProfileActivity",
-                "Follow", "-"
+            Utils.shareEventTracking(
+                this,
+                "Public Profile",
+                "Follow_Android",
+                eventName
             )
+        }
+    }
+
+    private fun updateFollowingStatusInList(followStatus: String) {
+        try {
+            userContentList?.let {
+                for (i in 0 until it.size) {
+                    it[i].isfollowing = followStatus
+                }
+                userContentAdapter.notifyDataSetChanged()
+            }
+        } catch (e: Exception) {
+            FirebaseCrashlytics.getInstance().recordException(e)
+            Log.d("MC4kException", Log.getStackTraceString(e))
         }
     }
 
@@ -715,7 +735,7 @@ class UserProfileActivity : BaseActivity(),
         call.enqueue(object : Callback<MixFeedResponse> {
             override fun onResponse(
                 call: Call<MixFeedResponse>,
-                response: retrofit2.Response<MixFeedResponse>
+                response: Response<MixFeedResponse>
             ) {
                 try {
                     isRequestRunning = false
@@ -736,7 +756,6 @@ class UserProfileActivity : BaseActivity(),
                         } else {
                             processUserContentResponse(responseData.data?.result)
                         }
-                    } else {
                     }
                 } catch (e: Exception) {
                     FirebaseCrashlytics.getInstance().recordException(e)
@@ -768,6 +787,11 @@ class UserProfileActivity : BaseActivity(),
             userContentList?.addAll(responseData)
             userContentAdapter.setListData(userContentList)
             userContentAdapter.notifyDataSetChanged()
+            if (isFollowing) {
+                updateFollowingStatusInList("1")
+            } else {
+                updateFollowingStatusInList("0")
+            }
         }
     }
 
@@ -778,7 +802,7 @@ class UserProfileActivity : BaseActivity(),
         call.enqueue(object : Callback<MixFeedResponse> {
             override fun onResponse(
                 call: Call<MixFeedResponse>,
-                response: retrofit2.Response<MixFeedResponse>
+                response: Response<MixFeedResponse>
             ) {
                 try {
                     isRequestRunning = false
@@ -791,7 +815,6 @@ class UserProfileActivity : BaseActivity(),
                     val responseData = response.body()
                     if (responseData!!.code == 200 && Constants.SUCCESS == responseData.status) {
                         processUserBookmarks(responseData.data?.result)
-                    } else {
                     }
                 } catch (e: Exception) {
                     FirebaseCrashlytics.getInstance().recordException(e)
@@ -948,7 +971,7 @@ class UserProfileActivity : BaseActivity(),
             call.enqueue(object : Callback<FeaturedOnModel> {
                 override fun onResponse(
                     call: Call<FeaturedOnModel>,
-                    response: retrofit2.Response<FeaturedOnModel>
+                    response: Response<FeaturedOnModel>
                 ) {
                     try {
                         if (null == response.body()) {
@@ -961,7 +984,6 @@ class UserProfileActivity : BaseActivity(),
                         val responseData = response.body() as FeaturedOnModel
                         if (responseData.code == 200 && Constants.SUCCESS == responseData.status) {
                             processFeaturedContentResponse(responseData.data?.result?.item_list)
-                        } else {
                         }
                     } catch (e: Exception) {
                         FirebaseCrashlytics.getInstance().recordException(e)
@@ -1156,14 +1178,14 @@ class UserProfileActivity : BaseActivity(),
             view?.id == R.id.followAuthorTextView -> {
                 if (!isFollowUnFollowRequestRunning) {
                     isFollowUnFollowRequestRunning = true
-                    hitFollowUnfollowAPI()
+                    hitFollowUnfollowAPI("PublicProfile_Main_Follow")
                 }
             }
             view?.id == R.id.sharePublicTextView -> {
                 shareProfile()
             }
             view?.id == R.id.sharePrivateTextView -> {
-                launchInviteFriendsDialog()
+                launchInviteFriendsDialog("profile")
             }
             view?.id == R.id.analyticsTextView -> {
                 if (AppConstants.DEBUGGING_USER_ID.contains("" + authorId)) {
@@ -1189,7 +1211,6 @@ class UserProfileActivity : BaseActivity(),
             }
             view?.id == R.id.followingContainer -> {
                 val intent = Intent(this, FollowingListFBSuggestionActivity::class.java)
-                //                val intent = Intent(this, FollowersAndFollowingListActivity::class.java)
                 intent.putExtra(AppConstants.FOLLOW_LIST_TYPE, AppConstants.FOLLOWING_LIST)
                 intent.putExtra(AppConstants.USER_ID_FOR_FOLLOWING_FOLLOWERS, authorId)
                 startActivity(intent)
@@ -1216,22 +1237,19 @@ class UserProfileActivity : BaseActivity(),
         }
     }
 
-    private fun launchInviteFriendsDialog() {
+    private fun launchInviteFriendsDialog(source: String?) {
         val inviteFriendsDialogFragment =
             InviteFriendsDialogFragment()
         val args = Bundle()
+        args.putString("source", source)
         inviteFriendsDialogFragment.arguments = args
         inviteFriendsDialogFragment.isCancelable = true
         val fm = supportFragmentManager
         inviteFriendsDialogFragment.show(fm, "Invite Friends")
-        Utils.pushProfileEvents(
-            this, "Show_InvitePopup_FromProfile", "UserProfileActivity",
-            "Invite", ""
-        )
     }
 
     fun shareProfile() {
-        shareCardType = "profile"
+        shareCardType = "profileWhatsapp"
         if (createSharableImageWhileCheckingPermissions()) {
             return
         }
@@ -1239,7 +1257,7 @@ class UserProfileActivity : BaseActivity(),
     }
 
     fun shareGenericProfile() {
-        shareCardType = "profile"
+        shareCardType = "profileGeneric"
         if (createSharableImageWhileCheckingPermissions()) {
             return
         }
@@ -1266,14 +1284,7 @@ class UserProfileActivity : BaseActivity(),
                 AppUtils.shareGenericImageAndOrLink(this, uri, shareText)
             else
                 AppUtils.shareGenericImageAndOrLinkViaWhatsapp(this, uri, shareText)
-            if (AppUtils.isPrivateProfile(authorId)) {
-                Utils.shareEventTracking(
-                    this,
-                    "Self Profile",
-                    "Share_Android",
-                    "SPC_Generic_Share"
-                )
-            } else {
+            if (!AppUtils.isPrivateProfile(authorId)) {
                 Utils.shareEventTracking(
                     this,
                     "Public Profile",
@@ -1408,6 +1419,9 @@ class UserProfileActivity : BaseActivity(),
             }
             view.id == R.id.menuItemImageView -> {
                 showArticleMenuOptions(view, position)
+            }
+            view.id == R.id.followAuthorTextView -> {
+                hitFollowUnfollowAPI("PublicProfile_Listing_Follow")
             }
         }
     }
@@ -1637,7 +1651,7 @@ class UserProfileActivity : BaseActivity(),
         object : Callback<RecommendUnrecommendArticleResponse> {
             override fun onResponse(
                 call: Call<RecommendUnrecommendArticleResponse>,
-                response: retrofit2.Response<RecommendUnrecommendArticleResponse>
+                response: Response<RecommendUnrecommendArticleResponse>
             ) {
                 isRecommendRequestRunning = false
                 if (response.body() == null) {
@@ -1773,7 +1787,7 @@ class UserProfileActivity : BaseActivity(),
             call.enqueue(object : Callback<AddBookmarkResponse> {
                 override fun onResponse(
                     call: Call<AddBookmarkResponse>,
-                    response: retrofit2.Response<AddBookmarkResponse>
+                    response: Response<AddBookmarkResponse>
                 ) {
                     if (null == response.body()) {
                         showToast(getString(R.string.server_went_wrong))
@@ -1804,7 +1818,7 @@ class UserProfileActivity : BaseActivity(),
             call.enqueue(object : Callback<AddBookmarkResponse> {
                 override fun onResponse(
                     call: Call<AddBookmarkResponse>,
-                    response: retrofit2.Response<AddBookmarkResponse>
+                    response: Response<AddBookmarkResponse>
                 ) {
                     if (null == response.body()) {
                         showToast(getString(R.string.server_went_wrong))
@@ -1992,7 +2006,7 @@ class UserProfileActivity : BaseActivity(),
                 return true
             } else {
                 try {
-                    if (shareCardType == "profile") {
+                    if (shareCardType == "profileGeneric" || shareCardType == "profileWhatsapp") {
                         AppUtils.getBitmapFromView(profileShareCardWidget, sharableProfileImageName)
                     } else {
                         createBitmapForSharingStory()
@@ -2005,7 +2019,7 @@ class UserProfileActivity : BaseActivity(),
             }
         } else {
             try {
-                if (shareCardType == "profile") {
+                if (shareCardType == "profileGeneric" || shareCardType == "profileWhatsapp") {
                     AppUtils.getBitmapFromView(profileShareCardWidget, sharableProfileImageName)
                 } else {
                     createBitmapForSharingStory()
@@ -2062,9 +2076,12 @@ class UserProfileActivity : BaseActivity(),
                 )
                     .show()
                 try {
-                    if (shareCardType == "profile") {
+                    if (shareCardType == "profileGeneric") {
                         AppUtils.getBitmapFromView(profileShareCardWidget, sharableProfileImageName)
                         shareGenericImage(true)
+                    } else if (shareCardType == "profileWhatsapp") {
+                        AppUtils.getBitmapFromView(profileShareCardWidget, sharableProfileImageName)
+                        shareGenericImage(false)
                     } else {
                         createBitmapForSharingStory()
                     }

@@ -3,6 +3,7 @@ package com.mycity4kids.ui.fragment;
 import android.accounts.NetworkErrorException;
 import android.app.Dialog;
 import android.app.ProgressDialog;
+import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.PorterDuff;
 import android.graphics.drawable.ColorDrawable;
@@ -13,7 +14,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
-import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.content.ContextCompat;
@@ -31,13 +31,12 @@ import com.mycity4kids.constants.Constants;
 import com.mycity4kids.models.response.CommentListData;
 import com.mycity4kids.models.response.CommentListResponse;
 import com.mycity4kids.models.response.LikeReactionModel;
+import com.mycity4kids.profile.UserProfileActivity;
 import com.mycity4kids.retrofitAPIsInterfaces.ArticleDetailsAPI;
 import com.mycity4kids.ui.adapter.CommentRepliesRecyclerAdapter;
-import com.mycity4kids.utils.ToastUtils;
 import java.util.ArrayList;
 import java.util.List;
 import okhttp3.ResponseBody;
-import org.json.JSONObject;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -47,16 +46,17 @@ public class ArticleCommentRepliesDialogFragment extends DialogFragment implemen
         CommentRepliesRecyclerAdapter.RecyclerViewClickListener,
         CommentOptionsDialogFragment.ICommentOptionAction {
 
-    private int pastVisiblesItems, visibleItemCount, totalItemCount;
+    private int pastVisiblesItems;
+    private int visibleItemCount;
+    private int totalItemCount;
     private boolean isReuqestRunning = false;
     private boolean isLastPageReached = false;
     private CommentListData data;
     private ArrayList<CommentListData> repliesList;
 
-    private Toolbar mToolbar;
+    private Toolbar toolbar;
     private RecyclerView repliesRecyclerView;
-    private TextView toolbarTitleTextView;
-    private ProgressDialog mProgressDialog;
+    private ProgressDialog progressDialog;
 
     private CommentRepliesRecyclerAdapter commentRepliesRecyclerAdapter;
     private int totalRepliesCount;
@@ -71,22 +71,15 @@ public class ArticleCommentRepliesDialogFragment extends DialogFragment implemen
 
         final View rootView = inflater.inflate(R.layout.short_story_comment_replies_dialog, container,
                 false);
-        mToolbar = (Toolbar) rootView.findViewById(R.id.toolbar);
-        repliesRecyclerView = (RecyclerView) rootView.findViewById(R.id.repliesRecyclerView);
-        toolbarTitleTextView = (TextView) mToolbar.findViewById(R.id.toolbarTitle);
-        openAddReplyDialog = (FloatingActionButton) rootView.findViewById(R.id.openAddReplyDialog);
+        toolbar = rootView.findViewById(R.id.toolbar);
+        repliesRecyclerView = rootView.findViewById(R.id.repliesRecyclerView);
+        openAddReplyDialog = rootView.findViewById(R.id.openAddReplyDialog);
 
         Drawable upArrow = ContextCompat.getDrawable(getActivity(), R.drawable.back_arroow);
         upArrow.setColorFilter(ContextCompat.getColor(getActivity(), R.color.colorControlNormal),
                 PorterDuff.Mode.SRC_ATOP);
-        mToolbar.setNavigationIcon(upArrow);
-        mToolbar.setNavigationOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                // handle back button naviagtion
-                dismiss();
-            }
-        });
+        toolbar.setNavigationIcon(upArrow);
+        toolbar.setNavigationOnClickListener(v -> dismiss());
 
         openAddReplyDialog.setOnClickListener(this);
 
@@ -143,8 +136,8 @@ public class ArticleCommentRepliesDialogFragment extends DialogFragment implemen
 
     private void getCommentReplies() {
         Retrofit retro = BaseApplication.getInstance().getRetrofit();
-        ArticleDetailsAPI articleDetailsAPI = retro.create(ArticleDetailsAPI.class);
-        Call<CommentListResponse> call = articleDetailsAPI
+        ArticleDetailsAPI articleDetailsApi = retro.create(ArticleDetailsAPI.class);
+        Call<CommentListResponse> call = articleDetailsApi
                 .getArticleCommentReplies(data.getPostId(), "reply", data.getId(), paginationReplyId);
         call.enqueue(articleCommentRepliesCallback);
     }
@@ -153,7 +146,7 @@ public class ArticleCommentRepliesDialogFragment extends DialogFragment implemen
         @Override
         public void onResponse(Call<CommentListResponse> call, retrofit2.Response<CommentListResponse> response) {
             isReuqestRunning = false;
-            if (response == null || response.body() == null) {
+            if (response.body() == null) {
                 NetworkErrorException nee = new NetworkErrorException("Trending Article API failure");
                 FirebaseCrashlytics.getInstance().recordException(nee);
                 return;
@@ -180,9 +173,7 @@ public class ArticleCommentRepliesDialogFragment extends DialogFragment implemen
         if (replyList.size() == 0) {
             isLastPageReached = false;
             if (null != repliesList && !repliesList.isEmpty()) {
-                //No more next results from pagination
                 isLastPageReached = true;
-            } else {
             }
         } else {
             repliesList.addAll(replyList);
@@ -216,29 +207,28 @@ public class ArticleCommentRepliesDialogFragment extends DialogFragment implemen
         Dialog dialog = getDialog();
         if (dialog != null) {
             dialog.getWindow().setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
-//            dialog.getWindow().setBackgroundDrawable(getResources().getDrawable(R.drawable.blue_bg_rounded_corners));
             dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
         }
     }
 
     public void showProgressDialog(String bodyText) {
-        if (mProgressDialog == null) {
-            mProgressDialog = new ProgressDialog(getActivity());
-            mProgressDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-            mProgressDialog.setCancelable(false);
+        if (progressDialog == null) {
+            progressDialog = new ProgressDialog(getActivity());
+            progressDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+            progressDialog.setCancelable(false);
         }
 
-        mProgressDialog.setMessage(bodyText);
+        progressDialog.setMessage(bodyText);
 
-        if (!mProgressDialog.isShowing()) {
-            mProgressDialog.show();
+        if (!progressDialog.isShowing()) {
+            progressDialog.show();
         }
     }
 
     public void removeProgressDialog() {
         try {
-            if (mProgressDialog != null && mProgressDialog.isShowing()) {
-                mProgressDialog.dismiss();
+            if (progressDialog != null && progressDialog.isShowing()) {
+                progressDialog.dismiss();
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -248,32 +238,40 @@ public class ArticleCommentRepliesDialogFragment extends DialogFragment implemen
 
     @Override
     public void onRecyclerItemClick(View view, int position) {
-        if (view.getId() == R.id.likeTextView) {
-            if (repliesList.get(position).getLiked()) {
-                repliesList.get(position).setLiked(false);
-                LikeReactionModel commentListData = new LikeReactionModel();
-                commentListData.setReaction("like");
-                commentListData.setStatus("0");
-                repliesList.get(position).setLikeCount(repliesList.get(position).getLikeCount() - 1);
-                Retrofit retrofit = BaseApplication.getInstance().getRetrofit();
-                ArticleDetailsAPI articleDetailsAPI = retrofit.create(ArticleDetailsAPI.class);
-                Call<ResponseBody> call = articleDetailsAPI
-                        .likeDislikeComment(repliesList.get(position).getId(), commentListData);
-                call.enqueue(likeDisLikeCommentCallback);
-
-            } else {
-                repliesList.get(position).setLiked(true);
-                LikeReactionModel commentListData = new LikeReactionModel();
-                commentListData.setReaction("like");
-                commentListData.setStatus("1");
-                repliesList.get(position).setLikeCount(repliesList.get(position).getLikeCount() + 1);
-                Retrofit retrofit = BaseApplication.getInstance().getRetrofit();
-                ArticleDetailsAPI articleDetailsAPI = retrofit.create(ArticleDetailsAPI.class);
-                Call<ResponseBody> call = articleDetailsAPI
-                        .likeDislikeComment(repliesList.get(position).getId(), commentListData);
-                call.enqueue(likeDisLikeCommentCallback);
+        try {
+            if (view.getId() == R.id.likeTextView) {
+                if (repliesList.get(position).getLiked()) {
+                    repliesList.get(position).setLiked(false);
+                    LikeReactionModel commentListData = new LikeReactionModel();
+                    commentListData.setReaction("like");
+                    commentListData.setStatus("0");
+                    repliesList.get(position).setLikeCount(repliesList.get(position).getLikeCount() - 1);
+                    Retrofit retrofit = BaseApplication.getInstance().getRetrofit();
+                    ArticleDetailsAPI articleDetailsApi = retrofit.create(ArticleDetailsAPI.class);
+                    Call<ResponseBody> call = articleDetailsApi
+                            .likeDislikeComment(repliesList.get(position).getId(), commentListData);
+                    call.enqueue(likeDisLikeCommentCallback);
+                } else {
+                    repliesList.get(position).setLiked(true);
+                    LikeReactionModel commentListData = new LikeReactionModel();
+                    commentListData.setReaction("like");
+                    commentListData.setStatus("1");
+                    repliesList.get(position).setLikeCount(repliesList.get(position).getLikeCount() + 1);
+                    Retrofit retrofit = BaseApplication.getInstance().getRetrofit();
+                    ArticleDetailsAPI articleDetailsApi = retrofit.create(ArticleDetailsAPI.class);
+                    Call<ResponseBody> call = articleDetailsApi
+                            .likeDislikeComment(repliesList.get(position).getId(), commentListData);
+                    call.enqueue(likeDisLikeCommentCallback);
+                }
+                commentRepliesRecyclerAdapter.notifyDataSetChanged();
+            } else if (view.getId() == R.id.commentorImageView) {
+                Intent intent = new Intent(getActivity(), UserProfileActivity.class);
+                intent.putExtra(Constants.USER_ID, repliesList.get(position).getUserId());
+                startActivity(intent);
             }
-            commentRepliesRecyclerAdapter.notifyDataSetChanged();
+        } catch (Exception e) {
+            FirebaseCrashlytics.getInstance().recordException(e);
+            Log.d("MC4kException", Log.getStackTraceString(e));
         }
     }
 
@@ -282,32 +280,32 @@ public class ArticleCommentRepliesDialogFragment extends DialogFragment implemen
         switch (view.getId()) {
             case R.id.moreOptionImageView:
             case R.id.commentRootLayout: {
+                Bundle args = new Bundle();
+                args.putInt("position", position);
+                args.putString("responseType", "COMMENT");
+                args.putString("authorId", repliesList.get(position).getUserId());
                 CommentOptionsDialogFragment commentOptionsDialogFragment = new CommentOptionsDialogFragment();
-                FragmentManager fm = getChildFragmentManager();
-                //  commentOptionsDialogFragment.setTargetFragment(this, 0);
-                Bundle _args = new Bundle();
-                _args.putInt("position", position);
-                _args.putString("responseType", "COMMENT");
-                _args.putString("authorId", repliesList.get(position).getUserId());
-                commentOptionsDialogFragment.setArguments(_args);
+                commentOptionsDialogFragment.setArguments(args);
                 commentOptionsDialogFragment.setCancelable(true);
+                FragmentManager fm = getChildFragmentManager();
                 commentOptionsDialogFragment.show(fm, "Comment Options");
             }
             break;
             case R.id.moreOptionRepliesImageView:
             case R.id.replyRootView: {
+                Bundle args = new Bundle();
+                args.putInt("position", position);
+                args.putString("responseType", "REPLY");
+                args.putString("authorId", repliesList.get(position).getUserId());
                 CommentOptionsDialogFragment commentOptionsDialogFragment = new CommentOptionsDialogFragment();
-                FragmentManager fm = getChildFragmentManager();
-                // commentOptionsDialogFragment.setTargetFragment(this, 0);
-                Bundle _args = new Bundle();
-                _args.putInt("position", position);
-                _args.putString("responseType", "REPLY");
-                _args.putString("authorId", repliesList.get(position).getUserId());
-                commentOptionsDialogFragment.setArguments(_args);
+                commentOptionsDialogFragment.setArguments(args);
                 commentOptionsDialogFragment.setCancelable(true);
+                FragmentManager fm = getChildFragmentManager();
                 commentOptionsDialogFragment.show(fm, "Comment Options");
             }
             break;
+            default:
+                break;
         }
     }
 
@@ -323,6 +321,8 @@ public class ArticleCommentRepliesDialogFragment extends DialogFragment implemen
                 }
             }
             break;
+            default:
+                break;
         }
     }
 
@@ -350,9 +350,7 @@ public class ArticleCommentRepliesDialogFragment extends DialogFragment implemen
         if ("REPLY".equals(responseType)) {
             if (getParentFragment() instanceof ArticleCommentsFragment) {
                 ((ArticleCommentsFragment) getParentFragment()).deleteReply(commentPosition, position - 1);
-            }
-            else if(getParentFragment() instanceof  ArticleDetailsFragment)
-            {
+            } else if (getParentFragment() instanceof ArticleDetailsFragment) {
                 ((ArticleDetailsFragment) getParentFragment()).deleteReply(commentPosition, position - 1);
             }
         } else {
@@ -363,59 +361,38 @@ public class ArticleCommentRepliesDialogFragment extends DialogFragment implemen
 
     @Override
     public void onResponseEdit(int position, String responseType) {
-        AddArticleCommentReplyDialogFragment addArticleCommentReplyDialogFragment = new AddArticleCommentReplyDialogFragment();
-        FragmentManager fm = getChildFragmentManager();
-        Bundle _args = new Bundle();
+        Bundle args = new Bundle();
         if (position == 0) {
-            _args.putString("action", "EDIT_COMMENT");
-            _args.putInt("position", commentPosition);
+            args.putString("action", "EDIT_COMMENT");
+            args.putInt("position", commentPosition);
         } else {
-            _args.putString("action", "EDIT_REPLY");
-            _args.putInt("position", position);
+            args.putString("action", "EDIT_REPLY");
+            args.putInt("position", position);
         }
-        _args.putParcelable("parentCommentData", repliesList.get(position));
-        addArticleCommentReplyDialogFragment.setArguments(_args);
+        args.putParcelable("parentCommentData", repliesList.get(position));
+        AddArticleCommentReplyDialogFragment addArticleCommentReplyDialogFragment =
+                new AddArticleCommentReplyDialogFragment();
+        addArticleCommentReplyDialogFragment.setArguments(args);
         addArticleCommentReplyDialogFragment.setCancelable(true);
-        // addArticleCommentReplyDialogFragment.setTargetFragment(getParentFragment(), 0);
+        FragmentManager fm = getChildFragmentManager();
         addArticleCommentReplyDialogFragment.show(fm, "Add Comment");
     }
 
     @Override
     public void onResponseReport(int position, String responseType) {
+        Bundle args = new Bundle();
+        args.putString("postId", repliesList.get(position).getId());
+        args.putInt("type", AppConstants.REPORT_TYPE_COMMENT);
         ReportContentDialogFragment reportContentDialogFragment = new ReportContentDialogFragment();
-        FragmentManager fm = getChildFragmentManager();
-        Bundle _args = new Bundle();
-        _args.putString("postId", repliesList.get(position).getId());
-        _args.putInt("type", AppConstants.REPORT_TYPE_COMMENT);
-        reportContentDialogFragment.setArguments(_args);
+        reportContentDialogFragment.setArguments(args);
         reportContentDialogFragment.setCancelable(true);
-        //reportContentDialogFragment.setTargetFragment(this, 0);
+        FragmentManager fm = getChildFragmentManager();
         reportContentDialogFragment.show(fm, "Report Content");
     }
 
     private Callback<ResponseBody> likeDisLikeCommentCallback = new Callback<ResponseBody>() {
         @Override
         public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
-            if (response == null || null == response.body()) {
-                NetworkErrorException nee = new NetworkErrorException(response.raw().toString());
-                FirebaseCrashlytics.getInstance().recordException(nee);
-                if (isAdded()) {
-                    ToastUtils.showToast(getActivity(), getResources().getString(R.string.server_went_wrong));
-                }
-                return;
-            }
-            try {
-                String resData = new String(response.body().bytes());
-                JSONObject jsonObject = new JSONObject(resData);
-                if (jsonObject.getJSONObject("status").toString().equals(Constants.SUCCESS) && jsonObject
-                        .getJSONObject("code").toString().equals("200")) {
-                }
-            } catch (Exception e) {
-                FirebaseCrashlytics.getInstance().recordException(e);
-                Log.d("MC4kException", Log.getStackTraceString(e));
-            }
-
-
         }
 
         @Override

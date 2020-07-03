@@ -206,10 +206,8 @@ public class ContributorListAdapter extends BaseAdapter {
             holder.relativeLoadingView.setVisibility(View.VISIBLE);
             holder.bloggerFollow.setVisibility(View.GONE);
             String jsonString = new Gson().toJson(followUnfollowUserRequest);
-            Utils.pushFollowAuthorEvent(context, "ContributorsScreen",
-                    SharedPrefUtils.getUserDetailModel(context).getDynamoId(),
-                    datalist.get(position).getId() + "-" + datalist.get(position).getFirstName() + " " + datalist
-                            .get(position).getLastName());
+            Utils.shareEventTracking(holder.bloggerFollow.getContext(), "Contributors", "Follow_Android",
+                    "Contributors_Follow");
             new FollowUnfollowAsyncTask(holder, "follow", position).execute(jsonString, "follow");
         } else {
             holder.relativeLoadingView.setVisibility(View.VISIBLE);

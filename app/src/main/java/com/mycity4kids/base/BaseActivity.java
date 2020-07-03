@@ -926,6 +926,7 @@ public abstract class BaseActivity extends AppCompatActivity implements GroupMem
         } else if (tempDeepLinkUrl.contains(AppConstants.DEEPLINK_PROFILE_INVITE_FRIENDS)) {
             Intent intent = new Intent(this, UserProfileActivity.class);
             intent.putExtra(AppConstants.SHOW_INVITE_DIALOG_FLAG, true);
+            intent.putExtra("source", "deeplink");
             startActivity(intent);
         } else if (tempDeepLinkUrl.contains(AppConstants.DEEPLINK_EDIT_SHORT_STORY_URL)) {
             final String storyId = tempDeepLinkUrl
@@ -1128,6 +1129,7 @@ public abstract class BaseActivity extends AppCompatActivity implements GroupMem
                 if (SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId()
                         .equals(separated[separated.length - 1])) {
                     intent.putExtra(AppConstants.SHOW_INVITE_DIALOG_FLAG, true);
+                    intent.putExtra("source", "deeplink");
                 }
                 intent.putExtra(Constants.USER_ID, separated[separated.length - 1]);
                 startActivity(intent);
@@ -1166,6 +1168,7 @@ public abstract class BaseActivity extends AppCompatActivity implements GroupMem
             Matcher matcher11 = pattern11.matcher(urlWithNoParams);
             if (matcher11.matches()) {
                 Intent intent = new Intent(this, ShortStoriesListingContainerActivity.class);
+                intent.putExtra("parentTopicId", AppConstants.SHORT_STORY_CATEGORYID);
                 startActivity(intent);
                 return true;
             }

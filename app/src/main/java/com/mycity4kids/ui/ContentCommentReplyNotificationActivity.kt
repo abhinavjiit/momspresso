@@ -177,10 +177,10 @@ class ContentCommentReplyNotificationActivity : BaseActivity(),
 
     override fun onRecyclerItemClick(view: View?, position: Int) {
         when (view?.id) {
-            R.id.commentorImageView->
+            R.id.commentorImageView ->
             {
-                val intent=Intent(this,UserProfileActivity::class.java)
-                intent.putExtra(Constants.USER_ID,commentList?.get(position)?.userId)
+                val intent = Intent(this, UserProfileActivity::class.java)
+                intent.putExtra(Constants.USER_ID, commentList?.get(position)?.userId)
                 startActivity(intent)
             }
             R.id.likeTextView -> {

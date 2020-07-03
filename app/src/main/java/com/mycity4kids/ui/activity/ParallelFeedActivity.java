@@ -422,7 +422,7 @@ public class ParallelFeedActivity extends BaseActivity implements View.OnClickLi
             videoRecyclerViewAdapter.setListUpdate(updateFollowPos, finalList);
         } else {
             finalList.get(updateFollowPos).setFollowed(true);
-            Utils.pushGenericEvent(this, "CTA_Follow_Vlog", userDynamoId, "ParallelFeedActivity");
+            Utils.shareEventTracking(this, "Video Detail", "Follow_Android", "VlogDetail_Follow");
             Call<FollowUnfollowUserResponse> followUnfollowUserResponseCall = followApi.followUserV2(request);
             followUnfollowUserResponseCall.enqueue(followUserResponseCallback);
             videoRecyclerViewAdapter.setListUpdate(updateFollowPos, finalList);

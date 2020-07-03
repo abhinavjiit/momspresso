@@ -1,11 +1,9 @@
 package com.mycity4kids.ui.activity;
 
 import android.accounts.NetworkErrorException;
-import android.app.ProgressDialog;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
-import android.os.Handler;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
@@ -15,7 +13,6 @@ import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
-import androidx.appcompat.widget.Toolbar;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.crashlytics.FirebaseCrashlytics;
@@ -44,25 +41,25 @@ import retrofit2.Retrofit;
  */
 public class VideoUploadProgressActivity extends BaseActivity implements View.OnClickListener {
 
-    RelativeLayout uploadFinishContainer, uploadingContainer;
-    private TextView status, okayTextView, mTxtPercentage, mTxtVideoSize, mTxtVideoName, mTxtVideoExtension;
-    private FirebaseAuth mAuth;
-    //    private UploadTask uploadTask;
+    private RelativeLayout uploadFinishContainer;
+    private RelativeLayout uploadingContainer;
+    private TextView okayTextView;
+    private TextView mtxtpercentage;
+    private TextView mtxtvideosize;
+    private TextView mtxtvideoname;
+    private FirebaseAuth firebaseAuth;
     private boolean isUploading = false;
-    private Uri contentURI;
+    private Uri contentUri;
     private String title;
-    private String categoryId, challengeId, comingFrom;
-    private String duration;
+    private String categoryId;
+    private String challengeId;
+    private String comingFrom;
     private String thumbnailTime;
     private MixpanelAPI mixpanel;
     private long suffixName;
-    private String jsonMyObject;
-    private ProgressBar mProgressBar;
-    private ProgressDialog progressdialog;
-    private Handler handler = new Handler();
-    private int statusProgress = 0;
+    private ProgressBar progressBar;
     private String extension;
-    private ImageView mImgCancelUpload;
+    private ImageView imgCancelUpload;
     private com.google.firebase.storage.UploadTask uploadTask;
     private RelativeLayout root;
     private String uploadStatus = AppConstants.VIDEO_UPLOAD_NOT_STARTED;
@@ -78,12 +75,11 @@ public class VideoUploadProgressActivity extends BaseActivity implements View.On
         Utils.pushOpenScreenEvent(this, "VideoUploadScreen",
                 SharedPrefUtils.getUserDetailModel(this).getDynamoId() + "");
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
-        mAuth = FirebaseAuth.getInstance();
+        firebaseAuth = FirebaseAuth.getInstance();
 
-        contentURI = getIntent().getParcelableExtra("uri");
+        contentUri = getIntent().getParcelableExtra("uri");
         title = getIntent().getStringExtra("title");
         categoryId = getIntent().getStringExtra("categoryId");
-        duration = getIntent().getStringExtra("duration");
         thumbnailTime = getIntent().getStringExtra("thumbnailTime");
         extension = getIntent().getStringExtra("extension");
 
@@ -92,19 +88,17 @@ public class VideoUploadProgressActivity extends BaseActivity implements View.On
             challengeId = getIntent().getStringExtra("ChallengeId");
         }
 
-        uploadingContainer = (RelativeLayout) findViewById(R.id.uploadingContainer);
-        uploadFinishContainer = (RelativeLayout) findViewById(R.id.uploadFinishContainer);
-        status = (TextView) findViewById(R.id.status);
-        okayTextView = (TextView) findViewById(R.id.okayTextView);
-        mProgressBar = (ProgressBar) findViewById(R.id.progressBar);
-        mTxtPercentage = (TextView) findViewById(R.id.percentage);
-        mTxtVideoSize = (TextView) findViewById(R.id.video_size);
-        mTxtVideoName = (TextView) findViewById(R.id.video_name);
-        mTxtVideoExtension = (TextView) findViewById(R.id.video_extension);
-        mImgCancelUpload = (ImageView) findViewById(R.id.cancel_upload);
+        uploadingContainer = findViewById(R.id.uploadingContainer);
+        uploadFinishContainer = findViewById(R.id.uploadFinishContainer);
+        okayTextView = findViewById(R.id.okayTextView);
+        progressBar = findViewById(R.id.progressBar);
+        mtxtpercentage = findViewById(R.id.percentage);
+        mtxtvideosize = findViewById(R.id.video_size);
+        mtxtvideoname = findViewById(R.id.video_name);
+        imgCancelUpload = findViewById(R.id.cancel_upload);
 
         okayTextView.setOnClickListener(this);
-        mImgCancelUpload.setOnClickListener(this);
+        imgCancelUpload.setOnClickListener(this);
 
         uploadingContainer.setVisibility(View.VISIBLE);
         uploadFinishContainer.setVisibility(View.GONE);
@@ -115,16 +109,16 @@ public class VideoUploadProgressActivity extends BaseActivity implements View.On
     @Override
     protected void onStart() {
         super.onStart();
-        FirebaseUser currentUser = mAuth.getCurrentUser();
+        FirebaseUser currentUser = firebaseAuth.getCurrentUser();
 
-        mAuth.signInAnonymously()
+        firebaseAuth.signInAnonymously()
                 .addOnCompleteListener(this, task -> {
                     if (task.isSuccessful()) {
                         // Sign in success, update UI with the signed-in user's information
                         Log.d("VideoUpload", "signInAnonymously:success");
-                        FirebaseUser user = mAuth.getCurrentUser();
-                        if (contentURI != null && AppConstants.VIDEO_UPLOAD_NOT_STARTED.equals(uploadStatus)) {
-                            uploadToFirebase(contentURI);
+                        FirebaseUser user = firebaseAuth.getCurrentUser();
+                        if (contentUri != null && AppConstants.VIDEO_UPLOAD_NOT_STARTED.equals(uploadStatus)) {
+                            uploadToFirebase(contentUri);
                         }
 
                     } else {
@@ -147,7 +141,7 @@ public class VideoUploadProgressActivity extends BaseActivity implements View.On
                         .getLastPathSegment() + "_" + suffixName);
         uploadTask = riversRef.putFile(file2);
 
-// Register observers to listen for when the download is done or if it fails
+        // Register observers to listen for when the download is done or if it fails
         uploadTask.addOnFailureListener(exception -> {
             // Handle unsuccessful uploads
             isUploading = false;
@@ -173,11 +167,11 @@ public class VideoUploadProgressActivity extends BaseActivity implements View.On
             DecimalFormat df = new DecimalFormat();
             df.setMaximumFractionDigits(2);
             int currentprogress = (int) progress;
-            mTxtVideoSize.setText("(" + df.format(mb) + "MB)");
-            mTxtVideoName
-                    .setText("UPLOADING " + contentURI.getLastPathSegment() + "_" + suffixName + "." + extension);
-            mTxtPercentage.setText(currentprogress + "%");
-            mProgressBar.setProgress(currentprogress);
+            mtxtvideosize.setText("(" + df.format(mb) + "MB)");
+            mtxtvideoname
+                    .setText("UPLOADING " + contentUri.getLastPathSegment() + "_" + suffixName + "." + extension);
+            mtxtpercentage.setText(currentprogress + "%");
+            progressBar.setProgress(currentprogress);
         });
     }
 
@@ -205,7 +199,7 @@ public class VideoUploadProgressActivity extends BaseActivity implements View.On
         }
         UploadVideoRequest uploadVideoRequest = new UploadVideoRequest();
         uploadVideoRequest.setTitle(title);
-        uploadVideoRequest.setFilename(contentURI.getLastPathSegment() + "_" + suffixName);
+        uploadVideoRequest.setFilename(contentUri.getLastPathSegment() + "_" + suffixName);
         uploadVideoRequest.setCategory_id(catList);
         uploadVideoRequest
                 .setFile_location("user/" + SharedPrefUtils.getUserDetailModel(this).getDynamoId() + "/path/to/");
@@ -222,7 +216,7 @@ public class VideoUploadProgressActivity extends BaseActivity implements View.On
     private Callback<ResponseBody> publishVideoResponseCallback = new Callback<ResponseBody>() {
         @Override
         public void onResponse(Call<ResponseBody> call, retrofit2.Response<ResponseBody> response) {
-            if (response == null || response.body() == null) {
+            if (response.body() == null) {
                 if (response.errorBody() != null) {
                     if (response.code() == 409) {
                         showToast("This title already exists. Kindly write a new title.");
@@ -231,7 +225,7 @@ public class VideoUploadProgressActivity extends BaseActivity implements View.On
                     MixPanelUtils.pushVideoPublishSuccessEvent(mixpanel, title);
                     uploadingContainer.setVisibility(View.GONE);
                     uploadFinishContainer.setVisibility(View.VISIBLE);
-                } else if (response != null && response.raw() != null) {
+                } else {
                     NetworkErrorException nee = new NetworkErrorException(response.raw().toString());
                     FirebaseCrashlytics.getInstance().recordException(nee);
                 }
@@ -242,8 +236,6 @@ public class VideoUploadProgressActivity extends BaseActivity implements View.On
                     MixPanelUtils.pushVideoPublishSuccessEvent(mixpanel, title);
                     uploadingContainer.setVisibility(View.GONE);
                     uploadFinishContainer.setVisibility(View.VISIBLE);
-                } else {
-
                 }
             } catch (Exception e) {
                 FirebaseCrashlytics.getInstance().recordException(e);
@@ -294,6 +286,7 @@ public class VideoUploadProgressActivity extends BaseActivity implements View.On
                 Intent intent = new Intent(VideoUploadProgressActivity.this, DashboardActivity.class);
                 intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                 intent.putExtra("showInviteDialog", true);
+                intent.putExtra("source", AppConstants.CONTENT_TYPE_VIDEO);
                 startActivity(intent);
                 finish();
                 break;
@@ -308,6 +301,8 @@ public class VideoUploadProgressActivity extends BaseActivity implements View.On
                                 }
                             });
                 }
+                break;
+            default:
                 break;
         }
     }
