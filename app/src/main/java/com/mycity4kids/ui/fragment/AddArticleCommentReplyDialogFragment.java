@@ -2,6 +2,7 @@ package com.mycity4kids.ui.fragment;
 
 import android.app.Dialog;
 import android.app.ProgressDialog;
+import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
@@ -21,7 +22,9 @@ import androidx.fragment.app.Fragment;
 import com.google.firebase.crashlytics.FirebaseCrashlytics;
 import com.mycity4kids.R;
 import com.mycity4kids.application.BaseApplication;
+import com.mycity4kids.constants.Constants;
 import com.mycity4kids.models.response.CommentListData;
+import com.mycity4kids.profile.UserProfileActivity;
 import com.mycity4kids.ui.ContentCommentReplyNotificationActivity;
 import com.mycity4kids.utils.DateTimeUtils;
 import com.mycity4kids.utils.StringUtils;
@@ -104,6 +107,7 @@ public class AddArticleCommentReplyDialogFragment extends DialogFragment impleme
 
         postCommentReplyTextView.setOnClickListener(this);
         closeImageView.setOnClickListener(this);
+        commentorImageView.setOnClickListener(this);
 
         return rootView;
     }
@@ -226,9 +230,11 @@ public class AddArticleCommentReplyDialogFragment extends DialogFragment impleme
             case R.id.closeImageView:
                 dismiss();
                 break;
-
+            case R.id.commentorImageView:
+                Intent intent = new Intent(getActivity(), UserProfileActivity.class);
+                intent.putExtra(Constants.USER_ID, commentOrReplyData.getUserId());
+                startActivity(intent);
         }
-
     }
 
     public void showProgressDialog(String bodyText) {

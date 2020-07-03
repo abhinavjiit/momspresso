@@ -21,6 +21,7 @@ import com.mycity4kids.models.request.AddEditCommentOrReplyRequest
 import com.mycity4kids.models.response.CommentListData
 import com.mycity4kids.models.response.CommentListResponse
 import com.mycity4kids.models.response.LikeReactionModel
+import com.mycity4kids.profile.UserProfileActivity
 import com.mycity4kids.retrofitAPIsInterfaces.ArticleDetailsAPI
 import com.mycity4kids.ui.activity.ArticleDetailsContainerActivity
 import com.mycity4kids.ui.activity.ParallelFeedActivity
@@ -176,6 +177,12 @@ class ContentCommentReplyNotificationActivity : BaseActivity(),
 
     override fun onRecyclerItemClick(view: View?, position: Int) {
         when (view?.id) {
+            R.id.commentorImageView->
+            {
+                val intent=Intent(this,UserProfileActivity::class.java)
+                intent.putExtra(Constants.USER_ID,commentList?.get(position)?.userId)
+                startActivity(intent)
+            }
             R.id.likeTextView -> {
                 if (commentList?.get(position)?.liked!!) {
                     commentList?.get(position)?.liked = false
