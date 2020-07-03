@@ -308,7 +308,7 @@ class ProfileInfoFragment : BaseFragment(),
             editAddNumber.visibility = View.VISIBLE
         }
 
-        if (apiGetResponse.isValidated.equals("1")) {
+        if (apiGetResponse.emailValidated.equals("1")) {
             editEmail.setText(apiGetResponse.email)
             editEmail.isEnabled = false
         } /*else {

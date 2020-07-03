@@ -33,6 +33,8 @@ public class UserDetailResult implements Parcelable {
     private String userType;
     @SerializedName("isValidated")
     private String isValidated;
+    @SerializedName("emailValidated")
+    private String emailValidated;
     @SerializedName("profilePicUrl")
     private ProfilePic profilePicUrl;
     @SerializedName("kids")
@@ -116,6 +118,7 @@ public class UserDetailResult implements Parcelable {
         cityId = in.readString();
         userType = in.readString();
         isValidated = in.readString();
+        emailValidated = in.readString();
         profilePicUrl = in.readParcelable(ProfilePic.class.getClassLoader());
         blogTitle = in.readString();
         followersCount = in.readString();
@@ -340,6 +343,15 @@ public class UserDetailResult implements Parcelable {
         this.isValidated = isValidated;
     }
 
+
+    public String getEmailValidated() {
+        return emailValidated;
+    }
+
+    public void setEmailValidated(String emailValidated) {
+        this.emailValidated = emailValidated;
+    }
+
     public ProfilePic getProfilePicUrl() {
         return profilePicUrl;
     }
@@ -551,6 +563,7 @@ public class UserDetailResult implements Parcelable {
         parcel.writeString(cityId);
         parcel.writeString(userType);
         parcel.writeString(isValidated);
+        parcel.writeString(emailValidated);
         parcel.writeParcelable(profilePicUrl, i);
         parcel.writeString(blogTitle);
         parcel.writeString(followersCount);
