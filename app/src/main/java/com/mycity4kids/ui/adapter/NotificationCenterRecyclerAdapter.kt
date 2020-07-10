@@ -30,6 +30,7 @@ import java.util.ArrayList
 const val NOTIFICATION_ITEM = 0
 const val RECENT_SECTION_HEADER = 1
 const val EARLIER_SECTION_HEADER = 2
+const val NOTIFICATION_ANNOUNCEMENT_ITEM = 3
 
 class NotificationCenterRecyclerAdapter(
     private val recyclerViewClickListener: RecyclerViewClickListener,
@@ -61,6 +62,15 @@ class NotificationCenterRecyclerAdapter(
                     view
                 )
             }
+            NOTIFICATION_ANNOUNCEMENT_ITEM -> {
+                val view = LayoutInflater.from(parent.context).inflate(
+                    R.layout.notification_center_announcement_item,
+                    parent, false
+                )
+                return NotificationAnnouncementViewHolder(
+                    view
+                )
+            }
             else -> {
                 val view = LayoutInflater.from(parent.context).inflate(
                     R.layout.notification_center_recycler_item,
@@ -81,6 +91,26 @@ class NotificationCenterRecyclerAdapter(
             is RecentHeaderViewHolder -> {
             }
             is EarlierHeaderViewHolder -> {
+            }
+            is NotificationAnnouncementViewHolder -> {
+                holder.announcementTitleTextView.text = notificationList[position].title
+                holder.announcementBodyTextView.text =
+                    AppUtils.fromHtml(notificationList[position].htmlBody)
+                try {
+                    if (!StringUtils.isNullOrEmpty(notificationList[position].thumbNail)) {
+                        holder.contentImageView.visibility = View.VISIBLE
+                        Picasso.get().load(notificationList[position].thumbNail)
+                            .placeholder(R.drawable.default_article).error(R.drawable.default_article)
+                            .into(holder.contentImageView)
+                    } else {
+                        holder.contentImageView.visibility = View.GONE
+                    }
+                } catch (e: Exception) {
+                    holder.contentImageView.visibility = View.GONE
+                }
+                holder.notificationDateTextView.text = "" + DateTimeUtils.getMMMDDFormatDate(
+                    notificationList[position].createdTime
+                )
             }
             is NotificationViewHolder -> {
                 if (notificationList[position].title.isNullOrBlank()) {
@@ -258,6 +288,7 @@ class NotificationCenterRecyclerAdapter(
         return when {
             AppConstants.NOTIFICATION_CENTER_RECENT_HEADER == notificationList[position].recyclerItemType -> RECENT_SECTION_HEADER
             AppConstants.NOTIFICATION_CENTER_EARLIER_HEADER == notificationList[position].recyclerItemType -> EARLIER_SECTION_HEADER
+            AppConstants.NOTIFICATION_CENTER_ANNOUNCEMENT == notificationList[position].notifType -> NOTIFICATION_ANNOUNCEMENT_ITEM
             else -> NOTIFICATION_ITEM
         }
     }
@@ -317,6 +348,33 @@ class NotificationCenterRecyclerAdapter(
             actionButtonWidget = view.findViewById(R.id.actionButtonWidget)
             rootView.setOnClickListener(this)
             actionButtonWidget.setOnClickListener(this)
+        }
+    }
+
+    inner class NotificationAnnouncementViewHolder internal constructor(view: View) :
+        RecyclerView.ViewHolder(view),
+        View.OnClickListener {
+        var rootView: RelativeLayout
+        var announcementTitleTextView: TextView
+        var announcementBodyTextView: TextView
+        var notificationDateTextView: TextView
+        var contentImageView: ImageView
+        override fun onClick(v: View) {
+            recyclerViewClickListener.onNotificationItemClick(v, adapterPosition)
+        }
+
+        init {
+            rootView =
+                view.findViewById(R.id.rootView)
+            announcementTitleTextView =
+                view.findViewById(R.id.announcementTitleTextView)
+            announcementBodyTextView =
+                view.findViewById(R.id.announcementBodyTextView)
+            contentImageView =
+                view.findViewById(R.id.announcementImageView)
+            notificationDateTextView =
+                view.findViewById(R.id.notificationDateTextView)
+            rootView.setOnClickListener(this)
         }
     }
 

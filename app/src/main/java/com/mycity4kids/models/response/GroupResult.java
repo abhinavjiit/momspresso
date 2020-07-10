@@ -56,7 +56,7 @@ public class GroupResult implements Parcelable {
     private AdminMembers adminMembers;
     @SerializedName("highlight")
     private int highlight;
-    @SerializedName("collectionId")
+    @SerializedName("resources")
     private String collectionId;
 
     protected GroupResult(Parcel in) {
