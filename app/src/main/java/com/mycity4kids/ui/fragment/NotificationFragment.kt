@@ -15,6 +15,7 @@ import com.google.firebase.crashlytics.FirebaseCrashlytics
 import com.mycity4kids.BuildConfig
 import com.mycity4kids.R
 import com.mycity4kids.application.BaseApplication
+import com.mycity4kids.base.BaseActivity
 import com.mycity4kids.base.BaseFragment
 import com.mycity4kids.constants.AppConstants
 import com.mycity4kids.constants.Constants
@@ -258,51 +259,6 @@ class NotificationFragment : BaseFragment(), IMembershipStatus,
             Log.d("MC4kException", Log.getStackTraceString(ex))
         }
     }
-
-    fun markAllNotificationAsRead() {
-        val retrofit = BaseApplication.getInstance().retrofit
-        val notificationsAPI = retrofit.create(
-            NotificationsAPI::class.java
-        )
-        val notificationReadRequest = NotificationReadRequest()
-        notificationReadRequest.readAll = "1"
-        val call =
-            notificationsAPI.markNotificationAsRead(notificationReadRequest)
-        call.enqueue(allNotificationReadResponseListener)
-    }
-
-    private val allNotificationReadResponseListener: Callback<NotificationCenterListResponse> =
-        object : Callback<NotificationCenterListResponse> {
-            override fun onResponse(
-                call: Call<NotificationCenterListResponse>,
-                response: Response<NotificationCenterListResponse>
-            ) {
-                if (null == response.body()) {
-                    val nee =
-                        NetworkErrorException(response.raw().toString())
-                    FirebaseCrashlytics.getInstance().recordException(nee)
-                    return
-                }
-                try {
-                    val responseData = response.body()
-                    if (responseData!!.code == 200 && Constants.SUCCESS == responseData.status) {
-                        paginationValue = ""
-                        notificationFromAPI
-                    }
-                } catch (e: Exception) {
-                    FirebaseCrashlytics.getInstance().recordException(e)
-                    Log.d("MC4kException", Log.getStackTraceString(e))
-                }
-            }
-
-            override fun onFailure(
-                call: Call<NotificationCenterListResponse>,
-                t: Throwable
-            ) {
-                FirebaseCrashlytics.getInstance().recordException(t)
-                Log.d("MC4kException", Log.getStackTraceString(t))
-            }
-        }
 
     override fun onNotificationItemClick(
         view: View,
@@ -853,6 +809,12 @@ class NotificationFragment : BaseFragment(), IMembershipStatus,
                         startActivity(intent)
                     }
                     pushEvent("NOTIFICATION_CENTER_CONTENT_LIKE")
+                }
+                AppConstants.NOTIFICATION_CENTER_ANNOUNCEMENT -> {
+                    activity?.let {
+                        (it as BaseActivity).handleDeeplinks(notificationCenterResultArrayList!![position].url)
+                    }
+                    pushEvent("NOTIFICATION_CENTER_ANNOUNCEMENT")
                 }
                 else -> {
                 }
