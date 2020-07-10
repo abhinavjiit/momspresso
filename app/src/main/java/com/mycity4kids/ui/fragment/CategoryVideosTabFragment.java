@@ -126,7 +126,7 @@ public class CategoryVideosTabFragment extends BaseFragment implements View.OnCl
         categoriesList = new ArrayList<>();
         Topics momVlogsSubCategoryModel = new Topics();
         momVlogsSubCategoryModel.setId(videoCategory);
-        momVlogsSubCategoryModel.setDisplay_name("All");
+        momVlogsSubCategoryModel.setDisplay_name(rootLayout.getContext().getString(R.string.all_categories_label));
         subCategoriesTopicList.add(0, momVlogsSubCategoryModel);
         for (int i = 0; i < topic.getChild().size(); i++) {
             if ("1".equals(topic.getChild().get(i).getShowInMenu())) {

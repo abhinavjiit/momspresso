@@ -71,7 +71,7 @@
           android:textColor="@color/white" />
 
         <RelativeLayout
-          android:id="@+id/winnerLayout"
+          android:id="@+id/statsLayout"
           android:layout_width="match_parent"
           android:layout_height="wrap_content"
           android:layout_below="@+id/author_name"
@@ -80,7 +80,8 @@
           android:paddingStart="@dimen/space_7"
           android:paddingTop="@dimen/space_3"
           android:paddingEnd="@dimen/space_7"
-          android:paddingBottom="@dimen/space_3">
+          android:paddingBottom="@dimen/space_3"
+          android:visibility="visible">
 
           <com.mycity4kids.widget.CustomFontTextView
             android:id="@+id/viewCountTextView1"
@@ -119,20 +120,38 @@
             android:visibility="visible"
             card_view:srcCompat="@drawable/ic_trophy" />
 
-          <com.mycity4kids.widget.CustomFontTextView
-            android:id="@+id/winner"
+        </RelativeLayout>
+
+        <RelativeLayout
+          android:id="@+id/winnerDetailsLayout"
+          android:layout_width="match_parent"
+          android:layout_height="wrap_content"
+          android:layout_below="@+id/author_name"
+          android:layout_alignParentEnd="true"
+          android:layout_marginBottom="@dimen/space_5"
+          android:paddingStart="@dimen/space_7"
+          android:paddingTop="@dimen/space_3"
+          android:paddingEnd="@dimen/space_7"
+          android:visibility="gone"
+          android:paddingBottom="@dimen/space_3">
+
+          <TextView
+            android:id="@+id/amountTextView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_centerVertical="true"
-            android:layout_marginStart="5dp"
-            android:layout_marginTop="5dp"
-            android:layout_marginEnd="@dimen/space_5"
-            android:layout_toEndOf="@+id/imageWinner"
-            android:text="WINNER"
-            android:textColor="#fff"
-            android:textSize="14sp"
-            android:visibility="gone"
-            card_view:fontName="oswald.ttf" />
+            android:layout_alignParentStart="true"
+            android:layout_marginStart="@dimen/space_10"
+            android:text=""
+            android:textColor="@color/white_color" />
+
+          <TextView
+            android:id="@+id/langTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_marginEnd="@dimen/space_10"
+            android:text=""
+            android:textColor="@color/white_color" />
         </RelativeLayout>
       </RelativeLayout>
     </RelativeLayout>

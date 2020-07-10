@@ -50,6 +50,13 @@ interface CollectionsAPI {
     ): Observable<BaseResponseGeneric<UserCollectionsListModel>>
 
     @GET("/v1/collections/{collectionId}")
+    fun getUserCollectionItem(
+        @Path("collectionId") collectionId: String,
+        @Query("start") start: Int,
+        @Query("offset") offset: Int
+    ): Call<BaseResponseGeneric<UserCollectionsListModel>>
+
+    @GET("/v1/collections/{collectionId}")
     fun getTutorialCollectionItems(
         @Path("collectionId") collectionId: String,
         @Query("start") start: Int,

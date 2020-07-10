@@ -353,7 +353,7 @@
   <string name="myprofile.followers_label">फॉलोवर्स</string>
   <string name="myprofile.section.articles_label">आर्टिकल्स</string>
   <string name="myprofile.section.short_story_label">100 शब्दों की कहानी</string>
-  <string name="myprofile.section.videos_label">मोम व्लॉग</string>
+  <string name="myprofile.section.videos_label">मॉम वी-लॉग</string>
   <string name="myprofile.section.activity_label">एक्टिविटी</string>
   <string name="myprofile.section.myranking_label">माय रैंकिंग</string>
   <string name="myprofile.section.settings_label">सेटिंग्स</string>
@@ -366,7 +366,7 @@
   <string name="blogger_profile.view_count_label">व्यूज</string>
   <string name="blogger_profile.article_count_label">पोस्ट्स</string>
   <string name="blogger_profile.section.articles_label">आर्टिकल्स</string>
-  <string name="blogger_profile.section.videos_label">मोम व्लॉग</string>
+  <string name="blogger_profile.section.videos_label">मॉम वी-लॉग</string>
   <string name="blogger_profile.section.activity_label">एक्टिविटी</string>
   <string name="blogger_profile.section.myranking_label">माय रैंकिंग</string>
   <string name="blogger_profile.top_3_article">सबसे अच्छे 3 आर्टिकल्स</string>
@@ -568,13 +568,13 @@
 
   <string name="all_videos.toolbar.title">विडियोज</string>
   <string name="all_videos.tabbar.momspresso_label">मॉम्सप्रेस्सो टीवी</string>
-  <string name="all_videos.tabbar.funny_label">मॉम वीलॉग्स </string>
+  <string name="all_videos.tabbar.funny_label">मॉम वी-लॉग</string>
   <string name="all_videos.funny_videos.no_videos">कोई मॉम वीलॉग्स शामिल नहीं किया गया </string>
 
   <string name="notification.read_all">सभी पढ़ें </string>
   <string name="notification.no_notification">कोई नोटिफिकेशन नहीं</string>
 
-  <string name="user_funny_video.toolbar.title">मॉम वीलॉग्स </string>
+  <string name="user_funny_video.toolbar.title">मॉम वी-लॉग</string>
   <string name="user_funny_video.published_on">पर प्रकाशित: %1$s</string>
   <string name="user_funny_video.pending_since">Approval pending since: %1$s</string>
   <string name="user_funny_video.unspecified">Unspecified: %1$s</string>
@@ -650,7 +650,7 @@
   <string name="lang_sel.continue">जारी रखें</string>
   <string name="lang_sel.choose_lang_toast">Please choose a language to continue</string>
 
-  <string name="all_categories_label">सब</string>
+  <string name="all_categories_label">सभी</string>
 
   <string name="language_label.english">ENGLISH</string>
   <string name="language_label.hindi">हिंदी</string>
@@ -984,7 +984,7 @@
 
 
   <string name="about_video">चैलेंज के बारे में</string>
-  <string name="myprofile.section.mom_bottom_label">मोम व्लॉग</string>
+  <string name="myprofile.section.mom_bottom_label">मॉम वी-लॉग</string>
   <string name="all_videos.toolbar.title.homepage">वीडियोज</string>
   <string name="moderation_message">100WordStory under moderation.\n
 Thank you! We will be reviewing your story. You can expect to hear from us within the next 48 working hours. Meanwhile, you can still share your story with your friends!</string>
@@ -1387,4 +1387,5 @@ Thank you! We will be reviewing your story. You can expect to hear from us withi
   <string name="all_first_vlog_upload">सबसे पहले अपना वी-लॉग  अपलोड करें </string>
   <string name="winner_empty_state">यहां देखें सभी चैलेंजस के विजेता</string>
   <string name="all_earlier">Earlier</string>
+  <string name="all_resources">RESOURCES</string>
 </resources>

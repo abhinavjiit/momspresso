@@ -1526,5 +1526,7 @@ Thank you! We will be reviewing your story. You can expect to hear from us withi
   <string name="all_first_vlog_upload">Be the first to upload your vlog!</string>
   <string name="winner_empty_state">Watch this space for challenge winners announcement!</string>
   <string name="all_earlier">Earlier</string>
+  <string name="amount_with_rupee_prefix" translatable="false">\u20B9 <![CDATA[<b>%d</b>]]></string>
+  <string name="all_resources">RESOURCES</string>
 </resources>
 

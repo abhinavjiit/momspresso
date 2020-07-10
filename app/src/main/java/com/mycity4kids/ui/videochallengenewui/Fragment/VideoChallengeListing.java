@@ -148,7 +148,7 @@ public class VideoChallengeListing extends BaseFragment implements View.OnClickL
         nextPageNumber = 1;
         hitArticleListingApi();
         gridLayoutManager = new GridLayoutManager(getActivity(), 2);
-        articlesListingAdapter = new VideoChallengeDetailListingAdapter(this);
+        articlesListingAdapter = new VideoChallengeDetailListingAdapter(this, "challengeTab");
         listView.setLayoutManager(gridLayoutManager);
         articlesListingAdapter.setNewListData(articleDataModelsNew);
         listView.setAdapter(articlesListingAdapter);
