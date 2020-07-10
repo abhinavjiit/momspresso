@@ -2,9 +2,7 @@ package com.mycity4kids.models.response;
 
 import android.os.Parcel;
 import android.os.Parcelable;
-
 import com.google.gson.annotations.SerializedName;
-
 import java.util.List;
 import java.util.Map;
 
@@ -13,6 +11,7 @@ import java.util.Map;
  */
 
 public class GroupResult implements Parcelable {
+
     @SerializedName("id")
     private int id;
     @SerializedName("title")
@@ -57,6 +56,8 @@ public class GroupResult implements Parcelable {
     private AdminMembers adminMembers;
     @SerializedName("highlight")
     private int highlight;
+    @SerializedName("collectionId")
+    private String collectionId;
 
     protected GroupResult(Parcel in) {
         id = in.readInt();
@@ -79,6 +80,7 @@ public class GroupResult implements Parcelable {
         dmAllowed = in.readInt();
         sentiment = in.readString();
         highlight = in.readInt();
+        collectionId = in.readString();
     }
 
     public static final Creator<GroupResult> CREATOR = new Creator<GroupResult>() {
@@ -269,6 +271,14 @@ public class GroupResult implements Parcelable {
         this.dmAllowed = dmAllowed;
     }
 
+    public String getCollectionId() {
+        return collectionId;
+    }
+
+    public void setCollectionId(String collectionId) {
+        this.collectionId = collectionId;
+    }
+
     @Override
     public int describeContents() {
         return 0;
@@ -296,9 +306,11 @@ public class GroupResult implements Parcelable {
         dest.writeInt(dmAllowed);
         dest.writeString(sentiment);
         dest.writeInt(highlight);
+        dest.writeString(collectionId);
     }
 
     public class AdminMembers {
+
         @SerializedName("total")
         private int total;
         @SerializedName("limit")
@@ -341,6 +353,7 @@ public class GroupResult implements Parcelable {
         }
 
         public class AdminMemberData {
+
             @SerializedName("id")
             private int id;
             @SerializedName("groupId")

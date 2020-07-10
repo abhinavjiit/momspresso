@@ -603,60 +603,10 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
     }
 
     private void changeDrawerLanguageText() {
-        if (AppConstants.LOCALE_ENGLISH.equals(SharedPrefUtils
-                .getAppLocale(BaseApplication.getAppContext()))) {
-            langTextView.setText(getString(R.string.language_label_english));
-            selectedlangGuideTextView
-                    .setText(getString(R.string.language_label_english));
-        } else if (AppConstants.LOCALE_HINDI.equals(SharedPrefUtils
-                .getAppLocale(BaseApplication.getAppContext()))) {
-            langTextView.setText(getString(R.string.language_label_hindi));
-            selectedlangGuideTextView.setText(getString(R.string.language_label_hindi));
-        } else if (AppConstants.LOCALE_MARATHI.equals(SharedPrefUtils
-                .getAppLocale(BaseApplication.getAppContext()))) {
-            langTextView.setText(getString(R.string.language_label_marathi));
-            selectedlangGuideTextView
-                    .setText(getString(R.string.language_label_marathi));
-        } else if (AppConstants.LOCALE_BENGALI.equals(SharedPrefUtils
-                .getAppLocale(BaseApplication.getAppContext()))) {
-            langTextView.setText(getString(R.string.language_label_bengali));
-            selectedlangGuideTextView
-                    .setText(getString(R.string.language_label_bengali));
-        } else if (AppConstants.LOCALE_TAMIL.equals(SharedPrefUtils
-                .getAppLocale(BaseApplication.getAppContext()))) {
-            langTextView.setText(getString(R.string.language_label_tamil));
-            selectedlangGuideTextView.setText(getString(R.string.language_label_tamil));
-        } else if (AppConstants.LOCALE_TELUGU.equals(SharedPrefUtils
-                .getAppLocale(BaseApplication.getAppContext()))) {
-            langTextView.setText(getString(R.string.language_label_telegu));
-            selectedlangGuideTextView
-                    .setText(getString(R.string.language_label_telegu));
-        } else if (AppConstants.LOCALE_KANNADA.equals(SharedPrefUtils
-                .getAppLocale(BaseApplication.getAppContext()))) {
-            selectedLangTextView.setText(getString(R.string.language_label_kannada));
-            langTextView.setText(getString(R.string.language_label_kannada));
-            selectedlangGuideTextView
-                    .setText(getString(R.string.language_label_kannada));
-        } else if (AppConstants.LOCALE_MALAYALAM.equals(SharedPrefUtils
-                .getAppLocale(BaseApplication.getAppContext()))) {
-            langTextView.setText(getString(R.string.language_label_malayalam));
-            selectedlangGuideTextView
-                    .setText(getString(R.string.language_label_malayalam));
-        } else if (AppConstants.LOCALE_GUJARATI.equals(SharedPrefUtils
-                .getAppLocale(BaseApplication.getAppContext()))) {
-            langTextView.setText(getString(R.string.language_label_gujarati));
-            selectedlangGuideTextView
-                    .setText(getString(R.string.language_label_gujarati));
-        } else if (AppConstants.LOCALE_PUNJABI.equals(SharedPrefUtils
-                .getAppLocale(BaseApplication.getAppContext()))) {
-            langTextView.setText(getString(R.string.language_label_punjabi));
-            selectedlangGuideTextView
-                    .setText(getString(R.string.language_label_punjabi));
-        } else {
-            langTextView.setText(getString(R.string.language_label_english));
-            selectedlangGuideTextView
-                    .setText(getString(R.string.language_label_english));
-        }
+        langTextView.setText(AppUtils.getLanguageFromLocale(langTextView.getContext(),
+                SharedPrefUtils.getAppLocale(BaseApplication.getAppContext())));
+        selectedlangGuideTextView.setText(AppUtils.getLanguageFromLocale(langTextView.getContext(),
+                SharedPrefUtils.getAppLocale(BaseApplication.getAppContext())));
     }
 
     private void launchInviteFriendsDialog(String contentType) {

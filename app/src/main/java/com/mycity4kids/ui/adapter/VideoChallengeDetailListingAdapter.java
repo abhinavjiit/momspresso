@@ -8,7 +8,6 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
-import com.google.android.exoplayer2.SimpleExoPlayer;
 import com.mycity4kids.R;
 import com.mycity4kids.models.response.VlogsListingAndDetailResult;
 import com.mycity4kids.utils.AppUtils;
@@ -17,13 +16,14 @@ import java.util.ArrayList;
 
 public class VideoChallengeDetailListingAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
-    ArrayList<VlogsListingAndDetailResult> articleDataModelsNew;
-    public SimpleExoPlayer player;
-    RecyclerViewClickListener recyclerViewClickListner;
+    private ArrayList<VlogsListingAndDetailResult> articleDataModelsNew;
+    private RecyclerViewClickListener recyclerViewClickListener;
+    private String listingType;
 
 
-    public VideoChallengeDetailListingAdapter(RecyclerViewClickListener recyclerViewClickListner) {
-        this.recyclerViewClickListner = recyclerViewClickListner;
+    public VideoChallengeDetailListingAdapter(RecyclerViewClickListener recyclerViewClickListener, String listingType) {
+        this.recyclerViewClickListener = recyclerViewClickListener;
+        this.listingType = listingType;
     }
 
     public void setNewListData(ArrayList<VlogsListingAndDetailResult> articleDataModelsNew) {
@@ -69,14 +69,30 @@ public class VideoChallengeDetailListingAdapter extends RecyclerView.Adapter<Rec
                 ((ViewHolderChallenge) holder).recommendCountTextView1
                         .setText(articleDataModelsNew.get(position).getLike_count());
             }
-            if (articleDataModelsNew.get(position).getWinner() == 1) {
-                ((ViewHolderChallenge) holder).imageWinner.setVisibility(View.VISIBLE);
-                ((ViewHolderChallenge) holder).imageWinner.setImageResource(R.drawable.ic_trophy);
-            } else if (articleDataModelsNew.get(position).isIs_gold()) {
-                ((ViewHolderChallenge) holder).imageWinner.setVisibility(View.VISIBLE);
-                ((ViewHolderChallenge) holder).imageWinner.setImageResource(R.drawable.ic_star_yellow);
+
+            if ("winnerTab".equals(listingType)) {
+                if (articleDataModelsNew.get(position).getWinnerDetails() != null) {
+                    ((ViewHolderChallenge) holder).winnerDetailsLayout.setVisibility(View.VISIBLE);
+                    ((ViewHolderChallenge) holder).amountTextView.setText(AppUtils.fromHtml(
+                            ((ViewHolderChallenge) holder).amountTextView.getContext()
+                                    .getString(R.string.amount_with_rupee_prefix,
+                                            articleDataModelsNew.get(position).getWinnerDetails().getPrizeMoney())));
+                    ((ViewHolderChallenge) holder).langTextView.setText(
+                            AppUtils.getLanguageFromLocale(((ViewHolderChallenge) holder).langTextView.getContext(),
+                                    articleDataModelsNew.get(position).getWinnerDetails().getLangCode()));
+                } else {
+                    ((ViewHolderChallenge) holder).winnerDetailsLayout.setVisibility(View.INVISIBLE);
+                }
             } else {
-                ((ViewHolderChallenge) holder).imageWinner.setVisibility(View.GONE);
+                if (articleDataModelsNew.get(position).getWinner() == 1) {
+                    ((ViewHolderChallenge) holder).imageWinner.setVisibility(View.VISIBLE);
+                    ((ViewHolderChallenge) holder).imageWinner.setImageResource(R.drawable.ic_trophy);
+                } else if (articleDataModelsNew.get(position).isIs_gold()) {
+                    ((ViewHolderChallenge) holder).imageWinner.setVisibility(View.VISIBLE);
+                    ((ViewHolderChallenge) holder).imageWinner.setImageResource(R.drawable.ic_star_yellow);
+                } else {
+                    ((ViewHolderChallenge) holder).imageWinner.setVisibility(View.GONE);
+                }
             }
         }
     }
@@ -108,7 +124,11 @@ public class VideoChallengeDetailListingAdapter extends RecyclerView.Adapter<Rec
         ImageView articleImageView;
         TextView viewCountTextView;
         TextView recommendCountTextView1;
+        TextView amountTextView;
+        TextView langTextView;
         RelativeLayout container;
+        RelativeLayout statsLayout;
+        RelativeLayout winnerDetailsLayout;
 
         ViewHolderChallenge(@NonNull View itemView) {
             super(itemView);
@@ -119,13 +139,24 @@ public class VideoChallengeDetailListingAdapter extends RecyclerView.Adapter<Rec
             recommendCountTextView1 = itemView.findViewById(R.id.recommendCountTextView1);
             viewCountTextView = itemView.findViewById(R.id.viewCountTextView1);
             imageWinner = itemView.findViewById(R.id.imageWinner);
+            amountTextView = itemView.findViewById(R.id.amountTextView);
+            langTextView = itemView.findViewById(R.id.langTextView);
             container = itemView.findViewById(R.id.container);
+            statsLayout = itemView.findViewById(R.id.statsLayout);
+            winnerDetailsLayout = itemView.findViewById(R.id.winnerDetailsLayout);
+            if ("winnerTab".equals(listingType)) {
+                winnerDetailsLayout.setVisibility(View.VISIBLE);
+                statsLayout.setVisibility(View.GONE);
+            } else {
+                winnerDetailsLayout.setVisibility(View.GONE);
+                statsLayout.setVisibility(View.VISIBLE);
+            }
             container.setOnClickListener(this);
         }
 
         @Override
         public void onClick(View view) {
-            recyclerViewClickListner.onRecyclerClick(view, getAdapterPosition());
+            recyclerViewClickListener.onRecyclerClick(view, getAdapterPosition());
         }
     }
 

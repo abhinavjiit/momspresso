@@ -66,7 +66,6 @@ public class WinnerVlogsListingTabFragment extends BaseFragment implements View.
     private int firstVisibleItem;
     private int visibleItemCount;
     private int totalItemCount;
-    private String tabType;
 
     @SuppressLint("ClickableViewAccessibility")
     @Nullable
@@ -87,7 +86,6 @@ public class WinnerVlogsListingTabFragment extends BaseFragment implements View.
 
         if (getArguments() != null) {
             selectedId = getArguments().getString("selectedId");
-            tabType = getArguments().getString("tabType");
         }
 
         frameLayout.getBackground().setAlpha(0);
@@ -148,7 +146,7 @@ public class WinnerVlogsListingTabFragment extends BaseFragment implements View.
         nextPageNumber = 1;
         hitArticleListingApi();
         gridLayoutManager = new GridLayoutManager(getActivity(), 2);
-        articlesListingAdapter = new VideoChallengeDetailListingAdapter(this);
+        articlesListingAdapter = new VideoChallengeDetailListingAdapter(this, "winnerTab");
         listView.setLayoutManager(gridLayoutManager);
         articlesListingAdapter.setNewListData(articleDataModelsNew);
         listView.setAdapter(articlesListingAdapter);

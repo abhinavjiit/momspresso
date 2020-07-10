@@ -319,8 +319,12 @@ public class ParallelFeedActivity extends BaseActivity implements View.OnClickLi
                             if (!fromLoadMore) {
                                 dataList.addAll(0, dataListHeader);
                                 finalList = dataList;
+                                setRecycler();
+                                recyclerViewFeed.setVideoInfoList(ParallelFeedActivity.this, finalList);
+                                videoRecyclerViewAdapter.updateList(finalList);
                             } else {
                                 finalList.addAll(dataList);
+                                setRecycler();
                                 recyclerViewFeed.setVideoInfoList(ParallelFeedActivity.this, finalList);
                                 videoRecyclerViewAdapter.updateList(finalList);
                             }
@@ -896,6 +900,9 @@ public class ParallelFeedActivity extends BaseActivity implements View.OnClickLi
                                 processChallengesData(responseData.getData().getResult());
                             }
                         } catch (Exception e) {
+                            setRecycler();
+                            recyclerViewFeed.setVideoInfoList(ParallelFeedActivity.this, finalList);
+                            videoRecyclerViewAdapter.updateList(finalList);
                             FirebaseCrashlytics.getInstance().recordException(e);
                             Log.d("MC4kException", Log.getStackTraceString(e));
                         }
@@ -904,7 +911,11 @@ public class ParallelFeedActivity extends BaseActivity implements View.OnClickLi
 
                 @Override
                 public void onFailure(Call<VlogsCategoryWiseChallengesResponse> call, Throwable t) {
-
+                    setRecycler();
+                    recyclerViewFeed.setVideoInfoList(ParallelFeedActivity.this, finalList);
+                    videoRecyclerViewAdapter.updateList(finalList);
+                    FirebaseCrashlytics.getInstance().recordException(t);
+                    Log.d("MC4kException", Log.getStackTraceString(t));
                 }
             };
 

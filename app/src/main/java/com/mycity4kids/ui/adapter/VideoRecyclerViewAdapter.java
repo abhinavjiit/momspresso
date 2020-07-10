@@ -136,7 +136,6 @@ public class VideoRecyclerViewAdapter extends RecyclerView.Adapter<BaseViewHolde
         } else if (holder instanceof ChallengeCardHolder) {
             holder.onBind(position);
         } else if (holder instanceof FollowFollowingCarousal) {
-
             if (!vlogsListingAndDetailResults.get(position).isCarouselRequestRunning()
                     && !vlogsListingAndDetailResults.get(position)
                     .isResponseReceived()) {
@@ -212,7 +211,6 @@ public class VideoRecyclerViewAdapter extends RecyclerView.Adapter<BaseViewHolde
                         .isResponseReceived()
                 );
             } else {
-
                 if (null != vlogsListingAndDetailResults.get(position)
                         .getCarouselVideoList()
                         && !vlogsListingAndDetailResults.get(position)

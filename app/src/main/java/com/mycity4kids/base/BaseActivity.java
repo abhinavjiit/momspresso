@@ -2,7 +2,6 @@ package com.mycity4kids.base;
 
 import android.app.Dialog;
 import android.app.ProgressDialog;
-import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
 import android.net.Uri;
@@ -14,11 +13,8 @@ import android.text.TextUtils;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.KeyEvent;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.Window;
-import android.view.inputmethod.InputMethodManager;
-import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
@@ -848,29 +844,6 @@ public abstract class BaseActivity extends AppCompatActivity implements GroupMem
         }
     }
 
-    @Override
-    public boolean dispatchTouchEvent(MotionEvent event) {
-        View v = getCurrentFocus();
-        boolean ret = super.dispatchTouchEvent(event);
-
-        if (v instanceof EditText) {
-            View w = getCurrentFocus();
-            int[] scrcoords = new int[2];
-            if (w != null) {
-                w.getLocationOnScreen(scrcoords);
-                float x = event.getRawX() + w.getLeft() - scrcoords[0];
-                float y = event.getRawY() + w.getTop() - scrcoords[1];
-
-                if (event.getAction() == MotionEvent.ACTION_UP && (x < w.getLeft() || x >= w.getRight() || y < w
-                        .getTop() || y > w.getBottom())) {
-                    InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
-                    imm.hideSoftInputFromWindow(getWindow().getCurrentFocus().getWindowToken(), 0);
-                }
-            }
-        }
-        return ret;
-    }
-
     public void showToast(String message) {
         if (toast != null) {
             toast.cancel();
@@ -899,146 +872,150 @@ public abstract class BaseActivity extends AppCompatActivity implements GroupMem
     }
 
     public void handleDeeplinks(String tempDeepLinkUrl) {
-        if (matchRegex(tempDeepLinkUrl)) {
-            // need to optimize this code
-        } else if (tempDeepLinkUrl.endsWith(AppConstants.DEEPLINK_SELF_PROFILE_URL_1)
-                || tempDeepLinkUrl.endsWith(AppConstants.DEEPLINK_SELF_PROFILE_URL_2)
-                || tempDeepLinkUrl.contains(AppConstants.DEEPLINK_PROFILE_URL)
-                || tempDeepLinkUrl.contains(AppConstants.DEEPLINK_MOMSPRESSO_PROFILE_URL)) {
-            Intent profileIntent = new Intent(this, UserProfileActivity.class);
-            startActivity(profileIntent);
-        } else if (tempDeepLinkUrl.contains(AppConstants.DEEPLINK_ADD_FUNNY_VIDEO_URL)
-                || tempDeepLinkUrl
-                .contains(AppConstants.DEEPLINK_MOMSPRESSO_ADD_FUNNY_VIDEO_URL)) {
-            if (this instanceof DashboardActivity) {
-                ((DashboardActivity) this).launchAddVideoOptions();
-            }
-        } else if (tempDeepLinkUrl.contains(AppConstants.DEEPLINK_EDITOR_URL)
-                || tempDeepLinkUrl.contains(AppConstants.DEEPLINK_MOMSPRESSO_EDITOR_URL)) {
-            launchEditor();
-        } else if (tempDeepLinkUrl.contains(AppConstants.DEEPLINK_EDIT_SHORT_DRAFT_URL)) {
-            Intent ssIntent = new Intent(this, UserDraftsContentActivity.class);
-            ssIntent.putExtra("isPrivateProfile", true);
-            ssIntent.putExtra("contentType", AppConstants.CONTENT_TYPE_SHORT_STORY);
-            ssIntent.putExtra(Constants.AUTHOR_ID,
-                    SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId());
-            startActivity(ssIntent);
-        } else if (tempDeepLinkUrl.contains(AppConstants.DEEPLINK_PROFILE_INVITE_FRIENDS)) {
-            Intent intent = new Intent(this, UserProfileActivity.class);
-            intent.putExtra(AppConstants.SHOW_INVITE_DIALOG_FLAG, true);
-            intent.putExtra("source", "deeplink");
-            startActivity(intent);
-        } else if (tempDeepLinkUrl.contains(AppConstants.DEEPLINK_EDIT_SHORT_STORY_URL)) {
-            final String storyId = tempDeepLinkUrl
-                    .substring(tempDeepLinkUrl.lastIndexOf("/") + 1,
-                            tempDeepLinkUrl.length());
-            Retrofit retrofit = BaseApplication.getInstance().getRetrofit();
-            ShortStoryAPI shortStoryApi = retrofit.create(ShortStoryAPI.class);
-            Call<ShortStoryDetailResult> call = shortStoryApi
-                    .getShortStoryDetails(storyId, "articleId");
-            call.enqueue(ssDetailResponseCallback);
-        } else if (tempDeepLinkUrl.contains(AppConstants.DEEPLINK_SUGGESTED_TOPIC_URL)
-                || tempDeepLinkUrl
-                .contains(AppConstants.DEEPLINK_MOMSPRESSO_SUGGESTED_TOPIC_URL)) {
-            Intent suggestedIntent = new Intent(this, SuggestedTopicsActivity.class);
-            startActivity(suggestedIntent);
-        } else if (tempDeepLinkUrl.endsWith(AppConstants.DEEPLINK_SETUP_BLOG)) {
-            checkIsBlogSetup();
-        } else if (tempDeepLinkUrl.contains(AppConstants.DEEPLINK_MOMSPRESSO_REWARD_PAGE)) {
-            Intent rewardForm = new Intent(this, RewardsContainerActivity.class);
-            final String referralCode = tempDeepLinkUrl
-                    .substring(tempDeepLinkUrl.lastIndexOf("=") + 1,
-                            tempDeepLinkUrl.length());
-            rewardForm.putExtra("pageLimit", 1);
-            rewardForm.putExtra("pageNumber", 1);
-            rewardForm.putExtra("referral", referralCode);
-            startActivity(rewardForm);
-        } else if (tempDeepLinkUrl
-                .contains(AppConstants.DEEPLINK_MOMSPRESSO_REWARD_MYMONEY)) {
-            Intent campaignIntent = new Intent(this, CampaignContainerActivity.class);
-            startActivity(campaignIntent);
-        } else if (tempDeepLinkUrl.contains(AppConstants.DEEPLINK_MOMSPRESSO_CAMPAIGN)) {
-            if (tempDeepLinkUrl.contains("?")) {
-                final String campaignID = tempDeepLinkUrl
+        try {
+            if (matchRegex(tempDeepLinkUrl)) {
+                // need to optimize this code
+            } else if (tempDeepLinkUrl.endsWith(AppConstants.DEEPLINK_SELF_PROFILE_URL_1)
+                    || tempDeepLinkUrl.endsWith(AppConstants.DEEPLINK_SELF_PROFILE_URL_2)
+                    || tempDeepLinkUrl.contains(AppConstants.DEEPLINK_PROFILE_URL)
+                    || tempDeepLinkUrl.contains(AppConstants.DEEPLINK_MOMSPRESSO_PROFILE_URL)) {
+                Intent profileIntent = new Intent(this, UserProfileActivity.class);
+                startActivity(profileIntent);
+            } else if (tempDeepLinkUrl.contains(AppConstants.DEEPLINK_ADD_FUNNY_VIDEO_URL)
+                    || tempDeepLinkUrl
+                    .contains(AppConstants.DEEPLINK_MOMSPRESSO_ADD_FUNNY_VIDEO_URL)) {
+                if (this instanceof DashboardActivity) {
+                    ((DashboardActivity) this).launchAddVideoOptions();
+                }
+            } else if (tempDeepLinkUrl.contains(AppConstants.DEEPLINK_EDITOR_URL)
+                    || tempDeepLinkUrl.contains(AppConstants.DEEPLINK_MOMSPRESSO_EDITOR_URL)) {
+                launchEditor();
+            } else if (tempDeepLinkUrl.contains(AppConstants.DEEPLINK_EDIT_SHORT_DRAFT_URL)) {
+                Intent ssIntent = new Intent(this, UserDraftsContentActivity.class);
+                ssIntent.putExtra("isPrivateProfile", true);
+                ssIntent.putExtra("contentType", AppConstants.CONTENT_TYPE_SHORT_STORY);
+                ssIntent.putExtra(Constants.AUTHOR_ID,
+                        SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId());
+                startActivity(ssIntent);
+            } else if (tempDeepLinkUrl.contains(AppConstants.DEEPLINK_PROFILE_INVITE_FRIENDS)) {
+                Intent intent = new Intent(this, UserProfileActivity.class);
+                intent.putExtra(AppConstants.SHOW_INVITE_DIALOG_FLAG, true);
+                intent.putExtra("source", "deeplink");
+                startActivity(intent);
+            } else if (tempDeepLinkUrl.contains(AppConstants.DEEPLINK_EDIT_SHORT_STORY_URL)) {
+                final String storyId = tempDeepLinkUrl
                         .substring(tempDeepLinkUrl.lastIndexOf("/") + 1,
-                                tempDeepLinkUrl.indexOf("?"));
-                if (!StringUtils.isNullOrEmpty(campaignID)) {
-                    Intent campaignIntent = new Intent(this,
-                            CampaignContainerActivity.class);
-                    campaignIntent.putExtra("campaignID", Integer.parseInt(campaignID));
-                    startActivity(campaignIntent);
-                }
-            } else {
-                final String campaignID = tempDeepLinkUrl
-                        .substring(tempDeepLinkUrl.lastIndexOf("/") + 1);
-                if (!StringUtils.isNullOrEmpty(campaignID)) {
-                    Intent campaignIntent = new Intent(this,
-                            CampaignContainerActivity.class);
-                    campaignIntent.putExtra("campaignID", Integer.parseInt(campaignID));
-                    startActivity(campaignIntent);
-                }
-            }
-        } else if (tempDeepLinkUrl.contains(AppConstants.DEEPLINK_GROUPS)) {
-            String[] separated = tempDeepLinkUrl.split("/");
-            if (separated[separated.length - 1].startsWith("comment-")) {
-                String[] commArray = separated[separated.length - 1].split("-");
-                long commentId = AppUtils.getIdFromHash(commArray[1]);
-                String[] postArray = separated[separated.length - 2].split("-");
-                long postId = AppUtils.getIdFromHash(postArray[1]);
-                String[] groupArray = separated[separated.length - 3].split("-");
-                long groupId = AppUtils.getIdFromHash(groupArray[groupArray.length - 1]);
-                Intent gpPostIntent = new Intent(this, GroupPostDetailActivity.class);
-                gpPostIntent.putExtra("postId", (int) postId);
-                gpPostIntent.putExtra("groupId", (int) groupId);
-                gpPostIntent.putExtra("responseId", (int) commentId);
-                startActivity(gpPostIntent);
-            } else if (separated[separated.length - 1].startsWith("post-")) {
-                String[] postArray = separated[separated.length - 1].split("-");
-                long postId = AppUtils.getIdFromHash(postArray[1]);
-                String[] groupArray = separated[separated.length - 2].split("-");
-                long groupId = AppUtils.getIdFromHash(groupArray[groupArray.length - 1]);
-                Intent gpPostIntent = new Intent(this, GroupPostDetailActivity.class);
-                gpPostIntent.putExtra("postId", (int) postId);
-                gpPostIntent.putExtra("groupId", (int) groupId);
-                startActivity(gpPostIntent);
-            } else if (separated[separated.length - 1].equals("join")) {
-                String[] groupArray = separated[separated.length - 2].split("-");
-                long groupId = AppUtils.getIdFromHash(groupArray[groupArray.length - 1]);
-                GroupMembershipStatus groupMembershipStatus = new GroupMembershipStatus(
-                        this);
-                groupMembershipStatus.checkMembershipStatus((int) groupId,
-                        SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext())
-                                .getDynamoId());
-            } else {
-                String[] groupArray;
-                long groupId;
-                if (separated[separated.length - 1].contains("?")) {
-                    groupArray = separated[separated.length - 1].split("[?]");
-                    groupArray = groupArray[0].split("-");
-                    groupId = AppUtils.getIdFromHash(groupArray[groupArray.length - 1]);
+                                tempDeepLinkUrl.length());
+                Retrofit retrofit = BaseApplication.getInstance().getRetrofit();
+                ShortStoryAPI shortStoryApi = retrofit.create(ShortStoryAPI.class);
+                Call<ShortStoryDetailResult> call = shortStoryApi
+                        .getShortStoryDetails(storyId, "articleId");
+                call.enqueue(ssDetailResponseCallback);
+            } else if (tempDeepLinkUrl.contains(AppConstants.DEEPLINK_SUGGESTED_TOPIC_URL)
+                    || tempDeepLinkUrl
+                    .contains(AppConstants.DEEPLINK_MOMSPRESSO_SUGGESTED_TOPIC_URL)) {
+                Intent suggestedIntent = new Intent(this, SuggestedTopicsActivity.class);
+                startActivity(suggestedIntent);
+            } else if (tempDeepLinkUrl.endsWith(AppConstants.DEEPLINK_SETUP_BLOG)) {
+                checkIsBlogSetup();
+            } else if (tempDeepLinkUrl.contains(AppConstants.DEEPLINK_MOMSPRESSO_REWARD_PAGE)) {
+                Intent rewardForm = new Intent(this, RewardsContainerActivity.class);
+                final String referralCode = tempDeepLinkUrl
+                        .substring(tempDeepLinkUrl.lastIndexOf("=") + 1,
+                                tempDeepLinkUrl.length());
+                rewardForm.putExtra("pageLimit", 1);
+                rewardForm.putExtra("pageNumber", 1);
+                rewardForm.putExtra("referral", referralCode);
+                startActivity(rewardForm);
+            } else if (tempDeepLinkUrl
+                    .contains(AppConstants.DEEPLINK_MOMSPRESSO_REWARD_MYMONEY)) {
+                Intent campaignIntent = new Intent(this, CampaignContainerActivity.class);
+                startActivity(campaignIntent);
+            } else if (tempDeepLinkUrl.contains(AppConstants.DEEPLINK_MOMSPRESSO_CAMPAIGN)) {
+                if (tempDeepLinkUrl.contains("?")) {
+                    final String campaignID = tempDeepLinkUrl
+                            .substring(tempDeepLinkUrl.lastIndexOf("/") + 1,
+                                    tempDeepLinkUrl.indexOf("?"));
+                    if (!StringUtils.isNullOrEmpty(campaignID)) {
+                        Intent campaignIntent = new Intent(this,
+                                CampaignContainerActivity.class);
+                        campaignIntent.putExtra("campaignID", Integer.parseInt(campaignID));
+                        startActivity(campaignIntent);
+                    }
                 } else {
-                    groupArray = separated[separated.length - 1].split("-");
-                    groupId = AppUtils.getIdFromHash(groupArray[groupArray.length - 1]);
+                    final String campaignID = tempDeepLinkUrl
+                            .substring(tempDeepLinkUrl.lastIndexOf("/") + 1);
+                    if (!StringUtils.isNullOrEmpty(campaignID)) {
+                        Intent campaignIntent = new Intent(this,
+                                CampaignContainerActivity.class);
+                        campaignIntent.putExtra("campaignID", Integer.parseInt(campaignID));
+                        startActivity(campaignIntent);
+                    }
                 }
-                if (groupId == -1) {
-                    return;
+            } else if (tempDeepLinkUrl.contains(AppConstants.DEEPLINK_GROUPS)) {
+                String[] separated = tempDeepLinkUrl.split("/");
+                if (separated[separated.length - 1].startsWith("comment-")) {
+                    String[] commArray = separated[separated.length - 1].split("-");
+                    long commentId = AppUtils.getIdFromHash(commArray[1]);
+                    String[] postArray = separated[separated.length - 2].split("-");
+                    long postId = AppUtils.getIdFromHash(postArray[1]);
+                    String[] groupArray = separated[separated.length - 3].split("-");
+                    long groupId = AppUtils.getIdFromHash(groupArray[groupArray.length - 1]);
+                    Intent gpPostIntent = new Intent(this, GroupPostDetailActivity.class);
+                    gpPostIntent.putExtra("postId", (int) postId);
+                    gpPostIntent.putExtra("groupId", (int) groupId);
+                    gpPostIntent.putExtra("responseId", (int) commentId);
+                    startActivity(gpPostIntent);
+                } else if (separated[separated.length - 1].startsWith("post-")) {
+                    String[] postArray = separated[separated.length - 1].split("-");
+                    long postId = AppUtils.getIdFromHash(postArray[1]);
+                    String[] groupArray = separated[separated.length - 2].split("-");
+                    long groupId = AppUtils.getIdFromHash(groupArray[groupArray.length - 1]);
+                    Intent gpPostIntent = new Intent(this, GroupPostDetailActivity.class);
+                    gpPostIntent.putExtra("postId", (int) postId);
+                    gpPostIntent.putExtra("groupId", (int) groupId);
+                    startActivity(gpPostIntent);
+                } else if (separated[separated.length - 1].equals("join")) {
+                    String[] groupArray = separated[separated.length - 2].split("-");
+                    long groupId = AppUtils.getIdFromHash(groupArray[groupArray.length - 1]);
+                    GroupMembershipStatus groupMembershipStatus = new GroupMembershipStatus(
+                            this);
+                    groupMembershipStatus.checkMembershipStatus((int) groupId,
+                            SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext())
+                                    .getDynamoId());
+                } else {
+                    String[] groupArray;
+                    long groupId;
+                    if (separated[separated.length - 1].contains("?")) {
+                        groupArray = separated[separated.length - 1].split("[?]");
+                        groupArray = groupArray[0].split("-");
+                        groupId = AppUtils.getIdFromHash(groupArray[groupArray.length - 1]);
+                    } else {
+                        groupArray = separated[separated.length - 1].split("-");
+                        groupId = AppUtils.getIdFromHash(groupArray[groupArray.length - 1]);
+                    }
+                    if (groupId == -1) {
+                        return;
+                    }
+                    GroupMembershipStatus groupMembershipStatus = new GroupMembershipStatus(
+                            this);
+                    groupMembershipStatus.checkMembershipStatus((int) groupId,
+                            SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext())
+                                    .getDynamoId());
                 }
-                GroupMembershipStatus groupMembershipStatus = new GroupMembershipStatus(
-                        this);
-                groupMembershipStatus.checkMembershipStatus((int) groupId,
-                        SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext())
-                                .getDynamoId());
+            } else if (tempDeepLinkUrl.contains(AppConstants.DEEPLINK_MOMSPRESSO_REFERRAL)) {
+                Intent intent1 = new Intent(this, RewardsContainerActivity.class);
+                intent1.putExtra("pageNumber", 1);
+                startActivity(intent1);
+            } else if (tempDeepLinkUrl.contains(AppConstants.DEEPLINK_ADD_SHORT_STORY_URL)
+                    || tempDeepLinkUrl.contains(AppConstants.DEEPLINK_ADD_SHORT_STORY_URL_1)) {
+                Intent ssIntent = new Intent(this, AddShortStoryActivity.class);
+                startActivity(ssIntent);
+            } else {
+                getDeepLinkData(tempDeepLinkUrl);
             }
-        } else if (tempDeepLinkUrl.contains(AppConstants.DEEPLINK_MOMSPRESSO_REFERRAL)) {
-            Intent intent1 = new Intent(this, RewardsContainerActivity.class);
-            intent1.putExtra("pageNumber", 1);
-            startActivity(intent1);
-        } else if (tempDeepLinkUrl.contains(AppConstants.DEEPLINK_ADD_SHORT_STORY_URL)
-                || tempDeepLinkUrl.contains(AppConstants.DEEPLINK_ADD_SHORT_STORY_URL_1)) {
-            Intent ssIntent = new Intent(this, AddShortStoryActivity.class);
-            startActivity(ssIntent);
-        } else {
-            getDeepLinkData(tempDeepLinkUrl);
+        } catch (Exception e) {
+            launchChromeTabs(tempDeepLinkUrl);
         }
     }
 

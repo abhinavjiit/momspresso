@@ -3,7 +3,6 @@ package com.mycity4kids.models.response;
 import com.google.gson.annotations.SerializedName;
 import com.mycity4kids.models.Topics;
 import com.mycity4kids.profile.Author;
-
 import java.util.ArrayList;
 
 /**
@@ -21,8 +20,6 @@ public class VlogsListingAndDetailResult {
     private String url;
     @SerializedName("published_time")
     private String published_time;
-    @SerializedName("approval_time")
-    private String approval_time;
     @SerializedName("published_status")
     private String published_status;
     @SerializedName("publication_status")
@@ -59,6 +56,9 @@ public class VlogsListingAndDetailResult {
     private boolean is_gold = false;
     @SerializedName("winner")
     private int winner = 0;
+    @SerializedName("winner_details")
+    private WinnerDetails winnerDetails;
+
     private int itemType = 0;
     private ArrayList<UserDetailResult> carouselVideoList;
     private boolean responseReceived = false;
@@ -313,5 +313,38 @@ public class VlogsListingAndDetailResult {
 
     public void setChallengeInfo(Topics challengeInfo) {
         this.challengeInfo = challengeInfo;
+    }
+
+    public WinnerDetails getWinnerDetails() {
+        return winnerDetails;
+    }
+
+    public void setWinnerDetails(WinnerDetails winnerDetails) {
+        this.winnerDetails = winnerDetails;
+    }
+
+    public class WinnerDetails {
+
+        @SerializedName("prize_money")
+        private int prizeMoney;
+
+        @SerializedName("lang")
+        private String langCode;
+
+        public int getPrizeMoney() {
+            return prizeMoney;
+        }
+
+        public void setPrizeMoney(int prizeMoney) {
+            this.prizeMoney = prizeMoney;
+        }
+
+        public String getLangCode() {
+            return langCode;
+        }
+
+        public void setLangCode(String langCode) {
+            this.langCode = langCode;
+        }
     }
 }

@@ -16,6 +16,7 @@ import android.text.TextWatcher;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.view.Window;
 import android.view.WindowManager;
 import android.view.animation.Animation;
@@ -46,6 +47,8 @@ import com.mycity4kids.constants.AppConstants;
 import com.mycity4kids.constants.Constants;
 import com.mycity4kids.filechooser.com.ipaulpro.afilechooser.utils.FileUtils;
 import com.mycity4kids.gtmutils.Utils;
+import com.mycity4kids.models.collectionsModels.UserCollectionsListModel;
+import com.mycity4kids.models.collectionsModels.UserCollectionsModel;
 import com.mycity4kids.models.request.AddGpPostCommentOrReplyRequest;
 import com.mycity4kids.models.request.AddGroupPostRequest;
 import com.mycity4kids.models.request.GroupActionsPatchRequest;
@@ -58,6 +61,7 @@ import com.mycity4kids.models.response.AddGpPostCommentReplyResponse;
 import com.mycity4kids.models.response.AddGroupPostResponse;
 import com.mycity4kids.models.response.ArticleListingResponse;
 import com.mycity4kids.models.response.ArticleListingResult;
+import com.mycity4kids.models.response.BaseResponseGeneric;
 import com.mycity4kids.models.response.GroupDetailResponse;
 import com.mycity4kids.models.response.GroupPostCommentResult;
 import com.mycity4kids.models.response.GroupPostResponse;
@@ -71,15 +75,21 @@ import com.mycity4kids.models.response.UserPostSettingResponse;
 import com.mycity4kids.models.response.UserPostSettingResult;
 import com.mycity4kids.preference.SharedPrefUtils;
 import com.mycity4kids.profile.UserProfileActivity;
+import com.mycity4kids.retrofitAPIsInterfaces.CollectionsAPI;
 import com.mycity4kids.retrofitAPIsInterfaces.GroupsAPI;
 import com.mycity4kids.retrofitAPIsInterfaces.TopicsCategoryAPI;
+import com.mycity4kids.ui.adapter.CollectionItemsListAdapter;
+import com.mycity4kids.ui.adapter.CollectionItemsListAdapter.RecyclerViewClick;
 import com.mycity4kids.ui.adapter.GroupAboutRecyclerAdapter;
+import com.mycity4kids.ui.adapter.GroupAboutRecyclerAdapter.RecyclerViewClickListener;
 import com.mycity4kids.ui.adapter.GroupBlogsRecyclerAdapter;
 import com.mycity4kids.ui.adapter.GroupsGenericPostRecyclerAdapter;
 import com.mycity4kids.ui.fragment.AddGpPostCommentReplyDialogFragment;
 import com.mycity4kids.ui.fragment.GroupPostReportDialogFragment;
 import com.mycity4kids.ui.fragment.ProcessBitmapTaskFragment;
+import com.mycity4kids.ui.fragment.ProcessBitmapTaskFragment.TaskCallbacks;
 import com.mycity4kids.ui.fragment.ShareBlogInDiscussionDialogFragment;
+import com.mycity4kids.ui.fragment.ShareBlogInDiscussionDialogFragment.IForYourArticleRemove;
 import com.mycity4kids.utils.AppUtils;
 import com.mycity4kids.utils.ConnectivityUtils;
 import com.mycity4kids.utils.StringUtils;
@@ -103,13 +113,15 @@ import retrofit2.Retrofit;
  * Created by hemant on 10/4/18.
  */
 
-public class GroupDetailsActivity extends BaseActivity implements View.OnClickListener,
-        GroupAboutRecyclerAdapter.RecyclerViewClickListener, GroupBlogsRecyclerAdapter.RecyclerViewClickListener,
+public class GroupDetailsActivity extends BaseActivity implements OnClickListener,
+        RecyclerViewClickListener, GroupBlogsRecyclerAdapter.RecyclerViewClickListener,
         GroupsGenericPostRecyclerAdapter.RecyclerViewClickListener,
-        ShareBlogInDiscussionDialogFragment.IForYourArticleRemove, ProcessBitmapTaskFragment.TaskCallbacks {
+        IForYourArticleRemove, TaskCallbacks, RecyclerViewClick {
 
     private static final int EDIT_POST_REQUEST_CODE = 1010;
     private static final String[] sectionsKey = {"ABOUT", "DISCUSSION", "BLOGS", "POLLS", "ASK AN EXPERT"};
+    private static final String[] sectionsKeyResources = {"ABOUT", "DISCUSSION", "RESOURCES", "POLLS", "ASK AN EXPERT"};
+    private static final int TUTORIAL = 1;
     private ArrayList<GroupsCategoryMappingResult> groupMappedCategories;
     private int categoryIndex = 0;
     private int nextPageNumber = 1;
@@ -125,6 +137,7 @@ public class GroupDetailsActivity extends BaseActivity implements View.OnClickLi
     private boolean isRequestRunning = false;
     private boolean isLastPageReached = false;
     private ArrayList<ArticleListingResult> articleDataModelsNew;
+    private ArrayList<UserCollectionsModel> vlogResourcesList;
     private ArrayList<GroupPostResult> postList;
     private int pastVisiblesItems;
     private int visibleItemCount;
@@ -147,6 +160,7 @@ public class GroupDetailsActivity extends BaseActivity implements View.OnClickLi
     private RecyclerView recyclerView;
     private GroupAboutRecyclerAdapter groupAboutRecyclerAdapter;
     private GroupBlogsRecyclerAdapter groupBlogsRecyclerAdapter;
+    private CollectionItemsListAdapter collectionItemsListAdapter;
     private GroupsGenericPostRecyclerAdapter groupsGenericPostRecyclerAdapter;
     private TabLayout groupPostTabLayout;
     private RelativeLayout addPostContainer;
@@ -185,6 +199,7 @@ public class GroupDetailsActivity extends BaseActivity implements View.OnClickLi
     private TextView justJoinedPostTextView;
     private CheckBox anonymousCheckbox;
     private Dialog dialog;
+    private int start = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -285,12 +300,6 @@ public class GroupDetailsActivity extends BaseActivity implements View.OnClickLi
 
         getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
         bottomSheetStateChange();
-        String[] sections = {
-                getString(R.string.groups_sections_about), getString(R.string.groups_sections_discussions),
-                getString(R.string.onboarding_desc_array_tutorial_1_blogs),
-                getString(R.string.groups_sections_polls), getString(R.string.groups_sections_ask)
-        };
-        setUpTabLayout(sections);
 
         final LinearLayoutManager llm = new LinearLayoutManager(this);
         llm.setOrientation(RecyclerView.VERTICAL);
@@ -300,6 +309,11 @@ public class GroupDetailsActivity extends BaseActivity implements View.OnClickLi
 
         groupBlogsRecyclerAdapter = new GroupBlogsRecyclerAdapter(this, this);
         groupBlogsRecyclerAdapter.setData(articleDataModelsNew);
+
+        vlogResourcesList = new ArrayList<>();
+        collectionItemsListAdapter = new CollectionItemsListAdapter(this, this);
+        collectionItemsListAdapter.setListType(TUTORIAL);
+        collectionItemsListAdapter.setListData(vlogResourcesList);
 
         postList = new ArrayList<>();
         groupsGenericPostRecyclerAdapter = new GroupsGenericPostRecyclerAdapter(this, this, selectedGroup, memberType);
@@ -318,6 +332,8 @@ public class GroupDetailsActivity extends BaseActivity implements View.OnClickLi
                             isRequestRunning = true;
                             if (recyclerView.getAdapter() instanceof GroupsGenericPostRecyclerAdapter) {
                                 getGroupPosts();
+                            } else if (recyclerView.getAdapter() instanceof CollectionItemsListAdapter) {
+                                getUserCollectionItems(selectedGroup.getCollectionId(), start);
                             } else {
                                 if (groupMappedCategories != null && groupMappedCategories.size() != 0) {
                                     hitFilteredTopicsArticleListingApi(
@@ -491,6 +507,23 @@ public class GroupDetailsActivity extends BaseActivity implements View.OnClickLi
                     GroupDetailResponse groupPostResponse = response.body();
                     selectedGroup = groupPostResponse.getData().getResult();
                     toolbarTitle.setHint(getString(R.string.groups_search_in));
+                    if (StringUtils.isNullOrEmpty(selectedGroup.getCollectionId())) {
+                        String[] sections = {
+                                getString(R.string.groups_sections_about),
+                                getString(R.string.groups_sections_discussions),
+                                getString(R.string.onboarding_desc_array_tutorial_1_blogs),
+                                getString(R.string.groups_sections_polls), getString(R.string.groups_sections_ask)
+                        };
+                        setUpTabLayout(sections, 0);
+                    } else {
+                        String[] sections = {
+                                getString(R.string.groups_sections_about),
+                                getString(R.string.groups_sections_discussions),
+                                getString(R.string.all_resources),
+                                getString(R.string.groups_sections_polls), getString(R.string.groups_sections_ask)
+                        };
+                        setUpTabLayout(sections, 1);
+                    }
                     memberCountTextView
                             .setText(selectedGroup.getMemberCount() + " " + getString(R.string.groups_member_label));
                     groupNameTextView.setText(selectedGroup.getTitle());
@@ -1352,11 +1385,19 @@ public class GroupDetailsActivity extends BaseActivity implements View.OnClickLi
         }
     }
 
-    private void setUpTabLayout(String[] sections) {
-        for (int i = 0; i < sections.length; i++) {
-            TabLayout.Tab tab = groupPostTabLayout.newTab();
-            tab.setTag(sectionsKey[i]);
-            groupPostTabLayout.addTab(tab.setText(sections[i]));
+    private void setUpTabLayout(String[] sections, int tabType) {
+        if (tabType == 0) {
+            for (int i = 0; i < sections.length; i++) {
+                TabLayout.Tab tab = groupPostTabLayout.newTab();
+                tab.setTag(sectionsKey[i]);
+                groupPostTabLayout.addTab(tab.setText(sections[i]));
+            }
+        } else {
+            for (int i = 0; i < sections.length; i++) {
+                TabLayout.Tab tab = groupPostTabLayout.newTab();
+                tab.setTag(sectionsKeyResources[i]);
+                groupPostTabLayout.addTab(tab.setText(sections[i]));
+            }
         }
 
         groupPostTabLayout.setTabGravity(TabLayout.GRAVITY_CENTER);
@@ -1428,6 +1469,17 @@ public class GroupDetailsActivity extends BaseActivity implements View.OnClickLi
                     limit = 10;
                     postType = AppConstants.ASK_AN_EXPERT_KEY;
                     getFilteredGroupPosts();
+                } else if (AppConstants.GROUP_SECTION_RESOURCES.equalsIgnoreCase(tab.getTag().toString())) {
+                    Utils.groupsEvent(GroupDetailsActivity.this, "Groups_Discussion", "resources", "android",
+                            SharedPrefUtils.getAppLocale(BaseApplication.getAppContext()),
+                            SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId(),
+                            String.valueOf(System.currentTimeMillis()), "resources page", "", "");
+
+                    isRequestRunning = false;
+                    isLastPageReached = false;
+                    start = 0;
+                    recyclerView.setAdapter(collectionItemsListAdapter);
+                    getUserCollectionItems(selectedGroup.getCollectionId(), start);
                 }
             }
 
@@ -1480,6 +1532,62 @@ public class GroupDetailsActivity extends BaseActivity implements View.OnClickLi
             }
         });
     }
+
+    private void getUserCollectionItems(String collectionId, int start) {
+        Retrofit retrofit = BaseApplication.getInstance().getRetrofit();
+        CollectionsAPI collectionsApi = retrofit.create(CollectionsAPI.class);
+        Call<BaseResponseGeneric<UserCollectionsListModel>> call = collectionsApi
+                .getUserCollectionItem(collectionId, start, 10);
+        call.enqueue(userCollectionItemsResponseCallback);
+    }
+
+    private Callback<BaseResponseGeneric<UserCollectionsListModel>> userCollectionItemsResponseCallback =
+            new Callback<BaseResponseGeneric<UserCollectionsListModel>>() {
+                @Override
+                public void onResponse(Call<BaseResponseGeneric<UserCollectionsListModel>> call,
+                        Response<BaseResponseGeneric<UserCollectionsListModel>> response) {
+                    if (response.body() == null) {
+                        NetworkErrorException nee = new NetworkErrorException(response.raw().toString());
+                        FirebaseCrashlytics.getInstance().recordException(nee);
+                        return;
+                    }
+                    try {
+                        if (response.isSuccessful()) {
+                            BaseResponseGeneric<UserCollectionsListModel> userCollectionsListModel = response.body();
+                            processCollectionItems(userCollectionsListModel);
+                        }
+                    } catch (Exception e) {
+                        FirebaseCrashlytics.getInstance().recordException(e);
+                        Log.d("MC4kException", Log.getStackTraceString(e));
+                    }
+                }
+
+                @Override
+                public void onFailure(Call<BaseResponseGeneric<UserCollectionsListModel>> call, Throwable t) {
+                    FirebaseCrashlytics.getInstance().recordException(t);
+                    Log.d("MC4kException", Log.getStackTraceString(t));
+                }
+            };
+
+    private void processCollectionItems(BaseResponseGeneric<UserCollectionsListModel> userCollectionsListModel) {
+        ArrayList<UserCollectionsModel> dataList = userCollectionsListModel.getData().getResult().getCollectionItems();
+        if (dataList.size() == 0) {
+            isLastPageReached = false;
+            if (null != vlogResourcesList && !vlogResourcesList.isEmpty()) {
+                isLastPageReached = true;
+            } else {
+                vlogResourcesList = dataList;
+                collectionItemsListAdapter.setListData(vlogResourcesList);
+                collectionItemsListAdapter.notifyDataSetChanged();
+            }
+        } else {
+            vlogResourcesList.addAll(dataList);
+            collectionItemsListAdapter.setListData(vlogResourcesList);
+            start = start + 10;
+            collectionItemsListAdapter.notifyDataSetChanged();
+        }
+    }
+
 
     private void getCategoriesTaggedWithGroups() {
         Retrofit retrofit = BaseApplication.getInstance().getGroupsRetrofit();
@@ -2133,5 +2241,15 @@ public class GroupDetailsActivity extends BaseActivity implements View.OnClickLi
             public void onSlide(@NonNull View view, float v) {
             }
         });
+    }
+
+    @Override
+    public void onRecyclerViewclick(int position) {
+        Intent intent = new Intent(this, ParallelFeedActivity.class);
+        intent.putExtra(Constants.STREAM_URL, vlogResourcesList.get(position).getItem_info().getStreamUrl());
+        intent.putExtra(Constants.VIDEO_ID, vlogResourcesList.get(position).getItem());
+        intent.putExtra(AppConstants.COLLECTION_ID, AppConstants.MOM_VLOG_TUTORIAL_COLLECTION);
+        intent.putExtra(Constants.AUTHOR_ID, vlogResourcesList.get(position).getItem_info().getAuthor().getId());
+        startActivity(intent);
     }
 }

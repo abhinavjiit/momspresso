@@ -49,9 +49,8 @@ public class FileUtils {
      */
     @SuppressLint("NewApi")
     public static String getPath(final Context context, final Uri uri) {
-
-        // DocumentProvider
         if (DocumentsContract.isDocumentUri(context, uri)) {
+            // DocumentProvider
             if (isExternalStorageDocument(uri)) {
                 final String docId = DocumentsContract.getDocumentId(uri);
                 final String[] split = docId.split(":");
@@ -59,18 +58,23 @@ public class FileUtils {
                 if ("primary".equalsIgnoreCase(type)) {
                     return Environment.getExternalStorageDirectory() + "/" + split[1];
                 }
-            }
-            // DownloadsProvider
-            else if (isDownloadsDocument(uri)) {
-
+            } else if (isDownloadsDocument(uri)) {
+                // DownloadsProvider
                 final String id = DocumentsContract.getDocumentId(uri);
-                final Uri contentUri = ContentUris.withAppendedId(
-                        Uri.parse("content://downloads/public_downloads"), Long.valueOf(id));
-
-                return getDataColumn(context, contentUri, null, null);
-            }
-            // MediaProvider
-            else if (isMediaDocument(uri)) {
+                if (id != null) {
+                    if (id.startsWith("raw:")) {
+                        return id.substring(4);
+                    }
+                    try {
+                        final Uri contentUri = ContentUris.withAppendedId(
+                                Uri.parse("content://downloads/public_downloads"), Long.valueOf(id));
+                        return getDataColumn(context, contentUri, null, null);
+                    } catch (Exception e) {
+                        return null;
+                    }
+                }
+            } else if (isMediaDocument(uri)) {
+                // MediaProvider
                 final String docId = DocumentsContract.getDocumentId(uri);
                 final String[] split = docId.split(":");
                 final String type = split[0];
@@ -91,19 +95,16 @@ public class FileUtils {
 
                 return getDataColumn(context, contentUri, selection, selectionArgs);
             }
-        }
-        // MediaStore (and general)
-        else if ("content".equalsIgnoreCase(uri.getScheme())) {
-
-            // Return the remote address
+        } else if ("content".equalsIgnoreCase(uri.getScheme())) {
+            // MediaStore (and general)
             if (isGooglePhotosUri(uri)) {
+                // Return the remote address
                 return uri.getLastPathSegment();
             }
 
             return getDataColumn(context, uri, null, null);
-        }
-        // File
-        else if ("file".equalsIgnoreCase(uri.getScheme())) {
+        } else if ("file".equalsIgnoreCase(uri.getScheme())) {
+            // File
             return uri.getPath();
         }
 
@@ -141,7 +142,7 @@ public class FileUtils {
         return null;
     }
 
-    /**
+    /*
      * @param uri The Uri to check.
      * @return Whether the Uri authority is Google Photos.
      */
@@ -149,7 +150,7 @@ public class FileUtils {
         return "com.google.android.apps.photos.content".equals(uri.getAuthority());
     }
 
-    /**
+    /*
      * @param uri The Uri to check.
      * @return Whether the Uri authority is ExternalStorageProvider.
      */
@@ -157,7 +158,7 @@ public class FileUtils {
         return "com.android.externalstorage.documents".equals(uri.getAuthority());
     }
 
-    /**
+    /*
      * @param uri The Uri to check.
      * @return Whether the Uri authority is DownloadsProvider.
      */
@@ -165,7 +166,7 @@ public class FileUtils {
         return "com.android.providers.downloads.documents".equals(uri.getAuthority());
     }
 
-    /**
+    /*
      * @param uri The Uri to check.
      * @return Whether the Uri authority is MediaProvider.
      */
