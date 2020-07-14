@@ -1363,4 +1363,8 @@ Thank you! We will be reviewing your story. You can expect to hear from us withi
   <string name="winner_empty_state">சவாலின் வெற்றியாளர்களைப் பற்றி இங்கே நீங்கள் அறிந்து கொள்ளலாம்!</string>
   <string name="all_earlier">Earlier</string>
   <string name="all_resources">RESOURCES</string>
+  <string name="profile_userhandle">User Handle</string>
+  <string name="profile_check">Check</string>
+  <string name="write_an_email">Write an email</string>
+  <string name="ask_mymoney_helpdesk">Ask on Mymoney helpdesk</string>
 </resources>

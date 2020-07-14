@@ -1,6 +1,7 @@
 package com.mycity4kids.retrofitAPIsInterfaces
 
 import com.mycity4kids.models.campaignmodels.ReferralCodeResult
+import com.mycity4kids.models.campaignmodels.UserHandleAvailabilityResponse
 import com.mycity4kids.models.response.BaseResponseGeneric
 import com.mycity4kids.models.response.SetupBlogData
 import com.mycity4kids.models.response.ShortStoryImageData
@@ -55,6 +56,10 @@ interface RewardsAPI {
     @GET("v1/users/{userId}")
     fun getUserDetails(@Path("userId") userId: String, @Query("email") required: String):
         Observable<BaseResponseGeneric<UserDetailResult>>
+
+    @GET("v1/users/handle/")
+    fun checkUserHandleAvailability(@Query("userHandle") userHandle: String):
+        Observable<BaseResponseGeneric<UserHandleAvailabilityResponse>>
 
     @PUT("/v2/users/{userId}")
     fun sendProfileDataForAny(

@@ -16,6 +16,8 @@ import android.os.Build
 import android.os.Bundle
 import android.os.Environment
 import android.provider.MediaStore
+import android.text.Editable
+import android.text.TextWatcher
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -56,6 +58,7 @@ import com.mycity4kids.constants.AppConstants
 import com.mycity4kids.constants.Constants
 import com.mycity4kids.filechooser.com.ipaulpro.afilechooser.utils.FileUtils
 import com.mycity4kids.gtmutils.Utils
+import com.mycity4kids.models.campaignmodels.UserHandleAvailabilityResponse
 import com.mycity4kids.models.request.UpdateUserDetailsRequest
 import com.mycity4kids.models.response.BaseResponseGeneric
 import com.mycity4kids.models.response.CityInfoItem
@@ -87,6 +90,12 @@ import io.reactivex.Observer
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable
 import io.reactivex.schedulers.Schedulers
+import okhttp3.MediaType.Companion.toMediaTypeOrNull
+import okhttp3.RequestBody.Companion.asRequestBody
+import okhttp3.RequestBody.Companion.toRequestBody
+import org.apmem.tools.layouts.FlowLayout
+import retrofit2.Call
+import retrofit2.Callback
 import java.io.ByteArrayOutputStream
 import java.io.File
 import java.io.IOException
@@ -95,12 +104,6 @@ import java.util.ArrayList
 import java.util.Calendar
 import java.util.Collections
 import java.util.Date
-import okhttp3.MediaType.Companion.toMediaTypeOrNull
-import okhttp3.RequestBody.Companion.asRequestBody
-import okhttp3.RequestBody.Companion.toRequestBody
-import org.apmem.tools.layouts.FlowLayout
-import retrofit2.Call
-import retrofit2.Callback
 
 const val ADD_MEDIA_ACTIVITY_REQUEST_CODE = 1111
 const val ADD_MEDIA_CAMERA_ACTIVITY_REQUEST_CODE = 1113
@@ -156,6 +159,8 @@ class ProfileInfoFragment : BaseFragment(),
     private lateinit var editEmail: EditText
     private lateinit var referralMainLayout: RelativeLayout
     private lateinit var editReferralCode: EditText
+    private lateinit var userHandleTextView: EditText
+    private lateinit var checkTextView: TextView
     private lateinit var textReferCodeError: TextView
     private lateinit var spinnernumberOfKids: AppCompatSpinner
     private lateinit var checkAreYouExpecting: AppCompatCheckBox
@@ -193,6 +198,7 @@ class ProfileInfoFragment : BaseFragment(),
     private lateinit var floatingLanguage: FlowLayout
     private lateinit var textEditInterest: TextView
     private lateinit var textEditLanguage: TextView
+    private lateinit var userAvailabilityResultTextView: TextView
     private lateinit var textAddChild: TextView
     private lateinit var radioGroupAreMother: RadioGroup
     private lateinit var layoutDynamicNumberOfKids: LinearLayout
@@ -203,6 +209,7 @@ class ProfileInfoFragment : BaseFragment(),
     private lateinit var editKidsName: EditText
     private var isComingFromCampaign = false
     private var isComingFromRewards = false
+    private var isHandleChecked = false
     private var referralCode: String = ""
     private lateinit var spinAdapter: CustomSpinnerAdapter
 
@@ -261,6 +268,10 @@ class ProfileInfoFragment : BaseFragment(),
         checkAreYouExpecting = containerView.findViewById(R.id.checkAreYouExpecting)
         profileImageView = containerView.findViewById(R.id.profileImageView)
         editImageView = containerView.findViewById(R.id.editImageView)
+        userHandleTextView = containerView.findViewById(R.id.userHandleTextView)
+        checkTextView = containerView.findViewById(R.id.checkTextView)
+        userAvailabilityResultTextView =
+            containerView.findViewById(R.id.userAvailabilityResultTextView)
 
         if (arguments != null) {
             isComingFromRewards = if (arguments!!.containsKey("isComingFromRewards")) {
@@ -314,9 +325,22 @@ class ProfileInfoFragment : BaseFragment(),
 
         if (apiGetResponse.emailValidated.equals("1")) {
             editEmail.isEnabled = false
-        } /*else {
-            editEmail.setText(SharedPrefUtils.getUserDetailModel(activity)?.email)
-        }*/
+            editEmail.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.green_tick, 0)
+        } else {
+            Toast.makeText(
+                activity,
+                "Email verification is pending",
+                Toast.LENGTH_SHORT
+            ).show()
+        }
+
+        if (!apiGetResponse.isUserHandleUpdated.isNullOrEmpty() && apiGetResponse.isUserHandleUpdated.equals(
+                "1"
+            )) {
+            userHandleTextView.setText(apiGetResponse.userHandle)
+            userHandleTextView.isEnabled = false
+            checkTextView.visibility = View.GONE
+        }
 
         if (!apiGetResponse.cityName.isNullOrBlank()) editLocation.setText(apiGetResponse.cityName)
         if (apiGetResponse.latitude != null) lat = apiGetResponse.latitude!!
@@ -466,6 +490,30 @@ class ProfileInfoFragment : BaseFragment(),
         /*textApplyReferral.setOnClickListener {
             validateReferralCode()
         }*/
+
+        userHandleTextView.addTextChangedListener(object : TextWatcher {
+            override fun afterTextChanged(text: Editable?) {
+                isHandleChecked = false
+            }
+
+            override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
+            }
+
+            override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
+            }
+        })
+
+        checkTextView.setOnClickListener {
+            if (userHandleTextView.text.length >= 7) {
+                checkUserHandleAvailability()
+            } else {
+                Toast.makeText(
+                    activity,
+                    "Handle should be of minimum 7 characters",
+                    Toast.LENGTH_SHORT
+                ).show()
+            }
+        }
 
         editImageView.setOnClickListener {
             if (Build.VERSION.SDK_INT >= 23) {
@@ -761,6 +809,42 @@ class ProfileInfoFragment : BaseFragment(),
         }
     }
 
+    private fun checkUserHandleAvailability() {
+        showProgressDialog(resources.getString(R.string.please_wait))
+        BaseApplication.getInstance().retrofit.create(RewardsAPI::class.java)
+            .checkUserHandleAvailability(userHandleTextView.text.toString()).subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe(object : Observer<BaseResponseGeneric<UserHandleAvailabilityResponse>> {
+                override fun onComplete() {
+                }
+
+                override fun onSubscribe(d: Disposable) {
+                }
+
+                override fun onNext(response: BaseResponseGeneric<UserHandleAvailabilityResponse>) {
+                    removeProgressDialog()
+                    if (response.code == 200 && Constants.SUCCESS == response.status && response.data != null) {
+                        userAvailabilityResultTextView.visibility = View.VISIBLE
+                        if (response.data!!.result.userId.isNullOrEmpty()) {
+                            userAvailabilityResultTextView.setText("User handle available")
+                            userAvailabilityResultTextView.setTextColor(resources.getColor(R.color.green_dark))
+                            isHandleChecked = true
+                        } else {
+                            isHandleChecked = false
+                            userAvailabilityResultTextView.setText("User handle unavailable")
+                            userAvailabilityResultTextView.setTextColor(resources.getColor(R.color.app_red))
+                        }
+                    }
+                }
+
+                override fun onError(e: Throwable) {
+                    removeProgressDialog()
+                    isHandleChecked = false
+                    Log.d("exception in error", e.message.toString())
+                }
+            })
+    }
+
     private fun requestCameraAndStoragePermissions() {
         if (ActivityCompat.shouldShowRequestPermissionRationale(
                 activity as RewardsContainerActivity,
@@ -1012,6 +1096,21 @@ class ProfileInfoFragment : BaseFragment(),
             return false
         } else {
             apiGetResponse.userBio = aboutEditText.text.toString()
+        }
+
+        if (isHandleChecked) {
+            if (apiGetResponse.isUserHandleUpdated.isNullOrEmpty() || apiGetResponse.isUserHandleUpdated.equals(
+                    "0"
+                )) {
+                apiGetResponse.userHandle = userHandleTextView.text.toString()
+            }
+        }else{
+            Toast.makeText(
+                activity,
+                "Please check handle availability",
+                Toast.LENGTH_SHORT
+            ).show()
+            return false
         }
 
         //        if (BuildConfig.DEBUG) {

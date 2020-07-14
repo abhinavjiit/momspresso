@@ -103,6 +103,60 @@
 
 
         <com.mycity4kids.widget.CustomFontTextView
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:layout_marginLeft="20dp"
+          android:layout_marginTop="15dp"
+          android:text="@string/profile_userhandle"
+          android:textColor="@color/color_85848A"
+          android:textSize="16sp" />
+
+        <RelativeLayout
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:layout_marginLeft="20dp"
+          android:layout_marginTop="5dp"
+          android:layout_marginRight="20dp"
+          android:background="@drawable/mainprofile_thin_border">
+
+            <com.mycity4kids.widget.CustomFontEditText
+              android:id="@+id/userHandleTextView"
+              android:layout_width="match_parent"
+              android:layout_height="@dimen/space_40"
+              android:layout_marginLeft="5dp"
+              android:paddingLeft="5dp"
+              android:paddingTop="10dp"
+              android:paddingBottom="10dp"
+              android:singleLine="true"
+              android:digits="ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!@#$%^/\&amp;*(){}[]_-+|,."
+              android:layout_toStartOf="@+id/checkTextView"
+              android:textColor="@color/campaign_4A4A4A"
+              android:textSize="16sp" />
+
+            <com.mycity4kids.widget.CustomFontTextView
+              android:id="@+id/checkTextView"
+              android:layout_width="wrap_content"
+              android:layout_height="wrap_content"
+              android:layout_alignParentRight="true"
+              android:layout_marginRight="10dp"
+              android:layout_centerVertical="true"
+              android:paddingLeft="@dimen/space_15"
+              android:text="@string/profile_check"
+              android:textColor="@color/app_red"
+              android:textSize="12sp"
+              android:visibility="visible" />
+        </RelativeLayout>
+
+        <com.mycity4kids.widget.CustomFontTextView
+          android:id="@+id/userAvailabilityResultTextView"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:layout_marginLeft="20dp"
+          android:layout_marginTop="@dimen/space_2"
+          android:visibility="gone"
+          android:textSize="10sp" />
+
+        <com.mycity4kids.widget.CustomFontTextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginLeft="20dp"
