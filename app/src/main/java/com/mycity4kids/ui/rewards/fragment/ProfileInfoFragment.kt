@@ -494,6 +494,7 @@ class ProfileInfoFragment : BaseFragment(),
         userHandleTextView.addTextChangedListener(object : TextWatcher {
             override fun afterTextChanged(text: Editable?) {
                 isHandleChecked = false
+                userAvailabilityResultTextView.visibility = View.GONE
             }
 
             override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
@@ -1098,7 +1099,7 @@ class ProfileInfoFragment : BaseFragment(),
             apiGetResponse.userBio = aboutEditText.text.toString()
         }
 
-        if (isHandleChecked) {
+        if (isHandleChecked || (!apiGetResponse.isUserHandleUpdated.isNullOrEmpty() && apiGetResponse.isUserHandleUpdated.equals("1"))) {
             if (apiGetResponse.isUserHandleUpdated.isNullOrEmpty() || apiGetResponse.isUserHandleUpdated.equals(
                     "0"
                 )) {
