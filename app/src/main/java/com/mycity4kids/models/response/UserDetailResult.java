@@ -107,6 +107,10 @@ public class UserDetailResult implements Parcelable {
     private String isNewUser;
     @SerializedName("following")
     private Boolean following;
+    @SerializedName("userHandle")
+    private String userHandle;
+    @SerializedName("isUserHandleUpdated")
+    private String isUserHandleUpdated;
 
     protected UserDetailResult(Parcel in) {
         id = in.readString();
@@ -148,6 +152,8 @@ public class UserDetailResult implements Parcelable {
         mobileAuthToken = in.readString();
         mobile = in.readString();
         isNewUser = in.readString();
+        userHandle = in.readString();
+        isUserHandleUpdated = in.readString();
     }
 
     public static final Creator<UserDetailResult> CREATOR = new Creator<UserDetailResult>() {
@@ -547,6 +553,22 @@ public class UserDetailResult implements Parcelable {
         this.isNewUser = isNewUser;
     }
 
+    public String getUserHandle() {
+        return userHandle;
+    }
+
+    public void setUserHandle(String userHandle) {
+        this.userHandle = userHandle;
+    }
+
+    public String getIsUserHandleUpdated() {
+        return isUserHandleUpdated;
+    }
+
+    public void setIsUserHandleUpdated(String isUserHandleUpdated) {
+        this.isUserHandleUpdated = isUserHandleUpdated;
+    }
+
     @Override
     public int describeContents() {
         return 0;
@@ -593,6 +615,8 @@ public class UserDetailResult implements Parcelable {
         parcel.writeString(mobileAuthToken);
         parcel.writeString(mobile);
         parcel.writeString(isNewUser);
+        parcel.writeString(userHandle);
+        parcel.writeString(isUserHandleUpdated);
     }
 
     public class SocialTokens {

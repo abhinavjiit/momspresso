@@ -39,6 +39,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.facebook.shimmer.ShimmerFrameLayout
 import com.google.firebase.crashlytics.FirebaseCrashlytics
+import com.mycity4kids.BuildConfig
 import com.mycity4kids.R
 import com.mycity4kids.application.BaseApplication
 import com.mycity4kids.base.BaseFragment
@@ -52,10 +53,15 @@ import com.mycity4kids.models.campaignmodels.ParticipateCampaignResponse
 import com.mycity4kids.models.request.CampaignParticipate
 import com.mycity4kids.models.request.CampaignReferral
 import com.mycity4kids.models.response.BaseResponseGeneric
+import com.mycity4kids.models.response.GroupsMembershipResponse
 import com.mycity4kids.models.rewardsmodels.RewardsDetailsResultResonse
 import com.mycity4kids.preference.SharedPrefUtils
 import com.mycity4kids.retrofitAPIsInterfaces.CampaignAPI
 import com.mycity4kids.retrofitAPIsInterfaces.RewardsAPI
+import com.mycity4kids.ui.GroupMembershipStatus
+import com.mycity4kids.ui.GroupMembershipStatus.IMembershipStatus
+import com.mycity4kids.ui.activity.GroupDetailsActivity
+import com.mycity4kids.ui.activity.GroupsSummaryActivity
 import com.mycity4kids.ui.activity.NewsLetterWebviewActivity
 import com.mycity4kids.ui.adapter.CampaignDetailAdapter
 import com.mycity4kids.ui.campaign.BasicResponse
@@ -70,20 +76,20 @@ import io.reactivex.Observer
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable
 import io.reactivex.schedulers.Schedulers
-import java.text.SimpleDateFormat
-import java.util.Calendar
-import java.util.regex.Pattern
 import kotlinx.coroutines.CoroutineExceptionHandler
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import retrofit2.Call
 import retrofit2.Callback
+import java.text.SimpleDateFormat
+import java.util.Calendar
+import java.util.regex.Pattern
 
 const val REWARDS_FILL_FORM_REQUEST = 1000
 const val SURVEY_CAMPAIGN_REQUEST = 10000
 
-class CampaignDetailFragment : BaseFragment() {
+class CampaignDetailFragment : BaseFragment(), IMembershipStatus {
     private lateinit var scrollView2: NestedScrollView
     private var campaignList = mutableListOf<CampaignDataListResult>()
     private lateinit var linearLayoutManager: LinearLayoutManager
@@ -269,17 +275,7 @@ class CampaignDetailFragment : BaseFragment() {
             }
 
             getHelp.setOnClickListener {
-                try {
-                    val emailIntent = Intent(
-                        Intent.ACTION_SENDTO, Uri.fromParts(
-                        "mailto", "support@momspresso-mymoney.com", null
-                    )
-                    )
-                    startActivity(Intent.createChooser(emailIntent, "Send email..."))
-                } catch (e: Exception) {
-                    FirebaseCrashlytics.getInstance().recordException(e)
-                    Log.d("MC4kException", Log.getStackTraceString(e))
-                }
+                getHelpDialog()
             }
 
             txtTrackerStatus.setOnClickListener {
@@ -1220,6 +1216,43 @@ class CampaignDetailFragment : BaseFragment() {
         dialog.show()
     }
 
+    private fun getHelpDialog() {
+        val dialog = activity?.let { Dialog(it) }
+        dialog?.window!!.requestFeature(Window.FEATURE_NO_TITLE)
+        dialog.setContentView(R.layout.campaign_gethelp_dialog)
+        dialog.setCancelable(false)
+        val writeEmail = dialog.findViewById<TextView>(R.id.email)
+        writeEmail.setOnClickListener {
+            try {
+                val emailIntent = Intent(
+                    Intent.ACTION_SENDTO, Uri.fromParts(
+                    "mailto", "support@momspresso-mymoney.com", null
+                )
+                )
+                startActivity(Intent.createChooser(emailIntent, "Send email..."))
+            } catch (e: Exception) {
+                FirebaseCrashlytics.getInstance().recordException(e)
+                Log.d("MC4kException", Log.getStackTraceString(e))
+            }
+            dialog.cancel()
+        }
+        val helpdesk = dialog.findViewById<TextView>(R.id.mymoney_helpdesk)
+        helpdesk.setOnClickListener {
+            val groupMembershipStatus = GroupMembershipStatus(this)
+            groupMembershipStatus.checkMembershipStatus(
+                102,
+                SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).dynamoId
+            )
+            dialog.cancel()
+        }
+        val okBtn = dialog.findViewById<TextView>(R.id.cross)
+        okBtn.setOnClickListener {
+            dialog.cancel()
+        }
+        dialog.window!!.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+        dialog.show()
+    }
+
     fun hideShowReferral(status: Int) {
         if (status == 1 && apiGetResponse!!.showRefferField == true) {
             viewLine.visibility = View.VISIBLE
@@ -1521,5 +1554,112 @@ class CampaignDetailFragment : BaseFragment() {
     override fun onStop() {
         super.onStop()
         shimmer1.stopShimmerAnimation()
+    }
+
+    override fun onMembershipStatusFetchFail() {
+        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    }
+
+    override fun onMembershipStatusFetchSuccess(body: GroupsMembershipResponse?, groupId: Int) {
+        var userType: String? = null
+        if (body!!.data.result != null && !body.data.result.isEmpty()) {
+            if (body.data.result[0].isAdmin == 1) {
+                userType = AppConstants.GROUP_MEMBER_TYPE_ADMIN
+            } else if (body.data.result[0].isModerator == 1) {
+                userType = AppConstants.GROUP_MEMBER_TYPE_MODERATOR
+            }
+        }
+
+        if (AppConstants.GROUP_MEMBER_TYPE_MODERATOR != userType && AppConstants.GROUP_MEMBER_TYPE_ADMIN != userType) {
+            if ("male".equals(
+                    SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).gender,
+                    ignoreCase = true
+                )
+                ||
+                "m".equals(
+                    SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).gender,
+                    ignoreCase = true
+                )) {
+                if (isAdded) {
+                    Toast.makeText(
+                        activity,
+                        getString(R.string.women_only),
+                        Toast.LENGTH_SHORT
+                    ).show()
+                }
+                if (!BuildConfig.DEBUG && !AppConstants.DEBUGGING_USER_ID
+                        .contains(SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).dynamoId)) {
+                    return
+                }
+            }
+        }
+
+        if (body.data.result == null || body.data.result.isEmpty()) {
+            val intent = Intent(
+                activity,
+                GroupsSummaryActivity::class.java
+            )
+            intent.putExtra("groupId", 102)
+            intent.putExtra(AppConstants.GROUP_MEMBER_TYPE, userType)
+            startActivity(intent)
+        } else if (AppConstants.GROUP_MEMBERSHIP_STATUS_BLOCKED == body.data.result[0].status) {
+            if (isAdded) {
+                Toast.makeText(
+                    activity,
+                    getString(R.string.groups_user_blocked_msg),
+                    Toast.LENGTH_SHORT
+                ).show()
+            }
+        } else if (AppConstants.GROUP_MEMBERSHIP_STATUS_MEMBER == body.data.result[0].status) {
+            val intent = Intent(
+                activity,
+                GroupDetailsActivity::class.java
+            )
+            intent.putExtra("groupId", 102)
+            intent.putExtra(AppConstants.GROUP_MEMBER_TYPE, userType)
+            startActivity(intent)
+            Utils.groupsEvent(
+                activity,
+                "Home Screen",
+                "Groups you are member of_group card",
+                "android",
+                SharedPrefUtils.getAppLocale(BaseApplication.getAppContext()),
+                SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).dynamoId,
+                System.currentTimeMillis().toString(),
+                "Discussion Page",
+                "",
+                ""
+            )
+        } else if (AppConstants.GROUP_MEMBERSHIP_STATUS_PENDING_MODERATION
+            == body.data.result[0].status) {
+            val intent = Intent(
+                activity,
+                GroupsSummaryActivity::class.java
+            )
+            intent.putExtra("groupId", 102)
+            intent.putExtra("pendingMembershipFlag", true)
+            intent.putExtra(AppConstants.GROUP_MEMBER_TYPE, userType)
+            startActivity(intent)
+        } else {
+            Utils.groupsEvent(
+                activity,
+                "Home Screen",
+                "other groups_group card",
+                "android",
+                SharedPrefUtils.getAppLocale(BaseApplication.getAppContext()),
+                SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).dynamoId,
+                System.currentTimeMillis().toString(),
+                "About Page",
+                "",
+                ""
+            )
+            val intent = Intent(
+                activity,
+                GroupsSummaryActivity::class.java
+            )
+            intent.putExtra("groupId", 102)
+            intent.putExtra(AppConstants.GROUP_MEMBER_TYPE, userType)
+            startActivity(intent)
+        }
     }
 }

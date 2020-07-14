@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+  xmlns:app="http://schemas.android.com/apk/res-auto"
+  android:id="@+id/bottom_sheet"
+  android:layout_width="match_parent"
+  android:layout_height="wrap_content"
+  android:background="@drawable/shape_shadow_rectangle"
+  android:clickable="true"
+  android:orientation="vertical">
+
+  <com.mycity4kids.widget.CustomFontTextView
+    android:id="@+id/cross"
+    android:layout_width="@dimen/space_35"
+    android:layout_height="@dimen/space_35"
+    android:layout_alignParentRight="true"
+    android:background="@drawable/ic_cross"
+    android:padding="@dimen/space_10"
+    android:visibility="visible" />
+
+  <com.mycity4kids.widget.CustomFontTextView
+    android:id="@+id/email"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_below="@id/cross"
+    android:layout_marginLeft="@dimen/space_20"
+    android:layout_marginRight="@dimen/space_20"
+    android:background="@drawable/gethelp_write_an_email_bg"
+    android:gravity="center"
+    android:paddingTop="@dimen/space_13"
+    android:paddingBottom="@dimen/space_13"
+    android:text="@string/write_an_email"
+    android:textColor="@color/white"
+    android:textSize="17sp" />
+
+  <com.mycity4kids.widget.CustomFontTextView
+    android:id="@+id/mymoney_helpdesk"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_below="@+id/email"
+    android:layout_marginLeft="@dimen/space_20"
+    android:layout_marginTop="@dimen/space_15"
+    android:layout_marginRight="@dimen/space_20"
+    android:layout_marginBottom="@dimen/space_10"
+    android:background="@drawable/gethelp_mymoney_helpdesk_bg"
+    android:gravity="center"
+    android:paddingTop="@dimen/space_13"
+    android:paddingBottom="@dimen/space_13"
+    android:text="@string/ask_mymoney_helpdesk"
+    android:textColor="@color/white"
+    android:textSize="17sp" />
+
+</RelativeLayout>
