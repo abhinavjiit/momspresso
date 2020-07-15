@@ -340,6 +340,8 @@ class ProfileInfoFragment : BaseFragment(),
             userHandleTextView.setText(apiGetResponse.userHandle)
             userHandleTextView.isEnabled = false
             checkTextView.visibility = View.GONE
+        } else if (!apiGetResponse.isUserHandleUpdated.isNullOrEmpty() && apiGetResponse.isUserHandleUpdated.equals("0") && !apiGetResponse.userHandle.isNullOrEmpty()){
+            userHandleTextView.setText(apiGetResponse.userHandle)
         }
 
         if (!apiGetResponse.cityName.isNullOrBlank()) editLocation.setText(apiGetResponse.cityName)
