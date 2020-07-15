@@ -76,15 +76,15 @@ import io.reactivex.Observer
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable
 import io.reactivex.schedulers.Schedulers
-import java.text.SimpleDateFormat
-import java.util.Calendar
-import java.util.regex.Pattern
 import kotlinx.coroutines.CoroutineExceptionHandler
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import retrofit2.Call
 import retrofit2.Callback
+import java.text.SimpleDateFormat
+import java.util.Calendar
+import java.util.regex.Pattern
 
 const val REWARDS_FILL_FORM_REQUEST = 1000
 const val SURVEY_CAMPAIGN_REQUEST = 10000
@@ -439,8 +439,8 @@ class CampaignDetailFragment : BaseFragment(), IMembershipStatus {
                         shimmer1.stopShimmerAnimation()
                         toolbar.visibility = View.VISIBLE
                         scrollView2.visibility = View.VISIBLE
-//                        labelTextLayout.visibility = View.VISIBLE
-//                        labelText.visibility = View.VISIBLE
+                        //                        labelTextLayout.visibility = View.VISIBLE
+                        //                        labelText.visibility = View.VISIBLE
                         bottomLayout.visibility = View.VISIBLE
                     }
                 } catch (e: Exception) {
@@ -1090,7 +1090,7 @@ class CampaignDetailFragment : BaseFragment(), IMembershipStatus {
         } else if (status == 6) {
             hideShowReferral(status)
             viewDetailsText.visibility = View.VISIBLE
-//            getFeedback()
+            //            getFeedback()
             applicationStatus.setBackgroundResource(R.drawable.campaign_rejected)
             context?.let {
                 applicationStatus.text = it.resources.getString(R.string.campaign_details_rejected)
@@ -1138,7 +1138,7 @@ class CampaignDetailFragment : BaseFragment(), IMembershipStatus {
         } else if (status == 10 || status == 17) {
             hideShowReferral(status)
             viewDetailsText.visibility = View.VISIBLE
-//            getFeedback()
+            //            getFeedback()
             applicationStatus.setBackgroundResource(R.drawable.campaign_proof_rejected_bg)
             context?.let {
                 applicationStatus.text = it.resources.getString(R.string.campaign_list_proof_reject)
