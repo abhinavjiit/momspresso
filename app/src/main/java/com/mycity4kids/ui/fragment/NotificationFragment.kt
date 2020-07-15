@@ -57,11 +57,11 @@ import com.mycity4kids.ui.rewards.activity.RewardsContainerActivity
 import com.mycity4kids.ui.videochallengenewui.activity.NewVideoChallengeActivity
 import com.mycity4kids.utils.StringUtils
 import com.mycity4kids.utils.ToastUtils
-import java.util.ArrayList
 import okhttp3.ResponseBody
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
+import java.util.ArrayList
 
 /**
  * Created by hemant.parmar on 30-12-2017.
@@ -732,16 +732,20 @@ class NotificationFragment : BaseFragment(), IMembershipStatus,
                         notificationCenterResultArrayList!![position].commentId
                     val replyId =
                         notificationCenterResultArrayList!![position].replyId
+                    val authorId = notificationCenterResultArrayList!![position].authorId
                     val commentReplyNotificationIntent =
                         Intent(
                             activity,
                             ContentCommentReplyNotificationActivity::class.java
                         )
-                    commentReplyNotificationIntent.putExtra("articleId", contentId)
-                    commentReplyNotificationIntent.putExtra("commentId", commentId)
-                    commentReplyNotificationIntent.putExtra("type", "comment")
-                    commentReplyNotificationIntent.putExtra("contentType", contentType)
-                    commentReplyNotificationIntent.putExtra("replyId", replyId)
+                    commentReplyNotificationIntent.apply {
+                        putExtra("articleId", contentId)
+                        putExtra("commentId", commentId)
+                        putExtra("type", "reply")
+                        putExtra("contentType", contentType)
+                        putExtra("replyId", replyId)
+                        putExtra("authorId", authorId)
+                    }
                     startActivity(commentReplyNotificationIntent)
                     pushEvent("NOTIFICATION_CENTER_CONTENT_COMMENTS")
                 }
@@ -763,16 +767,20 @@ class NotificationFragment : BaseFragment(), IMembershipStatus,
                         notificationCenterResultArrayList!![position].commentId
                     val replyId =
                         notificationCenterResultArrayList!![position].replyId
+                    val authorId = notificationCenterResultArrayList!![position].authorId
                     val commentReplyNotificationIntent =
                         Intent(
                             activity,
                             ContentCommentReplyNotificationActivity::class.java
                         )
-                    commentReplyNotificationIntent.putExtra("articleId", contentId)
-                    commentReplyNotificationIntent.putExtra("commentId", commentId)
-                    commentReplyNotificationIntent.putExtra("type", "reply")
-                    commentReplyNotificationIntent.putExtra("contentType", contentType)
-                    commentReplyNotificationIntent.putExtra("replyId", replyId)
+                    commentReplyNotificationIntent.apply {
+                        putExtra("articleId", contentId)
+                        putExtra("commentId", commentId)
+                        putExtra("type", "reply")
+                        putExtra("contentType", contentType)
+                        putExtra("replyId", replyId)
+                        putExtra("authorId", authorId)
+                    }
                     startActivity(commentReplyNotificationIntent)
                     pushEvent("NOTIFICATION_CENTER_CONTENT_REPLY")
                 }

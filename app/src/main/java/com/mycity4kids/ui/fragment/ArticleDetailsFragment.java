@@ -5,11 +5,8 @@ import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.app.Activity;
 import android.content.Intent;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.graphics.PorterDuff;
 import android.graphics.Rect;
-import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
@@ -57,6 +54,7 @@ import com.mycity4kids.base.BaseFragment;
 import com.mycity4kids.constants.AppConstants;
 import com.mycity4kids.constants.Constants;
 import com.mycity4kids.gtmutils.Utils;
+import com.mycity4kids.models.TopCommentData;
 import com.mycity4kids.models.Topics;
 import com.mycity4kids.models.TopicsResponse;
 import com.mycity4kids.models.parentingdetails.CommentsData;
@@ -123,7 +121,10 @@ import com.mycity4kids.widget.ShareButtonWidget;
 import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.utils.YouTubePlayerUtils;
 import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.views.YouTubePlayerView;
 import com.squareup.picasso.Picasso;
-import com.squareup.picasso.Target;
+import io.reactivex.Observer;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.Disposable;
+import io.reactivex.schedulers.Schedulers;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.net.SocketTimeoutException;
@@ -366,6 +367,11 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
     private ArticleCommentRepliesDialogFragment articleCommentRepliesDialogFragment;
     private String editReplyParentCommentId;
     private String replyId;
+    private TextView markedTopComment2;
+    private TextView markedTopComment1;
+    private TextView topCommentTextView;
+    private boolean markedFirstTopComment = false;
+    private boolean markedSecondTopComment = false;
 
 
     static {
@@ -458,6 +464,10 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
             shareTodayBestArticle3 = fragmentView.findViewById(R.id.shareTodayBestArticle3);
             shareTodayBestArticle4 = fragmentView.findViewById(R.id.shareTodayBestArticle4);
             shareTodayBestArticle5 = fragmentView.findViewById(R.id.shareTodayBestArticle5);
+
+            markedTopComment1 = fragmentView.findViewById(R.id.markedTopComment1);
+            markedTopComment2 = fragmentView.findViewById(R.id.markedTopComment2);
+            topCommentTextView = fragmentView.findViewById(R.id.topCommentTextView);
 
             relatedArticleHorizontalScrollView = fragmentView.findViewById(R.id.relatedArticleHorizontalScrollView);
             txvArticleTitle1 = fragmentView.findViewById(R.id.txvArticleTitle1);
@@ -618,6 +628,8 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
             moreArticlesTextView.setOnClickListener(this);
             commentatorImageView1.setOnClickListener(this);
             commentatorImageView2.setOnClickListener(this);
+            markedTopComment1.setOnClickListener(this);
+            markedTopComment2.setOnClickListener(this);
 
             mainWebChromeClient = new MyWebChromeClient();
             mainWebView.setWebChromeClient(mainWebChromeClient);
@@ -1108,6 +1120,21 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
             } else {
                 replyCount1.setText("Reply(" + commentsList.get(0).getRepliesCount() + ")");
             }
+            if (AppUtils.isPrivateProfile(authorId)) {
+                if (commentsList.get(0).isIs_top_comment()) {
+                    topCommentTextView.setVisibility(View.VISIBLE);
+                    markedTopComment1.setVisibility(View.GONE);
+
+                } else {
+                    topCommentTextView.setVisibility(View.GONE);
+                    markedTopComment1.setVisibility(View.VISIBLE);
+
+                }
+            } else {
+                markedTopComment1.setVisibility(View.GONE);
+                topCommentTextView.setVisibility(View.GONE);
+            }
+
 
         } else if (commentsList.size() == 2) {
             viewMoreTextView.setVisibility(View.VISIBLE);
@@ -1154,7 +1181,20 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
             } else {
                 replyCount1.setText("Reply(" + commentsList.get(0).getRepliesCount() + ")");
             }
+            if (AppUtils.isPrivateProfile(authorId)) {
+                if (commentsList.get(0).isIs_top_comment()) {
+                    topCommentTextView.setVisibility(View.VISIBLE);
+                    markedTopComment1.setVisibility(View.GONE);
 
+                } else {
+                    topCommentTextView.setVisibility(View.GONE);
+                    markedTopComment1.setVisibility(View.VISIBLE);
+
+                }
+            } else {
+                markedTopComment1.setVisibility(View.GONE);
+                topCommentTextView.setVisibility(View.GONE);
+            }
             commentatorNameAndCommentTextView2.setText((Html
                     .fromHtml(
                             "<b>" + "<font color=\"#D54058\">" + commentsList.get(1).getUserName() + "</font>" + "</b>"
@@ -1183,6 +1223,12 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
                 replyCount2.setText("Reply");
             } else {
                 replyCount2.setText("Reply(" + commentsList.get(1).getRepliesCount() + ")");
+            }
+            if (AppUtils.isPrivateProfile(authorId)) {
+                markedTopComment2.setVisibility(View.VISIBLE);
+
+            } else {
+                markedTopComment2.setVisibility(View.GONE);
             }
 
         } else {
@@ -1259,6 +1305,25 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
                 replyCount2.setText("Reply");
             } else {
                 replyCount2.setText("Reply(" + commentsList.get(1).getRepliesCount() + ")");
+            }
+            if (AppUtils.isPrivateProfile(authorId)) {
+                if (commentsList.get(0).isIs_top_comment()) {
+                    topCommentTextView.setVisibility(View.VISIBLE);
+                    markedTopComment1.setVisibility(View.GONE);
+
+                } else {
+                    topCommentTextView.setVisibility(View.GONE);
+                    markedTopComment1.setVisibility(View.VISIBLE);
+
+                }
+            } else {
+                markedTopComment1.setVisibility(View.GONE);
+                topCommentTextView.setVisibility(View.GONE);
+            }
+            if (AppUtils.isPrivateProfile(authorId)) {
+                markedTopComment2.setVisibility(View.VISIBLE);
+            } else {
+                markedTopComment2.setVisibility(View.GONE);
             }
         }
     }
@@ -1875,6 +1940,61 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
     public void onClick(View v) {
         try {
             switch (v.getId()) {
+                case R.id.markedTopComment1:
+                    if (markedFirstTopComment) {
+                        markedFirstTopComment = false;
+                        markedTopComment1.setText(
+                                BaseApplication.getAppContext().getResources().getString(R.string.top_comment_string));
+                        Drawable myDrawable = ContextCompat
+                                .getDrawable(markedTopComment1.getContext(),
+                                        R.drawable.ic_top_comment_raw_color);
+                        markedTopComment1.setCompoundDrawablesWithIntrinsicBounds(myDrawable, null, null, null);
+                        TopCommentData commentListData = new TopCommentData(commentsList.get(0).getPostId(),
+                                commentsList.get(0).getId(), false);
+                        markedUnMarkedTopComment(commentListData);
+
+
+                    } else {
+                        markedFirstTopComment = true;
+                        markedTopComment1
+                                .setText(BaseApplication.getAppContext().getResources()
+                                        .getString(R.string.top_comment_marked_string));
+                        Drawable myDrawable = ContextCompat
+                                .getDrawable(markedTopComment1.getContext(),
+                                        R.drawable.ic_top_comment_marked_golden);
+                        markedTopComment1.setCompoundDrawablesWithIntrinsicBounds(myDrawable, null, null, null);
+                        TopCommentData commentListData = new TopCommentData(commentsList.get(0).getPostId(),
+                                commentsList.get(0).getId(), true);
+                        markedUnMarkedTopComment(commentListData);
+
+                    }
+                    break;
+                case R.id.markedTopComment2:
+                    if (markedSecondTopComment) {
+                        TopCommentData commentListData = new TopCommentData(commentsList.get(1).getPostId(),
+                                commentsList.get(1).getId(), false);
+                        markedUnMarkedTopComment(commentListData);
+                        markedSecondTopComment = false;
+                        markedTopComment2.setText(
+                                BaseApplication.getAppContext().getResources().getString(R.string.top_comment_string));
+                        Drawable myDrawable = ContextCompat
+                                .getDrawable(markedTopComment2.getContext(),
+                                        R.drawable.ic_top_comment_raw_color);
+                        markedTopComment2.setCompoundDrawablesWithIntrinsicBounds(myDrawable, null, null, null);
+                    } else {
+                        TopCommentData commentListData = new TopCommentData(commentsList.get(1).getPostId(),
+                                commentsList.get(1).getId(), true);
+                        markedUnMarkedTopComment(commentListData);
+                        markedSecondTopComment = true;
+                        markedTopComment2
+                                .setText(BaseApplication.getAppContext().getResources()
+                                        .getString(R.string.top_comment_marked_string));
+                        Drawable myDrawable = ContextCompat
+                                .getDrawable(markedTopComment2.getContext(),
+                                        R.drawable.ic_top_comment_marked_golden);
+                        markedTopComment2.setCompoundDrawablesWithIntrinsicBounds(myDrawable, null, null, null);
+                    }
+                    break;
                 case R.id.moreArticlesTextView:
                     Intent intent1 = new Intent(getActivity(), DashboardActivity.class);
                     intent1.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
@@ -2110,6 +2230,7 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
                     args.putParcelable("commentReplies", commentsList.get(1));
                     args.putInt("totalRepliesCount", commentsList.get(1).getRepliesCount());
                     args.putInt("position", 1);
+                    args.putString("blogWriterId", authorId);
                     articleCommentRepliesDialogFragment =
                             new ArticleCommentRepliesDialogFragment();
                     articleCommentRepliesDialogFragment.setArguments(args);
@@ -2127,6 +2248,7 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
                         args.putParcelable("commentReplies", commentsList.get(0));
                         args.putInt("totalRepliesCount", commentsList.get(0).getRepliesCount());
                         args.putInt("position", 0);
+                        args.putString("blogWriterId", authorId);
                         articleCommentRepliesDialogFragment
                                 = new ArticleCommentRepliesDialogFragment();
                         articleCommentRepliesDialogFragment.setArguments(args);
@@ -2230,11 +2352,44 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
         }
     }
 
+
+    private void markedUnMarkedTopComment(TopCommentData commentListData) {
+        BaseApplication.getInstance().getRetrofit().create(ArticleDetailsAPI.class).markedTopComment(commentListData)
+                .subscribeOn(
+                        Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(
+                new Observer<ResponseBody>() {
+                    @Override
+                    public void onSubscribe(Disposable d) {
+
+                    }
+
+                    @Override
+                    public void onNext(ResponseBody responseBody) {
+                        Log.d("MARKED--UNMARKED", responseBody.toString());
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+                        FirebaseCrashlytics.getInstance().recordException(e);
+                        Log.d("MC4kException", Log.getStackTraceString(e));
+
+                    }
+
+                    @Override
+                    public void onComplete() {
+
+                    }
+                });
+
+
+    }
+
     private void reportComment(int position) {
         Bundle args = new Bundle();
         args.putInt("position", position);
         args.putString("authorId", commentsList.get(position).getUserId());
         args.putString("responseType", "COMMENT");
+        args.putString("blogWriterId", authorId);
         CommentOptionsDialogFragment commentOptionsDialogFragment = new CommentOptionsDialogFragment();
         commentOptionsDialogFragment.setArguments(args);
         commentOptionsDialogFragment.setCancelable(true);
@@ -2590,6 +2745,7 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
             }
             args.putString(Constants.ARTICLE_ID, articleId);
             args.putString(Constants.AUTHOR, authorId + "~" + author);
+            args.putString(Constants.AUTHOR_ID, authorId);
             args.putString(Constants.BLOG_SLUG, detailData.getBlogTitleSlug());
             args.putString(Constants.TITLE_SLUG, detailData.getTitleSlug());
             args.putString("userType", detailData.getUserType());

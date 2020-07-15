@@ -34,6 +34,7 @@ public class ViewAllCommentsFragment extends BaseFragment implements View.OnClic
     private String titleSlug;
     private String userType;
     private String contentType;
+    private String authorId;
 
     @Nullable
     @Override
@@ -53,6 +54,7 @@ public class ViewAllCommentsFragment extends BaseFragment implements View.OnClic
         titleSlug = getArguments().getString(Constants.TITLE_SLUG);
         userType = getArguments().getString("userType");
         contentType = getArguments().getString("contentType");
+        authorId = getArguments().getString(Constants.AUTHOR_ID);
 
         addCommentTabs();
         return view;
@@ -69,7 +71,7 @@ public class ViewAllCommentsFragment extends BaseFragment implements View.OnClic
         final ViewPager viewPager = view.findViewById(R.id.pager);
         final AllCommentsPagerAdapter adapter = new AllCommentsPagerAdapter(getChildFragmentManager(),
                 tabLayout.getTabCount(), mycityCommentUrl, fbCommentUrl, articleId, author, contentType, titleSlug,
-                blogSlug, userType);
+                blogSlug, userType,authorId);
         viewPager.setAdapter(adapter);
         viewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabLayout));
         tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {

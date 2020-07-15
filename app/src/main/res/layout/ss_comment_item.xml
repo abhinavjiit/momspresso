@@ -1,10 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
   xmlns:app="http://schemas.android.com/apk/res-auto"
+  xmlns:tools="http://schemas.android.com/tools"
   android:id="@+id/commentRootLayout"
   android:layout_width="match_parent"
   android:layout_height="wrap_content"
-  android:background="@color/white_color">
+  android:background="@color/white_color"
+  tools:ignore="ExtraText">
 
   //Change View hierarchy with caution. getParent method is in use in the class file
 
@@ -12,10 +14,12 @@
     android:id="@+id/relativeMainContainer"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:layout_below="@+id/topCommentTextView"
     android:paddingLeft="10dp"
     android:paddingTop="8dp"
     android:paddingRight="10dp"
     android:paddingBottom="4dp">
+
 
     <com.mikhaellopez.circularimageview.CircularImageView
       android:id="@+id/commentorImageView"
@@ -54,7 +58,6 @@
       android:id="@+id/commentDataTextView"
       android:layout_width="match_parent"
       android:layout_height="wrap_content"
-      android:layout_marginTop="@dimen/space_10"
       android:layout_toEndOf="@id/commentorImageView"
       android:ellipsize="end"
       android:paddingStart="10dp"
@@ -85,6 +88,7 @@
       android:layout_below="@+id/DateTextView"
       android:layout_alignStart="@+id/commentorUsernameTextView"
       android:layout_alignLeft="@+id/commentorUsernameTextView"
+      android:layout_toLeftOf="@id/moreOptionImageView"
       android:layout_toEndOf="@id/commentorImageView"
       android:orientation="horizontal">
 
@@ -102,7 +106,7 @@
         android:id="@+id/replyCommentTextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="45dp"
+        android:layout_marginStart="20dp"
         android:drawableStart="@drawable/ic_shape"
         android:drawablePadding="@dimen/space_5"
         android:padding="10dp"
@@ -122,6 +126,21 @@
         android:textSize="@dimen/ad_comments_date"
         android:visibility="gone"
         app:fontName="oswald.ttf" />
+
+      <com.mycity4kids.widget.CustomFontTextView
+        android:id="@+id/topCommentMarkedTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/space_20"
+        android:drawableLeft="@drawable/ic_top_comment_raw_color"
+        android:drawablePadding="@dimen/space_5"
+        android:padding="10dp"
+        android:textColor="@color/ad.comment.date"
+        android:textSize="14sp"
+        android:visibility="gone"
+        app:fontName="Roboto-Regular.ttf" />
+
+
     </LinearLayout>
 
     <androidx.appcompat.widget.AppCompatImageView
@@ -156,5 +175,21 @@
     android:layout_marginTop="10dp"
     android:background="@color/grey_light"
     android:visibility="visible" />
+
+  <com.mycity4kids.widget.CustomFontTextView
+    android:id="@+id/topCommentTextView"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginStart="42dp"
+    android:layout_marginTop="@dimen/space_10"
+    android:drawableLeft="@drawable/ic_top_comment_marked_golden"
+    android:drawablePadding="@dimen/space_10"
+    android:paddingStart="10dp"
+    android:text="Top comment"
+    android:textColor="#979797"
+    android:textSize="14sp"
+    android:visibility="gone"
+    app:fontName="Roboto-Medium.ttf" />
+
 
 </RelativeLayout>

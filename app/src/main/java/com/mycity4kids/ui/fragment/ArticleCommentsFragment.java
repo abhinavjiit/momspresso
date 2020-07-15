@@ -27,6 +27,7 @@ import com.mycity4kids.base.BaseFragment;
 import com.mycity4kids.constants.AppConstants;
 import com.mycity4kids.constants.Constants;
 import com.mycity4kids.gtmutils.Utils;
+import com.mycity4kids.models.TopCommentData;
 import com.mycity4kids.models.request.AddEditCommentOrReplyRequest;
 import com.mycity4kids.models.response.CommentListData;
 import com.mycity4kids.models.response.CommentListResponse;
@@ -39,6 +40,10 @@ import com.mycity4kids.utils.AppUtils;
 import com.mycity4kids.utils.StringUtils;
 import com.mycity4kids.utils.ToastUtils;
 import com.squareup.picasso.Picasso;
+import io.reactivex.Observer;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.Disposable;
+import io.reactivex.schedulers.Schedulers;
 import java.util.ArrayList;
 import java.util.List;
 import okhttp3.ResponseBody;
@@ -84,6 +89,7 @@ public class ArticleCommentsFragment extends BaseFragment implements OnClickList
     private TextView noCommentsTextView;
     private String contentType;
     private ImageView userImageView;
+    private String authorId;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -104,11 +110,6 @@ public class ArticleCommentsFragment extends BaseFragment implements OnClickList
         llm.setOrientation(LinearLayoutManager.VERTICAL);
         commentsRecyclerView.setLayoutManager(llm);
 
-        commentsList = new ArrayList<>();
-        articleCommentsRecyclerAdapter = new ArticleCommentsRecyclerAdapter(getActivity(), this);
-        articleCommentsRecyclerAdapter.setData(commentsList);
-        commentsRecyclerView.setAdapter(articleCommentsRecyclerAdapter);
-
         Bundle extras = getArguments();
         if (extras != null) {
             articleId = extras.getString(Constants.ARTICLE_ID);
@@ -116,7 +117,13 @@ public class ArticleCommentsFragment extends BaseFragment implements OnClickList
             blogSlug = extras.getString(Constants.BLOG_SLUG);
             userType = extras.getString("userType");
             contentType = extras.getString("contentType");
+            authorId = extras.getString(Constants.AUTHOR_ID);
         }
+
+        commentsList = new ArrayList<>();
+        articleCommentsRecyclerAdapter = new ArticleCommentsRecyclerAdapter(getActivity(), this, authorId);
+        articleCommentsRecyclerAdapter.setData(commentsList);
+        commentsRecyclerView.setAdapter(articleCommentsRecyclerAdapter);
 
         Retrofit retro = BaseApplication.getInstance().getRetrofit();
         articleDetailsApi = retro.create(ArticleDetailsAPI.class);
@@ -719,6 +726,21 @@ public class ArticleCommentsFragment extends BaseFragment implements OnClickList
     @Override
     public void onRecyclerItemClick(View view, int position) {
         switch (view.getId()) {
+            case R.id.topCommentMarkedTextView:
+                if (commentsList.get(position).isTopCommentMarked()) {
+                    TopCommentData commentListData = new TopCommentData(commentsList.get(position).getPostId(),
+                            commentsList.get(position).getId(), false);
+                    markedUnMarkedTopComment(commentListData);
+                    commentsList.get(position).setTopCommentMarked(false);
+
+                } else {
+                    TopCommentData commentListData = new TopCommentData(commentsList.get(position).getPostId(),
+                            commentsList.get(position).getId(), true);
+                    markedUnMarkedTopComment(commentListData);
+                    commentsList.get(position).setTopCommentMarked(true);
+                }
+                articleCommentsRecyclerAdapter.notifyDataSetChanged();
+                break;
             case R.id.commentorImageView:
                 Intent intent = new Intent(getActivity(), UserProfileActivity.class);
                 intent.putExtra(Constants.USER_ID, commentsList.get(position).getUserId());
@@ -755,8 +777,10 @@ public class ArticleCommentsFragment extends BaseFragment implements OnClickList
             case R.id.commentRootLayout: {
                 Bundle args = new Bundle();
                 args.putInt("position", position);
+                args.putInt("position", position);
                 args.putString("authorId", commentsList.get(position).getUserId());
                 args.putString("responseType", "COMMENT");
+                args.putString("blogWriterId", authorId);
                 CommentOptionsDialogFragment commentOptionsDialogFragment = new CommentOptionsDialogFragment();
                 commentOptionsDialogFragment.setArguments(args);
                 commentOptionsDialogFragment.setCancelable(true);
@@ -773,6 +797,7 @@ public class ArticleCommentsFragment extends BaseFragment implements OnClickList
                     args.putParcelable("commentReplies", commentsList.get(position));
                     args.putInt("totalRepliesCount", commentsList.get(position).getRepliesCount());
                     args.putInt("position", position);
+                    args.putString("blogWriterId",authorId);
                     articleCommentRepliesDialogFragment.setArguments(args);
                     articleCommentRepliesDialogFragment.setCancelable(true);
                     FragmentManager fm = getChildFragmentManager();
@@ -784,6 +809,38 @@ public class ArticleCommentsFragment extends BaseFragment implements OnClickList
                 break;
         }
     }
+
+    private void markedUnMarkedTopComment(TopCommentData commentListData) {
+        BaseApplication.getInstance().getRetrofit().create(ArticleDetailsAPI.class).markedTopComment(commentListData)
+                .subscribeOn(
+                        Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(
+                new Observer<ResponseBody>() {
+                    @Override
+                    public void onSubscribe(Disposable d) {
+
+                    }
+
+                    @Override
+                    public void onNext(ResponseBody responseBody) {
+                        Log.d("MARKED--UNMARKED", responseBody.toString());
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+                        FirebaseCrashlytics.getInstance().recordException(e);
+                        Log.d("MC4kException", Log.getStackTraceString(e));
+
+                    }
+
+                    @Override
+                    public void onComplete() {
+
+                    }
+                });
+
+
+    }
+
 
     private Callback<ResponseBody> likeDisLikeCommentCallback = new Callback<ResponseBody>() {
         @Override

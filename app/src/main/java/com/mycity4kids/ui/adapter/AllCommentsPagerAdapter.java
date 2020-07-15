@@ -22,10 +22,11 @@ public class AllCommentsPagerAdapter extends FragmentStatePagerAdapter {
     private String titleSlug;
     private String blogSlug;
     private String userType;
+    private String authorId;
 
     public AllCommentsPagerAdapter(FragmentManager fm, int numOfTabs, String mycityCommentUrl, String fbCommentUrl,
             String articleId, String author, String contentType,
-            String titleSlug, String blogSlug, String userType) {
+            String titleSlug, String blogSlug, String userType, String authorId) {
         super(fm);
         this.numOfTabs = numOfTabs;
         this.mycityCommentUrl = mycityCommentUrl;
@@ -36,6 +37,7 @@ public class AllCommentsPagerAdapter extends FragmentStatePagerAdapter {
         this.userType = userType;
         this.titleSlug = titleSlug;
         this.blogSlug = blogSlug;
+        this.authorId = authorId;
     }
 
     @Override
@@ -47,6 +49,7 @@ public class AllCommentsPagerAdapter extends FragmentStatePagerAdapter {
         bundle.putString(Constants.TITLE_SLUG, titleSlug);
         bundle.putString(Constants.BLOG_SLUG, blogSlug);
         bundle.putString("userType", userType);
+        bundle.putString(Constants.AUTHOR_ID, authorId);
 
         if (position == 0) {
             ArticleCommentsFragment tab1 = new ArticleCommentsFragment();

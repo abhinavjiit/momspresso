@@ -919,8 +919,9 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
             String articleId = notificationExtras.getString("id");
             String commentId = notificationExtras.getString("commentId");
             String type = notificationExtras.getString("type");
-            String contentType = notificationExtras.getString("contentType");//replyId
+            String contentType = notificationExtras.getString("contentType");
             String replyId = notificationExtras.getString("replyId");
+            String blogWriterId = notificationExtras.getString("authorId");
             Intent commentReplyNotificationIntent = new Intent(this,
                     ContentCommentReplyNotificationActivity.class);
             commentReplyNotificationIntent.putExtra("articleId", articleId);
@@ -928,6 +929,7 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
             commentReplyNotificationIntent.putExtra("type", type);
             commentReplyNotificationIntent.putExtra("contentType", contentType);
             commentReplyNotificationIntent.putExtra("replyId", replyId);
+            commentReplyNotificationIntent.putExtra("authorId", blogWriterId);
             startActivity(commentReplyNotificationIntent);
         } else if (AppConstants.NOTIFICATION_TYPE_ARTICLE_DETAILS.equalsIgnoreCase(notificationType)) {
             pushEvent("article_details");

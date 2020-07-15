@@ -1,5 +1,6 @@
 package com.mycity4kids.retrofitAPIsInterfaces;
 
+import com.mycity4kids.models.TopCommentData;
 import com.mycity4kids.models.request.AddCommentRequest;
 import com.mycity4kids.models.request.AddEditCommentOrReplyRequest;
 import com.mycity4kids.models.request.ArticleDetailRequest;
@@ -14,12 +15,14 @@ import com.mycity4kids.models.response.ArticleDetailResult;
 import com.mycity4kids.models.response.ArticleDetailWebserviceResponse;
 import com.mycity4kids.models.response.ArticleListingResponse;
 import com.mycity4kids.models.response.ArticleRecommendationStatusResponse;
+import com.mycity4kids.models.response.CommentListData;
 import com.mycity4kids.models.response.CommentListResponse;
 import com.mycity4kids.models.response.CrownDataResponse;
 import com.mycity4kids.models.response.FBCommentResponse;
 import com.mycity4kids.models.response.LikeReactionModel;
 import com.mycity4kids.models.response.RecommendUnrecommendArticleResponse;
 import com.mycity4kids.models.response.ViewCountResponse;
+import io.reactivex.Observable;
 import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.http.Body;
@@ -151,4 +154,8 @@ public interface ArticleDetailsAPI {
 
     @POST("v1/articles/chronos/")
     Call<ResponseBody> updateArticleTimeSpent(@Body ArticleReadTimeRequest body);
+
+    //https://api.momspresso.com/v1/comments/enable-top-comment/
+    @POST("/v1/comments/enable-top-comment/")
+    Observable<ResponseBody> markedTopComment(@Body TopCommentData commentListData);
 }

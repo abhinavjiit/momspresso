@@ -89,7 +89,7 @@ class UserFollowedCollectionsFragment : BaseFragment() {
                 totalItemCount: Int
             ) {
                 val loadMore = firstVisibleItem + visibleItemCount >= totalItemCount
-                if (visibleItemCount != 0 && loadMore && firstVisibleItem != 0 && !isReuqestRunning && !isLastPageReached) {
+                if (visibleItemCount != 0 && loadMore && firstVisibleItem >= 0 && !isReuqestRunning && !isLastPageReached) {
                     bottomLoadingView?.visibility = View.VISIBLE
                     getFollowedCollections()
                     isReuqestRunning = true

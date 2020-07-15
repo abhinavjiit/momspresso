@@ -64,6 +64,7 @@ public class ShortStoryCommentRepliesDialogFragment extends DialogFragment imple
     private String paginationReplyId;
     private int downloadedReplies = 0;
     private int commentPosition;
+    private String authorId;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -101,6 +102,7 @@ public class ShortStoryCommentRepliesDialogFragment extends DialogFragment imple
             data = extras.getParcelable("commentReplies");
             totalRepliesCount = extras.getInt("totalRepliesCount");
             commentPosition = extras.getInt("position");
+            authorId = extras.getString("articleWriterId");
         }
 
         repliesList.add(data);
@@ -118,7 +120,7 @@ public class ShortStoryCommentRepliesDialogFragment extends DialogFragment imple
             isLastPageReached = true;
         }
 
-        commentRepliesRecyclerAdapter = new CommentRepliesRecyclerAdapter(getActivity(), this);
+        commentRepliesRecyclerAdapter = new CommentRepliesRecyclerAdapter(getActivity(), this, authorId);
         commentRepliesRecyclerAdapter.setData(repliesList);
         repliesRecyclerView.setAdapter(commentRepliesRecyclerAdapter);
 

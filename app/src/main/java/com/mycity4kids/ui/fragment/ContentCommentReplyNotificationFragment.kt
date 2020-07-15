@@ -22,6 +22,7 @@ import com.mycity4kids.application.BaseApplication
 import com.mycity4kids.base.BaseFragment
 import com.mycity4kids.constants.AppConstants
 import com.mycity4kids.constants.Constants
+import com.mycity4kids.models.TopCommentData
 import com.mycity4kids.models.request.AddEditCommentOrReplyRequest
 import com.mycity4kids.models.response.CommentListData
 import com.mycity4kids.models.response.CommentListResponse
@@ -30,9 +31,14 @@ import com.mycity4kids.profile.UserProfileActivity
 import com.mycity4kids.retrofitAPIsInterfaces.ArticleDetailsAPI
 import com.mycity4kids.ui.ContentCommentReplyNotificationActivity
 import com.mycity4kids.ui.adapter.ContentCommentReplyNotificationAdapter
+import com.mycity4kids.utils.AppUtils
 import com.mycity4kids.utils.DateTimeUtils
 import com.mycity4kids.utils.ToastUtils
 import com.squareup.picasso.Picasso
+import io.reactivex.Observer
+import io.reactivex.android.schedulers.AndroidSchedulers
+import io.reactivex.disposables.Disposable
+import io.reactivex.schedulers.Schedulers
 import okhttp3.ResponseBody
 import org.json.JSONObject
 import retrofit2.Call
@@ -63,6 +69,10 @@ class ContentCommentReplyNotificationFragment : BaseFragment(),
     private var contentType: String? = null
     private var deleteReplyPos: Int = 0
     private lateinit var commentShimmerLayout: ShimmerFrameLayout
+    private lateinit var markedTopComment: TextView
+    private lateinit var topCommentTextView: TextView
+    private var authorId: String? = null
+    private var markedOrUnmarkedTopComment = false
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -85,11 +95,14 @@ class ContentCommentReplyNotificationFragment : BaseFragment(),
         moreOptionImageView = view.findViewById(R.id.moreOptionImageView)
         repliesShimmerLayout = view.findViewById(R.id.repliesShimmerLayout)
         commentShimmerLayout = view.findViewById(R.id.commentShimmerLayout)
+        markedTopComment = view.findViewById(R.id.markedTopComment)
+        topCommentTextView = view.findViewById(R.id.topCommentTextView)
         commentId = arguments?.getString("commentId")
         articleId = arguments?.getString("articleId")
         replyId = arguments?.getString("replyId")
         type = arguments?.getString("show")
         contentType = arguments?.getString("contentType")
+        authorId = arguments?.getString("articleWriterId")
         val linearLayoutManager = LinearLayoutManager(context)
         contentCommentReplyNotificationAdapter = ContentCommentReplyNotificationAdapter(this)
         repliesRecyclerView.layoutManager = linearLayoutManager
@@ -105,6 +118,7 @@ class ContentCommentReplyNotificationFragment : BaseFragment(),
         replyCommentTextView.setOnClickListener(this)
         moreOptionImageView.setOnClickListener(this)
         commentorImageView.setOnClickListener(this)
+        markedTopComment.setOnClickListener(this)
         return view
     }
 
@@ -200,6 +214,41 @@ class ContentCommentReplyNotificationFragment : BaseFragment(),
                 likeTextView.text = it.likeCount.toString()
             } else {
                 likeTextView.text = ""
+            }
+            if (AppUtils.isPrivateProfile(authorId)) {
+                if (it.isIs_top_comment) {
+                    topCommentTextView.visibility = View.VISIBLE
+                    markedTopComment.visibility = View.GONE
+                } else {
+                    topCommentTextView.visibility = View.GONE
+                    markedTopComment.visibility = View.VISIBLE
+                    if (it.isTopCommentMarked) {
+                        markedTopComment.text =
+                            context!!.resources.getString(R.string.top_comment_marked_string)
+                        val myDrawable =
+                            ContextCompat
+                                .getDrawable(
+                                    markedTopComment.context,
+                                    R.drawable.ic_top_comment_marked_golden
+                                )
+                        markedTopComment
+                            .setCompoundDrawablesWithIntrinsicBounds(myDrawable, null, null, null)
+                    } else {
+                        markedTopComment.setText(R.string.top_comment_string)
+                        val myDrawable =
+                            ContextCompat
+                                .getDrawable(
+                                    markedTopComment.context,
+                                    R.drawable.ic_top_comment_raw_color
+                                )
+                        markedTopComment
+                            .setCompoundDrawablesWithIntrinsicBounds(myDrawable, null, null, null)
+                    }
+
+                }
+            } else {
+                topCommentTextView.visibility = View.GONE
+                markedTopComment.visibility = View.GONE
             }
         }
     }
@@ -298,6 +347,54 @@ class ContentCommentReplyNotificationFragment : BaseFragment(),
     }
 
     override fun onClick(v: View?) {
+        if (v?.id == R.id.markedTopComment) {
+            if (markedOrUnmarkedTopComment) {
+                markedOrUnmarkedTopComment = false
+                markedTopComment.text =
+                    BaseApplication.getAppContext().resources.getString(R.string.top_comment_string)
+                val myDrawable = ContextCompat
+                    .getDrawable(
+                        markedTopComment.context,
+                        R.drawable.ic_top_comment_raw_color
+                    )
+                markedTopComment.setCompoundDrawablesWithIntrinsicBounds(
+                    myDrawable,
+                    null,
+                    null,
+                    null
+                )
+                val commentListData = TopCommentData(
+                    articleId!!,
+                    commentId!!, false
+                )
+                markedUnMarkedTopComment(commentListData)
+            } else {
+
+                markedOrUnmarkedTopComment = true
+                markedTopComment.text = BaseApplication.getAppContext().resources
+                    .getString(R.string.top_comment_marked_string)
+                val myDrawable =
+                    ContextCompat
+                        .getDrawable(
+                            markedTopComment.context,
+                            R.drawable.ic_top_comment_marked_golden
+                        )
+                markedTopComment.setCompoundDrawablesWithIntrinsicBounds(
+                    myDrawable,
+                    null,
+                    null,
+                    null
+                )
+                val commentListData = TopCommentData(
+                    articleId!!,
+                    commentId!!, true
+                )
+                markedUnMarkedTopComment(commentListData)
+
+            }
+
+        }
+
         if (v?.id == R.id.viewAllTextView) {
             repliesShimmerLayout.visibility = View.VISIBLE
             repliesShimmerLayout.startShimmerAnimation()
@@ -381,6 +478,28 @@ class ContentCommentReplyNotificationFragment : BaseFragment(),
                 startActivity(intent)
             }
         }
+    }
+
+    private fun markedUnMarkedTopComment(topCommentData: TopCommentData) {
+        BaseApplication.getInstance().retrofit.create(ArticleDetailsAPI::class.java).markedTopComment(
+            topCommentData
+        )
+            .subscribeOn(
+                Schedulers.io()
+            ).observeOn(AndroidSchedulers.mainThread()).subscribe(
+                object : Observer<ResponseBody> {
+                    override fun onSubscribe(d: Disposable) {}
+                    override fun onNext(responseBody: ResponseBody) {
+                        Log.d("MARKED--UNMARKED", responseBody.toString())
+                    }
+
+                    override fun onError(e: Throwable) {
+                        FirebaseCrashlytics.getInstance().recordException(e)
+                        Log.d("MC4kException", Log.getStackTraceString(e))
+                    }
+
+                    override fun onComplete() {}
+                })
     }
 
     fun openAddCommentReplyDialog(commentData: CommentListData) {

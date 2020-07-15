@@ -35,7 +35,11 @@ public class CommentListData implements Parcelable {
     private int likeCount;
     @SerializedName("is_liked")
     private Boolean isLiked = false;
+    @SerializedName("is_top_comment")
+    private boolean is_top_comment;
+    private boolean topCommentMarked = false;
     private String reaction;
+    private boolean status;
 
 
     public CommentListData() {
@@ -54,6 +58,8 @@ public class CommentListData implements Parcelable {
         replies = in.createTypedArrayList(CommentListData.CREATOR);
         repliesCount = in.readInt();
         likeCount = in.readInt();
+        is_top_comment = in.readByte() != 0;
+        topCommentMarked = in.readByte() != 0;
     }
 
     public static final Creator<CommentListData> CREATOR = new Creator<CommentListData>() {
@@ -172,6 +178,31 @@ public class CommentListData implements Parcelable {
         isLiked = liked;
     }
 
+    public boolean isIs_top_comment() {
+        return is_top_comment;
+    }
+
+    public boolean isTopCommentMarked() {
+        return topCommentMarked;
+    }
+
+    public boolean isStatus() {
+        return status;
+    }
+
+    public void setStatus(boolean status) {
+        this.status = status;
+    }
+
+    public void setTopCommentMarked(boolean topCommentMarked) {
+        this.topCommentMarked = topCommentMarked;
+    }
+
+
+    public void setIs_top_comment(boolean is_top_comment) {
+        this.is_top_comment = is_top_comment;
+    }
+
     @Override
     public int describeContents() {
         return 0;
@@ -190,5 +221,7 @@ public class CommentListData implements Parcelable {
         dest.writeTypedList(replies);
         dest.writeInt(repliesCount);
         dest.writeInt(likeCount);
+        dest.writeByte((byte) (is_top_comment ? 1 : 0));
+        dest.writeByte((byte) (topCommentMarked ? 1 : 0));
     }
 }

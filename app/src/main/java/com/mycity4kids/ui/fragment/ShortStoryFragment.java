@@ -43,6 +43,7 @@ import com.mycity4kids.base.BaseFragment;
 import com.mycity4kids.constants.AppConstants;
 import com.mycity4kids.constants.Constants;
 import com.mycity4kids.gtmutils.Utils;
+import com.mycity4kids.models.TopCommentData;
 import com.mycity4kids.models.request.AddEditCommentOrReplyRequest;
 import com.mycity4kids.models.request.ArticleDetailRequest;
 import com.mycity4kids.models.request.FollowUnfollowUserRequest;
@@ -74,6 +75,10 @@ import com.mycity4kids.utils.StringUtils;
 import com.mycity4kids.utils.ToastUtils;
 import com.mycity4kids.widget.StoryShareCardWidget;
 import io.github.douglasjunior.androidSimpleTooltip.SimpleTooltip;
+import io.reactivex.Observer;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.Disposable;
+import io.reactivex.schedulers.Schedulers;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -160,9 +165,6 @@ public class ShortStoryFragment extends BaseFragment implements View.OnClickList
             shortStoryRecyclerView.setLayoutManager(llm);
             headerModel = new ShortStoryDetailAndCommentModel();
             consolidatedList = new ArrayList<>();
-            adapter = new ShortStoriesDetailRecyclerAdapter(getActivity(), this, colorPosition);
-            adapter.setListData(consolidatedList);
-            shortStoryRecyclerView.setAdapter(adapter);
             if (bundle != null) {
                 articleId = bundle.getString(Constants.ARTICLE_ID);
                 authorId = bundle.getString(Constants.AUTHOR_ID, "");
@@ -175,6 +177,10 @@ public class ShortStoryFragment extends BaseFragment implements View.OnClickList
                 shortStoryApi = retro.create(ShortStoryAPI.class);
                 getShortStoryDetails();
             }
+            adapter = new ShortStoriesDetailRecyclerAdapter(getActivity(), this, colorPosition, authorId);
+            adapter.setListData(consolidatedList);
+            shortStoryRecyclerView.setAdapter(adapter);
+
         } catch (Exception e) {
             removeProgressDialog();
             FirebaseCrashlytics.getInstance().recordException(e);
@@ -583,6 +589,25 @@ public class ShortStoryFragment extends BaseFragment implements View.OnClickList
     @Override
     public void onClick(View view, int position, View whatsappShare) {
         switch (view.getId()) {
+
+            case R.id.topCommentMarkedTextView:
+                if (consolidatedList.get(position).getSsComment().isTopCommentMarked()) {
+                    TopCommentData commentListData = new TopCommentData(
+                            consolidatedList.get(position).getSsComment().getPostId(),
+                            consolidatedList.get(position).getSsComment().getId(), false);
+                    markedUnMarkedTopComment(commentListData);
+                    consolidatedList.get(position).getSsComment().setTopCommentMarked(false);
+
+                } else {
+                    TopCommentData commentListData = new TopCommentData(
+                            consolidatedList.get(position).getSsComment().getPostId(),
+                            consolidatedList.get(position).getSsComment().getId(), true);
+                    markedUnMarkedTopComment(commentListData);
+                    consolidatedList.get(position).getSsComment().setTopCommentMarked(true);
+                }
+                adapter.notifyDataSetChanged();
+                break;
+
             case R.id.commentorImageView:
                 Intent intent = new Intent(getActivity(), UserProfileActivity.class);
                 intent.putExtra(Constants.USER_ID, consolidatedList.get(position).ssComment.getUserId());
@@ -626,6 +651,7 @@ public class ShortStoryFragment extends BaseFragment implements View.OnClickList
                 args.putInt("position", position);
                 args.putString("authorId", consolidatedList.get(position).getSsComment().getUserId());
                 args.putString("responseType", "COMMENT");
+                args.putString("blogWriterId", authorId);
                 CommentOptionsDialogFragment commentOptionsDialogFragment = new CommentOptionsDialogFragment();
                 commentOptionsDialogFragment.setArguments(args);
                 commentOptionsDialogFragment.setCancelable(true);
@@ -642,6 +668,7 @@ public class ShortStoryFragment extends BaseFragment implements View.OnClickList
                     args.putParcelable("commentReplies", consolidatedList.get(position).getSsComment());
                     args.putInt("totalRepliesCount", consolidatedList.get(position).getSsComment().getRepliesCount());
                     args.putInt("position", position);
+                    args.putString("articleWriterId", authorId);
                     shortStoryCommentRepliesDialogFragment.setArguments(args);
                     shortStoryCommentRepliesDialogFragment.setCancelable(true);
                     FragmentManager fm = getChildFragmentManager();
@@ -655,6 +682,7 @@ public class ShortStoryFragment extends BaseFragment implements View.OnClickList
                 args.putParcelable("commentReplies", consolidatedList.get(position).getSsComment());
                 args.putInt("totalRepliesCount", consolidatedList.get(position).getSsComment().getRepliesCount());
                 args.putInt("position", position);
+                args.putString("articleWriterId",authorId);
                 shortStoryCommentRepliesDialogFragment.setArguments(args);
                 shortStoryCommentRepliesDialogFragment.setCancelable(true);
                 FragmentManager fm = getChildFragmentManager();
@@ -717,6 +745,36 @@ public class ShortStoryFragment extends BaseFragment implements View.OnClickList
         }
     }
 
+    private void markedUnMarkedTopComment(TopCommentData commentListData) {
+        BaseApplication.getInstance().getRetrofit().create(ArticleDetailsAPI.class).markedTopComment(commentListData)
+                .subscribeOn(
+                        Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(
+                new Observer<ResponseBody>() {
+                    @Override
+                    public void onSubscribe(Disposable d) {
+
+                    }
+
+                    @Override
+                    public void onNext(ResponseBody responseBody) {
+                        Log.d("MARKED--UNMARKED", responseBody.toString());
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+                        FirebaseCrashlytics.getInstance().recordException(e);
+                        Log.d("MC4kException", Log.getStackTraceString(e));
+
+                    }
+
+                    @Override
+                    public void onComplete() {
+
+                    }
+                });
+
+
+    }
 
     private Callback<ResponseBody> likeDisLikeCommentCallback = new Callback<ResponseBody>() {
         @Override

@@ -76,7 +76,9 @@ class UserCreatedCollectionsFragment : BaseFragment() {
             startActivityForResult(intent, 1000)
         }
         collectionGridView.setOnScrollListener(object : AbsListView.OnScrollListener {
-            override fun onScrollStateChanged(absListView: AbsListView, i: Int) {}
+            override fun onScrollStateChanged(absListView: AbsListView, i: Int) {
+
+            }
 
             override fun onScroll(
                 view: AbsListView,
@@ -84,12 +86,14 @@ class UserCreatedCollectionsFragment : BaseFragment() {
                 visibleItemCount: Int,
                 totalItemCount: Int
             ) {
-                val loadMore = firstVisibleItem + visibleItemCount >= totalItemCount
-                if (visibleItemCount != 0 && loadMore && firstVisibleItem != 0 && !isReuqestRunning && !isLastPageReached) {
-                    bottomLoadingView?.visibility = View.VISIBLE
-                    getUserCreatedCollections()
-                    isReuqestRunning = true
-                }
+
+                    val loadMore = firstVisibleItem + visibleItemCount >= totalItemCount
+                    if (visibleItemCount != 0 && loadMore && firstVisibleItem >= 0 && !isReuqestRunning && !isLastPageReached) {
+                        bottomLoadingView?.visibility = View.VISIBLE
+                        getUserCreatedCollections()
+                        isReuqestRunning = true
+                    }
+
             }
         })
         return view

@@ -51,6 +51,8 @@ public class PushNotificationModel {
     private String replyId;
     @SerializedName("contentType")
     private String contentType;
+    @SerializedName("authorId")
+    private String authorId;
 
     public String getCommentId() {
         return commentId;
@@ -226,5 +228,13 @@ public class PushNotificationModel {
 
     public void setMilestoneId(String milestoneId) {
         this.milestoneId = milestoneId;
+    }
+
+    public String getAuthorId() {
+        return authorId;
+    }
+
+    public void setAuthorId(String authorId) {
+        this.authorId = authorId;
     }
 }

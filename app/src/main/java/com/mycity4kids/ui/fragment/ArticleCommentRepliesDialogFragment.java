@@ -28,12 +28,17 @@ import com.mycity4kids.R;
 import com.mycity4kids.application.BaseApplication;
 import com.mycity4kids.constants.AppConstants;
 import com.mycity4kids.constants.Constants;
+import com.mycity4kids.models.TopCommentData;
 import com.mycity4kids.models.response.CommentListData;
 import com.mycity4kids.models.response.CommentListResponse;
 import com.mycity4kids.models.response.LikeReactionModel;
 import com.mycity4kids.profile.UserProfileActivity;
 import com.mycity4kids.retrofitAPIsInterfaces.ArticleDetailsAPI;
 import com.mycity4kids.ui.adapter.CommentRepliesRecyclerAdapter;
+import io.reactivex.Observer;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.Disposable;
+import io.reactivex.schedulers.Schedulers;
 import java.util.ArrayList;
 import java.util.List;
 import okhttp3.ResponseBody;
@@ -64,6 +69,7 @@ public class ArticleCommentRepliesDialogFragment extends DialogFragment implemen
     private String paginationReplyId;
     private int downloadedReplies = 0;
     private int commentPosition;
+    private String authorId;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -94,6 +100,7 @@ public class ArticleCommentRepliesDialogFragment extends DialogFragment implemen
             data = extras.getParcelable("commentReplies");
             totalRepliesCount = extras.getInt("totalRepliesCount");
             commentPosition = extras.getInt("position");
+            authorId = extras.getString("blogWriterId");
         }
 
         repliesList.add(data);
@@ -111,7 +118,7 @@ public class ArticleCommentRepliesDialogFragment extends DialogFragment implemen
             isLastPageReached = true;
         }
 
-        commentRepliesRecyclerAdapter = new CommentRepliesRecyclerAdapter(getActivity(), this);
+        commentRepliesRecyclerAdapter = new CommentRepliesRecyclerAdapter(getActivity(), this, authorId);
         commentRepliesRecyclerAdapter.setData(repliesList);
         repliesRecyclerView.setAdapter(commentRepliesRecyclerAdapter);
 
@@ -239,6 +246,20 @@ public class ArticleCommentRepliesDialogFragment extends DialogFragment implemen
     @Override
     public void onRecyclerItemClick(View view, int position) {
         try {
+            if (view.getId() == R.id.topCommentMarkedTextView) {
+                if (repliesList.get(position).isTopCommentMarked()) {
+                    TopCommentData commentListData = new TopCommentData(repliesList.get(position).getPostId(),
+                            repliesList.get(position).getId(), false);
+                    markedUnMarkedTopComment(commentListData);
+                    repliesList.get(position).setTopCommentMarked(false);
+                } else {
+                    TopCommentData commentListData = new TopCommentData(repliesList.get(position).getPostId(),
+                            repliesList.get(position).getId(), true);
+                    markedUnMarkedTopComment(commentListData);
+                    repliesList.get(position).setTopCommentMarked(true);
+                }
+                commentRepliesRecyclerAdapter.notifyDataSetChanged();
+            }
             if (view.getId() == R.id.likeTextView) {
                 if (repliesList.get(position).getLiked()) {
                     repliesList.get(position).setLiked(false);
@@ -324,6 +345,37 @@ public class ArticleCommentRepliesDialogFragment extends DialogFragment implemen
             default:
                 break;
         }
+    }
+
+    private void markedUnMarkedTopComment(TopCommentData commentListData) {
+        BaseApplication.getInstance().getRetrofit().create(ArticleDetailsAPI.class).markedTopComment(commentListData)
+                .subscribeOn(
+                        Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(
+                new Observer<ResponseBody>() {
+                    @Override
+                    public void onSubscribe(Disposable d) {
+
+                    }
+
+                    @Override
+                    public void onNext(ResponseBody responseBody) {
+                        Log.d("MARKED--UNMARKED", responseBody.toString());
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+                        FirebaseCrashlytics.getInstance().recordException(e);
+                        Log.d("MC4kException", Log.getStackTraceString(e));
+
+                    }
+
+                    @Override
+                    public void onComplete() {
+
+                    }
+                });
+
+
     }
 
     public void updateRepliesList(CommentListData ssComment) {

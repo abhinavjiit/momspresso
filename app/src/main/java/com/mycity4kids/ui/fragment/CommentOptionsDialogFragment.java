@@ -14,6 +14,7 @@ import com.mycity4kids.R;
 import com.mycity4kids.application.BaseApplication;
 import com.mycity4kids.preference.SharedPrefUtils;
 import com.mycity4kids.ui.ContentCommentReplyNotificationActivity;
+import com.mycity4kids.utils.AppUtils;
 
 /**
  * Created by user on 08-06-2015.
@@ -23,6 +24,7 @@ public class CommentOptionsDialogFragment extends DialogFragment implements OnCl
     private int position;
     private String responseType;
     private String authorId;
+    private String blogWriterId;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -35,6 +37,7 @@ public class CommentOptionsDialogFragment extends DialogFragment implements OnCl
         position = getArguments().getInt("position");
         responseType = getArguments().getString("responseType");
         authorId = getArguments().getString("authorId");
+        blogWriterId = getArguments().getString("blogWriterId");
 
         TextView deleteCommentTextView = (TextView) rootView.findViewById(R.id.deleteCommentTextView);
         TextView editCommentTextView = (TextView) rootView.findViewById(R.id.editCommentTextView);
@@ -44,14 +47,27 @@ public class CommentOptionsDialogFragment extends DialogFragment implements OnCl
         editCommentTextView.setOnClickListener(this);
         reportCommentTextView.setOnClickListener(this);
 
-        if (SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId().equals(authorId)) {
-            deleteCommentTextView.setVisibility(View.VISIBLE);
-            editCommentTextView.setVisibility(View.VISIBLE);
-            reportCommentTextView.setVisibility(View.VISIBLE);
+        if (AppUtils.isPrivateProfile(blogWriterId)) {
+            if (SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId().equals(authorId)) {
+                deleteCommentTextView.setVisibility(View.VISIBLE);
+                editCommentTextView.setVisibility(View.VISIBLE);
+                reportCommentTextView.setVisibility(View.VISIBLE);
+            } else {
+                deleteCommentTextView.setVisibility(View.VISIBLE);
+                editCommentTextView.setVisibility(View.GONE);
+                reportCommentTextView.setVisibility(View.VISIBLE);
+            }
         } else {
-            deleteCommentTextView.setVisibility(View.GONE);
-            editCommentTextView.setVisibility(View.GONE);
-            reportCommentTextView.setVisibility(View.VISIBLE);
+            if (SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId().equals(authorId)) {
+                deleteCommentTextView.setVisibility(View.VISIBLE);
+                editCommentTextView.setVisibility(View.VISIBLE);
+                reportCommentTextView.setVisibility(View.VISIBLE);
+            } else {
+                deleteCommentTextView.setVisibility(View.GONE);
+                editCommentTextView.setVisibility(View.GONE);
+                reportCommentTextView.setVisibility(View.VISIBLE);
+            }
+
         }
         return rootView;
     }
