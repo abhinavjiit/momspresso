@@ -22,13 +22,11 @@ import androidx.appcompat.widget.PopupMenu;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import com.google.firebase.crashlytics.FirebaseCrashlytics;
-import com.google.firebase.remoteconfig.FirebaseRemoteConfig;
 import com.google.gson.Gson;
 import com.mycity4kids.R;
 import com.mycity4kids.application.BaseApplication;
 import com.mycity4kids.base.BaseFragment;
 import com.mycity4kids.constants.Constants;
-import com.mycity4kids.editor.EditorPostActivity;
 import com.mycity4kids.editor.NewEditor;
 import com.mycity4kids.gtmutils.Utils;
 import com.mycity4kids.models.parentingdetails.ImageData;
@@ -61,8 +59,6 @@ public class UserPublishedArticleTabFragment extends BaseFragment implements Vie
         UserPublishedArticleAdapter.RecyclerViewClickListener, UserPublishedArticleAdapter.IEditVlog,
         UserPublishedShortStoriesAdapter.IEditShortStory, UserPublishedShortStoriesAdapter.SSRecyclerViewClickListener {
 
-    private static final String EDITOR_TYPE = "editor_type";
-    private FirebaseRemoteConfig firebaseRemoteConfig = FirebaseRemoteConfig.getInstance();
     private ArrayList<ArticleListingResult> articleDataModelsNew;
     private RecyclerView recyclerView;
     private RelativeLayout loadingView;
@@ -370,14 +366,7 @@ public class UserPublishedArticleTabFragment extends BaseFragment implements Vie
             content = bodyImgTxt;
         }
 
-        String editorType = firebaseRemoteConfig.getString(EDITOR_TYPE);
-        Intent intent;
-        if ((!StringUtils.isNullOrEmpty(editorType) && "1".equals(editorType)) || AppUtils
-                .isUserBucketedInNewEditor(firebaseRemoteConfig)) {
-            intent = new Intent(getActivity(), NewEditor.class);
-        } else {
-            intent = new Intent(getActivity(), EditorPostActivity.class);
-        }
+        Intent intent = new Intent(getActivity(), NewEditor.class);
         intent.putExtra("from", "publishedList");
         intent.putExtra("title", detailData.getTitle());
         intent.putExtra("content", content);

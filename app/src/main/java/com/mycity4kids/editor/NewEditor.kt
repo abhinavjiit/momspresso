@@ -24,7 +24,6 @@ import android.os.Handler
 import android.os.Message
 import android.provider.MediaStore
 import android.text.Editable
-import android.text.InputFilter
 import android.text.TextWatcher
 import android.util.Log
 import android.view.Gravity
@@ -72,26 +71,10 @@ import com.mycity4kids.utils.DateTimeUtils
 import com.mycity4kids.utils.GenericFileProvider
 import com.mycity4kids.utils.PermissionUtil
 import com.mycity4kids.utils.StringUtils
-import java.io.ByteArrayOutputStream
-import java.io.File
-import java.io.FileOutputStream
-import java.io.IOException
-import java.lang.ref.WeakReference
-import java.text.SimpleDateFormat
-import java.util.ArrayList
-import java.util.Calendar
-import java.util.Date
-import java.util.HashMap
-import java.util.Locale
-import java.util.Random
-import java.util.regex.Matcher
-import java.util.regex.Pattern
 import kotlinx.android.synthetic.main.activity_new_editor.*
 import okhttp3.MediaType
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.RequestBody
-import org.wordpress.android.editor.EditorFragmentAbstract
-import org.wordpress.android.editor.ImageSettingsDialogFragment
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.ToastUtils
 import org.wordpress.android.util.helpers.MediaFile
@@ -118,6 +101,19 @@ import org.xml.sax.Attributes
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
+import java.io.ByteArrayOutputStream
+import java.io.File
+import java.io.FileOutputStream
+import java.io.IOException
+import java.lang.ref.WeakReference
+import java.text.SimpleDateFormat
+import java.util.ArrayList
+import java.util.Calendar
+import java.util.Date
+import java.util.HashMap
+import java.util.Locale
+import java.util.Random
+import java.util.regex.Pattern
 
 const val MAX_WORDS = 300
 
@@ -135,8 +131,6 @@ class NewEditor : BaseActivity(),
     View.OnTouchListener, View.OnClickListener, ISpellcheckResult {
 
     companion object {
-        const val USE_NEW_EDITOR = 1
-
         private val isRunningTest: Boolean by lazy {
             try {
                 Class.forName("androidx.test.espresso.Espresso")
@@ -147,10 +141,7 @@ class NewEditor : BaseActivity(),
         }
     }
 
-    private val MEDIA_CAMERA_PHOTO_PERMISSION_REQUEST_CODE: Int = 1001
-    private val MEDIA_PHOTOS_PERMISSION_REQUEST_CODE: Int = 1003
     private val REQUEST_MEDIA_CAMERA_VIDEO: Int = 2002
-    private val REQUEST_MEDIA_PHOTO: Int = 2003
     private val REQUEST_MEDIA_VIDEO: Int = 2004
     protected lateinit var aztec: Aztec
     private lateinit var mediaPath: String
@@ -167,8 +158,6 @@ class NewEditor : BaseActivity(),
     private val mHandler = MyHandler(this@NewEditor)
     private var titleTxt: EditText? = null
     private lateinit var editorGetHelp: TextView
-    private var filter: InputFilter? = null
-    private var isMaxLengthToastShown = false
     private val mFirebaseRemoteConfig = FirebaseRemoteConfig.getInstance()
     private val SPELL_CHECK_FLAG = "show_spell_check_flag"
     private val PERMISSIONS_INIT = arrayOf(
@@ -196,10 +185,6 @@ class NewEditor : BaseActivity(),
     private var mFailedUploads: Map<String, String>? = null
     var title: String? = null
     var content: String? = null
-    var editor_param: String? = null
-    var draft_param: String? = null
-    var title_placeholder_param: String? = null
-    var content_placeholder_param: String? = null
 
     private var tag: String? = null
     private var cities: String? = null
@@ -220,225 +205,27 @@ class NewEditor : BaseActivity(),
     val HTML_PATTERN = "(?i)<p.*?>.*?</p>"
     var pattern: Pattern = Pattern.compile(HTML_PATTERN)
 
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        super.onActivityResult(requestCode, resultCode, data)
-        mediaFile = MediaFile()
-        mediaId = System.currentTimeMillis().toString()
-        mediaFile!!.setMediaId(mediaId)
-
-        if (resultCode == Activity.RESULT_OK) {
-            when (requestCode) {
-                ADD_MEDIA_ACTIVITY_REQUEST_CODE -> {
-                    if (data == null) {
-                        return
-                    }
-                    imageUri = data.data
-                    if (resultCode == Activity.RESULT_OK) {
-                        try {
-                            val imageBitmap =
-                                MediaStore.Images.Media.getBitmap(
-                                    this@NewEditor.getContentResolver(),
-                                    imageUri
-                                )
-                            var actualHeight = imageBitmap.height.toFloat()
-                            var actualWidth = imageBitmap.width.toFloat()
-                            if (actualWidth < 720) {
-                                showToast(getString(R.string.upload_min_width))
-                                return
-                            }
-                            val maxHeight = 1300f
-                            val maxWidth = 720f
-                            var imgRatio = actualWidth / actualHeight
-                            val maxRatio = maxWidth / maxHeight
-                            if (actualHeight > maxHeight || actualWidth > maxWidth) {
-                                if (imgRatio < maxRatio) { // adjust width according to maxHeight
-                                    imgRatio = maxHeight / actualHeight
-                                    actualWidth = imgRatio * actualWidth
-                                    actualHeight = maxHeight
-                                } else if (imgRatio > maxRatio) { // adjust height according to maxWidth
-                                    imgRatio = maxWidth / actualWidth
-                                    actualHeight = imgRatio * actualHeight
-                                    actualWidth = maxWidth
-                                } else {
-                                    actualHeight = maxHeight
-                                    actualWidth = maxWidth
-                                }
-                            }
-                            val finalBitmap = Bitmap.createScaledBitmap(
-                                imageBitmap,
-                                actualWidth.toInt(),
-                                actualHeight.toInt(),
-                                true
-                            )
-                            val stream = ByteArrayOutputStream()
-                            finalBitmap.compress(Bitmap.CompressFormat.PNG, 75, stream)
-                            val path =
-                                MediaStore.Images.Media.insertImage(
-                                    this@NewEditor.getContentResolver(),
-                                    finalBitmap,
-                                    "Title" + System.currentTimeMillis(),
-                                    null
-                                )
-                            val imageUriTemp = Uri.parse(path)
-                            EditorFragmentAbstract.imageUploading = 0
-                            val file2 = FileUtils.getFile(this, imageUriTemp)
-                            sendUploadProfileImageRequest(file2)
-                        } catch (e: Exception) {
-                            e.printStackTrace()
-                        }
-                    }
-                }
-                ADD_MEDIA_CAMERA_ACTIVITY_REQUEST_CODE -> {
-
-                    if (resultCode == Activity.RESULT_OK) {
-                        try {
-                            var imageBitmap =
-                                MediaStore.Images.Media.getBitmap(
-                                    contentResolver,
-                                    Uri.parse(mCurrentPhotoPath)
-                                )
-                            val ei =
-                                ExifInterface(absoluteImagePath)
-                            val orientation = ei.getAttributeInt(
-                                ExifInterface.TAG_ORIENTATION,
-                                ExifInterface.ORIENTATION_UNDEFINED
-                            )
-                            when (orientation) {
-                                ExifInterface.ORIENTATION_ROTATE_90 -> imageBitmap =
-                                    rotateImage(imageBitmap, 90f)
-                                ExifInterface.ORIENTATION_ROTATE_180 -> imageBitmap =
-                                    rotateImage(imageBitmap, 180f)
-                                ExifInterface.ORIENTATION_ROTATE_270 -> imageBitmap =
-                                    rotateImage(imageBitmap, 270f)
-                                ExifInterface.ORIENTATION_NORMAL -> {
-                                }
-                                else -> {
-                                }
-                            }
-                            var actualHeight = imageBitmap.height.toFloat()
-                            var actualWidth = imageBitmap.width.toFloat()
-                            val maxHeight = 1300f
-                            val maxWidth = 720f
-                            var imgRatio = actualWidth / actualHeight
-                            val maxRatio = maxWidth / maxHeight
-                            // float compressionQuality = 0.5;//50 percent compression
-                            if (actualWidth < 720) {
-                                showToast(getString(R.string.upload_min_width))
-                                return
-                            }
-                            if (actualHeight > maxHeight || actualWidth > maxWidth) {
-                                if (imgRatio < maxRatio) { // adjust width according to maxHeight
-                                    imgRatio = maxHeight / actualHeight
-                                    actualWidth = imgRatio * actualWidth
-                                    actualHeight = maxHeight
-                                } else if (imgRatio > maxRatio) { // adjust height according to maxWidth
-                                    imgRatio = maxWidth / actualWidth
-                                    actualHeight = imgRatio * actualHeight
-                                    actualWidth = maxWidth
-                                } else {
-                                    actualHeight = maxHeight
-                                    actualWidth = maxWidth
-                                }
-                            }
-                            val finalBitmap =
-                                Bitmap.createScaledBitmap(
-                                    imageBitmap,
-                                    actualWidth.toInt(),
-                                    actualHeight.toInt(),
-                                    true
-                                )
-                            val bytes =
-                                ByteArrayOutputStream()
-                            finalBitmap.compress(
-                                Bitmap.CompressFormat.JPEG,
-                                75,
-                                bytes
-                            )
-                            val bitmapData = bytes.toByteArray()
-                            val fos = FileOutputStream(photoFile)
-                            fos.write(bitmapData)
-                            fos.flush()
-                            fos.close()
-                            imageUri = Uri.fromFile(photoFile)
-                            EditorFragmentAbstract.imageUploading = 0
-                            val file2 =
-                                FileUtils.getFile(
-                                    this,
-                                    imageUri
-                                )
-                            sendUploadProfileImageRequest(file2)
-                        } catch (e: Exception) {
-                            e.printStackTrace()
-                        }
-                    }
-                }
-                REQUEST_MEDIA_CAMERA_VIDEO -> {
-                    mediaPath = data?.data.toString()
-                }
-                REQUEST_MEDIA_VIDEO -> {
-                }
-            }
-        }
-    }
-
-    private fun generateAttributesForMedia(
-        mediaPath: String,
-        isVideo: Boolean
-    ): Pair<String, AztecAttributes> {
-        val id = Random().nextInt(Integer.MAX_VALUE).toString()
-        val attrs = AztecAttributes()
-        attrs.setValue(
-            "src",
-            mediaPath
-        ) // Temporary source value.  Replace with URL after uploaded.
-        attrs.setValue("id", id)
-        attrs.setValue("uploading", "true")
-
-        if (isVideo) {
-            attrs.setValue("video", "true")
-        }
-
-        return Pair(id, attrs)
-    }
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        setContentView(R.layout.activity_new_editor)
+        Utils.pushOpenScreenEvent(
+            this@NewEditor,
+            "CreateArticleScreen",
+            SharedPrefUtils.getUserDetailModel(this).dynamoId + ""
+        )
 
-        if (intent.getIntExtra(
-                editor_param,
-                USE_NEW_EDITOR
-            ) == USE_NEW_EDITOR
-        ) {
-            setContentView(com.mycity4kids.R.layout.activity_new_editor)
-            Utils.pushOpenScreenEvent(
-                this@NewEditor,
-                "CreateArticleScreen",
-                SharedPrefUtils.getUserDetailModel(this).dynamoId + ""
-            )
-        }
-
-        // get title and content and draft switch
-        title = intent.getStringExtra("TITLE_PARAM")
-        content = intent.getStringExtra("CONTENT_PARAM")
-        draft_param = intent.getStringExtra("DRAFT_PARAM")
-        editor_param = intent.getStringExtra("EDITOR_PARAM")
-        title_placeholder_param = intent.getStringExtra("TITLE_PLACEHOLDER_PARAM")
-        content_placeholder_param = intent.getStringExtra("CONTENT_PLACEHOLDER_PARAM")
-
-        mToolbar = findViewById<View>(com.mycity4kids.R.id.toolbar) as Toolbar
+        mToolbar = findViewById<View>(R.id.toolbar) as Toolbar
         closeEditorImageView =
-            findViewById<View>(com.mycity4kids.R.id.closeEditorImageView) as ImageView
-        lastSavedTextView = findViewById<View>(com.mycity4kids.R.id.lastSavedTextView) as TextView
+            findViewById<View>(R.id.closeEditorImageView) as ImageView
+        lastSavedTextView = findViewById<View>(R.id.lastSavedTextView) as TextView
         publishTextView = findViewById<View>(R.id.publishTextView) as TextView
         val sourceEditor = findViewById<SourceViewEditText>(R.id.source)
-        titleTxt = findViewById<View>(com.mycity4kids.R.id.title) as EditText
+        titleTxt = findViewById<View>(R.id.title) as EditText
         editorGetHelp = findViewById(R.id.editor_get_help)
         wordCount = findViewById(R.id.wordCount)
         editor_get_help.setOnClickListener(this)
         closeEditorImageView!!.setOnClickListener(this)
         publishTextView!!.setOnClickListener(this)
-        val isLocalDraft =
-            intent.getBooleanExtra(EditorPostActivity.DRAFT_PARAM, true)
         if (intent.getStringExtra("from") != null && intent.getStringExtra("from") == "draftList") {
             draftObject = intent.getSerializableExtra("draftItem") as DraftListResult
             title = draftObject!!.title
@@ -457,7 +244,6 @@ class NewEditor : BaseActivity(),
             initiatePeriodicDraftSave()
         } else if (intent.getStringExtra("from") != null && intent.getStringExtra("from") == "publishedList") {
             title = intent.getStringExtra("title")
-            //            title = title.trim { it <= ' ' }
             content = intent.getStringExtra("content")
             tag = intent.getStringExtra("tag")
             cities = intent.getStringExtra("cities")
@@ -471,8 +257,7 @@ class NewEditor : BaseActivity(),
                 }
             }
         } else {
-            titleTxt!!.setText(title)
-            titleTxt!!.setHint(title_placeholder_param)
+            content = ""
             initiatePeriodicDraftSave()
         }
 
@@ -604,6 +389,26 @@ class NewEditor : BaseActivity(),
         })
     }
 
+    private fun generateAttributesForMedia(
+        mediaPath: String,
+        isVideo: Boolean
+    ): Pair<String, AztecAttributes> {
+        val id = Random().nextInt(Integer.MAX_VALUE).toString()
+        val attrs = AztecAttributes()
+        attrs.setValue(
+            "src",
+            mediaPath
+        ) // Temporary source value.  Replace with URL after uploaded.
+        attrs.setValue("id", id)
+        attrs.setValue("uploading", "true")
+
+        if (isVideo) {
+            attrs.setValue("video", "true")
+        }
+
+        return Pair(id, attrs)
+    }
+
     private var focusListener: View.OnFocusChangeListener =
         View.OnFocusChangeListener { v, hasFocus ->
             if (hasFocus) {
@@ -619,7 +424,6 @@ class NewEditor : BaseActivity(),
             return 0
         }
         return trim.split("\\s+".toRegex()).size
-        // separate string around spaces
     }
 
     private fun getNumberOfImages(content: String): Int {
@@ -673,32 +477,26 @@ class NewEditor : BaseActivity(),
 
     override fun onBackPressed() {
         mHandler.removeCallbacksAndMessages(null)
-        val fragment = supportFragmentManager
-            .findFragmentByTag(ImageSettingsDialogFragment.IMAGE_SETTINGS_DIALOG_TAG)
-        if (fragment != null && fragment.isVisible) {
-            (fragment as ImageSettingsDialogFragment).dismissFragment()
+        if (StringUtils.isEmpty(titleTxt?.text.toString().trim()) && StringUtils.isEmpty(
+                aztec.visualEditor.toFormattedHtml().trim()
+            ) || intent.getStringExtra(
+                "from"
+            ) != null && intent.getStringExtra(
+                "from"
+            ) == "publishedList"
+        ) {
+            super.onBackPressed()
+            finish()
         } else {
-            if (StringUtils.isEmpty(titleTxt?.text.toString().trim()) && StringUtils.isEmpty(
-                    aztec.visualEditor.toFormattedHtml().trim()
-                ) || intent.getStringExtra(
-                    "from"
-                ) != null && intent.getStringExtra(
-                    "from"
-                ) == "publishedList"
-            ) {
-                super.onBackPressed()
-                finish()
-            } else {
-                if (!ConnectivityUtils.isNetworkEnabled(this)) {
-                    showToast(getString(R.string.error_network))
-                    return
-                }
-                saveDraftRequest(
-                    titleFormatting(titleTxt?.text.toString()),
-                    aztec.visualEditor.toFormattedHtml(),
-                    draftId
-                )
+            if (!ConnectivityUtils.isNetworkEnabled(this)) {
+                showToast(getString(R.string.error_network))
+                return
             }
+            saveDraftRequest(
+                titleFormatting(titleTxt?.text.toString()),
+                aztec.visualEditor.toFormattedHtml(),
+                draftId
+            )
         }
     }
 
@@ -1244,7 +1042,8 @@ class NewEditor : BaseActivity(),
         publishObject.title =
             titleFormatting(titleTxt?.text.toString())
         Log.d("draftId = ", draftId + "")
-        if (intent.getStringExtra("from") != null && intent.getStringExtra("from") == "publishedList" || "4" == moderation_status) { // coming from edit published articles
+        if (intent.getStringExtra("from") != null && intent.getStringExtra("from") == "publishedList" || "4" == moderation_status) {
+            // coming from edit published articles
             val intent_1 = Intent(
                 this@NewEditor,
                 AddArticleTopicsActivityNew::class.java
@@ -1283,16 +1082,11 @@ class NewEditor : BaseActivity(),
         }
     }
 
-    fun hasHTMLTags(text: String): Boolean {
-        val matcher: Matcher = pattern.matcher(text)
-        return matcher.find()
-    }
-
     fun titleFormatting(title: String?): String? {
         return android.text.Html.fromHtml(title).toString()
     }
 
-    fun saveDraftRequest(
+    private fun saveDraftRequest(
         title: String?,
         body: String?,
         draftId1: String
@@ -1315,7 +1109,7 @@ class NewEditor : BaseActivity(),
                     response: Response<ArticleDraftResponse?>
                 ) {
                     removeProgressDialog()
-                    if (response == null || response.body() == null) {
+                    if (response.body() == null) {
                         showToast(getString(R.string.server_went_wrong))
                         showAlertDialog(
                             getString(R.string.draft_oops),
@@ -1328,7 +1122,6 @@ class NewEditor : BaseActivity(),
                         if (responseModel!!.code == 200 && Constants.SUCCESS == responseModel.status) {
                             draftId = responseModel.data[0].result.id + ""
                             showToast(getString(R.string.draft_save_success))
-                            // onBackPressed();
                             finish()
                         } else {
                             if (StringUtils.isNullOrEmpty(responseModel.reason)) {
@@ -1368,7 +1161,7 @@ class NewEditor : BaseActivity(),
                     response: Response<ArticleDraftResponse?>
                 ) {
                     removeProgressDialog()
-                    if (response == null || response.body() == null) {
+                    if (response.body() == null) {
                         showToast(getString(R.string.went_wrong))
                         return
                     }
@@ -1660,6 +1453,165 @@ class NewEditor : BaseActivity(),
                 showToast(getString(R.string.went_wrong))
             }
         }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        mediaFile = MediaFile()
+        mediaId = System.currentTimeMillis().toString()
+        mediaFile!!.setMediaId(mediaId)
+
+        if (resultCode == Activity.RESULT_OK) {
+            when (requestCode) {
+                ADD_MEDIA_ACTIVITY_REQUEST_CODE -> {
+                    if (data == null) {
+                        return
+                    }
+                    imageUri = data.data
+                    if (resultCode == Activity.RESULT_OK) {
+                        try {
+                            val imageBitmap =
+                                MediaStore.Images.Media.getBitmap(
+                                    this@NewEditor.getContentResolver(),
+                                    imageUri
+                                )
+                            var actualHeight = imageBitmap.height.toFloat()
+                            var actualWidth = imageBitmap.width.toFloat()
+                            if (actualWidth < 720) {
+                                showToast(getString(R.string.upload_min_width))
+                                return
+                            }
+                            val maxHeight = 1300f
+                            val maxWidth = 720f
+                            var imgRatio = actualWidth / actualHeight
+                            val maxRatio = maxWidth / maxHeight
+                            if (actualHeight > maxHeight || actualWidth > maxWidth) {
+                                if (imgRatio < maxRatio) { // adjust width according to maxHeight
+                                    imgRatio = maxHeight / actualHeight
+                                    actualWidth = imgRatio * actualWidth
+                                    actualHeight = maxHeight
+                                } else if (imgRatio > maxRatio) { // adjust height according to maxWidth
+                                    imgRatio = maxWidth / actualWidth
+                                    actualHeight = imgRatio * actualHeight
+                                    actualWidth = maxWidth
+                                } else {
+                                    actualHeight = maxHeight
+                                    actualWidth = maxWidth
+                                }
+                            }
+                            val finalBitmap = Bitmap.createScaledBitmap(
+                                imageBitmap,
+                                actualWidth.toInt(),
+                                actualHeight.toInt(),
+                                true
+                            )
+                            val stream = ByteArrayOutputStream()
+                            finalBitmap.compress(Bitmap.CompressFormat.PNG, 75, stream)
+                            val path =
+                                MediaStore.Images.Media.insertImage(
+                                    this@NewEditor.getContentResolver(),
+                                    finalBitmap,
+                                    "Title" + System.currentTimeMillis(),
+                                    null
+                                )
+                            val imageUriTemp = Uri.parse(path)
+                            val file2 = FileUtils.getFile(this, imageUriTemp)
+                            sendUploadProfileImageRequest(file2)
+                        } catch (e: Exception) {
+                            e.printStackTrace()
+                        }
+                    }
+                }
+                ADD_MEDIA_CAMERA_ACTIVITY_REQUEST_CODE -> {
+
+                    if (resultCode == Activity.RESULT_OK) {
+                        try {
+                            var imageBitmap =
+                                MediaStore.Images.Media.getBitmap(
+                                    contentResolver,
+                                    Uri.parse(mCurrentPhotoPath)
+                                )
+                            val ei =
+                                ExifInterface(absoluteImagePath)
+                            val orientation = ei.getAttributeInt(
+                                ExifInterface.TAG_ORIENTATION,
+                                ExifInterface.ORIENTATION_UNDEFINED
+                            )
+                            when (orientation) {
+                                ExifInterface.ORIENTATION_ROTATE_90 -> imageBitmap =
+                                    rotateImage(imageBitmap, 90f)
+                                ExifInterface.ORIENTATION_ROTATE_180 -> imageBitmap =
+                                    rotateImage(imageBitmap, 180f)
+                                ExifInterface.ORIENTATION_ROTATE_270 -> imageBitmap =
+                                    rotateImage(imageBitmap, 270f)
+                                ExifInterface.ORIENTATION_NORMAL -> {
+                                }
+                                else -> {
+                                }
+                            }
+                            var actualHeight = imageBitmap.height.toFloat()
+                            var actualWidth = imageBitmap.width.toFloat()
+                            val maxHeight = 1300f
+                            val maxWidth = 720f
+                            var imgRatio = actualWidth / actualHeight
+                            val maxRatio = maxWidth / maxHeight
+                            // float compressionQuality = 0.5;//50 percent compression
+                            if (actualWidth < 720) {
+                                showToast(getString(R.string.upload_min_width))
+                                return
+                            }
+                            if (actualHeight > maxHeight || actualWidth > maxWidth) {
+                                if (imgRatio < maxRatio) { // adjust width according to maxHeight
+                                    imgRatio = maxHeight / actualHeight
+                                    actualWidth = imgRatio * actualWidth
+                                    actualHeight = maxHeight
+                                } else if (imgRatio > maxRatio) { // adjust height according to maxWidth
+                                    imgRatio = maxWidth / actualWidth
+                                    actualHeight = imgRatio * actualHeight
+                                    actualWidth = maxWidth
+                                } else {
+                                    actualHeight = maxHeight
+                                    actualWidth = maxWidth
+                                }
+                            }
+                            val finalBitmap =
+                                Bitmap.createScaledBitmap(
+                                    imageBitmap,
+                                    actualWidth.toInt(),
+                                    actualHeight.toInt(),
+                                    true
+                                )
+                            val bytes =
+                                ByteArrayOutputStream()
+                            finalBitmap.compress(
+                                Bitmap.CompressFormat.JPEG,
+                                75,
+                                bytes
+                            )
+                            val bitmapData = bytes.toByteArray()
+                            val fos = FileOutputStream(photoFile)
+                            fos.write(bitmapData)
+                            fos.flush()
+                            fos.close()
+                            imageUri = Uri.fromFile(photoFile)
+                            val file2 =
+                                FileUtils.getFile(
+                                    this,
+                                    imageUri
+                                )
+                            sendUploadProfileImageRequest(file2)
+                        } catch (e: Exception) {
+                            e.printStackTrace()
+                        }
+                    }
+                }
+                REQUEST_MEDIA_CAMERA_VIDEO -> {
+                    mediaPath = data?.data.toString()
+                }
+                REQUEST_MEDIA_VIDEO -> {
+                }
+            }
+        }
+    }
 
     fun launchSpellCheckDialog() {
         val spellCheckDialogFragment = SpellCheckDialogFragment()

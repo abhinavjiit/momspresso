@@ -56,7 +56,6 @@ import com.mycity4kids.application.BaseApplication;
 import com.mycity4kids.base.BaseActivity;
 import com.mycity4kids.constants.AppConstants;
 import com.mycity4kids.constants.Constants;
-import com.mycity4kids.editor.EditorPostActivity;
 import com.mycity4kids.editor.NewEditor;
 import com.mycity4kids.gtmutils.Utils;
 import com.mycity4kids.models.BranchModel;
@@ -125,7 +124,6 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
 
     private static final String UPDATE_APP_POPUP_KEY = "latest_app_version";
     private static final String UPDATE_APP_FREQUENCY_KEY = "app_update_frequency";
-    private static final String EDITOR_TYPE = "editor_type";
     private static final int REQUEST_CAMERA_PERMISSION = 1;
     private static final int REQUEST_GALLERY_PERMISSION = 2;
     private static String[] PERMISSIONS_STORAGE_CAMERA = {Manifest.permission.READ_EXTERNAL_STORAGE,
@@ -1421,35 +1419,8 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
     }
 
     private void launchEditor() {
-        String editorType = firebaseRemoteConfig.getString(EDITOR_TYPE);
-        if ((!StringUtils.isNullOrEmpty(editorType) && "1".equals(editorType)) || AppUtils
-                .isUserBucketedInNewEditor(firebaseRemoteConfig)) {
-            Bundle bundle = new Bundle();
-            bundle.putString(EditorPostActivity.TITLE_PARAM, "");
-            bundle.putString(EditorPostActivity.CONTENT_PARAM, "");
-            bundle.putString(EditorPostActivity.TITLE_PLACEHOLDER_PARAM,
-                    getString(R.string.example_post_title_placeholder));
-            bundle.putString(EditorPostActivity.CONTENT_PLACEHOLDER_PARAM,
-                    getString(R.string.example_post_content_placeholder));
-            bundle.putInt(EditorPostActivity.EDITOR_PARAM, EditorPostActivity.USE_NEW_EDITOR);
-            bundle.putString("from", "dashboard");
-            Intent intent = new Intent(DashboardActivity.this, NewEditor.class);
-            intent.putExtras(bundle);
-            startActivity(intent);
-        } else {
-            Bundle bundle = new Bundle();
-            bundle.putString(EditorPostActivity.TITLE_PARAM, "");
-            bundle.putString(EditorPostActivity.CONTENT_PARAM, "");
-            bundle.putString(EditorPostActivity.TITLE_PLACEHOLDER_PARAM,
-                    getString(R.string.example_post_title_placeholder));
-            bundle.putString(EditorPostActivity.CONTENT_PLACEHOLDER_PARAM,
-                    getString(R.string.example_post_content_placeholder));
-            bundle.putInt(EditorPostActivity.EDITOR_PARAM, EditorPostActivity.USE_NEW_EDITOR);
-            bundle.putString("from", "dashboard");
-            Intent intent = new Intent(DashboardActivity.this, EditorPostActivity.class);
-            intent.putExtras(bundle);
-            startActivity(intent);
-        }
+        Intent intent = new Intent(this, NewEditor.class);
+        startActivity(intent);
     }
 
     @Override
@@ -2041,33 +2012,17 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
             intent.putExtra("from", "draftList");
             startActivity(intent);
         } else {
-            String editorType = firebaseRemoteConfig.getString(EDITOR_TYPE);
-            if ((!StringUtils.isNullOrEmpty(editorType) && "1".equals(editorType)) || AppUtils
-                    .isUserBucketedInNewEditor(firebaseRemoteConfig)) {
-                DraftListResult draftListResult = new DraftListResult();
-                draftListResult.setArticleType(allDraftsList.get(position).getArticleType());
-                draftListResult.setId(allDraftsList.get(position).getId());
-                draftListResult.setBody(allDraftsList.get(position).getBody());
-                draftListResult.setTitle(allDraftsList.get(position).getTitle());
-                draftListResult.setCreatedTime(allDraftsList.get(position).getCreatedTime());
-                draftListResult.setUpdatedTime((allDraftsList.get(position).getUpdatedTime()));
-                Intent intent = new Intent(this, NewEditor.class);
-                intent.putExtra("draftItem", draftListResult);
-                intent.putExtra("from", "draftList");
-                startActivity(intent);
-            } else {
-                DraftListResult draftListResult = new DraftListResult();
-                draftListResult.setArticleType(allDraftsList.get(position).getArticleType());
-                draftListResult.setId(allDraftsList.get(position).getId());
-                draftListResult.setBody(allDraftsList.get(position).getBody());
-                draftListResult.setTitle(allDraftsList.get(position).getTitle());
-                draftListResult.setCreatedTime(allDraftsList.get(position).getCreatedTime());
-                draftListResult.setUpdatedTime((allDraftsList.get(position).getUpdatedTime()));
-                Intent intent = new Intent(this, EditorPostActivity.class);
-                intent.putExtra("draftItem", draftListResult);
-                intent.putExtra("from", "draftList");
-                startActivity(intent);
-            }
+            DraftListResult draftListResult = new DraftListResult();
+            draftListResult.setArticleType(allDraftsList.get(position).getArticleType());
+            draftListResult.setId(allDraftsList.get(position).getId());
+            draftListResult.setBody(allDraftsList.get(position).getBody());
+            draftListResult.setTitle(allDraftsList.get(position).getTitle());
+            draftListResult.setCreatedTime(allDraftsList.get(position).getCreatedTime());
+            draftListResult.setUpdatedTime((allDraftsList.get(position).getUpdatedTime()));
+            Intent intent = new Intent(this, NewEditor.class);
+            intent.putExtra("draftItem", draftListResult);
+            intent.putExtra("from", "draftList");
+            startActivity(intent);
         }
     }
 

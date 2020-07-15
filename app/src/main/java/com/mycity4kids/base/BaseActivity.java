@@ -34,7 +34,6 @@ import com.mycity4kids.R;
 import com.mycity4kids.application.BaseApplication;
 import com.mycity4kids.constants.AppConstants;
 import com.mycity4kids.constants.Constants;
-import com.mycity4kids.editor.EditorPostActivity;
 import com.mycity4kids.editor.NewEditor;
 import com.mycity4kids.listener.OnButtonClicked;
 import com.mycity4kids.models.response.DeepLinkingResposnse;
@@ -1352,17 +1351,7 @@ public abstract class BaseActivity extends AppCompatActivity implements GroupMem
     }
 
     private void launchEditor() {
-        Bundle bundle = new Bundle();
-        bundle.putString(EditorPostActivity.TITLE_PARAM, "");
-        bundle.putString(EditorPostActivity.CONTENT_PARAM, "");
-        bundle.putString(EditorPostActivity.TITLE_PLACEHOLDER_PARAM,
-                getString(R.string.example_post_title_placeholder));
-        bundle.putString(EditorPostActivity.CONTENT_PLACEHOLDER_PARAM,
-                getString(R.string.example_post_content_placeholder));
-        bundle.putInt(EditorPostActivity.EDITOR_PARAM, EditorPostActivity.USE_NEW_EDITOR);
         Intent intent = new Intent(this, NewEditor.class);
-        intent.putExtras(bundle);
         startActivity(intent);
     }
-
 }

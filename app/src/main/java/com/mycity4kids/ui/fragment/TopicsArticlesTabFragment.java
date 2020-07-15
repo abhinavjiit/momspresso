@@ -25,7 +25,6 @@ import com.facebook.shimmer.ShimmerFrameLayout;
 import com.getbase.floatingactionbutton.FloatingActionButton;
 import com.getbase.floatingactionbutton.FloatingActionsMenu;
 import com.google.firebase.crashlytics.FirebaseCrashlytics;
-import com.google.firebase.remoteconfig.FirebaseRemoteConfig;
 import com.google.gson.Gson;
 import com.mycity4kids.R;
 import com.mycity4kids.application.BaseApplication;
@@ -57,8 +56,6 @@ import retrofit2.Retrofit;
 public class TopicsArticlesTabFragment extends BaseFragment implements View.OnClickListener,
         MainArticleRecyclerViewAdapter.RecyclerViewClickListener {
 
-    private static final String EDITOR_TYPE = "editor_type";
-    private FirebaseRemoteConfig firebaseRemoteConfig = FirebaseRemoteConfig.getInstance();
     private int nextPageNumber = 1;
     private int limit = 15;
     private boolean isReuqestRunning = false;
@@ -97,19 +94,19 @@ public class TopicsArticlesTabFragment extends BaseFragment implements View.OnCl
 
         View view = inflater.inflate(R.layout.topics_articles_tab_fragment, container, false);
 
-        recyclerView = (RecyclerView) view.findViewById(R.id.recyclerView);
-        swipeRefreshLayout = (SwipeRefreshLayout) view.findViewById(R.id.swipeRefresh);
-        loadingView = (RelativeLayout) view.findViewById(R.id.relativeLoadingView);
-        guideOverlay = (RelativeLayout) view.findViewById(R.id.guideOverlay);
-        writeArticleCell = (RelativeLayout) view.findViewById(R.id.writeArticleCell);
-        shimmerFrameLayout = (ShimmerFrameLayout) view.findViewById(R.id.shimmer1);
+        recyclerView = view.findViewById(R.id.recyclerView);
+        swipeRefreshLayout = view.findViewById(R.id.swipeRefresh);
+        loadingView = view.findViewById(R.id.relativeLoadingView);
+        guideOverlay = view.findViewById(R.id.guideOverlay);
+        writeArticleCell = view.findViewById(R.id.writeArticleCell);
+        shimmerFrameLayout = view.findViewById(R.id.shimmer1);
 
-        frameLayout = (FrameLayout) view.findViewById(R.id.frame_layout);
+        frameLayout = view.findViewById(R.id.frame_layout);
         frameLayout.getBackground().setAlpha(0);
-        fabMenu = (FloatingActionsMenu) view.findViewById(R.id.fab_menu);
-        popularSortFab = (FloatingActionButton) view.findViewById(R.id.popularSortFAB);
-        recentSortFab = (FloatingActionButton) view.findViewById(R.id.recentSortFAB);
-        fabSort = (FloatingActionButton) view.findViewById(R.id.fabSort);
+        fabMenu = view.findViewById(R.id.fab_menu);
+        popularSortFab = view.findViewById(R.id.popularSortFAB);
+        recentSortFab = view.findViewById(R.id.recentSortFAB);
+        fabSort = view.findViewById(R.id.fabSort);
 
         guideOverlay.setOnClickListener(this);
         writeArticleCell.setOnClickListener(this);
@@ -432,18 +429,8 @@ public class TopicsArticlesTabFragment extends BaseFragment implements View.OnCl
         switch (view.getId()) {
             case R.id.writeArticleCell:
                 if (isAdded()) {
-                    Bundle bundle5 = new Bundle();
-                    bundle5.putString("TITLE_PARAM", "");
-                    bundle5.putString("CONTENT_PARAM", "");
-                    bundle5.putString("TITLE_PLACEHOLDER_PARAM",
-                            getString(R.string.example_post_title_placeholder));
-                    bundle5.putString("CONTENT_PLACEHOLDER_PARAM",
-                            getString(R.string.example_post_content_placeholder));
-                    bundle5.putInt("EDITOR_PARAM", NewEditor.USE_NEW_EDITOR);
-                    bundle5.putString("from", "TopicArticlesListingScreen");
-                    Intent intent1 = new Intent(getActivity(), NewEditor.class);
-                    intent1.putExtras(bundle5);
-                    startActivity(intent1);
+                    Intent intent = new Intent(getActivity(), NewEditor.class);
+                    startActivity(intent);
                 }
                 break;
             case R.id.guideOverlay:

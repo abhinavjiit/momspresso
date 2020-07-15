@@ -6,15 +6,12 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
-
 import androidx.recyclerview.widget.RecyclerView;
-
-import com.mycity4kids.utils.DateTimeUtils;
-import com.mycity4kids.utils.StringUtils;
 import com.mycity4kids.R;
 import com.mycity4kids.models.response.ArticleListingResult;
+import com.mycity4kids.utils.DateTimeUtils;
+import com.mycity4kids.utils.StringUtils;
 import com.squareup.picasso.Picasso;
-
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -25,25 +22,23 @@ import java.util.Locale;
  */
 public class UserReadArticleAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
-    private LayoutInflater mInflator;
+    private LayoutInflater layoutInflater;
     private ArrayList<ArticleListingResult> articleDataModelsNew;
-    private RecyclerViewClickListener mListener;
-    private boolean isPrivateProfile;
+    private RecyclerViewClickListener recyclerViewClickListener;
 
-    public UserReadArticleAdapter(Context pContext, RecyclerViewClickListener listener, boolean isPrivateProfile) {
-        mInflator = (LayoutInflater) pContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        this.mListener = listener;
-        this.isPrivateProfile = isPrivateProfile;
+    public UserReadArticleAdapter(Context context, RecyclerViewClickListener listener) {
+        layoutInflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        this.recyclerViewClickListener = listener;
     }
 
-    public void setListData(ArrayList<ArticleListingResult> mParentingLists) {
-        articleDataModelsNew = mParentingLists;
+    public void setListData(ArrayList<ArticleListingResult> articleDataModelsNew) {
+        this.articleDataModelsNew = articleDataModelsNew;
     }
 
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         UserPublishedArticleViewHolder viewHolder = null;
-        View v0 = mInflator.inflate(R.layout.user_published_article_list_item, parent, false);
+        View v0 = layoutInflater.inflate(R.layout.user_published_article_list_item, parent, false);
         viewHolder = new UserPublishedArticleViewHolder(v0);
         return viewHolder;
     }
@@ -51,8 +46,8 @@ public class UserReadArticleAdapter extends RecyclerView.Adapter<RecyclerView.Vi
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
         if (null != articleDataModelsNew.get(position).getImageUrl()) {
-            Picasso.get().load(articleDataModelsNew.get(position).getImageUrl().getThumbMin()).
-                    placeholder(R.drawable.default_article).error(R.drawable.default_article)
+            Picasso.get().load(articleDataModelsNew.get(position).getImageUrl().getThumbMin())
+                    .placeholder(R.drawable.default_article).error(R.drawable.default_article)
                     .into(((UserPublishedArticleViewHolder) holder).articleImageView);
         } else {
             ((UserPublishedArticleViewHolder) holder).articleImageView
@@ -84,12 +79,7 @@ public class UserReadArticleAdapter extends RecyclerView.Adapter<RecyclerView.Vi
             ((UserPublishedArticleViewHolder) holder).recommendCountTextView.setVisibility(View.VISIBLE);
             ((UserPublishedArticleViewHolder) holder).separatorView2.setVisibility(View.VISIBLE);
         }
-        if (isPrivateProfile) {
-            ((UserPublishedArticleViewHolder) holder).editPublishedTextView.setVisibility(View.GONE);
-        } else {
-            ((UserPublishedArticleViewHolder) holder).editPublishedTextView.setVisibility(View.GONE);
-        }
-
+        ((UserPublishedArticleViewHolder) holder).editPublishedTextView.setVisibility(View.GONE);
         try {
             Calendar calendar1 = Calendar.getInstance();
             SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy", Locale.US);
@@ -140,13 +130,12 @@ public class UserReadArticleAdapter extends RecyclerView.Adapter<RecyclerView.Vi
             separatorView1 = itemView.findViewById(R.id.separatorView1);
             separatorView2 = itemView.findViewById(R.id.separatorView2);
             shareArticleImageView.setOnClickListener(this);
-            editPublishedTextView.setOnClickListener(this);
             itemView.setOnClickListener(this);
         }
 
         @Override
         public void onClick(View v) {
-            mListener.onClick(v, getAdapterPosition());
+            recyclerViewClickListener.onClick(v, getAdapterPosition());
         }
     }
 

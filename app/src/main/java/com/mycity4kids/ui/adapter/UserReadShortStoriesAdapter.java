@@ -21,27 +21,23 @@ import java.util.Locale;
  */
 public class UserReadShortStoriesAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
-    private LayoutInflater mInflator;
+    private LayoutInflater layoutInflater;
     private ArrayList<ArticleListingResult> articleDataModelsNew;
-    private SSRecyclerViewClickListener mListener;
-    private boolean isPrivateProfile;
+    private StoryRecyclerViewClickListener storyRecyclerViewClickListener;
 
-    public UserReadShortStoriesAdapter(Context pContext, SSRecyclerViewClickListener listener,
-            boolean isPrivateProfile) {
-
-        mInflator = (LayoutInflater) pContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        this.mListener = listener;
-        this.isPrivateProfile = isPrivateProfile;
+    public UserReadShortStoriesAdapter(Context context, StoryRecyclerViewClickListener listener) {
+        layoutInflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        this.storyRecyclerViewClickListener = listener;
     }
 
-    public void setListData(ArrayList<ArticleListingResult> mParentingLists) {
-        articleDataModelsNew = mParentingLists;
+    public void setListData(ArrayList<ArticleListingResult> articleDataModelsNew) {
+        this.articleDataModelsNew = articleDataModelsNew;
     }
 
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         UserPublishedArticleViewHolder viewHolder = null;
-        View v0 = mInflator.inflate(R.layout.user_published_short_stories_list_item, parent, false);
+        View v0 = layoutInflater.inflate(R.layout.user_published_short_stories_list_item, parent, false);
         viewHolder = new UserPublishedArticleViewHolder(v0);
         return viewHolder;
     }
@@ -69,11 +65,7 @@ public class UserReadShortStoriesAdapter extends RecyclerView.Adapter<RecyclerVi
         } else {
             ((UserPublishedArticleViewHolder) holder).recommendCountTextView.setVisibility(View.VISIBLE);
         }
-        if (isPrivateProfile) {
-            ((UserPublishedArticleViewHolder) holder).editPublishedTextView.setVisibility(View.GONE);
-        } else {
-            ((UserPublishedArticleViewHolder) holder).editPublishedTextView.setVisibility(View.GONE);
-        }
+        ((UserPublishedArticleViewHolder) holder).editPublishedTextView.setVisibility(View.GONE);
 
         try {
             Calendar calendar1 = Calendar.getInstance();
@@ -119,17 +111,16 @@ public class UserReadShortStoriesAdapter extends RecyclerView.Adapter<RecyclerVi
             editPublishedTextView = (TextView) itemView.findViewById(R.id.editPublishedTextView);
             separatorView2 = itemView.findViewById(R.id.separatorView2);
             shareArticleImageView.setOnClickListener(this);
-            editPublishedTextView.setOnClickListener(this);
             itemView.setOnClickListener(this);
         }
 
         @Override
         public void onClick(View v) {
-            mListener.onShortStoryClick(v, getAdapterPosition());
+            storyRecyclerViewClickListener.onShortStoryClick(v, getAdapterPosition());
         }
     }
 
-    public interface SSRecyclerViewClickListener {
+    public interface StoryRecyclerViewClickListener {
 
         void onShortStoryClick(View view, int position);
     }

@@ -12,30 +12,21 @@ import android.widget.TextView;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import com.google.firebase.crashlytics.FirebaseCrashlytics;
-import com.google.firebase.remoteconfig.FirebaseRemoteConfig;
-import com.google.gson.Gson;
 import com.mycity4kids.R;
 import com.mycity4kids.application.BaseApplication;
 import com.mycity4kids.base.BaseFragment;
 import com.mycity4kids.constants.Constants;
-import com.mycity4kids.editor.EditorPostActivity;
-import com.mycity4kids.editor.NewEditor;
 import com.mycity4kids.gtmutils.Utils;
-import com.mycity4kids.models.parentingdetails.ImageData;
-import com.mycity4kids.models.response.ArticleDetailResult;
 import com.mycity4kids.models.response.ArticleListingResponse;
 import com.mycity4kids.models.response.ArticleListingResult;
-import com.mycity4kids.models.response.ShortStoryDetailResult;
 import com.mycity4kids.preference.SharedPrefUtils;
-import com.mycity4kids.retrofitAPIsInterfaces.ArticleDetailsAPI;
 import com.mycity4kids.retrofitAPIsInterfaces.BloggerDashboardAPI;
-import com.mycity4kids.retrofitAPIsInterfaces.ShortStoryAPI;
-import com.mycity4kids.ui.activity.AddShortStoryActivity;
 import com.mycity4kids.ui.activity.ArticleDetailsContainerActivity;
 import com.mycity4kids.ui.activity.ShortStoryContainerActivity;
 import com.mycity4kids.ui.activity.UserPublishedContentActivity;
 import com.mycity4kids.ui.adapter.UserReadArticleAdapter;
 import com.mycity4kids.ui.adapter.UserReadShortStoriesAdapter;
+import com.mycity4kids.ui.adapter.UserReadShortStoriesAdapter.StoryRecyclerViewClickListener;
 import com.mycity4kids.utils.AppUtils;
 import com.mycity4kids.utils.ConnectivityUtils;
 import com.mycity4kids.utils.StringUtils;
@@ -48,10 +39,8 @@ import retrofit2.Retrofit;
  * Created by hemant.parmar on 21-04-2016.
  */
 public class UserReadArticleTabFragment extends BaseFragment implements View.OnClickListener,
-        UserReadArticleAdapter.RecyclerViewClickListener, UserReadShortStoriesAdapter.SSRecyclerViewClickListener {
+        UserReadArticleAdapter.RecyclerViewClickListener, StoryRecyclerViewClickListener {
 
-    private static final String EDITOR_TYPE = "editor_type";
-    private FirebaseRemoteConfig firebaseRemoteConfig = FirebaseRemoteConfig.getInstance();
     private ArrayList<ArticleListingResult> articleDataModelsNew;
     private RecyclerView recyclerView;
     private TextView noBlogsTextView;
@@ -78,9 +67,9 @@ public class UserReadArticleTabFragment extends BaseFragment implements View.OnC
             Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.user_read_article_tab_fragment, container, false);
 
-        recyclerView = (RecyclerView) view.findViewById(R.id.recyclerView);
-        bottomLoadingView = (RelativeLayout) view.findViewById(R.id.bottomLoadingView);
-        noBlogsTextView = (TextView) view.findViewById(R.id.noBlogsTextView);
+        recyclerView = view.findViewById(R.id.recyclerView);
+        bottomLoadingView = view.findViewById(R.id.bottomLoadingView);
+        noBlogsTextView = view.findViewById(R.id.noBlogsTextView);
         noBlogsTextViewshortstory = view.findViewById(R.id.noBlogsTextViewshortstory);
 
         view.findViewById(R.id.imgLoader)
@@ -99,11 +88,11 @@ public class UserReadArticleTabFragment extends BaseFragment implements View.OnC
 
         nextPageNumber = 0;
         if ("shortStory".equals(contentType)) {
-            shortStoriesAdapter = new UserReadShortStoriesAdapter(getActivity(), this, isPrivateProfile);
+            shortStoriesAdapter = new UserReadShortStoriesAdapter(getActivity(), this);
             recyclerView.setAdapter(shortStoriesAdapter);
             getUserPublishedShortStories();
         } else {
-            adapter = new UserReadArticleAdapter(getActivity(), this, isPrivateProfile);
+            adapter = new UserReadArticleAdapter(getActivity(), this);
             recyclerView.setAdapter(adapter);
             getUserPublishedArticles();
         }
@@ -282,13 +271,6 @@ public class UserReadArticleTabFragment extends BaseFragment implements View.OnC
                                 .getUserName());
                 startActivity(intent);
                 break;
-            case R.id.editPublishedTextView:
-                Retrofit retrofit = BaseApplication.getInstance().getRetrofit();
-                ArticleDetailsAPI articleDetailsApi = retrofit.create(ArticleDetailsAPI.class);
-                Call<ArticleDetailResult> call = articleDetailsApi
-                        .getArticleDetailsFromRedis(articleDataModelsNew.get(position).getId(), "articleId");
-                call.enqueue(articleDetailResponseCallback);
-                break;
             case R.id.shareArticleImageView:
                 Intent shareIntent = new Intent(android.content.Intent.ACTION_SEND);
                 shareIntent.setType("text/plain");
@@ -326,71 +308,6 @@ public class UserReadArticleTabFragment extends BaseFragment implements View.OnC
         }
     }
 
-    private Callback<ArticleDetailResult> articleDetailResponseCallback = new Callback<ArticleDetailResult>() {
-        @Override
-        public void onResponse(Call<ArticleDetailResult> call, retrofit2.Response<ArticleDetailResult> response) {
-            removeProgressDialog();
-            if (response.body() == null) {
-                return;
-            }
-            try {
-                ArticleDetailResult responseData = response.body();
-                getResponseUpdateUi(responseData);
-            } catch (Exception e) {
-                FirebaseCrashlytics.getInstance().recordException(e);
-                Log.d("MC4kException", Log.getStackTraceString(e));
-            }
-        }
-
-        @Override
-        public void onFailure(Call<ArticleDetailResult> call, Throwable t) {
-            removeProgressDialog();
-            FirebaseCrashlytics.getInstance().recordException(t);
-            Log.d("MC4kException", Log.getStackTraceString(t));
-        }
-    };
-
-    private void getResponseUpdateUi(ArticleDetailResult detailsResponse) {
-        ArticleDetailResult detailData = detailsResponse;
-        ArrayList<ImageData> imageList = detailData.getBody().getImage();
-
-        String bodyDescription = detailData.getBody().getText();
-        String bodyDesc = bodyDescription;
-        String content;
-        if (imageList.size() > 0) {
-            for (ImageData images : imageList) {
-                if (bodyDescription.contains(images.getKey())) {
-                    bodyDesc = bodyDesc.replace(images.getKey(),
-                            "<p style='text-align:center'><img src=" + images.getValue()
-                                    + " style=\"width: 100%;\"+></p>");
-                }
-            }
-
-            String bodyImgTxt = "<html><head></head><body>" + bodyDesc + "</body></html>";
-            content = bodyImgTxt;
-
-        } else {
-            String bodyImgTxt = "<html><head></head><body>" + bodyDesc + "</body></html>";
-            content = bodyImgTxt;
-        }
-        String editorType = firebaseRemoteConfig.getString(EDITOR_TYPE);
-        Intent intent;
-        if ((!StringUtils.isNullOrEmpty(editorType) && "1".equals(editorType)) || AppUtils
-                .isUserBucketedInNewEditor(firebaseRemoteConfig)) {
-            intent = new Intent(getActivity(), NewEditor.class);
-        } else {
-            intent = new Intent(getActivity(), EditorPostActivity.class);
-        }
-        intent.putExtra("from", "publishedList");
-        intent.putExtra("title", detailData.getTitle());
-        intent.putExtra("content", content);
-        intent.putExtra("thumbnailUrl", detailData.getImageUrl().getThumbMax());
-        intent.putExtra("articleId", detailData.getId());
-        intent.putExtra("tag", new Gson().toJson(detailData.getTags()));
-        intent.putExtra("cities", new Gson().toJson(detailData.getCities()));
-        startActivity(intent);
-    }
-
     @Override
     public void onShortStoryClick(View view, int position) {
         switch (view.getId()) {
@@ -413,13 +330,6 @@ public class UserReadArticleTabFragment extends BaseFragment implements View.OnC
                                 .getUserName());
                 startActivity(intent);
                 break;
-            case R.id.editPublishedTextView:
-                Retrofit retrofit = BaseApplication.getInstance().getRetrofit();
-                ShortStoryAPI shortStoryApi = retrofit.create(ShortStoryAPI.class);
-                Call<ShortStoryDetailResult> call = shortStoryApi
-                        .getShortStoryDetails(articleDataModelsNew.get(position).getId(), "articleId");
-                call.enqueue(ssDetailResponseCallbackRedis);
-                break;
             case R.id.shareArticleImageView:
                 Intent shareIntent = new Intent(android.content.Intent.ACTION_SEND);
                 shareIntent.setType("text/plain");
@@ -441,12 +351,12 @@ public class UserReadArticleTabFragment extends BaseFragment implements View.OnC
                 startActivity(Intent.createChooser(shareIntent, "Momspresso"));
                 if (isPrivateProfile) {
                     Utils.pushShareArticleEvent(getActivity(), "PrivateUserArticlesScreen",
-                            SharedPrefUtils.getUserDetailModel(getActivity()).getDynamoId() + "",
+                            SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId() + "",
                             articleDataModelsNew.get(position).getId(),
                             authorId + "~" + articleDataModelsNew.get(position).getUserName(), "-");
                 } else {
                     Utils.pushShareArticleEvent(getActivity(), "PublicUserArticlesScreen",
-                            SharedPrefUtils.getUserDetailModel(getActivity()).getDynamoId() + "",
+                            SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId() + "",
                             articleDataModelsNew.get(position).getId(),
                             authorId + "~" + articleDataModelsNew.get(position).getUserName(), "-");
                 }
@@ -456,43 +366,9 @@ public class UserReadArticleTabFragment extends BaseFragment implements View.OnC
         }
     }
 
-    private Callback<ShortStoryDetailResult> ssDetailResponseCallbackRedis = new Callback<ShortStoryDetailResult>() {
-        @Override
-        public void onResponse(Call<ShortStoryDetailResult> call, retrofit2.Response<ShortStoryDetailResult> response) {
-            removeProgressDialog();
-            if (response.body() == null) {
-                return;
-            }
-            try {
-                ShortStoryDetailResult responseData = response.body();
-                Intent intent = new Intent(getActivity(), AddShortStoryActivity.class);
-                intent.putExtra("from", "publishedList");
-                intent.putExtra("title", responseData.getTitle());
-                intent.putExtra("body", responseData.getBody());
-                intent.putExtra("articleId", responseData.getId());
-                intent.putExtra("tag", new Gson().toJson(responseData.getTags()));
-                intent.putExtra("cities", new Gson().toJson(responseData.getCities()));
-                startActivity(intent);
-            } catch (Exception e) {
-                removeProgressDialog();
-                FirebaseCrashlytics.getInstance().recordException(e);
-                Log.d("MC4kException", Log.getStackTraceString(e));
-            }
-
-        }
-
-        @Override
-        public void onFailure(Call<ShortStoryDetailResult> call, Throwable t) {
-            removeProgressDialog();
-            FirebaseCrashlytics.getInstance().recordException(t);
-            Log.d("MC4kException", Log.getStackTraceString(t));
-        }
-    };
-
     @Override
     public void onPause() {
         super.onPause();
         chunk = 0;
-
     }
 }

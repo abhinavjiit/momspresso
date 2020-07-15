@@ -103,7 +103,7 @@
     android:layout_marginBottom="40dp"
     android:gravity="center"
     android:padding="10dp"
-    android:text="@string/cancel"
+    android:text="@string/cancel_audio"
     android:textColor="@color/app_light_black"
     android:textSize="14sp" />
 

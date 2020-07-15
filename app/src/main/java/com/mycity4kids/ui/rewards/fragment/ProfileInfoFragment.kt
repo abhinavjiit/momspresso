@@ -90,12 +90,6 @@ import io.reactivex.Observer
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable
 import io.reactivex.schedulers.Schedulers
-import okhttp3.MediaType.Companion.toMediaTypeOrNull
-import okhttp3.RequestBody.Companion.asRequestBody
-import okhttp3.RequestBody.Companion.toRequestBody
-import org.apmem.tools.layouts.FlowLayout
-import retrofit2.Call
-import retrofit2.Callback
 import java.io.ByteArrayOutputStream
 import java.io.File
 import java.io.IOException
@@ -104,6 +98,12 @@ import java.util.ArrayList
 import java.util.Calendar
 import java.util.Collections
 import java.util.Date
+import okhttp3.MediaType.Companion.toMediaTypeOrNull
+import okhttp3.RequestBody.Companion.asRequestBody
+import okhttp3.RequestBody.Companion.toRequestBody
+import org.apmem.tools.layouts.FlowLayout
+import retrofit2.Call
+import retrofit2.Callback
 
 const val ADD_MEDIA_ACTIVITY_REQUEST_CODE = 1111
 const val ADD_MEDIA_CAMERA_ACTIVITY_REQUEST_CODE = 1113
@@ -1105,7 +1105,7 @@ class ProfileInfoFragment : BaseFragment(),
                 )) {
                 apiGetResponse.userHandle = userHandleTextView.text.toString()
             }
-        }else{
+        } else {
             Toast.makeText(
                 activity,
                 "Please check handle availability",
