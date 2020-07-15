@@ -14,6 +14,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.google.firebase.crashlytics.FirebaseCrashlytics;
 import com.mycity4kids.R;
 import com.mycity4kids.models.response.CommentListData;
+import com.mycity4kids.utils.AppUtils;
 import com.mycity4kids.utils.DateTimeUtils;
 import com.squareup.picasso.Picasso;
 import java.util.ArrayList;
@@ -25,11 +26,13 @@ public class ArticleCommentsRecyclerAdapter extends
     private final LayoutInflater mInflator;
     private ArrayList<CommentListData> commentList;
     private RecyclerViewClickListener mListener;
+    private String authorId;
 
-    public ArticleCommentsRecyclerAdapter(Context pContext, RecyclerViewClickListener listener) {
+    public ArticleCommentsRecyclerAdapter(Context pContext, RecyclerViewClickListener listener, String authorId) {
         mContext = pContext;
         mInflator = (LayoutInflater) pContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         mListener = listener;
+        this.authorId = authorId;
     }
 
     public void setData(ArrayList<CommentListData> commentList) {
@@ -89,7 +92,35 @@ public class ArticleCommentsRecyclerAdapter extends
 
         } else {
             commentsViewHolder.likeTextView.setText(commentList.get(position).getLikeCount() + "");
+        }
 
+        if (AppUtils.isPrivateProfile(authorId)) {
+            if (commentList.get(position).isIs_top_comment()) {
+                commentsViewHolder.topCommentTextView.setVisibility(View.VISIBLE);
+                commentsViewHolder.topCommentMarkedTextView.setVisibility(View.GONE);
+            } else {
+                commentsViewHolder.topCommentTextView.setVisibility(View.GONE);
+                commentsViewHolder.topCommentMarkedTextView.setVisibility(View.VISIBLE);
+                if (commentList.get(position).isTopCommentMarked()) {
+                    commentsViewHolder.topCommentMarkedTextView
+                            .setText(mContext.getResources().getString(R.string.top_comment_marked_string));
+                    Drawable myDrawable = ContextCompat
+                            .getDrawable(commentsViewHolder.topCommentMarkedTextView.getContext(),
+                                    R.drawable.ic_top_comment_marked_golden);
+                    commentsViewHolder.topCommentMarkedTextView
+                            .setCompoundDrawablesWithIntrinsicBounds(myDrawable, null, null, null);
+                } else {
+                    commentsViewHolder.topCommentMarkedTextView.setText(R.string.top_comment_string);
+                    Drawable myDrawable = ContextCompat
+                            .getDrawable(commentsViewHolder.topCommentMarkedTextView.getContext(),
+                                    R.drawable.ic_top_comment_raw_color);
+                    commentsViewHolder.topCommentMarkedTextView
+                            .setCompoundDrawablesWithIntrinsicBounds(myDrawable, null, null, null);
+                }
+            }
+        } else {
+            commentsViewHolder.topCommentTextView.setVisibility(View.GONE);
+            commentsViewHolder.topCommentMarkedTextView.setVisibility(View.GONE);
         }
     }
 
@@ -105,6 +136,8 @@ public class ArticleCommentsRecyclerAdapter extends
         TextView DateTextView;
         TextView likeTextView;
         ImageView moreOptionImageView;
+        TextView topCommentMarkedTextView;
+        TextView topCommentTextView;
 
         CommentsViewHolder(View view) {
             super(view);
@@ -117,12 +150,15 @@ public class ArticleCommentsRecyclerAdapter extends
             replyCountTextView = (TextView) view.findViewById(R.id.replyCountTextView);
             likeTextView = (TextView) view.findViewById(R.id.likeTextView);
             moreOptionImageView = (ImageView) view.findViewById(R.id.moreOptionImageView);
+            topCommentMarkedTextView = (TextView) view.findViewById(R.id.topCommentMarkedTextView);
+            topCommentTextView = (TextView) view.findViewById(R.id.topCommentTextView);
             view.setOnLongClickListener(this);
             replyCommentTextView.setOnClickListener(this);
             replyCountTextView.setOnClickListener(this);
             likeTextView.setOnClickListener(this);
             moreOptionImageView.setOnClickListener(this);
             commentorImageView.setOnClickListener(this);
+            topCommentMarkedTextView.setOnClickListener(this);
         }
 
         @Override

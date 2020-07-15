@@ -11,15 +11,30 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:paddingLeft="10dp"
-    android:paddingTop="8dp"
     android:paddingRight="10dp"
     android:paddingBottom="4dp">
+    <com.mycity4kids.widget.CustomFontTextView
+      android:id="@+id/topCommentTextView"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:layout_marginStart="42dp"
+      android:drawableStart="@drawable/ic_top_comment_marked_golden"
+      android:drawablePadding="@dimen/space_10"
+      android:paddingTop="@dimen/space_10"
+      android:paddingBottom="@dimen/space_10"
+      android:text="Top comment"
+      android:textColor="#979797"
+      android:textSize="14sp"
+      android:visibility="gone"
+      app:fontName="Roboto-Medium.ttf" />
+
+
     <com.mikhaellopez.circularimageview.CircularImageView
       android:id="@+id/commentorImageView"
       android:layout_width="@dimen/ad_comments_profile_pic_width"
       android:layout_height="@dimen/ad_comments_profile_pic_width"
+      android:layout_below="@id/topCommentTextView"
       android:layout_alignParentStart="true"
-      android:layout_alignParentTop="true"
       android:contentDescription="@string/author_img"
       android:src="@drawable/default_commentor_img"
       android:visibility="visible"
@@ -51,7 +66,9 @@
       android:id="@+id/commentDataTextView"
       android:layout_width="match_parent"
       android:layout_height="wrap_content"
+      android:layout_below="@id/topCommentTextView"
       android:layout_marginTop="@dimen/space_10"
+
       android:layout_toEndOf="@id/commentorImageView"
       android:ellipsize="end"
       android:paddingStart="10dp"
@@ -108,6 +125,22 @@
         android:textSize="@dimen/ad_comments_date"
         app:fontName="Roboto-Regular.ttf" />
 
+
+      <com.mycity4kids.widget.CustomFontTextView
+        android:id="@+id/markedTopComment"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="20dp"
+        android:layout_marginTop="2dp"
+        android:layout_marginEnd="21dp"
+        android:drawableStart="@drawable/ic_top_comment_raw_color"
+        android:drawablePadding="6dp"
+        android:padding="@dimen/space_5"
+        android:text="@string/top_comment_string"
+        android:textColor="#979797"
+        android:visibility="gone"
+        app:fontName="Roboto-Regular.ttf" />
+
       <com.mycity4kids.widget.CustomFontTextView
         android:id="@+id/commentDateTextView"
         android:layout_width="wrap_content"
@@ -147,11 +180,12 @@
       android:id="@+id/commentShimmerLayout"
       android:layout_width="match_parent"
       android:layout_height="wrap_content"
-      android:background="@color/white">
-    <include
-      android:layout_height="wrap_content"
-      android:layout_width="match_parent"
-      layout="@layout/collection_item_type_shimmer_layout" />
+      android:background="@color/white"
+      android:visibility="visible">
+      <include
+        layout="@layout/collection_item_type_shimmer_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
     </com.facebook.shimmer.ShimmerFrameLayout>
   </RelativeLayout>
 
@@ -176,8 +210,8 @@
     android:layout_gravity="right|bottom"
     android:layout_marginRight="10dp"
     android:layout_marginBottom="10dp"
-    app:fab_colorNormal="@color/app_red"
     android:visibility="gone"
+    app:fab_colorNormal="@color/app_red"
     app:fab_colorPressed="@color/app_red"
     app:fab_icon="@drawable/ic_add_comments" />
 
@@ -203,13 +237,13 @@
     android:id="@+id/viewAllTextView"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:layout_below="@id/repliesRecyclerView"
+    android:layout_marginTop="@dimen/space_20"
     android:gravity="center"
     android:padding="@dimen/space_16"
     android:text="View All"
-    android:visibility="gone"
-    android:layout_below="@id/repliesRecyclerView"
     android:textColor="@color/app_red"
-    android:layout_marginTop="@dimen/space_20"
-    android:textSize="18sp" />
+    android:textSize="18sp"
+    android:visibility="gone" />
 
 </RelativeLayout>

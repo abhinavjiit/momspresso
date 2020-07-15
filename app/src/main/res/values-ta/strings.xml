@@ -1367,4 +1367,6 @@ Thank you! We will be reviewing your story. You can expect to hear from us withi
   <string name="profile_check">Check</string>
   <string name="write_an_email">Write an email</string>
   <string name="ask_mymoney_helpdesk">Ask on Mymoney helpdesk</string>
+  <string name="top_comment_marked_string">Marked</string>
+  <string name="top_comment_string">Top comment</string>
 </resources>

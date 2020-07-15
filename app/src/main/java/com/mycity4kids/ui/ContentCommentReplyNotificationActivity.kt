@@ -17,6 +17,7 @@ import com.mycity4kids.application.BaseApplication
 import com.mycity4kids.base.BaseActivity
 import com.mycity4kids.constants.AppConstants
 import com.mycity4kids.constants.Constants
+import com.mycity4kids.models.TopCommentData
 import com.mycity4kids.models.request.AddEditCommentOrReplyRequest
 import com.mycity4kids.models.response.CommentListData
 import com.mycity4kids.models.response.CommentListResponse
@@ -33,11 +34,15 @@ import com.mycity4kids.ui.fragment.ContentCommentReplyNotificationFragment
 import com.mycity4kids.ui.fragment.ReportContentDialogFragment
 import com.mycity4kids.utils.EndlessScrollListener
 import com.mycity4kids.utils.ToastUtils
-import java.util.ArrayList
+import io.reactivex.Observer
+import io.reactivex.android.schedulers.AndroidSchedulers
+import io.reactivex.disposables.Disposable
+import io.reactivex.schedulers.Schedulers
 import okhttp3.ResponseBody
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
+import java.util.ArrayList
 
 class ContentCommentReplyNotificationActivity : BaseActivity(),
     ArticleCommentsRecyclerAdapter.RecyclerViewClickListener,
@@ -54,6 +59,7 @@ class ContentCommentReplyNotificationActivity : BaseActivity(),
     private var paginationId: String? = null
     private var contentType: String? = null
     private lateinit var rLayout: RelativeLayout
+    private var blogWriterId: String? = null
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.content_comment_reply_notification_activity)
@@ -66,6 +72,7 @@ class ContentCommentReplyNotificationActivity : BaseActivity(),
         replyId = intent?.getStringExtra("replyId")
         commentId = intent?.getStringExtra("commentId")
         val show = intent?.getStringExtra("type")
+        blogWriterId = intent?.getStringExtra("authorId")
         commentList = ArrayList()
         getComments(null)
         if ("comment" == show || replyId.isNullOrBlank()) {
@@ -73,7 +80,7 @@ class ContentCommentReplyNotificationActivity : BaseActivity(),
         } else if ("reply" == show) {
             showReplyFragment()
         }
-        articleCommentsRecyclerAdapter = ArticleCommentsRecyclerAdapter(this, this)
+        articleCommentsRecyclerAdapter = ArticleCommentsRecyclerAdapter(this, this, blogWriterId)
         val linearLayoutManager = LinearLayoutManager(this)
         commentRecyclerView.layoutManager = linearLayoutManager
         commentRecyclerView.adapter = articleCommentsRecyclerAdapter
@@ -149,6 +156,7 @@ class ContentCommentReplyNotificationActivity : BaseActivity(),
             bundle.putString("articleId", articleId)
             bundle.putString("show", "comment")
             bundle.putString("contentType", contentType)
+            bundle.putString("articleWriterId", blogWriterId)
             val articleShortStoryMomVlogCommentAndReplyNotificationFragment =
                 ContentCommentReplyNotificationFragment()
             articleShortStoryMomVlogCommentAndReplyNotificationFragment.arguments = bundle
@@ -166,6 +174,7 @@ class ContentCommentReplyNotificationActivity : BaseActivity(),
         bundle.putString("replyId", replyId)
         bundle.putString("show", "replies")
         bundle.putString("contentType", contentType)
+        bundle.putString("articleWriterId", blogWriterId)
         val articleShortStoryMomVlogCommentAndReplyNotificationFragment =
             ContentCommentReplyNotificationFragment()
         articleShortStoryMomVlogCommentAndReplyNotificationFragment.arguments = bundle
@@ -177,8 +186,31 @@ class ContentCommentReplyNotificationActivity : BaseActivity(),
 
     override fun onRecyclerItemClick(view: View?, position: Int) {
         when (view?.id) {
-            R.id.commentorImageView ->
-            {
+            R.id.topCommentMarkedTextView -> {
+                if (commentList?.get(position)?.isTopCommentMarked!!) {
+                    articleId?.let { articleId ->
+                        commentId?.let { commentId ->
+                            val topCommentData =
+                                TopCommentData(postId = articleId, id = commentId, status = false)
+                            markedUnMarkedTopComment(topCommentData)
+                            commentList?.get(position)?.isTopCommentMarked = false
+                        }
+                    }
+                } else {
+                    articleId?.let { articleId ->
+                        commentId?.let { commentId ->
+                            val topCommentData =
+                                TopCommentData(postId = articleId, id = commentId, status = true)
+                            markedUnMarkedTopComment(topCommentData)
+                            commentList?.get(position)?.isTopCommentMarked = true
+                        }
+                    }
+                }
+                articleCommentsRecyclerAdapter.notifyDataSetChanged()
+            }
+
+
+            R.id.commentorImageView -> {
                 val intent = Intent(this, UserProfileActivity::class.java)
                 intent.putExtra(Constants.USER_ID, commentList?.get(position)?.userId)
                 startActivity(intent)
@@ -221,6 +253,7 @@ class ContentCommentReplyNotificationActivity : BaseActivity(),
                 args.putInt("position", position)
                 args.putString("authorId", commentList?.get(position)?.userId)
                 args.putString("responseType", "COMMENT")
+                args.putString("blogWriterId", blogWriterId)
                 val commentOptionsDialogFragment =
                     CommentOptionsDialogFragment()
                 commentOptionsDialogFragment.arguments = args
@@ -237,6 +270,29 @@ class ContentCommentReplyNotificationActivity : BaseActivity(),
             }
         }
     }
+
+    private fun markedUnMarkedTopComment(topCommentData: TopCommentData) {
+        BaseApplication.getInstance().retrofit.create(ArticleDetailsAPI::class.java).markedTopComment(
+            topCommentData
+        )
+            .subscribeOn(
+                Schedulers.io()
+            ).observeOn(AndroidSchedulers.mainThread()).subscribe(
+                object : Observer<ResponseBody> {
+                    override fun onSubscribe(d: Disposable) {}
+                    override fun onNext(responseBody: ResponseBody) {
+                        Log.d("MARKED--UNMARKED", responseBody.toString())
+                    }
+
+                    override fun onError(e: Throwable) {
+                        FirebaseCrashlytics.getInstance().recordException(e)
+                        Log.d("MC4kException", Log.getStackTraceString(e))
+                    }
+
+                    override fun onComplete() {}
+                })
+    }
+
 
     fun openAddCommentReplyDialog(commentData: CommentListData?) {
         val args = Bundle()

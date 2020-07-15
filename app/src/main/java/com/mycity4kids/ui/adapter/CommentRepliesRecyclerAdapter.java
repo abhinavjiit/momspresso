@@ -14,6 +14,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.google.firebase.crashlytics.FirebaseCrashlytics;
 import com.mycity4kids.R;
 import com.mycity4kids.models.response.CommentListData;
+import com.mycity4kids.utils.AppUtils;
 import com.mycity4kids.utils.DateTimeUtils;
 import com.squareup.picasso.Picasso;
 import java.util.ArrayList;
@@ -26,11 +27,13 @@ public class CommentRepliesRecyclerAdapter extends RecyclerView.Adapter<Recycler
     private final LayoutInflater layoutInflater;
     private ArrayList<CommentListData> repliesList;
     private RecyclerViewClickListener recyclerViewClickListener;
+    private String authorId;
 
-    public CommentRepliesRecyclerAdapter(Context context, RecyclerViewClickListener listener) {
+    public CommentRepliesRecyclerAdapter(Context context, RecyclerViewClickListener listener, String authorId) {
         this.context = context;
         layoutInflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         recyclerViewClickListener = listener;
+        this.authorId = authorId;
     }
 
     public void setData(ArrayList<CommentListData> repliesList) {
@@ -108,6 +111,35 @@ public class CommentRepliesRecyclerAdapter extends RecyclerView.Adapter<Recycler
                 commentsViewHolder.likeTextView.setText(repliesList.get(position).getLikeCount() + "");
 
             }
+            if (AppUtils.isPrivateProfile(authorId)) {
+                if (repliesList.get(position).isIs_top_comment()) {
+                    commentsViewHolder.topCommentTextView.setVisibility(View.VISIBLE);
+                    commentsViewHolder.topCommentMarkedTextView.setVisibility(View.GONE);
+                } else {
+                    commentsViewHolder.topCommentTextView.setVisibility(View.GONE);
+                    commentsViewHolder.topCommentMarkedTextView.setVisibility(View.VISIBLE);
+                    if (repliesList.get(position).isTopCommentMarked()) {
+                        commentsViewHolder.topCommentMarkedTextView
+                                .setText(context.getResources().getString(R.string.top_comment_marked_string));
+                        Drawable myDrawable = ContextCompat
+                                .getDrawable(commentsViewHolder.topCommentMarkedTextView.getContext(),
+                                        R.drawable.ic_top_comment_marked_golden);
+                        commentsViewHolder.topCommentMarkedTextView
+                                .setCompoundDrawablesWithIntrinsicBounds(myDrawable, null, null, null);
+                    } else {
+                        commentsViewHolder.topCommentMarkedTextView.setText(R.string.top_comment_string);
+                        Drawable myDrawable = ContextCompat
+                                .getDrawable(commentsViewHolder.topCommentMarkedTextView.getContext(),
+                                        R.drawable.ic_top_comment_raw_color);
+                        commentsViewHolder.topCommentMarkedTextView
+                                .setCompoundDrawablesWithIntrinsicBounds(myDrawable, null, null, null);
+                    }
+                }
+            } else {
+                commentsViewHolder.topCommentTextView.setVisibility(View.GONE);
+                commentsViewHolder.topCommentMarkedTextView.setVisibility(View.GONE);
+            }
+
         } else {
             RepliesViewHolder repliesViewHolder = (RepliesViewHolder) holder;
             repliesViewHolder.commentDataTextView.setText((Html
@@ -159,6 +191,8 @@ public class CommentRepliesRecyclerAdapter extends RecyclerView.Adapter<Recycler
         TextView dateTextView;
         TextView likeTextView;
         ImageView moreOptionImageView;
+        TextView topCommentMarkedTextView;
+        TextView topCommentTextView;
 
         CommentsViewHolder(View view) {
             super(view);
@@ -173,6 +207,10 @@ public class CommentRepliesRecyclerAdapter extends RecyclerView.Adapter<Recycler
             replyCountTextView = (TextView) view.findViewById(R.id.replyCountTextView);
             dateTextView = (TextView) view.findViewById(R.id.DateTextView);
             moreOptionImageView = (ImageView) view.findViewById(R.id.moreOptionImageView);
+            topCommentMarkedTextView = (TextView) view.findViewById(R.id.topCommentMarkedTextView);
+            topCommentTextView = (TextView) view.findViewById(R.id.topCommentTextView);
+
+            topCommentMarkedTextView.setOnClickListener(this);
             moreOptionImageView.setOnClickListener(this);
             replyCommentTextView.setVisibility(View.GONE);
             likeTextView.setOnClickListener(this);

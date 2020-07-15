@@ -515,6 +515,7 @@ public class MyFcmListenerService extends FirebaseMessagingService {
                         intent.putExtra("type", pushNotificationModel.getType());
                         intent.putExtra("contentType", pushNotificationModel.getContentType());
                         intent.putExtra("replyId", pushNotificationModel.getReplyId());
+                        intent.putExtra("authorId",pushNotificationModel.getAuthorId());
                         TaskStackBuilder stackBuilder = TaskStackBuilder.create(this);
                         stackBuilder.addNextIntentWithParentStack(intent);
                         contentIntent = stackBuilder.getPendingIntent(0, PendingIntent.FLAG_UPDATE_CURRENT);
