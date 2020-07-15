@@ -19,12 +19,10 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import com.getbase.floatingactionbutton.FloatingActionButton;
 import com.getbase.floatingactionbutton.FloatingActionsMenu;
 import com.google.firebase.crashlytics.FirebaseCrashlytics;
-import com.google.firebase.remoteconfig.FirebaseRemoteConfig;
 import com.mycity4kids.R;
 import com.mycity4kids.application.BaseApplication;
 import com.mycity4kids.base.BaseFragment;
 import com.mycity4kids.constants.Constants;
-import com.mycity4kids.editor.EditorPostActivity;
 import com.mycity4kids.editor.NewEditor;
 import com.mycity4kids.models.Topics;
 import com.mycity4kids.models.response.ArticleListingResponse;
@@ -35,8 +33,6 @@ import com.mycity4kids.ui.activity.ArticleDetailsContainerActivity;
 import com.mycity4kids.ui.activity.ShortStoryContainerActivity;
 import com.mycity4kids.ui.activity.TopicsListingActivity;
 import com.mycity4kids.ui.adapter.MainArticleRecyclerViewAdapter;
-import com.mycity4kids.utils.AppUtils;
-import com.mycity4kids.utils.StringUtils;
 import java.util.ArrayList;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -48,8 +44,6 @@ import retrofit2.Retrofit;
 public class LeafTopicArticlesTabFragment extends BaseFragment implements View.OnClickListener,
         MainArticleRecyclerViewAdapter.RecyclerViewClickListener {
 
-    private static final String EDITOR_TYPE = "editor_type";
-    private FirebaseRemoteConfig firebaseRemoteConfig = FirebaseRemoteConfig.getInstance();
     private int nextPageNumber = 1;
     private int limit = 15;
     private boolean isReuqestRunning = false;
@@ -79,18 +73,18 @@ public class LeafTopicArticlesTabFragment extends BaseFragment implements View.O
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
         View view = inflater.inflate(R.layout.topics_articles_tab_fragment, container, false);
-        swipeRefresh = (SwipeRefreshLayout) view.findViewById(R.id.swipeRefresh);
-        recyclerView = (RecyclerView) view.findViewById(R.id.recyclerView);
-        loadingView = (RelativeLayout) view.findViewById(R.id.relativeLoadingView);
-        guideOverlay = (RelativeLayout) view.findViewById(R.id.guideOverlay);
-        writeArticleCell = (RelativeLayout) view.findViewById(R.id.writeArticleCell);
+        swipeRefresh = view.findViewById(R.id.swipeRefresh);
+        recyclerView = view.findViewById(R.id.recyclerView);
+        loadingView = view.findViewById(R.id.relativeLoadingView);
+        guideOverlay = view.findViewById(R.id.guideOverlay);
+        writeArticleCell = view.findViewById(R.id.writeArticleCell);
 
-        frameLayout = (FrameLayout) view.findViewById(R.id.frame_layout);
+        frameLayout = view.findViewById(R.id.frame_layout);
         frameLayout.getBackground().setAlpha(0);
-        fabMenu = (FloatingActionsMenu) view.findViewById(R.id.fab_menu);
-        popularSortFab = (FloatingActionButton) view.findViewById(R.id.popularSortFAB);
-        recentSortFab = (FloatingActionButton) view.findViewById(R.id.recentSortFAB);
-        fabSort = (FloatingActionButton) view.findViewById(R.id.fabSort);
+        fabMenu = view.findViewById(R.id.fab_menu);
+        popularSortFab = view.findViewById(R.id.popularSortFAB);
+        recentSortFab = view.findViewById(R.id.recentSortFAB);
+        fabSort = view.findViewById(R.id.fabSort);
 
         guideOverlay.setOnClickListener(this);
         writeArticleCell.setOnClickListener(this);
@@ -247,35 +241,8 @@ public class LeafTopicArticlesTabFragment extends BaseFragment implements View.O
         switch (view.getId()) {
             case R.id.writeArticleCell:
                 if (isAdded()) {
-                    String editorType = firebaseRemoteConfig.getString(EDITOR_TYPE);
-                    if ((!StringUtils.isNullOrEmpty(editorType) && "1".equals(editorType)) || AppUtils
-                            .isUserBucketedInNewEditor(firebaseRemoteConfig)) {
-                        Bundle bundle5 = new Bundle();
-                        bundle5.putString("TITLE_PARAM", "");
-                        bundle5.putString("CONTENT_PARAM", "");
-                        bundle5.putString("TITLE_PLACEHOLDER_PARAM",
-                                getString(R.string.example_post_title_placeholder));
-                        bundle5.putString("CONTENT_PLACEHOLDER_PARAM",
-                                getString(R.string.example_post_content_placeholder));
-                        bundle5.putInt("EDITOR_PARAM", NewEditor.USE_NEW_EDITOR);
-                        bundle5.putString("from", "TopicArticlesListingScreen");
-                        Intent intent1 = new Intent(getActivity(), NewEditor.class);
-                        intent1.putExtras(bundle5);
-                        startActivity(intent1);
-                    } else {
-                        Bundle bundle5 = new Bundle();
-                        bundle5.putString(EditorPostActivity.TITLE_PARAM, "");
-                        bundle5.putString(EditorPostActivity.CONTENT_PARAM, "");
-                        bundle5.putString(EditorPostActivity.TITLE_PLACEHOLDER_PARAM,
-                                getString(R.string.example_post_title_placeholder));
-                        bundle5.putString(EditorPostActivity.CONTENT_PLACEHOLDER_PARAM,
-                                getString(R.string.example_post_content_placeholder));
-                        bundle5.putInt(EditorPostActivity.EDITOR_PARAM, EditorPostActivity.USE_NEW_EDITOR);
-                        bundle5.putString("from", "TopicArticlesListingScreen");
-                        Intent intent1 = new Intent(getActivity(), EditorPostActivity.class);
-                        intent1.putExtras(bundle5);
-                        startActivity(intent1);
-                    }
+                    Intent intent = new Intent(getActivity(), NewEditor.class);
+                    startActivity(intent);
                 }
                 break;
             case R.id.guideOverlay:

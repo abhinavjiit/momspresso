@@ -1,13 +1,10 @@
 package com.mycity4kids.ui.adapter;
 
 import android.os.Bundle;
-
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentStatePagerAdapter;
-
 import com.mycity4kids.constants.Constants;
-import com.mycity4kids.ui.fragment.UserDraftArticleTabFragment;
 import com.mycity4kids.ui.fragment.UserReadArticleTabFragment;
 import com.mycity4kids.ui.fragment.UserSeenFunnyVideosTabFragment;
 
@@ -16,16 +13,15 @@ import com.mycity4kids.ui.fragment.UserSeenFunnyVideosTabFragment;
  */
 public class UserReadArticlesPagerAdapter extends FragmentStatePagerAdapter {
 
-    private int mNumOfTabs;
+    private int numOfTabs;
     private UserReadArticleTabFragment userReadArticleTabFragment;
-    private UserDraftArticleTabFragment userDraftArticleTabFragment;
     private UserSeenFunnyVideosTabFragment userFunnyVideosTabFragment;
     private String authorId;
     private boolean isPrivateProfile;
 
-    public UserReadArticlesPagerAdapter(FragmentManager fm, int NumOfTabs, String authorId, boolean isPrivateProfile) {
+    public UserReadArticlesPagerAdapter(FragmentManager fm, int numOfTabs, String authorId, boolean isPrivateProfile) {
         super(fm);
-        this.mNumOfTabs = NumOfTabs;
+        this.numOfTabs = numOfTabs;
         this.authorId = authorId;
         this.isPrivateProfile = isPrivateProfile;
     }
@@ -55,6 +51,8 @@ public class UserReadArticlesPagerAdapter extends FragmentStatePagerAdapter {
                 bundle.putString(Constants.AUTHOR_ID, authorId);
                 userFunnyVideosTabFragment.setArguments(bundle);
                 return userFunnyVideosTabFragment;
+            default:
+                break;
         }
 
         return null;
@@ -63,6 +61,6 @@ public class UserReadArticlesPagerAdapter extends FragmentStatePagerAdapter {
 
     @Override
     public int getCount() {
-        return mNumOfTabs;
+        return numOfTabs;
     }
 }

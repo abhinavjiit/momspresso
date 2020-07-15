@@ -15,7 +15,6 @@ import androidx.fragment.app.FragmentManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import com.google.firebase.crashlytics.FirebaseCrashlytics;
-import com.google.firebase.remoteconfig.FirebaseRemoteConfig;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.mycity4kids.R;
@@ -23,7 +22,6 @@ import com.mycity4kids.application.BaseApplication;
 import com.mycity4kids.base.BaseFragment;
 import com.mycity4kids.constants.AppConstants;
 import com.mycity4kids.constants.Constants;
-import com.mycity4kids.editor.EditorPostActivity;
 import com.mycity4kids.editor.NewEditor;
 import com.mycity4kids.gtmutils.Utils;
 import com.mycity4kids.models.response.ArticleDraftResponse;
@@ -37,7 +35,6 @@ import com.mycity4kids.ui.activity.AddShortStoryActivity;
 import com.mycity4kids.ui.activity.UserDraftsContentActivity;
 import com.mycity4kids.ui.adapter.UserDraftArticleAdapter;
 import com.mycity4kids.ui.adapter.UserDraftShortStoriesAdapter;
-import com.mycity4kids.utils.AppUtils;
 import com.mycity4kids.utils.ConnectivityUtils;
 import com.mycity4kids.utils.StringUtils;
 import java.util.ArrayList;
@@ -58,8 +55,6 @@ public class UserDraftArticleTabFragment extends BaseFragment implements View.On
         UserDraftArticleAdapter.RecyclerViewClickListener, ConfirmationDialogFragment.IConfirmationResult,
         UserDraftShortStoriesAdapter.SSRecyclerViewClickListener {
 
-    private static final String EDITOR_TYPE = "editor_type";
-    private FirebaseRemoteConfig firebaseRemoteConfig = FirebaseRemoteConfig.getInstance();
     ArrayList<DraftListResult> draftList;
     RecyclerView recyclerView;
     TextView noBlogsTextView;
@@ -247,22 +242,12 @@ public class UserDraftArticleTabFragment extends BaseFragment implements View.On
         switch (view.getId()) {
             case R.id.editDraftTextView:
                 Utils.pushEditDraftEvent(getActivity(), "DraftList",
-                        SharedPrefUtils.getUserDetailModel(getActivity()).getDynamoId(),
+                        SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId(),
                         draftList.get(position).getId());
-                String editorType = firebaseRemoteConfig.getString(EDITOR_TYPE);
-
-                if ((!StringUtils.isNullOrEmpty(editorType) && "1".equals(editorType)) || AppUtils
-                        .isUserBucketedInNewEditor(firebaseRemoteConfig)) {
-                    Intent intent = new Intent(getActivity(), NewEditor.class);
-                    intent.putExtra("draftItem", draftList.get(position));
-                    intent.putExtra("from", "draftList");
-                    startActivity(intent);
-                } else {
-                    Intent intent = new Intent(getActivity(), EditorPostActivity.class);
-                    intent.putExtra("draftItem", draftList.get(position));
-                    intent.putExtra("from", "draftList");
-                    startActivity(intent);
-                }
+                Intent intent = new Intent(getActivity(), NewEditor.class);
+                intent.putExtra("draftItem", draftList.get(position));
+                intent.putExtra("from", "draftList");
+                startActivity(intent);
                 break;
             case R.id.deleteDraftImageView:
                 Bundle args = new Bundle();
@@ -326,7 +311,8 @@ public class UserDraftArticleTabFragment extends BaseFragment implements View.On
     @Override
     public void onContinue(int position) {
         Utils.pushRemoveDraftEvent(getActivity(), "DraftList",
-                SharedPrefUtils.getUserDetailModel(getActivity()).getDynamoId(), draftList.get(position).getId());
+                SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId(),
+                draftList.get(position).getId());
         deleteDraftApi(draftList.get(position), position);
     }
 
@@ -350,12 +336,12 @@ public class UserDraftArticleTabFragment extends BaseFragment implements View.On
                 }
                 break;
             case R.id.deleteDraftImageView:
-                ConfirmationDialogFragment confirmationDialogFragment = new ConfirmationDialogFragment();
-                FragmentManager fm = getChildFragmentManager();
                 Bundle args = new Bundle();
                 args.putInt("position", position);
+                ConfirmationDialogFragment confirmationDialogFragment = new ConfirmationDialogFragment();
                 confirmationDialogFragment.setArguments(args);
                 confirmationDialogFragment.setCancelable(true);
+                FragmentManager fm = getChildFragmentManager();
                 confirmationDialogFragment.show(fm, "Delete Draft");
                 break;
             default:

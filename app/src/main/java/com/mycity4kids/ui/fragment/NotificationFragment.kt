@@ -69,8 +69,7 @@ import java.util.ArrayList
 class NotificationFragment : BaseFragment(), IMembershipStatus,
     NotificationCenterRecyclerAdapter.RecyclerViewClickListener {
     private var notificationCenterRecyclerAdapter: NotificationCenterRecyclerAdapter? = null
-    private var notificationCenterResultArrayList: ArrayList<NotificationCenterResult>? =
-        null
+    private var notificationCenterResultArrayList: ArrayList<NotificationCenterResult>? = null
     private var paginationValue = ""
     private var isLastPageReached = false
     private var isReuqestRunning = false
@@ -962,23 +961,8 @@ class NotificationFragment : BaseFragment(), IMembershipStatus,
 
     private fun launchEditor() {
         if (isAdded) {
-            val bundle5 = Bundle()
-            bundle5.putString("TITLE_PARAM", "")
-            bundle5.putString("CONTENT_PARAM", "")
-            bundle5.putString(
-                "TITLE_PLACEHOLDER_PARAM",
-                getString(R.string.example_post_title_placeholder)
-            )
-            bundle5.putString(
-                "CONTENT_PLACEHOLDER_PARAM",
-                getString(R.string.example_post_content_placeholder)
-            )
-            bundle5.putInt("EDITOR_PARAM", NewEditor.USE_NEW_EDITOR)
-            bundle5.putString("from", "dashboard")
-            val intent1 =
-                Intent(activity, NewEditor::class.java)
-            intent1.putExtras(bundle5)
-            startActivity(intent1)
+            val intent = Intent(activity, NewEditor::class.java)
+            startActivity(intent)
         }
     }
 

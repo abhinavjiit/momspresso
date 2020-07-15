@@ -76,15 +76,15 @@ import io.reactivex.Observer
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable
 import io.reactivex.schedulers.Schedulers
+import java.text.SimpleDateFormat
+import java.util.Calendar
+import java.util.regex.Pattern
 import kotlinx.coroutines.CoroutineExceptionHandler
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import retrofit2.Call
 import retrofit2.Callback
-import java.text.SimpleDateFormat
-import java.util.Calendar
-import java.util.regex.Pattern
 
 const val REWARDS_FILL_FORM_REQUEST = 1000
 const val SURVEY_CAMPAIGN_REQUEST = 10000
@@ -1557,7 +1557,7 @@ class CampaignDetailFragment : BaseFragment(), IMembershipStatus {
     }
 
     override fun onMembershipStatusFetchFail() {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        TODO("not implemented") // To change body of created functions use File | Settings | File Templates.
     }
 
     override fun onMembershipStatusFetchSuccess(body: GroupsMembershipResponse?, groupId: Int) {
@@ -1574,8 +1574,7 @@ class CampaignDetailFragment : BaseFragment(), IMembershipStatus {
             if ("male".equals(
                     SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).gender,
                     ignoreCase = true
-                )
-                ||
+                ) ||
                 "m".equals(
                     SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).gender,
                     ignoreCase = true

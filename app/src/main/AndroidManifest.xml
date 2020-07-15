@@ -222,10 +222,6 @@
       android:theme="@style/transparent_status"
       android:windowSoftInputMode="adjustPan" />
     <activity
-      android:name=".editor.EditorPostActivity"
-      android:screenOrientation="portrait"
-      android:theme="@style/EditorTheme" />
-    <activity
       android:name=".editor.ArticleImageTagUploadActivity"
       android:screenOrientation="portrait" />
     <activity

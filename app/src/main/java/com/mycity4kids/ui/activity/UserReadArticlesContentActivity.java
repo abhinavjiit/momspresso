@@ -2,19 +2,15 @@ package com.mycity4kids.ui.activity;
 
 import android.content.Intent;
 import android.os.Bundle;
-
-import com.google.android.material.tabs.TabLayout;
-
-import androidx.viewpager.widget.ViewPager;
-import androidx.appcompat.widget.Toolbar;
-
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
-
-import com.mycity4kids.base.BaseActivity;
+import androidx.appcompat.widget.Toolbar;
+import androidx.viewpager.widget.ViewPager;
+import com.google.android.material.tabs.TabLayout;
 import com.mycity4kids.R;
+import com.mycity4kids.base.BaseActivity;
 import com.mycity4kids.constants.Constants;
 import com.mycity4kids.ui.adapter.UserReadArticlesPagerAdapter;
 import com.mycity4kids.utils.AppUtils;
@@ -47,21 +43,20 @@ public class UserReadArticlesContentActivity extends BaseActivity implements Vie
         contentType = getIntent().getStringExtra("contentType");
         searchAllImageView.setOnClickListener(this);
 
-        String authorId = getIntent().getStringExtra(Constants.AUTHOR_ID);
-        boolean isPrivateProfile = getIntent().getBooleanExtra("isPrivateProfile", false);
-
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
         toolbarTitleTextView.setText("READ");
 
-
         tabLayout.addTab(tabLayout.newTab().setText(getString(R.string.search_article_topic_tab_label)));
         tabLayout.addTab(tabLayout.newTab().setText(getString(R.string.lang_setting_stories_label)));
         tabLayout.addTab(tabLayout.newTab().setText(getString(R.string.myprofile_section_videos_label)));
         AppUtils.changeTabsFont(tabLayout);
-//        toolbarTitleTextView.setText(getString(R.string.myprofile_section_short_story_label));
-        UserReadArticlesPagerAdapter adapter = new UserReadArticlesPagerAdapter(getSupportFragmentManager(), tabLayout.getTabCount(), authorId, isPrivateProfile);
+
+        String authorId = getIntent().getStringExtra(Constants.AUTHOR_ID);
+        boolean isPrivateProfile = getIntent().getBooleanExtra("isPrivateProfile", false);
+        UserReadArticlesPagerAdapter adapter = new UserReadArticlesPagerAdapter(getSupportFragmentManager(),
+                tabLayout.getTabCount(), authorId, isPrivateProfile);
         viewPager.setAdapter(adapter);
 
         viewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabLayout));
@@ -82,9 +77,6 @@ public class UserReadArticlesContentActivity extends BaseActivity implements Vie
 
             }
         });
-
-
-//        viewPager.setCurrentItem(0);
     }
 
     @Override
@@ -105,6 +97,8 @@ public class UserReadArticlesContentActivity extends BaseActivity implements Vie
                 searchIntent.putExtra(Constants.FILTER_NAME, "");
                 searchIntent.putExtra(Constants.TAB_POSITION, 0);
                 startActivity(searchIntent);
+                break;
+            default:
                 break;
         }
     }
