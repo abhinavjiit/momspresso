@@ -202,14 +202,15 @@ class ContentCommentReplyNotificationActivity : BaseActivity(),
                             val topCommentData =
                                 TopCommentData(postId = articleId, id = commentId, status = true)
                             markedUnMarkedTopComment(topCommentData)
-                            commentList?.get(position)?.isTopCommentMarked = true
+                            for (i in 0 until commentList?.size!!) {
+                                commentList?.get(i)?.isTopCommentMarked = i == position
+                            }
                         }
                     }
+                    articleCommentsRecyclerAdapter.notifyDataSetChanged()
                 }
-                articleCommentsRecyclerAdapter.notifyDataSetChanged()
+
             }
-
-
             R.id.commentorImageView -> {
                 val intent = Intent(this, UserProfileActivity::class.java)
                 intent.putExtra(Constants.USER_ID, commentList?.get(position)?.userId)

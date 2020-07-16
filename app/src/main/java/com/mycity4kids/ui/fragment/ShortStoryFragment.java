@@ -603,7 +603,15 @@ public class ShortStoryFragment extends BaseFragment implements View.OnClickList
                             consolidatedList.get(position).getSsComment().getPostId(),
                             consolidatedList.get(position).getSsComment().getId(), true);
                     markedUnMarkedTopComment(commentListData);
-                    consolidatedList.get(position).getSsComment().setTopCommentMarked(true);
+                    for (int i = 0; i < consolidatedList.size(); i++) {
+                        if (i == position) {
+                            consolidatedList.get(i).getSsComment().setTopCommentMarked(true);
+
+                        } else {
+                            consolidatedList.get(i).getSsComment().setTopCommentMarked(false);
+
+                        }
+                    }
                 }
                 adapter.notifyDataSetChanged();
                 break;
@@ -682,7 +690,7 @@ public class ShortStoryFragment extends BaseFragment implements View.OnClickList
                 args.putParcelable("commentReplies", consolidatedList.get(position).getSsComment());
                 args.putInt("totalRepliesCount", consolidatedList.get(position).getSsComment().getRepliesCount());
                 args.putInt("position", position);
-                args.putString("articleWriterId",authorId);
+                args.putString("articleWriterId", authorId);
                 shortStoryCommentRepliesDialogFragment.setArguments(args);
                 shortStoryCommentRepliesDialogFragment.setCancelable(true);
                 FragmentManager fm = getChildFragmentManager();
