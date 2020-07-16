@@ -737,8 +737,15 @@ public class ArticleCommentsFragment extends BaseFragment implements OnClickList
                     TopCommentData commentListData = new TopCommentData(commentsList.get(position).getPostId(),
                             commentsList.get(position).getId(), true);
                     markedUnMarkedTopComment(commentListData);
-                    commentsList.get(position).setTopCommentMarked(true);
-                }
+                    for (int i = 0; i < commentsList.size(); i++) {
+                        if (i == position) {
+                            commentsList.get(i).setTopCommentMarked(true);
+
+                        } else {
+                            commentsList.get(i).setTopCommentMarked(false);
+
+                        }
+                    }                }
                 articleCommentsRecyclerAdapter.notifyDataSetChanged();
                 break;
             case R.id.commentorImageView:
