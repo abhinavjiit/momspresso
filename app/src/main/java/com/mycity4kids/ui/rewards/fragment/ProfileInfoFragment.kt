@@ -211,6 +211,7 @@ class ProfileInfoFragment : BaseFragment(),
     private var isComingFromRewards = false
     private var isHandleChecked = false
     private var referralCode: String = ""
+    private var defaultHandle: String = ""
     private lateinit var spinAdapter: CustomSpinnerAdapter
 
     private val REQUEST_CAMERA = 0
@@ -344,6 +345,7 @@ class ProfileInfoFragment : BaseFragment(),
                 "0"
             ) && !apiGetResponse.userHandle.isNullOrEmpty()) {
             userHandleTextView.setText(apiGetResponse.userHandle)
+            defaultHandle = apiGetResponse.userHandle
             checkTextView.visibility = View.GONE
             isHandleChecked = true
         }
@@ -501,7 +503,9 @@ class ProfileInfoFragment : BaseFragment(),
             override fun afterTextChanged(text: Editable?) {
                 isHandleChecked = false
                 userAvailabilityResultTextView.visibility = View.GONE
-                if (userHandleTextView.text.length >= 7) {
+                if (userHandleTextView.text.length >= 7 && !userHandleTextView.text.toString().equals(
+                        defaultHandle
+                    )) {
                     checkTextView.visibility = View.VISIBLE
                 } else {
                     checkTextView.visibility = View.GONE
@@ -517,7 +521,15 @@ class ProfileInfoFragment : BaseFragment(),
 
         checkTextView.setOnClickListener {
             if (userHandleTextView.text.length >= 7) {
-                checkUserHandleAvailability()
+                if (userHandleTextView.text.endsWith(".", false)) {
+                    Toast.makeText(
+                        activity,
+                        "User handle cannot ends with dot(.)",
+                        Toast.LENGTH_SHORT
+                    ).show()
+                } else {
+                    checkUserHandleAvailability()
+                }
             } else {
                 Toast.makeText(
                     activity,
@@ -1443,7 +1455,11 @@ class ProfileInfoFragment : BaseFragment(),
                     override fun onNext(response: RewardsPersonalResponse) {
                         if (response.code == 200) {
                             if (Constants.SUCCESS == response.status) {
-                                Toast.makeText(context, resources.getString(R.string.verify_email_address), Toast.LENGTH_LONG).show()
+                                Toast.makeText(
+                                    context,
+                                    resources.getString(R.string.verify_email_address),
+                                    Toast.LENGTH_LONG
+                                ).show()
                                 (activity as RewardsContainerActivity).finish()
                                 /*if (isComingFromCampaign) {
                                     SharedPrefUtils.setIsRewardsAdded(BaseApplication.getAppContext(), "1")
