@@ -90,6 +90,12 @@ import io.reactivex.Observer
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable
 import io.reactivex.schedulers.Schedulers
+import okhttp3.MediaType.Companion.toMediaTypeOrNull
+import okhttp3.RequestBody.Companion.asRequestBody
+import okhttp3.RequestBody.Companion.toRequestBody
+import org.apmem.tools.layouts.FlowLayout
+import retrofit2.Call
+import retrofit2.Callback
 import java.io.ByteArrayOutputStream
 import java.io.File
 import java.io.IOException
@@ -98,12 +104,6 @@ import java.util.ArrayList
 import java.util.Calendar
 import java.util.Collections
 import java.util.Date
-import okhttp3.MediaType.Companion.toMediaTypeOrNull
-import okhttp3.RequestBody.Companion.asRequestBody
-import okhttp3.RequestBody.Companion.toRequestBody
-import org.apmem.tools.layouts.FlowLayout
-import retrofit2.Call
-import retrofit2.Callback
 
 const val ADD_MEDIA_ACTIVITY_REQUEST_CODE = 1111
 const val ADD_MEDIA_CAMERA_ACTIVITY_REQUEST_CODE = 1113
@@ -340,8 +340,12 @@ class ProfileInfoFragment : BaseFragment(),
             userHandleTextView.setText(apiGetResponse.userHandle)
             userHandleTextView.isEnabled = false
             checkTextView.visibility = View.GONE
-        } else if (!apiGetResponse.isUserHandleUpdated.isNullOrEmpty() && apiGetResponse.isUserHandleUpdated.equals("0") && !apiGetResponse.userHandle.isNullOrEmpty()){
+        } else if (!apiGetResponse.isUserHandleUpdated.isNullOrEmpty() && apiGetResponse.isUserHandleUpdated.equals(
+                "0"
+            ) && !apiGetResponse.userHandle.isNullOrEmpty()) {
             userHandleTextView.setText(apiGetResponse.userHandle)
+            checkTextView.visibility = View.GONE
+            isHandleChecked = true
         }
 
         if (!apiGetResponse.cityName.isNullOrBlank()) editLocation.setText(apiGetResponse.cityName)
@@ -497,6 +501,11 @@ class ProfileInfoFragment : BaseFragment(),
             override fun afterTextChanged(text: Editable?) {
                 isHandleChecked = false
                 userAvailabilityResultTextView.visibility = View.GONE
+                if (userHandleTextView.text.length >= 7) {
+                    checkTextView.visibility = View.VISIBLE
+                } else {
+                    checkTextView.visibility = View.GONE
+                }
             }
 
             override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
@@ -834,7 +843,7 @@ class ProfileInfoFragment : BaseFragment(),
                             isHandleChecked = true
                         } else {
                             isHandleChecked = false
-                            userAvailabilityResultTextView.setText("User handle unavailable")
+                            userAvailabilityResultTextView.setText("Sorry, this handle is not available.")
                             userAvailabilityResultTextView.setTextColor(resources.getColor(R.color.app_red))
                         }
                     }
@@ -1101,7 +1110,9 @@ class ProfileInfoFragment : BaseFragment(),
             apiGetResponse.userBio = aboutEditText.text.toString()
         }
 
-        if (isHandleChecked || (!apiGetResponse.isUserHandleUpdated.isNullOrEmpty() && apiGetResponse.isUserHandleUpdated.equals("1"))) {
+        if (isHandleChecked || (!apiGetResponse.isUserHandleUpdated.isNullOrEmpty() && apiGetResponse.isUserHandleUpdated.equals(
+                "1"
+            ))) {
             if (apiGetResponse.isUserHandleUpdated.isNullOrEmpty() || apiGetResponse.isUserHandleUpdated.equals(
                     "0"
                 )) {
@@ -1432,6 +1443,7 @@ class ProfileInfoFragment : BaseFragment(),
                     override fun onNext(response: RewardsPersonalResponse) {
                         if (response.code == 200) {
                             if (Constants.SUCCESS == response.status) {
+                                Toast.makeText(context, resources.getString(R.string.verify_email_address), Toast.LENGTH_LONG).show()
                                 (activity as RewardsContainerActivity).finish()
                                 /*if (isComingFromCampaign) {
                                     SharedPrefUtils.setIsRewardsAdded(BaseApplication.getAppContext(), "1")
