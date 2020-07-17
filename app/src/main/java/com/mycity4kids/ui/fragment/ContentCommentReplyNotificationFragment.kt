@@ -215,12 +215,15 @@ class ContentCommentReplyNotificationFragment : BaseFragment(),
             } else {
                 likeTextView.text = ""
             }
-            if (AppUtils.isPrivateProfile(authorId)) {
+            if (it.isIs_top_comment) {
+                topCommentTextView.visibility = View.VISIBLE
+            } else {
+                topCommentTextView.visibility = View.GONE
+            }
+            if (AppUtils.isContentCreator(authorId)) {
                 if (it.isIs_top_comment) {
-                    topCommentTextView.visibility = View.VISIBLE
                     markedTopComment.visibility = View.GONE
                 } else {
-                    topCommentTextView.visibility = View.GONE
                     markedTopComment.visibility = View.VISIBLE
                     if (it.isTopCommentMarked) {
                         markedTopComment.text =
@@ -244,10 +247,8 @@ class ContentCommentReplyNotificationFragment : BaseFragment(),
                         markedTopComment
                             .setCompoundDrawablesWithIntrinsicBounds(myDrawable, null, null, null)
                     }
-
                 }
             } else {
-                topCommentTextView.visibility = View.GONE
                 markedTopComment.visibility = View.GONE
             }
         }
@@ -348,28 +349,7 @@ class ContentCommentReplyNotificationFragment : BaseFragment(),
 
     override fun onClick(v: View?) {
         if (v?.id == R.id.markedTopComment) {
-            if (markedOrUnmarkedTopComment) {
-                markedOrUnmarkedTopComment = false
-                markedTopComment.text =
-                    BaseApplication.getAppContext().resources.getString(R.string.top_comment_string)
-                val myDrawable = ContextCompat
-                    .getDrawable(
-                        markedTopComment.context,
-                        R.drawable.ic_top_comment_raw_color
-                    )
-                markedTopComment.setCompoundDrawablesWithIntrinsicBounds(
-                    myDrawable,
-                    null,
-                    null,
-                    null
-                )
-                val commentListData = TopCommentData(
-                    articleId!!,
-                    commentId!!, false
-                )
-                markedUnMarkedTopComment(commentListData)
-            } else {
-
+            if (!markedOrUnmarkedTopComment) {
                 markedOrUnmarkedTopComment = true
                 markedTopComment.text = BaseApplication.getAppContext().resources
                     .getString(R.string.top_comment_marked_string)
@@ -390,9 +370,7 @@ class ContentCommentReplyNotificationFragment : BaseFragment(),
                     commentId!!, true
                 )
                 markedUnMarkedTopComment(commentListData)
-
             }
-
         }
 
         if (v?.id == R.id.viewAllTextView) {

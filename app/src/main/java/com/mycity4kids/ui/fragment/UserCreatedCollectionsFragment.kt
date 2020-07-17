@@ -77,7 +77,6 @@ class UserCreatedCollectionsFragment : BaseFragment() {
         }
         collectionGridView.setOnScrollListener(object : AbsListView.OnScrollListener {
             override fun onScrollStateChanged(absListView: AbsListView, i: Int) {
-
             }
 
             override fun onScroll(
@@ -93,7 +92,6 @@ class UserCreatedCollectionsFragment : BaseFragment() {
                         getUserCreatedCollections()
                         isReuqestRunning = true
                     }
-
             }
         })
         return view

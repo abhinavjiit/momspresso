@@ -804,6 +804,10 @@ public class AppUtils {
                 .equals(authorId);
     }
 
+    public static boolean isContentCreator(String authorId) {
+        return SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId().equals(authorId);
+    }
+
     public static Bitmap getBitmapFromView(View view, String filename) {
         File appDir = BaseApplication.getAppContext().getExternalFilesDir(null);
         if (appDir != null && appDir.isDirectory()) {
@@ -1090,35 +1094,25 @@ public class AppUtils {
     }
 
     public static String getLanguageFromLocale(Context context, String appLocale) {
-        if (AppConstants.LOCALE_ENGLISH.equals(SharedPrefUtils
-                .getAppLocale(BaseApplication.getAppContext()))) {
+        if (AppConstants.LOCALE_ENGLISH.equals(appLocale)) {
             return context.getString(R.string.language_label_english);
-        } else if (AppConstants.LOCALE_HINDI.equals(SharedPrefUtils
-                .getAppLocale(BaseApplication.getAppContext()))) {
+        } else if (AppConstants.LOCALE_HINDI.equals(appLocale)) {
             return context.getString(R.string.language_label_hindi);
-        } else if (AppConstants.LOCALE_MARATHI.equals(SharedPrefUtils
-                .getAppLocale(BaseApplication.getAppContext()))) {
+        } else if (AppConstants.LOCALE_MARATHI.equals(appLocale)) {
             return context.getString(R.string.language_label_marathi);
-        } else if (AppConstants.LOCALE_BENGALI.equals(SharedPrefUtils
-                .getAppLocale(BaseApplication.getAppContext()))) {
+        } else if (AppConstants.LOCALE_BENGALI.equals(appLocale)) {
             return context.getString(R.string.language_label_bengali);
-        } else if (AppConstants.LOCALE_TAMIL.equals(SharedPrefUtils
-                .getAppLocale(BaseApplication.getAppContext()))) {
+        } else if (AppConstants.LOCALE_TAMIL.equals(appLocale)) {
             return context.getString(R.string.language_label_tamil);
-        } else if (AppConstants.LOCALE_TELUGU.equals(SharedPrefUtils
-                .getAppLocale(BaseApplication.getAppContext()))) {
+        } else if (AppConstants.LOCALE_TELUGU.equals(appLocale)) {
             return context.getString(R.string.language_label_telegu);
-        } else if (AppConstants.LOCALE_KANNADA.equals(SharedPrefUtils
-                .getAppLocale(BaseApplication.getAppContext()))) {
+        } else if (AppConstants.LOCALE_KANNADA.equals(appLocale)) {
             return context.getString(R.string.language_label_kannada);
-        } else if (AppConstants.LOCALE_MALAYALAM.equals(SharedPrefUtils
-                .getAppLocale(BaseApplication.getAppContext()))) {
+        } else if (AppConstants.LOCALE_MALAYALAM.equals(appLocale)) {
             return context.getString(R.string.language_label_malayalam);
-        } else if (AppConstants.LOCALE_GUJARATI.equals(SharedPrefUtils
-                .getAppLocale(BaseApplication.getAppContext()))) {
+        } else if (AppConstants.LOCALE_GUJARATI.equals(appLocale)) {
             return context.getString(R.string.language_label_gujarati);
-        } else if (AppConstants.LOCALE_PUNJABI.equals(SharedPrefUtils
-                .getAppLocale(BaseApplication.getAppContext()))) {
+        } else if (AppConstants.LOCALE_PUNJABI.equals(appLocale)) {
             return context.getString(R.string.language_label_punjabi);
         } else {
             return context.getString(R.string.language_label_english);

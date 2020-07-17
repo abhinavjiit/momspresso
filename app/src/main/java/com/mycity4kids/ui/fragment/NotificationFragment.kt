@@ -57,11 +57,11 @@ import com.mycity4kids.ui.rewards.activity.RewardsContainerActivity
 import com.mycity4kids.ui.videochallengenewui.activity.NewVideoChallengeActivity
 import com.mycity4kids.utils.StringUtils
 import com.mycity4kids.utils.ToastUtils
+import java.util.ArrayList
 import okhttp3.ResponseBody
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
-import java.util.ArrayList
 
 /**
  * Created by hemant.parmar on 30-12-2017.
@@ -285,15 +285,6 @@ class NotificationFragment : BaseFragment(), IMembershipStatus,
                     pushEvent("NOTIFICATION_CENTER_WEB_VIEW")
                 }
                 AppConstants.NOTIFICATION_CENTER_ARTICLE_DETAIL -> {
-                    val authorId: String
-                    authorId = if (StringUtils.isNullOrEmpty(
-                            notificationCenterResultArrayList!![position].authorId
-                        ) || ("0"
-                            == notificationCenterResultArrayList!![position].authorId)) {
-                        notificationCenterResultArrayList!![position].userId
-                    } else {
-                        notificationCenterResultArrayList!![position].authorId
-                    }
                     val intent = Intent(
                         activity,
                         ArticleDetailsContainerActivity::class.java
@@ -302,7 +293,10 @@ class NotificationFragment : BaseFragment(), IMembershipStatus,
                         Constants.ARTICLE_ID,
                         notificationCenterResultArrayList!![position].articleId
                     )
-                    intent.putExtra(Constants.AUTHOR_ID, authorId)
+                    intent.putExtra(
+                        Constants.AUTHOR_ID,
+                        "" + notificationCenterResultArrayList!![position].authorId
+                    )
                     intent.putExtra(
                         Constants.BLOG_SLUG,
                         notificationCenterResultArrayList!![position].blogTitleSlug
@@ -323,7 +317,10 @@ class NotificationFragment : BaseFragment(), IMembershipStatus,
                         Constants.ARTICLE_INDEX,
                         "" + position
                     )
-                    intent.putExtra(Constants.AUTHOR, "$authorId~")
+                    intent.putExtra(
+                        Constants.AUTHOR,
+                        "$notificationCenterResultArrayList!![position].authorId~"
+                    )
                     startActivity(intent)
                     pushEvent("NOTIFICATION_CENTER_ARTICLE_DETAIL")
                 }
@@ -415,15 +412,6 @@ class NotificationFragment : BaseFragment(), IMembershipStatus,
                     pushEvent("NOTIFICATION_CENTER_SHORT_STORY_LIST")
                 }
                 AppConstants.NOTIFICATION_CENTER_SHORT_STORY_DETAILS -> {
-                    val authorId: String
-                    authorId = if (StringUtils.isNullOrEmpty(
-                            notificationCenterResultArrayList!![position].authorId
-                        ) ||
-                        "0" == notificationCenterResultArrayList!![position].authorId) {
-                        notificationCenterResultArrayList!![position].userId
-                    } else {
-                        notificationCenterResultArrayList!![position].authorId
-                    }
                     val intent = Intent(
                         activity,
                         ShortStoryContainerActivity::class.java
@@ -432,7 +420,10 @@ class NotificationFragment : BaseFragment(), IMembershipStatus,
                         Constants.ARTICLE_ID,
                         notificationCenterResultArrayList!![position].articleId
                     )
-                    intent.putExtra(Constants.AUTHOR_ID, authorId)
+                    intent.putExtra(
+                        Constants.AUTHOR_ID,
+                        "" + notificationCenterResultArrayList!![position].authorId
+                    )
                     intent.putExtra(
                         Constants.BLOG_SLUG,
                         notificationCenterResultArrayList!![position].blogTitleSlug
@@ -453,7 +444,10 @@ class NotificationFragment : BaseFragment(), IMembershipStatus,
                         Constants.ARTICLE_INDEX,
                         "" + position
                     )
-                    intent.putExtra(Constants.AUTHOR, "$authorId~")
+                    intent.putExtra(
+                        Constants.AUTHOR,
+                        "$notificationCenterResultArrayList!![position].authorId~"
+                    )
                     startActivity(intent)
                     pushEvent("NOTIFICATION_CENTER_SHORT_STORY_DETAILS")
                 }
@@ -731,7 +725,7 @@ class NotificationFragment : BaseFragment(), IMembershipStatus,
                         notificationCenterResultArrayList!![position].commentId
                     val replyId =
                         notificationCenterResultArrayList!![position].replyId
-                    val authorId = notificationCenterResultArrayList!![position].authorId
+                    val authorId = notificationCenterResultArrayList!![position].contentAuthor
                     val commentReplyNotificationIntent =
                         Intent(
                             activity,
@@ -766,7 +760,7 @@ class NotificationFragment : BaseFragment(), IMembershipStatus,
                         notificationCenterResultArrayList!![position].commentId
                     val replyId =
                         notificationCenterResultArrayList!![position].replyId
-                    val authorId = notificationCenterResultArrayList!![position].authorId
+                    val authorId = notificationCenterResultArrayList!![position].contentAuthor
                     val commentReplyNotificationIntent =
                         Intent(
                             activity,
@@ -822,6 +816,12 @@ class NotificationFragment : BaseFragment(), IMembershipStatus,
                         (it as BaseActivity).handleDeeplinks(notificationCenterResultArrayList!![position].url)
                     }
                     pushEvent("NOTIFICATION_CENTER_ANNOUNCEMENT")
+                }
+                AppConstants.NOTIFICATION_CENTER_PERSONAL_INFO -> {
+                    val intent = Intent(activity, RewardsContainerActivity::class.java)
+                    intent.putExtra("showProfileInfo", true)
+                    startActivity(intent)
+                    pushEvent("NOTIFICATION_CENTER_PERSONAL_INFO")
                 }
                 else -> {
                 }

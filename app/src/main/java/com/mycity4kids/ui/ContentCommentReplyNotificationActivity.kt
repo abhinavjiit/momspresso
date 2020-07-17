@@ -38,11 +38,11 @@ import io.reactivex.Observer
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable
 import io.reactivex.schedulers.Schedulers
+import java.util.ArrayList
 import okhttp3.ResponseBody
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
-import java.util.ArrayList
 
 class ContentCommentReplyNotificationActivity : BaseActivity(),
     ArticleCommentsRecyclerAdapter.RecyclerViewClickListener,
@@ -187,16 +187,7 @@ class ContentCommentReplyNotificationActivity : BaseActivity(),
     override fun onRecyclerItemClick(view: View?, position: Int) {
         when (view?.id) {
             R.id.topCommentMarkedTextView -> {
-                if (commentList?.get(position)?.isTopCommentMarked!!) {
-                    articleId?.let { articleId ->
-                        commentId?.let { commentId ->
-                            val topCommentData =
-                                TopCommentData(postId = articleId, id = commentId, status = false)
-                            markedUnMarkedTopComment(topCommentData)
-                            commentList?.get(position)?.isTopCommentMarked = false
-                        }
-                    }
-                } else {
+                if (!commentList?.get(position)?.isTopCommentMarked!!) {
                     articleId?.let { articleId ->
                         commentId?.let { commentId ->
                             val topCommentData =
@@ -204,12 +195,12 @@ class ContentCommentReplyNotificationActivity : BaseActivity(),
                             markedUnMarkedTopComment(topCommentData)
                             for (i in 0 until commentList?.size!!) {
                                 commentList?.get(i)?.isTopCommentMarked = i == position
+                                commentList?.get(i)?.isIs_top_comment = false
                             }
                         }
                     }
                     articleCommentsRecyclerAdapter.notifyDataSetChanged()
                 }
-
             }
             R.id.commentorImageView -> {
                 val intent = Intent(this, UserProfileActivity::class.java)
@@ -293,7 +284,6 @@ class ContentCommentReplyNotificationActivity : BaseActivity(),
                     override fun onComplete() {}
                 })
     }
-
 
     fun openAddCommentReplyDialog(commentData: CommentListData?) {
         val args = Bundle()

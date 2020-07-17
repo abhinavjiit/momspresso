@@ -1120,19 +1120,21 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
             } else {
                 replyCount1.setText("Reply(" + commentsList.get(0).getRepliesCount() + ")");
             }
-            if (AppUtils.isPrivateProfile(authorId)) {
+
+            if (commentsList.get(0).isIs_top_comment()) {
+                topCommentTextView.setVisibility(View.VISIBLE);
+            } else {
+                topCommentTextView.setVisibility(View.GONE);
+            }
+
+            if (AppUtils.isContentCreator(authorId)) {
                 if (commentsList.get(0).isIs_top_comment()) {
-                    topCommentTextView.setVisibility(View.VISIBLE);
                     markedTopComment1.setVisibility(View.GONE);
-
                 } else {
-                    topCommentTextView.setVisibility(View.GONE);
                     markedTopComment1.setVisibility(View.VISIBLE);
-
                 }
             } else {
                 markedTopComment1.setVisibility(View.GONE);
-                topCommentTextView.setVisibility(View.GONE);
             }
 
 
@@ -1181,19 +1183,19 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
             } else {
                 replyCount1.setText("Reply(" + commentsList.get(0).getRepliesCount() + ")");
             }
-            if (AppUtils.isPrivateProfile(authorId)) {
+            if (commentsList.get(0).isIs_top_comment()) {
+                topCommentTextView.setVisibility(View.VISIBLE);
+            } else {
+                topCommentTextView.setVisibility(View.GONE);
+            }
+            if (AppUtils.isContentCreator(authorId)) {
                 if (commentsList.get(0).isIs_top_comment()) {
-                    topCommentTextView.setVisibility(View.VISIBLE);
                     markedTopComment1.setVisibility(View.GONE);
-
                 } else {
-                    topCommentTextView.setVisibility(View.GONE);
                     markedTopComment1.setVisibility(View.VISIBLE);
-
                 }
             } else {
                 markedTopComment1.setVisibility(View.GONE);
-                topCommentTextView.setVisibility(View.GONE);
             }
             commentatorNameAndCommentTextView2.setText((Html
                     .fromHtml(
@@ -1224,9 +1226,8 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
             } else {
                 replyCount2.setText("Reply(" + commentsList.get(1).getRepliesCount() + ")");
             }
-            if (AppUtils.isPrivateProfile(authorId)) {
+            if (AppUtils.isContentCreator(authorId)) {
                 markedTopComment2.setVisibility(View.VISIBLE);
-
             } else {
                 markedTopComment2.setVisibility(View.GONE);
             }
@@ -1306,21 +1307,21 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
             } else {
                 replyCount2.setText("Reply(" + commentsList.get(1).getRepliesCount() + ")");
             }
-            if (AppUtils.isPrivateProfile(authorId)) {
+            if (commentsList.get(0).isIs_top_comment()) {
+                topCommentTextView.setVisibility(View.VISIBLE);
+            } else {
+                topCommentTextView.setVisibility(View.GONE);
+            }
+            if (AppUtils.isContentCreator(authorId)) {
                 if (commentsList.get(0).isIs_top_comment()) {
-                    topCommentTextView.setVisibility(View.VISIBLE);
                     markedTopComment1.setVisibility(View.GONE);
-
                 } else {
-                    topCommentTextView.setVisibility(View.GONE);
                     markedTopComment1.setVisibility(View.VISIBLE);
-
                 }
             } else {
                 markedTopComment1.setVisibility(View.GONE);
-                topCommentTextView.setVisibility(View.GONE);
             }
-            if (AppUtils.isPrivateProfile(authorId)) {
+            if (AppUtils.isContentCreator(authorId)) {
                 markedTopComment2.setVisibility(View.VISIBLE);
             } else {
                 markedTopComment2.setVisibility(View.GONE);
@@ -1952,8 +1953,6 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
                         TopCommentData commentListData = new TopCommentData(commentsList.get(0).getPostId(),
                                 commentsList.get(0).getId(), false);
                         markedUnMarkedTopComment(commentListData);
-
-
                     } else {
                         markedFirstTopComment = true;
                         markedTopComment1

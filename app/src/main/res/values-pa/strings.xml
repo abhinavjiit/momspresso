@@ -685,7 +685,7 @@ Thank you! We will be reviewing your story. You can expect to hear from us withi
   <string name="check_out_blog">ਮੋਮਸਪ੍ਰੈਸੋ\n\nCheck out this interesting blog post\n</string>
   <string name="check_out_short_story">ਮੋਮਸਪ੍ਰੈਸੋ\n\nCheck out this interesting short story\n</string>
   <string name="contributors">Contributors</string>
-  <string name="contributor_in">Contributors in</string>
+  <string name="contributor_in">ਯੋਗਦਾਨਕਰਤਾ</string>
   <string name="recent_article">ਸਬੰਧਤ ਅਰਟਿਕਲ</string>
   <string name="upload_bigger_image">Please upload bigger image</string>
   <string name="upload_min_width">ਕਿਰਪਾ ਕਰਕੇ ਘੱਟੋ-ਘੱਟ ਚੌੜਾਈ 70 ਪਿਕਸਲ ਦਾ ਚਿੱਤਰ ਅੱਪਲੋਡ ਕਰੋ</string>
@@ -1435,4 +1435,9 @@ Thank you! We will be reviewing your story. You can expect to hear from us withi
   <string name="top_comment_marked_string">Marked</string>
   <string name="top_comment_string">Top comment</string>
   <string name="verify_email_address">We have sent a verification link to your email address, please verify it.</string>
+  <string name="all_bloggers">ਬਲੌਗਰਸ</string>
+  <string name="all_experts">ਐਕਸਪਰਟਸ</string>
+  <string name="all_editors">ਐਡੀਟਰਸ</string>
+  <string name="all_editorial">ਐਡੀਟੋਰੀਅਲ ਟੀਮ</string>
+  <string name="all_featured">ਫੀਚਰਡ ਲੇਖਕ</string>
 </resources>

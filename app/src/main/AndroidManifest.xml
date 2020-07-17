@@ -508,6 +508,9 @@
       android:name=".vlogs.VideoCategoryAndChallengeSelectionActivity"
       android:screenOrientation="portrait" />
     <activity
+      android:name=".ui.activity.ArticleChallengesActivity"
+      android:screenOrientation="portrait" />
+    <activity
       android:name=".ui.activity.PhoneContactsActivity"
       android:screenOrientation="portrait"
       android:theme="@style/PermissionDialogTheme" />

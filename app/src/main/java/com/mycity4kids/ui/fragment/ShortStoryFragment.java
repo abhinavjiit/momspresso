@@ -177,7 +177,7 @@ public class ShortStoryFragment extends BaseFragment implements View.OnClickList
                 shortStoryApi = retro.create(ShortStoryAPI.class);
                 getShortStoryDetails();
             }
-            adapter = new ShortStoriesDetailRecyclerAdapter(getActivity(), this, colorPosition, authorId);
+            adapter = new ShortStoriesDetailRecyclerAdapter(getActivity(), this, colorPosition);
             adapter.setListData(consolidatedList);
             shortStoryRecyclerView.setAdapter(adapter);
 
@@ -258,6 +258,7 @@ public class ShortStoryFragment extends BaseFragment implements View.OnClickList
                 blogSlug = responseData.getBlogTitleSlug();
                 titleSlug = responseData.getTitleSlug();
                 hitBookmarkFollowingStatusApi();
+                adapter.setAuthorId(authorId);
                 consolidatedList.add(headerModel);
                 getStoryComments(articleId, null);
                 getViewCountApi();
@@ -589,33 +590,24 @@ public class ShortStoryFragment extends BaseFragment implements View.OnClickList
     @Override
     public void onClick(View view, int position, View whatsappShare) {
         switch (view.getId()) {
-
             case R.id.topCommentMarkedTextView:
-                if (consolidatedList.get(position).getSsComment().isTopCommentMarked()) {
-                    TopCommentData commentListData = new TopCommentData(
-                            consolidatedList.get(position).getSsComment().getPostId(),
-                            consolidatedList.get(position).getSsComment().getId(), false);
-                    markedUnMarkedTopComment(commentListData);
-                    consolidatedList.get(position).getSsComment().setTopCommentMarked(false);
-
-                } else {
+                if (!consolidatedList.get(position).getSsComment().isTopCommentMarked()) {
                     TopCommentData commentListData = new TopCommentData(
                             consolidatedList.get(position).getSsComment().getPostId(),
                             consolidatedList.get(position).getSsComment().getId(), true);
                     markedUnMarkedTopComment(commentListData);
-                    for (int i = 0; i < consolidatedList.size(); i++) {
+                    for (int i = 1; i < consolidatedList.size(); i++) {
                         if (i == position) {
                             consolidatedList.get(i).getSsComment().setTopCommentMarked(true);
-
+                            consolidatedList.get(i).getSsComment().setIs_top_comment(false);
                         } else {
                             consolidatedList.get(i).getSsComment().setTopCommentMarked(false);
-
+                            consolidatedList.get(i).getSsComment().setIs_top_comment(false);
                         }
                     }
                 }
                 adapter.notifyDataSetChanged();
                 break;
-
             case R.id.commentorImageView:
                 Intent intent = new Intent(getActivity(), UserProfileActivity.class);
                 intent.putExtra(Constants.USER_ID, consolidatedList.get(position).ssComment.getUserId());

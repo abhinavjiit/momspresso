@@ -1,6 +1,5 @@
 package com.mycity4kids.base;
 
-import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.graphics.Color;
@@ -99,7 +98,6 @@ public abstract class BaseActivity extends AppCompatActivity implements GroupMem
     public static boolean isScrInFg = false;
     public static boolean isChangeScrFg = false;
     BaseApplication baseApplication;
-    private Dialog dialog;
     private String userId;
     private String title = "";
     private String body = "";
@@ -234,74 +232,24 @@ public abstract class BaseActivity extends AppCompatActivity implements GroupMem
             intent1.putExtra(Constants.ARTICLE_OPENED_FROM, "Notification Popup");
             intent1.putExtra(Constants.ARTICLE_INDEX, "-1");
             startActivity(intent1);
-            try {
-                JSONObject jsonObject = new JSONObject();
-                jsonObject.put("userId",
-                        SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId());
-                jsonObject.put("type", "article_details");
-                dialog.dismiss();
-            } catch (Exception e) {
-                FirebaseCrashlytics.getInstance().recordException(e);
-                Log.d("MC4kException", Log.getStackTraceString(e));
-            }
         } else if (type.equalsIgnoreCase("momsights_screen")) {
             Intent intent1 = new Intent(this, RewardsContainerActivity.class);
             startActivity(intent1);
-            try {
-                JSONObject jsonObject = new JSONObject();
-                jsonObject.put("userId",
-                        SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId());
-                jsonObject.put("type", "momsights_screen");
-                dialog.dismiss();
-            } catch (Exception e) {
-                FirebaseCrashlytics.getInstance().recordException(e);
-                Log.d("MC4kException", Log.getStackTraceString(e));
-            }
         } else if (type.equalsIgnoreCase("campaign_listing")) {
             Intent campaignIntent = new Intent(this, CampaignContainerActivity.class);
             campaignIntent.putExtra("campaign_listing", "campaign_listing");
             startActivity(campaignIntent);
-            try {
-                JSONObject jsonObject = new JSONObject();
-                jsonObject.put("userId",
-                        SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId());
-                jsonObject.put("type", "campaign_listing");
-                dialog.dismiss();
-            } catch (Exception e) {
-                FirebaseCrashlytics.getInstance().recordException(e);
-                Log.d("MC4kException", Log.getStackTraceString(e));
-            }
         } else if (type.equalsIgnoreCase("campaign_detail")) {
             Intent campaignIntent = new Intent(this, CampaignContainerActivity.class);
             campaignIntent.putExtra("campaign_id", campaignId);
             campaignIntent.putExtra("campaign_detail", "campaign_detail");
             campaignIntent.putExtra("fromNotification", false);
             startActivity(campaignIntent);
-            try {
-                JSONObject jsonObject = new JSONObject();
-                jsonObject.put("userId",
-                        SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId());
-                jsonObject.put("type", "campaign_detail");
-                dialog.dismiss();
-            } catch (Exception e) {
-                FirebaseCrashlytics.getInstance().recordException(e);
-                Log.d("MC4kException", Log.getStackTraceString(e));
-            }
         } else if (type.equalsIgnoreCase("campaign_submit_proof")) {
             Intent campaignIntent = new Intent(this, CampaignContainerActivity.class);
             campaignIntent.putExtra("campaign_Id", campaignId);
             campaignIntent.putExtra("campaign_submit_proof", "campaign_submit_proof");
             startActivity(campaignIntent);
-            try {
-                JSONObject jsonObject = new JSONObject();
-                jsonObject.put("userId",
-                        SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId());
-                jsonObject.put("type", "campaign_submit_proof");
-                dialog.dismiss();
-            } catch (Exception e) {
-                FirebaseCrashlytics.getInstance().recordException(e);
-                Log.d("MC4kException", Log.getStackTraceString(e));
-            }
         } else if (type.equalsIgnoreCase("mymoney_bankdetails")) {
             Intent campaignIntent = new Intent(this, RewardsContainerActivity.class);
             campaignIntent.putExtra("isComingfromCampaign", true);
@@ -310,16 +258,6 @@ public abstract class BaseActivity extends AppCompatActivity implements GroupMem
             campaignIntent.putExtra("campaign_Id", campaignId);
             campaignIntent.putExtra("mymoney_bankdetails", "mymoney_bankdetails");
             startActivity(campaignIntent);
-            try {
-                JSONObject jsonObject = new JSONObject();
-                jsonObject.put("userId",
-                        SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId());
-                jsonObject.put("type", "campaign_submit_proof");
-                dialog.dismiss();
-            } catch (Exception e) {
-                FirebaseCrashlytics.getInstance().recordException(e);
-                Log.d("MC4kException", Log.getStackTraceString(e));
-            }
         } else if (type.equalsIgnoreCase("mymoney_pancard")) {
             Intent campaignIntent = new Intent(this, RewardsContainerActivity.class);
             campaignIntent.putExtra("isComingFromRewards", true);
@@ -328,16 +266,6 @@ public abstract class BaseActivity extends AppCompatActivity implements GroupMem
             campaignIntent.putExtra("panCardFormNotification", "mymoney_pancard");
             campaignIntent.putExtra("mymoney_pancard", "mymoney_pancard");
             startActivity(campaignIntent);
-            try {
-                JSONObject jsonObject = new JSONObject();
-                jsonObject.put("userId",
-                        SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId());
-                jsonObject.put("type", "campaign_submit_proof");
-                dialog.dismiss();
-            } catch (Exception e) {
-                FirebaseCrashlytics.getInstance().recordException(e);
-                Log.d("MC4kException", Log.getStackTraceString(e));
-            }
         } else if (type.equalsIgnoreCase("shortStoryDetails")) {
             Intent ssIntent = new Intent(this, ShortStoryContainerActivity.class);
             ssIntent.putExtra(Constants.AUTHOR_ID, userId);
@@ -349,16 +277,6 @@ public abstract class BaseActivity extends AppCompatActivity implements GroupMem
             ssIntent.putExtra(Constants.ARTICLE_INDEX, "-1");
             ssIntent.putExtra(Constants.AUTHOR, userId + "~");
             startActivity(ssIntent);
-            try {
-                JSONObject jsonObject = new JSONObject();
-                jsonObject.put("userId",
-                        SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId());
-                jsonObject.put("type", "shortStoryDetails");
-                dialog.dismiss();
-            } catch (Exception e) {
-                FirebaseCrashlytics.getInstance().recordException(e);
-                Log.d("MC4kException", Log.getStackTraceString(e));
-            }
         } else if (type.equalsIgnoreCase("video_details")) {
             Intent intent1 = new Intent(this, ParallelFeedActivity.class);
             intent1.putExtra("fromNotification", true);
@@ -367,16 +285,6 @@ public abstract class BaseActivity extends AppCompatActivity implements GroupMem
             intent1.putExtra(Constants.ARTICLE_OPENED_FROM, "Notification Popup");
             intent1.putExtra(Constants.ARTICLE_INDEX, "-1");
             startActivity(intent1);
-            try {
-                JSONObject jsonObject = new JSONObject();
-                jsonObject.put("userId",
-                        SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId());
-                jsonObject.put("type", "video_details");
-                dialog.dismiss();
-            } catch (Exception e) {
-                FirebaseCrashlytics.getInstance().recordException(e);
-                Log.d("MC4kException", Log.getStackTraceString(e));
-            }
         } else if (type.equalsIgnoreCase("group_membership")
                 || type.equalsIgnoreCase("group_new_post")
                 || type.equalsIgnoreCase("group_admin_group_edit")
@@ -384,102 +292,31 @@ public abstract class BaseActivity extends AppCompatActivity implements GroupMem
             GroupMembershipStatus groupMembershipStatus = new GroupMembershipStatus(BaseActivity.this);
             groupMembershipStatus.checkMembershipStatus(Integer.parseInt(groupId),
                     SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId());
-            try {
-                JSONObject jsonObject = new JSONObject();
-                jsonObject.put("userId",
-                        SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId());
-                jsonObject.put("type", "" + type);
-                dialog.dismiss();
-            } catch (Exception e) {
-                FirebaseCrashlytics.getInstance().recordException(e);
-                Log.d("MC4kException", Log.getStackTraceString(e));
-            }
         } else if (type.equalsIgnoreCase("group_new_response")) {
             Intent gpPostIntent = new Intent(this, GroupPostDetailActivity.class);
             gpPostIntent.putExtra("postId", Integer.parseInt(postId));
             gpPostIntent.putExtra("groupId", Integer.parseInt(groupId));
             gpPostIntent.putExtra("responseId", Integer.parseInt(responseId));
             startActivity(gpPostIntent);
-            try {
-                JSONObject jsonObject = new JSONObject();
-                jsonObject.put("userId",
-                        SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId());
-                jsonObject.put("type", "group_new_response");
-                dialog.dismiss();
-            } catch (Exception e) {
-                FirebaseCrashlytics.getInstance().recordException(e);
-                Log.d("MC4kException", Log.getStackTraceString(e));
-            }
         } else if (type.equalsIgnoreCase("group_new_reply")) {
             Intent gpPostIntent = new Intent(this, ViewGroupPostCommentsRepliesActivity.class);
             gpPostIntent.putExtra("postId", Integer.parseInt(postId));
             gpPostIntent.putExtra("groupId", Integer.parseInt(groupId));
             gpPostIntent.putExtra("responseId", Integer.parseInt(responseId));
             startActivity(gpPostIntent);
-            try {
-                JSONObject jsonObject = new JSONObject();
-                jsonObject.put("userId",
-                        SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId());
-                jsonObject.put("type", "group_new_reply");
-                dialog.dismiss();
-            } catch (Exception e) {
-                FirebaseCrashlytics.getInstance().recordException(e);
-                Log.d("MC4kException", Log.getStackTraceString(e));
-            }
         } else if (type.equalsIgnoreCase("group_admin_membership")) {
             Intent memberIntent = new Intent(this, GroupMembershipActivity.class);
             memberIntent.putExtra("groupId", Integer.parseInt(groupId));
             startActivity(memberIntent);
-            try {
-                JSONObject jsonObject = new JSONObject();
-                jsonObject.put("userId",
-                        SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId());
-                jsonObject.put("type", "group_admin_membership");
-                dialog.dismiss();
-            } catch (Exception e) {
-                FirebaseCrashlytics.getInstance().recordException(e);
-                Log.d("MC4kException", Log.getStackTraceString(e));
-            }
         } else if (type.equalsIgnoreCase("group_admin_reported")) {
             Intent reportIntent = new Intent(this, GroupsReportedContentActivity.class);
             reportIntent.putExtra("groupId", Integer.parseInt(type));
             startActivity(reportIntent);
-            try {
-                JSONObject jsonObject = new JSONObject();
-                jsonObject.put("userId",
-                        SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId());
-                jsonObject.put("type", "group_admin_reported");
-                dialog.dismiss();
-            } catch (Exception e) {
-                FirebaseCrashlytics.getInstance().recordException(e);
-                Log.d("MC4kException", Log.getStackTraceString(e));
-            }
         } else if (type.equalsIgnoreCase("webView")) {
             Intent intent1 = new Intent(this, LoadWebViewActivity.class);
             intent1.putExtra("fromNotification", true);
             intent1.putExtra(Constants.WEB_VIEW_URL, url);
             startActivity(intent1);
-            try {
-                JSONObject jsonObject = new JSONObject();
-                jsonObject.put("userId",
-                        SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId());
-                jsonObject.put("type", "webView");
-                dialog.dismiss();
-            } catch (Exception e) {
-                FirebaseCrashlytics.getInstance().recordException(e);
-                Log.d("MC4kException", Log.getStackTraceString(e));
-            }
-        } else if (type.equalsIgnoreCase("write_blog")) {
-            try {
-                JSONObject jsonObject = new JSONObject();
-                jsonObject.put("userId",
-                        SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId());
-                jsonObject.put("type", "write_blog");
-                dialog.dismiss();
-            } catch (Exception e) {
-                FirebaseCrashlytics.getInstance().recordException(e);
-                Log.d("MC4kException", Log.getStackTraceString(e));
-            }
         } else if (type.equalsIgnoreCase("profile")) {
             if (!SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId().equals(userId)) {
                 Intent intent1 = new Intent(this, UserProfileActivity.class);
@@ -487,75 +324,11 @@ public abstract class BaseActivity extends AppCompatActivity implements GroupMem
                 intent1.putExtra(Constants.USER_ID, userId);
                 startActivity(intent1);
             }
-            try {
-                JSONObject jsonObject = new JSONObject();
-                jsonObject.put("userId",
-                        SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId());
-                jsonObject.put("type", "profile");
-                dialog.dismiss();
-            } catch (Exception e) {
-                FirebaseCrashlytics.getInstance().recordException(e);
-                Log.d("MC4kException", Log.getStackTraceString(e));
-            }
-        } else if (type.equalsIgnoreCase("upcoming_event_list")) {
-            try {
-                JSONObject jsonObject = new JSONObject();
-                jsonObject.put("userId",
-                        SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId());
-                jsonObject.put("type", "upcoming_event_list");
-                dialog.dismiss();
-            } catch (Exception e) {
-                FirebaseCrashlytics.getInstance().recordException(e);
-                Log.d("MC4kException", Log.getStackTraceString(e));
-            }
-        } else if (type.equalsIgnoreCase("suggested_topics")) {
-            try {
-                JSONObject jsonObject = new JSONObject();
-                jsonObject.put("userId",
-                        SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId());
-                jsonObject.put("type", "suggested_topics");
-                dialog.dismiss();
-            } catch (Exception e) {
-                FirebaseCrashlytics.getInstance().recordException(e);
-                Log.d("MC4kException", Log.getStackTraceString(e));
-            }
         } else if (type.equalsIgnoreCase(AppConstants.APP_SETTINGS_DEEPLINK)) {
             Intent intent1 = new Intent(this, AppSettingsActivity.class);
             intent1.putExtra("fromNotification", true);
             intent1.putExtra("load_fragment", Constants.SETTINGS_FRAGMENT);
             startActivity(intent1);
-            try {
-                JSONObject jsonObject = new JSONObject();
-                jsonObject.put("userId",
-                        SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId());
-                jsonObject.put("type", AppConstants.APP_SETTINGS_DEEPLINK);
-                dialog.dismiss();
-            } catch (Exception e) {
-                FirebaseCrashlytics.getInstance().recordException(e);
-                Log.d("MC4kException", Log.getStackTraceString(e));
-            }
-        } else if (type.equalsIgnoreCase("shortStoryListing")) {
-            try {
-                JSONObject jsonObject = new JSONObject();
-                jsonObject.put("userId",
-                        SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId());
-                jsonObject.put("type", "shortStoryListing");
-                dialog.dismiss();
-            } catch (Exception e) {
-                FirebaseCrashlytics.getInstance().recordException(e);
-                Log.d("MC4kException", Log.getStackTraceString(e));
-            }
-        } else if (type.equalsIgnoreCase("group_listing")) {
-            try {
-                JSONObject jsonObject = new JSONObject();
-                jsonObject.put("userId",
-                        SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId());
-                jsonObject.put("type", "group_listing");
-                dialog.dismiss();
-            } catch (Exception e) {
-                FirebaseCrashlytics.getInstance().recordException(e);
-                Log.d("MC4kException", Log.getStackTraceString(e));
-            }
         }
     }
 
@@ -1145,6 +918,15 @@ public abstract class BaseActivity extends AppCompatActivity implements GroupMem
             if (matcher11.matches()) {
                 Intent intent = new Intent(this, ShortStoriesListingContainerActivity.class);
                 intent.putExtra("parentTopicId", AppConstants.SHORT_STORY_CATEGORYID);
+                startActivity(intent);
+                return true;
+            }
+
+            Pattern pattern12 = Pattern.compile(AppConstants.PERSONAL_INFO_REGEX);
+            Matcher matcher12 = pattern12.matcher(urlWithNoParams);
+            if (matcher12.matches()) {
+                Intent intent = new Intent(this, RewardsContainerActivity.class);
+                intent.putExtra("showProfileInfo", true);
                 startActivity(intent);
                 return true;
             }

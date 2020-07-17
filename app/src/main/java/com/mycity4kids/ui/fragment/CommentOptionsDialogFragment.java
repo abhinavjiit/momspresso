@@ -47,7 +47,7 @@ public class CommentOptionsDialogFragment extends DialogFragment implements OnCl
         editCommentTextView.setOnClickListener(this);
         reportCommentTextView.setOnClickListener(this);
 
-        if (AppUtils.isPrivateProfile(blogWriterId)) {
+        if (AppUtils.isContentCreator(blogWriterId)) {
             if (SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId().equals(authorId)) {
                 deleteCommentTextView.setVisibility(View.VISIBLE);
                 editCommentTextView.setVisibility(View.VISIBLE);

@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.mycity4kids.widget.MomspressoButtonWidget xmlns:android="http://schemas.android.com/apk/res/android"
+  xmlns:app="http://schemas.android.com/apk/res-auto"
+  android:id="@+id/suggestedTopicWidget"
+  android:layout_width="match_parent"
+  android:layout_height="wrap_content"
+  android:elevation="4dp"
+  android:gravity="center"
+  android:padding="10dp"
+  app:fb_borderWidth="1dp"
+  app:fb_radius="6dp"
+  app:fb_textColor="@color/app_dark_black"
+  app:fb_textSize="14sp" />

@@ -1395,4 +1395,9 @@ Thank you! We will be reviewing your story. You can expect to hear from us withi
   <string name="top_comment_marked_string">Marked</string>
   <string name="top_comment_string">Top comment</string>
   <string name="verify_email_address">We have sent a verification link to your email address, please verify it.</string>
+  <string name="all_bloggers">ब्लॉगर्स</string>
+  <string name="all_experts">एक्सपर्ट्स</string>
+  <string name="all_editors">एडिटर्स</string>
+  <string name="all_editorial">एडिटोरियल टीम</string>
+  <string name="all_featured">फीचर्ड लेखक</string>
 </resources>

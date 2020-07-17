@@ -624,7 +624,7 @@
   <string name="cancel">Cancel</string>
 
   <string name="article_listing.type.trending_label">ட்ரென்டிங்</string>
-  <string name="article_listing.type.editor_label">EDITOR\'S PICK</string>
+  <string name="article_listing.type.editor_label">ஆசிரியரின் தேர்வு</string>
   <string name="article_listing.type.todays_best_label">இன்றைய சிறந்தது</string>
   <string name="article_listing.type.for_you_label">உங்களுக்காக</string>
   <string name="article_listing.type.short_story_label">100 வார்த்தை கதை</string>
@@ -1370,4 +1370,9 @@ Thank you! We will be reviewing your story. You can expect to hear from us withi
   <string name="top_comment_marked_string">Marked</string>
   <string name="top_comment_string">Top comment</string>
   <string name="verify_email_address">We have sent a verification link to your email address, please verify it.</string>
+  <string name="all_bloggers">வலைப்பதிவர்கள்</string>
+  <string name="all_experts">வல்லுநர்கள்</string>
+  <string name="all_editors">ஆசிரியர்கள்</string>
+  <string name="all_editorial">ஆசிரியர் குழு</string>
+  <string name="all_featured">நூலாசிரியர்</string>
 </resources>

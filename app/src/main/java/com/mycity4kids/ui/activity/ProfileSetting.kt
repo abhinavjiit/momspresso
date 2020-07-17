@@ -150,10 +150,10 @@ class ProfileSetting : BaseActivity(), GoogleApiClient.OnConnectionFailedListene
         supportActionBar!!.setDisplayHomeAsUpEnabled(true)
         supportActionBar!!.setDisplayShowHomeEnabled(true)
 
-        myMoneyContainer!!.setOnClickListener(this)
+        myMoneyContainer.setOnClickListener(this)
         personal_info!!.setOnClickListener(this)
-        payment_details!!.setOnClickListener(this)
-        social_accounts!!.setOnClickListener(this)
+        payment_details.setOnClickListener(this)
+        social_accounts.setOnClickListener(this)
         appSettingsTextView!!.setOnClickListener(this)
         help!!.setOnClickListener(this)
         report_spam!!.setOnClickListener(this)

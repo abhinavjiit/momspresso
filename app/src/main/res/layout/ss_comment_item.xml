@@ -131,7 +131,7 @@
         android:id="@+id/topCommentMarkedTextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="@dimen/space_20"
+        android:layout_marginStart="@dimen/space_12"
         android:drawableLeft="@drawable/ic_top_comment_raw_color"
         android:drawablePadding="@dimen/space_5"
         android:padding="10dp"

@@ -94,12 +94,15 @@ public class ArticleCommentsRecyclerAdapter extends
             commentsViewHolder.likeTextView.setText(commentList.get(position).getLikeCount() + "");
         }
 
-        if (AppUtils.isPrivateProfile(authorId)) {
+        if (commentList.get(position).isIs_top_comment()) {
+            commentsViewHolder.topCommentTextView.setVisibility(View.VISIBLE);
+        } else {
+            commentsViewHolder.topCommentTextView.setVisibility(View.GONE);
+        }
+        if (AppUtils.isContentCreator(authorId)) {
             if (commentList.get(position).isIs_top_comment()) {
-                commentsViewHolder.topCommentTextView.setVisibility(View.VISIBLE);
                 commentsViewHolder.topCommentMarkedTextView.setVisibility(View.GONE);
             } else {
-                commentsViewHolder.topCommentTextView.setVisibility(View.GONE);
                 commentsViewHolder.topCommentMarkedTextView.setVisibility(View.VISIBLE);
                 if (commentList.get(position).isTopCommentMarked()) {
                     commentsViewHolder.topCommentMarkedTextView
@@ -119,7 +122,6 @@ public class ArticleCommentsRecyclerAdapter extends
                 }
             }
         } else {
-            commentsViewHolder.topCommentTextView.setVisibility(View.GONE);
             commentsViewHolder.topCommentMarkedTextView.setVisibility(View.GONE);
         }
     }

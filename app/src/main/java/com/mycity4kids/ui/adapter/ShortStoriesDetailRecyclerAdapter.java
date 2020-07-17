@@ -40,12 +40,14 @@ public class ShortStoriesDetailRecyclerAdapter extends RecyclerView.Adapter<Recy
     private String followingStatus = "";
     private String authorId;
 
-    public ShortStoriesDetailRecyclerAdapter(Context pContext, RecyclerViewClickListener listener, int colorPosition,
-            String authorId) {
+    public ShortStoriesDetailRecyclerAdapter(Context pContext, RecyclerViewClickListener listener, int colorPosition) {
         mInflator = (LayoutInflater) pContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         mContext = pContext;
         this.mListener = listener;
         this.colorPosition = colorPosition;
+    }
+
+    public void setAuthorId(String authorId) {
         this.authorId = authorId;
     }
 
@@ -184,14 +186,17 @@ public class ShortStoriesDetailRecyclerAdapter extends RecyclerView.Adapter<Recy
 
                 } else {
                     ssCommentViewHolder.likeTextView.setText(datalist.get(position).getSsComment().getLikeCount() + "");
-
                 }
-                if (AppUtils.isPrivateProfile(authorId)) {
+                if (datalist.get(position).getSsComment().isIs_top_comment()) {
+                    ssCommentViewHolder.topCommentTextView.setVisibility(View.VISIBLE);
+                } else {
+                    ssCommentViewHolder.topCommentTextView.setVisibility(View.GONE);
+                }
+
+                if (AppUtils.isContentCreator(authorId)) {
                     if (datalist.get(position).getSsComment().isIs_top_comment()) {
-                        ssCommentViewHolder.topCommentTextView.setVisibility(View.VISIBLE);
                         ssCommentViewHolder.topCommentMarkedTextView.setVisibility(View.GONE);
                     } else {
-                        ssCommentViewHolder.topCommentTextView.setVisibility(View.GONE);
                         ssCommentViewHolder.topCommentMarkedTextView.setVisibility(View.VISIBLE);
                         if (datalist.get(position).getSsComment().isTopCommentMarked()) {
                             ssCommentViewHolder.topCommentMarkedTextView
@@ -213,7 +218,6 @@ public class ShortStoriesDetailRecyclerAdapter extends RecyclerView.Adapter<Recy
 
                     }
                 } else {
-                    ssCommentViewHolder.topCommentTextView.setVisibility(View.GONE);
                     ssCommentViewHolder.topCommentMarkedTextView.setVisibility(View.GONE);
                 }
             }
@@ -283,7 +287,7 @@ public class ShortStoriesDetailRecyclerAdapter extends RecyclerView.Adapter<Recy
     public class SSCommentViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener,
             View.OnLongClickListener {
 
-        ImageView commentorImageView, menuItem;
+        ImageView commentorImageView;
         TextView commentorUsernameTextView;
         TextView commentDataTextView;
         TextView replyCommentTextView;

@@ -85,6 +85,11 @@ public interface VlogsListingAndDetailsAPI {
             @Query("type") int type,
             @Query("category_id") String categoryId);
 
+    @GET("v2/videos/related/{videoId}")
+    Call<VlogsListingResponse> getRelatedVlogs(@Path("videoId") String videoId,
+            @Query("start") int start,
+            @Query("end") int end);
+
     @GET("/v1/collections/{collectionId}")
     Call<BaseResponseGeneric<TutorialCollectionsListModel>> getTutorialCollectionItems(
             @Path("collectionId") String collectionId,
