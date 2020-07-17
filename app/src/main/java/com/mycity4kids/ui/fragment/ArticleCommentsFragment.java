@@ -727,25 +727,20 @@ public class ArticleCommentsFragment extends BaseFragment implements OnClickList
     public void onRecyclerItemClick(View view, int position) {
         switch (view.getId()) {
             case R.id.topCommentMarkedTextView:
-                if (commentsList.get(position).isTopCommentMarked()) {
-                    TopCommentData commentListData = new TopCommentData(commentsList.get(position).getPostId(),
-                            commentsList.get(position).getId(), false);
-                    markedUnMarkedTopComment(commentListData);
-                    commentsList.get(position).setTopCommentMarked(false);
-
-                } else {
+                if (!commentsList.get(position).isTopCommentMarked()) {
                     TopCommentData commentListData = new TopCommentData(commentsList.get(position).getPostId(),
                             commentsList.get(position).getId(), true);
                     markedUnMarkedTopComment(commentListData);
                     for (int i = 0; i < commentsList.size(); i++) {
                         if (i == position) {
                             commentsList.get(i).setTopCommentMarked(true);
-
+                            commentsList.get(i).setIs_top_comment(false);
                         } else {
                             commentsList.get(i).setTopCommentMarked(false);
-
+                            commentsList.get(i).setIs_top_comment(false);
                         }
-                    }                }
+                    }
+                }
                 articleCommentsRecyclerAdapter.notifyDataSetChanged();
                 break;
             case R.id.commentorImageView:
@@ -804,7 +799,7 @@ public class ArticleCommentsFragment extends BaseFragment implements OnClickList
                     args.putParcelable("commentReplies", commentsList.get(position));
                     args.putInt("totalRepliesCount", commentsList.get(position).getRepliesCount());
                     args.putInt("position", position);
-                    args.putString("blogWriterId",authorId);
+                    args.putString("blogWriterId", authorId);
                     articleCommentRepliesDialogFragment.setArguments(args);
                     articleCommentRepliesDialogFragment.setCancelable(true);
                     FragmentManager fm = getChildFragmentManager();

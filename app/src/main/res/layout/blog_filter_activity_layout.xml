@@ -36,7 +36,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:padding="15dp"
-            android:text="Bloggers"
+            android:text="@string/all_bloggers"
             android:textColor="@color/black_color" />
 
         <TextView
@@ -44,7 +44,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:padding="15dp"
-            android:text="Experts"
+            android:text="@string/all_experts"
             android:textColor="@color/black_color" />
 
         <TextView
@@ -52,7 +52,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:padding="15dp"
-            android:text="Editors"
+            android:text="@string/all_editors"
             android:textColor="@color/black_color" />
 
         <TextView
@@ -60,7 +60,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:padding="15dp"
-            android:text="Editorial Team"
+            android:text="@string/all_editorial"
             android:textColor="@color/black_color" />
 
         <TextView
@@ -68,7 +68,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:padding="15dp"
-            android:text="Featured Author"
+            android:text="@string/all_featured"
             android:textColor="@color/black_color" />
     </LinearLayout>
 

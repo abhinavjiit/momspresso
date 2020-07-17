@@ -507,15 +507,14 @@ public class MyFcmListenerService extends FirebaseMessagingService {
                     if (SharedPrefUtils.getAppUpgrade(BaseApplication.getAppContext())) {
                         contentIntent = handleForcedUpdate();
                     } else {
-                        intent = new Intent(getApplicationContext(),
-                                ContentCommentReplyNotificationActivity.class);
+                        intent = new Intent(getApplicationContext(), ContentCommentReplyNotificationActivity.class);
                         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                         intent.putExtra("articleId", pushNotificationModel.getId());
                         intent.putExtra("commentId", pushNotificationModel.getCommentId());
                         intent.putExtra("type", pushNotificationModel.getType());
                         intent.putExtra("contentType", pushNotificationModel.getContentType());
                         intent.putExtra("replyId", pushNotificationModel.getReplyId());
-                        intent.putExtra("authorId",pushNotificationModel.getAuthorId());
+                        intent.putExtra("authorId", pushNotificationModel.getContentAuthor());
                         TaskStackBuilder stackBuilder = TaskStackBuilder.create(this);
                         stackBuilder.addNextIntentWithParentStack(intent);
                         contentIntent = stackBuilder.getPendingIntent(0, PendingIntent.FLAG_UPDATE_CURRENT);
@@ -523,6 +522,21 @@ public class MyFcmListenerService extends FirebaseMessagingService {
                     handleNotificationAccordingToStructure(remoteMessage, pushNotificationModel, contentIntent,
                             "commentListing ----- Notification Message --- ",
                             "commentListing ----- Notification MixFeedData");
+                } else if (AppConstants.NOTIFICATION_TYPE_PERSONAL_INFO.equalsIgnoreCase(type)) {
+                    if (SharedPrefUtils.getAppUpgrade(BaseApplication.getAppContext())) {
+                        contentIntent = handleForcedUpdate();
+                    } else {
+                        intent = new Intent(getApplicationContext(), RewardsContainerActivity.class);
+                        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                        intent.putExtra("showProfileInfo", true);
+                        intent.putExtra("fromNotification", true);
+                        TaskStackBuilder stackBuilder = TaskStackBuilder.create(this);
+                        stackBuilder.addNextIntentWithParentStack(intent);
+                        contentIntent = stackBuilder.getPendingIntent(0, PendingIntent.FLAG_UPDATE_CURRENT);
+                    }
+                    handleNotificationAccordingToStructure(remoteMessage, pushNotificationModel, contentIntent,
+                            "personal_info ----- Notification Message --- ",
+                            "personal_info ----- Notification MixFeedData");
                 } else {
                     Utils.pushEventNotificationClick(this, GTMEventType.NOTIFICATION_CLICK_EVENT,
                             SharedPrefUtils.getUserDetailModel(this).getDynamoId(), "Notification Popup", "default");

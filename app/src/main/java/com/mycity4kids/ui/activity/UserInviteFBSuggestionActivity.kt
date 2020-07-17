@@ -160,7 +160,7 @@ class UserInviteFBSuggestionActivity : BaseActivity(),
 
                         Utils.shareEventTracking(
                             this, eventScreen, "Invite_Android",
-                            "CTA_Final_InviteFBFriend_$eventSuffix"
+                            "CTA_Final_InviteFBFriend$eventSuffix"
                         )
                     }
                 }

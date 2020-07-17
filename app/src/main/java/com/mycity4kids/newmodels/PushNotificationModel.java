@@ -53,6 +53,8 @@ public class PushNotificationModel {
     private String contentType;
     @SerializedName("authorId")
     private String authorId;
+    @SerializedName("content_author")
+    private String contentAuthor;
 
     public String getCommentId() {
         return commentId;
@@ -236,5 +238,13 @@ public class PushNotificationModel {
 
     public void setAuthorId(String authorId) {
         this.authorId = authorId;
+    }
+
+    public String getContentAuthor() {
+        return contentAuthor;
+    }
+
+    public void setContentAuthor(String contentAuthor) {
+        this.contentAuthor = contentAuthor;
     }
 }

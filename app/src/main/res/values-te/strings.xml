@@ -531,7 +531,7 @@
   <string name="article_listing.toolbar.title_trending">ట్రెండింగ్</string>
   <string name="article_listing.toolbar.title_for_you">మీ కోసం</string>
 
-  <string name="article_listing.toolbar.title_todays_best">TODAY\'S BEST</string>
+  <string name="article_listing.toolbar.title_todays_best">ఈనాటి బెస్ట్</string>
   <string name="article_listing.toolbar.title_editor_picks">ఎడిటర్ ఎంచుకున్నవి </string>
 
   <string name="sort.recent">ఇటీవల</string>
@@ -576,7 +576,7 @@
   <string name="choose_mp4_file">దయచేసి .ఎంపీ4 ఫార్మాట్ ఫైల్ ను ఎంచుకోండి</string>
   <string name="article_listing.type.trending_label">ట్రెండింగ్</string>
   <string name="article_listing.type.editor_label">ఎడిటర్ ఎంచుకున్నవి </string>
-  <string name="article_listing.type.todays_best_label">TODAY\'S BEST</string>
+  <string name="article_listing.type.todays_best_label">ఈనాటి బెస్ట్</string>
   <string name="article_listing.type.for_you_label">మీ కోసం</string>
   <string name="article_listing.type.short_story_label">100 పదాల కథ</string>
   <string name="article_listing.type.languages_label">భాషలు</string>
@@ -1374,4 +1374,9 @@ Thank you! We will be reviewing your story. You can expect to hear from us withi
   <string name="top_comment_marked_string">Marked</string>
   <string name="top_comment_string">Top comment</string>
   <string name="verify_email_address">We have sent a verification link to your email address, please verify it.</string>
+  <string name="all_bloggers">బ్లాగర్లు</string>
+  <string name="all_experts">నిపుణులు</string>
+  <string name="all_editors">ఎడిటర్స్</string>
+  <string name="all_editorial">సంపాదకీయ బృందం</string>
+  <string name="all_featured">ఫీచర్డ్ బ్లాగర్</string>
 </resources>

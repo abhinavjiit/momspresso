@@ -227,11 +227,14 @@ public class ParallelFeedActivity extends BaseActivity implements View.OnClickLi
         if (StringUtils.isNullOrEmpty(collectionId)) {
             endIndex = startIndex + 10;
             Call<VlogsListingResponse> callAuthorRecentcall = vlogsListingAndDetailsApi
-                    .getVlogsList(startIndex, endIndex, 0, 3, taggedCategories);
+                    .getRelatedVlogs(videoId, startIndex, endIndex);
             callAuthorRecentcall.enqueue(bloggersArticleResponseCallback);
         } else {
             if (startIndex != 0) {
-                startIndex = startIndex + PAGINATION_SIZE - 1;
+                startIndex = endIndex;
+                endIndex = startIndex + PAGINATION_SIZE;
+            } else {
+                endIndex = endIndex + PAGINATION_SIZE;
             }
             Call<BaseResponseGeneric<TutorialCollectionsListModel>> callAuthorRecentcall = vlogsListingAndDetailsApi
                     .getTutorialCollectionItems(collectionId, startIndex, PAGINATION_SIZE);
@@ -324,11 +327,9 @@ public class ParallelFeedActivity extends BaseActivity implements View.OnClickLi
                                 videoRecyclerViewAdapter.updateList(finalList);
                             } else {
                                 finalList.addAll(dataList);
-                                setRecycler();
                                 recyclerViewFeed.setVideoInfoList(ParallelFeedActivity.this, finalList);
                                 videoRecyclerViewAdapter.updateList(finalList);
                             }
-
                         } else {
                             showToast(getString(R.string.server_went_wrong));
                         }
@@ -364,7 +365,7 @@ public class ParallelFeedActivity extends BaseActivity implements View.OnClickLi
             public void onLoadMore(int page, int totalItemsCount, RecyclerView view) {
                 fromLoadMore = true;
                 if (!isLastPageReached) {
-                    hitRelatedArticleApi(endIndex + 1);
+                    hitRelatedArticleApi(endIndex);
                 }
             }
         });

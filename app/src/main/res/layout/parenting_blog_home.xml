@@ -1,140 +1,140 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:fab="http://schemas.android.com/apk/res-auto"
-    android:id="@+id/root"
+  xmlns:fab="http://schemas.android.com/apk/res-auto"
+  android:id="@+id/root"
+  android:layout_width="match_parent"
+  android:layout_height="match_parent"
+  android:background="@color/home_bg"
+  android:orientation="vertical">
+
+  <androidx.appcompat.widget.Toolbar
+    android:id="@+id/toolbar"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="@color/home_bg"
-    android:orientation="vertical">
-
-    <androidx.appcompat.widget.Toolbar
-        android:id="@+id/toolbar"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentTop="true"
-        android:background="?attr/colorPrimary"
-        android:elevation="5dp"
-        android:minHeight="?attr/actionBarSize"
-        android:visibility="visible"
-        fab:theme="@style/ToolbarTheme"
-        fab:titleTextAppearance="@style/ToolbarTheme.Title">
-
-        <TextView
-            android:id="@+id/contributorTitleTextView"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Contributor in"
-            android:textColor="@color/black_color"
-            android:textSize="17sp" />
-
-        <Spinner
-            android:id="@+id/spinner_nav"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:dropDownVerticalOffset="40dp" />
-
-    </androidx.appcompat.widget.Toolbar>
-
-    <ListView
-        android:id="@+id/blog_listing"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_below="@+id/toolbar"
-        android:background="@color/home_bg"
-        android:divider="@color/home_bg"
-        android:dividerHeight="5dp" />
+    android:layout_height="wrap_content"
+    android:layout_alignParentTop="true"
+    android:background="?attr/colorPrimary"
+    android:elevation="5dp"
+    android:minHeight="?attr/actionBarSize"
+    android:visibility="visible"
+    fab:theme="@style/ToolbarTheme"
+    fab:titleTextAppearance="@style/ToolbarTheme.Title">
 
     <TextView
-        android:id="@+id/noBlogsTextView"
+      android:id="@+id/contributorTitleTextView"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:text="@string/contributor_in"
+      android:textColor="@color/black_color"
+      android:textSize="17sp" />
+
+    <Spinner
+      android:id="@+id/spinner_nav"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:dropDownVerticalOffset="40dp" />
+
+  </androidx.appcompat.widget.Toolbar>
+
+  <ListView
+    android:id="@+id/blog_listing"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_below="@+id/toolbar"
+    android:background="@color/home_bg"
+    android:divider="@color/home_bg"
+    android:dividerHeight="5dp" />
+
+  <TextView
+    android:id="@+id/noBlogsTextView"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_centerInParent="true"
+    android:text="No result found."
+    android:visibility="gone" />
+
+  <RelativeLayout
+    android:id="@+id/relativeLoadingView"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_alignParentBottom="true"
+    android:background="#80000000"
+    android:paddingBottom="5dp"
+    android:visibility="gone">
+
+    <View
+      android:id="@+id/sepaartorView"
+      android:layout_width="match_parent"
+      android:layout_height="1dp"
+      android:layout_marginBottom="1dp"
+      android:background="#DEDEDE" />
+
+    <TextView
+      android:id="@+id/txvLoadMore"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:layout_below="@id/sepaartorView"
+      android:layout_centerInParent="true"
+      android:layout_centerVertical="true"
+      android:gravity="center"
+      android:padding="5dp"
+      android:text="@string/loading_txt"
+      android:textColor="@color/white_color" />
+
+    <ImageView
+      android:id="@+id/imgLoader"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:layout_below="@id/sepaartorView"
+      android:layout_centerVertical="true"
+      android:layout_marginTop="4dp"
+      android:layout_toLeftOf="@id/txvLoadMore"
+      android:src="@drawable/progress_spinner" />
+  </RelativeLayout>
+
+  <FrameLayout
+    android:id="@+id/frame_layout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#B3000000"
+    android:visibility="visible">
+
+    <com.getbase.floatingactionbutton.FloatingActionsMenu
+      android:id="@+id/fab_menu"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:layout_alignParentEnd="true"
+      android:layout_alignParentRight="true"
+      android:layout_alignParentBottom="true"
+      android:layout_gravity="right|bottom"
+      fab:fab_addButtonColorNormal="@color/fab.pink"
+      fab:fab_addButtonColorPressed="@color/fab.pink"
+      fab:fab_addButtonPlusIconColor="@color/white_color"
+      fab:fab_addButtonStrokeVisible="false"
+      fab:fab_labelStyle="@style/menu_labels_style"
+      fab:fab_labelsPosition="left">
+
+      <com.getbase.floatingactionbutton.FloatingActionButton
+        android:id="@+id/rankSortFAB"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_centerInParent="true"
-        android:text="No result found."
-        android:visibility="gone" />
+        fab:fab_colorNormal="@color/fab.pink"
+        fab:fab_colorPressed="@color/fab.pink"
+        fab:fab_icon="@drawable/rank"
+        fab:fab_plusIconColor="@color/white_color"
+        fab:fab_size="mini"
+        fab:fab_title="Rank" />
 
-    <RelativeLayout
-        android:id="@+id/relativeLoadingView"
-        android:layout_width="match_parent"
+      <com.getbase.floatingactionbutton.FloatingActionButton
+        android:id="@+id/nameSortFAB"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:background="#80000000"
-        android:paddingBottom="5dp"
-        android:visibility="gone">
+        fab:fab_colorNormal="@color/fab.pink"
+        fab:fab_colorPressed="@color/fab.pink"
+        fab:fab_icon="@drawable/name"
+        fab:fab_plusIconColor="@color/white_color"
+        fab:fab_size="mini"
+        fab:fab_title="Name" />
 
-        <View
-            android:id="@+id/sepaartorView"
-            android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:layout_marginBottom="1dp"
-            android:background="#DEDEDE" />
-
-        <TextView
-            android:id="@+id/txvLoadMore"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/sepaartorView"
-            android:layout_centerInParent="true"
-            android:layout_centerVertical="true"
-            android:gravity="center"
-            android:padding="5dp"
-            android:text="@string/loading_txt"
-            android:textColor="@color/white_color" />
-
-        <ImageView
-            android:id="@+id/imgLoader"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/sepaartorView"
-            android:layout_centerVertical="true"
-            android:layout_marginTop="4dp"
-            android:layout_toLeftOf="@id/txvLoadMore"
-            android:src="@drawable/progress_spinner" />
-    </RelativeLayout>
-
-    <FrameLayout
-        android:id="@+id/frame_layout"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:background="#B3000000"
-        android:visibility="visible">
-
-        <com.getbase.floatingactionbutton.FloatingActionsMenu
-            android:id="@+id/fab_menu"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentBottom="true"
-            android:layout_alignParentEnd="true"
-            android:layout_alignParentRight="true"
-            android:layout_gravity="right|bottom"
-            fab:fab_addButtonColorNormal="@color/fab.pink"
-            fab:fab_addButtonColorPressed="@color/fab.pink"
-            fab:fab_addButtonPlusIconColor="@color/white_color"
-            fab:fab_addButtonStrokeVisible="false"
-            fab:fab_labelStyle="@style/menu_labels_style"
-            fab:fab_labelsPosition="left">
-
-            <com.getbase.floatingactionbutton.FloatingActionButton
-                android:id="@+id/rankSortFAB"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                fab:fab_colorNormal="@color/fab.pink"
-                fab:fab_colorPressed="@color/fab.pink"
-                fab:fab_icon="@drawable/rank"
-                fab:fab_plusIconColor="@color/white_color"
-                fab:fab_size="mini"
-                fab:fab_title="Rank" />
-
-            <com.getbase.floatingactionbutton.FloatingActionButton
-                android:id="@+id/nameSortFAB"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                fab:fab_colorNormal="@color/fab.pink"
-                fab:fab_colorPressed="@color/fab.pink"
-                fab:fab_icon="@drawable/name"
-                fab:fab_plusIconColor="@color/white_color"
-                fab:fab_size="mini"
-                fab:fab_title="Name" />
-
-        </com.getbase.floatingactionbutton.FloatingActionsMenu>
-    </FrameLayout>
+    </com.getbase.floatingactionbutton.FloatingActionsMenu>
+  </FrameLayout>
 </RelativeLayout>

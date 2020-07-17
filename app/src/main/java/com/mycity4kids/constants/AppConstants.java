@@ -158,6 +158,7 @@ public class AppConstants {
     public static final String NOTIFICATION_TYPE_CONTENT_COMMENTS = "comment";
     public static final String NOTIFICATION_TYPE_CONTENT_REPLY = "reply";
     public static final String NOTIFICATION_TYPE_ANNOUNCEMENT = "announcement";
+    public static final String NOTIFICATION_TYPE_PERSONAL_INFO = "personal_info";
 
     public static final String NOTIFICATION_CENTER_APP_SETTINGS = "-1";
     public static final String NOTIFICATION_CENTER_WEB_VIEW = "0";
@@ -198,6 +199,7 @@ public class AppConstants {
     public static final String NOTIFICATION_CENTER_CONTENT_REPLY = "35";
     public static final String NOTIFICATION_CENTER_CONTENT_LIKE = "36";
     public static final String NOTIFICATION_CENTER_ANNOUNCEMENT = "38";
+    public static final String NOTIFICATION_CENTER_PERSONAL_INFO = "39";
 
     public static final String VIDEO_STATUS_DRAFT = "0";
     public static final String VIDEO_STATUS_APPROVAL_PENDING = "1";
@@ -356,6 +358,7 @@ public class AppConstants {
             ".+?(parenting\\/videos\\/challenges\\/category-)[a-zA-Z0-9]+";
     public static final String VLOG_CATEGORY_LISTING_REGEX = ".+?(parenting\\/videos)";
     public static final String STORY_CATEGORY_LISTING_REGEX = ".+?(parenting\\/topic\\/short-stories)(\\/[a-z]+)?";
+    public static final String PERSONAL_INFO_REGEX = ".+?(userprofile\\/)(edit\\/)[a-zA-Z0-9]+";
 
     public static final String BADGE_ID = "badgeId";
     public static final String MILESTONE_ID = "milestoneId";

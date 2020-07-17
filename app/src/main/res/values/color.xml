@@ -573,4 +573,15 @@
   <color name="color_2A2A2A">#2A2A2A</color>
   <color name="color_DB4A38">#DB4A38</color>
   <color name="color_4FD5BE">#4FD5BE</color>
+
+  <color name="suggested_topic_bg_1">#FDF6F6</color>
+  <color name="suggested_topic_bg_2">#F6FDF9</color>
+  <color name="suggested_topic_bg_3">#FBF6FD</color>
+  <color name="suggested_topic_bg_4">#F6FAFD</color>
+  <color name="suggested_topic_bg_5">#FDF9F6</color>
+  <color name="suggested_topic_border_1">#F8DFE5</color>
+  <color name="suggested_topic_border_2">#D5F5EE</color>
+  <color name="suggested_topic_border_3">#EDE0F9</color>
+  <color name="suggested_topic_border_4">#DBE9FA</color>
+  <color name="suggested_topic_border_5">#F6E9D5</color>
 </resources>

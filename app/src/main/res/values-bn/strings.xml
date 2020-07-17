@@ -602,7 +602,7 @@
   <string name="check_out_blog">Momspresso\n\nCheck out this interesting blog post\n</string>
   <string name="check_out_short_story">Momspresso\n\nCheck out this interesting short story\n</string>
   <string name="contributors">আমাদের লেখকেরা</string>
-  <string name="contributor_in">Contributors in</string>
+  <string name="contributor_in">যোগদানকর্তা</string>
   <string name="recent_article">একই সম্পর্কিত আর্টিকেলস</string>
   <string name="upload_bigger_image">Please upload bigger image</string>
   <string name="upload_min_width">Please upload image with minimum width of 720 pixels</string>
@@ -1379,4 +1379,9 @@ Thank you! We will be reviewing your story. You can expect to hear from us withi
   <string name="top_comment_marked_string">Marked</string>
   <string name="top_comment_string">Top comment</string>
   <string name="verify_email_address">We have sent a verification link to your email address, please verify it.</string>
+  <string name="all_bloggers">ব্লগার্স </string>
+  <string name="all_experts">বিশেষজ্ঞ</string>
+  <string name="all_editors">এডিটরস</string>
+  <string name="all_editorial">এডিটোরিয়াল টীম</string>
+  <string name="all_featured">ফিচার্ড লেখক</string>
 </resources>

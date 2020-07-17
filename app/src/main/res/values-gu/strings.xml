@@ -567,7 +567,7 @@ Thank you! We will be reviewing your story. You can expect to hear from us withi
   <string name="check_out_blog">Momspresso\n\nCheck out this interesting blog post\n</string>
   <string name="check_out_short_story">Momspresso\n\nCheck out this interesting short story\n</string>
   <string name="contributors">સહયોગીઓને</string>
-  <string name="contributor_in">Contributors in</string>
+  <string name="contributor_in">માં ફાળો આપનાર</string>
 
 
   <string name="recent_article">સંબંધિત લેખ </string>
@@ -1486,4 +1486,9 @@ Thank you! We will be reviewing your story. You can expect to hear from us withi
   <string name="top_comment_marked_string">Marked</string>
   <string name="top_comment_string">Top comment</string>
   <string name="verify_email_address">We have sent a verification link to your email address, please verify it.</string>
+  <string name="all_bloggers">બ્લોગરો </string>
+  <string name="all_experts">વિશેષજ્ઞ</string>
+  <string name="all_editors">સંપાદક</string>
+  <string name="all_editorial">સંપાદકીય ટુકડી </string>
+  <string name="all_featured">વૈશિષ્ટિકૃત લેખક</string>
 </resources>

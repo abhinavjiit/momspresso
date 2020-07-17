@@ -40,6 +40,7 @@ class PhoneContactsActivity : BaseActivity(), EasyPermissions.PermissionCallback
     private var source: String? = null
     private var eventScreen: String? = ""
     private var eventSuffix: String? = ""
+    private var isRequestRunning = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -218,6 +219,9 @@ class PhoneContactsActivity : BaseActivity(), EasyPermissions.PermissionCallback
     }
 
     override fun onClick(p0: View?) {
+        if (isRequestRunning) {
+            return
+        }
         val selectedContactList = ArrayList<String>()
         contactModelArrayList?.let { list ->
             for (i in 0 until list.size) {
@@ -229,12 +233,11 @@ class PhoneContactsActivity : BaseActivity(), EasyPermissions.PermissionCallback
         }
 
         if (selectedContactList.isNotEmpty()) {
-
             Utils.shareEventTracking(
                 this,
                 eventScreen,
                 "Invite_Android",
-                "CTA_Final_InviteContact_$eventSuffix"
+                "CTA_Final_InviteContact$eventSuffix"
             )
 
             val contactSynRequest = PhoneContactRequest()
@@ -244,6 +247,7 @@ class PhoneContactsActivity : BaseActivity(), EasyPermissions.PermissionCallback
             } else {
                 contactSynRequest.notifType = "1"
             }
+            isRequestRunning = true
             val retro = BaseApplication.getInstance().retrofit
             val contactSyncAPI = retro.create(ContactSyncAPI::class.java)
             val contactSyncCall = contactSyncAPI.sendInvite(contactSynRequest)
@@ -252,6 +256,7 @@ class PhoneContactsActivity : BaseActivity(), EasyPermissions.PermissionCallback
                     call: Call<ResponseBody>,
                     response: Response<ResponseBody>
                 ) {
+                    isRequestRunning = false
                     if (response.body() == null) {
                         val nee =
                             NetworkErrorException(response.raw().toString())
@@ -272,6 +277,7 @@ class PhoneContactsActivity : BaseActivity(), EasyPermissions.PermissionCallback
                 }
 
                 override fun onFailure(call: Call<ResponseBody>, t: Throwable) {
+                    isRequestRunning = false
                     showToast(getString(R.string.toast_response_error))
                     FirebaseCrashlytics.getInstance().recordException(t)
                     Log.d(

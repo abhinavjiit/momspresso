@@ -81,6 +81,8 @@ public class NotificationCenterResult {
     private ArrayList<GroupedUsers> notifiedBy;
     @SerializedName("recyclerItemType")
     private String recyclerItemType;
+    @SerializedName("content_author")
+    private String contentAuthor;
 
     public NotificationCenterResult(@NotNull String recyclerItemType) {
         this.recyclerItemType = recyclerItemType;
@@ -373,6 +375,14 @@ public class NotificationCenterResult {
 
     public void setRecyclerItemType(String recyclerItemType) {
         this.recyclerItemType = recyclerItemType;
+    }
+
+    public String getContentAuthor() {
+        return contentAuthor;
+    }
+
+    public void setContentAuthor(String contentAuthor) {
+        this.contentAuthor = contentAuthor;
     }
 
     public class NotificationUserInfo {

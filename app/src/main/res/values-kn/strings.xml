@@ -563,7 +563,7 @@
 
   <string name="check_out_short_story">Momspresso\n\nCheck out this interesting short story\n</string>
   <string name="contributors">Contributors</string>
-  <string name="contributor_in">Contributors in</string>
+  <string name="contributor_in">ಕಾಂಟ್ರಿಬ್ಯೂಟರ್‌ ಗಳು</string>
   <string name="recent_article">ಸಂಬಂಧಿಸಿದ ಲೇಖನಗಳು</string>
   <string name="upload_bigger_image">Please upload bigger image</string>
 
@@ -1414,4 +1414,9 @@ Thank you! We will be reviewing your story. You can expect to hear from us withi
   <string name="top_comment_marked_string">Marked</string>
   <string name="top_comment_string">Top comment</string>
   <string name="verify_email_address">We have sent a verification link to your email address, please verify it.</string>
+  <string name="all_bloggers">ಬ್ಲಾಗರ್ಸ್</string>
+  <string name="all_experts">ತಜ್ಞರು</string>
+  <string name="all_editors">ಸಂಪಾದಕರು</string>
+  <string name="all_editorial">ಸಂಪಾದಕೀಯ ತಂಡ</string>
+  <string name="all_featured">ಆಯ್ದ ಲೇಖಕಿ</string>
 </resources>

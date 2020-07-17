@@ -71,6 +71,19 @@ import com.mycity4kids.utils.DateTimeUtils
 import com.mycity4kids.utils.GenericFileProvider
 import com.mycity4kids.utils.PermissionUtil
 import com.mycity4kids.utils.StringUtils
+import java.io.ByteArrayOutputStream
+import java.io.File
+import java.io.FileOutputStream
+import java.io.IOException
+import java.lang.ref.WeakReference
+import java.text.SimpleDateFormat
+import java.util.ArrayList
+import java.util.Calendar
+import java.util.Date
+import java.util.HashMap
+import java.util.Locale
+import java.util.Random
+import java.util.regex.Pattern
 import kotlinx.android.synthetic.main.activity_new_editor.*
 import okhttp3.MediaType
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
@@ -101,19 +114,6 @@ import org.xml.sax.Attributes
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
-import java.io.ByteArrayOutputStream
-import java.io.File
-import java.io.FileOutputStream
-import java.io.IOException
-import java.lang.ref.WeakReference
-import java.text.SimpleDateFormat
-import java.util.ArrayList
-import java.util.Calendar
-import java.util.Date
-import java.util.HashMap
-import java.util.Locale
-import java.util.Random
-import java.util.regex.Pattern
 
 const val MAX_WORDS = 300
 

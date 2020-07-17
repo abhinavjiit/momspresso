@@ -914,12 +914,13 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
                     });
         } else if (AppConstants.NOTIFICATION_TYPE_CONTENT_COMMENTS.equalsIgnoreCase(notificationType)
                 || AppConstants.NOTIFICATION_TYPE_CONTENT_REPLY.equalsIgnoreCase(notificationType)) {
+            pushEvent("content_comment_or_reply");
             String articleId = notificationExtras.getString("id");
             String commentId = notificationExtras.getString("commentId");
             String type = notificationExtras.getString("type");
             String contentType = notificationExtras.getString("contentType");
             String replyId = notificationExtras.getString("replyId");
-            String blogWriterId = notificationExtras.getString("authorId");
+            String blogWriterId = notificationExtras.getString("content_author");
             Intent commentReplyNotificationIntent = new Intent(this,
                     ContentCommentReplyNotificationActivity.class);
             commentReplyNotificationIntent.putExtra("articleId", articleId);
@@ -948,8 +949,7 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
             startActivity(intent1);
         } else if (AppConstants.NOTIFICATION_TYPE_COLLECTION_DETAILS.equalsIgnoreCase(notificationType)) {
             pushEvent("collection_detail");
-            Intent intent = new Intent(DashboardActivity.this,
-                    UserCollectionItemListActivity.class);
+            Intent intent = new Intent(this, UserCollectionItemListActivity.class);
             intent.putExtra("id", notificationExtras.getString(AppConstants.COLLECTION_ID));
             startActivity(intent);
         } else if (AppConstants.NOTIFICATION_TYPE_CREATE_CONTENT_PROMPT.equalsIgnoreCase(notificationType)) {
@@ -957,7 +957,7 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
             fragmentToLoad = Constants.CREATE_CONTENT_PROMPT;
         } else if (AppConstants.NOTIFICATION_TYPE_MOMSIGHT_REWARD_LISTING.equalsIgnoreCase(notificationType)) {
             pushEvent("momsights_screen");
-            Intent intent1 = new Intent(DashboardActivity.this, RewardsContainerActivity.class);
+            Intent intent1 = new Intent(this, RewardsContainerActivity.class);
             startActivity(intent1);
         } else if (AppConstants.NOTIFICATION_TYPE_CAMPAIGN_LISTING.equalsIgnoreCase(notificationType)) {
             pushEvent("campaign_listing");
@@ -1156,7 +1156,14 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
             startActivity(intent1);
         } else if (AppConstants.NOTIFICATION_TYPE_ANNOUNCEMENT.equalsIgnoreCase(notificationType)) {
             pushEvent("announcement");
-            handleDeeplinks(notificationExtras.getString("url"));
+            if (!StringUtils.isNullOrEmpty(notificationExtras.getString("url"))) {
+                handleDeeplinks(notificationExtras.getString("url"));
+            }
+        } else if (AppConstants.NOTIFICATION_TYPE_PERSONAL_INFO.equalsIgnoreCase(notificationType)) {
+            pushEvent("personal_info");
+            Intent intent = new Intent(this, RewardsContainerActivity.class);
+            intent.putExtra("showProfileInfo", true);
+            startActivity(intent);
         }
     }
 
