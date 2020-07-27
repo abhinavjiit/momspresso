@@ -3,6 +3,8 @@ package com.mycity4kids.retrofitAPIsInterfaces;
 import com.mycity4kids.models.request.SaveDraftRequest;
 import com.mycity4kids.models.response.ArticleDraftResponse;
 
+import java.util.List;
+import java.util.Map;
 import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.http.Body;
@@ -25,7 +27,8 @@ public interface ArticleDraftAPI {
             @Field("title") String title,
             @Field("body") String body,
             @Field("articleType") String articleType,
-            @Field("userAgent1") String userAgent1);
+            @Field("userAgent1") String userAgent1,
+            @Field("tags") List<Map<String, String>> tags);
 
     @PUT
     Call<ArticleDraftResponse> updateDrafts(@Url String url,

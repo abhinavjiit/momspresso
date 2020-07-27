@@ -1,6 +1,8 @@
 package com.mycity4kids.models.request;
 
 import com.google.gson.annotations.SerializedName;
+import java.util.List;
+import java.util.Map;
 
 /**
  * Created by hemant on 26/9/18.
@@ -15,6 +17,8 @@ public class SaveDraftRequest {
     private String articleType;
     @SerializedName("userAgent1")
     private String userAgent1;
+    @SerializedName("tags")
+    private List<Map<String, String>> tags;
 
     public String getTitle() {
         return title;
@@ -46,5 +50,13 @@ public class SaveDraftRequest {
 
     public void setUserAgent1(String userAgent1) {
         this.userAgent1 = userAgent1;
+    }
+
+    public List<Map<String, String>> getTags() {
+        return tags;
+    }
+
+    public void setTags(List<Map<String, String>> tags) {
+        this.tags = tags;
     }
 }

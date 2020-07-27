@@ -112,7 +112,7 @@
         android:padding="10dp"
         android:text="@string/reply"
         android:textColor="@color/ad.comment.date"
-        android:textSize="@dimen/ad_comments_date"
+        android:textSize="12sp"
         app:fontName="Roboto-Regular.ttf" />
 
       <com.mycity4kids.widget.CustomFontTextView

@@ -388,4 +388,7 @@ public class AppConstants {
 
     public static final String NOTIFICATION_CENTER_RECENT_HEADER = "recent";
     public static final String NOTIFICATION_CENTER_EARLIER_HEADER = "earlier";
+
+
+    public static final String ARTICLE_CHALLENGE_CATEGORY_ID = "category-c0ab155724d7482cbee69a8d3040dbaf";
 }

@@ -58,7 +58,7 @@ const val SELECT_VIDEO = 1006
 class CampaignAddProofFragment : BaseFragment(), UrlProofRecyclerAdapter.ClickListener,
     MediaProofRecyclerAdapter.ClickListener {
     override fun onUrlComponentDelete(cellIndex: Int) {
-        for (i in 0..campaignUrlProofList.size - 1) {
+        for (i in 0 until campaignUrlProofList.size) {
             var view = recyclerUrlProof.layoutManager?.findViewByPosition(i)
             var textview = view?.findViewById<EditText>(R.id.textUrl)
             if (textview != null && !textview.text.isNullOrEmpty()) {

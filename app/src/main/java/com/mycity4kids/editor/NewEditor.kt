@@ -46,6 +46,8 @@ import androidx.core.content.ContextCompat
 import com.google.android.material.snackbar.Snackbar
 import com.google.firebase.crashlytics.FirebaseCrashlytics
 import com.google.firebase.remoteconfig.FirebaseRemoteConfig
+import com.google.gson.Gson
+import com.mycity4kids.BuildConfig
 import com.mycity4kids.R
 import com.mycity4kids.application.BaseApplication
 import com.mycity4kids.base.BaseActivity
@@ -201,6 +203,10 @@ class NewEditor : BaseActivity(),
     private lateinit var wordCount: TextView
     private var imageWordCount = 0
     private var numberOfImages = 0
+    private var taggedChallengeId: String? = null
+    private var taggedChallengeName: String? = null
+    var draftChallengeTagList: ArrayList<Map<String, String>>? = null
+    var taggedChallengeMap: HashMap<String, String>? = null
 
     val HTML_PATTERN = "(?i)<p.*?>.*?</p>"
     var pattern: Pattern = Pattern.compile(HTML_PATTERN)
@@ -226,11 +232,20 @@ class NewEditor : BaseActivity(),
         editor_get_help.setOnClickListener(this)
         closeEditorImageView!!.setOnClickListener(this)
         publishTextView!!.setOnClickListener(this)
+        taggedChallengeId = intent.getStringExtra("articleChallengeId")
+        taggedChallengeName = intent.getStringExtra("challengeName")
+        if (!taggedChallengeId.isNullOrBlank() && !taggedChallengeName.isNullOrBlank()) {
+            draftChallengeTagList = ArrayList()
+            taggedChallengeMap = HashMap()
+            taggedChallengeMap!![taggedChallengeId!!] = taggedChallengeName!!
+            draftChallengeTagList!!.add(taggedChallengeMap!!)
+        }
         if (intent.getStringExtra("from") != null && intent.getStringExtra("from") == "draftList") {
             draftObject = intent.getSerializableExtra("draftItem") as DraftListResult
             title = draftObject!!.title
             content = draftObject!!.body
             draftId = draftObject!!.id
+            draftChallengeTagList = draftObject!!.tags
             if (StringUtils.isNullOrEmpty(moderation_status)) {
                 moderation_status = "0"
             }
@@ -1041,8 +1056,8 @@ class NewEditor : BaseActivity(),
         publishObject.body = contentFormatting(finalContent)
         publishObject.title =
             titleFormatting(titleTxt?.text.toString())
-        Log.d("draftId = ", draftId + "")
-        if (intent.getStringExtra("from") != null && intent.getStringExtra("from") == "publishedList" || "4" == moderation_status) {
+        if (intent.getStringExtra("from") != null &&
+            intent.getStringExtra("from") == "publishedList" || "4" == moderation_status) {
             // coming from edit published articles
             val intent_1 = Intent(
                 this@NewEditor,
@@ -1064,8 +1079,12 @@ class NewEditor : BaseActivity(),
             if (!StringUtils.isNullOrEmpty(draftId)) {
                 publishObject.id = draftId
             }
+            //   intent_3.putExtra("articleChallengeId", articleChallengeId)
             intent_3.putExtra("draftItem", publishObject)
             intent_3.putExtra("from", "editor")
+            if (draftChallengeTagList != null) {
+                intent_3.putExtra("tag", Gson().toJson(draftChallengeTagList))
+            }
             startActivity(intent_3)
         }
     }
@@ -1102,7 +1121,13 @@ class NewEditor : BaseActivity(),
         }
         if (draftId1.isEmpty()) {
             val call =
-                articleDraftAPI.saveDraft(title, body, "0", null)
+                articleDraftAPI.saveDraft(
+                    title,
+                    body,
+                    "0",
+                    null,
+                    draftChallengeTagList
+                )
             call.enqueue(object : Callback<ArticleDraftResponse?> {
                 override fun onResponse(
                     call: Call<ArticleDraftResponse?>,
@@ -1152,6 +1177,7 @@ class NewEditor : BaseActivity(),
             saveDraftRequest.body = body
             saveDraftRequest.articleType = "0"
             saveDraftRequest.userAgent1 = AppConstants.ANDROID_NEW_EDITOR
+            saveDraftRequest.tags = draftChallengeTagList
             val call = articleDraftAPI.updateDrafts(
                 AppConstants.LIVE_URL + "v1/articles/" + draftId1, saveDraftRequest
             )
@@ -1218,7 +1244,7 @@ class NewEditor : BaseActivity(),
         }
         if (draftId1.isEmpty()) {
             val call =
-                articleDraftAPI.saveDraft(title, body, "0", null)
+                articleDraftAPI.saveDraft(title, body, "0", null, draftChallengeTagList)
             call.enqueue(object : Callback<ArticleDraftResponse?> {
                 override fun onResponse(
                     call: Call<ArticleDraftResponse?>,
@@ -1247,6 +1273,7 @@ class NewEditor : BaseActivity(),
             saveDraftRequest.body = body
             saveDraftRequest.articleType = "0"
             saveDraftRequest.userAgent1 = AppConstants.ANDROID_NEW_EDITOR
+            saveDraftRequest.tags = draftChallengeTagList
             val call = articleDraftAPI.updateDrafts(
                 AppConstants.LIVE_URL + "v1/articles/" + draftId1, saveDraftRequest
             )
@@ -1318,7 +1345,7 @@ class NewEditor : BaseActivity(),
             } else if (aztec.visualEditor.text.toString().replace(
                     "&nbsp;",
                     " "
-                ).split("\\s+".toRegex()).size + imageWordCount - numberOfImages < 299) {
+                ).split("\\s+".toRegex()).size + imageWordCount - numberOfImages < 299 && !BuildConfig.DEBUG) {
                 showCustomToast(
                     aztec.visualEditor.text.toString().replace(
                         "&nbsp;",
@@ -1380,7 +1407,7 @@ class NewEditor : BaseActivity(),
         }
         if (draftId1.isEmpty()) {
             val call =
-                articleDraftAPI.saveDraft(title, body, "0", null)
+                articleDraftAPI.saveDraft(title, body, "0", null, draftChallengeTagList)
             call.enqueue(saveDraftBeforePublishResponseListener)
         } else {
             val saveDraftRequest = SaveDraftRequest()
@@ -1388,6 +1415,7 @@ class NewEditor : BaseActivity(),
             saveDraftRequest.body = body
             saveDraftRequest.articleType = "0"
             saveDraftRequest.userAgent1 = AppConstants.ANDROID_NEW_EDITOR
+            saveDraftRequest.tags = draftChallengeTagList
             val call = articleDraftAPI.updateDrafts(
                 AppConstants.LIVE_URL + "v1/articles/" + draftId1,
                 saveDraftRequest

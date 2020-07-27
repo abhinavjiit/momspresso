@@ -24,16 +24,15 @@
 
 
         <ImageView
-            android:id="@+id/closeEditorImageView"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentRight="true"
-            android:layout_marginTop="10dp"
-            android:paddingLeft="20dp"
-            android:paddingRight="20dp"
-            android:paddingBottom="20dp"
-            android:src="@drawable/cross_icon_back"
-            android:tint="@color/app_red" />
+          android:id="@+id/closeEditorImageView"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:layout_alignParentRight="true"
+          android:paddingLeft="20dp"
+          android:paddingRight="20dp"
+          android:paddingBottom="20dp"
+          android:src="@drawable/cross_icon_back"
+          android:tint="@color/app_red" />
     </RelativeLayout>
 
     <WebView

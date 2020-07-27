@@ -29,6 +29,7 @@ import com.mycity4kids.retrofitAPIsInterfaces.TopicsCategoryAPI;
 import com.mycity4kids.ui.adapter.AddArticleTopicsPagerAdapter;
 import com.mycity4kids.utils.AppUtils;
 import com.mycity4kids.utils.ArrayAdapterFactory;
+import com.mycity4kids.utils.StringUtils;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
@@ -61,6 +62,7 @@ public class AddArticleTopicsActivityNew extends BaseActivity {
     private String imageUrl;
     private String articleId;
     private String tags;
+    private ArrayList<Topics> publishedArticleChallengeTag = new ArrayList<>();
     private String cities;
 
     private AddArticleTopicsPagerAdapter adapter;
@@ -92,7 +94,6 @@ public class AddArticleTopicsActivityNew extends BaseActivity {
         userAgent = getIntent().getStringExtra("userAgent");
         draftObject = (PublishDraftObject) getIntent().getSerializableExtra("draftItem");
 
-        //reminaingTopicsList is available only when Editing A Published Article
         if ("publishedList".equals(userNavigatingFrom)) {
             imageUrl = getIntent().getStringExtra("imageUrl");
             articleId = getIntent().getStringExtra("articleId");
@@ -212,11 +213,38 @@ public class AddArticleTopicsActivityNew extends BaseActivity {
                 jsonObject.put("" + chosenTopicsList.get(i).getId(), chosenTopicsList.get(i).getTitle());
                 jsonArray.put(jsonObject);
             }
+            if ("publishedList".equals(userNavigatingFrom)) {
+                reAddChallengeTagForPublishedArticle(jsonArray);
+            }
+            if (!"publishedList".equals(userNavigatingFrom) && getIntent().hasExtra("tag")) {
+                Log.e("DRAFT", "---------- draft tag == " + getIntent().getStringExtra("tag"));
+                if (!StringUtils.isNullOrEmpty(getIntent().getStringExtra("tag"))) {
+                    JSONArray jsonArray1 = new JSONArray(getIntent().getStringExtra("tag"));
+                    for (int i = 0; i < jsonArray1.length(); i++) {
+                        jsonArray.put(jsonArray1.getJSONObject(i));
+                    }
+                }
+            }
         } catch (Exception e) {
             FirebaseCrashlytics.getInstance().recordException(e);
             Log.d("MC4kException", Log.getStackTraceString(e));
         }
         tags = jsonArray.toString();
+        Log.e("DRAFT", "---------- Final tag == " + tags);
+    }
+
+    private void reAddChallengeTagForPublishedArticle(JSONArray jsonArray) {
+        try {
+            for (int i = 0; i < publishedArticleChallengeTag.size(); i++) {
+                JSONObject jsonObject = new JSONObject();
+                jsonObject.put("" + publishedArticleChallengeTag.get(i).getId(),
+                        publishedArticleChallengeTag.get(i).getDisplay_name());
+                jsonArray.put(jsonObject);
+            }
+        } catch (Exception e) {
+            FirebaseCrashlytics.getInstance().recordException(e);
+            Log.d("MC4kException", Log.getStackTraceString(e));
+        }
     }
 
     private void getSelectedTopicsFromList() {
@@ -269,7 +297,8 @@ public class AddArticleTopicsActivityNew extends BaseActivity {
                 }
 
                 if ("1".equals(responseData.getData().get(i).getPublicVisibility())
-                        && !AppConstants.SHORT_STORY_CATEGORYID.equals(responseData.getData().get(i).getId())) {
+                        && !AppConstants.SHORT_STORY_CATEGORYID.equals(responseData.getData().get(i).getId())
+                        && !AppConstants.ARTICLE_CHALLENGE_CATEGORY_ID.equals(responseData.getData().get(i).getId())) {
                     responseData.getData().get(i).setChild(secondLevelLeafNodeList);
                     if (!secondLevelLeafNodeList.isEmpty()) {
                         topicList.add(responseData.getData().get(i));
@@ -282,11 +311,41 @@ public class AddArticleTopicsActivityNew extends BaseActivity {
                 retainItemsFromReminaingList(selectedTopicsIdList);
             }
             createTopicsTabPages();
+            if ("publishedList".equals(userNavigatingFrom)) {
+                extractChallengeTagFromTagLists(responseData);
+            }
         } catch (Exception e) {
             progressBar.setVisibility(View.GONE);
             FirebaseCrashlytics.getInstance().recordException(e);
             Log.d("MC4kException", Log.getStackTraceString(e));
             showToast(getString(R.string.went_wrong));
+        }
+    }
+
+    private void extractChallengeTagFromTagLists(TopicsResponse responseData) {
+        try {
+            for (int i = 0; i < responseData.getData().size(); i++) {
+                if (AppConstants.ARTICLE_CHALLENGE_CATEGORY_ID.equals(responseData.getData().get(i).getId())) {
+                    for (int j = 0; j < responseData.getData().get(i).getChild().size(); j++) {
+                        for (int k = 0; k < selectedTopicsIdList.size(); k++) {
+                            if (selectedTopicsIdList.get(k)
+                                    .equals(responseData.getData().get(i).getChild().get(j).getId())) {
+                                publishedArticleChallengeTag.add(responseData.getData().get(i).getChild().get(j));
+                                break;
+                            }
+                        }
+                        if (publishedArticleChallengeTag.size() > 0) {
+                            break;
+                        }
+                    }
+                    if (publishedArticleChallengeTag.size() > 0) {
+                        break;
+                    }
+                }
+            }
+        } catch (Exception e) {
+            FirebaseCrashlytics.getInstance().recordException(e);
+            Log.d("MC4kException", Log.getStackTraceString(e));
         }
     }
 

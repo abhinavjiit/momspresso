@@ -68,6 +68,7 @@ class VideoChallengeSelectionHorizontalAdapter(
         var challengeImageView: ImageView = itemView.findViewById(R.id.tagImageView)
         private var challengeInfoImageView: ImageView = itemView.findViewById(R.id.info)
         var liveChallengeTextView: TextView = itemView.findViewById(R.id.liveTextViewVideoChallenge)
+        val info: ImageView = itemView.findViewById(R.id.info)
 
         init {
             if (source == "vlogsListing") {
@@ -76,6 +77,7 @@ class VideoChallengeSelectionHorizontalAdapter(
             itemView.setOnClickListener(this)
             challengeInfoImageView.setOnClickListener(this)
             challengeImageView.setOnClickListener(this)
+            info.setOnClickListener(this)
         }
 
         override fun onClick(view: View) {

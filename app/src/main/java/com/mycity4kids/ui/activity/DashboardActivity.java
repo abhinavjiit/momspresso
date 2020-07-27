@@ -733,29 +733,33 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
                         if (resultJsonObject.getJSONObject(i).has("contentType")) {
                             draftitem.setContentType(
                                     resultJsonObject.getJSONObject(i).getString("contentType"));
-
                         } else {
                             draftitem.setContentType("0");
                         }
                         if (resultJsonObject.getJSONObject(i).has("tags")) {
-                            JSONArray tagsArray = resultJsonObject.getJSONObject(i)
-                                    .optJSONArray("tags");
-                            if (null != tagsArray) {
-                                retMap = new Gson().fromJson(tagsArray.toString(),
-                                        new TypeToken<ArrayList<HashMap<String, String>>>() {
-                                        }.getType());
-                                draftitem.setTags(retMap);
-                            } else {
-                                JSONArray jsArray = resultJsonObject.getJSONObject(i)
-                                        .getJSONObject("tags").optJSONArray("tagsArr");
-                                retMap = new Gson().fromJson(jsArray.toString(),
-                                        new TypeToken<ArrayList<HashMap<String, String>>>() {
-                                        }.getType());
+                            try {
+                                JSONArray tagsArray = resultJsonObject.getJSONObject(i)
+                                        .optJSONArray("tags");
+                                if (null != tagsArray) {
+                                    retMap = new Gson().fromJson(tagsArray.toString(),
+                                            new TypeToken<ArrayList<HashMap<String, String>>>() {
+                                            }.getType());
+                                    draftitem.setTags(retMap);
+                                } else {
+                                    JSONArray jsArray = resultJsonObject.getJSONObject(i)
+                                            .getJSONObject("tags").optJSONArray("tagsArr");
+                                    retMap = new Gson().fromJson(jsArray.toString(),
+                                            new TypeToken<ArrayList<HashMap<String, String>>>() {
+                                            }.getType());
+                                    draftitem.setTags(retMap);
+                                }
+                            } catch (Exception e) {
+                                retMap = new ArrayList<>();
                                 draftitem.setTags(retMap);
                             }
                         } else {
                             //no tags key in the json
-                            retMap = new ArrayList<Map<String, String>>();
+                            retMap = new ArrayList<>();
                             draftitem.setTags(retMap);
                         }
                         draftList.add(draftitem);
@@ -1490,7 +1494,7 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
                     becomeBloggerFragment.setArguments(searchBundle);
                     addFragment(becomeBloggerFragment, searchBundle);
                 } else {
-                    Intent intent = new Intent(this, SuggestedTopicsActivity.class);
+                    Intent intent = new Intent(this, ArticleChallengeOrTopicSelectionActivity.class);
                     startActivity(intent);
                 }
                 break;
