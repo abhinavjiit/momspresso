@@ -1,0 +1,376 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+  xmlns:app="http://schemas.android.com/apk/res-auto"
+  android:id="@+id/mainprofile_parent_layout"
+  android:layout_width="match_parent"
+  android:layout_height="match_parent">
+
+  <com.google.android.material.appbar.AppBarLayout
+    android:id="@+id/id_appbar"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="#fff"
+    android:fitsSystemWindows="true">
+
+    <RelativeLayout
+      android:id="@+id/challengeHeaderRelative"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:background="@drawable/short_story_border_bg"
+      android:visibility="visible"
+      app:layout_scrollFlags="scroll|enterAlwaysCollapsed">
+
+      <androidx.appcompat.widget.Toolbar
+        android:id="@+id/id_toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="?attr/colorPrimary"
+        android:minHeight="?attr/actionBarSize"
+        android:visibility="visible"
+        app:contentInsetEnd="0dp"
+        app:contentInsetLeft="0dp"
+        app:contentInsetRight="0dp"
+        app:contentInsetStart="0dp"
+        app:layout_scrollFlags="scroll|enterAlwaysCollapsed"
+        app:theme="@style/ToolbarTheme"
+        app:titleTextAppearance="@style/ToolbarTheme.Title">
+
+        <RelativeLayout
+          android:id="@+id/toolbarRelativeLayout"
+          android:layout_width="match_parent"
+          android:layout_height="wrap_content"
+          android:visibility="visible">
+
+          <ImageView
+            android:id="@+id/back"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:paddingStart="@dimen/space_10"
+            android:paddingEnd="@dimen/space_10"
+            android:src="@drawable/back_arroow"
+            android:tint="@color/black_color" />
+
+          <com.mycity4kids.widget.CustomFontTextView
+            android:id="@+id/toolbarTitleTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_toEndOf="@id/back"
+            android:text="@string/ad.write_blog"
+            android:textColor="@color/home.toolbar.titlecolor"
+            android:textSize="20sp"
+            app:fontName="Roboto-Medium.ttf" />
+
+        </RelativeLayout>
+
+      </androidx.appcompat.widget.Toolbar>
+
+      <RelativeLayout
+        android:id="@+id/main_media_frame"
+        android:layout_width="match_parent"
+        android:layout_height="150dp"
+        android:layout_below="@id/id_toolbar"
+        android:layout_marginTop="1dp"
+        android:background="#000000"
+        android:visibility="visible">
+
+
+        <ImageView
+          android:id="@+id/thumbNail"
+          android:layout_width="match_parent"
+          android:layout_height="match_parent"
+          android:scaleType="fitXY"
+          android:src="@drawable/default_article" />
+
+        <RelativeLayout
+          android:layout_width="match_parent"
+          android:layout_height="wrap_content"
+          android:layout_centerVertical="true">
+
+          <com.mycity4kids.widget.CustomFontTextView
+            android:id="@+id/challengeNameTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_marginBottom="@dimen/space_10"
+            android:text="#AmWriting"
+            android:textColor="@color/white"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            app:fontName="Roboto-Bold.ttf" />
+
+          <com.mycity4kids.widget.MomspressoButtonWidget
+            android:id="@+id/startWritingTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/challengeNameTextView"
+            android:layout_centerHorizontal="true"
+            android:paddingStart="@dimen/space_20"
+            android:paddingTop="@dimen/space_7"
+            android:paddingEnd="@dimen/space_20"
+            android:paddingBottom="@dimen/space_7"
+            android:text="Start Writing"
+            android:textAllCaps="true"
+            android:textSize="@dimen/space_16"
+            android:textStyle="bold"
+            app:fb_defaultColor="@color/app_red"
+            app:fb_radius="17dp" />
+
+        </RelativeLayout>
+
+      </RelativeLayout>
+
+      <LinearLayout
+        android:id="@+id/submit_challenge_relative_Layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/main_media_frame"
+        android:layout_centerHorizontal="true"
+        android:background="@color/white_color"
+        android:gravity="center"
+        android:orientation="horizontal"
+        android:visibility="gone">
+
+        <com.mycity4kids.widget.CustomFontTextView
+          android:id="@+id/ChallengeNameText"
+          android:layout_width="0dp"
+          android:layout_height="wrap_content"
+          android:layout_marginStart="10dp"
+          android:layout_marginTop="20dp"
+          android:layout_marginBottom="20dp"
+          android:layout_weight="6"
+          android:background="@color/white_color"
+          android:ellipsize="end"
+          android:paddingEnd="10dp"
+          android:textColor="@color/app_red"
+          android:textSize="25sp"
+          android:visibility="visible"
+          app:fontName="oswald.ttf" />
+
+        <com.mycity4kids.widget.CustomFontTextView
+          android:id="@+id/submit_story_text"
+          android:layout_width="0dp"
+          android:layout_height="wrap_content"
+          android:layout_marginEnd="10dp"
+          android:layout_weight="2"
+          android:background="@drawable/update_profile_bg"
+          android:gravity="center"
+          android:paddingLeft="12dp"
+          android:paddingTop="7dp"
+          android:paddingRight="12dp"
+          android:paddingBottom="7dp"
+          android:text="@string/add"
+          android:textColor="@color/white_color"
+          android:textSize="18sp"
+          app:fontName="oswald_regular.ttf" />
+      </LinearLayout>
+    </RelativeLayout>
+
+    <com.google.android.material.tabs.TabLayout
+      android:id="@+id/tabs"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:elevation="4dp"
+      app:layout_scrollFlags="scroll|exitUntilCollapsed"
+      app:tabIndicatorColor="@color/app_red"
+      app:tabSelectedTextColor="@color/app_red"
+      app:tabTextColor="@color/grey" />
+
+  </com.google.android.material.appbar.AppBarLayout>
+
+  <androidx.viewpager.widget.ViewPager
+    android:id="@+id/viewpager"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    app:layout_behavior="@string/appbar_scrolling_view_behavior" />
+
+
+  <androidx.coordinatorlayout.widget.CoordinatorLayout
+    android:id="@+id/articleCoachMark"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/dark_transparent"
+    android:visibility="gone">
+
+    <com.google.android.material.appbar.AppBarLayout
+      android:id="@+id/id_appbarCoachMark"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:background="#fff"
+      android:fitsSystemWindows="true"
+      android:visibility="gone">
+
+      <RelativeLayout
+        android:id="@+id/challengeHeaderRelativeCoachMark"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/short_story_border_bg"
+        android:visibility="gone"
+        app:layout_scrollFlags="scroll|enterAlwaysCollapsed">
+
+        <androidx.appcompat.widget.Toolbar
+          android:id="@+id/id_toolbarCoachMark"
+          android:layout_width="match_parent"
+          android:layout_height="45dp"
+          android:background="?attr/colorPrimary"
+          android:minHeight="?attr/actionBarSize"
+          android:visibility="gone"
+          app:layout_scrollFlags="scroll|enterAlwaysCollapsed"
+          app:theme="@style/ToolbarTheme"
+          app:titleTextAppearance="@style/ToolbarTheme.Title">
+
+          <RelativeLayout
+            android:id="@+id/toolbarRelativeLayoutCoachMark"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:visibility="visible">
+
+            <com.mycity4kids.widget.CustomFontTextView
+              android:id="@+id/toolbarTitleTextViewCoachMark"
+              android:layout_width="wrap_content"
+              android:layout_height="wrap_content"
+              android:layout_centerVertical="true"
+              android:text="@string/home_screen.select_an_option.title"
+              android:textColor="@color/home.toolbar.titlecolor"
+              android:textSize="20sp"
+              app:fontName="oswald_regular.ttf" />
+          </RelativeLayout>
+        </androidx.appcompat.widget.Toolbar>
+
+        <RelativeLayout
+          android:id="@+id/main_media_frameCoachMark"
+          android:layout_width="match_parent"
+          android:layout_height="200dp"
+          android:layout_below="@id/id_toolbarCoachMark"
+          android:layout_marginTop="1dp"
+          android:background="#000000"
+          android:visibility="gone">
+
+          <com.google.android.exoplayer2.ui.PlayerView
+            android:id="@+id/exoplayerChallengeDetailListingCoachMark"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:visibility="gone" />
+
+          <ImageView
+            android:id="@+id/thumbNailCoachMark"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:scaleType="fitXY"
+            android:src="@drawable/default_article" />
+
+          <ImageView
+            android:id="@+id/videoIndicatorImageViewCoachMark"
+            android:layout_width="70dp"
+            android:layout_height="65dp"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="80dp"
+            android:src="@drawable/ic_videos"
+            android:visibility="visible" />
+
+          <com.mycity4kids.widget.CustomFontTextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignEnd="@id/thumbNailCoachMark"
+            android:layout_marginTop="15dp"
+            android:layout_marginEnd="15dp"
+            android:background="@drawable/update_profile_bg"
+            android:paddingLeft="7dp"
+            android:paddingRight="7dp"
+            android:text="Featured"
+            android:textColor="#fff"
+            app:fontName="oswald.ttf" />
+        </RelativeLayout>
+
+        <LinearLayout
+          android:id="@+id/submit_challenge_relative_LayoutCoachMark"
+          android:layout_width="match_parent"
+          android:layout_height="wrap_content"
+          android:layout_below="@+id/main_media_frameCoachMark"
+          android:layout_centerHorizontal="true"
+          android:background="@color/white_color"
+          android:gravity="center"
+          android:orientation="horizontal"
+          android:visibility="gone">
+
+          <com.mycity4kids.widget.CustomFontTextView
+            android:id="@+id/ChallengeNameTextCoachMark"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="10dp"
+            android:layout_marginTop="20dp"
+            android:layout_marginBottom="20dp"
+            android:layout_weight="6"
+            android:background="@color/white_color"
+            android:ellipsize="end"
+            android:paddingEnd="10dp"
+            android:textColor="@color/app_red"
+            android:textSize="25sp"
+            android:visibility="visible"
+            app:fontName="oswald.ttf" />
+
+          <com.mycity4kids.widget.CustomFontTextView
+            android:id="@+id/submit_story_textCoachMark"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="10dp"
+            android:layout_weight="2"
+            android:background="@drawable/update_profile_bg"
+            android:gravity="center"
+            android:paddingLeft="12dp"
+            android:paddingTop="7dp"
+            android:paddingRight="12dp"
+            android:paddingBottom="7dp"
+            android:text="@string/add"
+            android:textColor="@color/white_color"
+            android:textSize="18sp"
+            app:fontName="oswald_regular.ttf" />
+        </LinearLayout>
+      </RelativeLayout>
+
+      <com.google.android.material.tabs.TabLayout
+        android:id="@+id/id_tabsCoachMark"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:elevation="4dp"
+        android:visibility="gone"
+        app:layout_scrollFlags="scroll|exitUntilCollapsed"
+        app:tabIndicatorColor="@color/app_red"
+        app:tabSelectedTextColor="@color/app_red"
+        app:tabTextColor="@color/grey" />
+
+    </com.google.android.material.appbar.AppBarLayout>
+
+    <androidx.viewpager.widget.ViewPager
+      android:id="@+id/id_viewpagerCoachMark"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:visibility="gone"
+      app:layout_behavior="@string/appbar_scrolling_view_behavior" />
+
+    <RelativeLayout
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:layout_gravity="bottom">
+
+      <com.getbase.floatingactionbutton.FloatingActionButton
+        android:id="@+id/saveTextViewCoachMark"
+        android:layout_width="60dp"
+        android:layout_height="60dp"
+        android:layout_alignParentEnd="true"
+        android:layout_centerHorizontal="true"
+        android:layout_margin="@dimen/space_20"
+        android:layout_marginLeft="25dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginRight="25dp"
+        android:layout_marginBottom="10dp"
+        android:elevation="4dp"
+        android:tint="@color/white_color"
+        android:visibility="visible"
+        app:backgroundTint="@color/app_red"
+        app:srcCompat="@drawable/ic_video_new" />
+    </RelativeLayout>
+  </androidx.coordinatorlayout.widget.CoordinatorLayout>
+</androidx.coordinatorlayout.widget.CoordinatorLayout>

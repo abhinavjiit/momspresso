@@ -508,7 +508,7 @@
       android:name=".vlogs.VideoCategoryAndChallengeSelectionActivity"
       android:screenOrientation="portrait" />
     <activity
-      android:name=".ui.activity.ArticleChallengesActivity"
+      android:name=".ui.activity.ArticleChallengeOrTopicSelectionActivity"
       android:screenOrientation="portrait" />
     <activity
       android:name=".ui.activity.PhoneContactsActivity"
@@ -518,6 +518,7 @@
       android:name=".ui.activity.ShortStoryModerationOrShareActivity"
       android:screenOrientation="portrait"
       android:theme="@style/ShareStoryTheme" />
+    <activity android:name=".ui.activity.ArticleChallengeDetailActivity" />
 
     <service android:name=".sync.PushTokenService" />
     <service android:name=".sync.FetchAdvertisementInfoService" />
