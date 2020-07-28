@@ -2,7 +2,7 @@ package com.mycity4kids.ui.adapter;
 
 import android.content.Context;
 import android.graphics.drawable.Drawable;
-import android.text.Html;
+import android.text.method.LinkMovementMethod;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -32,19 +32,17 @@ public class ShortStoriesDetailRecyclerAdapter extends RecyclerView.Adapter<Recy
 
     private static final int HEADER = 0;
     private static final int COMMENT_LEVEL_ROOT = 1;
-    private Context mContext;
-    private LayoutInflater mInflator;
+    private Context context;
+    private LayoutInflater layoutInflater;
     ArrayList<ShortStoryFragment.ShortStoryDetailAndCommentModel> datalist;
-    private RecyclerViewClickListener mListener;
-    private int colorPosition;
+    private RecyclerViewClickListener recyclerViewClickListener;
     private String followingStatus = "";
     private String authorId;
 
-    public ShortStoriesDetailRecyclerAdapter(Context pContext, RecyclerViewClickListener listener, int colorPosition) {
-        mInflator = (LayoutInflater) pContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        mContext = pContext;
-        this.mListener = listener;
-        this.colorPosition = colorPosition;
+    public ShortStoriesDetailRecyclerAdapter(Context context, RecyclerViewClickListener listener) {
+        layoutInflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        this.context = context;
+        this.recyclerViewClickListener = listener;
     }
 
     public void setAuthorId(String authorId) {
@@ -71,12 +69,12 @@ public class ShortStoriesDetailRecyclerAdapter extends RecyclerView.Adapter<Recy
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         if (viewType == HEADER) {
-            View v0 = mInflator.inflate(R.layout.short_story_listing_item, parent, false);
-            ShortStoriesViewHolder viewHolder = new ShortStoriesViewHolder(v0, mListener);
+            View v0 = layoutInflater.inflate(R.layout.short_story_listing_item, parent, false);
+            ShortStoriesViewHolder viewHolder = new ShortStoriesViewHolder(v0, recyclerViewClickListener);
             return viewHolder;
         } else {
-            View v0 = mInflator.inflate(R.layout.ss_comment_item, parent, false);
-            SSCommentViewHolder ssCommentViewHolder = new SSCommentViewHolder(v0, mListener);
+            View v0 = layoutInflater.inflate(R.layout.ss_comment_item, parent, false);
+            SSCommentViewHolder ssCommentViewHolder = new SSCommentViewHolder(v0, recyclerViewClickListener);
             return ssCommentViewHolder;
         }
     }
@@ -108,11 +106,11 @@ public class ShortStoriesDetailRecyclerAdapter extends RecyclerView.Adapter<Recy
                 } else if (AppConstants.STATUS_FOLLOWING.equals(followingStatus)) {
                     ssViewHolder.followAuthorTextView.setVisibility(View.VISIBLE);
                     ssViewHolder.followAuthorTextView
-                            .setText(WordUtils.capitalizeFully(mContext.getString(R.string.ad_following_author)));
+                            .setText(WordUtils.capitalizeFully(context.getString(R.string.ad_following_author)));
                 } else {
                     ssViewHolder.followAuthorTextView.setVisibility(View.VISIBLE);
                     ssViewHolder.followAuthorTextView
-                            .setText(WordUtils.capitalizeFully(mContext.getString(R.string.ad_follow_author)));
+                            .setText(WordUtils.capitalizeFully(context.getString(R.string.ad_follow_author)));
                 }
                 if (null == datalist.get(position).getSsResult().getCommentCount()) {
                     ssViewHolder.storyCommentCountTextView.setText("0");
@@ -132,33 +130,31 @@ public class ShortStoriesDetailRecyclerAdapter extends RecyclerView.Adapter<Recy
 
                 if (datalist.get(position).getSsResult().isLiked()) {
                     ssViewHolder.likeImageView
-                            .setImageDrawable(ContextCompat.getDrawable(mContext, R.drawable.ic_recommended));
+                            .setImageDrawable(ContextCompat.getDrawable(context, R.drawable.ic_recommended));
                 } else {
                     ssViewHolder.likeImageView
-                            .setImageDrawable(ContextCompat.getDrawable(mContext, R.drawable.ic_ss_like));
+                            .setImageDrawable(ContextCompat.getDrawable(context, R.drawable.ic_ss_like));
                 }
             } else {
                 SSCommentViewHolder ssCommentViewHolder = (SSCommentViewHolder) holder;
                 ssCommentViewHolder.commentorUsernameTextView
                         .setText(datalist.get(position).getSsComment().getUserName());
-                //   ssCommentViewHolder.commentDataTextView.setText(datalist.get(position).getSsComment().getMessage());
-                ssCommentViewHolder.commentDataTextView.setText((Html
-                        .fromHtml(
-                                "<b>" + "<font color=\"#D54058\">" + datalist.get(position).getSsComment().getUserName()
-                                        + "</font>"
-                                        + "</b>"
-                                        + " "
-                                        + "<font color=\"#4A4A4A\">" + datalist.get(position).getSsComment()
-                                        .getMessage()
-                                        + "</font>")));
-                ssCommentViewHolder.DateTextView.setText(DateTimeUtils.getDateFromNanoMilliTimestamp(
+                ssCommentViewHolder.commentDataTextView.setText(
+                        AppUtils.createSpannableForMentionHandling(datalist.get(position).getSsComment().getUserId(),
+                                datalist.get(position).getSsComment().getUserName(),
+                                datalist.get(position).getSsComment().getMessage(),
+                                datalist.get(position).getSsComment().getMentions(), ContextCompat
+                                        .getColor(ssCommentViewHolder.commentDataTextView.getContext(),
+                                                R.color.app_red)));
+                ssCommentViewHolder.commentDataTextView.setMovementMethod(LinkMovementMethod.getInstance());
+                ssCommentViewHolder.dateTextView.setText(DateTimeUtils.getDateFromNanoMilliTimestamp(
                         Long.parseLong(datalist.get(position).getSsComment().getCreatedTime())));
                 if (datalist.get(position).getSsComment().getReplies() == null || datalist.get(position).getSsComment()
                         .getReplies().isEmpty() || datalist.get(position).getSsComment().getRepliesCount() == 0) {
-                    ssCommentViewHolder.replyCommentTextView.setText(mContext.getString(R.string.reply));
+                    ssCommentViewHolder.replyCommentTextView.setText(context.getString(R.string.reply));
                 } else {
                     ssCommentViewHolder.replyCommentTextView.setText(
-                            mContext.getString(R.string.reply) + "(" + datalist.get(position).getSsComment()
+                            context.getString(R.string.reply) + "(" + datalist.get(position).getSsComment()
                                     .getRepliesCount() + ")");
                 }
                 try {
@@ -200,7 +196,7 @@ public class ShortStoriesDetailRecyclerAdapter extends RecyclerView.Adapter<Recy
                         ssCommentViewHolder.topCommentMarkedTextView.setVisibility(View.VISIBLE);
                         if (datalist.get(position).getSsComment().isTopCommentMarked()) {
                             ssCommentViewHolder.topCommentMarkedTextView
-                                    .setText(mContext.getResources().getString(R.string.top_comment_marked_string));
+                                    .setText(context.getResources().getString(R.string.top_comment_marked_string));
                             Drawable myDrawable = ContextCompat
                                     .getDrawable(ssCommentViewHolder.topCommentMarkedTextView.getContext(),
                                             R.drawable.ic_top_comment_marked_golden);
@@ -236,11 +232,17 @@ public class ShortStoriesDetailRecyclerAdapter extends RecyclerView.Adapter<Recy
 
         TextView authorNameTextView;
         TextView followAuthorTextView;
-        LinearLayout storyRecommendationContainer, storyCommentContainer;
+        LinearLayout storyRecommendationContainer;
+        LinearLayout storyCommentContainer;
         TextView storyCommentCountTextView;
         TextView storyRecommendationCountTextView;
-        ImageView storyImage, likeImageView, menuItem;
-        ImageView facebookShareImageView, whatsappShareImageView, instagramShareImageView, genericShareImageView;
+        ImageView storyImage;
+        ImageView likeImageView;
+        ImageView menuItem;
+        ImageView facebookShareImageView;
+        ImageView whatsappShareImageView;
+        ImageView instagramShareImageView;
+        ImageView genericShareImageView;
         StoryShareCardWidget storyShareCardWidget;
         ImageView shareStoryImageView;
         TextView storyAuthorTextView;
@@ -280,7 +282,7 @@ public class ShortStoriesDetailRecyclerAdapter extends RecyclerView.Adapter<Recy
 
         @Override
         public void onClick(View v) {
-            mListener.onClick(v, getAdapterPosition(), whatsappShareImageView);
+            recyclerViewClickListener.onClick(v, getAdapterPosition(), whatsappShareImageView);
         }
     }
 
@@ -294,7 +296,7 @@ public class ShortStoriesDetailRecyclerAdapter extends RecyclerView.Adapter<Recy
         TextView commentDateTextView;
         TextView replyCountTextView;
         View underlineView;
-        TextView DateTextView;
+        TextView dateTextView;
         TextView likeTextView;
         ImageView moreOptionImageView;
         TextView topCommentTextView;
@@ -308,7 +310,7 @@ public class ShortStoriesDetailRecyclerAdapter extends RecyclerView.Adapter<Recy
             replyCommentTextView = (TextView) view.findViewById(R.id.replyCommentTextView);
             commentDateTextView = (TextView) view.findViewById(R.id.commentDateTextView);
             replyCountTextView = (TextView) view.findViewById(R.id.replyCountTextView);
-            DateTextView = (TextView) view.findViewById(R.id.DateTextView);
+            dateTextView = (TextView) view.findViewById(R.id.DateTextView);
             likeTextView = (TextView) view.findViewById(R.id.likeTextView);
             moreOptionImageView = (ImageView) view.findViewById(R.id.moreOptionImageView);
             topCommentTextView = view.findViewById(R.id.topCommentTextView);
@@ -325,13 +327,13 @@ public class ShortStoriesDetailRecyclerAdapter extends RecyclerView.Adapter<Recy
 
         @Override
         public void onClick(View v) {
-            mListener.onClick(v, getAdapterPosition(), v);
+            recyclerViewClickListener.onClick(v, getAdapterPosition(), v);
         }
 
 
         @Override
         public boolean onLongClick(View v) {
-            mListener.onClick(v, getAdapterPosition(), v);
+            recyclerViewClickListener.onClick(v, getAdapterPosition(), v);
             return true;
         }
     }

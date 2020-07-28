@@ -49,6 +49,7 @@ import com.mycity4kids.sync.SyncUserInfoService;
 import com.mycity4kids.ui.GroupMembershipStatus;
 import com.mycity4kids.ui.activity.AddShortStoryActivity;
 import com.mycity4kids.ui.activity.AppSettingsActivity;
+import com.mycity4kids.ui.activity.ArticleChallengeOrTopicSelectionActivity;
 import com.mycity4kids.ui.activity.ArticleDetailsContainerActivity;
 import com.mycity4kids.ui.activity.BadgeActivity;
 import com.mycity4kids.ui.activity.BlogSetupActivity;
@@ -63,7 +64,6 @@ import com.mycity4kids.ui.activity.LoadWebViewActivity;
 import com.mycity4kids.ui.activity.ParallelFeedActivity;
 import com.mycity4kids.ui.activity.ShortStoriesListingContainerActivity;
 import com.mycity4kids.ui.activity.ShortStoryContainerActivity;
-import com.mycity4kids.ui.activity.SuggestedTopicsActivity;
 import com.mycity4kids.ui.activity.UserDraftsContentActivity;
 import com.mycity4kids.ui.activity.ViewGroupPostCommentsRepliesActivity;
 import com.mycity4kids.ui.activity.collection.CollectionsActivity;
@@ -686,7 +686,7 @@ public abstract class BaseActivity extends AppCompatActivity implements GroupMem
             } else if (tempDeepLinkUrl.contains(AppConstants.DEEPLINK_SUGGESTED_TOPIC_URL)
                     || tempDeepLinkUrl
                     .contains(AppConstants.DEEPLINK_MOMSPRESSO_SUGGESTED_TOPIC_URL)) {
-                Intent suggestedIntent = new Intent(this, SuggestedTopicsActivity.class);
+                Intent suggestedIntent = new Intent(this, ArticleChallengeOrTopicSelectionActivity.class);
                 startActivity(suggestedIntent);
             } else if (tempDeepLinkUrl.endsWith(AppConstants.DEEPLINK_SETUP_BLOG)) {
                 checkIsBlogSetup();
@@ -927,6 +927,14 @@ public abstract class BaseActivity extends AppCompatActivity implements GroupMem
             if (matcher12.matches()) {
                 Intent intent = new Intent(this, RewardsContainerActivity.class);
                 intent.putExtra("showProfileInfo", true);
+                startActivity(intent);
+                return true;
+            }
+
+            Pattern pattern13 = Pattern.compile(AppConstants.BLOGS_CHALLENGE_LISTING_REGEX);
+            Matcher matcher13 = pattern13.matcher(urlWithNoParams);
+            if (matcher13.matches()) {
+                Intent intent = new Intent(this, ArticleChallengeOrTopicSelectionActivity.class);
                 startActivity(intent);
                 return true;
             }

@@ -2,7 +2,7 @@ package com.mycity4kids.ui.adapter;
 
 import android.content.Context;
 import android.graphics.drawable.Drawable;
-import android.text.Html;
+import android.text.method.LinkMovementMethod;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -22,16 +22,16 @@ import java.util.ArrayList;
 public class ArticleCommentsRecyclerAdapter extends
         RecyclerView.Adapter<ArticleCommentsRecyclerAdapter.CommentsViewHolder> {
 
-    private final Context mContext;
-    private final LayoutInflater mInflator;
+    private final Context context;
+    private final LayoutInflater layoutInflater;
     private ArrayList<CommentListData> commentList;
-    private RecyclerViewClickListener mListener;
+    private RecyclerViewClickListener recyclerViewClickListener;
     private String authorId;
 
-    public ArticleCommentsRecyclerAdapter(Context pContext, RecyclerViewClickListener listener, String authorId) {
-        mContext = pContext;
-        mInflator = (LayoutInflater) pContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        mListener = listener;
+    public ArticleCommentsRecyclerAdapter(Context context, RecyclerViewClickListener listener, String authorId) {
+        this.context = context;
+        layoutInflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        recyclerViewClickListener = listener;
         this.authorId = authorId;
     }
 
@@ -46,28 +46,27 @@ public class ArticleCommentsRecyclerAdapter extends
 
     @Override
     public CommentsViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View v0 = mInflator.inflate(R.layout.ss_comment_item, parent, false);
+        View v0 = layoutInflater.inflate(R.layout.ss_comment_item, parent, false);
         return new CommentsViewHolder(v0);
     }
 
     @Override
     public void onBindViewHolder(final CommentsViewHolder commentsViewHolder, final int position) {
         commentsViewHolder.commentorUsernameTextView.setText(commentList.get(position).getUserName());
-        commentsViewHolder.commentDataTextView.setText((Html
-                .fromHtml(
-                        "<b>" + "<font color=\"#D54058\">" + commentList.get(position).getUserName() + "</font>"
-                                + "</b>"
-                                + " "
-                                + "<font color=\"#4A4A4A\">" + commentList.get(position).getMessage() + "</font>")));
-        commentsViewHolder.DateTextView.setText(DateTimeUtils
+        commentsViewHolder.commentDataTextView.setText(
+                AppUtils.createSpannableForMentionHandling(commentList.get(position).getUserId(),
+                        commentList.get(position).getUserName(), commentList.get(position).getMessage(),
+                        commentList.get(position).getMentions(), ContextCompat
+                                .getColor(commentsViewHolder.commentDataTextView.getContext(), R.color.app_red)));
+        commentsViewHolder.commentDataTextView.setMovementMethod(LinkMovementMethod.getInstance());
+        commentsViewHolder.dateTextView.setText(DateTimeUtils
                 .getDateFromNanoMilliTimestamp(Long.parseLong(commentList.get(position).getCreatedTime())));
         if (commentList.get(position).getReplies() == null || commentList.get(position).getReplies().isEmpty()
                 || commentList.get(position).getRepliesCount() == 0) {
-            commentsViewHolder.replyCommentTextView.setText(mContext.getString(R.string.reply));
+            commentsViewHolder.replyCommentTextView.setText(context.getString(R.string.reply));
         } else {
             commentsViewHolder.replyCommentTextView.setText(
-                    mContext.getString(R.string.reply) + "(" + commentList.get(position)
-                            .getRepliesCount() + ")");
+                    context.getString(R.string.reply) + "(" + commentList.get(position).getRepliesCount() + ")");
         }
         try {
             Picasso.get().load(commentList.get(position).getUserPic().getClientAppMin())
@@ -89,7 +88,6 @@ public class ArticleCommentsRecyclerAdapter extends
         }
         if (commentList.get(position).getLikeCount() <= 0) {
             commentsViewHolder.likeTextView.setText("");
-
         } else {
             commentsViewHolder.likeTextView.setText(commentList.get(position).getLikeCount() + "");
         }
@@ -106,7 +104,7 @@ public class ArticleCommentsRecyclerAdapter extends
                 commentsViewHolder.topCommentMarkedTextView.setVisibility(View.VISIBLE);
                 if (commentList.get(position).isTopCommentMarked()) {
                     commentsViewHolder.topCommentMarkedTextView
-                            .setText(mContext.getResources().getString(R.string.top_comment_marked_string));
+                            .setText(context.getResources().getString(R.string.top_comment_marked_string));
                     Drawable myDrawable = ContextCompat
                             .getDrawable(commentsViewHolder.topCommentMarkedTextView.getContext(),
                                     R.drawable.ic_top_comment_marked_golden);
@@ -135,7 +133,7 @@ public class ArticleCommentsRecyclerAdapter extends
         TextView replyCommentTextView;
         TextView commentDateTextView;
         TextView replyCountTextView;
-        TextView DateTextView;
+        TextView dateTextView;
         TextView likeTextView;
         ImageView moreOptionImageView;
         TextView topCommentMarkedTextView;
@@ -145,7 +143,7 @@ public class ArticleCommentsRecyclerAdapter extends
             super(view);
             commentorImageView = (ImageView) view.findViewById(R.id.commentorImageView);
             commentorUsernameTextView = (TextView) view.findViewById(R.id.commentorUsernameTextView);
-            DateTextView = (TextView) view.findViewById(R.id.DateTextView);
+            dateTextView = (TextView) view.findViewById(R.id.DateTextView);
             commentDataTextView = (TextView) view.findViewById(R.id.commentDataTextView);
             replyCommentTextView = (TextView) view.findViewById(R.id.replyCommentTextView);
             commentDateTextView = (TextView) view.findViewById(R.id.commentDateTextView);
@@ -165,12 +163,12 @@ public class ArticleCommentsRecyclerAdapter extends
 
         @Override
         public void onClick(View v) {
-            mListener.onRecyclerItemClick(v, getAdapterPosition());
+            recyclerViewClickListener.onRecyclerItemClick(v, getAdapterPosition());
         }
 
         @Override
         public boolean onLongClick(View v) {
-            mListener.onRecyclerItemClick(v, getAdapterPosition());
+            recyclerViewClickListener.onRecyclerItemClick(v, getAdapterPosition());
             return true;
         }
     }
@@ -178,6 +176,5 @@ public class ArticleCommentsRecyclerAdapter extends
     public interface RecyclerViewClickListener {
 
         void onRecyclerItemClick(View view, int position);
-
     }
 }

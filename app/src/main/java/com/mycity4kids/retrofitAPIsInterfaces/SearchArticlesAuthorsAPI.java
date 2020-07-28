@@ -3,6 +3,7 @@ package com.mycity4kids.retrofitAPIsInterfaces;
 import com.mycity4kids.models.request.SaveSearchQueryRequest;
 import com.mycity4kids.models.response.SearchResponse;
 import com.mycity4kids.models.response.SearchTrendsAndHistoryResponse;
+import com.mycity4kids.tagging.MentionsResponse;
 import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.http.Body;
@@ -38,4 +39,7 @@ public interface SearchArticlesAuthorsAPI {
 
     @POST("/v1/search/insert")
     Call<ResponseBody> saveSearchQuery(@Body SaveSearchQueryRequest saveSearchQueryRequest);
+
+    @GET("v2/search/users/mapping/")
+    Call<MentionsResponse> searchUserHandles(@Query("q") String query);
 }

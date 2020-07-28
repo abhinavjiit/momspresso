@@ -35,6 +35,7 @@ import com.mycity4kids.models.response.LikeReactionModel;
 import com.mycity4kids.preference.SharedPrefUtils;
 import com.mycity4kids.profile.UserProfileActivity;
 import com.mycity4kids.retrofitAPIsInterfaces.ArticleDetailsAPI;
+import com.mycity4kids.tagging.Mentions;
 import com.mycity4kids.ui.adapter.ArticleCommentsRecyclerAdapter;
 import com.mycity4kids.utils.AppUtils;
 import com.mycity4kids.utils.StringUtils;
@@ -46,6 +47,7 @@ import io.reactivex.disposables.Disposable;
 import io.reactivex.schedulers.Schedulers;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -234,24 +236,6 @@ public class ArticleCommentsFragment extends BaseFragment implements OnClickList
             default:
                 break;
         }
-
-    }
-
-    public void addComment(String content) {
-        showProgressDialog("Adding Comment");
-        AddEditCommentOrReplyRequest addEditCommentOrReplyRequest = new AddEditCommentOrReplyRequest();
-        addEditCommentOrReplyRequest.setPost_id(articleId);
-        addEditCommentOrReplyRequest.setMessage(content);
-        addEditCommentOrReplyRequest.setParent_id("0");
-        if (AppConstants.CONTENT_TYPE_VIDEO.equals(contentType)) {
-            addEditCommentOrReplyRequest.setType("video");
-        } else if (AppConstants.CONTENT_TYPE_SHORT_STORY.equals(contentType)) {
-            addEditCommentOrReplyRequest.setType("story");
-        } else {
-            addEditCommentOrReplyRequest.setType("article");
-        }
-        Call<CommentListResponse> call = articleDetailsApi.addCommentOrReply(addEditCommentOrReplyRequest);
-        call.enqueue(addCommentResponseListener);
     }
 
     private Callback<CommentListResponse> addCommentResponseListener = new Callback<CommentListResponse>() {
@@ -275,8 +259,9 @@ public class ArticleCommentsFragment extends BaseFragment implements OnClickList
                     commentModel.setMessage(responseData.getData().get(0).getMessage());
                     commentModel.setCreatedTime(responseData.getData().get(0).getCreatedTime());
                     commentModel.setPostId(responseData.getData().get(0).getPostId());
+                    commentModel.setMentions(responseData.getData().get(0).getMentions());
                     commentModel.setParentCommentId("0");
-                    commentModel.setReplies(new ArrayList<CommentListData>());
+                    commentModel.setReplies(new ArrayList<>());
                     commentModel.setRepliesCount(0);
                     commentModel.setUserPic(responseData.getData().get(0).getUserPic());
                     commentModel.setUserName(responseData.getData().get(0).getUserName());
@@ -329,13 +314,15 @@ public class ArticleCommentsFragment extends BaseFragment implements OnClickList
         }
     };
 
-    public void editComment(String content, String responseId, int position) {
+    public void editComment(String content, String responseId, int position,
+            Map<String, Mentions> mentions) {
         showProgressDialog("Editing your response");
         actionItemPosition = position;
         editContent = content;
         AddEditCommentOrReplyRequest addEditCommentOrReplyRequest = new AddEditCommentOrReplyRequest();
         addEditCommentOrReplyRequest.setPost_id(articleId);
         addEditCommentOrReplyRequest.setMessage(content);
+        addEditCommentOrReplyRequest.setMentions(mentions);
         Call<CommentListResponse> call = articleDetailsApi.editCommentOrReply(responseId, addEditCommentOrReplyRequest);
         call.enqueue(editCommentResponseListener);
     }
@@ -477,11 +464,12 @@ public class ArticleCommentsFragment extends BaseFragment implements OnClickList
         }
     };
 
-    void addReply(String content, String parentCommentId) {
+    void addReply(String content, String parentCommentId, Map<String, Mentions> mentionsMap) {
         showProgressDialog("Adding Reply");
         AddEditCommentOrReplyRequest addEditCommentOrReplyRequest = new AddEditCommentOrReplyRequest();
         addEditCommentOrReplyRequest.setPost_id(articleId);
         addEditCommentOrReplyRequest.setMessage(content);
+        addEditCommentOrReplyRequest.setMentions(mentionsMap);
         addEditCommentOrReplyRequest.setParent_id(parentCommentId);
         if (AppConstants.CONTENT_TYPE_VIDEO.equals(contentType)) {
             addEditCommentOrReplyRequest.setType("video");
@@ -519,6 +507,7 @@ public class ArticleCommentsFragment extends BaseFragment implements OnClickList
                     commentListData.setUserPic(responseData.getData().get(0).getUserPic());
                     commentListData.setUserName(responseData.getData().get(0).getUserName());
                     commentListData.setUserId(responseData.getData().get(0).getUserId());
+                    commentListData.setMentions(responseData.getData().get(0).getMentions());
 
                     for (int i = 0; i < commentsList.size(); i++) {
                         if (commentsList.get(i).getId().equals(responseData.getData().get(0).getParentCommentId())) {
@@ -561,11 +550,12 @@ public class ArticleCommentsFragment extends BaseFragment implements OnClickList
     };
 
 
-    void editReply(String content, String parentCommentId, String replyId) {
+    void editReply(String content, String parentCommentId, String replyId, Map<String, Mentions> mentionsMap) {
         showProgressDialog("Editing Reply");
         AddEditCommentOrReplyRequest addEditCommentOrReplyRequest = new AddEditCommentOrReplyRequest();
         addEditCommentOrReplyRequest.setPost_id(articleId);
         addEditCommentOrReplyRequest.setMessage(content);
+        addEditCommentOrReplyRequest.setMentions(mentionsMap);
         Call<CommentListResponse> call = articleDetailsApi.editCommentOrReply(replyId, addEditCommentOrReplyRequest);
         call.enqueue(editReplyResponseListener);
         editReplyId = replyId;
@@ -760,7 +750,6 @@ public class ArticleCommentsFragment extends BaseFragment implements OnClickList
                     Call<ResponseBody> call = articleDetailsApi
                             .likeDislikeComment(commentsList.get(position).getId(), commentListData);
                     call.enqueue(likeDisLikeCommentCallback);
-
                 } else {
                     commentsList.get(position).setLiked(true);
                     LikeReactionModel commentListData = new LikeReactionModel();
@@ -814,9 +803,8 @@ public class ArticleCommentsFragment extends BaseFragment implements OnClickList
 
     private void markedUnMarkedTopComment(TopCommentData commentListData) {
         BaseApplication.getInstance().getRetrofit().create(ArticleDetailsAPI.class).markedTopComment(commentListData)
-                .subscribeOn(
-                        Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(
-                new Observer<ResponseBody>() {
+                .subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Observer<ResponseBody>() {
                     @Override
                     public void onSubscribe(Disposable d) {
 
@@ -839,8 +827,6 @@ public class ArticleCommentsFragment extends BaseFragment implements OnClickList
 
                     }
                 });
-
-
     }
 
 
@@ -875,7 +861,7 @@ public class ArticleCommentsFragment extends BaseFragment implements OnClickList
     }
 
     @Override
-    public void addComments(String content) {
+    public void addComments(String content, Map<String, Mentions> mentionsMap) {
         showProgressDialog("Adding Comment");
         AddEditCommentOrReplyRequest addEditCommentOrReplyRequest = new AddEditCommentOrReplyRequest();
         addEditCommentOrReplyRequest.setPost_id(articleId);
@@ -888,6 +874,7 @@ public class ArticleCommentsFragment extends BaseFragment implements OnClickList
         } else {
             addEditCommentOrReplyRequest.setType("article");
         }
+        addEditCommentOrReplyRequest.setMentions(mentionsMap);
         Call<CommentListResponse> call = articleDetailsApi.addCommentOrReply(addEditCommentOrReplyRequest);
         call.enqueue(addCommentResponseListener);
     }

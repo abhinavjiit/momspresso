@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+  xmlns:app="http://schemas.android.com/apk/res-auto"
+  android:layout_width="match_parent"
+  android:layout_height="match_parent"
+  android:paddingStart="16dp"
+  android:paddingTop="8dp"
+  android:paddingEnd="16dp"
+  android:paddingBottom="8dp">
+
+  <com.mikhaellopez.circularimageview.CircularImageView
+    android:id="@+id/userImageView"
+    android:layout_width="36dp"
+    android:layout_height="36dp"
+    android:layout_alignParentStart="true"
+    android:layout_alignParentTop="true"
+    android:layout_marginEnd="4dp"
+    android:contentDescription="@string/author_img"
+    android:src="@drawable/default_commentor_img"
+    android:visibility="visible"
+    app:civ_border="true"
+    app:civ_border_color="@color/white_color"
+    app:civ_border_width="0dp"
+    app:civ_shadow="true"
+    app:civ_shadow_color="@color/grey"
+    app:civ_shadow_radius="4" />
+
+  <com.mycity4kids.widget.CustomFontTextView
+    android:id="@+id/userNameTextView"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_above="@+id/userHandleTextView"
+    android:layout_toEndOf="@+id/userImageView"
+    android:text=""
+    android:textColor="@color/app_dark_black"
+    android:textSize="14sp"
+    app:fontName="Roboto-Medium.ttf" />
+
+  <com.mycity4kids.widget.CustomFontTextView
+    android:id="@+id/userHandleTextView"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_alignBottom="@+id/userImageView"
+    android:layout_toEndOf="@+id/userImageView"
+    android:text=""
+    android:textColor="@color/app_grey"
+    android:textSize="12sp"
+    app:fontName="Roboto-Regular.ttf" />
+</RelativeLayout>

@@ -11,11 +11,16 @@ import com.mycity4kids.models.Topics
 import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.horizontal_recycler_view_video_challenge.view.*
 
-class ShortStoryChallengeTopicsAdapter(private val clickListener: RecyclerViewClickListener) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
+class ShortStoryChallengeTopicsAdapter(private val clickListener: RecyclerViewClickListener) :
+    RecyclerView.Adapter<RecyclerView.ViewHolder>() {
     private var shortStoryChallengesList = ArrayList<Topics>()
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
-        val view = LayoutInflater.from(parent.context).inflate(R.layout.horizontal_recycler_view_video_challenge, parent, false)
+        val view = LayoutInflater.from(parent.context).inflate(
+            R.layout.horizontal_recycler_view_video_challenge,
+            parent,
+            false
+        )
         return ViewHolder(view, clickListener)
     }
 
@@ -26,9 +31,12 @@ class ShortStoryChallengeTopicsAdapter(private val clickListener: RecyclerViewCl
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
         if (holder is ViewHolder) {
             holder.info.visibility = View.GONE
-            holder.challengeNameText.text = shortStoryChallengesList[position].display_name.toUpperCase()
+            holder.challengeNameText.text =
+                shortStoryChallengesList[position].display_name.toUpperCase()
             try {
-                Picasso.get().load(shortStoryChallengesList[position].extraData[0].challenge.imageUrl).placeholder(R.drawable.default_article).error(R.drawable.default_article).fit().into(holder.challengesImageView)
+                Picasso.get().load(shortStoryChallengesList[position].extraData[0].challenge.imageUrl).placeholder(
+                    R.drawable.default_article
+                ).error(R.drawable.default_article).fit().into(holder.challengesImageView)
             } catch (e: Exception) {
                 holder.challengesImageView.setImageResource(R.drawable.default_article)
             }
@@ -44,7 +52,8 @@ class ShortStoryChallengeTopicsAdapter(private val clickListener: RecyclerViewCl
         shortStoryChallengesList = data
     }
 
-    class ViewHolder(itemView: View, private val clickListener: RecyclerViewClickListener) : RecyclerView.ViewHolder(itemView), View.OnClickListener {
+    class ViewHolder(itemView: View, private val clickListener: RecyclerViewClickListener) :
+        RecyclerView.ViewHolder(itemView), View.OnClickListener {
         override fun onClick(v: View) {
             clickListener.onClick(v, adapterPosition)
         }

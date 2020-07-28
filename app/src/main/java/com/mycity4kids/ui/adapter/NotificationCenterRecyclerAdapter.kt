@@ -120,11 +120,9 @@ class NotificationCenterRecyclerAdapter(
                     holder.notificationBodyTextView.text =
                         AppUtils.fromHtml("<b>" + notificationList[position].title + "</b> " + notificationList[position].htmlBody)
                 }
-
                 holder.notificationDateTextView.text = "" + DateTimeUtils.getMMMDDFormatDate(
                     notificationList[position].createdTime
                 )
-
                 try {
                     if (!StringUtils.isNullOrEmpty(notificationList[position].thumbNail)) {
                         holder.contentImageView.visibility = View.VISIBLE
@@ -230,31 +228,11 @@ class NotificationCenterRecyclerAdapter(
                             }
                         }
                         holder.actionButtonWidget.visibility = View.VISIBLE
-                    }
-                    // else if (!notificationList[position].badgeId.isNullOrBlank()) {
-                    //     holder.actionButtonWidget.tag = AppConstants.NOTIFICATION_ACTION_SHARE_BADGE
-                    //     holder.actionButtonWidget.setText(holder.actionButtonWidget.context.getString(R.string.ad_bottom_bar_generic_share))
-                    //     holder.actionButtonWidget.visibility = View.VISIBLE
-                    // } else if (!notificationList[position].milestoneId.isNullOrBlank()) {
-                    //     holder.actionButtonWidget.tag = AppConstants.NOTIFICATION_ACTION_SHARE_MILESTONE
-                    //     holder.actionButtonWidget.setText(holder.actionButtonWidget.context.getString(R.string.ad_bottom_bar_generic_share))
-                    //     holder.actionButtonWidget.visibility = View.VISIBLE
-                    // }
-                    else {
+                    } else {
                         holder.actionButtonWidget.tag = null
                         holder.actionButtonWidget.visibility = View.GONE
                     }
-                }
-                // else if (AppConstants.NOTIFICATION_CENTER_VIDEO_CHALLENGE_DETAIL == notifType) {
-                //     holder.actionButtonWidget.tag = AppConstants.NOTIFICATION_ACTION_VLOG_CHALLENGE
-                //     holder.actionButtonWidget.setText(holder.actionButtonWidget.context.getString(R.string.participate))
-                //     holder.actionButtonWidget.visibility = View.VISIBLE
-                // } else if (AppConstants.NOTIFICATION_CENTER_STORY_CHALLENGE_DETAIL == notifType) {
-                //     holder.actionButtonWidget.tag = AppConstants.NOTIFICATION_ACTION_STORY_CHALLENGE
-                //     holder.actionButtonWidget.setText(holder.actionButtonWidget.context.getString(R.string.participate))
-                //     holder.actionButtonWidget.visibility = View.VISIBLE
-                // }
-                else {
+                } else {
                     holder.actionButtonWidget.tag = null
                     holder.actionButtonWidget.visibility = View.GONE
                 }

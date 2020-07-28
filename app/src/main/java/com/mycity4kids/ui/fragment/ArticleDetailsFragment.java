@@ -100,6 +100,7 @@ import com.mycity4kids.retrofitAPIsInterfaces.FollowAPI;
 import com.mycity4kids.retrofitAPIsInterfaces.ShortStoryAPI;
 import com.mycity4kids.retrofitAPIsInterfaces.TopicsCategoryAPI;
 import com.mycity4kids.retrofitAPIsInterfaces.TorcaiAdsAPI;
+import com.mycity4kids.tagging.Mentions;
 import com.mycity4kids.ui.GroupMembershipStatus;
 import com.mycity4kids.ui.activity.ArticleDetailsContainerActivity;
 import com.mycity4kids.ui.activity.DashboardActivity;
@@ -2354,9 +2355,8 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
 
     private void markedUnMarkedTopComment(TopCommentData commentListData) {
         BaseApplication.getInstance().getRetrofit().create(ArticleDetailsAPI.class).markedTopComment(commentListData)
-                .subscribeOn(
-                        Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(
-                new Observer<ResponseBody>() {
+                .subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Observer<ResponseBody>() {
                     @Override
                     public void onSubscribe(Disposable d) {
 
@@ -2379,8 +2379,6 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
 
                     }
                 });
-
-
     }
 
     private void reportComment(int position) {
@@ -2641,12 +2639,13 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
         addArticleCommentReplyDialogFragment.show(fm, "Add Replies");
     }
 
-    public void addReply(String content, String commentId) {
+    public void addReply(String content, String commentId, Map<String, Mentions> mentionsMap) {
         showProgressDialog("Adding Reply");
         AddEditCommentOrReplyRequest addEditCommentOrReplyRequest = new AddEditCommentOrReplyRequest();
         addEditCommentOrReplyRequest.setPost_id(articleId);
         addEditCommentOrReplyRequest.setMessage(content);
         addEditCommentOrReplyRequest.setParent_id(commentId);
+        addEditCommentOrReplyRequest.setMentions(mentionsMap);
         addEditCommentOrReplyRequest.setType("article");
         Retrofit retrofit = BaseApplication.getInstance().getRetrofit();
         ArticleDetailsAPI articleDetailsApi = retrofit.create(ArticleDetailsAPI.class);
@@ -2670,7 +2669,7 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
             try {
 
                 CommentListResponse res = response.body();
-                if (null != res && 200 == res.getCode() && Constants.SUCCESS.equals(res.getStatus())) {
+                if (200 == res.getCode() && Constants.SUCCESS.equals(res.getStatus())) {
                     CommentListData commentListData = new CommentListData();
                     commentListData.setId(res.getData().get(0).getId());
                     commentListData.setMessage(res.getData().get(0).getMessage());
@@ -2680,6 +2679,7 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
                     commentListData.setUserPic(res.getData().get(0).getUserPic());
                     commentListData.setUserName(res.getData().get(0).getUserName());
                     commentListData.setUserId(res.getData().get(0).getUserId());
+                    commentListData.setMentions(res.getData().get(0).getMentions());
 
                     for (int i = 0; i < commentsList.size(); i++) {
                         if (commentsList.get(i).getId().equals(res.getData().get(0).getParentCommentId())) {
@@ -4215,13 +4215,15 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
         reportContentDialogFragment.show(fm, "Report Content");
     }
 
-    public void editComment(String content, String responseId, int position) {
+    public void editComment(String content, String responseId, int position,
+            Map<String, Mentions> mentions) {
         showProgressDialog("Editing your response");
         editCommentPosition = position;
         editContent = content;
         AddEditCommentOrReplyRequest addEditCommentOrReplyRequest = new AddEditCommentOrReplyRequest();
         addEditCommentOrReplyRequest.setPost_id(articleId);
         addEditCommentOrReplyRequest.setMessage(content);
+        addEditCommentOrReplyRequest.setMentions(mentions);
         Call<CommentListResponse> call = articleDetailsApi.editCommentOrReply(responseId, addEditCommentOrReplyRequest);
         call.enqueue(editCommentResponseListener);
     }
@@ -4477,11 +4479,13 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
     };
 
 
-    void editReply(String content, String parentCommentId, String replyId) {
+    void editReply(String content, String parentCommentId, String replyId,
+            Map<String, Mentions> mentions) {
         showProgressDialog("Editing Reply");
         AddEditCommentOrReplyRequest addEditCommentOrReplyRequest = new AddEditCommentOrReplyRequest();
         addEditCommentOrReplyRequest.setPost_id(articleId);
         addEditCommentOrReplyRequest.setMessage(content);
+        addEditCommentOrReplyRequest.setMentions(mentions);
         Call<CommentListResponse> call = articleDetailsApi.editCommentOrReply(replyId, addEditCommentOrReplyRequest);
         call.enqueue(editReplyResponseListener);
         this.replyId = replyId;

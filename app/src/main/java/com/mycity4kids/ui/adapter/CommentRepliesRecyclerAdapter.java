@@ -2,7 +2,7 @@ package com.mycity4kids.ui.adapter;
 
 import android.content.Context;
 import android.graphics.drawable.Drawable;
-import android.text.Html;
+import android.text.method.LinkMovementMethod;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -70,23 +70,14 @@ public class CommentRepliesRecyclerAdapter extends RecyclerView.Adapter<Recycler
         if (holder instanceof CommentsViewHolder) {
             CommentsViewHolder commentsViewHolder = (CommentsViewHolder) holder;
             commentsViewHolder.commentorUsernameTextView.setText(repliesList.get(position).getUserName());
-            commentsViewHolder.commentDataTextView.setText((Html
-                    .fromHtml(
-                            "<b>" + "<font color=\"#D54058\">" + repliesList.get(position).getUserName() + "</font>"
-                                    + "</b>"
-                                    + " "
-                                    + "<font color=\"#4A4A4A\">" + repliesList.get(position).getMessage()
-                                    + "</font>")));
+            commentsViewHolder.commentDataTextView.setText(
+                    AppUtils.createSpannableForMentionHandling(repliesList.get(position).getUserId(),
+                            repliesList.get(position).getUserName(), repliesList.get(position).getMessage(),
+                            repliesList.get(position).getMentions(), ContextCompat
+                                    .getColor(commentsViewHolder.commentDataTextView.getContext(), R.color.app_red)));
+            commentsViewHolder.commentDataTextView.setMovementMethod(LinkMovementMethod.getInstance());
             commentsViewHolder.dateTextView.setText(DateTimeUtils
                     .getDateFromNanoMilliTimestamp(Long.parseLong(repliesList.get(position).getCreatedTime())));
-            if (repliesList.get(position).getReplies() == null || repliesList.get(position).getReplies().isEmpty()
-                    || repliesList.get(position).getRepliesCount() == 0) {
-                commentsViewHolder.replyCommentTextView.setText(context.getString(R.string.reply));
-            } else {
-                commentsViewHolder.replyCommentTextView.setText(
-                        context.getString(R.string.reply) + "(" + repliesList.get(position)
-                                .getRepliesCount() + ")");
-            }
             try {
                 Picasso.get().load(repliesList.get(position).getUserPic().getClientAppMin())
                         .placeholder(R.drawable.default_commentor_img).into((commentsViewHolder.commentorImageView));
@@ -144,13 +135,12 @@ public class CommentRepliesRecyclerAdapter extends RecyclerView.Adapter<Recycler
 
         } else {
             RepliesViewHolder repliesViewHolder = (RepliesViewHolder) holder;
-            repliesViewHolder.commentDataTextView.setText((Html
-                    .fromHtml(
-                            "<b>" + "<font color=\"#D54058\">" + repliesList.get(position).getUserName() + "</font>"
-                                    + "</b>"
-                                    + " "
-                                    + "<font color=\"#4A4A4A\">" + repliesList.get(position).getMessage()
-                                    + "</font>")));
+            repliesViewHolder.commentDataTextView.setText(
+                    AppUtils.createSpannableForMentionHandling(repliesList.get(position).getUserId(),
+                            repliesList.get(position).getUserName(), repliesList.get(position).getMessage(),
+                            repliesList.get(position).getMentions(), ContextCompat
+                                    .getColor(repliesViewHolder.commentDataTextView.getContext(), R.color.app_red)));
+            repliesViewHolder.commentDataTextView.setMovementMethod(LinkMovementMethod.getInstance());
             repliesViewHolder.commentorUsernameTextView.setText(repliesList.get(position).getUserName());
             repliesViewHolder.commentDateTextView.setText(DateTimeUtils
                     .getDateFromNanoMilliTimestamp(Long.parseLong(repliesList.get(position).getCreatedTime())));

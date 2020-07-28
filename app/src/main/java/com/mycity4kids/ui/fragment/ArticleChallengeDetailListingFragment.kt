@@ -47,7 +47,6 @@ class ArticleChallengeDetailListingFragment : BaseFragment(),
     private lateinit var loadingView: RelativeLayout
     private lateinit var shimmer1: ShimmerFrameLayout
     private lateinit var noArticleTextView: TextView
-    private var ADD_BOOKMARK = 1
 
     override fun onCreateView(
         inflater: LayoutInflater,

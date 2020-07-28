@@ -23,12 +23,12 @@ import com.mycity4kids.R;
 import com.mycity4kids.application.BaseApplication;
 import com.mycity4kids.base.BaseFragment;
 import com.mycity4kids.constants.Constants;
-import com.mycity4kids.editor.NewEditor;
 import com.mycity4kids.models.Topics;
 import com.mycity4kids.models.response.ArticleListingResponse;
 import com.mycity4kids.models.response.ArticleListingResult;
 import com.mycity4kids.preference.SharedPrefUtils;
 import com.mycity4kids.retrofitAPIsInterfaces.TopicsCategoryAPI;
+import com.mycity4kids.ui.activity.ArticleChallengeOrTopicSelectionActivity;
 import com.mycity4kids.ui.activity.ArticleDetailsContainerActivity;
 import com.mycity4kids.ui.activity.ShortStoryContainerActivity;
 import com.mycity4kids.ui.activity.TopicsListingActivity;
@@ -241,7 +241,7 @@ public class LeafTopicArticlesTabFragment extends BaseFragment implements View.O
         switch (view.getId()) {
             case R.id.writeArticleCell:
                 if (isAdded()) {
-                    Intent intent = new Intent(getActivity(), NewEditor.class);
+                    Intent intent = new Intent(getActivity(), ArticleChallengeOrTopicSelectionActivity.class);
                     startActivity(intent);
                 }
                 break;
