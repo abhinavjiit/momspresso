@@ -32,7 +32,6 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import com.facebook.share.model.ShareLinkContent;
 import com.facebook.share.widget.ShareDialog;
-import com.getbase.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.crashlytics.FirebaseCrashlytics;
 import com.google.gson.Gson;
@@ -64,6 +63,7 @@ import com.mycity4kids.profile.UserProfileActivity;
 import com.mycity4kids.retrofitAPIsInterfaces.ArticleDetailsAPI;
 import com.mycity4kids.retrofitAPIsInterfaces.FollowAPI;
 import com.mycity4kids.retrofitAPIsInterfaces.ShortStoryAPI;
+import com.mycity4kids.tagging.Mentions;
 import com.mycity4kids.ui.activity.ArticleDetailsContainerActivity;
 import com.mycity4kids.ui.activity.ShortStoryContainerActivity;
 import com.mycity4kids.ui.adapter.ShortStoriesDetailRecyclerAdapter;
@@ -128,7 +128,6 @@ public class ShortStoryFragment extends BaseFragment implements View.OnClickList
     private ShortStoryDetailAndCommentModel headerModel;
     private ArrayList<ShortStoryDetailAndCommentModel> consolidatedList;
     ShortStoriesDetailRecyclerAdapter adapter;
-    private FloatingActionButton openAddCommentDialog;
     private int actionItemPosition;
     private String editContent;
     private String editReplyParentCommentId;
@@ -150,12 +149,10 @@ public class ShortStoryFragment extends BaseFragment implements View.OnClickList
         fragmentView = inflater.inflate(R.layout.short_story_fragment, container, false);
         rootLayout = (RelativeLayout) fragmentView.findViewById(R.id.rootLayout);
         shortStoryRecyclerView = (RecyclerView) fragmentView.findViewById(R.id.shortStoryRecyclerView);
-        openAddCommentDialog = (FloatingActionButton) fragmentView.findViewById(R.id.openAddCommentDialog);
         viewAllTextView = fragmentView.findViewById(R.id.viewAllTextView);
 
         userDynamoId = SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId();
         try {
-            openAddCommentDialog.setOnClickListener(this);
             Bundle bundle = getArguments();
             if (bundle != null) {
                 colorPosition = bundle.getInt("colorPosition", 0);
@@ -177,7 +174,7 @@ public class ShortStoryFragment extends BaseFragment implements View.OnClickList
                 shortStoryApi = retro.create(ShortStoryAPI.class);
                 getShortStoryDetails();
             }
-            adapter = new ShortStoriesDetailRecyclerAdapter(getActivity(), this, colorPosition);
+            adapter = new ShortStoriesDetailRecyclerAdapter(getActivity(), this);
             adapter.setListData(consolidatedList);
             shortStoryRecyclerView.setAdapter(adapter);
 
@@ -546,15 +543,6 @@ public class ShortStoryFragment extends BaseFragment implements View.OnClickList
     public void onClick(View v) {
         try {
             switch (v.getId()) {
-                case R.id.openAddCommentDialog:
-                    AddShortStoryCommentReplyDialogFragment addGpPostCommentReplyDialogFragment =
-                            new AddShortStoryCommentReplyDialogFragment();
-                    FragmentManager fm = getChildFragmentManager();
-                    Bundle args = new Bundle();
-                    addGpPostCommentReplyDialogFragment.setArguments(args);
-                    addGpPostCommentReplyDialogFragment.setCancelable(true);
-                    addGpPostCommentReplyDialogFragment.show(fm, "Add Comment");
-                    break;
                 case R.id.viewAllTextView:
                     try {
                         Bundle bundle = new Bundle();
@@ -747,9 +735,8 @@ public class ShortStoryFragment extends BaseFragment implements View.OnClickList
 
     private void markedUnMarkedTopComment(TopCommentData commentListData) {
         BaseApplication.getInstance().getRetrofit().create(ArticleDetailsAPI.class).markedTopComment(commentListData)
-                .subscribeOn(
-                        Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(
-                new Observer<ResponseBody>() {
+                .subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Observer<ResponseBody>() {
                     @Override
                     public void onSubscribe(Disposable d) {
 
@@ -772,8 +759,6 @@ public class ShortStoryFragment extends BaseFragment implements View.OnClickList
 
                     }
                 });
-
-
     }
 
     private Callback<ResponseBody> likeDisLikeCommentCallback = new Callback<ResponseBody>() {
@@ -907,13 +892,14 @@ public class ShortStoryFragment extends BaseFragment implements View.OnClickList
         addGpPostCommentReplyDialogFragment.show(fm, "Add Replies");
     }
 
-    void addComment(String content) {
+    void addComment(String content, Map<String, Mentions> mentionsMap) {
         showProgressDialog("Adding Comment");
         AddEditCommentOrReplyRequest addEditShortStoryCommentOrReplyRequest = new AddEditCommentOrReplyRequest();
         addEditShortStoryCommentOrReplyRequest.setPost_id(articleId);
         addEditShortStoryCommentOrReplyRequest.setMessage(content);
         addEditShortStoryCommentOrReplyRequest.setParent_id("0");
         addEditShortStoryCommentOrReplyRequest.setType("story");
+        addEditShortStoryCommentOrReplyRequest.setMentions(mentionsMap);
         Call<CommentListResponse> call = shortStoryApi.addCommentOrReply(addEditShortStoryCommentOrReplyRequest);
         call.enqueue(addCommentResponseListener);
     }
@@ -939,11 +925,13 @@ public class ShortStoryFragment extends BaseFragment implements View.OnClickList
                     shortStoryCommentListData.setCreatedTime(responseData.getData().get(0).getCreatedTime());
                     shortStoryCommentListData.setPostId(responseData.getData().get(0).getPostId());
                     shortStoryCommentListData.setParentCommentId("0");
-                    shortStoryCommentListData.setReplies(new ArrayList<CommentListData>());
+                    shortStoryCommentListData.setReplies(new ArrayList<>());
                     shortStoryCommentListData.setRepliesCount(0);
                     shortStoryCommentListData.setUserPic(responseData.getData().get(0).getUserPic());
                     shortStoryCommentListData.setUserName(responseData.getData().get(0).getUserName());
                     shortStoryCommentListData.setUserId(responseData.getData().get(0).getUserId());
+                    shortStoryCommentListData.setMentions(responseData.getData().get(0).getMentions());
+
                     ShortStoryDetailAndCommentModel commentModel = new ShortStoryDetailAndCommentModel();
                     commentModel.setSsComment(shortStoryCommentListData);
                     consolidatedList.add(1, commentModel);
@@ -991,13 +979,14 @@ public class ShortStoryFragment extends BaseFragment implements View.OnClickList
         }
     };
 
-    public void editComment(String content, String responseId, int position) {
+    public void editComment(String content, String responseId, int position, Map<String, Mentions> mentions) {
         showProgressDialog("Editing your response");
         actionItemPosition = position;
         editContent = content;
         AddEditCommentOrReplyRequest addEditShortStoryCommentOrReplyRequest = new AddEditCommentOrReplyRequest();
         addEditShortStoryCommentOrReplyRequest.setPost_id(articleId);
         addEditShortStoryCommentOrReplyRequest.setMessage(content);
+        addEditShortStoryCommentOrReplyRequest.setMentions(mentions);
         Call<CommentListResponse> call = shortStoryApi
                 .editCommentOrReply(responseId, addEditShortStoryCommentOrReplyRequest);
         call.enqueue(editCommentResponseListener);
@@ -1054,13 +1043,14 @@ public class ShortStoryFragment extends BaseFragment implements View.OnClickList
         }
     };
 
-    void addReply(String content, String parentCommentId) {
+    void addReply(String content, String parentCommentId, Map<String, Mentions> mentionsMap) {
         showProgressDialog("Adding Reply");
         AddEditCommentOrReplyRequest addEditShortStoryCommentOrReplyRequest = new AddEditCommentOrReplyRequest();
         addEditShortStoryCommentOrReplyRequest.setPost_id(articleId);
         addEditShortStoryCommentOrReplyRequest.setMessage(content);
         addEditShortStoryCommentOrReplyRequest.setParent_id(parentCommentId);
         addEditShortStoryCommentOrReplyRequest.setType("story");
+        addEditShortStoryCommentOrReplyRequest.setMentions(mentionsMap);
         Call<CommentListResponse> call = shortStoryApi.addCommentOrReply(addEditShortStoryCommentOrReplyRequest);
         call.enqueue(addReplyResponseListener);
     }
@@ -1089,6 +1079,7 @@ public class ShortStoryFragment extends BaseFragment implements View.OnClickList
                     shortStoryCommentListData.setUserPic(responseData.getData().get(0).getUserPic());
                     shortStoryCommentListData.setUserName(responseData.getData().get(0).getUserName());
                     shortStoryCommentListData.setUserId(responseData.getData().get(0).getUserId());
+                    shortStoryCommentListData.setMentions(responseData.getData().get(0).getMentions());
                     for (int i = 1; i < consolidatedList.size(); i++) {
                         if (consolidatedList.get(i).getSsComment().getId()
                                 .equals(responseData.getData().get(0).getParentCommentId())) {
@@ -1133,11 +1124,12 @@ public class ShortStoryFragment extends BaseFragment implements View.OnClickList
         }
     };
 
-    void editReply(String content, String parentCommentId, String replyId) {
+    void editReply(String content, String parentCommentId, String replyId, Map<String, Mentions> mentionsMap) {
         showProgressDialog("Editing Reply");
         AddEditCommentOrReplyRequest addEditShortStoryCommentOrReplyRequest = new AddEditCommentOrReplyRequest();
         addEditShortStoryCommentOrReplyRequest.setPost_id(articleId);
         addEditShortStoryCommentOrReplyRequest.setMessage(content);
+        addEditShortStoryCommentOrReplyRequest.setMentions(mentionsMap);
         Call<CommentListResponse> call = shortStoryApi
                 .editCommentOrReply(replyId, addEditShortStoryCommentOrReplyRequest);
         call.enqueue(editReplyResponseListener);

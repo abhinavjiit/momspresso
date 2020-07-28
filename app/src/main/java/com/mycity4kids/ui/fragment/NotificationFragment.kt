@@ -33,6 +33,8 @@ import com.mycity4kids.retrofitAPIsInterfaces.NotificationsAPI
 import com.mycity4kids.ui.ContentCommentReplyNotificationActivity
 import com.mycity4kids.ui.GroupMembershipStatus
 import com.mycity4kids.ui.GroupMembershipStatus.IMembershipStatus
+import com.mycity4kids.ui.activity.ArticleChallengeDetailActivity
+import com.mycity4kids.ui.activity.ArticleChallengeOrTopicSelectionActivity
 import com.mycity4kids.ui.activity.ArticleDetailsContainerActivity
 import com.mycity4kids.ui.activity.ArticleListingActivity
 import com.mycity4kids.ui.activity.BadgeActivity
@@ -47,7 +49,6 @@ import com.mycity4kids.ui.activity.ShortStoriesListingContainerActivity
 import com.mycity4kids.ui.activity.ShortStoryChallengeDetailActivity
 import com.mycity4kids.ui.activity.ShortStoryContainerActivity
 import com.mycity4kids.ui.activity.ShortStoryModerationOrShareActivity
-import com.mycity4kids.ui.activity.SuggestedTopicsActivity
 import com.mycity4kids.ui.activity.TopicsListingActivity
 import com.mycity4kids.ui.activity.ViewGroupPostCommentsRepliesActivity
 import com.mycity4kids.ui.activity.collection.UserCollectionItemListActivity
@@ -382,7 +383,7 @@ class NotificationFragment : BaseFragment(), IMembershipStatus,
                 }
                 AppConstants.NOTIFICATION_CENTER_SUGGESTED_TOPICS -> {
                     val intent =
-                        Intent(activity, SuggestedTopicsActivity::class.java)
+                        Intent(activity, ArticleChallengeOrTopicSelectionActivity::class.java)
                     startActivity(intent)
                     pushEvent("NOTIFICATION_CENTER_SUGGESTED_TOPICS")
                 }
@@ -823,6 +824,15 @@ class NotificationFragment : BaseFragment(), IMembershipStatus,
                     startActivity(intent)
                     pushEvent("NOTIFICATION_CENTER_PERSONAL_INFO")
                 }
+                AppConstants.NOTIFICATION_CENTER_ARTICLE_CHALLENGE -> {
+                    val intent = Intent(activity, ArticleChallengeDetailActivity::class.java)
+                    intent.putExtra(
+                        "articleChallengeId",
+                        notificationCenterResultArrayList!![position].challengeId
+                    )
+                    startActivity(intent)
+                    pushEvent("NOTIFICATION_CENTER_ARTICLE_CHALLENGE")
+                }
                 else -> {
                 }
             }
@@ -841,39 +851,6 @@ class NotificationFragment : BaseFragment(), IMembershipStatus,
                         Log.d("MC4kException", Log.getStackTraceString(e))
                     }
                 }
-                //                AppConstants.NOTIFICATION_ACTION_SHARE_BADGE -> {
-                //                    activity?.let {
-                //                        if (AppUtils.shareGenericLinkWithSuccessStatus(
-                //                                it,
-                //                                notificationCenterResultArrayList?.get(position)?.sharingUrl
-                //                            )
-                //                        ) {
-                //                            Utils.pushProfileEvents(
-                //                                it, "CTA_Generic_Share_Private_Badge_Detail",
-                //                                "BadgesDialogFragment", "Generic Share", badgeData?.badge_name
-                //                            )
-                //                        }
-                //                    }
-                //
-                //                }
-                //                AppConstants.NOTIFICATION_ACTION_SHARE_MILESTONE -> {
-                //                    activity?.let {
-                //                        if (AppUtils.shareGenericLinkWithSuccessStatus(
-                //                                it,
-                //                                notificationCenterResultArrayList?.get(position)?.sharingUrl
-                //                            )
-                //                        ) {
-                //                            Utils.pushProfileEvents(
-                //                                it, "CTA_Generic_Share_Private_Badge_Detail",
-                //                                "BadgesDialogFragment", "Generic Share", badgeData?.badge_name
-                //                            )
-                //                        }
-                //                    }
-                //                }
-                //                AppConstants.NOTIFICATION_ACTION_STORY_CHALLENGE -> {
-                //                }
-                //                AppConstants.NOTIFICATION_ACTION_VLOG_CHALLENGE -> {
-                //                }
                 else -> {
                 }
             }

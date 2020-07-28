@@ -3,7 +3,9 @@ package com.mycity4kids.models.response;
 import android.os.Parcel;
 import android.os.Parcelable;
 import com.google.gson.annotations.SerializedName;
+import com.mycity4kids.tagging.Mentions;
 import java.util.ArrayList;
+import java.util.Map;
 
 /**
  * Created by hemant on 6/6/18.
@@ -37,6 +39,9 @@ public class CommentListData implements Parcelable {
     private Boolean isLiked = false;
     @SerializedName("is_top_comment")
     private boolean is_top_comment;
+    @SerializedName("mentions")
+    private Map<String, Mentions> mentions;
+
     private boolean topCommentMarked = false;
     private String reaction;
     private boolean status;
@@ -198,9 +203,16 @@ public class CommentListData implements Parcelable {
         this.topCommentMarked = topCommentMarked;
     }
 
-
     public void setIs_top_comment(boolean is_top_comment) {
         this.is_top_comment = is_top_comment;
+    }
+
+    public Map<String, Mentions> getMentions() {
+        return mentions;
+    }
+
+    public void setMentions(Map<String, Mentions> mentions) {
+        this.mentions = mentions;
     }
 
     @Override

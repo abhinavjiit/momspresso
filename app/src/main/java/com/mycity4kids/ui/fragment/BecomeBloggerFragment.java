@@ -13,7 +13,7 @@ import androidx.fragment.app.FragmentStatePagerAdapter;
 import androidx.viewpager.widget.ViewPager;
 import com.mycity4kids.R;
 import com.mycity4kids.base.BaseFragment;
-import com.mycity4kids.editor.NewEditor;
+import com.mycity4kids.ui.activity.ArticleChallengeOrTopicSelectionActivity;
 
 /**
  * Created by hemant on 2/8/17.
@@ -43,7 +43,7 @@ public class BecomeBloggerFragment extends BaseFragment {
         viewPager.setAdapter(adapter);
 
         getStartedTextView.setOnClickListener(v -> {
-            Intent intent = new Intent(getActivity(), NewEditor.class);
+            Intent intent = new Intent(getActivity(), ArticleChallengeOrTopicSelectionActivity.class);
             startActivity(intent);
         });
         return view;
@@ -53,7 +53,7 @@ public class BecomeBloggerFragment extends BaseFragment {
 
         private int numOfTabs;
 
-        public BecomeBloggerPagerAdapter(FragmentManager fm, int numOfTabs) {
+        BecomeBloggerPagerAdapter(FragmentManager fm, int numOfTabs) {
             super(fm);
             this.numOfTabs = numOfTabs;
         }

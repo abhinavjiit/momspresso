@@ -104,10 +104,10 @@ class ArticleChallengeOrTopicSelectionActivity : BaseActivity(),
             val callRecentVideoArticles =
                 vlogsListingAndDetailsApi
                     .getArticleChallenges(AppConstants.ARTICLE_CHALLENGE_CATEGORY_ID)
-            callRecentVideoArticles.enqueue(vlogChallengeResponseCallBack)
+            callRecentVideoArticles.enqueue(blogsChallengeResponseCallBack)
         }
 
-    private val vlogChallengeResponseCallBack: Callback<Topics> =
+    private val blogsChallengeResponseCallBack: Callback<Topics> =
         object : Callback<Topics> {
             override fun onResponse(
                 call: Call<Topics>,
@@ -224,14 +224,8 @@ class ArticleChallengeOrTopicSelectionActivity : BaseActivity(),
                 dialog.show()
             }
         } else {
-
             val intent = Intent(this, ArticleChallengeDetailActivity::class.java)
-            intent.apply {
-                putExtra("articleChallengeId", topics.id)
-                putExtra("rules", topics.extraData[0].challenge.rules)
-                putExtra("challengeName", topics.display_name)
-                putExtra("articleImageVIEW", topics.extraData[0].challenge.imageUrl)
-            }
+            intent.putExtra("articleChallengeId", topics.id)
             startActivity(intent)
         }
     }

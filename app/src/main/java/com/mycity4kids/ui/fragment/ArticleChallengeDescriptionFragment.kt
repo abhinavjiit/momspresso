@@ -25,6 +25,6 @@ class ArticleChallengeDescriptionFragment : BaseFragment() {
         } ?: run {
             ToastUtils.showToast(activity, "something went wrong")
         }
-        return videoChallengeRulesWebView
+        return view
     }
 }

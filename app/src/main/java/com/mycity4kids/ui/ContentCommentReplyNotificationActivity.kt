@@ -24,6 +24,7 @@ import com.mycity4kids.models.response.CommentListResponse
 import com.mycity4kids.models.response.LikeReactionModel
 import com.mycity4kids.profile.UserProfileActivity
 import com.mycity4kids.retrofitAPIsInterfaces.ArticleDetailsAPI
+import com.mycity4kids.tagging.Mentions
 import com.mycity4kids.ui.activity.ArticleDetailsContainerActivity
 import com.mycity4kids.ui.activity.ParallelFeedActivity
 import com.mycity4kids.ui.activity.ShortStoryContainerActivity
@@ -379,7 +380,7 @@ class ContentCommentReplyNotificationActivity : BaseActivity(),
         }
     }
 
-    fun addReply(content: String?, commentId: String) {
+    fun addReply(content: String?, commentId: String, mentionsMap: Map<String, Mentions>?) {
         commentList?.let { commentList ->
 
             for (i in 0 until commentList.size) {
@@ -397,6 +398,7 @@ class ContentCommentReplyNotificationActivity : BaseActivity(),
                 addEditCommentOrReplyRequest.post_id = articleId
                 addEditCommentOrReplyRequest.message = content
                 addEditCommentOrReplyRequest.parent_id = commentId
+                addEditCommentOrReplyRequest.mentions = mentionsMap
                 when (contentType) {
                     "2" -> {
                         addEditCommentOrReplyRequest.type = "video"
@@ -535,7 +537,8 @@ class ContentCommentReplyNotificationActivity : BaseActivity(),
     fun editComment(
         content: String,
         responseId: String?,
-        position: Int
+        position: Int,
+        mentions: MutableMap<String, Mentions>?
     ) {
         showProgressDialog("Editing your response")
 
@@ -543,6 +546,7 @@ class ContentCommentReplyNotificationActivity : BaseActivity(),
             AddEditCommentOrReplyRequest()
         addEditCommentOrReplyRequest.post_id = articleId
         addEditCommentOrReplyRequest.message = content
+        addEditCommentOrReplyRequest.mentions = mentions
         val retrofit = BaseApplication.getInstance().retrofit
         val articleDetailsApi = retrofit.create(ArticleDetailsAPI::class.java)
         val call: Call<CommentListResponse> =
@@ -579,12 +583,13 @@ class ContentCommentReplyNotificationActivity : BaseActivity(),
         }
     }
 
-    fun addComment(content: String) {
+    fun addComment(content: String, mentionsMap: Map<String, Mentions>?) {
         showProgressDialog("Adding Comment")
         val addEditCommentOrReplyRequest =
             AddEditCommentOrReplyRequest()
         addEditCommentOrReplyRequest.post_id = articleId
         addEditCommentOrReplyRequest.message = content
+        addEditCommentOrReplyRequest.mentions = mentionsMap
         addEditCommentOrReplyRequest.parent_id = "0"
         when (contentType) {
             "2" -> {
@@ -631,6 +636,7 @@ class ContentCommentReplyNotificationActivity : BaseActivity(),
                         commentModel.message = responseData.data[0].message
                         commentModel.createdTime = responseData.data[0].createdTime
                         commentModel.postId = responseData.data[0].postId
+                        commentModel.mentions = responseData.data[0].mentions
                         commentModel.parentCommentId = "0"
                         commentModel.replies = ArrayList()
                         commentModel.repliesCount = 0

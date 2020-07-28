@@ -1,16 +1,25 @@
 package com.mycity4kids.ui.activity
 
+import android.accounts.NetworkErrorException
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.widget.ImageView
 import androidx.viewpager.widget.ViewPager
 import com.google.android.material.tabs.TabLayout
+import com.google.firebase.crashlytics.FirebaseCrashlytics
 import com.mycity4kids.R
+import com.mycity4kids.application.BaseApplication
 import com.mycity4kids.base.BaseActivity
 import com.mycity4kids.editor.NewEditor
+import com.mycity4kids.models.Topics
+import com.mycity4kids.retrofitAPIsInterfaces.VlogsListingAndDetailsAPI
 import com.mycity4kids.ui.adapter.ArticleChallengePagerAdapter
 import com.mycity4kids.widget.MomspressoButtonWidget
 import com.squareup.picasso.Picasso
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
 
 class ArticleChallengeDetailActivity : BaseActivity() {
 
@@ -20,6 +29,7 @@ class ArticleChallengeDetailActivity : BaseActivity() {
     private lateinit var viewpager: ViewPager
     private var articleChallengeId: String? = null
     private lateinit var startWritingTextView: MomspressoButtonWidget
+    private lateinit var articleChallengeAdapter: ArticleChallengePagerAdapter
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -30,27 +40,78 @@ class ArticleChallengeDetailActivity : BaseActivity() {
         tabs = findViewById(R.id.tabs)
         startWritingTextView = findViewById(R.id.startWritingTextView)
         articleChallengeId = intent.getStringExtra("articleChallengeId")
-        val rules = intent.getStringExtra("rules")
-        val challengeName = intent.getStringExtra("challengeName")
-        val articleImageViewUrl = intent.getStringExtra("articleImageVIEW")
+        tabs.apply {
+            addTab(tabs.newTab().setText(R.string.about_txt))
+            addTab(tabs.newTab().setText(R.string.groups_sections_blogs))
+        }
+
+        getChallengeDetails
+
+        back.setOnClickListener {
+            onBackPressed()
+        }
+    }
+
+    private val getChallengeDetails: Unit
+        get() {
+            val retrofit = BaseApplication.getInstance().retrofit
+            val vlogsListingAndDetailsApi =
+                retrofit.create(
+                    VlogsListingAndDetailsAPI::class.java
+                )
+            val callRecentVideoArticles =
+                vlogsListingAndDetailsApi.getArticleChallenges(articleChallengeId)
+            callRecentVideoArticles.enqueue(blogsChallengeResponseCallBack)
+        }
+
+    private val blogsChallengeResponseCallBack: Callback<Topics> =
+        object : Callback<Topics> {
+            override fun onResponse(
+                call: Call<Topics>,
+                response: Response<Topics>
+            ) {
+                if (null == response.body()) {
+                    val nee =
+                        NetworkErrorException(response.raw().toString())
+                    FirebaseCrashlytics.getInstance().recordException(nee)
+                    return
+                }
+                if (response.isSuccessful) {
+                    try {
+                        val responseData = response.body()
+                        responseData?.let { processChallengesData(it) }
+                    } catch (e: Exception) {
+                        FirebaseCrashlytics.getInstance().recordException(e)
+                        Log.d("MC4kException", Log.getStackTraceString(e))
+                    }
+                }
+            }
+
+            override fun onFailure(
+                call: Call<Topics>,
+                t: Throwable
+            ) {
+            }
+        }
+
+    private fun processChallengesData(challengeDetail: Topics) {
+        val rules = challengeDetail.extraData[0].challenge.rules
+        val challengeName = challengeDetail.display_name
+        val articleImageViewUrl = challengeDetail.extraData[0].challenge.imageUrl
         articleImageViewUrl?.let {
             Picasso.get().load(it.trim()).error(R.drawable.default_article).into(thumbNail)
         } ?: run {
             thumbNail.setImageResource(R.drawable.default_article)
         }
-        tabs.apply {
-            addTab(tabs.newTab().setText(R.string.about_txt))
-            addTab(tabs.newTab().setText(R.string.groups_sections_blogs))
-        }
+        articleChallengeAdapter = ArticleChallengePagerAdapter(
+            articleChallengeId,
+            challengeName,
+            rules,
+            supportFragmentManager
+        )
+        viewpager.adapter = articleChallengeAdapter
+
         viewpager.addOnPageChangeListener(TabLayout.TabLayoutOnPageChangeListener(tabs))
-        viewpager.adapter =
-            ArticleChallengePagerAdapter(
-                articleChallengeId,
-                challengeName,
-                rules,
-                supportFragmentManager
-            )
-        viewpager.currentItem = 1
         tabs.addOnTabSelectedListener(object : TabLayout.OnTabSelectedListener {
             override fun onTabReselected(tab: TabLayout.Tab?) {
                 viewpager.currentItem = tab?.position!!
@@ -68,9 +129,6 @@ class ArticleChallengeDetailActivity : BaseActivity() {
             intent.putExtra("articleChallengeId", articleChallengeId)
             intent.putExtra("challengeName", challengeName)
             startActivity(intent)
-        }
-        back.setOnClickListener {
-            onBackPressed()
         }
     }
 }

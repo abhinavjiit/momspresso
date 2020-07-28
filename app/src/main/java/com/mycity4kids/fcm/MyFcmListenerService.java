@@ -33,6 +33,7 @@ import com.mycity4kids.profile.UserProfileActivity;
 import com.mycity4kids.sync.PushTokenService;
 import com.mycity4kids.ui.ContentCommentReplyNotificationActivity;
 import com.mycity4kids.ui.activity.AppSettingsActivity;
+import com.mycity4kids.ui.activity.ArticleChallengeDetailActivity;
 import com.mycity4kids.ui.activity.ArticleDetailsContainerActivity;
 import com.mycity4kids.ui.activity.BadgeActivity;
 import com.mycity4kids.ui.activity.CategoryVideosListingActivity;
@@ -529,6 +530,21 @@ public class MyFcmListenerService extends FirebaseMessagingService {
                         intent = new Intent(getApplicationContext(), RewardsContainerActivity.class);
                         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                         intent.putExtra("showProfileInfo", true);
+                        intent.putExtra("fromNotification", true);
+                        TaskStackBuilder stackBuilder = TaskStackBuilder.create(this);
+                        stackBuilder.addNextIntentWithParentStack(intent);
+                        contentIntent = stackBuilder.getPendingIntent(0, PendingIntent.FLAG_UPDATE_CURRENT);
+                    }
+                    handleNotificationAccordingToStructure(remoteMessage, pushNotificationModel, contentIntent,
+                            "personal_info ----- Notification Message --- ",
+                            "personal_info ----- Notification MixFeedData");
+                } else if (AppConstants.NOTIFICATION_TYPE_ARTICLE_CHALLENGE.equalsIgnoreCase(type)) {
+                    if (SharedPrefUtils.getAppUpgrade(BaseApplication.getAppContext())) {
+                        contentIntent = handleForcedUpdate();
+                    } else {
+                        intent = new Intent(getApplicationContext(), ArticleChallengeDetailActivity.class);
+                        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                        intent.putExtra("articleChallengeId", pushNotificationModel.getChallengeId());
                         intent.putExtra("fromNotification", true);
                         TaskStackBuilder stackBuilder = TaskStackBuilder.create(this);
                         stackBuilder.addNextIntentWithParentStack(intent);

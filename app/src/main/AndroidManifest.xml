@@ -393,9 +393,6 @@
       android:name=".ui.activity.ChangePasswordActivity"
       android:screenOrientation="portrait" />
     <activity
-      android:name=".ui.activity.SuggestedTopicsActivity"
-      android:screenOrientation="portrait" />
-    <activity
       android:name=".ui.activity.PhoneLoginUserDetailActivity"
       android:screenOrientation="portrait"
       android:theme="@style/EditorTheme" />
@@ -518,7 +515,12 @@
       android:name=".ui.activity.ShortStoryModerationOrShareActivity"
       android:screenOrientation="portrait"
       android:theme="@style/ShareStoryTheme" />
-    <activity android:name=".ui.activity.ArticleChallengeDetailActivity" />
+    <activity
+      android:name=".ui.activity.ArticleChallengeDetailActivity"
+      android:screenOrientation="portrait" />
+    <activity
+      android:name=".ui.activity.DeeplinkActivity"
+      android:screenOrientation="portrait" />
 
     <service android:name=".sync.PushTokenService" />
     <service android:name=".sync.FetchAdvertisementInfoService" />

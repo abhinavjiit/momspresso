@@ -28,7 +28,8 @@ public class CustomSignUpActivity extends BaseActivity implements View.OnClickLi
 
     private UserInfo model;
 
-    private EditText emailEditText, passwordEditText;
+    private EditText emailEditText;
+    private EditText passwordEditText;
     private TextView continueTextView;
 
     @Override
@@ -54,8 +55,8 @@ public class CustomSignUpActivity extends BaseActivity implements View.OnClickLi
             lr.setRequestMedium("custom");
 
             Retrofit retrofit = BaseApplication.getInstance().getRetrofit();
-            LoginRegistrationAPI loginRegistrationAPI = retrofit.create(LoginRegistrationAPI.class);
-            Call<UserDetailResponse> call = loginRegistrationAPI.login(lr);
+            LoginRegistrationAPI loginRegistrationApi = retrofit.create(LoginRegistrationAPI.class);
+            Call<UserDetailResponse> call = loginRegistrationApi.login(lr);
             call.enqueue(onLoginResponseReceivedListener);
         }
     }
@@ -98,10 +99,11 @@ public class CustomSignUpActivity extends BaseActivity implements View.OnClickLi
         RegistrationRequest lr = new RegistrationRequest();
         lr.setEmail(emailEditText.getText().toString());
         lr.setPassword("password");
+        lr.setUserHandle("fnln" + (int) (Math.random() * (999999 - 100000 + 1) + 100000));
 
         Retrofit retrofit = BaseApplication.getInstance().getRetrofit();
-        LoginRegistrationAPI loginRegistrationAPI = retrofit.create(LoginRegistrationAPI.class);
-        Call<UserDetailResponse> call = loginRegistrationAPI.customRegistration(lr);
+        LoginRegistrationAPI loginRegistrationApi = retrofit.create(LoginRegistrationAPI.class);
+        Call<UserDetailResponse> call = loginRegistrationApi.customRegistration(lr);
         call.enqueue(onRegistrationResponseListener);
     }
 
@@ -146,6 +148,9 @@ public class CustomSignUpActivity extends BaseActivity implements View.OnClickLi
                     validateUser();
                 } else {
                     showToast(responseData.getReason());
+                    if ("cannot send notifications !!".equals(responseData.getReason())) {
+                        loginWithUser();
+                    }
                 }
             } catch (Exception e) {
                 FirebaseCrashlytics.getInstance().recordException(e);
@@ -163,13 +168,25 @@ public class CustomSignUpActivity extends BaseActivity implements View.OnClickLi
         }
     };
 
+    private void loginWithUser() {
+        LoginRegistrationRequest lr = new LoginRegistrationRequest();
+        lr.setEmail(emailEditText.getText().toString());
+        lr.setPassword("password");
+        lr.setRequestMedium("custom");
+
+        Retrofit retrofit = BaseApplication.getInstance().getRetrofit();
+        LoginRegistrationAPI loginRegistrationApi = retrofit.create(LoginRegistrationAPI.class);
+        Call<UserDetailResponse> call = loginRegistrationApi.login(lr);
+        call.enqueue(onRegistrationResponseListener);
+    }
+
     private void validateUser() {
         UpdateUserDetailsRequest validateUserRequest = new UpdateUserDetailsRequest();
         validateUserRequest.setIsValidated("1");
 
         Retrofit retrofit = BaseApplication.getInstance().getRetrofit();
-        UserAttributeUpdateAPI userAttributeUpdateAPI = retrofit.create(UserAttributeUpdateAPI.class);
-        Call<UserDetailResponse> call = userAttributeUpdateAPI.updateProfile(validateUserRequest);
+        UserAttributeUpdateAPI userAttributeUpdateApi = retrofit.create(UserAttributeUpdateAPI.class);
+        Call<UserDetailResponse> call = userAttributeUpdateApi.updateProfile(validateUserRequest);
         call.enqueue(userDetailsUpdateResponseListener);
     }
 
@@ -209,8 +226,8 @@ public class CustomSignUpActivity extends BaseActivity implements View.OnClickLi
 
     private boolean isDataValid() {
         boolean isLoginOk = true;
-        String email_id = emailEditText.getText().toString().trim();
-        if (email_id.trim().length() == 0 || !StringUtils.isValidEmail(email_id) || !email_id.endsWith("mc4k.com")) {
+        String emailId = emailEditText.getText().toString().trim();
+        if (emailId.trim().length() == 0 || !StringUtils.isValidEmail(emailId) || !emailId.endsWith("mc4k.com")) {
             emailEditText.setFocusableInTouchMode(true);
             emailEditText.setError(getString(R.string.enter_valid_email));
             emailEditText.requestFocus();
@@ -243,6 +260,8 @@ public class CustomSignUpActivity extends BaseActivity implements View.OnClickLi
         private String email;
         @SerializedName("password")
         private String password;
+        @SerializedName("userHandle")
+        private String userHandle;
         @SerializedName("requestMedium")
         private String requestMedium = "custom";
 
@@ -276,6 +295,14 @@ public class CustomSignUpActivity extends BaseActivity implements View.OnClickLi
 
         public void setRequestMedium(String requestMedium) {
             this.requestMedium = requestMedium;
+        }
+
+        public String getUserHandle() {
+            return userHandle;
+        }
+
+        public void setUserHandle(String userHandle) {
+            this.userHandle = userHandle;
         }
     }
 }

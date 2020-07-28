@@ -168,10 +168,10 @@
     <attr name="fb_iconPaddingTop" format="dimension" />
     <attr name="fb_iconPaddingBottom" format="dimension" />
 
-    <attr name="fb_radiusTopLeft" format="dimension"/>
-    <attr name="fb_radiusTopRight" format="dimension"/>
-    <attr name="fb_radiusBottomLeft" format="dimension"/>
-    <attr name="fb_radiusBottomRight" format="dimension"/>
+    <attr name="fb_radiusTopLeft" format="dimension" />
+    <attr name="fb_radiusTopRight" format="dimension" />
+    <attr name="fb_radiusBottomLeft" format="dimension" />
+    <attr name="fb_radiusBottomRight" format="dimension" />
 
     <attr name="fb_borderColor" format="color" />
     <attr name="fb_borderWidth" format="dimension" />
@@ -184,6 +184,25 @@
 
     <attr name="fb_ghost" format="boolean" />
     <attr name="fb_useSystemFont" format="boolean" />
+  </declare-styleable>
+
+  <attr name="mentionTextColor" format="color" />
+  <attr name="mentionTextBackgroundColor" format="color" />
+  <attr name="selectedMentionTextColor" format="color" />
+  <attr name="selectedMentionTextBackgroundColor" format="color" />
+
+  <declare-styleable name="MentionsEditText">
+    <attr name="mentionTextColor" />
+    <attr name="mentionTextBackgroundColor" />
+    <attr name="selectedMentionTextColor" />
+    <attr name="selectedMentionTextBackgroundColor" />
+  </declare-styleable>
+
+  <declare-styleable name="RichEditorView">
+    <attr name="mentionTextColor" />
+    <attr name="mentionTextBackgroundColor" />
+    <attr name="selectedMentionTextColor" />
+    <attr name="selectedMentionTextBackgroundColor" />
   </declare-styleable>
   <!--<declare-styleable name="KidsInfoComponent">--><!--<attr name="searchArticleTitle" format="string" localization="suggested" />--><!--<attr name="searchArticleDesc" format="string" localization="suggested" />--><!--<attr name="searchArticleImage" format="integer" />--><!--</declare-styleable>-->
 </resources>

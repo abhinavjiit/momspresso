@@ -36,6 +36,7 @@ import com.mycity4kids.models.response.ArticleListingResponse;
 import com.mycity4kids.models.response.ArticleListingResult;
 import com.mycity4kids.preference.SharedPrefUtils;
 import com.mycity4kids.retrofitAPIsInterfaces.TopicsCategoryAPI;
+import com.mycity4kids.ui.activity.ArticleChallengeOrTopicSelectionActivity;
 import com.mycity4kids.ui.activity.ArticleDetailsContainerActivity;
 import com.mycity4kids.ui.activity.LeafNodeTopicArticlesActivity;
 import com.mycity4kids.ui.activity.ShortStoryContainerActivity;
@@ -429,7 +430,7 @@ public class TopicsArticlesTabFragment extends BaseFragment implements View.OnCl
         switch (view.getId()) {
             case R.id.writeArticleCell:
                 if (isAdded()) {
-                    Intent intent = new Intent(getActivity(), NewEditor.class);
+                    Intent intent = new Intent(getActivity(), ArticleChallengeOrTopicSelectionActivity.class);
                     startActivity(intent);
                 }
                 break;

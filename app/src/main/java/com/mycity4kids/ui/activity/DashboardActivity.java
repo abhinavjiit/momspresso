@@ -557,7 +557,7 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
             }
             startActivity(profileIntent);
         } else if (Constants.SUGGESTED_TOPICS_FRAGMENT.equals(fragmentToLoad)) {
-            Intent suggestedIntent = new Intent(this, SuggestedTopicsActivity.class);
+            Intent suggestedIntent = new Intent(this, ArticleChallengeOrTopicSelectionActivity.class);
             startActivity(suggestedIntent);
         } else if (Constants.GROUP_LISTING_FRAGMENT.equals(fragmentToLoad)) {
             GroupsViewFragment fragment1 = new GroupsViewFragment();
@@ -1167,6 +1167,11 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
             pushEvent("personal_info");
             Intent intent = new Intent(this, RewardsContainerActivity.class);
             intent.putExtra("showProfileInfo", true);
+            startActivity(intent);
+        } else if (AppConstants.NOTIFICATION_TYPE_ARTICLE_CHALLENGE.equalsIgnoreCase(notificationType)) {
+            pushEvent("article_challenge_detail");
+            Intent intent = new Intent(this, ArticleChallengeDetailActivity.class);
+            intent.putExtra("articleChallengeId", notificationExtras.getString("challengeId"));
             startActivity(intent);
         }
     }

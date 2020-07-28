@@ -28,9 +28,14 @@ import android.provider.OpenableColumns;
 import android.provider.Settings;
 import android.telephony.TelephonyManager;
 import android.text.Html;
+import android.text.Spannable;
 import android.text.SpannableString;
 import android.text.Spanned;
+import android.text.TextPaint;
 import android.text.TextUtils;
+import android.text.style.ClickableSpan;
+import android.text.style.ForegroundColorSpan;
+import android.text.style.StyleSpan;
 import android.util.Base64;
 import android.util.Log;
 import android.view.View;
@@ -48,10 +53,14 @@ import com.google.gson.reflect.TypeToken;
 import com.mycity4kids.R;
 import com.mycity4kids.application.BaseApplication;
 import com.mycity4kids.constants.AppConstants;
+import com.mycity4kids.constants.Constants;
 import com.mycity4kids.gtmutils.Utils;
 import com.mycity4kids.models.response.ArticleListingResult;
 import com.mycity4kids.models.response.MixFeedResult;
 import com.mycity4kids.preference.SharedPrefUtils;
+import com.mycity4kids.tagging.Mentions;
+import com.mycity4kids.tagging.mentions.MentionSpan;
+import com.mycity4kids.ui.activity.DeeplinkActivity;
 import com.mycity4kids.widget.Hashids;
 import com.squareup.picasso.Picasso;
 import java.io.BufferedReader;
@@ -1116,6 +1125,132 @@ public class AppUtils {
             return context.getString(R.string.language_label_punjabi);
         } else {
             return context.getString(R.string.language_label_english);
+        }
+    }
+
+    public static SpannableString createSpannableForMentionHandling(String commenterId, String userName, String message,
+            Map<String, Mentions> mentions, int color) {
+        try {
+            StringBuilder consolidateMessage = new StringBuilder(userName + " " + message);
+            ArrayList<SpanData> list = new ArrayList<>();
+            int userNameStart = 0;
+            int userNameEnd = userName.length();
+            MySpannable commenterSpannable = new MySpannable(AppConstants.USER_PROFILE_SHARE_BASE_URL + commenterId);
+            SpanData te = new SpanData(userNameStart, userNameEnd, commenterSpannable);
+            list.add(te);
+
+            if (mentions != null) {
+                Pattern pattern = Pattern.compile("(\\[~userId:)([a-z0-9]+)(\\])");
+                Matcher matcher = pattern.matcher(consolidateMessage);
+                while (matcher.find()) {
+                    if (mentions.get(matcher.group(2)) != null) {
+                        consolidateMessage = consolidateMessage
+                                .replace(matcher.start(), matcher.end(), mentions.get(matcher.group(2)).getName());
+                        MySpannable mySpannable = new MySpannable(
+                                AppConstants.USER_PROFILE_SHARE_BASE_URL + mentions.get(matcher.group(2)).getUserId());
+                        int start = matcher.start();
+                        int end = start + mentions.get(matcher.group(2)).getName().length();
+                        SpanData spanData = new SpanData(start, end, mySpannable);
+                        list.add(spanData);
+                        matcher = pattern.matcher(consolidateMessage);
+                    }
+                }
+            }
+            SpannableString messageSpannable = new SpannableString(consolidateMessage.toString());
+            for (int i = 0; i < list.size(); i++) {
+                messageSpannable.setSpan(list.get(i).mySpannable, list.get(i).start, list.get(i).end,
+                        Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+                if (i == 0) {
+                    messageSpannable.setSpan(new ForegroundColorSpan(color), list.get(i).start, list.get(i).end,
+                            Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+                } else {
+                    messageSpannable.setSpan(new ForegroundColorSpan(Color.BLACK), list.get(i).start, list.get(i).end,
+                            Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+                }
+                messageSpannable.setSpan(new StyleSpan(Typeface.BOLD), list.get(i).start, list.get(i).end,
+                        Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+            }
+            return messageSpannable;
+        } catch (Exception e) {
+            FirebaseCrashlytics.getInstance().recordException(e);
+            Log.d("MC4kException", Log.getStackTraceString(e));
+            return new SpannableString("");
+        }
+    }
+
+    public static class SpanData {
+
+        private int start;
+        private int end;
+        private MySpannable mySpannable;
+        private MentionSpan mentionSpan;
+
+        SpanData(int start, int end, MySpannable mySpannable) {
+            this.start = start;
+            this.end = end;
+            this.mySpannable = mySpannable;
+        }
+
+        SpanData(int start, int end, MentionSpan mentionSpan) {
+            this.start = start;
+            this.end = end;
+            this.mentionSpan = mentionSpan;
+        }
+    }
+
+    public static class MySpannable extends ClickableSpan {
+
+        private String url;
+
+        MySpannable(String url) {
+            this.url = url;
+        }
+
+        @Override
+        public void updateDrawState(TextPaint ds) {
+            super.updateDrawState(ds);
+            ds.setUnderlineText(false);
+        }
+
+        @Override
+        public void onClick(View widget) {
+            Intent intent = new Intent(widget.getContext(), DeeplinkActivity.class);
+            intent.putExtra(Constants.URL, url);
+            widget.getContext().startActivity(intent);
+        }
+    }
+
+
+    public static SpannableString createMentionSpanForEditing(String message, Map<String, Mentions> mentions) {
+        try {
+            StringBuilder consolidateMessage = new StringBuilder(message);
+            ArrayList<SpanData> list = new ArrayList<>();
+            if (mentions != null) {
+                Pattern pattern = Pattern.compile("(\\[~userId:)([a-z0-9]+)(\\])");
+                Matcher matcher = pattern.matcher(consolidateMessage);
+                while (matcher.find()) {
+                    if (mentions.get(matcher.group(2)) != null) {
+                        consolidateMessage = consolidateMessage
+                                .replace(matcher.start(), matcher.end(), mentions.get(matcher.group(2)).getName());
+                        MentionSpan mySpannable = new MentionSpan(mentions.get(matcher.group(2)));
+                        int start = matcher.start();
+                        int end = start + mentions.get(matcher.group(2)).getName().length();
+                        SpanData spanData = new SpanData(start, end, mySpannable);
+                        list.add(spanData);
+                        matcher = pattern.matcher(consolidateMessage);
+                    }
+                }
+            }
+            SpannableString messageSpannable = new SpannableString(consolidateMessage.toString());
+            for (int i = 0; i < list.size(); i++) {
+                messageSpannable.setSpan(list.get(i).mentionSpan, list.get(i).start, list.get(i).end,
+                        Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+            }
+            return messageSpannable;
+        } catch (Exception e) {
+            FirebaseCrashlytics.getInstance().recordException(e);
+            Log.d("MC4kException", Log.getStackTraceString(e));
+            return new SpannableString("");
         }
     }
 }
