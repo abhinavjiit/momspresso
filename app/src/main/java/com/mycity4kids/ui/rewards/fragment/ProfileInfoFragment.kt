@@ -1455,11 +1455,13 @@ class ProfileInfoFragment : BaseFragment(),
                     override fun onNext(response: RewardsPersonalResponse) {
                         if (response.code == 200) {
                             if (Constants.SUCCESS == response.status) {
-                                Toast.makeText(
-                                    context,
-                                    resources.getString(R.string.verify_email_address),
-                                    Toast.LENGTH_LONG
-                                ).show()
+                                if (apiGetResponse.emailValidated.equals("0")) {
+                                    Toast.makeText(
+                                        context,
+                                        resources.getString(R.string.verify_email_address),
+                                        Toast.LENGTH_LONG
+                                    ).show()
+                                }
                                 (activity as RewardsContainerActivity).finish()
                                 /*if (isComingFromCampaign) {
                                     SharedPrefUtils.setIsRewardsAdded(BaseApplication.getAppContext(), "1")

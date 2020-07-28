@@ -10,7 +10,6 @@ import com.mycity4kids.models.response.FBPhoneLoginResponse;
 import com.mycity4kids.models.response.ForgotPasswordResponse;
 import com.mycity4kids.models.response.UserDetailResponse;
 import com.mycity4kids.ui.activity.CustomSignUpActivity;
-
 import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.http.Body;
@@ -63,10 +62,10 @@ public interface LoginRegistrationAPI {
 
     @GET("apiusers/updatePushTokenV1")
     Call<ResponseBody> updatePushToken(@Query("userId") String userId,
-                                       @Query("dynamoId") String dynamoId,
-                                       @Query("app_version") String app_version,
-                                       @Query("deviceType") String deviceType,
-                                       @Query("cityId") int cityId,
-                                       @Query("pushToken") String pushToken,
-                                       @Query("fcmToken") String fcmToken);
+            @Query("dynamoId") String dynamoId,
+            @Query("app_version") String app_version,
+            @Query("deviceType") String deviceType,
+            @Query("cityId") int cityId,
+            @Query("pushToken") String pushToken,
+            @Query("fcmToken") String fcmToken);
 }
