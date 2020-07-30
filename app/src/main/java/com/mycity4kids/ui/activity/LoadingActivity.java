@@ -30,6 +30,11 @@ public class LoadingActivity extends BaseActivity {
 
     private RelativeLayout root;
     String type = "";
+    private static final int UPDATE_USER_HANDLE = 1001;
+
+    private String loginMode = "";
+    private String isUserHandleUpdated = "";
+    private String userHandle = "";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,12 +46,30 @@ public class LoadingActivity extends BaseActivity {
         ((BaseApplication) getApplication()).setView(root);
         ((BaseApplication) getApplication()).setActivity(this);
 
-        if (!ConnectivityUtils.isNetworkEnabled(LoadingActivity.this)) {
+        isUserHandleUpdated = SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext())
+                .getIsUserHandleUpdated();
+
+        if ((StringUtils.isNullOrEmpty(isUserHandleUpdated) || isUserHandleUpdated.equals("0")) && !loginMode
+                .equals("email")) {
+            Intent intent = new Intent(LoadingActivity.this, UpdateUserHandleActivity.class);
+            startActivityForResult(intent, UPDATE_USER_HANDLE);
+        } else {
+            if (!ConnectivityUtils.isNetworkEnabled(LoadingActivity.this)) {
+                navigateToDashboard();
+                return;
+            }
+            type = BaseApplication.getInstance().getBranchLink();
             navigateToDashboard();
-            return;
         }
-        type = BaseApplication.getInstance().getBranchLink();
-        navigateToDashboard();
+    }
+
+    @Override
+    protected void onActivityResult(int _requestCode, int _resultCode, Intent _data) {
+        super.onActivityResult(_requestCode, _resultCode, _data);//64206,0  -1
+        if (_resultCode == RESULT_OK) {
+            type = BaseApplication.getInstance().getBranchLink();
+            navigateToDashboard();
+        }
     }
 
     public void navigateToDashboard() {

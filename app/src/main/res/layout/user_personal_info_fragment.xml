@@ -1089,6 +1089,43 @@
 
         </LinearLayout>
 
+        <LinearLayout
+          android:id="@+id/noteTextView"
+          android:layout_width="match_parent"
+          android:layout_height="wrap_content"
+          android:layout_marginLeft="@dimen/space_16"
+          android:layout_marginTop="@dimen/space_10"
+          android:layout_marginRight="@dimen/space_16"
+          android:background="@drawable/read_this_background"
+          android:orientation="vertical"
+          android:padding="@dimen/space_10">
+
+            <com.mycity4kids.widget.CustomFontTextView
+              android:layout_width="wrap_content"
+              android:layout_height="wrap_content"
+              android:text="@string/rewards_pancard_Note_textview"
+              android:textColor="#D1000D"
+              android:textSize="12sp"
+              app:fontName="open_sans.ttf" />
+
+            <com.mycity4kids.widget.CustomFontTextView
+              android:layout_width="wrap_content"
+              android:layout_height="wrap_content"
+              android:text="@string/profile_info_disclaimer_note_one"
+              android:textColor="@color/campaign_4A4A4A"
+              android:textSize="12sp"
+              app:fontName="open_sans.ttf" />
+
+            <com.mycity4kids.widget.CustomFontTextView
+              android:layout_width="wrap_content"
+              android:layout_height="wrap_content"
+              android:text="@string/rewards_payment_disclaimer_note_two"
+              android:textColor="@color/campaign_4A4A4A"
+              android:textSize="12sp"
+              app:fontName="open_sans.ttf" />
+
+        </LinearLayout>
+
         <com.mycity4kids.widget.CustomFontTextView
             android:id="@+id/textSaveAndContinue"
             android:layout_width="match_parent"

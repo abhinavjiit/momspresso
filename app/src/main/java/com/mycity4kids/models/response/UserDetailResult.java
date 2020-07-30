@@ -111,6 +111,8 @@ public class UserDetailResult implements Parcelable {
     private String userHandle;
     @SerializedName("isUserHandleUpdated")
     private String isUserHandleUpdated;
+    @SerializedName("requestMedium")
+    private String requestMedium;
 
     protected UserDetailResult(Parcel in) {
         id = in.readString();
@@ -154,6 +156,7 @@ public class UserDetailResult implements Parcelable {
         isNewUser = in.readString();
         userHandle = in.readString();
         isUserHandleUpdated = in.readString();
+        requestMedium = in.readString();
     }
 
     public static final Creator<UserDetailResult> CREATOR = new Creator<UserDetailResult>() {
@@ -561,6 +564,14 @@ public class UserDetailResult implements Parcelable {
         this.userHandle = userHandle;
     }
 
+    public String getRequestMedium() {
+        return requestMedium;
+    }
+
+    public void setRequestMedium(String requestMedium) {
+        this.requestMedium = requestMedium;
+    }
+
     public String getIsUserHandleUpdated() {
         return isUserHandleUpdated;
     }
@@ -617,6 +628,7 @@ public class UserDetailResult implements Parcelable {
         parcel.writeString(isNewUser);
         parcel.writeString(userHandle);
         parcel.writeString(isUserHandleUpdated);
+        parcel.writeString(requestMedium);
     }
 
     public class SocialTokens {
