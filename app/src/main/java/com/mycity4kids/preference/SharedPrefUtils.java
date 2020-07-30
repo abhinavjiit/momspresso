@@ -50,6 +50,10 @@ public class SharedPrefUtils {
     private static final String USER_TYPE = "userType";
     private static final String GENDER = "gender";
     private static final String NEW_USER_FLAG = "newUserFlag";
+    private static final String LOGIN_MODE = "loginMode";
+    private static final String IS_USER_HANDLE_UPDATED = "isUserHandleUpdated";
+    private static final String USER_HANDLE = "userHandle";
+    private static final String REQUEST_MEDIUM = "requestMedium";
 
     private static final String DEVICE_TOKEN = "device_token";
     private static final String LOGOUT_FLAG = "logout_flag";
@@ -168,6 +172,11 @@ public class SharedPrefUtils {
         editor.putString(USER_TYPE, model.getUserType());
         editor.putString(GENDER, model.getGender());
         editor.putString(NEW_USER_FLAG, model.getIsNewUser());
+        editor.putString(LOGIN_MODE, model.getLoginMode());
+        editor.putString(IS_USER_HANDLE_UPDATED, model.getIsUserHandleUpdated());
+        editor.putString(USER_HANDLE,model.getUserHandle());
+        editor.putString(REQUEST_MEDIUM, model.getRequestMedium());
+
         editor.commit();
     }
 
@@ -196,6 +205,10 @@ public class SharedPrefUtils {
         user.setUserType(sharedPref.getString(USER_TYPE, "0"));
         user.setGender(sharedPref.getString(GENDER, "0"));
         user.setIsNewUser(sharedPref.getString(NEW_USER_FLAG, "0"));
+        user.setIsNewUser(sharedPref.getString(LOGIN_MODE, ""));
+        user.setIsUserHandleUpdated(sharedPref.getString(IS_USER_HANDLE_UPDATED, "0"));
+        user.setUserHandle(sharedPref.getString(USER_HANDLE, ""));
+        user.setRequestMedium(sharedPref.getString(REQUEST_MEDIUM,""));
         return user;
     }
 

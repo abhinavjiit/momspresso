@@ -1043,7 +1043,7 @@ Thank you! We will be reviewing your story. You can expect to hear from us withi
   <string name="rewards_tab_fragment_referrer_myMoney">refer mymoney</string>
   <string name="rewards_pancard_toolbar_text">PAN CARD DETAIL</string>
   <string name="reawrds_pancard_detail_text">Please enter your PAN card details</string>
-  <string name="rewards_pancard_note_detail">In case of Invalid/No Pan card attached, 20% tax will be deducted from the payment.</string>
+  <string name="rewards_pancard_note_detail">1.In case of Invalid/No Pan card attached, 20% tax will be deducted from the payment.</string>
   <string name="rewards_pancard_Note_textview">NOTE :</string>
   <string name="rewards_payment_submission_enter_bank_detail_text">PLEASE ENTER YOUR BANK DETAILS</string>
   <string name="rewards_bank_detail_holder_nmae_text">Account Holder’s Name</string>
@@ -1423,4 +1423,17 @@ Thank you! We will be reviewing your story. You can expect to hear from us withi
   <string name="all_editors">എഡിറ്റർമാർ</string>
   <string name="all_editorial">എഡിറ്റോറിയൽ ടീം</string>
   <string name="all_featured">തിരഞ്ഞെടുത്ത രചയിതാവ്</string>
+  <string name="rewards_pancard_note_detail_two">2.One PAN card can be linked to only one account on this platform.</string>
+  <string name="rewards_pancard_note_detail_three">3.Only your own PAN card number can be entered on this platform.</string>
+  <string name="rewards_pancard_note_detail_four">4.For any difficulties faced while editing your information, kindly email us on support@momspresso-mymoney.com</string>
+  <string name="rewards_payment_disclaimer_note_one">1.One account/Paytm number card can be linked to only one account on this platform. In case two accounts are associated with the same account/Paytm number, payments to the second account will not be made.</string>
+  <string name="rewards_payment_disclaimer_note_two">2.For any difficulties faced while editing your information, kindly email us on support@momspresso-mymoney.com</string>
+  <string name="rewards_social_disclaimer_note_one">1.All your social account information should be unique and no information in your profile should have been used on this platform earlier.</string>
+  <string name="profile_info_disclaimer_note_one">1.You can only have one account on this platform and no information in your profile should have been used on this platform earlier.</string>
+  <string name="please_provide_information">Please provide the information below</string>
+  <string name="user_handle">User Handle</string>
+  <string name="suggestions">Suggestions:</string>
+  <string name="phone_number_optional">Phone Number (optional)</string>
+  <string name="save_n_continue"><![CDATA[Save & Continue]]></string>
+  <string name="set_user_handle">Set your userhandle</string>
 </resources>

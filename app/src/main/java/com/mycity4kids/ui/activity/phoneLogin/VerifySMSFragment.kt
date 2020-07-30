@@ -18,6 +18,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.EditText
 import android.widget.TextView
+import androidx.fragment.app.FragmentManager
 import com.google.android.gms.auth.api.phone.SmsRetriever
 import com.google.android.gms.common.api.CommonStatusCodes
 import com.google.android.gms.common.api.Status
@@ -30,6 +31,7 @@ import com.mycity4kids.models.request.PhoneLoginRequest
 import com.mycity4kids.retrofitAPIsInterfaces.LoginRegistrationAPI
 import com.mycity4kids.ui.activity.ActivityLogin
 import com.mycity4kids.ui.activity.OTPActivity
+import com.mycity4kids.ui.activity.UpdateUserHandleActivity
 import okhttp3.ResponseBody
 import org.json.JSONObject
 import retrofit2.Call
@@ -286,6 +288,8 @@ class VerifySMSFragment : BaseFragment(), View.OnClickListener {
                         if (response.code() == 200) {
                             val auth_token = jObject.getJSONObject("data").getJSONObject("result")
                                 .getString("auth_token")
+                            val mobile = jObject.getJSONObject("data").getJSONObject("result")
+                                .getString("phone")
                             activity?.let {
                                 //                                (activity as ActivityLogin).phoneLogin(auth_token)
                                 if (activity?.javaClass?.simpleName.equals("ActivityLogin")) {
@@ -297,11 +301,26 @@ class VerifySMSFragment : BaseFragment(), View.OnClickListener {
                                      }*/
                                     val intent = Intent()
                                     intent.putExtra("auth_token", auth_token)
+                                    intent.putExtra("phone", mobile)
                                     (activity as OTPActivity).setResult(Activity.RESULT_OK, intent)
                                     (activity as OTPActivity).finish()
                                     //                                    (activity as OTPActivity).updateMobile(auth_token)
                                     //                                    fragmentManager!!.popBackStack("ProfileInfoFragment", 0)
                                     //                                    activity!!.supportFragmentManager.popBackStackImmediate()
+                                } else if (activity?.javaClass?.simpleName.equals("UpdateUserHandleActivity")) {
+                                    val intent = Intent()
+                                    intent.putExtra("auth_token", auth_token)
+                                    (activity as UpdateUserHandleActivity).setResult(
+                                        Activity.RESULT_OK,
+                                        intent
+                                    )
+                                    val fm: FragmentManager =
+                                        (activity as UpdateUserHandleActivity).supportFragmentManager
+                                    val count = fm.backStackEntryCount
+                                    for (i in 0 until count) {
+                                        fm.popBackStackImmediate()
+                                    }
+//                                    activity!!.supportFragmentManager.popBackStackImmediate()
                                 }
                             }
                         } else if (response.code() == 401) {

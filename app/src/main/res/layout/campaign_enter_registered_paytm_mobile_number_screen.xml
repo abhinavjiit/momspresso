@@ -1,388 +1,416 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+  xmlns:app="http://schemas.android.com/apk/res-auto"
+  android:layout_width="match_parent"
+  android:layout_height="match_parent"
+  android:background="@color/white_color"
+  android:clipToPadding="false"
+  android:fillViewport="true">
+
+  <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/white_color"
-    android:clipToPadding="false"
-    android:fillViewport="true">
+    android:background="#F9F9F9"
+    android:fitsSystemWindows="true">
 
-    <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:app="http://schemas.android.com/apk/res-auto"
+
+    <androidx.appcompat.widget.Toolbar
+      android:id="@+id/toolbar"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:background="?attr/colorPrimary"
+      android:minHeight="?attr/actionBarSize"
+      app:theme="@style/ToolbarTheme"
+      app:titleTextAppearance="@style/ToolbarTheme.Title">
+
+
+      <com.mycity4kids.widget.CustomFontTextView
+        android:id="@+id/back"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:background="#F9F9F9"
-        android:fitsSystemWindows="true">
+        android:layout_height="wrap_content"
+        android:drawableLeft="@drawable/back_arroow"
+        android:drawablePadding="@dimen/space_10"
+        android:drawableTint="@color/black_color"
+        android:text="@string/rewards_add_detail"
+        android:textColor="#515151"
+        android:textSize="20sp"
+        app:fontName="oswald_regular.ttf" />
 
 
-        <androidx.appcompat.widget.Toolbar
-            android:id="@+id/toolbar"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="?attr/colorPrimary"
-            android:minHeight="?attr/actionBarSize"
-            app:theme="@style/ToolbarTheme"
-            app:titleTextAppearance="@style/ToolbarTheme.Title">
+    </androidx.appcompat.widget.Toolbar>
+
+    <RelativeLayout
+      android:id="@+id/paytmContainer"
+      android:layout_width="match_parent"
+      android:layout_height="match_parent"
+      android:layout_above="@+id/submitTextViewCampaign"
+      android:layout_below="@id/toolbar"
+      android:visibility="gone">
+
+      <ImageView
+        android:id="@+id/paytmImageView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="50dp"
+        android:src="@drawable/paytm" />
 
 
-            <com.mycity4kids.widget.CustomFontTextView
-                android:id="@+id/back"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:drawableLeft="@drawable/back_arroow"
-                android:drawablePadding="@dimen/space_10"
-                android:drawableTint="@color/black_color"
-                android:text="@string/rewards_add_detail"
-                android:textColor="#515151"
-                android:textSize="20sp"
-                app:fontName="oswald_regular.ttf" />
+      <com.mycity4kids.widget.CustomFontTextView
+        android:id="@+id/enterRegisteredMobileNumberTextView"
+        android:layout_width="400dp"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/paytmImageView"
+        android:layout_centerHorizontal="true"
+        android:layout_marginLeft="12dp"
+        android:layout_marginTop="43dp"
+        android:layout_marginRight="12dp"
+        android:gravity="center"
+        android:text="@string/enter_paytm_number"
+        android:textColor="#4A4A4A"
+        android:textSize="20sp"
+        app:fontName="oswald_regular.ttf" />
 
 
-        </androidx.appcompat.widget.Toolbar>
+      <com.mycity4kids.widget.CustomFontEditText
+        android:id="@+id/addMobileNumberEditText"
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:layout_below="@id/enterRegisteredMobileNumberTextView"
+        android:layout_marginLeft="12dp"
+        android:layout_marginTop="30dp"
+        android:layout_marginRight="12dp"
+        android:layout_marginBottom="30dp"
+        android:background="@drawable/border_layout_for_campaign"
+        android:fontFamily="sans-serif"
+        android:hint="Enter your paytm Number"
+        android:inputType="number"
+        android:lines="1"
+        android:maxLines="1"
+        android:paddingLeft="12dp"
+        android:textColor="#4A4A4A"
+        android:textSize="14sp"
 
-        <RelativeLayout
-            android:id="@+id/paytmContainer"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_below="@id/toolbar"
-            android:visibility="gone">
-
-            <ImageView
-                android:id="@+id/paytmImageView"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_centerHorizontal="true"
-                android:layout_marginTop="50dp"
-                android:src="@drawable/paytm" />
-
-
-            <com.mycity4kids.widget.CustomFontTextView
-                android:id="@+id/enterRegisteredMobileNumberTextView"
-                android:layout_width="400dp"
-                android:layout_height="wrap_content"
-                android:layout_below="@id/paytmImageView"
-                android:layout_centerHorizontal="true"
-                android:layout_marginLeft="12dp"
-                android:layout_marginTop="43dp"
-                android:layout_marginRight="12dp"
-                android:gravity="center"
-                android:text="@string/enter_paytm_number"
-                android:textColor="#4A4A4A"
-                android:textSize="20sp"
-                app:fontName="oswald_regular.ttf" />
+        />
 
 
-            <com.mycity4kids.widget.CustomFontEditText
-                android:id="@+id/addMobileNumberEditText"
-                android:layout_width="match_parent"
-                android:layout_height="40dp"
-                android:layout_below="@id/enterRegisteredMobileNumberTextView"
-                android:layout_marginLeft="12dp"
-                android:layout_marginTop="30dp"
-                android:layout_marginRight="12dp"
-                android:layout_marginBottom="30dp"
-                android:background="@drawable/border_layout_for_campaign"
-                android:fontFamily="sans-serif"
-                android:hint="Enter your paytm Number"
-                android:inputType="number"
-                android:lines="1"
-                android:maxLines="1"
-                android:paddingLeft="12dp"
-                android:textColor="#4A4A4A"
-                android:textSize="14sp"
-
-                />
-
-
-        </RelativeLayout>
-
-        <RelativeLayout
-            android:id="@+id/upiContainer"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_below="@id/toolbar"
-
-            android:visibility="gone">
-
-            <ImageView
-                android:id="@+id/upiImageView"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_centerHorizontal="true"
-                android:layout_marginTop="50dp"
-                android:src="@drawable/upi" />
-
-
-            <com.mycity4kids.widget.CustomFontTextView
-                android:id="@+id/enterRegisteredUpiTextView"
-                android:layout_width="400dp"
-                android:layout_height="wrap_content"
-                android:layout_below="@id/upiImageView"
-                android:layout_centerHorizontal="true"
-                android:layout_marginLeft="12dp"
-                android:layout_marginTop="43dp"
-                android:layout_marginRight="12dp"
-                android:gravity="center"
-                android:text="PLEASE ENTER YOUR REGISTERED UPI ID"
-                android:textColor="#4A4A4A"
-                android:textSize="20sp"
-                app:fontName="oswald_regular.ttf" />
-
-
-            <com.mycity4kids.widget.CustomFontEditText
-                android:id="@+id/addUpiEditTextView"
-                android:layout_width="match_parent"
-                android:layout_height="40dp"
-                android:layout_below="@id/enterRegisteredUpiTextView"
-                android:layout_marginLeft="12dp"
-                android:layout_marginTop="30dp"
-                android:layout_marginRight="12dp"
-                android:layout_marginBottom="30dp"
-                android:background="@drawable/border_layout_for_campaign"
-                android:fontFamily="sans-serif"
-                android:hint="Enter your UPI ID"
-                android:paddingLeft="12dp"
-                android:textColor="#4A4A4A"
-                android:textSize="14sp"
-
-                />
-
-
-        </RelativeLayout>
-
-        <RelativeLayout
-            android:id="@+id/bankTransferContainer"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_below="@id/toolbar"
-            android:paddingBottom="50dp"
-
-            android:visibility="visible">
-
-            <ImageView
-                android:id="@+id/bankTransferImageView"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_centerHorizontal="true"
-                android:layout_marginTop="50dp"
-                android:src="@drawable/bank_transfer" />
-
-
-            <com.mycity4kids.widget.CustomFontTextView
-                android:id="@+id/enterBankDetailTextView"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_below="@id/bankTransferImageView"
-                android:layout_centerHorizontal="true"
-                android:layout_marginLeft="12dp"
-                android:layout_marginTop="43dp"
-                android:layout_marginRight="12dp"
-                android:gravity="center"
-                android:text="@string/rewards_payment_submission_enter_bank_detail_text"
-                android:textColor="#4A4A4A"
-                android:textSize="20sp"
-                app:fontName="oswald_regular.ttf" />
-
-
-            <com.mycity4kids.widget.CustomFontTextView
-                android:id="@+id/note"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_below="@id/enterBankDetailTextView"
-                android:layout_centerHorizontal="true"
-                android:layout_marginLeft="12dp"
-                android:layout_marginRight="12dp"
-                android:gravity="center"
-                android:text="@string/note_detail_in_english"
-                android:textColor="@color/app_red"
-                android:textSize="12sp"
-                app:fontName="oswald_regular.ttf" />
-
-
-            <com.mycity4kids.widget.CustomFontTextView
-                android:id="@+id/accountHolderNameTextView"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_below="@+id/note"
-                android:layout_marginLeft="15dp"
-                android:layout_marginTop="30dp"
-                android:layout_marginBottom="4dp"
-                android:text="@string/rewards_bank_detail_holder_nmae_text"
-                android:textColor="#A1A1A1"
-                android:textSize="16sp" />
-
-            <com.mycity4kids.widget.CustomFontEditText
-                android:id="@+id/addAccountHolderNameEditTextView"
-                android:layout_width="match_parent"
-                android:layout_height="50dp"
-                android:layout_below="@id/accountHolderNameTextView"
-                android:layout_marginLeft="12dp"
-                android:layout_marginRight="12dp"
-                android:layout_marginBottom="25dp"
-                android:background="@drawable/border_layout_for_campaign"
-                android:digits="abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ "
-                android:fontFamily="sans-serif"
-                android:lines="1"
-                android:maxLines="1"
-                android:paddingLeft="12dp"
-                android:textColor="#4A4A4A"
-                android:textSize="14sp"
-
-                />
-
-
-            <com.mycity4kids.widget.CustomFontTextView
-                android:id="@+id/selectBankAccountTextView"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_below="@+id/addAccountHolderNameEditTextView"
-                android:layout_marginLeft="15dp"
-                android:layout_marginBottom="4dp"
-                android:text="@string/rewards_bank_detail_select_bank_text"
-                android:textColor="#A1A1A1"
-                android:textSize="16sp" />
-
-
-            <com.mycity4kids.widget.CustomFontEditText
-                android:id="@+id/selectBankAccountEditText"
-                android:layout_width="match_parent"
-                android:layout_height="50dp"
-                android:layout_below="@id/selectBankAccountTextView"
-                android:layout_marginLeft="12dp"
-                android:layout_marginRight="12dp"
-                android:layout_marginBottom="25dp"
-                android:background="@drawable/border_layout_for_campaign"
-                android:fontFamily="sans-serif"
-                android:lines="1"
-
-                android:maxLines="1"
-                android:paddingLeft="12dp"
-                android:textColor="#4A4A4A"
-                android:textSize="14sp"
-
-                />
-
-            <Spinner
-                android:id="@+id/selectBankAccountspinner"
-                android:layout_width="match_parent"
-                android:layout_height="50dp"
-                android:layout_below="@id/selectBankAccountTextView"
-                android:layout_marginLeft="12dp"
-                android:layout_marginRight="12dp"
-                android:layout_marginBottom="25dp"
-                android:background="@drawable/campaign_spinner_border_layout"
-                android:paddingLeft="12dp"
-                android:spinnerMode="dropdown"
-                android:visibility="gone" />
-
-
-            <com.mycity4kids.widget.CustomFontTextView
-                android:id="@+id/accountNumberTextView"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_below="@+id/selectBankAccountEditText"
-                android:layout_marginLeft="15dp"
-                android:layout_marginBottom="4dp"
-                android:text="@string/rewards_bank_detail_account_number"
-                android:textColor="#A1A1A1"
-                android:textSize="16sp" />
-
-            <com.mycity4kids.widget.CustomFontEditText
-                android:id="@+id/accountNumberEditTextView"
-                android:layout_width="match_parent"
-                android:layout_height="50dp"
-                android:layout_below="@id/accountNumberTextView"
-                android:layout_marginLeft="12dp"
-
-                android:layout_marginRight="12dp"
-                android:layout_marginBottom="25dp"
-                android:background="@drawable/border_layout_for_campaign"
-                android:fontFamily="sans-serif"
-                android:inputType="number"
-                android:lines="1"
-                android:maxLines="1"
-                android:paddingLeft="12dp"
-                android:textColor="#4A4A4A"
-                android:textSize="14sp"
-
-                />
-
-            <com.mycity4kids.widget.CustomFontTextView
-                android:id="@+id/confirmAccountNumberTextView"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_below="@+id/accountNumberEditTextView"
-                android:layout_marginLeft="15dp"
-                android:layout_marginBottom="4dp"
-                android:text="@string/rewards_bank_detail_confirm_account_number"
-                android:textColor="#A1A1A1"
-                android:textSize="16sp" />
-
-            <com.mycity4kids.widget.CustomFontEditText
-                android:id="@+id/confirmAccountNumberEditTextView"
-                android:layout_width="match_parent"
-                android:layout_height="50dp"
-                android:layout_below="@id/confirmAccountNumberTextView"
-                android:layout_marginLeft="12dp"
-                android:layout_marginRight="12dp"
-                android:layout_marginBottom="30dp"
-                android:background="@drawable/border_layout_for_campaign"
-                android:fontFamily="sans-serif"
-                android:inputType="number"
-                android:lines="1"
-                android:maxLines="1"
-                android:paddingLeft="12dp"
-                android:textColor="#4A4A4A"
-                android:textSize="14sp"
-
-                />
-
-
-            <com.mycity4kids.widget.CustomFontTextView
-                android:id="@+id/ifscCodeTextView"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_below="@+id/confirmAccountNumberEditTextView"
-                android:layout_marginLeft="15dp"
-                android:layout_marginBottom="4dp"
-                android:text="@string/rewards_bank_detail_ifsc_text"
-                android:textColor="#A1A1A1"
-                android:textSize="16sp" />
-
-            <com.mycity4kids.widget.CustomFontEditText
-                android:id="@+id/ifscEditTextView"
-                android:layout_width="match_parent"
-                android:layout_height="50dp"
-                android:layout_below="@id/ifscCodeTextView"
-                android:layout_marginLeft="12dp"
-                android:layout_marginRight="12dp"
-                android:layout_marginBottom="25dp"
-                android:background="@drawable/border_layout_for_campaign"
-                android:digits="ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789"
-                android:fontFamily="sans-serif"
-                android:inputType="textCapCharacters"
-                android:lines="1"
-                android:maxLines="1"
-                android:paddingLeft="12dp"
-                android:textColor="#4A4A4A"
-                android:textSize="14sp" />
-
-
-        </RelativeLayout>
-
-
-        <com.mycity4kids.widget.CustomFontTextView
-            android:id="@+id/submitTextViewCampaign"
-            android:layout_width="match_parent"
-            android:layout_height="53dp"
-            android:layout_alignParentBottom="true"
-            android:background="#D03F56"
-            android:gravity="center"
-            android:text="@string/submit"
-            android:textColor="@color/white_color"
-            android:textSize="18sp"
-            app:fontName="oswald_regular.ttf" />
-        <!-- </ScrollView>-->
+      <include
+        layout="@layout/payment_disclaimer_note"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_marginLeft="@dimen/space_16"
+        android:layout_marginRight="@dimen/space_16"
+        android:layout_marginBottom="@dimen/space_25" />
 
     </RelativeLayout>
+
+    <RelativeLayout
+      android:id="@+id/upiContainer"
+      android:layout_width="match_parent"
+      android:layout_height="match_parent"
+      android:layout_above="@id/submitTextViewCampaign"
+      android:layout_below="@id/toolbar"
+      android:visibility="gone">
+
+      <ImageView
+        android:id="@+id/upiImageView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="50dp"
+        android:src="@drawable/upi" />
+
+
+      <com.mycity4kids.widget.CustomFontTextView
+        android:id="@+id/enterRegisteredUpiTextView"
+        android:layout_width="400dp"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/upiImageView"
+        android:layout_centerHorizontal="true"
+        android:layout_marginLeft="12dp"
+        android:layout_marginTop="43dp"
+        android:layout_marginRight="12dp"
+        android:gravity="center"
+        android:text="PLEASE ENTER YOUR REGISTERED UPI ID"
+        android:textColor="#4A4A4A"
+        android:textSize="20sp"
+        app:fontName="oswald_regular.ttf" />
+
+
+      <com.mycity4kids.widget.CustomFontEditText
+        android:id="@+id/addUpiEditTextView"
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:layout_below="@id/enterRegisteredUpiTextView"
+        android:layout_marginLeft="12dp"
+        android:layout_marginTop="30dp"
+        android:layout_marginRight="12dp"
+        android:layout_marginBottom="30dp"
+        android:background="@drawable/border_layout_for_campaign"
+        android:fontFamily="sans-serif"
+        android:hint="Enter your UPI ID"
+        android:paddingLeft="12dp"
+        android:textColor="#4A4A4A"
+        android:textSize="14sp"
+
+        />
+
+
+      <include
+        layout="@layout/payment_disclaimer_note"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_marginLeft="@dimen/space_16"
+        android:layout_marginRight="@dimen/space_16"
+        android:layout_marginBottom="@dimen/space_25" />
+
+    </RelativeLayout>
+
+    <RelativeLayout
+      android:id="@+id/bankTransferContainer"
+      android:layout_width="match_parent"
+      android:layout_height="match_parent"
+      android:layout_below="@id/toolbar"
+      android:paddingBottom="50dp"
+
+      android:visibility="visible">
+
+      <ImageView
+        android:id="@+id/bankTransferImageView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="50dp"
+        android:src="@drawable/bank_transfer" />
+
+
+      <com.mycity4kids.widget.CustomFontTextView
+        android:id="@+id/enterBankDetailTextView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/bankTransferImageView"
+        android:layout_centerHorizontal="true"
+        android:layout_marginLeft="12dp"
+        android:layout_marginTop="43dp"
+        android:layout_marginRight="12dp"
+        android:gravity="center"
+        android:text="@string/rewards_payment_submission_enter_bank_detail_text"
+        android:textColor="#4A4A4A"
+        android:textSize="20sp"
+        app:fontName="oswald_regular.ttf" />
+
+
+      <com.mycity4kids.widget.CustomFontTextView
+        android:id="@+id/note"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/enterBankDetailTextView"
+        android:layout_centerHorizontal="true"
+        android:layout_marginLeft="12dp"
+        android:layout_marginRight="12dp"
+        android:gravity="center"
+        android:text="@string/note_detail_in_english"
+        android:textColor="@color/app_red"
+        android:textSize="12sp"
+        app:fontName="oswald_regular.ttf" />
+
+
+      <com.mycity4kids.widget.CustomFontTextView
+        android:id="@+id/accountHolderNameTextView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/note"
+        android:layout_marginLeft="15dp"
+        android:layout_marginTop="30dp"
+        android:layout_marginBottom="4dp"
+        android:text="@string/rewards_bank_detail_holder_nmae_text"
+        android:textColor="#A1A1A1"
+        android:textSize="16sp" />
+
+      <com.mycity4kids.widget.CustomFontEditText
+        android:id="@+id/addAccountHolderNameEditTextView"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:layout_below="@id/accountHolderNameTextView"
+        android:layout_marginLeft="12dp"
+        android:layout_marginRight="12dp"
+        android:layout_marginBottom="25dp"
+        android:background="@drawable/border_layout_for_campaign"
+        android:digits="abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ "
+        android:fontFamily="sans-serif"
+        android:lines="1"
+        android:maxLines="1"
+        android:paddingLeft="12dp"
+        android:textColor="#4A4A4A"
+        android:textSize="14sp"
+
+        />
+
+
+      <com.mycity4kids.widget.CustomFontTextView
+        android:id="@+id/selectBankAccountTextView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/addAccountHolderNameEditTextView"
+        android:layout_marginLeft="15dp"
+        android:layout_marginBottom="4dp"
+        android:text="@string/rewards_bank_detail_select_bank_text"
+        android:textColor="#A1A1A1"
+        android:textSize="16sp" />
+
+
+      <com.mycity4kids.widget.CustomFontEditText
+        android:id="@+id/selectBankAccountEditText"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:layout_below="@id/selectBankAccountTextView"
+        android:layout_marginLeft="12dp"
+        android:layout_marginRight="12dp"
+        android:layout_marginBottom="25dp"
+        android:background="@drawable/border_layout_for_campaign"
+        android:fontFamily="sans-serif"
+        android:lines="1"
+
+        android:maxLines="1"
+        android:paddingLeft="12dp"
+        android:textColor="#4A4A4A"
+        android:textSize="14sp"
+
+        />
+
+      <Spinner
+        android:id="@+id/selectBankAccountspinner"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:layout_below="@id/selectBankAccountTextView"
+        android:layout_marginLeft="12dp"
+        android:layout_marginRight="12dp"
+        android:layout_marginBottom="25dp"
+        android:background="@drawable/campaign_spinner_border_layout"
+        android:paddingLeft="12dp"
+        android:spinnerMode="dropdown"
+        android:visibility="gone" />
+
+
+      <com.mycity4kids.widget.CustomFontTextView
+        android:id="@+id/accountNumberTextView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/selectBankAccountEditText"
+        android:layout_marginLeft="15dp"
+        android:layout_marginBottom="4dp"
+        android:text="@string/rewards_bank_detail_account_number"
+        android:textColor="#A1A1A1"
+        android:textSize="16sp" />
+
+      <com.mycity4kids.widget.CustomFontEditText
+        android:id="@+id/accountNumberEditTextView"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:layout_below="@id/accountNumberTextView"
+        android:layout_marginLeft="12dp"
+
+        android:layout_marginRight="12dp"
+        android:layout_marginBottom="25dp"
+        android:background="@drawable/border_layout_for_campaign"
+        android:fontFamily="sans-serif"
+        android:inputType="number"
+        android:lines="1"
+        android:maxLines="1"
+        android:paddingLeft="12dp"
+        android:textColor="#4A4A4A"
+        android:textSize="14sp"
+
+        />
+
+      <com.mycity4kids.widget.CustomFontTextView
+        android:id="@+id/confirmAccountNumberTextView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/accountNumberEditTextView"
+        android:layout_marginLeft="15dp"
+        android:layout_marginBottom="4dp"
+        android:text="@string/rewards_bank_detail_confirm_account_number"
+        android:textColor="#A1A1A1"
+        android:textSize="16sp" />
+
+      <com.mycity4kids.widget.CustomFontEditText
+        android:id="@+id/confirmAccountNumberEditTextView"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:layout_below="@id/confirmAccountNumberTextView"
+        android:layout_marginLeft="12dp"
+        android:layout_marginRight="12dp"
+        android:layout_marginBottom="30dp"
+        android:background="@drawable/border_layout_for_campaign"
+        android:fontFamily="sans-serif"
+        android:inputType="number"
+        android:lines="1"
+        android:maxLines="1"
+        android:paddingLeft="12dp"
+        android:textColor="#4A4A4A"
+        android:textSize="14sp"
+
+        />
+
+
+      <com.mycity4kids.widget.CustomFontTextView
+        android:id="@+id/ifscCodeTextView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/confirmAccountNumberEditTextView"
+        android:layout_marginLeft="15dp"
+        android:layout_marginBottom="4dp"
+        android:text="@string/rewards_bank_detail_ifsc_text"
+        android:textColor="#A1A1A1"
+        android:textSize="16sp" />
+
+      <com.mycity4kids.widget.CustomFontEditText
+        android:id="@+id/ifscEditTextView"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:layout_below="@id/ifscCodeTextView"
+        android:layout_marginLeft="12dp"
+        android:layout_marginRight="12dp"
+        android:layout_marginBottom="25dp"
+        android:background="@drawable/border_layout_for_campaign"
+        android:digits="ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789"
+        android:fontFamily="sans-serif"
+        android:inputType="textCapCharacters"
+        android:lines="1"
+        android:maxLines="1"
+        android:paddingLeft="12dp"
+        android:textColor="#4A4A4A"
+        android:textSize="14sp" />
+
+      <include
+        layout="@layout/payment_disclaimer_note"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/ifscEditTextView"
+        android:layout_marginLeft="@dimen/space_16"
+        android:layout_marginRight="@dimen/space_16"
+        android:layout_marginBottom="@dimen/space_25" />
+
+
+    </RelativeLayout>
+
+
+    <com.mycity4kids.widget.CustomFontTextView
+      android:id="@+id/submitTextViewCampaign"
+      android:layout_width="match_parent"
+      android:layout_height="53dp"
+      android:layout_alignParentBottom="true"
+      android:background="#D03F56"
+      android:gravity="center"
+      android:text="@string/submit"
+      android:textColor="@color/white_color"
+      android:textSize="18sp"
+      app:fontName="oswald_regular.ttf" />
+    <!-- </ScrollView>-->
+
+  </RelativeLayout>
 </ScrollView>

@@ -308,6 +308,9 @@
       android:name=".ui.activity.GroupsQuestionnaireActivity"
       android:screenOrientation="portrait" />
     <activity
+      android:name=".ui.activity.UpdateUserHandleActivity"
+      android:screenOrientation="portrait" />
+    <activity
       android:name=".ui.activity.GroupDetailsActivity"
       android:screenOrientation="portrait" />
     <activity

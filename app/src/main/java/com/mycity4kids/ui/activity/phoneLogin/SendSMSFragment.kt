@@ -24,6 +24,7 @@ import com.mycity4kids.models.request.PhoneLoginRequest
 import com.mycity4kids.retrofitAPIsInterfaces.LoginRegistrationAPI
 import com.mycity4kids.ui.activity.ActivityLogin
 import com.mycity4kids.ui.activity.OTPActivity
+import com.mycity4kids.ui.activity.UpdateUserHandleActivity
 import okhttp3.ResponseBody
 import org.json.JSONObject
 import retrofit2.Call
@@ -148,6 +149,8 @@ class SendSMSFragment : BaseFragment(), View.OnClickListener {
                 VerifySMSFragment::class.java.simpleName
             ).addToBackStack(null)
                 .commit()
+        } else if (activity?.javaClass?.simpleName.equals("UpdateUserHandleActivity")) {
+            (activity as UpdateUserHandleActivity).addFragment(verifySMSFragment, bundle, null)
         }
     }
 

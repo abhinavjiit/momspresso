@@ -52,6 +52,12 @@ public class UserInfo implements Parcelable {
     private String blogTitle = "";
     @SerializedName("isNewUser")
     private String isNewUser = "";
+    @SerializedName("isUserHandleUpdated")
+    private String isUserHandleUpdated = "";
+    @SerializedName("userHandle")
+    private String userHandle = "";
+    @SerializedName("requestMedium")
+    private String requestMedium = "";
 
     public UserInfo() {
         super();
@@ -241,6 +247,30 @@ public class UserInfo implements Parcelable {
         this.isNewUser = isNewUser;
     }
 
+    public String getIsUserHandleUpdated() {
+        return isUserHandleUpdated;
+    }
+
+    public void setIsUserHandleUpdated(String isUserHandleUpdated) {
+        this.isUserHandleUpdated = isUserHandleUpdated;
+    }
+
+    public String getRequestMedium() {
+        return requestMedium;
+    }
+
+    public void setRequestMedium(String requestMedium) {
+        this.requestMedium = requestMedium;
+    }
+
+    public String getUserHandle() {
+        return userHandle;
+    }
+
+    public void setUserHandle(String userHandle) {
+        this.userHandle = userHandle;
+    }
+
     protected UserInfo(Parcel in) {
         id = in.readString();
         dynamoId = in.readString();
@@ -265,6 +295,9 @@ public class UserInfo implements Parcelable {
         gender = in.readString();
         blogTitle = in.readString();
         isNewUser = in.readString();
+        isUserHandleUpdated = in.readString();
+        userHandle = in.readString();
+        requestMedium = in.readString();
     }
 
     @Override
@@ -292,6 +325,9 @@ public class UserInfo implements Parcelable {
         dest.writeString(gender);
         dest.writeString(blogTitle);
         dest.writeString(isNewUser);
+        dest.writeString(isUserHandleUpdated);
+        dest.writeString(userHandle);
+        dest.writeString(requestMedium);
     }
 
     @Override

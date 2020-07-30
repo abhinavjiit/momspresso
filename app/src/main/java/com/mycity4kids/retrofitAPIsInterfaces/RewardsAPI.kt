@@ -6,6 +6,7 @@ import com.mycity4kids.models.response.BaseResponseGeneric
 import com.mycity4kids.models.response.SetupBlogData
 import com.mycity4kids.models.response.ShortStoryImageData
 import com.mycity4kids.models.response.UserDetailResult
+import com.mycity4kids.models.response.UserHandleResult
 import com.mycity4kids.models.rewardsmodels.RewardsDetailsResultResonse
 import com.mycity4kids.models.rewardsmodels.RewardsPersonalResponse
 import io.reactivex.Observable
@@ -66,6 +67,13 @@ interface RewardsAPI {
         @Path("userId") userId: String,
         @Body userDetailResult: UserDetailResult,
         @Query("fn") pageValue: Int
+    ):
+        Observable<RewardsPersonalResponse>
+
+    @PUT("/v2/users/{userId}")
+    fun sendUserHandleFlowData(
+        @Path("userId") userId: String,
+        @Body userDetailResult: UserHandleResult
     ):
         Observable<RewardsPersonalResponse>
 

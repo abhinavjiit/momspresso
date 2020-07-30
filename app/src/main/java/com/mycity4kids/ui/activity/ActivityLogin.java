@@ -19,6 +19,8 @@ import com.google.android.gms.common.Scopes;
 import com.google.android.gms.common.api.Scope;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.crashlytics.FirebaseCrashlytics;
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 import com.mixpanel.android.mpmetrics.MixpanelAPI;
 import com.mycity4kids.R;
 import com.mycity4kids.application.BaseApplication;
@@ -33,6 +35,7 @@ import com.mycity4kids.models.request.PhoneLoginRequest;
 import com.mycity4kids.models.request.SocialConnectRequest;
 import com.mycity4kids.models.response.BaseResponse;
 import com.mycity4kids.models.response.FBPhoneLoginResponse;
+import com.mycity4kids.models.response.LanguageConfigModel;
 import com.mycity4kids.models.response.UserDetailResponse;
 import com.mycity4kids.models.response.UserDetailResult;
 import com.mycity4kids.models.user.UserInfo;
@@ -40,13 +43,18 @@ import com.mycity4kids.preference.SharedPrefUtils;
 import com.mycity4kids.retrofitAPIsInterfaces.LoginRegistrationAPI;
 import com.mycity4kids.sync.CategorySyncService;
 import com.mycity4kids.sync.PushTokenService;
+import com.mycity4kids.sync.SyncUserInfoService;
 import com.mycity4kids.ui.fragment.ChooseLoginAccountDialogFragment;
 import com.mycity4kids.ui.fragment.FacebookAddEmailDialogFragment;
 import com.mycity4kids.ui.fragment.SignInFragment;
 import com.mycity4kids.ui.fragment.SignUpFragment;
+import com.mycity4kids.utils.AppUtils;
 import com.mycity4kids.utils.ConnectivityUtils;
 import com.mycity4kids.utils.StringUtils;
+import java.io.FileInputStream;
 import java.util.ArrayList;
+import java.util.LinkedHashMap;
+import java.util.Map;
 import org.json.JSONObject;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -294,10 +302,11 @@ public class ActivityLogin extends BaseActivity implements IFacebookUser {
             dialogFragment.setArguments(bundle);
             dialogFragment.show(getFragmentManager(), "verify email");
         } else {
-            if ("phone".equals(loginMode) &&
+            /*if ("phone".equals(loginMode) &&
                     ((StringUtils.isNullOrEmpty(userDetailResult.getFirstName()) && StringUtils
                             .isNullOrEmpty(userDetailResult.getLastName()))
                             || userDetailResult.getFirstName().toUpperCase().contains("XXX"))) {
+                hitApiRequest();
                 Intent intent = new Intent(ActivityLogin.this, PushTokenService.class);
                 startService(intent);
                 Intent mServiceIntent = new Intent(ActivityLogin.this, CategorySyncService.class);
@@ -306,15 +315,68 @@ public class ActivityLogin extends BaseActivity implements IFacebookUser {
                 startActivity(intent1);
                 startSyncingUserInfo();
             } else {
+                hitApiRequest();
                 Intent intent = new Intent(ActivityLogin.this, PushTokenService.class);
                 startService(intent);
                 Intent mServiceIntent = new Intent(ActivityLogin.this, CategorySyncService.class);
                 startService(mServiceIntent);
                 Intent intent1 = new Intent(ActivityLogin.this, LoadingActivity.class);
                 startActivity(intent1);
-            }
+            }*/
+            hitApiRequest();
+            Intent intent = new Intent(ActivityLogin.this, PushTokenService.class);
+            startService(intent);
+            Intent mServiceIntent = new Intent(ActivityLogin.this, CategorySyncService.class);
+            startService(mServiceIntent);
+            Intent intent1 = new Intent(ActivityLogin.this, LoadingActivity.class);
+            startActivity(intent1);
         }
     }
+
+
+    private void hitApiRequest() {
+        Retrofit retrofit = BaseApplication.getInstance().getRetrofit();
+        LoginRegistrationAPI usersApi = retrofit.create(LoginRegistrationAPI.class);
+        Call<UserDetailResponse> call = usersApi.getUserDetails(SharedPrefUtils.getUserDetailModel(this).getDynamoId());
+        call.enqueue(onLoginResponseReceivedListener1);
+    }
+
+    Callback<UserDetailResponse> onLoginResponseReceivedListener1 = new Callback<UserDetailResponse>() {
+        @Override
+        public void onResponse(Call<UserDetailResponse> call, retrofit2.Response<UserDetailResponse> response) {
+            if (response.body() == null) {
+                return;
+            }
+
+            try {
+                UserDetailResponse responseData = response.body();
+                if (responseData.getCode() == 200 && Constants.SUCCESS.equals(responseData.getStatus())) {
+                    SharedPrefUtils.setProfileImgUrl(BaseApplication.getAppContext(),
+                            responseData.getData().get(0).getResult().getProfilePicUrl().getClientApp());
+                    UserInfo userInfo = SharedPrefUtils.getUserDetailModel(ActivityLogin.this);
+                    userInfo.setFirst_name(responseData.getData().get(0).getResult().getFirstName());
+                    userInfo.setLast_name(responseData.getData().get(0).getResult().getLastName());
+                    userInfo.setIsUserHandleUpdated(responseData.getData().get(0).getResult().getIsUserHandleUpdated());
+                    userInfo.setUserHandle(responseData.getData().get(0).getResult().getUserHandle());
+                    userInfo.setRequestMedium(responseData.getData().get(0).getResult().getRequestMedium());
+
+                    SharedPrefUtils.setUserDetailModel(BaseApplication.getAppContext(), userInfo);
+
+                }
+            } catch (Exception e) {
+                FirebaseCrashlytics.getInstance().recordException(e);
+                Log.d("MC4kException", Log.getStackTraceString(e));
+            }
+        }
+
+        @Override
+        public void onFailure(Call<UserDetailResponse> call, Throwable t) {
+            Log.d("MC4kException", Log.getStackTraceString(t));
+            FirebaseCrashlytics.getInstance().recordException(t);
+        }
+    };
+
+
 
     public class GetGoogleToken extends AsyncTask<Void, String, String> {
 
@@ -381,6 +443,7 @@ public class ActivityLogin extends BaseActivity implements IFacebookUser {
                     model.setGender("" + responseData.getData().get(0).getResult().getGender());
                     model.setBlogTitle(responseData.getData().get(0).getResult().getBlogTitle());
                     model.setIsNewUser(responseData.getData().get(0).getResult().getIsNewUser());
+
                     int cityIdFromLocation = SharedPrefUtils.getCurrentCityModel(ActivityLogin.this).getId();
                     if (cityIdFromLocation == AppConstants.OTHERS_CITY_ID) {
                         model.setCityId(responseData.getData().get(0).getResult().getCityId());
@@ -438,6 +501,7 @@ public class ActivityLogin extends BaseActivity implements IFacebookUser {
                     }
                     //Verified User
                     else {
+                        hitApiRequest();
                         Intent intent = new Intent(ActivityLogin.this, PushTokenService.class);
                         startService(intent);
                         Intent mServiceIntent = new Intent(ActivityLogin.this, CategorySyncService.class);
@@ -561,6 +625,7 @@ public class ActivityLogin extends BaseActivity implements IFacebookUser {
                 if (responseData.getCode() == 200 && Constants.SUCCESS.equals(responseData.getStatus())) {
                     dialogFragment.dismiss();
                     showToast(getString(R.string.verify_email));
+                    hitApiRequest();
                     Intent intent = new Intent(ActivityLogin.this, PushTokenService.class);
                     startService(intent);
                     Intent intent1 = new Intent(ActivityLogin.this, LoadingActivity.class);
