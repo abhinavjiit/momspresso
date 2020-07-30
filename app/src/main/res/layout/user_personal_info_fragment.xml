@@ -1117,10 +1117,12 @@
               app:fontName="open_sans.ttf" />
 
             <com.mycity4kids.widget.CustomFontTextView
+              android:id="@+id/profile_disclaimer_two"
               android:layout_width="wrap_content"
               android:layout_height="wrap_content"
               android:text="@string/rewards_payment_disclaimer_note_two"
               android:textColor="@color/campaign_4A4A4A"
+              android:textColorLink="@color/campaign_applied_bg"
               android:textSize="12sp"
               app:fontName="open_sans.ttf" />
 

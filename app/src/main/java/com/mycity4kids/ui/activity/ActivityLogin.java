@@ -19,8 +19,6 @@ import com.google.android.gms.common.Scopes;
 import com.google.android.gms.common.api.Scope;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.crashlytics.FirebaseCrashlytics;
-import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
 import com.mixpanel.android.mpmetrics.MixpanelAPI;
 import com.mycity4kids.R;
 import com.mycity4kids.application.BaseApplication;
@@ -35,7 +33,6 @@ import com.mycity4kids.models.request.PhoneLoginRequest;
 import com.mycity4kids.models.request.SocialConnectRequest;
 import com.mycity4kids.models.response.BaseResponse;
 import com.mycity4kids.models.response.FBPhoneLoginResponse;
-import com.mycity4kids.models.response.LanguageConfigModel;
 import com.mycity4kids.models.response.UserDetailResponse;
 import com.mycity4kids.models.response.UserDetailResult;
 import com.mycity4kids.models.user.UserInfo;
@@ -43,18 +40,13 @@ import com.mycity4kids.preference.SharedPrefUtils;
 import com.mycity4kids.retrofitAPIsInterfaces.LoginRegistrationAPI;
 import com.mycity4kids.sync.CategorySyncService;
 import com.mycity4kids.sync.PushTokenService;
-import com.mycity4kids.sync.SyncUserInfoService;
 import com.mycity4kids.ui.fragment.ChooseLoginAccountDialogFragment;
 import com.mycity4kids.ui.fragment.FacebookAddEmailDialogFragment;
 import com.mycity4kids.ui.fragment.SignInFragment;
 import com.mycity4kids.ui.fragment.SignUpFragment;
-import com.mycity4kids.utils.AppUtils;
 import com.mycity4kids.utils.ConnectivityUtils;
 import com.mycity4kids.utils.StringUtils;
-import java.io.FileInputStream;
 import java.util.ArrayList;
-import java.util.LinkedHashMap;
-import java.util.Map;
 import org.json.JSONObject;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -75,6 +67,7 @@ public class ActivityLogin extends BaseActivity implements IFacebookUser {
     private String accessToken = "";
     private String googleToken = "";
     FacebookAddEmailDialogFragment dialogFragment;
+    private boolean isFbMailMissing = false;
 
     private String loginMode = "";
     private CallbackManager callbackManager;
@@ -302,34 +295,7 @@ public class ActivityLogin extends BaseActivity implements IFacebookUser {
             dialogFragment.setArguments(bundle);
             dialogFragment.show(getFragmentManager(), "verify email");
         } else {
-            /*if ("phone".equals(loginMode) &&
-                    ((StringUtils.isNullOrEmpty(userDetailResult.getFirstName()) && StringUtils
-                            .isNullOrEmpty(userDetailResult.getLastName()))
-                            || userDetailResult.getFirstName().toUpperCase().contains("XXX"))) {
-                hitApiRequest();
-                Intent intent = new Intent(ActivityLogin.this, PushTokenService.class);
-                startService(intent);
-                Intent mServiceIntent = new Intent(ActivityLogin.this, CategorySyncService.class);
-                startService(mServiceIntent);
-                Intent intent1 = new Intent(ActivityLogin.this, PhoneLoginUserDetailActivity.class);
-                startActivity(intent1);
-                startSyncingUserInfo();
-            } else {
-                hitApiRequest();
-                Intent intent = new Intent(ActivityLogin.this, PushTokenService.class);
-                startService(intent);
-                Intent mServiceIntent = new Intent(ActivityLogin.this, CategorySyncService.class);
-                startService(mServiceIntent);
-                Intent intent1 = new Intent(ActivityLogin.this, LoadingActivity.class);
-                startActivity(intent1);
-            }*/
             hitApiRequest();
-            Intent intent = new Intent(ActivityLogin.this, PushTokenService.class);
-            startService(intent);
-            Intent mServiceIntent = new Intent(ActivityLogin.this, CategorySyncService.class);
-            startService(mServiceIntent);
-            Intent intent1 = new Intent(ActivityLogin.this, LoadingActivity.class);
-            startActivity(intent1);
         }
     }
 
@@ -359,9 +325,20 @@ public class ActivityLogin extends BaseActivity implements IFacebookUser {
                     userInfo.setIsUserHandleUpdated(responseData.getData().get(0).getResult().getIsUserHandleUpdated());
                     userInfo.setUserHandle(responseData.getData().get(0).getResult().getUserHandle());
                     userInfo.setRequestMedium(responseData.getData().get(0).getResult().getRequestMedium());
+                    userInfo.setEmailValidated(responseData.getData().get(0).getResult().getEmailValidated());
 
                     SharedPrefUtils.setUserDetailModel(BaseApplication.getAppContext(), userInfo);
 
+                    Intent intent = new Intent(ActivityLogin.this, PushTokenService.class);
+                    startService(intent);
+                    if (!isFbMailMissing) {
+                        Intent mServiceIntent = new Intent(ActivityLogin.this, CategorySyncService.class);
+                        startService(mServiceIntent);
+                    }
+                    Intent intent1 = new Intent(ActivityLogin.this, LoadingActivity.class);
+                    intent1.putExtra("loginMode", loginMode);
+                    startActivity(intent1);
+                    startSyncingUserInfo();
                 }
             } catch (Exception e) {
                 FirebaseCrashlytics.getInstance().recordException(e);
@@ -375,7 +352,6 @@ public class ActivityLogin extends BaseActivity implements IFacebookUser {
             FirebaseCrashlytics.getInstance().recordException(t);
         }
     };
-
 
 
     public class GetGoogleToken extends AsyncTask<Void, String, String> {
@@ -502,13 +478,6 @@ public class ActivityLogin extends BaseActivity implements IFacebookUser {
                     //Verified User
                     else {
                         hitApiRequest();
-                        Intent intent = new Intent(ActivityLogin.this, PushTokenService.class);
-                        startService(intent);
-                        Intent mServiceIntent = new Intent(ActivityLogin.this, CategorySyncService.class);
-                        startService(mServiceIntent);
-                        Intent intent1 = new Intent(ActivityLogin.this, LoadingActivity.class);
-                        startActivity(intent1);
-                        startSyncingUserInfo();
                     }
                 } else {
                     showToast(responseData.getReason());
@@ -624,12 +593,9 @@ public class ActivityLogin extends BaseActivity implements IFacebookUser {
                 UserDetailResponse responseData = response.body();
                 if (responseData.getCode() == 200 && Constants.SUCCESS.equals(responseData.getStatus())) {
                     dialogFragment.dismiss();
+                    isFbMailMissing = true;
                     showToast(getString(R.string.verify_email));
                     hitApiRequest();
-                    Intent intent = new Intent(ActivityLogin.this, PushTokenService.class);
-                    startService(intent);
-                    Intent intent1 = new Intent(ActivityLogin.this, LoadingActivity.class);
-                    startActivity(intent1);
                 } else {
                     showToast(responseData.getReason());
                 }

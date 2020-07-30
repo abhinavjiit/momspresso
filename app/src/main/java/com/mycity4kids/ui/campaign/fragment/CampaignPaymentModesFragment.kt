@@ -3,7 +3,15 @@ package com.mycity4kids.ui.campaign.fragment
 import android.app.Activity
 import android.content.Context
 import android.content.Intent
+import android.graphics.Color
+import android.net.Uri
 import android.os.Bundle
+import android.text.Html
+import android.text.SpannableString
+import android.text.Spanned
+import android.text.TextPaint
+import android.text.method.LinkMovementMethod
+import android.text.style.ClickableSpan
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -37,9 +45,9 @@ import io.reactivex.Observer
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable
 import io.reactivex.schedulers.Schedulers
+import retrofit2.HttpException
 import java.io.InputStreamReader
 import java.util.regex.Pattern
-import retrofit2.HttpException
 
 class CampaignPaymentModesFragment : BaseFragment(), PaymentModesAdapter.ClickListener, View.OnClickListener {
 
@@ -65,6 +73,8 @@ class CampaignPaymentModesFragment : BaseFragment(), PaymentModesAdapter.ClickLi
     private var panNumber: String? = null
     private lateinit var submitTextView: TextView
     private lateinit var panCardDetailEditTextView: EditText
+    private var spannable: SpannableString? = null
+    private lateinit var panCardDisclaimerFour: TextView
 
     override fun onRadioButton(position: Int) {
         selectedPaymantIdPosition = position
@@ -309,6 +319,7 @@ class CampaignPaymentModesFragment : BaseFragment(), PaymentModesAdapter.ClickLi
         }
 
         // Set the adapter
+        panCardDisclaimerFour = view.findViewById(R.id.pan_card_disclaimer_four)
         panCardDetailEditTextView = view.findViewById(R.id.panCardDetailEditTextView)
         recyclerPaymentModesOption = view.findViewById<RecyclerView>(R.id.recyclerPaymentModesOption)
         saveContinueTextView = view.findViewById(R.id.saveContinueTextView)
@@ -319,6 +330,27 @@ class CampaignPaymentModesFragment : BaseFragment(), PaymentModesAdapter.ClickLi
         fetchPaymentModes()
         saveContinueTextView.setOnClickListener(this)
 
+        spannable = SpannableString(resources.getString(R.string.rewards_pancard_note_detail_four))
+
+        val clickableSpan = object : ClickableSpan() {
+            override fun onClick(p0: View) {
+                val emailIntent = Intent(
+                    Intent.ACTION_SENDTO, Uri.fromParts(
+                    "mailto", "support@momspresso-mymoney.com", null
+                )
+                )
+                startActivity(Intent.createChooser(emailIntent, "Send email..."))
+            }
+
+            override fun updateDrawState(ds: TextPaint) {
+                super.updateDrawState(ds)
+                ds.setUnderlineText(false)
+            }
+        }
+        spannable!!.setSpan(clickableSpan, 80, 110, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
+        panCardDisclaimerFour.movementMethod = LinkMovementMethod.getInstance()
+        panCardDisclaimerFour.highlightColor = Color.BLUE
+        panCardDisclaimerFour.setText(spannable)
         return view
     }
 

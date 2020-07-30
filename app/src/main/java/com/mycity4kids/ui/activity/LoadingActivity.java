@@ -49,6 +49,10 @@ public class LoadingActivity extends BaseActivity {
         isUserHandleUpdated = SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext())
                 .getIsUserHandleUpdated();
 
+        if (getIntent().hasExtra("loginMode")) {
+            loginMode = getIntent().getStringExtra("loginMode");
+        }
+
         if ((StringUtils.isNullOrEmpty(isUserHandleUpdated) || isUserHandleUpdated.equals("0")) && !loginMode
                 .equals("email")) {
             Intent intent = new Intent(LoadingActivity.this, UpdateUserHandleActivity.class);

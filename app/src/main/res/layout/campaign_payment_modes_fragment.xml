@@ -156,9 +156,10 @@
             app:fontName="open_sans.ttf" />
 
           <com.mycity4kids.widget.CustomFontTextView
+            android:id="@+id/pan_card_disclaimer_four"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/rewards_pancard_note_detail_four"
+            android:textColorLink="@color/campaign_applied_bg"
             android:textColor="@color/campaign_4A4A4A"
             android:textSize="12sp"
             app:fontName="open_sans.ttf" />

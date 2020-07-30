@@ -54,6 +54,7 @@ public class SharedPrefUtils {
     private static final String IS_USER_HANDLE_UPDATED = "isUserHandleUpdated";
     private static final String USER_HANDLE = "userHandle";
     private static final String REQUEST_MEDIUM = "requestMedium";
+    private static final String EMAIL_VALIDATED = "emailValidated";
 
     private static final String DEVICE_TOKEN = "device_token";
     private static final String LOGOUT_FLAG = "logout_flag";
@@ -176,6 +177,7 @@ public class SharedPrefUtils {
         editor.putString(IS_USER_HANDLE_UPDATED, model.getIsUserHandleUpdated());
         editor.putString(USER_HANDLE,model.getUserHandle());
         editor.putString(REQUEST_MEDIUM, model.getRequestMedium());
+        editor.putString(EMAIL_VALIDATED,model.getEmailValidated());
 
         editor.commit();
     }
@@ -209,6 +211,7 @@ public class SharedPrefUtils {
         user.setIsUserHandleUpdated(sharedPref.getString(IS_USER_HANDLE_UPDATED, "0"));
         user.setUserHandle(sharedPref.getString(USER_HANDLE, ""));
         user.setRequestMedium(sharedPref.getString(REQUEST_MEDIUM,""));
+        user.setEmailValidated(sharedPref.getString(EMAIL_VALIDATED,"0"));
         return user;
     }
 

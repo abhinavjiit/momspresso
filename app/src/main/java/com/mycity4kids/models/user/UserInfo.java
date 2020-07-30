@@ -58,6 +58,8 @@ public class UserInfo implements Parcelable {
     private String userHandle = "";
     @SerializedName("requestMedium")
     private String requestMedium = "";
+    @SerializedName("emailValidated")
+    private String emailValidated = "";
 
     public UserInfo() {
         super();
@@ -263,6 +265,14 @@ public class UserInfo implements Parcelable {
         this.requestMedium = requestMedium;
     }
 
+    public String getEmailValidated() {
+        return emailValidated;
+    }
+
+    public void setEmailValidated(String emailValidated) {
+        this.emailValidated = emailValidated;
+    }
+
     public String getUserHandle() {
         return userHandle;
     }
@@ -298,6 +308,7 @@ public class UserInfo implements Parcelable {
         isUserHandleUpdated = in.readString();
         userHandle = in.readString();
         requestMedium = in.readString();
+        emailValidated = in.readString();
     }
 
     @Override
@@ -328,6 +339,7 @@ public class UserInfo implements Parcelable {
         dest.writeString(isUserHandleUpdated);
         dest.writeString(userHandle);
         dest.writeString(requestMedium);
+        dest.writeString(emailValidated);
     }
 
     @Override
