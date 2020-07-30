@@ -43,6 +43,7 @@ public class UpdateUserHandleActivity extends BaseActivity {
     private String loginMode = "";
     private String userHandle = "";
     private String email = "";
+    private String emailValidated = "";
     private TextView fNameTextView, lNameTextView, userHandleTextView, suggestions, emailTextView, phoneTextView, checkTextView, userAvailabilityResultTextView, phoneEditView, textSaveAndContinue;
     private EditText fNameEditView, lNameEditView, userHandleEditView, emailEditView;
     private RadioGroup suggestionRadioGroup;
@@ -85,6 +86,7 @@ public class UpdateUserHandleActivity extends BaseActivity {
         userHandle = SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getUserHandle();
         loginMode = SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getRequestMedium();
         email = SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getEmail();
+        emailValidated = SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getEmailValidated();
 
         if (!StringUtils.isNullOrEmpty(userHandle)) {
             userHandleEditView.setText(userHandle);
@@ -92,7 +94,15 @@ public class UpdateUserHandleActivity extends BaseActivity {
 
         if (!StringUtils.isNullOrEmpty(email)) {
             emailEditView.setText(email);
-            emailEditView.setEnabled(false);
+            if (emailValidated.equals("1")) {
+                emailEditView.setEnabled(false);
+                emailEditView.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.green_tick, 0);
+            }
+        }
+
+        if (loginMode.equals("phone") || loginMode.equals("custom") || loginMode.equals("mobile number")){
+            fNameEditView.setText(SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getFirst_name());
+            lNameEditView.setText(SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getLast_name());
         }
 
         if (userHandleEditView.getText().toString().equals(userHandle)) {
@@ -163,6 +173,12 @@ public class UpdateUserHandleActivity extends BaseActivity {
                     if (prepareDataForPosting()) {
                         postData();
                     }
+                } else {
+                    Toast.makeText(
+                            UpdateUserHandleActivity.this,
+                            "Please check handle availability",
+                            Toast.LENGTH_SHORT
+                    ).show();
                 }
             }
         });
@@ -172,7 +188,7 @@ public class UpdateUserHandleActivity extends BaseActivity {
             fNameEditView.setVisibility(View.GONE);
             lNameTextView.setVisibility(View.GONE);
             lNameEditView.setVisibility(View.GONE);
-        } else if (loginMode.equals("phone") || loginMode.equals("custom")) {
+        } else if (loginMode.equals("phone") || loginMode.equals("custom") || loginMode.equals("mobile number")) {
             phoneLayout.setVisibility(View.GONE);
             phoneTextView.setVisibility(View.GONE);
         } else if (loginMode.equals("gp")) {
@@ -320,6 +336,12 @@ public class UpdateUserHandleActivity extends BaseActivity {
                     if (prepareDataForPosting()) {
                         postData();
                     }
+                } else {
+                    Toast.makeText(
+                            this,
+                            "Please check handle availability",
+                            Toast.LENGTH_SHORT
+                    ).show();
                 }
             }
         }
@@ -377,7 +399,7 @@ public class UpdateUserHandleActivity extends BaseActivity {
         }
         userDetailResult.setUserHandle(userHandleEditView.getText().toString());
 
-        if (loginMode.equals("phone")) {
+        if (loginMode.equals("phone") || loginMode.equals("custom") || loginMode.equals("mobile number")) {
             if (StringUtils.isNullOrEmpty(fNameEditView.getText().toString())) {
                 Toast.makeText(this, "First name cannot be blank", Toast.LENGTH_SHORT).show();
                 return false;

@@ -2,7 +2,14 @@ package com.mycity4kids.ui.rewards.fragment
 
 import android.content.Context
 import android.content.Intent
+import android.graphics.Color
+import android.net.Uri
 import android.os.Bundle
+import android.text.SpannableString
+import android.text.Spanned
+import android.text.TextPaint
+import android.text.method.LinkMovementMethod
+import android.text.style.ClickableSpan
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -64,6 +71,8 @@ class RewardsSocialInfoFragment : BaseFragment(), InstagramApp.OAuthAuthenticati
     private var callbackManager: CallbackManager? = null
     private var isComingFromRewards = false
     private var isComingFromCampaign = false
+    private var spannable: SpannableString? = null
+    private lateinit var socialDisclaimerTwo: TextView
 
     companion object {
         fun newInstance(
@@ -100,6 +109,7 @@ class RewardsSocialInfoFragment : BaseFragment(), InstagramApp.OAuthAuthenticati
         callbackManager = CallbackManager.Factory.create()
         initializeXMLComponents()
         fetchRewardsData()
+
         return containerView
     }
 
@@ -227,6 +237,7 @@ class RewardsSocialInfoFragment : BaseFragment(), InstagramApp.OAuthAuthenticati
         editWebsite = containerView.findViewById(R.id.editWebsite)
         editYoutube = containerView.findViewById(R.id.editYoutube)
         textlater = containerView.findViewById(R.id.textlater)
+        socialDisclaimerTwo = containerView.findViewById(R.id.social_disclaimer_two)
 
         if (isComingFromRewards) {
             textlater.visibility = View.VISIBLE
@@ -306,6 +317,29 @@ class RewardsSocialInfoFragment : BaseFragment(), InstagramApp.OAuthAuthenticati
                 postDataofRewardsToServer()
             }
         }
+
+
+        spannable = SpannableString(resources.getString(R.string.rewards_payment_disclaimer_note_two))
+
+        val clickableSpan = object : ClickableSpan() {
+            override fun onClick(p0: View) {
+                val emailIntent = Intent(
+                    Intent.ACTION_SENDTO, Uri.fromParts(
+                    "mailto", "support@momspresso-mymoney.com", null
+                )
+                )
+                startActivity(Intent.createChooser(emailIntent, "Send email..."))
+            }
+
+            override fun updateDrawState(ds: TextPaint) {
+                super.updateDrawState(ds)
+                ds.setUnderlineText(false)
+            }
+        }
+        spannable!!.setSpan(clickableSpan, 80, 110, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
+        socialDisclaimerTwo.movementMethod = LinkMovementMethod.getInstance()
+        socialDisclaimerTwo.highlightColor = Color.BLUE
+        socialDisclaimerTwo.setText(spannable)
     }
 
     private fun prepareDataForPosting(): Boolean {

@@ -1,7 +1,15 @@
 package com.mycity4kids.ui.campaign.fragment
 
 import android.app.Activity
+import android.content.Intent
+import android.graphics.Color
+import android.net.Uri
 import android.os.Bundle
+import android.text.SpannableString
+import android.text.Spanned
+import android.text.TextPaint
+import android.text.method.LinkMovementMethod
+import android.text.style.ClickableSpan
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -64,6 +72,10 @@ class PaymentModeDtailsSubmissionFragment : BaseFragment(), View.OnClickListener
     private var source: String? = null
     private var ID: Int = -1
     private var isComingFromRewards: Boolean = false
+    private var spannable: SpannableString? = null
+    private lateinit var paytmDisclaimerTwo: TextView
+    private lateinit var upiDisclaimerTwo: TextView
+    private lateinit var accountDisclaimerTwo: TextView
 
     companion object {
         @JvmStatic
@@ -105,6 +117,9 @@ class PaymentModeDtailsSubmissionFragment : BaseFragment(), View.OnClickListener
         ifscEditTextView = view.findViewById(R.id.ifscEditTextView)
         addUpiEditTextView = view.findViewById(R.id.addUpiEditTextView)
         addMobileNumberEditText = view.findViewById(R.id.addMobileNumberEditText)
+        paytmDisclaimerTwo = view.findViewById(R.id.paytm_disclaimer_two)
+        upiDisclaimerTwo = view.findViewById(R.id.upi_disclaimer_two)
+        accountDisclaimerTwo = view.findViewById(R.id.account_disclaimer_two)
         back = view.findViewById(R.id.back)
         toolbar = view.findViewById(R.id.toolbar)
         activity!!.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN)
@@ -177,6 +192,40 @@ class PaymentModeDtailsSubmissionFragment : BaseFragment(), View.OnClickListener
                 (activity as CampaignContainerActivity).onBackPressed()
             }
         }
+
+
+        spannable = SpannableString(resources.getString(R.string.rewards_payment_disclaimer_note_two))
+
+        val clickableSpan = object : ClickableSpan() {
+            override fun onClick(p0: View) {
+                val emailIntent = Intent(
+                    Intent.ACTION_SENDTO, Uri.fromParts(
+                    "mailto", "support@momspresso-mymoney.com", null
+                )
+                )
+                startActivity(Intent.createChooser(emailIntent, "Send email..."))
+            }
+
+            override fun updateDrawState(ds: TextPaint) {
+                super.updateDrawState(ds)
+                ds.setUnderlineText(false)
+            }
+        }
+        spannable!!.setSpan(clickableSpan, 80, 110, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
+        if (paymantModeId == 1) {
+            paytmDisclaimerTwo.movementMethod = LinkMovementMethod.getInstance()
+            paytmDisclaimerTwo.highlightColor = Color.BLUE
+            paytmDisclaimerTwo.setText(spannable)
+        } else if (paymantModeId == 2){
+            upiDisclaimerTwo.movementMethod = LinkMovementMethod.getInstance()
+            upiDisclaimerTwo.highlightColor = Color.BLUE
+            upiDisclaimerTwo.setText(spannable)
+        } else{
+            accountDisclaimerTwo.movementMethod = LinkMovementMethod.getInstance()
+            accountDisclaimerTwo.highlightColor = Color.BLUE
+            accountDisclaimerTwo.setText(spannable)
+        }
+
         return view
     }
 

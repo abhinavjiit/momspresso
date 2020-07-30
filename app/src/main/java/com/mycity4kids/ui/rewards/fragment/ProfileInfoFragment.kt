@@ -17,7 +17,12 @@ import android.os.Bundle
 import android.os.Environment
 import android.provider.MediaStore
 import android.text.Editable
+import android.text.SpannableString
+import android.text.Spanned
+import android.text.TextPaint
 import android.text.TextWatcher
+import android.text.method.LinkMovementMethod
+import android.text.style.ClickableSpan
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -227,6 +232,8 @@ class ProfileInfoFragment : BaseFragment(),
     private lateinit var mCurrentPhotoPath: String
     private lateinit var absoluteImagePath: String
     private lateinit var imageUri: Uri
+    private var spannable: SpannableString? = null
+    private lateinit var profileDisclaimerTwo: TextView
 
     private var endIndex: Int = 0
 
@@ -271,6 +278,7 @@ class ProfileInfoFragment : BaseFragment(),
         editImageView = containerView.findViewById(R.id.editImageView)
         userHandleTextView = containerView.findViewById(R.id.userHandleTextView)
         checkTextView = containerView.findViewById(R.id.checkTextView)
+        profileDisclaimerTwo = containerView.findViewById(R.id.profile_disclaimer_two)
         userAvailabilityResultTextView =
             containerView.findViewById(R.id.userAvailabilityResultTextView)
 
@@ -304,6 +312,30 @@ class ProfileInfoFragment : BaseFragment(),
 
         initializeXMLComponents()
         fetchRewardsData()
+
+
+        spannable = SpannableString(resources.getString(R.string.rewards_payment_disclaimer_note_two))
+
+        val clickableSpan = object : ClickableSpan() {
+            override fun onClick(p0: View) {
+                val emailIntent = Intent(
+                    Intent.ACTION_SENDTO, Uri.fromParts(
+                    "mailto", "support@momspresso-mymoney.com", null
+                )
+                )
+                startActivity(Intent.createChooser(emailIntent, "Send email..."))
+            }
+
+            override fun updateDrawState(ds: TextPaint) {
+                super.updateDrawState(ds)
+                ds.setUnderlineText(false)
+            }
+        }
+        spannable!!.setSpan(clickableSpan, 80, 110, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
+        profileDisclaimerTwo.movementMethod = LinkMovementMethod.getInstance()
+        profileDisclaimerTwo.highlightColor = Color.BLUE
+        profileDisclaimerTwo.setText(spannable)
+
         return containerView
     }
 

@@ -94,15 +94,45 @@
 
         />
 
-
-      <include
-        layout="@layout/payment_disclaimer_note"
-        android:layout_width="wrap_content"
+      <LinearLayout
+        android:id="@+id/noteTextView"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
+        android:background="@drawable/read_this_background"
+        android:orientation="vertical"
+        android:padding="@dimen/space_10"
         android:layout_marginLeft="@dimen/space_16"
         android:layout_marginRight="@dimen/space_16"
-        android:layout_marginBottom="@dimen/space_25" />
+        android:layout_marginBottom="@dimen/space_25">
+
+        <com.mycity4kids.widget.CustomFontTextView
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:text="@string/rewards_pancard_Note_textview"
+          android:textColor="#D1000D"
+          android:textSize="12sp"
+          app:fontName="open_sans.ttf" />
+
+        <com.mycity4kids.widget.CustomFontTextView
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:text="@string/rewards_payment_disclaimer_note_one"
+          android:textColor="@color/campaign_4A4A4A"
+          android:textSize="12sp"
+          app:fontName="open_sans.ttf" />
+
+        <com.mycity4kids.widget.CustomFontTextView
+          android:id="@+id/paytm_disclaimer_two"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:text="@string/rewards_payment_disclaimer_note_two"
+          android:textColorLink="@color/campaign_applied_bg"
+          android:textColor="@color/campaign_4A4A4A"
+          android:textSize="12sp"
+          app:fontName="open_sans.ttf" />
+
+      </LinearLayout>
 
     </RelativeLayout>
 
@@ -157,15 +187,48 @@
 
         />
 
-
-      <include
-        layout="@layout/payment_disclaimer_note"
-        android:layout_width="wrap_content"
+      <LinearLayout
+        android:id="@+id/noteTextView1"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
+        android:background="@drawable/read_this_background"
+        android:orientation="vertical"
+        android:padding="@dimen/space_10"
         android:layout_marginLeft="@dimen/space_16"
         android:layout_marginRight="@dimen/space_16"
-        android:layout_marginBottom="@dimen/space_25" />
+        android:layout_marginBottom="@dimen/space_25">
+
+        <com.mycity4kids.widget.CustomFontTextView
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:text="@string/rewards_pancard_Note_textview"
+          android:textColor="#D1000D"
+          android:textSize="12sp"
+          app:fontName="open_sans.ttf" />
+
+        <com.mycity4kids.widget.CustomFontTextView
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:text="@string/rewards_payment_disclaimer_note_one"
+          android:textColor="@color/campaign_4A4A4A"
+          android:textSize="12sp"
+          app:fontName="open_sans.ttf" />
+
+        <com.mycity4kids.widget.CustomFontTextView
+          android:id="@+id/upi_disclaimer_two"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:text="@string/rewards_payment_disclaimer_note_two"
+          android:textColorLink="@color/campaign_applied_bg"
+          android:textColor="@color/campaign_4A4A4A"
+          android:textSize="12sp"
+          app:fontName="open_sans.ttf" />
+
+      </LinearLayout>
+
+
+
 
     </RelativeLayout>
 
@@ -386,14 +449,45 @@
         android:textColor="#4A4A4A"
         android:textSize="14sp" />
 
-      <include
-        layout="@layout/payment_disclaimer_note"
-        android:layout_width="wrap_content"
+      <LinearLayout
+        android:id="@+id/noteTextView2"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:background="@drawable/read_this_background"
         android:layout_below="@+id/ifscEditTextView"
+        android:orientation="vertical"
+        android:padding="@dimen/space_10"
         android:layout_marginLeft="@dimen/space_16"
         android:layout_marginRight="@dimen/space_16"
-        android:layout_marginBottom="@dimen/space_25" />
+        android:layout_marginBottom="@dimen/space_25">
+
+        <com.mycity4kids.widget.CustomFontTextView
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:text="@string/rewards_pancard_Note_textview"
+          android:textColor="#D1000D"
+          android:textSize="12sp"
+          app:fontName="open_sans.ttf" />
+
+        <com.mycity4kids.widget.CustomFontTextView
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:text="@string/rewards_payment_disclaimer_note_one"
+          android:textColor="@color/campaign_4A4A4A"
+          android:textSize="12sp"
+          app:fontName="open_sans.ttf" />
+
+        <com.mycity4kids.widget.CustomFontTextView
+          android:id="@+id/account_disclaimer_two"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:text="@string/rewards_payment_disclaimer_note_two"
+          android:textColorLink="@color/campaign_applied_bg"
+          android:textColor="@color/campaign_4A4A4A"
+          android:textSize="12sp"
+          app:fontName="open_sans.ttf" />
+
+      </LinearLayout>
 
 
     </RelativeLayout>
