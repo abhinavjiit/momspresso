@@ -318,7 +318,6 @@ class RewardsSocialInfoFragment : BaseFragment(), InstagramApp.OAuthAuthenticati
             }
         }
 
-
         spannable = SpannableString(resources.getString(R.string.rewards_payment_disclaimer_note_two))
 
         val clickableSpan = object : ClickableSpan() {

@@ -25,11 +25,8 @@ class NotificationSettingActivity : BaseActivity(),
 
     lateinit var backImageView: ImageView
     lateinit var recyclerView: RecyclerView
-    val notificationCategoryAdapter: NotificationCategoryAdapter by lazy {
-        NotificationCategoryAdapter(
-            this
-        )
-    }
+    lateinit var notificationCategoryAdapter: NotificationCategoryAdapter
+
     private var notificationCategoryListData = ArrayList<NotificationCenterResult>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -38,6 +35,7 @@ class NotificationSettingActivity : BaseActivity(),
         backImageView = findViewById(R.id.backImageView)
         recyclerView = findViewById(R.id.recyclerView)
         recyclerView.layoutManager = LinearLayoutManager(this)
+        notificationCategoryAdapter = NotificationCategoryAdapter(this)
         recyclerView.adapter = notificationCategoryAdapter
         notificationCategoryAdapter.setNotificationCategoryListData(notificationCategoryListData)
         notificationCategoryAdapter.notifyDataSetChanged()
@@ -47,7 +45,6 @@ class NotificationSettingActivity : BaseActivity(),
         }
     }
 
-
     private fun getAllNotificationCategories() {
         showProgressDialog("please wait")
         val retrofit = BaseApplication.getInstance().retrofit
@@ -55,7 +52,6 @@ class NotificationSettingActivity : BaseActivity(),
         val call = notificationApi.allNotificationCategories
         call.enqueue(allNotificationCategoriesCallback)
     }
-
 
     private val allNotificationCategoriesCallback =
         object : Callback<NotificationCenterListResponse> {
@@ -77,7 +73,9 @@ class NotificationSettingActivity : BaseActivity(),
                     val res = response.body()
                     if (res?.code == 200 && res.status == Constants.SUCCESS) {
                         notificationCategoryListData = res.data.result
-                        notificationCategoryAdapter.setNotificationCategoryListData(res.data.result)
+                        notificationCategoryAdapter.setNotificationCategoryListData(
+                            notificationCategoryListData
+                        )
                         notificationCategoryAdapter.notifyDataSetChanged()
                     }
                 } catch (t: Exception) {
@@ -87,19 +85,17 @@ class NotificationSettingActivity : BaseActivity(),
             }
         }
 
-
     override fun onRecyclerClick(position: Int, id: String, notificationOn: Boolean) {
         val retrofit = BaseApplication.getInstance().retrofit
         val notificationApi = retrofit.create(NotificationsAPI::class.java)
         val notificationEnableRequestModel: NotificationEnabledOrDisabledModel
         if (notificationOn) {
             notificationEnableRequestModel =
-                NotificationEnabledOrDisabledModel(id.toInt(), enabled = true)
+                NotificationEnabledOrDisabledModel(id.toInt(), enabled = false)
             notificationCategoryListData[position].disabled = false
-
         } else {
             notificationEnableRequestModel =
-                NotificationEnabledOrDisabledModel(id.toInt(), enabled = false)
+                NotificationEnabledOrDisabledModel(id.toInt(), enabled = true)
             notificationCategoryListData[position].disabled = true
         }
         notificationCategoryAdapter.setNotificationCategoryListData(notificationCategoryListData)

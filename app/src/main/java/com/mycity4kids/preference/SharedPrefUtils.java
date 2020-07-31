@@ -175,9 +175,9 @@ public class SharedPrefUtils {
         editor.putString(NEW_USER_FLAG, model.getIsNewUser());
         editor.putString(LOGIN_MODE, model.getLoginMode());
         editor.putString(IS_USER_HANDLE_UPDATED, model.getIsUserHandleUpdated());
-        editor.putString(USER_HANDLE,model.getUserHandle());
+        editor.putString(USER_HANDLE, model.getUserHandle());
         editor.putString(REQUEST_MEDIUM, model.getRequestMedium());
-        editor.putString(EMAIL_VALIDATED,model.getEmailValidated());
+        editor.putString(EMAIL_VALIDATED, model.getEmailValidated());
 
         editor.commit();
     }
@@ -210,8 +210,8 @@ public class SharedPrefUtils {
         user.setIsNewUser(sharedPref.getString(LOGIN_MODE, ""));
         user.setIsUserHandleUpdated(sharedPref.getString(IS_USER_HANDLE_UPDATED, "0"));
         user.setUserHandle(sharedPref.getString(USER_HANDLE, ""));
-        user.setRequestMedium(sharedPref.getString(REQUEST_MEDIUM,""));
-        user.setEmailValidated(sharedPref.getString(EMAIL_VALIDATED,"0"));
+        user.setRequestMedium(sharedPref.getString(REQUEST_MEDIUM, ""));
+        user.setEmailValidated(sharedPref.getString(EMAIL_VALIDATED, "0"));
         return user;
     }
 
@@ -702,18 +702,5 @@ public class SharedPrefUtils {
         Editor editor = sharedPref.edit();
         editor.putBoolean("isFiveClickDone", isFiveClickDone);
         editor.commit();
-    }
-
-
-    public static void setSupportGroupNotificationOnOffFlag(Context context, Boolean isOn) {
-        SharedPreferences sharedPreferences = context.getSharedPreferences(COMMON_PREF_FILE, Context.MODE_PRIVATE);
-        Editor editor = sharedPreferences.edit();
-        editor.putBoolean("isOn", isOn);
-        editor.apply();
-    }
-
-    public static Boolean getSupportGroupNotificationOnOffFlag(Context context) {
-        SharedPreferences sharedPref = context.getSharedPreferences(COMMON_PREF_FILE, Context.MODE_PRIVATE);
-        return (sharedPref.getBoolean("isOn", true));
     }
 }

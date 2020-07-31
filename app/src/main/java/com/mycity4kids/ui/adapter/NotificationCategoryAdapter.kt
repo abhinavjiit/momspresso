@@ -28,7 +28,6 @@ class NotificationCategoryAdapter(val clickListener: RecyclerViewClick) :
         return if (notificationCategory == null) 0 else notificationCategory?.size!!
     }
 
-
     fun setNotificationCategoryListData(notificationCategory: ArrayList<NotificationCenterResult>) {
         this.notificationCategory = notificationCategory
     }
@@ -41,7 +40,6 @@ class NotificationCategoryAdapter(val clickListener: RecyclerViewClick) :
             }
         }
     }
-
 
     inner class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         val categoryTextView: TextView = view.categoryTextView
@@ -61,5 +59,4 @@ class NotificationCategoryAdapter(val clickListener: RecyclerViewClick) :
     interface RecyclerViewClick {
         fun onRecyclerClick(position: Int, id: String, notificationOn: Boolean)
     }
-
 }
