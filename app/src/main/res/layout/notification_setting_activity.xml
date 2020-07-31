@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+  xmlns:app="http://schemas.android.com/apk/res-auto"
+  android:layout_width="match_parent"
+  android:layout_height="wrap_content">
+
+  <RelativeLayout
+    android:id="@+id/toolbar"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <androidx.appcompat.widget.AppCompatImageView
+      android:id="@+id/backImageView"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:layout_centerVertical="true"
+      android:paddingStart="@dimen/space_10"
+      android:paddingEnd="@dimen/space_10"
+      app:srcCompat="@drawable/back_arroow"
+      app:tint="@color/campaign_515151" />
+
+    <com.mycity4kids.widget.CustomFontTextView
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:layout_centerVertical="true"
+      android:layout_toEndOf="@+id/backImageView"
+      android:padding="@dimen/space_16"
+      android:text="@string/notification_settings"
+      android:textColor="@color/campaign_515151"
+      android:textSize="20sp"
+      app:fontName="Roboto-Bold.ttf" />
+
+  </RelativeLayout>
+
+  <androidx.recyclerview.widget.RecyclerView
+    android:id="@+id/recyclerView"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_below="@+id/toolbar"
+    android:layout_marginStart="@dimen/space_16"
+    android:layout_marginTop="@dimen/space_20"
+    android:layout_marginEnd="@dimen/space_16"
+    android:layout_marginBottom="@dimen/space_20" />
+
+
+</RelativeLayout>

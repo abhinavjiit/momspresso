@@ -521,8 +521,9 @@
     <activity
       android:name=".ui.activity.ArticleChallengeDetailActivity"
       android:screenOrientation="portrait" />
+    <activity android:name=".ui.activity.DeeplinkActivity" />
     <activity
-      android:name=".ui.activity.DeeplinkActivity"
+      android:name=".ui.activity.NotificationSettingActivity"
       android:screenOrientation="portrait" />
 
     <service android:name=".sync.PushTokenService" />
