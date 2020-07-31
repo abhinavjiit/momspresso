@@ -20,7 +20,7 @@
     android:id="@+id/categoryTextView"
     android:layout_width="0dp"
     android:layout_height="wrap_content"
-    android:text="kjbvkjfdbvk fdkvjfdbkjv kkjdbfkjvbdfkv "
+    android:text=""
     android:textColor="@color/campaign_515151"
     android:textSize="17sp"
     app:fontName="Roboto-Regular.ttf"
