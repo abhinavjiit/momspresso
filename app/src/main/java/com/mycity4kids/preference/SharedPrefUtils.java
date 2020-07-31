@@ -177,7 +177,7 @@ public class SharedPrefUtils {
         editor.putString(IS_USER_HANDLE_UPDATED, model.getIsUserHandleUpdated());
         editor.putString(USER_HANDLE, model.getUserHandle());
         editor.putString(REQUEST_MEDIUM, model.getRequestMedium());
-        editor.putString(EMAIL_VALIDATED, model.getEmailValidated());
+        editor.putString(EMAIL_VALIDATED,model.getEmailValidated());
 
         editor.commit();
     }
