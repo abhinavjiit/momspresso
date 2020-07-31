@@ -4,12 +4,13 @@ import com.google.gson.annotations.SerializedName;
 import java.util.ArrayList;
 import org.jetbrains.annotations.NotNull;
 
+
 /**
  * Created by hemant on 21/12/16.
  */
 public class NotificationCenterResult {
 
-    @SerializedName("id")
+    @SerializedName(value = "id", alternate = {"ID"})
     private String id;
     @SerializedName("contentId")
     private String contentId;
@@ -83,6 +84,27 @@ public class NotificationCenterResult {
     private String recyclerItemType;
     @SerializedName("content_author")
     private String contentAuthor;
+
+    @SerializedName("Name")
+    private String name;
+    @SerializedName("Disabled")
+    private Boolean disabled;
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public Boolean getDisabled() {
+        return disabled;
+    }
+
+    public void setDisabled(Boolean disabled) {
+        this.disabled = disabled;
+    }
 
     public NotificationCenterResult(@NotNull String recyclerItemType) {
         this.recyclerItemType = recyclerItemType;

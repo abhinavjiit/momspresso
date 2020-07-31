@@ -29,6 +29,15 @@
         android:textSize="20sp"
         app:fontName="oswald_regular.ttf"
         app:textAllCaps="true" />
+
+      <androidx.appcompat.widget.AppCompatImageView
+        android:id="@+id/settingImageView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:layout_centerVertical="true"
+        android:padding="@dimen/space_16"
+        app:srcCompat="@drawable/ic_settings" />
     </RelativeLayout>
   </androidx.appcompat.widget.Toolbar>
 

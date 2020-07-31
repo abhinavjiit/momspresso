@@ -165,7 +165,7 @@ public class GroupsFragment extends BaseFragment implements View.OnClickListener
                         if (response.isSuccessful()) {
                             GroupsMembershipResponse responseModel = response.body();
                             List<GroupsMembershipResult> membershipList = responseModel.getData().getResult();
-                            List<GroupResult> dataList = new ArrayList<>();
+                            ArrayList<GroupResult> dataList = new ArrayList<>();
                             for (int i = 0; i < membershipList.size(); i++) {
                                 dataList.add(membershipList.get(i).getGroupInfo());
                             }
@@ -176,7 +176,7 @@ public class GroupsFragment extends BaseFragment implements View.OnClickListener
                                 joinGpLabel.setVisibility(View.GONE);
                             } else {
                                 joinedGroupRecyclerGridView.setVisibility(View.VISIBLE);
-                                joinedGroupList = (ArrayList<GroupResult>) dataList;
+                                joinedGroupList = dataList;
                                 getJoinedGroupAdapter.setNewListData(joinedGroupList);
                                 getJoinedGroupAdapter.notifyDataSetChanged();
                                 if (joinedGroupList.size() > 4) {

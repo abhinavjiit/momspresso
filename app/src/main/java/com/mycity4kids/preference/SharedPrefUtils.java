@@ -703,4 +703,17 @@ public class SharedPrefUtils {
         editor.putBoolean("isFiveClickDone", isFiveClickDone);
         editor.commit();
     }
+
+
+    public static void setSupportGroupNotificationOnOffFlag(Context context, Boolean isOn) {
+        SharedPreferences sharedPreferences = context.getSharedPreferences(COMMON_PREF_FILE, Context.MODE_PRIVATE);
+        Editor editor = sharedPreferences.edit();
+        editor.putBoolean("isOn", isOn);
+        editor.apply();
+    }
+
+    public static Boolean getSupportGroupNotificationOnOffFlag(Context context) {
+        SharedPreferences sharedPref = context.getSharedPreferences(COMMON_PREF_FILE, Context.MODE_PRIVATE);
+        return (sharedPref.getBoolean("isOn", true));
+    }
 }
