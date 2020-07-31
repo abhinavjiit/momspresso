@@ -193,6 +193,7 @@ class PaymentModeDtailsSubmissionFragment : BaseFragment(), View.OnClickListener
             }
         }
 
+
         spannable = SpannableString(resources.getString(R.string.rewards_payment_disclaimer_note_two))
 
         val clickableSpan = object : ClickableSpan() {
@@ -215,11 +216,11 @@ class PaymentModeDtailsSubmissionFragment : BaseFragment(), View.OnClickListener
             paytmDisclaimerTwo.movementMethod = LinkMovementMethod.getInstance()
             paytmDisclaimerTwo.highlightColor = Color.BLUE
             paytmDisclaimerTwo.setText(spannable)
-        } else if (paymantModeId == 2) {
+        } else if (paymantModeId == 2){
             upiDisclaimerTwo.movementMethod = LinkMovementMethod.getInstance()
             upiDisclaimerTwo.highlightColor = Color.BLUE
             upiDisclaimerTwo.setText(spannable)
-        } else {
+        } else{
             accountDisclaimerTwo.movementMethod = LinkMovementMethod.getInstance()
             accountDisclaimerTwo.highlightColor = Color.BLUE
             accountDisclaimerTwo.setText(spannable)

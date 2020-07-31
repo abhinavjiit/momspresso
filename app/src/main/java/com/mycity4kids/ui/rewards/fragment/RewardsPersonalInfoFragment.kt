@@ -11,7 +11,13 @@ import android.content.Context
 import android.content.Intent
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
+import android.net.Uri
 import android.os.Bundle
+import android.text.SpannableString
+import android.text.Spanned
+import android.text.TextPaint
+import android.text.method.LinkMovementMethod
+import android.text.style.ClickableSpan
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -176,6 +182,8 @@ class RewardsPersonalInfoFragment : BaseFragment(),
     private var isComingFromCampaign = false
     private var isComingFromRewards = false
     private var referralCode: String = ""
+    private var spannable: SpannableString? = null
+    private lateinit var profileDisclaimerTwo: TextView
 
     private var endIndex: Int = 0
 
@@ -426,6 +434,7 @@ class RewardsPersonalInfoFragment : BaseFragment(),
         editEmail = containerView.findViewById(R.id.editEmail)
         editLocation = containerView.findViewById(R.id.editLocation)
         textApplyReferral = containerView.findViewById(R.id.textApplyReferral)
+        profileDisclaimerTwo = containerView.findViewById(R.id.profile_disclaimer_two)
 
         editAddNumber.setOnClickListener {
             //            varifyNumberWithFacebookAccountKit()
@@ -678,6 +687,31 @@ class RewardsPersonalInfoFragment : BaseFragment(),
                     }
                 }
             }
+
+
+
+        spannable = SpannableString(resources.getString(R.string.rewards_payment_disclaimer_note_two))
+
+        val clickableSpan = object : ClickableSpan() {
+            override fun onClick(p0: View) {
+                val emailIntent = Intent(
+                    Intent.ACTION_SENDTO, Uri.fromParts(
+                    "mailto", "support@momspresso-mymoney.com", null
+                )
+                )
+                startActivity(Intent.createChooser(emailIntent, "Send email..."))
+            }
+
+            override fun updateDrawState(ds: TextPaint) {
+                super.updateDrawState(ds)
+                ds.setUnderlineText(false)
+            }
+        }
+        spannable!!.setSpan(clickableSpan, 80, 110, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
+        profileDisclaimerTwo.movementMethod = LinkMovementMethod.getInstance()
+        profileDisclaimerTwo.highlightColor = Color.BLUE
+        profileDisclaimerTwo.setText(spannable)
+
     }
 
     fun prepareDataForPosting(): Boolean {

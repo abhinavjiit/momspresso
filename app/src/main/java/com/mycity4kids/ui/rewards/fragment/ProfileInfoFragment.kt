@@ -313,6 +313,7 @@ class ProfileInfoFragment : BaseFragment(),
         initializeXMLComponents()
         fetchRewardsData()
 
+
         spannable = SpannableString(resources.getString(R.string.rewards_payment_disclaimer_note_two))
 
         val clickableSpan = object : ClickableSpan() {

@@ -44,6 +44,8 @@ public class UpdateUserHandleActivity extends BaseActivity {
     private String userHandle = "";
     private String email = "";
     private String emailValidated = "";
+    private String fName = "";
+    private String lName = "";
     private TextView fNameTextView, lNameTextView, userHandleTextView, suggestions, emailTextView, phoneTextView, checkTextView, userAvailabilityResultTextView, phoneEditView, textSaveAndContinue;
     private EditText fNameEditView, lNameEditView, userHandleEditView, emailEditView;
     private RadioGroup suggestionRadioGroup;
@@ -82,9 +84,12 @@ public class UpdateUserHandleActivity extends BaseActivity {
 
         phoneLayout = findViewById(R.id.phone_layout);
 
-        getHandleSuggestion();
+        fName = SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getFirst_name();
+        lName = SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getLast_name();
         userHandle = SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getUserHandle();
-        loginMode = SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getRequestMedium();
+        if (getIntent().hasExtra("loginMode")) {
+            loginMode = getIntent().getStringExtra("loginMode");
+        }
         email = SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getEmail();
         emailValidated = SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getEmailValidated();
 
@@ -100,10 +105,12 @@ public class UpdateUserHandleActivity extends BaseActivity {
             }
         }
 
-        if (loginMode.equals("phone") || loginMode.equals("custom") || loginMode.equals("mobile number")){
-            fNameEditView.setText(SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getFirst_name());
-            lNameEditView.setText(SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getLast_name());
+        if (loginMode.equals("phone")){
+            fNameEditView.setText(fName);
+            lNameEditView.setText(lName);
         }
+
+        getHandleSuggestion();
 
         if (userHandleEditView.getText().toString().equals(userHandle)) {
             checkTextView.setVisibility(View.GONE);
@@ -188,10 +195,10 @@ public class UpdateUserHandleActivity extends BaseActivity {
             fNameEditView.setVisibility(View.GONE);
             lNameTextView.setVisibility(View.GONE);
             lNameEditView.setVisibility(View.GONE);
-        } else if (loginMode.equals("phone") || loginMode.equals("custom") || loginMode.equals("mobile number")) {
+        } else if (loginMode.equals("phone")) {
             phoneLayout.setVisibility(View.GONE);
             phoneTextView.setVisibility(View.GONE);
-        } else if (loginMode.equals("gp")) {
+        } else if (loginMode.equals("gp") || loginMode.equals("email")) {
             fNameTextView.setVisibility(View.GONE);
             fNameEditView.setVisibility(View.GONE);
             lNameTextView.setVisibility(View.GONE);
@@ -292,7 +299,7 @@ public class UpdateUserHandleActivity extends BaseActivity {
         Retrofit retrofit = BaseApplication.getInstance().getRetrofit();
         UserHandleSuggestionAPI userHandleSuggestionAPI = retrofit.create(UserHandleSuggestionAPI.class);
         Call<UserHandleSuggestionResponse> call = userHandleSuggestionAPI
-                .getSuggestion(fNameEditView.getText().toString(), lNameEditView.getText().toString());
+                .getSuggestion(fName, lName);
         call.enqueue(getHandleSuggestionResponseReceived);
     }
 

@@ -53,9 +53,9 @@ public class LoadingActivity extends BaseActivity {
             loginMode = getIntent().getStringExtra("loginMode");
         }
 
-        if ((StringUtils.isNullOrEmpty(isUserHandleUpdated) || isUserHandleUpdated.equals("0")) && !loginMode
-                .equals("email")) {
+        if ((StringUtils.isNullOrEmpty(isUserHandleUpdated) || isUserHandleUpdated.equals("0"))) {
             Intent intent = new Intent(LoadingActivity.this, UpdateUserHandleActivity.class);
+            intent.putExtra("loginMode", loginMode);
             startActivityForResult(intent, UPDATE_USER_HANDLE);
         } else {
             if (!ConnectivityUtils.isNetworkEnabled(LoadingActivity.this)) {
