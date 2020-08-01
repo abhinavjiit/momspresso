@@ -28,12 +28,16 @@ import com.mycity4kids.R;
 import com.mycity4kids.application.BaseApplication;
 import com.mycity4kids.constants.AppConstants;
 import com.mycity4kids.constants.Constants;
+import com.mycity4kids.gtmutils.Utils;
 import com.mycity4kids.models.TopCommentData;
 import com.mycity4kids.models.response.CommentListData;
 import com.mycity4kids.models.response.CommentListResponse;
 import com.mycity4kids.models.response.LikeReactionModel;
 import com.mycity4kids.profile.UserProfileActivity;
 import com.mycity4kids.retrofitAPIsInterfaces.ArticleDetailsAPI;
+import com.mycity4kids.ui.activity.ArticleDetailsContainerActivity;
+import com.mycity4kids.ui.activity.ParallelFeedActivity;
+import com.mycity4kids.ui.activity.ShortStoryContainerActivity;
 import com.mycity4kids.ui.adapter.CommentRepliesRecyclerAdapter;
 import io.reactivex.Observer;
 import io.reactivex.android.schedulers.AndroidSchedulers;
@@ -273,6 +277,7 @@ public class ArticleCommentRepliesDialogFragment extends DialogFragment implemen
                             .likeDislikeComment(repliesList.get(position).getId(), commentListData);
                     call.enqueue(likeDisLikeCommentCallback);
                 } else {
+                    pushEvent("CD_Like_Comment");
                     repliesList.get(position).setLiked(true);
                     LikeReactionModel commentListData = new LikeReactionModel();
                     commentListData.setReaction("like");
@@ -289,6 +294,34 @@ public class ArticleCommentRepliesDialogFragment extends DialogFragment implemen
                 Intent intent = new Intent(getActivity(), UserProfileActivity.class);
                 intent.putExtra(Constants.USER_ID, repliesList.get(position).getUserId());
                 startActivity(intent);
+            } else if (view.getId() == R.id.replyCommentTextView) {
+                pushEvent("CD_Reply_Comment");
+                Fragment parentFragment = getParentFragment();
+                if (parentFragment instanceof ArticleCommentsFragment) {
+                    ((ArticleCommentsFragment) getParentFragment())
+                            .openAddCommentReplyDialog(data, repliesList.get(position));
+                } else if (parentFragment instanceof ArticleDetailsFragment) {
+                    ((ArticleDetailsFragment) getParentFragment())
+                            .openAddCommentReplyDialog(data, repliesList.get(position));
+                }
+            }
+        } catch (Exception e) {
+            FirebaseCrashlytics.getInstance().recordException(e);
+            Log.d("MC4kException", Log.getStackTraceString(e));
+        }
+    }
+
+    private void pushEvent(String eventSuffix) {
+        try {
+            if (getActivity() instanceof ArticleDetailsContainerActivity) {
+                Utils.shareEventTracking(getActivity(), "Article Detail", "Comment_Android",
+                        "ArticleDetail_" + eventSuffix);
+            } else if (getActivity() instanceof ShortStoryContainerActivity) {
+                Utils.shareEventTracking(getActivity(), "100WS Detail", "Comment_Android",
+                        "StoryDetail_" + eventSuffix);
+            } else if (getActivity() instanceof ParallelFeedActivity) {
+                Utils.shareEventTracking(getActivity(), "Video Detail", "Comment_Android",
+                        "VlogDetail_" + eventSuffix);
             }
         } catch (Exception e) {
             FirebaseCrashlytics.getInstance().recordException(e);
@@ -334,11 +367,12 @@ public class ArticleCommentRepliesDialogFragment extends DialogFragment implemen
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.openAddReplyDialog: {
+                pushEvent("CD_Comment");
                 Fragment parentFragment = getParentFragment();
                 if (parentFragment instanceof ArticleCommentsFragment) {
-                    ((ArticleCommentsFragment) getParentFragment()).openAddCommentReplyDialog(data);
+                    ((ArticleCommentsFragment) getParentFragment()).openAddCommentReplyDialog(data, null);
                 } else if (parentFragment instanceof ArticleDetailsFragment) {
-                    ((ArticleDetailsFragment) getParentFragment()).openAddCommentReplyDialog(data);
+                    ((ArticleDetailsFragment) getParentFragment()).openAddCommentReplyDialog(data, null);
                 }
             }
             break;

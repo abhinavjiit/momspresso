@@ -115,14 +115,14 @@
         android:id="@+id/replyCommentTextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="45dp"
-        android:drawableLeft="@drawable/ic_shape"
+        android:layout_marginStart="20dp"
+        android:drawableStart="@drawable/ic_shape"
         android:drawablePadding="@dimen/space_5"
         android:padding="10dp"
         android:text="@string/reply"
         android:textColor="@color/ad.comment.date"
         android:textSize="12sp"
-        android:visibility="gone"
+        android:visibility="visible"
         app:fontName="Roboto-Regular.ttf" />
 
       <com.mycity4kids.widget.CustomFontTextView

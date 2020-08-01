@@ -409,7 +409,7 @@
   <string name="app_settings.edit_profile.how_many_child">നിങ്ങൾക്ക് എത്ര കുട്ടികളുണ്ട്?</string>
   <string name="app_settings.edit_profile.gender">സ്ത്രീ</string>
   <string name="app_settings.edit_profile.dob">ജനനത്തീയതി</string>
-  <string name="app_settings.edit_profile.save">ಉಳಿಸಿ</string>
+  <string name="app_settings.edit_profile.save">സേവ് ചെയ്യൂ</string>
   <string name="app_settings.edit_profile.update_success">User profile updated successfully</string>
   <string name="app_settings.edit_profile.toast_fn_empty">First Name cannot be empty</string>
   <string name="app_settings.edit_profile.toast_blog_title_empty">ബ്ലോഗ് തലക്കെട്ട് ശൂന്യമാണ്</string>
@@ -1436,4 +1436,6 @@ Thank you! We will be reviewing your story. You can expect to hear from us withi
   <string name="phone_number_optional">Phone Number (optional)</string>
   <string name="save_n_continue"><![CDATA[Save & Continue]]></string>
   <string name="set_user_handle">Set your userhandle</string>
+  <string name="tagging_coachmark">You can now tag your followers and friends on Momspresso</string>
+  <string name="comment_placeholder">Type here. Tag your followers and friends on Momspresso by typing @, followed by their name and then select them from the dropdown! eg @ritu</string>
 </resources>

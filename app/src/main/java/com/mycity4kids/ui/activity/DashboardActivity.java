@@ -1171,7 +1171,7 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
         } else if (AppConstants.NOTIFICATION_TYPE_ARTICLE_CHALLENGE.equalsIgnoreCase(notificationType)) {
             pushEvent("article_challenge_detail");
             Intent intent = new Intent(this, ArticleChallengeDetailActivity.class);
-            intent.putExtra("articleChallengeId", notificationExtras.getString("challengeId"));
+            intent.putExtra("articleChallengeId", notificationExtras.getString("articleChallengeId"));
             startActivity(intent);
         }
     }

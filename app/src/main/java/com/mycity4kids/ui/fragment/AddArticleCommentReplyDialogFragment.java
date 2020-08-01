@@ -2,6 +2,7 @@ package com.mycity4kids.ui.fragment;
 
 import android.app.Dialog;
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
@@ -12,6 +13,7 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.view.Window;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -23,6 +25,7 @@ import com.google.firebase.crashlytics.FirebaseCrashlytics;
 import com.mycity4kids.R;
 import com.mycity4kids.application.BaseApplication;
 import com.mycity4kids.constants.Constants;
+import com.mycity4kids.gtmutils.Utils;
 import com.mycity4kids.models.response.CommentListData;
 import com.mycity4kids.profile.UserProfileActivity;
 import com.mycity4kids.retrofitAPIsInterfaces.ArticleDetailsAPI;
@@ -36,6 +39,9 @@ import com.mycity4kids.tagging.tokenization.QueryToken;
 import com.mycity4kids.tagging.tokenization.interfaces.QueryTokenReceiver;
 import com.mycity4kids.tagging.ui.RichEditorView;
 import com.mycity4kids.ui.ContentCommentReplyNotificationActivity;
+import com.mycity4kids.ui.activity.ArticleDetailsContainerActivity;
+import com.mycity4kids.ui.activity.ParallelFeedActivity;
+import com.mycity4kids.ui.activity.ShortStoryContainerActivity;
 import com.mycity4kids.utils.AppUtils;
 import com.mycity4kids.utils.DateTimeUtils;
 import com.mycity4kids.utils.StringUtils;
@@ -89,7 +95,7 @@ public class AddArticleCommentReplyDialogFragment extends DialogFragment impleme
         commentDataTextView = rootView.findViewById(R.id.commentDataTextView);
         commentDateTextView = rootView.findViewById(R.id.commentDateTextView);
         headingTextView = rootView.findViewById(R.id.headingTextView);
-
+        commentReplyEditText.setHint(getString(R.string.comment_placeholder));
         Bundle extras = getArguments();
         commentOrReplyData = (CommentListData) extras.get("parentCommentData");
         actionType = (String) extras.get("action");
@@ -107,6 +113,7 @@ public class AddArticleCommentReplyDialogFragment extends DialogFragment impleme
             } else {
                 headingTextView.setText(BaseApplication.getAppContext().getString(R.string.reply));
                 relativeMainContainer.setVisibility(View.VISIBLE);
+                setMentionForReplyingTo(extras);
                 try {
                     Picasso.get().load(commentOrReplyData.getUserPic().getClientAppMin())
                             .placeholder(R.drawable.default_commentor_img).into((commentorImageView));
@@ -118,16 +125,42 @@ public class AddArticleCommentReplyDialogFragment extends DialogFragment impleme
                     }
                 }
                 commentorUsernameTextView.setText(commentOrReplyData.getUserName());
-                commentDataTextView.setText(commentOrReplyData.getMessage());
+                commentDataTextView.setText(AppUtils.createMentionSpanForEditing(commentOrReplyData.getMessage(),
+                        commentOrReplyData.getMentions()));
                 commentDateTextView.setText(DateTimeUtils
                         .getDateFromNanoMilliTimestamp(Long.parseLong(commentOrReplyData.getCreatedTime())));
             }
+        }
+
+        commentReplyEditText.requestFocus();
+        if (getContext() != null) {
+            InputMethodManager inputMethodManager = (InputMethodManager) getContext()
+                    .getSystemService(Context.INPUT_METHOD_SERVICE);
+            inputMethodManager.toggleSoftInput(InputMethodManager.SHOW_FORCED, 0);
         }
 
         postCommentReplyTextView.setOnClickListener(this);
         closeImageView.setOnClickListener(this);
         commentorImageView.setOnClickListener(this);
         return rootView;
+    }
+
+    private void setMentionForReplyingTo(Bundle extras) {
+        try {
+            if (extras.get("currentReplyData") != null) {
+                CommentListData currentReplyData = (CommentListData) extras.get("currentReplyData");
+                String message = "[~userId:" + currentReplyData.getUserId() + "] ";
+                Map<String, Mentions> mentionsMap = new HashMap<>();
+                Mentions mentions = new Mentions(currentReplyData.getUserId(),
+                        currentReplyData.getUserName(),
+                        "", "");
+                mentionsMap.put(currentReplyData.getUserId(), mentions);
+                commentReplyEditText.setText(AppUtils.createMentionSpanForEditing(message, mentionsMap));
+            }
+        } catch (Exception e) {
+            FirebaseCrashlytics.getInstance().recordException(e);
+            Log.d("MC4kException", Log.getStackTraceString(e));
+        }
     }
 
     @NonNull
@@ -152,21 +185,76 @@ public class AddArticleCommentReplyDialogFragment extends DialogFragment impleme
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.postCommentReplyTextView:
+                pushPublishEvent();
                 if (isValid()) {
                     formatMentionDataForApiRequest(commentOrReplyData);
+                    InputMethodManager imm = (InputMethodManager) getContext()
+                            .getSystemService(Context.INPUT_METHOD_SERVICE);
+                    imm.hideSoftInputFromWindow(commentReplyEditText.getWindowToken(), 0);
                     dismiss();
                 }
                 break;
-            case R.id.closeImageView:
+            case R.id.closeImageView: {
+                InputMethodManager imm = (InputMethodManager) getContext()
+                        .getSystemService(Context.INPUT_METHOD_SERVICE);
+                imm.hideSoftInputFromWindow(commentReplyEditText.getWindowToken(), 0);
                 dismiss();
-                break;
-            case R.id.commentorImageView:
+            }
+            break;
+            case R.id.commentorImageView: {
+                InputMethodManager imm = (InputMethodManager) getContext()
+                        .getSystemService(Context.INPUT_METHOD_SERVICE);
+                imm.hideSoftInputFromWindow(commentReplyEditText.getWindowToken(), 0);
                 Intent intent = new Intent(getActivity(), UserProfileActivity.class);
                 intent.putExtra(Constants.USER_ID, commentOrReplyData.getUserId());
                 startActivity(intent);
-                break;
+            }
+            break;
             default:
                 break;
+        }
+    }
+
+    private void pushPublishEvent() {
+        try {
+            if (getActivity() instanceof ArticleDetailsContainerActivity) {
+                pushPublishEvent("Article Detail", "ArticleDetail");
+            } else if (getActivity() instanceof ShortStoryContainerActivity) {
+                pushPublishEvent("100WS Detail", "StoryDetail");
+            } else if (getActivity() instanceof ParallelFeedActivity) {
+                pushPublishEvent("Video Detail", "VlogDetail");
+            } else if (getActivity() instanceof ContentCommentReplyNotificationActivity) {
+                if (getArguments() != null) {
+                    if ("0".equals(getArguments().getString("contentType"))) {
+                        pushPublishEvent("Article Detail", "ArticleDetail");
+                    } else if ("1".equals(getArguments().getString("contentType"))) {
+                        pushPublishEvent("100WS Detail", "StoryDetail");
+                    } else if ("2".equals(getArguments().getString("contentType"))) {
+                        pushPublishEvent("Video Detail", "VlogDetail");
+                    }
+                }
+            }
+        } catch (Exception e) {
+            FirebaseCrashlytics.getInstance().recordException(e);
+            Log.d("MC4kException", Log.getStackTraceString(e));
+        }
+    }
+
+    private void pushPublishEvent(String screenName, String eventPrefix) {
+        if ("EDIT_COMMENT".equals(actionType)) {
+            Utils.shareEventTracking(getActivity(), screenName, "Comment_Android",
+                    eventPrefix + "_Publish_Comment");
+        } else if ("EDIT_REPLY".equals(actionType)) {
+            Utils.shareEventTracking(getActivity(), screenName, "Comment_Android",
+                    eventPrefix + "_PublishReply_Comment");
+        } else {
+            if (commentOrReplyData == null) {
+                Utils.shareEventTracking(getActivity(), screenName, "Comment_Android",
+                        eventPrefix + "_Publish_Comment");
+            } else {
+                Utils.shareEventTracking(getActivity(), screenName, "Comment_Android",
+                        eventPrefix + "_PublishReply_Comment");
+            }
         }
     }
 

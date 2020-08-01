@@ -28,7 +28,7 @@ import com.mycity4kids.retrofitAPIsInterfaces.VlogsListingAndDetailsAPI
 import com.mycity4kids.ui.adapter.ChallengeListingRecycleAdapter
 import com.mycity4kids.ui.adapter.SuggestedTopicsRecyclerAdapter
 import com.mycity4kids.utils.AppUtils
-import com.mycity4kids.vlogs.VideoChallengeSelectionHorizontalAdapter
+import com.mycity4kids.vlogs.ContentChallengeSelectionHorizontalAdapter
 import com.mycity4kids.widget.SpacesItemDecoration
 import retrofit2.Call
 import retrofit2.Callback
@@ -36,14 +36,14 @@ import retrofit2.Response
 
 class ArticleChallengeOrTopicSelectionActivity : BaseActivity(),
     ChallengeListingRecycleAdapter.RecyclerViewClickListener,
-    VideoChallengeSelectionHorizontalAdapter.RecyclerViewClickListener,
+    ContentChallengeSelectionHorizontalAdapter.RecyclerViewClickListener,
     SuggestedTopicsRecyclerAdapter.RecyclerViewClickListener {
     private lateinit var articleChallengesList: ArrayList<Topics>
     private lateinit var suggestedTopicsList: ArrayList<String>
     private lateinit var articleChallengesRecyclerView: RecyclerView
     private lateinit var suggestedTopicsRecyclerView: RecyclerView
     private lateinit var mToolbar: Toolbar
-    private lateinit var articleChallengesRecyclerAdapter: VideoChallengeSelectionHorizontalAdapter
+    private lateinit var articleChallengesRecyclerAdapter: ContentChallengeSelectionHorizontalAdapter
     private lateinit var suggestedTopicsRecyclerAdapter: SuggestedTopicsRecyclerAdapter
     private lateinit var bottomLayout: RelativeLayout
     private lateinit var challengesShimmerLayout: ShimmerFrameLayout
@@ -68,15 +68,14 @@ class ArticleChallengeOrTopicSelectionActivity : BaseActivity(),
         llm.orientation = RecyclerView.HORIZONTAL
         articleChallengesRecyclerView.layoutManager = llm
         articleChallengesRecyclerAdapter =
-            VideoChallengeSelectionHorizontalAdapter(this, articleChallengesList, "")
+            ContentChallengeSelectionHorizontalAdapter(this, articleChallengesList, "")
         articleChallengesRecyclerView.adapter = articleChallengesRecyclerAdapter
         challenges
 
         suggestedTopicsList = ArrayList()
         val llm1 = StaggeredGridLayoutManager(2, LinearLayoutManager.VERTICAL)
         suggestedTopicsRecyclerView.layoutManager = llm1
-        val spacingInPixels =
-            resources.getDimensionPixelSize(R.dimen.groups_column_spacing)
+        val spacingInPixels = resources.getDimensionPixelSize(R.dimen.space_15)
         suggestedTopicsRecyclerView.addItemDecoration(SpacesItemDecoration(spacingInPixels))
         suggestedTopicsRecyclerAdapter = SuggestedTopicsRecyclerAdapter(suggestedTopicsList, this)
         suggestedTopicsRecyclerView.adapter = suggestedTopicsRecyclerAdapter
@@ -226,6 +225,7 @@ class ArticleChallengeOrTopicSelectionActivity : BaseActivity(),
         } else {
             val intent = Intent(this, ArticleChallengeDetailActivity::class.java)
             intent.putExtra("articleChallengeId", topics.id)
+            intent.putExtra("challengeName", topics.display_name)
             startActivity(intent)
         }
     }

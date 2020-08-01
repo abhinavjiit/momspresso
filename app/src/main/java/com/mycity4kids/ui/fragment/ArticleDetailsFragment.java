@@ -11,6 +11,7 @@ import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.text.Html;
+import android.text.method.LinkMovementMethod;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -217,7 +218,6 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
     private View fragmentView;
     private LinearLayout bottomToolbarLL;
     private View relatedTrendingSeparator;
-    private TextView viewCommentsTextView;
     private LayoutInflater layoutInflater;
     private RelativeLayout groupHeaderView;
     private ImageView groupHeaderImageView;
@@ -528,42 +528,40 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
             followTextViewFollowContainer = fragmentView.findViewById(R.id.followTextViewFollowContainer);
             postsCountTextView = fragmentView.findViewById(R.id.postsCountTextView);
             likeCountTextView = fragmentView.findViewById(R.id.likeCountTextView);
-            followPopUpBottomContainer = (RelativeLayout) fragmentView.findViewById(R.id.followPopUpBottomContainer);
-            cancelFollowPopUp = (ImageView) fragmentView.findViewById(R.id.cancelFollowPopUp);
-            authorNameFollowPopUp = (TextView) fragmentView.findViewById(R.id.authorNameFollowPopUp);
-            authorImageViewFollowPopUp = (ImageView) fragmentView.findViewById(R.id.authorImageViewFollowPopUp);
-            followText = (TextView) fragmentView.findViewById(R.id.followText);
-            mainWebView = (WebView) fragmentView.findViewById(R.id.articleWebView);
-            viewAllTagsTextView = (TextView) fragmentView.findViewById(R.id.viewAllTagsTextView);
-            bottomToolbarLL = (LinearLayout) fragmentView.findViewById(R.id.bottomToolbarLL);
-            facebookShareTextView = (ImageView) fragmentView.findViewById(R.id.facebookShareTextView);
-            whatsappShareTextView = (ImageView) fragmentView.findViewById(R.id.whatsappShareTextView);
-            emailShareTextView = (CustomFontTextView) fragmentView.findViewById(R.id.emailShareTextView);
-            likeArticleTextView = (ImageView) fragmentView.findViewById(R.id.likeTextView);
-            bookmarkArticleTextView = (CustomFontTextView) fragmentView.findViewById(R.id.bookmarkTextView);
-            sponsoredViewContainer = (RelativeLayout) fragmentView.findViewById(R.id.sponseredLayoutContainer);
-            sponsoredImage = (ImageView) fragmentView.findViewById(R.id.sponseredImage);
-            sponsoredTextView = (TextView) fragmentView.findViewById(R.id.sponseredText);
-            badge = (ImageView) fragmentView.findViewById(R.id.badge);
-            progressBarContainer = (LinearLayout) fragmentView.findViewById(R.id.progressBarContainer);
-            articleTitle = (TextView) fragmentView.findViewById(R.id.article_title);
-            recentAuthorArticleHeading = (TextView) fragmentView.findViewById(R.id.recentAuthorArticleHeading);
-            relatedArticles1 = (RelatedArticlesView) fragmentView.findViewById(R.id.relatedArticles1);
-            relatedArticles2 = (RelatedArticlesView) fragmentView.findViewById(R.id.relatedArticles2);
-            relatedArticles3 = (RelatedArticlesView) fragmentView.findViewById(R.id.relatedArticles3);
-            trendingRelatedArticles1 = (RelatedArticlesView) fragmentView.findViewById(R.id.trendingRelatedArticles1);
-            trendingRelatedArticles2 = (RelatedArticlesView) fragmentView.findViewById(R.id.trendingRelatedArticles2);
-            trendingRelatedArticles3 = (RelatedArticlesView) fragmentView.findViewById(R.id.trendingRelatedArticles3);
-            recentAuthorArticles = (LinearLayout) fragmentView.findViewById(R.id.recentAuthorArticles);
-            relatedTrendingSeparator = (View) fragmentView.findViewById(R.id.relatedTrendingSeparator);
-            tagsLayout = (FlowLayout) fragmentView.findViewById(R.id.tagsLayout);
-            articleViewCountTextView = (TextView) fragmentView.findViewById(R.id.articleViewCountTextView);
-            articleCommentCountTextView = (TextView) fragmentView.findViewById(R.id.articleCommentCountTextView);
-            articleRecommendationCountTextView = (TextView) fragmentView
-                    .findViewById(R.id.articleRecommendationCountTextView);
+            followPopUpBottomContainer = fragmentView.findViewById(R.id.followPopUpBottomContainer);
+            cancelFollowPopUp = fragmentView.findViewById(R.id.cancelFollowPopUp);
+            authorNameFollowPopUp = fragmentView.findViewById(R.id.authorNameFollowPopUp);
+            authorImageViewFollowPopUp = fragmentView.findViewById(R.id.authorImageViewFollowPopUp);
+            followText = fragmentView.findViewById(R.id.followText);
+            mainWebView = fragmentView.findViewById(R.id.articleWebView);
+            viewAllTagsTextView = fragmentView.findViewById(R.id.viewAllTagsTextView);
+            bottomToolbarLL = fragmentView.findViewById(R.id.bottomToolbarLL);
+            facebookShareTextView = fragmentView.findViewById(R.id.facebookShareTextView);
+            whatsappShareTextView = fragmentView.findViewById(R.id.whatsappShareTextView);
+            emailShareTextView = fragmentView.findViewById(R.id.emailShareTextView);
+            likeArticleTextView = fragmentView.findViewById(R.id.likeTextView);
+            bookmarkArticleTextView = fragmentView.findViewById(R.id.bookmarkTextView);
+            sponsoredViewContainer = fragmentView.findViewById(R.id.sponseredLayoutContainer);
+            sponsoredImage = fragmentView.findViewById(R.id.sponseredImage);
+            sponsoredTextView = fragmentView.findViewById(R.id.sponseredText);
+            badge = fragmentView.findViewById(R.id.badge);
+            progressBarContainer = fragmentView.findViewById(R.id.progressBarContainer);
+            articleTitle = fragmentView.findViewById(R.id.article_title);
+            recentAuthorArticleHeading = fragmentView.findViewById(R.id.recentAuthorArticleHeading);
+            relatedArticles1 = fragmentView.findViewById(R.id.relatedArticles1);
+            relatedArticles2 = fragmentView.findViewById(R.id.relatedArticles2);
+            relatedArticles3 = fragmentView.findViewById(R.id.relatedArticles3);
+            trendingRelatedArticles1 = fragmentView.findViewById(R.id.trendingRelatedArticles1);
+            trendingRelatedArticles2 = fragmentView.findViewById(R.id.trendingRelatedArticles2);
+            trendingRelatedArticles3 = fragmentView.findViewById(R.id.trendingRelatedArticles3);
+            recentAuthorArticles = fragmentView.findViewById(R.id.recentAuthorArticles);
+            relatedTrendingSeparator = fragmentView.findViewById(R.id.relatedTrendingSeparator);
+            tagsLayout = fragmentView.findViewById(R.id.tagsLayout);
+            articleViewCountTextView = fragmentView.findViewById(R.id.articleViewCountTextView);
+            articleCommentCountTextView = fragmentView.findViewById(R.id.articleCommentCountTextView);
+            articleRecommendationCountTextView = fragmentView.findViewById(R.id.articleRecommendationCountTextView);
             coverImage = fragmentView.findViewById(R.id.cover_image);
             swipeNextTextView = fragmentView.findViewById(R.id.swipeNextTextView);
-            viewCommentsTextView = fragmentView.findViewById(R.id.viewCommentsTextView);
             groupHeaderView = fragmentView.findViewById(R.id.groupHeaderView);
             groupHeaderImageView = fragmentView.findViewById(R.id.groupHeaderImageView);
             groupHeadingTextView = fragmentView.findViewById(R.id.groupHeadingTextView);
@@ -588,7 +586,6 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
             emailShareTextView.setOnClickListener(this);
             likeArticleTextView.setOnClickListener(this);
             bookmarkArticleTextView.setOnClickListener(this);
-            viewCommentsTextView.setOnClickListener(this);
             groupHeaderView.setOnClickListener(this);
             cancelFollowPopUp.setOnClickListener(this);
             followText.setOnClickListener(this);
@@ -1088,12 +1085,14 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
             } catch (Exception e) {
                 commentatorImageView1.setImageResource(R.drawable.default_commentor_img);
             }
-            commentatorNameAndCommentTextView1.setText((Html
-                    .fromHtml(
-                            "<b>" + "<font color=\"#D54058\">" + commentsList.get(0).getUserName() + "</font>" + "</b>"
-                                    + " "
-                                    + "<font color=\"#4A4A4A\">" + commentsList.get(0).getMessage() + "</font>")));
-
+            commentatorNameAndCommentTextView1.setText(AppUtils.createSpannableForMentionHandling(
+                    commentsList.get(0).getUserId(),
+                    commentsList.get(0).getUserName(),
+                    commentsList.get(0).getMessage(),
+                    commentsList.get(0).getMentions(),
+                    ContextCompat.getColor(commentatorNameAndCommentTextView1.getContext(), R.color.app_red)
+            ));
+            commentatorNameAndCommentTextView1.setMovementMethod(LinkMovementMethod.getInstance());
             commentDateTextView1.setText(
                     DateTimeUtils.getDateFromNanoMilliTimestamp(Long.parseLong(commentsList.get(0).getCreatedTime())));
             if (commentsList.get(0).getLiked()) {
@@ -1137,8 +1136,6 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
             } else {
                 markedTopComment1.setVisibility(View.GONE);
             }
-
-
         } else if (commentsList.size() == 2) {
             viewMoreTextView.setVisibility(View.VISIBLE);
             try {
@@ -1153,11 +1150,14 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
             } catch (Exception e) {
                 commentatorImageView1.setImageResource(R.drawable.default_commentor_img);
             }
-            commentatorNameAndCommentTextView1.setText((Html
-                    .fromHtml(
-                            "<b>" + "<font color=\"#D54058\">" + commentsList.get(0).getUserName() + "</font>" + "</b>"
-                                    + " "
-                                    + "<font color=\"#4A4A4A\">" + commentsList.get(0).getMessage() + "</font>")));
+            commentatorNameAndCommentTextView1.setText(AppUtils.createSpannableForMentionHandling(
+                    commentsList.get(0).getUserId(),
+                    commentsList.get(0).getUserName(),
+                    commentsList.get(0).getMessage(),
+                    commentsList.get(0).getMentions(),
+                    ContextCompat.getColor(commentatorNameAndCommentTextView1.getContext(), R.color.app_red)
+            ));
+            commentatorNameAndCommentTextView1.setMovementMethod(LinkMovementMethod.getInstance());
             commentDateTextView1.setText(
                     DateTimeUtils.getDateFromNanoMilliTimestamp(Long.parseLong(commentsList.get(0).getCreatedTime())));
 
@@ -1198,11 +1198,15 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
             } else {
                 markedTopComment1.setVisibility(View.GONE);
             }
-            commentatorNameAndCommentTextView2.setText((Html
-                    .fromHtml(
-                            "<b>" + "<font color=\"#D54058\">" + commentsList.get(1).getUserName() + "</font>" + "</b>"
-                                    + " "
-                                    + "<font color=\"#4A4A4A\">" + commentsList.get(1).getMessage() + "</font>")));
+            commentatorNameAndCommentTextView2.setText(AppUtils.createSpannableForMentionHandling(
+                    commentsList.get(1).getUserId(),
+                    commentsList.get(1).getUserName(),
+                    commentsList.get(1).getMessage(),
+                    commentsList.get(1).getMentions(),
+                    ContextCompat.getColor(commentatorNameAndCommentTextView2.getContext(), R.color.app_red)
+            ));
+            commentatorNameAndCommentTextView2.setMovementMethod(LinkMovementMethod.getInstance());
+
             commentDateTextView2.setText(
                     DateTimeUtils.getDateFromNanoMilliTimestamp(Long.parseLong(commentsList.get(1).getCreatedTime())));
 
@@ -1232,7 +1236,6 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
             } else {
                 markedTopComment2.setVisibility(View.GONE);
             }
-
         } else {
             viewMoreTextView.setVisibility(View.VISIBLE);
             try {
@@ -1247,11 +1250,15 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
             } catch (Exception e) {
                 commentatorImageView2.setImageResource(R.drawable.default_commentor_img);
             }
-            commentatorNameAndCommentTextView1.setText((Html
-                    .fromHtml("<b>" + "<font color=\"#D54058\">" + commentsList.get(0).getUserName() + "</font>"
-                            + "</b>"
-                            + " "
-                            + "<font color=\"#4A4A4A\">" + commentsList.get(0).getMessage() + "</font>")));
+            commentatorNameAndCommentTextView1.setText(AppUtils.createSpannableForMentionHandling(
+                    commentsList.get(0).getUserId(),
+                    commentsList.get(0).getUserName(),
+                    commentsList.get(0).getMessage(),
+                    commentsList.get(0).getMentions(),
+                    ContextCompat.getColor(commentatorNameAndCommentTextView1.getContext(), R.color.app_red)
+            ));
+            commentatorNameAndCommentTextView1.setMovementMethod(LinkMovementMethod.getInstance());
+
             commentDateTextView1.setText(
                     DateTimeUtils.getDateFromNanoMilliTimestamp(Long.parseLong(commentsList.get(0).getCreatedTime())));
             if (commentsList.get(0).getLiked()) {
@@ -1267,7 +1274,6 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
             }
             if (commentsList.get(0).getLikeCount() == 0) {
                 likeCount1.setText("");
-
             } else {
                 likeCount1.setText(commentsList.get(0).getLikeCount() + "");
 
@@ -1277,11 +1283,14 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
             } else {
                 replyCount1.setText("Reply(" + commentsList.get(0).getRepliesCount() + ")");
             }
-            commentatorNameAndCommentTextView2.setText((Html
-                    .fromHtml("<b>" + "<font color=\"#D54058\"></bold>" + commentsList.get(1).getUserName() + "</font>"
-                            + "</b>"
-                            + " "
-                            + "<font color=\"#4A4A4A\">" + commentsList.get(1).getMessage() + "</font>")));
+            commentatorNameAndCommentTextView2.setText(AppUtils.createSpannableForMentionHandling(
+                    commentsList.get(1).getUserId(),
+                    commentsList.get(1).getUserName(),
+                    commentsList.get(1).getMessage(),
+                    commentsList.get(1).getMentions(),
+                    ContextCompat.getColor(commentatorNameAndCommentTextView2.getContext(), R.color.app_red)
+            ));
+            commentatorNameAndCommentTextView2.setMovementMethod(LinkMovementMethod.getInstance());
             commentDateTextView2.setText(
                     DateTimeUtils.getDateFromNanoMilliTimestamp(Long.parseLong(commentsList.get(1).getCreatedTime())));
             if (commentsList.get(1).getLiked()) {
@@ -1399,7 +1408,6 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
             } else {
                 replyCount2.setText("Reply(" + fbCommentsList.get(1).getReplies().size() + ")");
             }
-
         } else {
             viewMoreTextView.setVisibility(View.VISIBLE);
             try {
@@ -2039,17 +2047,6 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
                     tagsLayout.setLayoutParams(params);
                     viewAllTagsTextView.setVisibility(View.GONE);
                     break;
-                case R.id.txvCommentCellEdit: {
-                    CommentsData commentsData = (CommentsData) ((View) v.getParent().getParent()
-                            .getParent()).getTag();
-                    openCommentDialog(commentsData, "EDIT");
-                }
-                break;
-                case R.id.txvReplyCellEdit: {
-                    CommentsData commentsData = (CommentsData) ((View) v.getParent().getParent()).getTag();
-                    openCommentDialog(commentsData, "EDIT");
-                }
-                break;
                 case R.id.bookmarkTextView:
                 case R.id.bookmarkImageViewNew:
                     addRemoveBookmark();
@@ -2134,14 +2131,21 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
                     startActivity(intent);
                     break;
                 }
-                case R.id.viewCommentsTextView:
-                case R.id.writeCommentTextView:
-                case R.id.viewMoreTextView:
-                case R.id.beTheFirstOneCommentContainer:
-                    openViewCommentDialog();
+                case R.id.writeCommentTextView: {
+                    openViewCommentDialog("ArticleDetail_Comment");
                     ((ArticleDetailsContainerActivity) getActivity()).checkAudioPlaying();
-
-                    break;
+                }
+                break;
+                case R.id.viewMoreTextView: {
+                    openViewCommentDialog("ArticleDetail_Viewmore_Comment");
+                    ((ArticleDetailsContainerActivity) getActivity()).checkAudioPlaying();
+                }
+                break;
+                case R.id.beTheFirstOneCommentContainer: {
+                    openViewCommentDialog("ArticleDetail_ZC_Comment");
+                    ((ArticleDetailsContainerActivity) getActivity()).checkAudioPlaying();
+                }
+                break;
                 case R.id.likeTextView: {
                     if (recommendStatus == 0) {
                         recommendStatus = 1;
@@ -2155,8 +2159,7 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
                                 PorterDuff.Mode.SRC_IN);
                         likeArticleTextView.setImageDrawable(drawable);
                         recommendUnrecommendArticleApi("1");
-                        Utils.pushLikeArticleEvent(getActivity(), "DetailArticleScreen",
-                                userDynamoId + "", articleId, authorId + "~" + author);
+                        Utils.shareEventTracking(getActivity(), "Article Detail", "Like_Android", "ArticleDetail_Like");
                     } else {
                         Drawable drawable = ContextCompat
                                 .getDrawable(likeArticleTextView.getContext(), R.drawable.ic_recommend);
@@ -2226,6 +2229,8 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
                     followPopUpBottomContainer.setVisibility(View.GONE);
                     break;
                 case R.id.replyCount2: {
+                    Utils.shareEventTracking(getActivity(), "Article Detail", "Comment_Android",
+                            "ArticleDetail_Reply_Comment");
                     Bundle args = new Bundle();
                     args.putParcelable("commentReplies", commentsList.get(1));
                     args.putInt("totalRepliesCount", commentsList.get(1).getRepliesCount());
@@ -2237,12 +2242,13 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
                     articleCommentRepliesDialogFragment.setCancelable(true);
                     FragmentManager fm = getChildFragmentManager();
                     articleCommentRepliesDialogFragment.show(fm, "View Replies");
-
                     break;
                 }
                 case R.id.replyCount: {
+                    Utils.shareEventTracking(getActivity(), "Article Detail", "Comment_Android",
+                            "ArticleDetail_Reply_Comment");
                     if (commentsList.get(0).getRepliesCount() == 0) {
-                        openAddCommentReplyDialog(commentsList.get(0));
+                        openAddCommentReplyDialog(commentsList.get(0), null);
                     } else {
                         Bundle args = new Bundle();
                         args.putParcelable("commentReplies", commentsList.get(0));
@@ -2396,6 +2402,7 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
 
     private void likeDislikeComment(int index) {
         if (!commentsList.get(index).getLiked()) {
+            Utils.shareEventTracking(getActivity(), "Article Detail", "Comment_Android", "ArticleDetail_Like_Comment");
             if (index == 0) {
                 try {
                     Drawable myDrawable = ContextCompat
@@ -2437,7 +2444,6 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
                     .likeDislikeComment(commentsList.get(index).getId(), commentListData);
             call.enqueue(likeDisLikeCommentCallback);
         } else if (commentsList.get(index).getLiked()) {
-
             if (index == 0) {
                 try {
                     Drawable myDrawable = ContextCompat
@@ -2628,9 +2634,10 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
         popupMenu.show();
     }
 
-    void openAddCommentReplyDialog(CommentListData commentListData) {
+    void openAddCommentReplyDialog(CommentListData commentListData, CommentListData currentReplyData) {
         Bundle args = new Bundle();
         args.putParcelable("parentCommentData", commentListData);
+        args.putParcelable("currentReplyData", currentReplyData);
         AddArticleCommentReplyDialogFragment addArticleCommentReplyDialogFragment =
                 new AddArticleCommentReplyDialogFragment();
         addArticleCommentReplyDialogFragment.setArguments(args);
@@ -2708,29 +2715,9 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
         }
     };
 
-    private void openCommentDialog(CommentsData comData, String opType) {
+    private void openViewCommentDialog(String eventName) {
         try {
-            AddEditCommentReplyFragment commentFrag = new AddEditCommentReplyFragment();
-            commentFrag.setTargetFragment(this, 0);
-            Bundle args = new Bundle();
-            args.putString(Constants.ARTICLE_ID, articleId);
-            args.putString(Constants.AUTHOR, authorId + "~" + author);
-            args.putString("opType", opType);
-            if (comData != null) {
-                args.putParcelable("commentData", comData);
-            }
-            commentFrag.setArguments(args);
-            ((ArticleDetailsContainerActivity) getActivity()).hideToolbarPerm();
-            ((ArticleDetailsContainerActivity) getActivity())
-                    .addFragment(commentFrag, null, "topToBottom");
-        } catch (Exception e) {
-            FirebaseCrashlytics.getInstance().recordException(e);
-            Log.d("MC4kException", Log.getStackTraceString(e));
-        }
-    }
-
-    private void openViewCommentDialog() {
-        try {
+            Utils.shareEventTracking(getActivity(), "Article Detail", "Comment_Android", eventName);
             long createdTime = Long.parseLong(detailData.getCreated());
             ViewAllCommentsFragment commentFrag = new ViewAllCommentsFragment();
             commentFrag.setTargetFragment(this, 0);
@@ -3512,8 +3499,6 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
                             recommendCountTextView4.setText(dataList.get(3).getLikesCount());
                             commentCountTextView4.setText(dataList.get(3).getCommentsCount());
                             viewCountTextView4.setText(dataList.get(3).getArticleCount());
-
-
                         }
 
                         if (dataList.size() >= 5) {

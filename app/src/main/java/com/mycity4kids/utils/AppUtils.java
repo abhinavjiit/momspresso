@@ -1178,6 +1178,29 @@ public class AppUtils {
         }
     }
 
+    public static String replaceUserIdWithName(String message, Map<String, Mentions> mentions) {
+        try {
+            StringBuilder consolidateMessage = new StringBuilder(message);
+            if (mentions != null) {
+                Pattern pattern = Pattern.compile("(\\[~userId:)([a-z0-9]+)(\\])");
+                Matcher matcher = pattern.matcher(consolidateMessage);
+                while (matcher.find()) {
+                    if (mentions.get(matcher.group(2)) != null) {
+                        consolidateMessage = consolidateMessage
+                                .replace(matcher.start(), matcher.end(), mentions.get(matcher.group(2)).getName());
+                        matcher = pattern.matcher(consolidateMessage);
+                    }
+                }
+            }
+
+            return consolidateMessage.toString();
+        } catch (Exception e) {
+            FirebaseCrashlytics.getInstance().recordException(e);
+            Log.d("MC4kException", Log.getStackTraceString(e));
+            return "";
+        }
+    }
+
     public static class SpanData {
 
         private int start;

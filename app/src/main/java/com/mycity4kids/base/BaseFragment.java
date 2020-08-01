@@ -3,15 +3,22 @@ package com.mycity4kids.base;
 import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
+import android.net.Uri;
 import android.view.KeyEvent;
 import android.view.Window;
 
 import androidx.fragment.app.Fragment;
 
+import com.facebook.share.model.ShareLinkContent;
+import com.facebook.share.widget.ShareDialog;
 import com.google.android.gms.analytics.HitBuilders;
 import com.google.android.gms.analytics.Tracker;
 import com.mycity4kids.R;
 import com.mycity4kids.application.BaseApplication;
+import com.mycity4kids.models.response.CommentListResponse;
+import com.mycity4kids.tagging.Mentions;
+import com.mycity4kids.utils.AppUtils;
+import java.util.Map;
 
 /**
  * @author deepanker.chaudhary
@@ -21,7 +28,7 @@ public abstract class BaseFragment extends Fragment {
     private ProgressDialog mProgressDialog;
 
     /**
-     * @param bodyText
+     *
      */
     public void showProgressDialog(String bodyText) {
         if (mProgressDialog == null) {
@@ -57,6 +64,17 @@ public abstract class BaseFragment extends Fragment {
         if (tracker != null) {
             tracker.setScreenName(getClass().getSimpleName());
             tracker.send(new HitBuilders.ScreenViewBuilder().build());
+        }
+    }
+
+    protected void shareCommentOnFacebook(String shareUrl, String shareMessage, Map<String, Mentions> map) {
+        if (ShareDialog.canShow(ShareLinkContent.class)) {
+            ShareLinkContent content = new ShareLinkContent.Builder().setQuote(
+                    AppUtils.replaceUserIdWithName(shareMessage, map))
+                    .setContentUrl(Uri.parse(shareUrl)).build();
+            if (isAdded()) {
+                new ShareDialog(getActivity()).show(content);
+            }
         }
     }
 
