@@ -105,7 +105,7 @@ public class UpdateUserHandleActivity extends BaseActivity {
             }
         }
 
-        if (loginMode.equals("phone")){
+        if (loginMode.equals("phone")) {
             fNameEditView.setText(fName);
             lNameEditView.setText(lName);
         }
@@ -181,11 +181,19 @@ public class UpdateUserHandleActivity extends BaseActivity {
                         postData();
                     }
                 } else {
-                    Toast.makeText(
-                            UpdateUserHandleActivity.this,
-                            "Please check handle availability",
-                            Toast.LENGTH_SHORT
-                    ).show();
+                    if (userHandleEditView.getText().length() < 7) {
+                        Toast.makeText(
+                                UpdateUserHandleActivity.this,
+                                "Handle should be of minimum 7 characters",
+                                Toast.LENGTH_SHORT
+                        ).show();
+                    } else {
+                        Toast.makeText(
+                                UpdateUserHandleActivity.this,
+                                "Please check handle availability",
+                                Toast.LENGTH_SHORT
+                        ).show();
+                    }
                 }
             }
         });
@@ -380,6 +388,10 @@ public class UpdateUserHandleActivity extends BaseActivity {
                                 } else if (Constants.FAILURE.equals(response.getStatus())) {
                                     Toast.makeText(UpdateUserHandleActivity.this, response.getReason(),
                                             Toast.LENGTH_LONG).show();
+                                    if (response.getReason().equals("Mobile Number is already registered with us")) {
+                                        phoneEditView.setText("");
+                                        accountKitAuthCode = null;
+                                    }
                                 }
                             }
                         }
@@ -401,7 +413,7 @@ public class UpdateUserHandleActivity extends BaseActivity {
 
     private boolean prepareDataForPosting() {
         userDetailResult = new UserHandleResult();
-        if (!StringUtils.isNullOrEmpty(accountKitAuthCode.trim())) {
+        if (!StringUtils.isNullOrEmpty(accountKitAuthCode) && !StringUtils.isNullOrEmpty(accountKitAuthCode.trim())) {
             userDetailResult.setMobileToken(accountKitAuthCode);
         }
         userDetailResult.setUserHandle(userHandleEditView.getText().toString());
