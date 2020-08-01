@@ -958,31 +958,32 @@ class ArticleListingFragment : BaseFragment(), View.OnClickListener,
                 followApi.unfollowUserInShortStoryListingV2(request)
             followUnfollowUserResponseCall.enqueue(followUnfollowUserResponseCallback)
         } else {
-            val screenName: String = when (sortType) {
-                Constants.KEY_TRENDING -> {
-                    "Trending"
-                }
-                Constants.KEY_RECENT -> {
-                    "Recent"
-                }
-                Constants.KEY_TODAYS_BEST -> {
-                    "TodaysBest"
-                }
-                Constants.KEY_FOLLOWING -> {
-                    "FollowingFeed"
-                }
-                else -> "NA"
-            }
-            Utils.shareEventTracking(
-                activity, screenName, "Follow_Android",
-                "MixedFeedStory_Follow"
-            )
+            trackEventsWithScreenName("Follow_Android", "MixedFeedStory_Follow")
             mixfeedList!![position].isfollowing = "1"
             mixfeedAdapter.notifyDataSetChanged()
             val followUnfollowUserResponseCall =
                 followApi.followUserInShortStoryListingV2(request)
             followUnfollowUserResponseCall.enqueue(followUnfollowUserResponseCallback)
         }
+    }
+
+    private fun trackEventsWithScreenName(objective: String, event: String) {
+        val screenName: String = when (sortType) {
+            Constants.KEY_TRENDING -> {
+                "Trending"
+            }
+            Constants.KEY_RECENT -> {
+                "Recent"
+            }
+            Constants.KEY_TODAYS_BEST -> {
+                "TodaysBest"
+            }
+            Constants.KEY_FOLLOWING -> {
+                "FollowingFeed"
+            }
+            else -> "NA"
+        }
+        Utils.shareEventTracking(activity, screenName, objective, event)
     }
 
     private val followUnfollowUserResponseCallback: Callback<ResponseBody?> =
@@ -1293,6 +1294,7 @@ class ArticleListingFragment : BaseFragment(), View.OnClickListener,
                                 mixfeedList?.get(position)?.userName!!
                             )
                         } else {
+                            trackEventsWithScreenName("Like_Android", "MixedFeedStory_Like")
                             likeStatus = "1"
                             currentShortStoryPosition = position
                             recommendUnrecommendArticleApi(

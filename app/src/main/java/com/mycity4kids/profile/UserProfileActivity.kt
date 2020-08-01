@@ -1395,6 +1395,12 @@ class UserProfileActivity : BaseActivity(),
                                 userContentList?.get(position)?.userName
                             )
                         } else {
+                            Utils.shareEventTracking(
+                                this,
+                                "Public Profile",
+                                "Like_Android",
+                                "PublicProfile_Listing_Like"
+                            )
                             likeStatus = "1"
                             currentShortStoryPosition = position
                             recommendUnrecommentArticleAPI(

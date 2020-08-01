@@ -23,7 +23,7 @@ import com.mycity4kids.preference.SharedPrefUtils;
 import com.mycity4kids.retrofitAPIsInterfaces.VlogsListingAndDetailsAPI;
 import com.mycity4kids.ui.videochallengenewui.activity.NewVideoChallengeActivity;
 import com.mycity4kids.utils.ConnectivityUtils;
-import com.mycity4kids.vlogs.VideoChallengeSelectionHorizontalAdapter;
+import com.mycity4kids.vlogs.ContentChallengeSelectionHorizontalAdapter;
 import com.mycity4kids.vlogs.VideoChallengeSelectionVerticalAdapter;
 import com.mycity4kids.vlogs.VlogsCategoryWiseChallengesResponse;
 import java.util.ArrayList;
@@ -33,7 +33,7 @@ import retrofit2.Callback;
 import retrofit2.Retrofit;
 
 public class ChallengeCategoryVideoTabFragment extends BaseFragment implements OnClickListener,
-        VideoChallengeSelectionHorizontalAdapter.RecyclerViewClickListener {
+        ContentChallengeSelectionHorizontalAdapter.RecyclerViewClickListener {
 
     RecyclerView categoryWiseChallengesRecyclerView;
     LinearLayoutManager llm;

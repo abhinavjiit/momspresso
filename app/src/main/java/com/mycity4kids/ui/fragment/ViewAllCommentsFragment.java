@@ -5,14 +5,17 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.FragmentManager;
 import androidx.viewpager.widget.ViewPager;
 import com.google.android.material.tabs.TabLayout;
+import com.mycity4kids.BuildConfig;
 import com.mycity4kids.R;
 import com.mycity4kids.application.BaseApplication;
 import com.mycity4kids.base.BaseFragment;
 import com.mycity4kids.constants.Constants;
+import com.mycity4kids.preference.SharedPrefUtils;
 import com.mycity4kids.ui.adapter.AllCommentsPagerAdapter;
 import com.mycity4kids.utils.AppUtils;
 
@@ -35,6 +38,7 @@ public class ViewAllCommentsFragment extends BaseFragment implements View.OnClic
     private String userType;
     private String contentType;
     private String authorId;
+    private RelativeLayout taggingCoachmark;
 
     @Nullable
     @Override
@@ -43,9 +47,10 @@ public class ViewAllCommentsFragment extends BaseFragment implements View.OnClic
 
         tabLayout = view.findViewById(R.id.tab_layout);
         closeImageView = view.findViewById(R.id.closeImageView);
+        taggingCoachmark = view.findViewById(R.id.taggingCoachmark);
 
         closeImageView.setOnClickListener(this);
-
+        taggingCoachmark.setOnClickListener(this);
         fbCommentUrl = getArguments().getString("fbCommentURL");
         mycityCommentUrl = getArguments().getString("mycityCommentURL");
         articleId = getArguments().getString(Constants.ARTICLE_ID);
@@ -56,6 +61,11 @@ public class ViewAllCommentsFragment extends BaseFragment implements View.OnClic
         contentType = getArguments().getString("contentType");
         authorId = getArguments().getString(Constants.AUTHOR_ID);
 
+        if (!SharedPrefUtils.isCoachmarksShownFlag(BaseApplication.getAppContext(), "taggingCoachmark")) {
+            taggingCoachmark.setVisibility(View.VISIBLE);
+        } else {
+            taggingCoachmark.setVisibility(View.GONE);
+        }
         addCommentTabs();
         return view;
     }
@@ -71,7 +81,7 @@ public class ViewAllCommentsFragment extends BaseFragment implements View.OnClic
         final ViewPager viewPager = view.findViewById(R.id.pager);
         final AllCommentsPagerAdapter adapter = new AllCommentsPagerAdapter(getChildFragmentManager(),
                 tabLayout.getTabCount(), mycityCommentUrl, fbCommentUrl, articleId, author, contentType, titleSlug,
-                blogSlug, userType,authorId);
+                blogSlug, userType, authorId);
         viewPager.setAdapter(adapter);
         viewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabLayout));
         tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
@@ -99,6 +109,10 @@ public class ViewAllCommentsFragment extends BaseFragment implements View.OnClic
             case R.id.closeImageView:
                 FragmentManager fm = getActivity().getSupportFragmentManager();
                 fm.popBackStack();
+                break;
+            case R.id.taggingCoachmark:
+                taggingCoachmark.setVisibility(View.GONE);
+                SharedPrefUtils.setCoachmarksShownFlag(BaseApplication.getAppContext(), "taggingCoachmark", true);
                 break;
             default:
                 break;

@@ -41,7 +41,7 @@ import retrofit2.Response
 
 class VideoCategoryAndChallengeSelectionActivity : BaseActivity(),
     VideoCategoriesSelectionAdapter.RecyclerViewClickListener,
-    VideoChallengeSelectionHorizontalAdapter.RecyclerViewClickListener, View.OnClickListener {
+    ContentChallengeSelectionHorizontalAdapter.RecyclerViewClickListener, View.OnClickListener {
 
     private val REQUEST_CAMERA_PERMISSION = 1
     private val REQUEST_GALLERY_PERMISSION = 2

@@ -612,7 +612,6 @@ public class ParallelFeedActivity extends BaseActivity implements View.OnClickLi
     }
 
     public void recommendUnrecommentArticleApi(String vidId, String likeStatus, int pos) {
-        Utils.pushLikeStoryEvent(this, "ShortStoryDetailsScreen", userDynamoId + "", vidId, authorId + "~" + authorId);
         RecommendUnrecommendArticleRequest recommendUnrecommendArticleRequest =
                 new RecommendUnrecommendArticleRequest();
         recommendUnrecommendArticleRequest.setArticleId(vidId);

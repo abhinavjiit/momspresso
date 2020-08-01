@@ -294,7 +294,6 @@ public class ShortStoriesDetailRecyclerAdapter extends RecyclerView.Adapter<Recy
         TextView commentDataTextView;
         TextView replyCommentTextView;
         TextView commentDateTextView;
-        TextView replyCountTextView;
         View underlineView;
         TextView dateTextView;
         TextView likeTextView;
@@ -309,7 +308,6 @@ public class ShortStoriesDetailRecyclerAdapter extends RecyclerView.Adapter<Recy
             commentDataTextView = (TextView) view.findViewById(R.id.commentDataTextView);
             replyCommentTextView = (TextView) view.findViewById(R.id.replyCommentTextView);
             commentDateTextView = (TextView) view.findViewById(R.id.commentDateTextView);
-            replyCountTextView = (TextView) view.findViewById(R.id.replyCountTextView);
             dateTextView = (TextView) view.findViewById(R.id.DateTextView);
             likeTextView = (TextView) view.findViewById(R.id.likeTextView);
             moreOptionImageView = (ImageView) view.findViewById(R.id.moreOptionImageView);

@@ -17,6 +17,7 @@ import com.mycity4kids.application.BaseApplication
 import com.mycity4kids.base.BaseActivity
 import com.mycity4kids.constants.AppConstants
 import com.mycity4kids.constants.Constants
+import com.mycity4kids.gtmutils.Utils
 import com.mycity4kids.models.TopCommentData
 import com.mycity4kids.models.request.AddEditCommentOrReplyRequest
 import com.mycity4kids.models.response.CommentListData
@@ -224,6 +225,7 @@ class ContentCommentReplyNotificationActivity : BaseActivity(),
                         .likeDislikeComment(commentList?.get(position)?.id, commentListData)
                     call.enqueue(likeDisLikeCommentCallback)
                 } else {
+                    pushEvent("CD_Like_Comment")
                     commentList?.get(position)?.liked = true
                     val commentListData = LikeReactionModel()
                     commentListData.reaction = "like"
@@ -255,6 +257,7 @@ class ContentCommentReplyNotificationActivity : BaseActivity(),
                 commentOptionsDialogFragment.show(fm, "Comment Options")
             }
             R.id.replyCommentTextView -> {
+                pushEvent("CD_Reply_Comment")
                 if (commentList?.get(position)?.repliesCount == 0) {
                     openAddCommentReplyDialog(commentList?.get(position))
                 } else {
@@ -289,6 +292,7 @@ class ContentCommentReplyNotificationActivity : BaseActivity(),
     fun openAddCommentReplyDialog(commentData: CommentListData?) {
         val args = Bundle()
         args.putParcelable("parentCommentData", commentData)
+        args.putString("contentType", contentType)
         val addArticleCommentReplyDialogFragment =
             AddArticleCommentReplyDialogFragment()
         addArticleCommentReplyDialogFragment.arguments = args
@@ -528,6 +532,7 @@ class ContentCommentReplyNotificationActivity : BaseActivity(),
         val _args = Bundle()
         _args.putString("action", "EDIT_COMMENT")
         _args.putInt("position", 0)
+        _args.putString("contentType", contentType)
         _args.putParcelable("parentCommentData", commentList?.get(position))
         addArticleCommentReplyDialogFragment.arguments = _args
         addArticleCommentReplyDialogFragment.isCancelable = true
@@ -573,13 +578,43 @@ class ContentCommentReplyNotificationActivity : BaseActivity(),
         if (v?.id == R.id.commentToolbarTextView) {
             onBackPressed()
         } else if (v?.id == R.id.rLayout) {
+            pushEvent("CD_Comment")
             val args = Bundle()
+            args.putString("contentType", contentType)
             val addArticleCommentReplyDialogFragment =
                 AddArticleCommentReplyDialogFragment()
             addArticleCommentReplyDialogFragment.arguments = args
             addArticleCommentReplyDialogFragment.isCancelable = true
             val fm: FragmentManager = supportFragmentManager
             addArticleCommentReplyDialogFragment.show(fm, "Add Comment")
+        }
+    }
+
+    private fun pushEvent(eventSuffix: String) {
+        try {
+            when (contentType) {
+                "0" -> {
+                    Utils.shareEventTracking(
+                        this, "Article Detail", "Comment_Android",
+                        "ArticleDetail_$eventSuffix"
+                    )
+                }
+                "1" -> {
+                    Utils.shareEventTracking(
+                        this, "100WS Detail", "Comment_Android",
+                        "StoryDetail_$eventSuffix"
+                    )
+                }
+                "2" -> {
+                    Utils.shareEventTracking(
+                        this, "Video Detail", "Comment_Android",
+                        "VlogDetail_$eventSuffix"
+                    )
+                }
+            }
+        } catch (e: java.lang.Exception) {
+            FirebaseCrashlytics.getInstance().recordException(e)
+            Log.d("MC4kException", Log.getStackTraceString(e))
         }
     }
 

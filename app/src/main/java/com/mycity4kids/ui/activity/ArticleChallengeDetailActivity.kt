@@ -5,6 +5,7 @@ import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.widget.ImageView
+import android.widget.TextView
 import androidx.viewpager.widget.ViewPager
 import com.google.android.material.tabs.TabLayout
 import com.google.firebase.crashlytics.FirebaseCrashlytics
@@ -23,6 +24,9 @@ import retrofit2.Response
 
 class ArticleChallengeDetailActivity : BaseActivity() {
 
+    private var challengeName: String? = ""
+    private lateinit var toolbarTitleTextView: TextView
+    private lateinit var challengeNameTextView: TextView
     private lateinit var back: ImageView
     private lateinit var thumbNail: ImageView
     private lateinit var tabs: TabLayout
@@ -37,9 +41,15 @@ class ArticleChallengeDetailActivity : BaseActivity() {
         back = findViewById(R.id.back)
         thumbNail = findViewById(R.id.thumbNail)
         viewpager = findViewById(R.id.viewpager)
+        toolbarTitleTextView = findViewById(R.id.toolbarTitleTextView)
+        challengeNameTextView = findViewById(R.id.toolbarTitleTextView)
         tabs = findViewById(R.id.tabs)
         startWritingTextView = findViewById(R.id.startWritingTextView)
         articleChallengeId = intent.getStringExtra("articleChallengeId")
+        challengeName = intent.getStringExtra("challengeName")
+
+        toolbarTitleTextView.text = challengeName
+        challengeNameTextView.text = challengeName
         tabs.apply {
             addTab(tabs.newTab().setText(R.string.about_txt))
             addTab(tabs.newTab().setText(R.string.groups_sections_blogs))
@@ -97,6 +107,8 @@ class ArticleChallengeDetailActivity : BaseActivity() {
     private fun processChallengesData(challengeDetail: Topics) {
         val rules = challengeDetail.extraData[0].challenge.rules
         val challengeName = challengeDetail.display_name
+        toolbarTitleTextView.text = challengeName
+        challengeNameTextView.text = challengeName
         val articleImageViewUrl = challengeDetail.extraData[0].challenge.imageUrl
         articleImageViewUrl?.let {
             Picasso.get().load(it.trim()).error(R.drawable.default_article).into(thumbNail)
@@ -105,7 +117,6 @@ class ArticleChallengeDetailActivity : BaseActivity() {
         }
         articleChallengeAdapter = ArticleChallengePagerAdapter(
             articleChallengeId,
-            challengeName,
             rules,
             supportFragmentManager
         )

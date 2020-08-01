@@ -94,7 +94,7 @@
             android:layout_height="wrap_content"
             android:layout_centerHorizontal="true"
             android:layout_marginBottom="@dimen/space_10"
-            android:text="#AmWriting"
+            android:text=""
             android:textColor="@color/white"
             android:textSize="18sp"
             android:textStyle="bold"

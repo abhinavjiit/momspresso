@@ -10,7 +10,7 @@ import com.mycity4kids.R
 import com.mycity4kids.models.Topics
 
 class VideoChallengeSelectionVerticalAdapter(
-    private val listener: VideoChallengeSelectionHorizontalAdapter.RecyclerViewClickListener
+    private val listener: ContentChallengeSelectionHorizontalAdapter.RecyclerViewClickListener
 ) : RecyclerView.Adapter<VideoChallengeSelectionVerticalAdapter.ViewHolder>() {
     private var categoryWiseChallengeList: ArrayList<Topics>? = null
     private var source: String = ""
@@ -39,7 +39,7 @@ class VideoChallengeSelectionVerticalAdapter(
         holder: ViewHolder,
         position: Int
     ) {
-        holder.challengeRecyclerView.adapter = VideoChallengeSelectionHorizontalAdapter(
+        holder.challengeRecyclerView.adapter = ContentChallengeSelectionHorizontalAdapter(
             listener,
             categoryWiseChallengeList?.get(position)?.child!!,
             source

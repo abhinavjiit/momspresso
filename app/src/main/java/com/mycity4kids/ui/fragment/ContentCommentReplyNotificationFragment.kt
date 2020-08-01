@@ -2,9 +2,7 @@ package com.mycity4kids.ui.fragment
 
 import android.accounts.NetworkErrorException
 import android.content.Intent
-import android.os.Build
 import android.os.Bundle
-import android.text.Html
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -22,6 +20,7 @@ import com.mycity4kids.application.BaseApplication
 import com.mycity4kids.base.BaseFragment
 import com.mycity4kids.constants.AppConstants
 import com.mycity4kids.constants.Constants
+import com.mycity4kids.gtmutils.Utils
 import com.mycity4kids.models.TopCommentData
 import com.mycity4kids.models.request.AddEditCommentOrReplyRequest
 import com.mycity4kids.models.response.CommentListData
@@ -50,8 +49,8 @@ class ContentCommentReplyNotificationFragment : BaseFragment(),
     View.OnClickListener, ContentCommentReplyNotificationAdapter.RecyclerViewRepliesClickListner,
     CommentOptionsDialogFragment.ICommentOptionAction {
 
-    lateinit var repliesRecyclerView: RecyclerView
-    lateinit var openAddReplyDialog: FloatingActionButton
+    private lateinit var repliesRecyclerView: RecyclerView
+    private lateinit var openAddReplyDialog: FloatingActionButton
     private var commentId: String? = null
     private var articleId: String? = null
     private lateinit var commentorImageView: ImageView
@@ -144,6 +143,16 @@ class ContentCommentReplyNotificationFragment : BaseFragment(),
                             try {
                                 commentShimmerLayout.stopShimmerAnimation()
                                 commentShimmerLayout.visibility = View.GONE
+                                if (responseData.data == null || responseData.data.isEmpty()) {
+                                    activity?.onBackPressed()
+                                    activity?.let {
+                                        ToastUtils.showToast(
+                                            it,
+                                            "This comment doesn't exist anymore"
+                                        )
+                                    }
+                                    return
+                                }
                                 val commentData = responseData.data?.get(0)
                                 setDataInToCommentContainer(commentData)
                             } catch (e: Exception) {
@@ -168,30 +177,13 @@ class ContentCommentReplyNotificationFragment : BaseFragment(),
             } catch (e: Exception) {
                 commentorImageView.setImageResource(R.drawable.default_commentor_img)
             }
-
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-                commentDataTextView.text = (
-                    (Html
-                        .fromHtml(
-                            "<b>" + "<font color=\"#D54058\">" + it.userName + "</font>" +
-                                "</b>" +
-                                " " +
-                                "<font color=\"#4A4A4A\">" + it.message + "</font>",
-                            Html.FROM_HTML_MODE_LEGACY
-                        ))
-                    )
-            } else {
-                commentDataTextView.text = (
-                    (Html
-                        .fromHtml(
-                            "<b>" + "<font color=\"#D54058\">" + it.userName + "</font>" +
-                                "</b>" +
-                                " " +
-                                "<font color=\"#4A4A4A\">" + it.message + "</font>"
-                        ))
-                    )
-            }
-
+            commentDataTextView.text = AppUtils.createSpannableForMentionHandling(
+                it.userId,
+                it.userName,
+                it.message,
+                it.mentions,
+                ContextCompat.getColor(commentDataTextView.context, R.color.app_red)
+            )
             DateTextView.text =
                 DateTimeUtils
                     .getDateFromNanoMilliTimestamp(it.createdTime.toLong())
@@ -319,6 +311,16 @@ class ContentCommentReplyNotificationFragment : BaseFragment(),
                     commentShimmerLayout.visibility = View.GONE
                     val responseData = response.body()
                     if (200 == responseData?.code && Constants.SUCCESS == responseData.status) {
+                        if (responseData.data == null || responseData.data.isEmpty()) {
+                            activity?.onBackPressed()
+                            activity?.let {
+                                ToastUtils.showToast(
+                                    it,
+                                    "This reply doesn't exist anymore"
+                                )
+                                return
+                            }
+                        }
                         val commentData = responseData.data?.get(0)
                         setDataInToCommentContainer(commentData)
                         repliesData = commentData?.replies as ArrayList<CommentListData>
@@ -429,6 +431,7 @@ class ContentCommentReplyNotificationFragment : BaseFragment(),
             }
         } else if (v?.id == R.id.replyCommentTextView) {
             try {
+                pushEvent("CD_Reply_Comment")
                 openAddCommentReplyDialog(commentData)
             } catch (e: Exception) {
                 FirebaseCrashlytics.getInstance().recordException(e)
@@ -459,6 +462,34 @@ class ContentCommentReplyNotificationFragment : BaseFragment(),
         }
     }
 
+    private fun pushEvent(eventSuffix: String) {
+        try {
+            when (contentType) {
+                "0" -> {
+                    Utils.shareEventTracking(
+                        activity, "Article Detail", "Comment_Android",
+                        "ArticleDetail_$eventSuffix"
+                    )
+                }
+                "1" -> {
+                    Utils.shareEventTracking(
+                        activity, "100WS Detail", "Comment_Android",
+                        "StoryDetail_$eventSuffix"
+                    )
+                }
+                "2" -> {
+                    Utils.shareEventTracking(
+                        activity, "Video Detail", "Comment_Android",
+                        "VlogDetail_$eventSuffix"
+                    )
+                }
+            }
+        } catch (e: java.lang.Exception) {
+            FirebaseCrashlytics.getInstance().recordException(e)
+            Log.d("MC4kException", Log.getStackTraceString(e))
+        }
+    }
+
     private fun markedUnMarkedTopComment(topCommentData: TopCommentData) {
         BaseApplication.getInstance().retrofit.create(ArticleDetailsAPI::class.java).markedTopComment(
             topCommentData
@@ -484,6 +515,7 @@ class ContentCommentReplyNotificationFragment : BaseFragment(),
     fun openAddCommentReplyDialog(commentData: CommentListData) {
         val args = Bundle()
         args.putParcelable("parentCommentData", commentData)
+        args.putString("contentType", contentType)
         val addArticleCommentReplyDialogFragment =
             AddArticleCommentReplyDialogFragment()
         addArticleCommentReplyDialogFragment.arguments = args
@@ -509,6 +541,7 @@ class ContentCommentReplyNotificationFragment : BaseFragment(),
                     .likeDislikeComment(repliesData?.get(position)?.id, commentListData)
                 call.enqueue(likeDisLikeCommentCallback)
             } else {
+                pushEvent("CD_Like_Comment")
                 repliesData?.get(position)?.liked = true
                 val commentListData = LikeReactionModel()
                 commentListData.reaction = "like"
@@ -814,6 +847,7 @@ class ContentCommentReplyNotificationFragment : BaseFragment(),
             AddArticleCommentReplyDialogFragment()
         val fm = childFragmentManager
         val _args = Bundle()
+        _args.putString("contentType", contentType)
         if ("COMMENT" == responseType) {
             _args.putString("action", "EDIT_COMMENT")
             _args.putInt("position", 0)

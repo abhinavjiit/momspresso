@@ -1,7 +1,6 @@
 package com.mycity4kids.ui.adapter
 
-import android.os.Build
-import android.text.Html
+import android.text.method.LinkMovementMethod
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -9,6 +8,7 @@ import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
 import com.mycity4kids.R
 import com.mycity4kids.models.response.CommentListData
+import com.mycity4kids.utils.AppUtils
 import com.mycity4kids.utils.DateTimeUtils
 import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.notification_replies_item.view.*
@@ -35,27 +35,14 @@ class ContentCommentReplyNotificationAdapter(val recyclerViewClickListner: Recyc
         } catch (e: Exception) {
             holder.replierImageView.setImageResource(R.drawable.default_commentor_img)
         }
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-            holder.commentDataTextView.text = (
-                (Html
-                    .fromHtml(
-                        "<b>" + "<font color=\"#D54058\">" + repliesList?.get(position)?.userName + "</font>" +
-                            "</b>" +
-                            " " +
-                            "<font color=\"#4A4A4A\">" + repliesList?.get(position)?.message + "</font>", Html.FROM_HTML_MODE_LEGACY
-                    ))
-                )
-        } else {
-            holder.commentDataTextView.text = (
-                (Html
-                    .fromHtml(
-                        "<b>" + "<font color=\"#D54058\">" + repliesList?.get(position)?.userName + "</font>" +
-                            "</b>" +
-                            " " +
-                            "<font color=\"#4A4A4A\">" + repliesList?.get(position)?.message + "</font>"
-                    ))
-                )
-        }
+        holder.commentDataTextView.text = AppUtils.createSpannableForMentionHandling(
+            repliesList?.get(position)?.userId,
+            repliesList?.get(position)?.userName,
+            repliesList?.get(position)?.message,
+            repliesList?.get(position)?.mentions,
+            ContextCompat.getColor(holder.commentDataTextView.context, R.color.app_red)
+        )
+        holder.commentDataTextView.movementMethod = LinkMovementMethod.getInstance()
         holder.DateTextView.text =
             DateTimeUtils
                 .getDateFromNanoMilliTimestamp(repliesList?.get(position)?.createdTime?.toLong()!!)

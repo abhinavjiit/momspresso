@@ -688,8 +688,6 @@ class RewardsPersonalInfoFragment : BaseFragment(),
                 }
             }
 
-
-
         spannable = SpannableString(resources.getString(R.string.rewards_payment_disclaimer_note_two))
 
         val clickableSpan = object : ClickableSpan() {
@@ -711,7 +709,6 @@ class RewardsPersonalInfoFragment : BaseFragment(),
         profileDisclaimerTwo.movementMethod = LinkMovementMethod.getInstance()
         profileDisclaimerTwo.highlightColor = Color.BLUE
         profileDisclaimerTwo.setText(spannable)
-
     }
 
     fun prepareDataForPosting(): Boolean {

@@ -419,6 +419,7 @@ public class TopicsShortStoriesTabFragment extends BaseFragment implements View.
                                 articleListingResults.get(position).getUserId(),
                                 articleListingResults.get(position).getUserName());
                     } else {
+                        Utils.shareEventTracking(getActivity(), "100WS Listing", "Like_Android", "StoryListing_Like");
                         tooltipForShare(shareImageView);
                         likeStatus = "1";
                         currentShortStoryPosition = position;

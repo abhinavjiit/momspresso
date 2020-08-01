@@ -389,20 +389,13 @@ public class VideoRecyclerViewAdapter extends RecyclerView.Adapter<BaseViewHolde
                     notifyItemChanged(position, this);
                     ((ParallelFeedActivity) context)
                             .recommendUnrecommentArticleApi(responseData.getId(), likeStatus, position);
-                    Utils.momVlogEvent(context, "Video Detail", "DisLike", "", "android",
-                            SharedPrefUtils.getAppLocale(context),
-                            SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId(),
-                            String.valueOf(System.currentTimeMillis()), "Vlogs_Engagement_CTA", "", "");
                 } else {
                     likeStatus = "1";
                     vlogsListingAndDetailResults.get(position).setIs_liked(likeStatus);
                     notifyItemChanged(position, this);
                     ((ParallelFeedActivity) context)
                             .recommendUnrecommentArticleApi(responseData.getId(), likeStatus, position);
-                    Utils.momVlogEvent(context, "Video Detail", "Like", "", "android",
-                            SharedPrefUtils.getAppLocale(context),
-                            SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId(),
-                            String.valueOf(System.currentTimeMillis()), "Vlogs_Engagement_CTA", "", "");
+                    Utils.shareEventTracking(context, "Video Detail", "Like_Android", "VlogDetail_Like");
                 }
             });
 
@@ -498,11 +491,7 @@ public class VideoRecyclerViewAdapter extends RecyclerView.Adapter<BaseViewHolde
             });
             comment.setOnClickListener(view -> {
                 try {
-                    Utils.momVlogEvent(context, "Video Detail", "Add comment", "", "android",
-                            SharedPrefUtils.getAppLocale(context),
-                            SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId(),
-                            String.valueOf(System.currentTimeMillis()), "Vlogs_Engagement_CTA", "", "");
-
+                    Utils.shareEventTracking(context, "Video Detail", "Comment_Android", "VlogDetail_Comment");
                     ((ParallelFeedActivity) context)
                             .openViewCommentDialog(responseData.getCommentUri(),
                                     AppUtils.getVlogsShareUrl(responseData.getAuthor().getUserType(),

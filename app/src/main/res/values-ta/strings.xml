@@ -1388,4 +1388,6 @@ Thank you! We will be reviewing your story. You can expect to hear from us withi
   <string name="phone_number_optional">Phone Number (optional)</string>
   <string name="save_n_continue"><![CDATA[Save & Continue]]></string>
   <string name="set_user_handle">Set your userhandle</string>
+  <string name="tagging_coachmark">You can now tag your followers and friends on Momspresso</string>
+  <string name="comment_placeholder">Type here. Tag your followers and friends on Momspresso by typing @, followed by their name and then select them from the dropdown! eg @ritu</string>
 </resources>

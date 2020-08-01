@@ -65,4 +65,24 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:layout_below="@id/tab_layout" />
+
+  <RelativeLayout
+    android:id="@+id/taggingCoachmark"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_alignParentBottom="true"
+    android:background="@color/dark_transparent"
+    android:elevation="8dp"
+    android:visibility="gone">
+    <TextView
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:layout_alignParentBottom="true"
+      android:layout_marginBottom="80dp"
+      android:gravity="center"
+      android:padding="20dp"
+      android:text="@string/tagging_coachmark"
+      android:textColor="@color/white_color"
+      android:textSize="14sp" />
+  </RelativeLayout>
 </RelativeLayout>

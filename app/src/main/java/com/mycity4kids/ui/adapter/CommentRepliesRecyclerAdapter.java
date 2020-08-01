@@ -177,34 +177,31 @@ public class CommentRepliesRecyclerAdapter extends RecyclerView.Adapter<Recycler
         ImageView commentorImageView;
         TextView commentorUsernameTextView;
         TextView commentDataTextView;
-        TextView replyCommentTextView;
         TextView commentDateTextView;
-        TextView replyCountTextView;
         TextView dateTextView;
         TextView likeTextView;
         ImageView moreOptionImageView;
         TextView topCommentMarkedTextView;
         TextView topCommentTextView;
+        TextView replyCommentTextView;
 
         CommentsViewHolder(View view) {
             super(view);
             commentorImageView = (ImageView) view.findViewById(R.id.commentorImageView);
             commentorUsernameTextView = (TextView) view.findViewById(R.id.commentorUsernameTextView);
             commentDataTextView = (TextView) view.findViewById(R.id.commentDataTextView);
-            replyCommentTextView = (TextView) view.findViewById(R.id.replyCommentTextView);
             commentDateTextView = (TextView) view.findViewById(R.id.commentDateTextView);
-            replyCountTextView = (TextView) view.findViewById(R.id.replyCountTextView);
             commentDateTextView = (TextView) view.findViewById(R.id.commentDateTextView);
             likeTextView = (TextView) view.findViewById(R.id.likeTextView);
-            replyCountTextView = (TextView) view.findViewById(R.id.replyCountTextView);
             dateTextView = (TextView) view.findViewById(R.id.DateTextView);
             moreOptionImageView = (ImageView) view.findViewById(R.id.moreOptionImageView);
             topCommentMarkedTextView = (TextView) view.findViewById(R.id.topCommentMarkedTextView);
             topCommentTextView = (TextView) view.findViewById(R.id.topCommentTextView);
+            replyCommentTextView = (TextView) view.findViewById(R.id.replyCommentTextView);
 
+            replyCommentTextView.setVisibility(View.INVISIBLE);
             topCommentMarkedTextView.setOnClickListener(this);
             moreOptionImageView.setOnClickListener(this);
-            replyCommentTextView.setVisibility(View.GONE);
             likeTextView.setOnClickListener(this);
             commentorImageView.setOnClickListener(this);
             view.setOnLongClickListener(this);
@@ -251,6 +248,7 @@ public class CommentRepliesRecyclerAdapter extends RecyclerView.Adapter<Recycler
             moreOptionRepliesImageView.setOnClickListener(this);
             likeTextView.setOnClickListener(this);
             commentorImageView.setOnClickListener(this);
+            replyCommentTextView.setOnClickListener(this);
             view.setOnLongClickListener(this);
         }
 

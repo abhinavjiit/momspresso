@@ -18,6 +18,7 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.DialogFragment;
+import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -27,11 +28,15 @@ import com.mycity4kids.R;
 import com.mycity4kids.application.BaseApplication;
 import com.mycity4kids.constants.AppConstants;
 import com.mycity4kids.constants.Constants;
+import com.mycity4kids.gtmutils.Utils;
 import com.mycity4kids.models.response.CommentListData;
 import com.mycity4kids.models.response.CommentListResponse;
 import com.mycity4kids.models.response.LikeReactionModel;
 import com.mycity4kids.retrofitAPIsInterfaces.ArticleDetailsAPI;
 import com.mycity4kids.retrofitAPIsInterfaces.ShortStoryAPI;
+import com.mycity4kids.ui.activity.ArticleDetailsContainerActivity;
+import com.mycity4kids.ui.activity.ParallelFeedActivity;
+import com.mycity4kids.ui.activity.ShortStoryContainerActivity;
 import com.mycity4kids.ui.adapter.CommentRepliesRecyclerAdapter;
 import com.mycity4kids.utils.ToastUtils;
 import java.util.ArrayList;
@@ -72,22 +77,16 @@ public class ShortStoryCommentRepliesDialogFragment extends DialogFragment imple
 
         final View rootView = inflater.inflate(R.layout.short_story_comment_replies_dialog, container,
                 false);
-        mToolbar = (Toolbar) rootView.findViewById(R.id.toolbar);
-        repliesRecyclerView = (RecyclerView) rootView.findViewById(R.id.repliesRecyclerView);
-        toolbarTitleTextView = (TextView) mToolbar.findViewById(R.id.toolbarTitle);
-        openAddReplyDialog = (FloatingActionButton) rootView.findViewById(R.id.openAddReplyDialog);
+        mToolbar = rootView.findViewById(R.id.toolbar);
+        repliesRecyclerView = rootView.findViewById(R.id.repliesRecyclerView);
+        toolbarTitleTextView = mToolbar.findViewById(R.id.toolbarTitle);
+        openAddReplyDialog = rootView.findViewById(R.id.openAddReplyDialog);
 
         Drawable upArrow = ContextCompat.getDrawable(getActivity(), R.drawable.back_arroow);
         upArrow.setColorFilter(ContextCompat.getColor(getActivity(), R.color.colorControlNormal),
                 PorterDuff.Mode.SRC_ATOP);
         mToolbar.setNavigationIcon(upArrow);
-        mToolbar.setNavigationOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                // handle back button naviagtion
-                dismiss();
-            }
-        });
+        mToolbar.setNavigationOnClickListener(v -> dismiss());
 
         openAddReplyDialog.setOnClickListener(this);
 
@@ -139,7 +138,6 @@ public class ShortStoryCommentRepliesDialogFragment extends DialogFragment imple
                 }
             }
         });
-
         return rootView;
     }
 
@@ -155,7 +153,7 @@ public class ShortStoryCommentRepliesDialogFragment extends DialogFragment imple
         @Override
         public void onResponse(Call<CommentListResponse> call, retrofit2.Response<CommentListResponse> response) {
             isReuqestRunning = false;
-            if (response == null || response.body() == null) {
+            if (response.body() == null) {
                 NetworkErrorException nee = new NetworkErrorException("Trending Article API failure");
                 FirebaseCrashlytics.getInstance().recordException(nee);
                 return;
@@ -184,7 +182,6 @@ public class ShortStoryCommentRepliesDialogFragment extends DialogFragment imple
             if (null != repliesList && !repliesList.isEmpty()) {
                 //No more next results from pagination
                 isLastPageReached = true;
-            } else {
             }
         } else {
             repliesList.addAll(replyList);
@@ -218,7 +215,6 @@ public class ShortStoryCommentRepliesDialogFragment extends DialogFragment imple
         Dialog dialog = getDialog();
         if (dialog != null) {
             dialog.getWindow().setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
-//            dialog.getWindow().setBackgroundDrawable(getResources().getDrawable(R.drawable.blue_bg_rounded_corners));
             dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
         }
     }
@@ -245,7 +241,6 @@ public class ShortStoryCommentRepliesDialogFragment extends DialogFragment imple
         } catch (Exception e) {
             e.printStackTrace();
         }
-
     }
 
     @Override
@@ -262,8 +257,8 @@ public class ShortStoryCommentRepliesDialogFragment extends DialogFragment imple
                 Call<ResponseBody> call = articleDetailsAPI
                         .likeDislikeComment(repliesList.get(position).getId(), commentListData);
                 call.enqueue(likeDisLikeCommentCallback);
-
             } else {
+                pushEvent("CD_Like_Comment");
                 repliesList.get(position).setLiked(true);
                 LikeReactionModel commentListData = new LikeReactionModel();
                 commentListData.setReaction("like");
@@ -276,6 +271,17 @@ public class ShortStoryCommentRepliesDialogFragment extends DialogFragment imple
                 call.enqueue(likeDisLikeCommentCallback);
             }
             commentRepliesRecyclerAdapter.notifyDataSetChanged();
+        } else if (view.getId() == R.id.replyCommentTextView) {
+            pushEvent("CD_Reply_Comment");
+            Fragment parentFragment = getParentFragment();
+            ((ShortStoryFragment) getParentFragment()).openAddCommentReplyDialog(data, repliesList.get(position));
+            if (parentFragment instanceof ArticleCommentsFragment) {
+                ((ArticleCommentsFragment) getParentFragment())
+                        .openAddCommentReplyDialog(data, repliesList.get(position));
+            } else if (parentFragment instanceof ArticleDetailsFragment) {
+                ((ArticleDetailsFragment) getParentFragment())
+                        .openAddCommentReplyDialog(data, repliesList.get(position));
+            }
         }
     }
 
@@ -286,7 +292,6 @@ public class ShortStoryCommentRepliesDialogFragment extends DialogFragment imple
             case R.id.commentRootLayout: {
                 CommentOptionsDialogFragment commentOptionsDialogFragment = new CommentOptionsDialogFragment();
                 FragmentManager fm = getChildFragmentManager();
-                //commentOptionsDialogFragment.setTargetFragment(this, 0);
                 Bundle _args = new Bundle();
                 _args.putInt("position", position);
                 _args.putString("responseType", "COMMENT");
@@ -300,7 +305,6 @@ public class ShortStoryCommentRepliesDialogFragment extends DialogFragment imple
             case R.id.replyRootView: {
                 CommentOptionsDialogFragment commentOptionsDialogFragment = new CommentOptionsDialogFragment();
                 FragmentManager fm = getChildFragmentManager();
-                //commentOptionsDialogFragment.setTargetFragment(this, 0);
                 Bundle _args = new Bundle();
                 _args.putInt("position", position);
                 _args.putString("responseType", "REPLY");
@@ -311,16 +315,18 @@ public class ShortStoryCommentRepliesDialogFragment extends DialogFragment imple
             }
             break;
         }
-//        ((ShortStoryFragment) getTargetFragment()).openAddCommentReplyDialog(data);
     }
 
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.openAddReplyDialog: {
-                ((ShortStoryFragment) getParentFragment()).openAddCommentReplyDialog(data);
+                pushEvent("CD_Comment");
+                ((ShortStoryFragment) getParentFragment()).openAddCommentReplyDialog(data, null);
             }
             break;
+            default:
+                break;
         }
     }
 
@@ -329,9 +335,7 @@ public class ShortStoryCommentRepliesDialogFragment extends DialogFragment imple
             repliesList.clear();
             repliesList.add(ssComment);
             if (data.getReplies() != null) {
-                for (int i = 0; i < ssComment.getReplies().size(); i++) {
-                    repliesList.add(ssComment.getReplies().get(i));
-                }
+                repliesList.addAll(ssComment.getReplies());
                 if (totalRepliesCount <= ssComment.getReplies().size()) {
                     isLastPageReached = true;
                 }
@@ -368,7 +372,6 @@ public class ShortStoryCommentRepliesDialogFragment extends DialogFragment imple
         _args.putParcelable("parentCommentData", repliesList.get(position));
         addGpPostCommentReplyDialogFragment.setArguments(_args);
         addGpPostCommentReplyDialogFragment.setCancelable(true);
-        //addGpPostCommentReplyDialogFragment.setTargetFragment(getParentFragment(), 0);
         addGpPostCommentReplyDialogFragment.show(fm, "Add Comment");
     }
 
@@ -381,33 +384,12 @@ public class ShortStoryCommentRepliesDialogFragment extends DialogFragment imple
         _args.putInt("type", AppConstants.REPORT_TYPE_COMMENT);
         reportContentDialogFragment.setArguments(_args);
         reportContentDialogFragment.setCancelable(true);
-        //reportContentDialogFragment.setTargetFragment(this, 0);
         reportContentDialogFragment.show(fm, "Report Content");
     }
 
     private Callback<ResponseBody> likeDisLikeCommentCallback = new Callback<ResponseBody>() {
         @Override
         public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
-            if (response == null || null == response.body()) {
-                NetworkErrorException nee = new NetworkErrorException(response.raw().toString());
-                FirebaseCrashlytics.getInstance().recordException(nee);
-                if (isAdded()) {
-                    ToastUtils.showToast(getActivity(), getResources().getString(R.string.server_went_wrong));
-                }
-                return;
-            }
-            try {
-                String resData = new String(response.body().bytes());
-                JSONObject jsonObject = new JSONObject(resData);
-                if (jsonObject.getJSONObject("status").toString().equals(Constants.SUCCESS) && jsonObject
-                        .getJSONObject("code").toString().equals("200")) {
-                }
-            } catch (Exception e) {
-                FirebaseCrashlytics.getInstance().recordException(e);
-                Log.d("MC4kException", Log.getStackTraceString(e));
-            }
-
-
         }
 
         @Override
@@ -416,5 +398,23 @@ public class ShortStoryCommentRepliesDialogFragment extends DialogFragment imple
             Log.d("MC4kException", Log.getStackTraceString(e));
         }
     };
+
+    private void pushEvent(String eventSuffix) {
+        try {
+            if (getActivity() instanceof ArticleDetailsContainerActivity) {
+                Utils.shareEventTracking(getActivity(), "Article Detail", "Comment_Android",
+                        "ArticleDetail_" + eventSuffix);
+            } else if (getActivity() instanceof ShortStoryContainerActivity) {
+                Utils.shareEventTracking(getActivity(), "100WS Detail", "Comment_Android",
+                        "StoryDetail_" + eventSuffix);
+            } else if (getActivity() instanceof ParallelFeedActivity) {
+                Utils.shareEventTracking(getActivity(), "Video Detail", "Comment_Android",
+                        "VlogDetail_" + eventSuffix);
+            }
+        } catch (Exception e) {
+            FirebaseCrashlytics.getInstance().recordException(e);
+            Log.d("MC4kException", Log.getStackTraceString(e));
+        }
+    }
 
 }

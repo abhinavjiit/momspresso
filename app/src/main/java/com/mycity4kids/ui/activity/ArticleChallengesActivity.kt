@@ -20,7 +20,7 @@ import com.mycity4kids.retrofitAPIsInterfaces.VlogsListingAndDetailsAPI
 import com.mycity4kids.ui.adapter.ChallengeListingRecycleAdapter
 import com.mycity4kids.ui.adapter.SuggestedTopicsRecyclerAdapter
 import com.mycity4kids.utils.AppUtils
-import com.mycity4kids.vlogs.VideoChallengeSelectionHorizontalAdapter
+import com.mycity4kids.vlogs.ContentChallengeSelectionHorizontalAdapter
 import com.mycity4kids.vlogs.VlogsCategoryWiseChallengesResponse
 import com.mycity4kids.widget.SpacesItemDecoration
 import retrofit2.Call
@@ -29,14 +29,14 @@ import retrofit2.Response
 
 class ArticleChallengesActivity : BaseActivity(),
     ChallengeListingRecycleAdapter.RecyclerViewClickListener,
-    VideoChallengeSelectionHorizontalAdapter.RecyclerViewClickListener,
+    ContentChallengeSelectionHorizontalAdapter.RecyclerViewClickListener,
     SuggestedTopicsRecyclerAdapter.RecyclerViewClickListener {
     private lateinit var articleChallengesList: ArrayList<Topics>
     private lateinit var suggestedTopicsList: ArrayList<String>
     private lateinit var articleChallengesRecyclerView: RecyclerView
     private lateinit var suggestedTopicsRecyclerView: RecyclerView
     private lateinit var mToolbar: Toolbar
-    private lateinit var articleChallengesRecyclerAdapter: VideoChallengeSelectionHorizontalAdapter
+    private lateinit var articleChallengesRecyclerAdapter: ContentChallengeSelectionHorizontalAdapter
     private lateinit var suggestedTopicsRecyclerAdapter: SuggestedTopicsRecyclerAdapter
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -54,7 +54,7 @@ class ArticleChallengesActivity : BaseActivity(),
         llm.orientation = RecyclerView.HORIZONTAL
         articleChallengesRecyclerView.layoutManager = llm
         articleChallengesRecyclerAdapter =
-            VideoChallengeSelectionHorizontalAdapter(this, articleChallengesList, "")
+            ContentChallengeSelectionHorizontalAdapter(this, articleChallengesList, "")
         articleChallengesRecyclerView.adapter = articleChallengesRecyclerAdapter
         challenges
 

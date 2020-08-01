@@ -30,8 +30,6 @@ import androidx.core.app.ActivityCompat;
 import androidx.fragment.app.FragmentManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-import com.facebook.share.model.ShareLinkContent;
-import com.facebook.share.widget.ShareDialog;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.crashlytics.FirebaseCrashlytics;
 import com.google.gson.Gson;
@@ -107,7 +105,6 @@ public class ShortStoryFragment extends BaseFragment implements View.OnClickList
             Manifest.permission.WRITE_EXTERNAL_STORAGE};
     private ShortStoryCommentRepliesDialogFragment shortStoryCommentRepliesDialogFragment;
     private String paginationCommentId = null;
-    private int totalCommentCount = 0;
     private int downloadedComment = 0;
     private boolean isRecommendRequestRunning;
     private String likeStatus;
@@ -354,7 +351,6 @@ public class ShortStoryFragment extends BaseFragment implements View.OnClickList
             try {
                 CommentListResponse shortStoryCommentListResponse = response.body();
                 if (shortStoryCommentListResponse.getCount() != 0) {
-                    totalCommentCount = shortStoryCommentListResponse.getCount();
                     viewAllTextView.setText(getString(R.string.view_comments));
                 } else {
                     viewAllTextView.setText(getString(R.string.group_add_comment_text));
@@ -545,6 +541,8 @@ public class ShortStoryFragment extends BaseFragment implements View.OnClickList
             switch (v.getId()) {
                 case R.id.viewAllTextView:
                     try {
+                        Utils.shareEventTracking(getActivity(), "100WS Detail", "Comment_Android",
+                                "StoryDetail_Viewmore_Comment");
                         Bundle bundle = new Bundle();
                         bundle.putString(Constants.ARTICLE_ID, articleId);
                         bundle.putString(Constants.BLOG_SLUG, blogSlug);
@@ -614,8 +612,8 @@ public class ShortStoryFragment extends BaseFragment implements View.OnClickList
                     Call<ResponseBody> call = articleDetailsApi
                             .likeDislikeComment(consolidatedList.get(position).getSsComment().getId(), commentListData);
                     call.enqueue(likeDisLikeCommentCallback);
-
                 } else {
+                    Utils.shareEventTracking(getActivity(), "100WS Detail", "Like_Android", "StoryDetail_Like_Comment");
                     consolidatedList.get(position).getSsComment().setLiked(true);
                     LikeReactionModel commentListData = new LikeReactionModel();
                     commentListData.setReaction("like");
@@ -648,8 +646,9 @@ public class ShortStoryFragment extends BaseFragment implements View.OnClickList
             }
             break;
             case R.id.replyCommentTextView: {
+                Utils.shareEventTracking(getActivity(), "100WS Detail", "Comment_Android", "StoryDetail_Reply_Comment");
                 if (consolidatedList.get(position).getSsComment().getRepliesCount() == 0) {
-                    openAddCommentReplyDialog(consolidatedList.get(position).getSsComment());
+                    openAddCommentReplyDialog(consolidatedList.get(position).getSsComment(), null);
                 } else {
                     shortStoryCommentRepliesDialogFragment = new ShortStoryCommentRepliesDialogFragment();
                     Bundle args = new Bundle();
@@ -662,19 +661,6 @@ public class ShortStoryFragment extends BaseFragment implements View.OnClickList
                     FragmentManager fm = getChildFragmentManager();
                     shortStoryCommentRepliesDialogFragment.show(fm, "View Replies");
                 }
-            }
-            break;
-            case R.id.replyCountTextView: {
-                shortStoryCommentRepliesDialogFragment = new ShortStoryCommentRepliesDialogFragment();
-                Bundle args = new Bundle();
-                args.putParcelable("commentReplies", consolidatedList.get(position).getSsComment());
-                args.putInt("totalRepliesCount", consolidatedList.get(position).getSsComment().getRepliesCount());
-                args.putInt("position", position);
-                args.putString("articleWriterId", authorId);
-                shortStoryCommentRepliesDialogFragment.setArguments(args);
-                shortStoryCommentRepliesDialogFragment.setCancelable(true);
-                FragmentManager fm = getChildFragmentManager();
-                shortStoryCommentRepliesDialogFragment.show(fm, "View Replies");
             }
             break;
             case R.id.storyRecommendationContainer:
@@ -881,10 +867,11 @@ public class ShortStoryFragment extends BaseFragment implements View.OnClickList
         }
     }
 
-    void openAddCommentReplyDialog(CommentListData commentListData) {
+    void openAddCommentReplyDialog(CommentListData commentListData, CommentListData currentReplyData) {
         AddShortStoryCommentReplyDialogFragment addGpPostCommentReplyDialogFragment =
                 new AddShortStoryCommentReplyDialogFragment();
         Bundle args = new Bundle();
+        args.putParcelable("currentReplyData", currentReplyData);
         args.putParcelable("parentCommentData", commentListData);
         addGpPostCommentReplyDialogFragment.setArguments(args);
         addGpPostCommentReplyDialogFragment.setCancelable(true);
@@ -939,15 +926,8 @@ public class ShortStoryFragment extends BaseFragment implements View.OnClickList
                     if (!StringUtils.isNullOrEmpty(userType) && !StringUtils.isNullOrEmpty(titleSlug) && !StringUtils
                             .isNullOrEmpty(blogSlug)) {
                         String shareUrl = AppUtils.getShortStoryShareUrl(userType, blogSlug, titleSlug);
-                        if (ShareDialog.canShow(ShareLinkContent.class)) {
-                            ShareLinkContent content = new ShareLinkContent.Builder()
-                                    .setQuote(responseData.getData().get(0).getMessage())
-                                    .setContentUrl(Uri.parse(shareUrl))
-                                    .build();
-                            if (getActivity() != null) {
-                                new ShareDialog(getActivity()).show(content);
-                            }
-                        }
+                        shareCommentOnFacebook(shareUrl, responseData.getData().get(0).getMessage(),
+                                responseData.getData().get(0).getMentions());
                     }
                     if (isAdded()) {
                         Utils.pushShortStoryCommentReplyChangeEvent(getActivity(), "ShortStoryDetailsScreen",

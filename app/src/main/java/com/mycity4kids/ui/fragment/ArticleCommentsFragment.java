@@ -3,7 +3,6 @@ package com.mycity4kids.ui.fragment;
 import android.accounts.NetworkErrorException;
 import android.app.ProgressDialog;
 import android.content.Intent;
-import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -17,8 +16,6 @@ import android.widget.TextView;
 import androidx.fragment.app.FragmentManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-import com.facebook.share.model.ShareLinkContent;
-import com.facebook.share.widget.ShareDialog;
 import com.google.firebase.crashlytics.FirebaseCrashlytics;
 import com.mycity4kids.R;
 import com.mycity4kids.application.BaseApplication;
@@ -36,6 +33,10 @@ import com.mycity4kids.preference.SharedPrefUtils;
 import com.mycity4kids.profile.UserProfileActivity;
 import com.mycity4kids.retrofitAPIsInterfaces.ArticleDetailsAPI;
 import com.mycity4kids.tagging.Mentions;
+import com.mycity4kids.ui.ContentCommentReplyNotificationActivity;
+import com.mycity4kids.ui.activity.ArticleDetailsContainerActivity;
+import com.mycity4kids.ui.activity.ParallelFeedActivity;
+import com.mycity4kids.ui.activity.ShortStoryContainerActivity;
 import com.mycity4kids.ui.adapter.ArticleCommentsRecyclerAdapter;
 import com.mycity4kids.utils.AppUtils;
 import com.mycity4kids.utils.StringUtils;
@@ -222,9 +223,9 @@ public class ArticleCommentsFragment extends BaseFragment implements OnClickList
 
     @Override
     public void onClick(View v) {
-
         switch (v.getId()) {
             case R.id.addCommentFAB:
+                pushEvent("CD_Comment");
                 Bundle args = new Bundle();
                 AddArticleCommentReplyDialogFragment addArticleCommentReplyDialogFragment =
                         new AddArticleCommentReplyDialogFragment();
@@ -275,15 +276,8 @@ public class ArticleCommentsFragment extends BaseFragment implements OnClickList
                     if (!StringUtils.isNullOrEmpty(userType) && !StringUtils.isNullOrEmpty(titleSlug) && !StringUtils
                             .isNullOrEmpty(blogSlug)) {
                         String shareUrl = AppUtils.getShareUrl(userType, blogSlug, titleSlug);
-                        if (ShareDialog.canShow(ShareLinkContent.class)) {
-                            ShareLinkContent content = new ShareLinkContent.Builder()
-                                    .setQuote(responseData.getData().get(0).getMessage())
-                                    .setContentUrl(Uri.parse(shareUrl))
-                                    .build();
-                            if (isAdded()) {
-                                new ShareDialog(getActivity()).show(content);
-                            }
-                        }
+                        shareCommentOnFacebook(shareUrl, responseData.getData().get(0).getMessage(),
+                                responseData.getData().get(0).getMentions());
                     }
                     if (isAdded()) {
                         Utils.pushArticleCommentReplyChangeEvent(getActivity(), "DetailArticleScreen", userDynamoId,
@@ -717,6 +711,7 @@ public class ArticleCommentsFragment extends BaseFragment implements OnClickList
     public void onRecyclerItemClick(View view, int position) {
         switch (view.getId()) {
             case R.id.topCommentMarkedTextView:
+
                 if (!commentsList.get(position).isTopCommentMarked()) {
                     TopCommentData commentListData = new TopCommentData(commentsList.get(position).getPostId(),
                             commentsList.get(position).getId(), true);
@@ -751,6 +746,7 @@ public class ArticleCommentsFragment extends BaseFragment implements OnClickList
                             .likeDislikeComment(commentsList.get(position).getId(), commentListData);
                     call.enqueue(likeDisLikeCommentCallback);
                 } else {
+                    pushEvent("CD_Like_Comment");
                     commentsList.get(position).setLiked(true);
                     LikeReactionModel commentListData = new LikeReactionModel();
                     commentListData.setReaction("like");
@@ -780,8 +776,9 @@ public class ArticleCommentsFragment extends BaseFragment implements OnClickList
             }
             break;
             case R.id.replyCommentTextView: {
+                pushEvent("CD_Reply_Comment");
                 if (commentsList.get(position).getRepliesCount() == 0) {
-                    openAddCommentReplyDialog(commentsList.get(position));
+                    openAddCommentReplyDialog(commentsList.get(position), null);
                 } else {
                     articleCommentRepliesDialogFragment = new ArticleCommentRepliesDialogFragment();
                     Bundle args = new Bundle();
@@ -829,6 +826,23 @@ public class ArticleCommentsFragment extends BaseFragment implements OnClickList
                 });
     }
 
+    private void pushEvent(String eventSuffix) {
+        try {
+            if (getActivity() instanceof ArticleDetailsContainerActivity) {
+                Utils.shareEventTracking(getActivity(), "Article Detail", "Comment_Android",
+                        "ArticleDetail_" + eventSuffix);
+            } else if (getActivity() instanceof ShortStoryContainerActivity) {
+                Utils.shareEventTracking(getActivity(), "100WS Detail", "Comment_Android",
+                        "StoryDetail_" + eventSuffix);
+            } else if (getActivity() instanceof ParallelFeedActivity) {
+                Utils.shareEventTracking(getActivity(), "Video Detail", "Comment_Android",
+                        "VlogDetail_" + eventSuffix);
+            }
+        } catch (Exception e) {
+            FirebaseCrashlytics.getInstance().recordException(e);
+            Log.d("MC4kException", Log.getStackTraceString(e));
+        }
+    }
 
     private Callback<ResponseBody> likeDisLikeCommentCallback = new Callback<ResponseBody>() {
         @Override
@@ -849,8 +863,9 @@ public class ArticleCommentsFragment extends BaseFragment implements OnClickList
         }
     };
 
-    void openAddCommentReplyDialog(CommentListData commentData) {
+    void openAddCommentReplyDialog(CommentListData commentData, CommentListData currentReplyData) {
         Bundle args = new Bundle();
+        args.putParcelable("currentReplyData", currentReplyData);
         args.putParcelable("parentCommentData", commentData);
         AddArticleCommentReplyDialogFragment addArticleCommentReplyDialogFragment =
                 new AddArticleCommentReplyDialogFragment();

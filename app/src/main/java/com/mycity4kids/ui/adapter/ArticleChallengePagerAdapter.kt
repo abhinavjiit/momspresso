@@ -10,7 +10,6 @@ import com.mycity4kids.ui.fragment.ArticleChallengeDetailListingFragment
 class ArticleChallengePagerAdapter(
     private var challengeId: String?,
     private var rules: String?,
-    private var challengeName: String?,
     fragmentManager: FragmentManager
 ) : FragmentPagerAdapter(
     fragmentManager,

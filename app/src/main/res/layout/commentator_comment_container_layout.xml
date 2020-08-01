@@ -66,12 +66,11 @@
         android:layout_height="wrap_content"
         android:layout_below="@id/commentDateTextView"
         android:layout_marginStart="45dp"
-        android:layout_toRightOf="@id/likeCount"
-        android:drawableLeft="@drawable/ic_shape"
+        android:layout_toEndOf="@id/likeCount"
+        android:drawableStart="@drawable/ic_shape"
         android:drawablePadding="@dimen/space_6"
         android:padding="5dp"
         android:textColor="#979797" />
-
 
       <com.mycity4kids.widget.CustomFontTextView
         android:id="@+id/markedTopComment1"
@@ -89,6 +88,7 @@
         android:text="@string/top_comment_string"
         android:textColor="#979797"
         app:fontName="Roboto-Regular.ttf" />
+
       <androidx.appcompat.widget.AppCompatImageView
         android:id="@+id/reportCommentContent1"
         android:layout_width="wrap_content"
@@ -100,8 +100,6 @@
         android:padding="5dp"
         android:visibility="visible"
         app:srcCompat="@drawable/ic_three_verticle_dot_rounded" />
-
-
     </RelativeLayout>
   </RelativeLayout>
 
@@ -111,15 +109,17 @@
     android:layout_height="wrap_content"
     android:layout_below="@id/commentContainer1"
     android:paddingStart="@dimen/space_10">
+
     <com.mikhaellopez.circularimageview.CircularImageView
       android:id="@+id/commentatorImageView2"
       android:layout_width="34dp"
       android:layout_height="34dp"
       android:src="@drawable/default_commentor_img" />
+
     <RelativeLayout
       android:layout_width="match_parent"
       android:layout_height="wrap_content"
-      android:layout_toRightOf="@id/commentatorImageView2">
+      android:layout_toEndOf="@id/commentatorImageView2">
 
       <com.mycity4kids.widget.CustomFontTextView
         android:id="@+id/commentatorNameAndCommentTextView2"
@@ -153,12 +153,11 @@
         android:layout_height="wrap_content"
         android:layout_below="@id/commentDateTextView2"
         android:layout_marginStart="45dp"
-        android:layout_toRightOf="@id/likeCount2"
-        android:drawableLeft="@drawable/ic_shape"
+        android:layout_toEndOf="@id/likeCount2"
+        android:drawableStart="@drawable/ic_shape"
         android:drawablePadding="@dimen/space_6"
         android:padding="5dp"
         android:textColor="#979797" />
-
 
       <com.mycity4kids.widget.CustomFontTextView
         android:id="@+id/markedTopComment2"
