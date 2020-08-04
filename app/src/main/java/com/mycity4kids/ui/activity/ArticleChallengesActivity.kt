@@ -17,7 +17,6 @@ import com.mycity4kids.models.Topics
 import com.mycity4kids.models.response.SuggestedTopicsResponse
 import com.mycity4kids.retrofitAPIsInterfaces.TopicsCategoryAPI
 import com.mycity4kids.retrofitAPIsInterfaces.VlogsListingAndDetailsAPI
-import com.mycity4kids.ui.adapter.ChallengeListingRecycleAdapter
 import com.mycity4kids.ui.adapter.SuggestedTopicsRecyclerAdapter
 import com.mycity4kids.utils.AppUtils
 import com.mycity4kids.vlogs.ContentChallengeSelectionHorizontalAdapter
@@ -28,7 +27,6 @@ import retrofit2.Callback
 import retrofit2.Response
 
 class ArticleChallengesActivity : BaseActivity(),
-    ChallengeListingRecycleAdapter.RecyclerViewClickListener,
     ContentChallengeSelectionHorizontalAdapter.RecyclerViewClickListener,
     SuggestedTopicsRecyclerAdapter.RecyclerViewClickListener {
     private lateinit var articleChallengesList: ArrayList<Topics>
@@ -167,13 +165,6 @@ class ArticleChallengesActivity : BaseActivity(),
         val topicList = responseData.data[0].result[AppUtils.getLangKey().toString()]
         topicList?.let { suggestedTopicsList.addAll(it) }
         suggestedTopicsRecyclerAdapter.notifyDataSetChanged()
-    }
-
-    override fun onClick(
-        view: View,
-        position: Int,
-        activeUrl: String
-    ) {
     }
 
     override fun onChallengeItemClick(view: View, topics: Topics) {

@@ -49,6 +49,7 @@ import com.mycity4kids.sync.SyncUserInfoService;
 import com.mycity4kids.ui.GroupMembershipStatus;
 import com.mycity4kids.ui.activity.AddShortStoryActivity;
 import com.mycity4kids.ui.activity.AppSettingsActivity;
+import com.mycity4kids.ui.activity.ArticleChallengeDetailActivity;
 import com.mycity4kids.ui.activity.ArticleChallengeOrTopicSelectionActivity;
 import com.mycity4kids.ui.activity.ArticleDetailsContainerActivity;
 import com.mycity4kids.ui.activity.BadgeActivity;
@@ -63,6 +64,7 @@ import com.mycity4kids.ui.activity.GroupsSummaryActivity;
 import com.mycity4kids.ui.activity.LoadWebViewActivity;
 import com.mycity4kids.ui.activity.ParallelFeedActivity;
 import com.mycity4kids.ui.activity.ShortStoriesListingContainerActivity;
+import com.mycity4kids.ui.activity.ShortStoryChallengeDetailActivity;
 import com.mycity4kids.ui.activity.ShortStoryContainerActivity;
 import com.mycity4kids.ui.activity.UserDraftsContentActivity;
 import com.mycity4kids.ui.activity.ViewGroupPostCommentsRepliesActivity;
@@ -935,6 +937,26 @@ public abstract class BaseActivity extends AppCompatActivity implements GroupMem
             Matcher matcher13 = pattern13.matcher(urlWithNoParams);
             if (matcher13.matches()) {
                 Intent intent = new Intent(this, ArticleChallengeOrTopicSelectionActivity.class);
+                startActivity(intent);
+                return true;
+            }
+
+            Pattern pattern14 = Pattern.compile(AppConstants.BLOGS_CHALLENGE_DETAIL_REGEX);
+            Matcher matcher14 = pattern14.matcher(urlWithNoParams);
+            if (matcher14.matches()) {
+                String[] separated = urlWithNoParams.split("/");
+                Intent intent = new Intent(this, ArticleChallengeDetailActivity.class);
+                intent.putExtra("challengeSlug", separated[separated.length - 1]);
+                startActivity(intent);
+                return true;
+            }
+
+            Pattern pattern15 = Pattern.compile(AppConstants.STORY_CHALLENGE_DETAIL_REGEX);
+            Matcher matcher15 = pattern15.matcher(urlWithNoParams);
+            if (matcher15.matches()) {
+                String[] separated = urlWithNoParams.split("/");
+                Intent intent = new Intent(this, ShortStoryChallengeDetailActivity.class);
+                intent.putExtra("challengeSlug", separated[separated.length - 1]);
                 startActivity(intent);
                 return true;
             }

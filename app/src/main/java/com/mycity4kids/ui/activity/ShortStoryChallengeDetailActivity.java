@@ -1,6 +1,7 @@
 package com.mycity4kids.ui.activity;
 
 import android.Manifest;
+import android.accounts.NetworkErrorException;
 import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -47,6 +48,7 @@ import com.mycity4kids.constants.Constants;
 import com.mycity4kids.gtmutils.Utils;
 import com.mycity4kids.models.ExploreTopicsModel;
 import com.mycity4kids.models.ExploreTopicsResponse;
+import com.mycity4kids.models.Topics;
 import com.mycity4kids.models.request.FollowUnfollowUserRequest;
 import com.mycity4kids.models.request.RecommendUnrecommendArticleRequest;
 import com.mycity4kids.models.response.ArticleListingResponse;
@@ -57,6 +59,7 @@ import com.mycity4kids.profile.UserProfileActivity;
 import com.mycity4kids.retrofitAPIsInterfaces.ArticleDetailsAPI;
 import com.mycity4kids.retrofitAPIsInterfaces.FollowAPI;
 import com.mycity4kids.retrofitAPIsInterfaces.TopicsCategoryAPI;
+import com.mycity4kids.retrofitAPIsInterfaces.VlogsListingAndDetailsAPI;
 import com.mycity4kids.ui.adapter.ChallengeListingRecycleAdapter;
 import com.mycity4kids.ui.fragment.AddCollectionAndCollectionItemDialogFragment;
 import com.mycity4kids.ui.fragment.ReportContentDialogFragment;
@@ -65,6 +68,7 @@ import com.mycity4kids.utils.ArrayAdapterFactory;
 import com.mycity4kids.utils.ConnectivityUtils;
 import com.mycity4kids.utils.PermissionUtil;
 import com.mycity4kids.utils.SharingUtils;
+import com.mycity4kids.utils.StringUtils;
 import com.mycity4kids.utils.ToastUtils;
 import com.mycity4kids.widget.StoryShareCardWidget;
 import java.io.File;
@@ -76,6 +80,7 @@ import okhttp3.ResponseBody;
 import org.json.JSONObject;
 import retrofit2.Call;
 import retrofit2.Callback;
+import retrofit2.Response;
 import retrofit2.Retrofit;
 
 public class ShortStoryChallengeDetailActivity extends BaseActivity implements View.OnClickListener,
@@ -89,7 +94,6 @@ public class ShortStoryChallengeDetailActivity extends BaseActivity implements V
     private LinearLayoutManager llm;
     private ChallengeListingRecycleAdapter challengeListingRecycleAdapter;
     private ArrayList<ExploreTopicsModel> ssTopicsList;
-    private String parentName;
     private int nextPageNumber = 1;
     private int limit = 15;
     private boolean isReuqestRunning = false;
@@ -101,8 +105,6 @@ public class ShortStoryChallengeDetailActivity extends BaseActivity implements V
     private int totalItemCount;
     private RelativeLayout lodingView;
     private String selectedId;
-    private String selectedName;
-    private String selectedActiveUrl;
     private FrameLayout frameLayout;
     private FloatingActionsMenu fabMenu;
     private RelativeLayout writeArticleCell;
@@ -130,7 +132,8 @@ public class ShortStoryChallengeDetailActivity extends BaseActivity implements V
     private FloatingActionButton fabSort;
     private RadioGroup chooseoptionradioButton;
     private Toolbar toolbar;
-    private int pos;
+    private Topics challengeCategory;
+    private String challengeSlug;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -140,24 +143,31 @@ public class ShortStoryChallengeDetailActivity extends BaseActivity implements V
         ((BaseApplication) getApplication()).setActivity(this);
 
         userDynamoId = SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId();
-        startWriting = (TextView) findViewById(R.id.start_writing);
-        relativeFrame = (RelativeLayout) findViewById(R.id.framelayout_relative);
-        chooseLayout = (RelativeLayout) findViewById(R.id.choose_layout);
-        recyclerView = (RecyclerView) findViewById(R.id.recyclerView_listing);
-        toolbarTitle = (TextView) findViewById(R.id.toolbarTitleTextView);
-        lodingView = (RelativeLayout) findViewById(R.id.relativeLoadingView);
-        overlayLayout = (View) findViewById(R.id.overlayView_choose_story_challenge);
-        guideOverlay = (RelativeLayout) findViewById(R.id.guideOverlay);
-        writeArticleCell = (RelativeLayout) findViewById(R.id.writeArticleCell);
-        frameLayout = (FrameLayout) findViewById(R.id.frame_layout);
+        toolbar = findViewById(R.id.toolbar);
+        startWriting = findViewById(R.id.start_writing);
+        relativeFrame = findViewById(R.id.framelayout_relative);
+        chooseLayout = findViewById(R.id.choose_layout);
+        recyclerView = findViewById(R.id.recyclerView_listing);
+        toolbarTitle = findViewById(R.id.toolbarTitleTextView);
+        lodingView = findViewById(R.id.relativeLoadingView);
+        overlayLayout = findViewById(R.id.overlayView_choose_story_challenge);
+        guideOverlay = findViewById(R.id.guideOverlay);
+        writeArticleCell = findViewById(R.id.writeArticleCell);
+        frameLayout = findViewById(R.id.frame_layout);
         pullToRefresh = findViewById(R.id.pullToRefresh);
+        fabMenu = findViewById(R.id.fab_menu);
+        popularSortFab = findViewById(R.id.popularSortFAB);
+        recentSortFab = findViewById(R.id.recentSortFAB);
+        fabSort = findViewById(R.id.fabSort);
+        chooseoptionradioButton = findViewById(R.id.reportReasonRadioGroup);
+
+        setSupportActionBar(toolbar);
+        ActionBar actionbar = getSupportActionBar();
+        actionbar.setDisplayHomeAsUpEnabled(true);
+        actionbar.setDisplayShowHomeEnabled(true);
+        toolbarTitle.setText(getString(R.string.article_listing_type_short_story_label));
 
         frameLayout.getBackground().setAlpha(0);
-        fabMenu = (FloatingActionsMenu) findViewById(R.id.fab_menu);
-        popularSortFab = (FloatingActionButton) findViewById(R.id.popularSortFAB);
-        recentSortFab = (FloatingActionButton) findViewById(R.id.recentSortFAB);
-        fabSort = (FloatingActionButton) findViewById(R.id.fabSort);
-        chooseoptionradioButton = (RadioGroup) findViewById(R.id.reportReasonRadioGroup);
 
         ssTopicsList = new ArrayList<>();
         guideOverlay.setOnClickListener(this);
@@ -195,43 +205,19 @@ public class ShortStoryChallengeDetailActivity extends BaseActivity implements V
 
         articleListingResults = new ArrayList<>();
         Intent intent = getIntent();
-        pos = intent.getIntExtra("position", 0);
         selectedId = intent.getStringExtra("challenge");
-        selectedName = intent.getStringExtra("Display_Name");
-        selectedActiveUrl = intent.getStringExtra("StringUrl");
-        parentName = intent.getStringExtra("topics");
-        String challengeComingFrom = intent.getStringExtra("selectedrequest");
-        if (challengeComingFrom == null) {
-            challengeComingFrom = "challenge";
-        }
-        if ("FromDeepLink".equals(challengeComingFrom)) {
-            selectedId = intent.getStringExtra("challenge");
-            selectedName = intent.getStringExtra("Display_Name");
-            selectedActiveUrl = intent.getStringExtra("StringUrl");
-            chooseLayout.setVisibility(View.VISIBLE);
+        challengeSlug = intent.getStringExtra("challengeSlug");
+        if (selectedId != null) {
+            getChallengeDetails(selectedId);
+        } else if (challengeSlug != null) {
+            getChallengeDetailsFromSlug(challengeSlug);
         } else {
-            if ("storyListingCard".equals(getIntent().getStringExtra("source"))) {
-                chooseLayout.setVisibility(View.VISIBLE);
-            } else {
-                chooseLayout.setVisibility(View.INVISIBLE);
-            }
+            return;
         }
 
-        toolbar = (Toolbar) findViewById(R.id.toolbar);
         llm = new LinearLayoutManager(this);
         llm.setOrientation(RecyclerView.VERTICAL);
         recyclerView.setLayoutManager(llm);
-        setSupportActionBar(toolbar);
-        ActionBar actionbar = getSupportActionBar();
-        actionbar.setDisplayHomeAsUpEnabled(true);
-        actionbar.setDisplayShowHomeEnabled(true);
-        toolbarTitle.setText(getString(R.string.article_listing_type_short_story_label));
-        hitFilteredTopicsArticleListingApi(sortType);
-        challengeListingRecycleAdapter = new ChallengeListingRecycleAdapter(this, this, pos, selectedName,
-                selectedActiveUrl);
-        recyclerView.setAdapter(challengeListingRecycleAdapter);
-        challengeListingRecycleAdapter.setListData(articleListingResults);
-        challengeListingRecycleAdapter.notifyDataSetChanged();
 
         pullToRefresh.setOnRefreshListener(() -> {
             nextPageNumber = 1;
@@ -309,6 +295,54 @@ public class ShortStoryChallengeDetailActivity extends BaseActivity implements V
         });
     }
 
+    private void getChallengeDetailsFromSlug(String challengeSlug) {
+        Retrofit retrofit = BaseApplication.getInstance().getRetrofit();
+        VlogsListingAndDetailsAPI categoryDetailApi = retrofit.create(VlogsListingAndDetailsAPI.class);
+        Call<Topics> call = categoryDetailApi.getCategoryDetailsFromSlug(challengeSlug);
+        call.enqueue(categoryDetailsResponseCallback);
+    }
+
+    private void getChallengeDetails(String challengeId) {
+        Retrofit retrofit = BaseApplication.getInstance().getRetrofit();
+        VlogsListingAndDetailsAPI categoryDetailApi = retrofit.create(VlogsListingAndDetailsAPI.class);
+        Call<Topics> call = categoryDetailApi.getCategoryDetails(challengeId);
+        call.enqueue(categoryDetailsResponseCallback);
+    }
+
+    private Callback<Topics> categoryDetailsResponseCallback = new Callback<Topics>() {
+        @Override
+        public void onResponse(Call<Topics> call, Response<Topics> response) {
+            if (null == response.body()) {
+                NetworkErrorException nee = new NetworkErrorException(response.raw().toString());
+                FirebaseCrashlytics.getInstance().recordException(nee);
+                return;
+            }
+            if (response.isSuccessful()) {
+                try {
+                    Topics responseData = response.body();
+                    challengeCategory = responseData;
+                    selectedId = responseData.getId();
+                    hitFilteredTopicsArticleListingApi(sortType);
+                    challengeListingRecycleAdapter = new ChallengeListingRecycleAdapter(
+                            ShortStoryChallengeDetailActivity.this, responseData.getDisplay_name(),
+                            responseData.getExtraData().get(0).getChallenge().getImageUrl());
+                    recyclerView.setAdapter(challengeListingRecycleAdapter);
+                    challengeListingRecycleAdapter.setListData(articleListingResults);
+                    challengeListingRecycleAdapter.notifyDataSetChanged();
+                } catch (Exception e) {
+                    FirebaseCrashlytics.getInstance().recordException(e);
+                    Log.d("MC4kException", Log.getStackTraceString(e));
+                }
+            }
+        }
+
+        @Override
+        public void onFailure(Call<Topics> call, Throwable t) {
+            FirebaseCrashlytics.getInstance().recordException(t);
+            Log.d("MC4kException", Log.getStackTraceString(t));
+        }
+    };
+
     private void addShortStoryCategories(RadioGroup chooseoptionradioButton) {
         RadioGroup.LayoutParams rprms = new RadioGroup.LayoutParams(RadioGroup.LayoutParams.MATCH_PARENT,
                 RadioGroup.LayoutParams.WRAP_CONTENT);
@@ -318,19 +352,18 @@ public class ShortStoryChallengeDetailActivity extends BaseActivity implements V
             rbn.setTextColor(getResources().getColor(R.color.short_story_light_black_color));
             rbn.setText(ssTopicsList.get(i).getDisplay_name());
             chooseoptionradioButton.addView(rbn, rprms);
-            rbn.setPadding(10, 0, 0, 0);
+            rbn.setPaddingRelative(10, 0, 0, 0);
             if (Build.VERSION.SDK_INT >= 21) {
                 ColorStateList colorStateList = new ColorStateList(
                         new int[][] {
-                                new int[] {-android.R.attr.state_enabled}, //disabled
-                                new int[] {android.R.attr.state_enabled} //enabled
+                                new int[] {-android.R.attr.state_enabled},
+                                new int[] {android.R.attr.state_enabled}
                         },
                         new int[] {
-                                getResources().getColor(R.color.app_red),//// disabled
-                                getResources().getColor(R.color.app_red) //enabled
+                                getResources().getColor(R.color.app_red),
+                                getResources().getColor(R.color.app_red)
                         });
-                rbn.setButtonTintList(colorStateList);//set the color tint list
-                // radio.invalidate(); //could not be necessary
+                rbn.setButtonTintList(colorStateList);
             }
         }
     }
@@ -453,13 +486,19 @@ public class ShortStoryChallengeDetailActivity extends BaseActivity implements V
                 hitFilteredTopicsArticleListingApi(1);
                 break;
             case R.id.start_writing:
-                if (ssTopicsText != null) {
+                if (ssTopicsText != null
+                        && challengeCategory != null
+                        && !StringUtils.isNullOrEmpty(challengeCategory.getDisplay_name())
+                        && challengeCategory.getExtraData() != null
+                        && !challengeCategory.getExtraData().isEmpty()
+                        && challengeCategory.getExtraData().get(0).getChallenge() != null
+                        && !StringUtils
+                        .isNullOrEmpty(challengeCategory.getExtraData().get(0).getChallenge().getImageUrl())) {
                     Intent intentt = new Intent(this, AddShortStoryActivity.class);
-                    String challenge = "challenge";
-                    intentt.putExtra("selectedrequest", challenge);
+                    intentt.putExtra("selectedrequest", "challenge");
                     intentt.putExtra("challengeId", selectedId);
-                    intentt.putExtra("challengeName", selectedName);
-                    intentt.putExtra("Url", selectedActiveUrl);
+                    intentt.putExtra("challengeName", challengeCategory.getDisplay_name());
+                    intentt.putExtra("Url", challengeCategory.getExtraData().get(0).getChallenge().getImageUrl());
                     intentt.putExtra("selectedCategory", ssTopicsText);
                     intentt.putExtra("shortStoryCategoryId", shortStoryCategoryId);
                     startActivity(intentt);
@@ -487,7 +526,7 @@ public class ShortStoryChallengeDetailActivity extends BaseActivity implements V
                 intent.putExtra(Constants.AUTHOR_ID, articleListingResults.get(position).getUserId());
                 intent.putExtra(Constants.BLOG_SLUG, articleListingResults.get(position).getBlogPageSlug());
                 intent.putExtra(Constants.TITLE_SLUG, articleListingResults.get(position).getTitleSlug());
-                intent.putExtra(Constants.ARTICLE_OPENED_FROM, "" + parentName);
+                intent.putExtra(Constants.ARTICLE_OPENED_FROM, "" + challengeCategory.getDisplay_name());
                 intent.putExtra(Constants.FROM_SCREEN, "TopicArticlesListingScreen");
                 intent.putExtra(Constants.AUTHOR,
                         articleListingResults.get(position).getUserId() + "~" + articleListingResults.get(position)

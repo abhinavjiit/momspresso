@@ -24,6 +24,7 @@ import retrofit2.Response
 
 class ArticleChallengeDetailActivity : BaseActivity() {
 
+    private var challengeSlug: String? = ""
     private var challengeName: String? = ""
     private lateinit var toolbarTitleTextView: TextView
     private lateinit var challengeNameTextView: TextView
@@ -46,6 +47,7 @@ class ArticleChallengeDetailActivity : BaseActivity() {
         tabs = findViewById(R.id.tabs)
         startWritingTextView = findViewById(R.id.startWritingTextView)
         articleChallengeId = intent.getStringExtra("articleChallengeId")
+        challengeSlug = intent.getStringExtra("challengeSlug")
         challengeName = intent.getStringExtra("challengeName")
 
         toolbarTitleTextView.text = challengeName
@@ -55,7 +57,11 @@ class ArticleChallengeDetailActivity : BaseActivity() {
             addTab(tabs.newTab().setText(R.string.groups_sections_blogs))
         }
 
-        getChallengeDetails
+        if (!articleChallengeId.isNullOrBlank()) {
+            getChallengeDetails
+        } else if (!challengeSlug.isNullOrBlank()) {
+            getChallengeDetailsFromSlug
+        }
 
         back.setOnClickListener {
             onBackPressed()
@@ -69,9 +75,21 @@ class ArticleChallengeDetailActivity : BaseActivity() {
                 retrofit.create(
                     VlogsListingAndDetailsAPI::class.java
                 )
-            val callRecentVideoArticles =
-                vlogsListingAndDetailsApi.getArticleChallenges(articleChallengeId)
-            callRecentVideoArticles.enqueue(blogsChallengeResponseCallBack)
+            val categoryDetailsApi =
+                vlogsListingAndDetailsApi.getCategoryDetails(articleChallengeId)
+            categoryDetailsApi.enqueue(blogsChallengeResponseCallBack)
+        }
+
+    private val getChallengeDetailsFromSlug: Unit
+        get() {
+            val retrofit = BaseApplication.getInstance().retrofit
+            val vlogsListingAndDetailsApi =
+                retrofit.create(
+                    VlogsListingAndDetailsAPI::class.java
+                )
+            val categoryDetailsApi =
+                vlogsListingAndDetailsApi.getCategoryDetailsFromSlug(challengeSlug)
+            categoryDetailsApi.enqueue(blogsChallengeResponseCallBack)
         }
 
     private val blogsChallengeResponseCallBack: Callback<Topics> =
@@ -115,6 +133,7 @@ class ArticleChallengeDetailActivity : BaseActivity() {
         } ?: run {
             thumbNail.setImageResource(R.drawable.default_article)
         }
+        articleChallengeId = challengeDetail.id
         articleChallengeAdapter = ArticleChallengePagerAdapter(
             articleChallengeId,
             rules,

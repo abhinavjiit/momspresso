@@ -299,47 +299,39 @@ public class AddArticleCommentReplyDialogFragment extends DialogFragment impleme
         if ("EDIT_COMMENT".equals(actionType)) {
             if (parentFragment instanceof ArticleCommentsFragment) {
                 ((ArticleCommentsFragment) getParentFragment())
-                        .editComment(String.valueOf(commentBody), commentOrReplyData.getId(),
-                                position, commentOrReplyData.getMentions());
+                        .editComment(String.valueOf(commentBody), commentOrReplyData.getId(), position, mentionsMap);
             } else if (parentFragment instanceof ArticleDetailsFragment) {
                 ((ArticleDetailsFragment) getParentFragment())
-                        .editComment(String.valueOf(commentBody), commentOrReplyData.getId(),
-                                position, commentOrReplyData.getMentions());
+                        .editComment(String.valueOf(commentBody), commentOrReplyData.getId(), position, mentionsMap);
             } else if (parentFragment instanceof ContentCommentReplyNotificationFragment) {
                 ((ContentCommentReplyNotificationFragment) getParentFragment())
-                        .editComment(String.valueOf(commentBody), commentOrReplyData.getId(),
-                                position, commentOrReplyData.getMentions());
+                        .editComment(String.valueOf(commentBody), commentOrReplyData.getId(), position, mentionsMap);
             } else if (getActivity() != null
                     && getActivity() instanceof ContentCommentReplyNotificationActivity) {
                 ((ContentCommentReplyNotificationActivity) getActivity())
-                        .editComment(String.valueOf(commentBody), commentOrReplyData.getId(),
-                                position, commentOrReplyData.getMentions());
+                        .editComment(String.valueOf(commentBody), commentOrReplyData.getId(), position, mentionsMap);
             }
         } else if ("EDIT_REPLY".equals(actionType)) {
             Fragment fragment = getParentFragment();
             if (fragment instanceof ArticleCommentsFragment) {
                 ((ArticleCommentsFragment) getParentFragment())
-                        .editReply(String.valueOf(commentBody),
-                                commentOrReplyData.getParentCommentId(), commentOrReplyData.getId(),
-                                commentOrReplyData.getMentions());
+                        .editReply(String.valueOf(commentBody), commentOrReplyData.getParentCommentId(),
+                                commentOrReplyData.getId(), mentionsMap);
             } else if (fragment instanceof ArticleCommentRepliesDialogFragment) {
                 Fragment parentOfParentFragment = fragment.getParentFragment();
                 if (parentOfParentFragment instanceof ArticleCommentsFragment) {
                     ((ArticleCommentsFragment) parentOfParentFragment)
-                            .editReply(String.valueOf(commentBody),
-                                    commentOrReplyData.getParentCommentId(), commentOrReplyData.getId(),
-                                    commentOrReplyData.getMentions());
+                            .editReply(String.valueOf(commentBody), commentOrReplyData.getParentCommentId(),
+                                    commentOrReplyData.getId(), mentionsMap);
                 } else if (parentOfParentFragment instanceof ArticleDetailsFragment) {
                     ((ArticleDetailsFragment) parentOfParentFragment)
-                            .editReply(String.valueOf(commentBody),
-                                    commentOrReplyData.getParentCommentId(), commentOrReplyData.getId(),
-                                    commentOrReplyData.getMentions());
+                            .editReply(String.valueOf(commentBody), commentOrReplyData.getParentCommentId(),
+                                    commentOrReplyData.getId(), mentionsMap);
                 }
             } else if (fragment instanceof ContentCommentReplyNotificationFragment) {
                 ((ContentCommentReplyNotificationFragment) getParentFragment())
-                        .editReply(String.valueOf(commentBody),
-                                commentOrReplyData.getParentCommentId(), commentOrReplyData.getId(),
-                                position, commentOrReplyData.getMentions());
+                        .editReply(String.valueOf(commentBody), commentOrReplyData.getParentCommentId(),
+                                commentOrReplyData.getId(), position, commentOrReplyData.getMentions());
             }
         } else {
             if (commentOrReplyData == null) {
@@ -408,8 +400,8 @@ public class AddArticleCommentReplyDialogFragment extends DialogFragment impleme
     public List<String> onQueryReceived(@NonNull QueryToken queryToken) {
         final QueryTokenReceiver receiver = commentReplyEditText;
         Retrofit retro = BaseApplication.getInstance().getRetrofit();
-        SearchArticlesAuthorsAPI searchArticlesAuthorsAPI = retro.create(SearchArticlesAuthorsAPI.class);
-        Call<MentionsResponse> call = searchArticlesAuthorsAPI.searchUserHandles(queryToken.getKeywords());
+        SearchArticlesAuthorsAPI searchArticlesAuthorsApi = retro.create(SearchArticlesAuthorsAPI.class);
+        Call<MentionsResponse> call = searchArticlesAuthorsApi.searchUserHandles(queryToken.getKeywords());
         call.enqueue(new Callback<MentionsResponse>() {
             @Override
             public void onResponse(Call<MentionsResponse> call, Response<MentionsResponse> response) {
