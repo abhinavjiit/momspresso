@@ -47,7 +47,10 @@ public interface VlogsListingAndDetailsAPI {
     Call<VlogsCategoryWiseChallengesResponse> getVlogsCategoryWiseChallenges();
 
     @GET("v2/categories/")
-    Call<Topics> getArticleChallenges(@Query("id") String id);
+    Call<Topics> getCategoryDetails(@Query("id") String id);
+
+    @GET("v2/categories/")
+    Call<Topics> getCategoryDetailsFromSlug(@Query("slug") String slug);
 
     @GET("/v2/categories/category/challenges/")
     Call<VlogsCategoryWiseChallengesResponse> getSingleChallenge(@Query("id") ArrayList<String> id);

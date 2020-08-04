@@ -235,8 +235,7 @@ public class AddShortStoryCommentReplyDialogFragment extends DialogFragment impl
         if ("EDIT_COMMENT".equals(actionType)) {
             Utils.shareEventTracking(getActivity(), "100WS Detail", "Comment_Android", "StoryDetail_Publish_Comment");
             ((ShortStoryFragment) getParentFragment())
-                    .editComment(String.valueOf(commentBody), commentOrReplyData.getId(),
-                            position, commentOrReplyData.getMentions());
+                    .editComment(String.valueOf(commentBody), commentOrReplyData.getId(), position, mentionsMap);
         } else if ("EDIT_REPLY".equals(actionType)) {
             Utils.shareEventTracking(getActivity(), "100WS Detail", "Comment_Android",
                     "StoryDetail_PublishReply_Comment");
@@ -244,17 +243,15 @@ public class AddShortStoryCommentReplyDialogFragment extends DialogFragment impl
             if (parentFragment != null) {
                 if (parentFragment instanceof ShortStoryFragment) {
                     ((ShortStoryFragment) getParentFragment())
-                            .editReply(String.valueOf(commentBody),
-                                    commentOrReplyData.getParentCommentId(), commentOrReplyData.getId(),
-                                    commentOrReplyData.getMentions());
+                            .editReply(String.valueOf(commentBody), commentOrReplyData.getParentCommentId(),
+                                    commentOrReplyData.getId(), mentionsMap);
                 } else if (parentFragment instanceof ShortStoryCommentRepliesDialogFragment) {
                     Fragment parentOfParentFragment = parentFragment.getParentFragment();
                     if (parentOfParentFragment != null
                             && parentOfParentFragment instanceof ShortStoryFragment) {
                         ((ShortStoryFragment) parentOfParentFragment)
-                                .editReply(String.valueOf(commentBody),
-                                        commentOrReplyData.getParentCommentId(), commentOrReplyData.getId(),
-                                        commentOrReplyData.getMentions());
+                                .editReply(String.valueOf(commentBody), commentOrReplyData.getParentCommentId(),
+                                        commentOrReplyData.getId(), mentionsMap);
                     }
                 }
             }

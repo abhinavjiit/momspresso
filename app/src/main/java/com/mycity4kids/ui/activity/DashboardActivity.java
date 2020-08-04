@@ -44,7 +44,6 @@ import com.google.firebase.crashlytics.FirebaseCrashlytics;
 import com.google.firebase.remoteconfig.FirebaseRemoteConfig;
 import com.google.firebase.remoteconfig.FirebaseRemoteConfigSettings;
 import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonParser;
 import com.google.gson.reflect.TypeToken;
@@ -59,13 +58,11 @@ import com.mycity4kids.constants.Constants;
 import com.mycity4kids.editor.NewEditor;
 import com.mycity4kids.gtmutils.Utils;
 import com.mycity4kids.models.BranchModel;
-import com.mycity4kids.models.Topics;
 import com.mycity4kids.models.TopicsResponse;
 import com.mycity4kids.models.request.VlogsEventRequest;
 import com.mycity4kids.models.response.AllDraftsResponse;
 import com.mycity4kids.models.response.DraftListResult;
 import com.mycity4kids.models.response.GroupsMembershipResponse;
-import com.mycity4kids.models.response.ShortStoryDetailResult;
 import com.mycity4kids.models.response.UserDetailResponse;
 import com.mycity4kids.models.version.RateVersion;
 import com.mycity4kids.preference.SharedPrefUtils;
@@ -73,7 +70,6 @@ import com.mycity4kids.profile.MyMoneyRegistrationDialogFragment;
 import com.mycity4kids.profile.UserProfileActivity;
 import com.mycity4kids.retrofitAPIsInterfaces.ArticleDraftAPI;
 import com.mycity4kids.retrofitAPIsInterfaces.BloggerDashboardAPI;
-import com.mycity4kids.retrofitAPIsInterfaces.TopicsCategoryAPI;
 import com.mycity4kids.retrofitAPIsInterfaces.VlogsListingAndDetailsAPI;
 import com.mycity4kids.ui.ContentCommentReplyNotificationActivity;
 import com.mycity4kids.ui.GroupMembershipStatus;
@@ -93,15 +89,12 @@ import com.mycity4kids.ui.rewards.activity.RewardsContainerActivity;
 import com.mycity4kids.ui.rewards.activity.RewardsShareReferralCodeActivity;
 import com.mycity4kids.ui.videochallengenewui.activity.NewVideoChallengeActivity;
 import com.mycity4kids.utils.AppUtils;
-import com.mycity4kids.utils.ArrayAdapterFactory;
 import com.mycity4kids.utils.MixPanelUtils;
 import com.mycity4kids.utils.PermissionUtil;
 import com.mycity4kids.utils.StringUtils;
 import com.mycity4kids.videotrimmer.utils.FileUtils;
 import com.mycity4kids.vlogs.VideoCategoryAndChallengeSelectionActivity;
 import com.squareup.picasso.Picasso;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -129,11 +122,6 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
     private static String[] PERMISSIONS_STORAGE_CAMERA = {Manifest.permission.READ_EXTERNAL_STORAGE,
             Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.CAMERA};
     private FirebaseRemoteConfig firebaseRemoteConfig = FirebaseRemoteConfig.getInstance();
-    private int challengeCount;
-    private String shortStoryChallengesList;
-    private String deepLinkDisplayName;
-    private String deepLinkImageUrl;
-    private ArrayList<Topics> shortStoriesTopicList;
     public boolean filter = false;
     private Tracker tracker;
     private String mainToolbarTitle = "";
@@ -1129,14 +1117,8 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
             if (StringUtils.isNullOrEmpty(notificationExtras.getString("categoryId"))) {
                 return;
             }
-            findValues(notificationExtras.getString("categoryId"));
             Intent intent1 = new Intent(this, ShortStoryChallengeDetailActivity.class);
-            intent1.putExtra("Display_Name", deepLinkDisplayName);
-            intent1.putExtra("challenge", shortStoryChallengesList);
-            intent1.putExtra("position", 0);
-            intent1.putExtra("topics", shortStoriesTopicList.get(0).getDisplay_name());
-            intent1.putExtra("parentId", shortStoriesTopicList.get(0).getId());
-            intent1.putExtra("StringUrl", deepLinkImageUrl);
+            intent1.putExtra("challenge", notificationExtras.getString("categoryId"));
             startActivity(intent1);
         } else if (AppConstants.NOTIFICATION_TYPE_GROUP_LISTING.equalsIgnoreCase(notificationType)) {
             pushEvent("group_listing");
@@ -1181,191 +1163,6 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
                 SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId(),
                 "DashboardActivity");
     }
-
-    private void findValues(String deepLinkChallengeId) {
-        try {
-            if (shortStoriesTopicList != null && shortStoriesTopicList.size() != 0) {
-                categoryCount = shortStoriesTopicList.get(0).getChild().size();
-                for (int j = 0; j < categoryCount; j++) {
-                    if (shortStoriesTopicList.get(0).getChild().get(j).getId()
-                            .equals(AppConstants.SHORT_STORY_CHALLENGE_ID)) {
-                        challengeCount = shortStoriesTopicList.get(0).getChild().get(j)
-                                .getChild().size();
-                        for (int k = 0; k < challengeCount; k++) {
-                            if (deepLinkChallengeId
-                                    .equals(shortStoriesTopicList.get(0).getChild().get(j)
-                                            .getChild().get(k).getId())) {
-                                if (shortStoriesTopicList.get(0).getChild().get(j).getChild().get(k)
-                                        .getExtraData() != null
-                                        && shortStoriesTopicList.get(0).getChild().get(j).getChild()
-                                        .get(k).getExtraData().size() != 0) {
-                                    shortStoryChallengesList = shortStoriesTopicList.get(0)
-                                            .getChild().get(j).getChild().get(k).getId();
-                                    deepLinkDisplayName = shortStoriesTopicList.get(0).getChild()
-                                            .get(j).getChild().get(k).getDisplay_name();
-                                    deepLinkImageUrl = shortStoriesTopicList.get(0).getChild()
-                                            .get(j).getChild().get(k).getExtraData().get(0)
-                                            .getChallenge().getImageUrl();
-                                    break;
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-            if (shortStoriesTopicList == null || shortStoriesTopicList.size() == 0) {
-                FileInputStream fileInputStream = BaseApplication.getAppContext()
-                        .openFileInput(AppConstants.CATEGORIES_JSON_FILE);
-                String fileContent = AppUtils.convertStreamToString(fileInputStream);
-                Gson gson = new GsonBuilder().registerTypeAdapterFactory(new ArrayAdapterFactory())
-                        .create();
-                res = gson.fromJson(fileContent, TopicsResponse.class);
-                shortStoriesTopicList = new ArrayList<Topics>();
-                for (int i = 0; i < res.getData().size(); i++) {
-                    if (AppConstants.SHORT_STORY_CATEGORYID.equals(res.getData().get(i).getId())) {
-                        shortStoriesTopicList.add(res.getData().get(i));
-                    }
-                }
-                categoryCount = shortStoriesTopicList.get(0).getChild().size();
-                for (int j = 0; j < categoryCount; j++) {
-                    if (shortStoriesTopicList.get(0).getChild().get(j).getId()
-                            .equals(AppConstants.SHORT_STORY_CHALLENGE_ID)) {
-                        challengeCount = shortStoriesTopicList.get(0).getChild().get(j)
-                                .getChild().size();
-                        for (int k = 0; k < challengeCount; k++) {
-                            if (deepLinkChallengeId
-                                    .equals(shortStoriesTopicList.get(0).getChild().get(j)
-                                            .getChild().get(k).getId())) {
-                                if (shortStoriesTopicList.get(0).getChild().get(j).getChild().get(k)
-                                        .getExtraData() != null
-                                        && shortStoriesTopicList.get(0).getChild().get(j).getChild()
-                                        .get(k).getExtraData().size() != 0) {
-                                    shortStoryChallengesList = shortStoriesTopicList.get(0)
-                                            .getChild().get(j).getChild().get(k).getId();
-                                    deepLinkDisplayName = shortStoriesTopicList.get(0).getChild()
-                                            .get(j).getChild().get(k).getDisplay_name();
-                                    deepLinkImageUrl = shortStoriesTopicList.get(0).getChild()
-                                            .get(j).getChild().get(k).getExtraData().get(0)
-                                            .getChallenge().getImageUrl();
-                                    break;
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-        } catch (FileNotFoundException e) {
-            FirebaseCrashlytics.getInstance().recordException(e);
-            Log.d("FileNotFoundException", Log.getStackTraceString(e));
-            Retrofit retro = BaseApplication.getInstance().getRetrofit();
-            final TopicsCategoryAPI topicsApi = retro.create(TopicsCategoryAPI.class);
-            Call<ResponseBody> caller = topicsApi.downloadTopicsJSON();
-            caller.enqueue(new Callback<ResponseBody>() {
-                @Override
-                public void onResponse(Call<ResponseBody> call,
-                        retrofit2.Response<ResponseBody> response) {
-                    AppUtils.writeResponseBodyToDisk(BaseApplication.getAppContext(),
-                            AppConstants.CATEGORIES_JSON_FILE, response.body());
-                    try {
-                        FileInputStream fileInputStream = BaseApplication.getAppContext()
-                                .openFileInput(AppConstants.CATEGORIES_JSON_FILE);
-                        String fileContent = AppUtils.convertStreamToString(fileInputStream);
-                        Gson gson = new GsonBuilder()
-                                .registerTypeAdapterFactory(new ArrayAdapterFactory()).create();
-                        res = gson.fromJson(fileContent, TopicsResponse.class);
-                        shortStoriesTopicList = new ArrayList<Topics>();
-                        for (int i = 0; i < res.getData().size(); i++) {
-                            if (AppConstants.SHORT_STORY_CATEGORYID
-                                    .equals(res.getData().get(i).getId())) {
-                                shortStoriesTopicList.add(res.getData().get(i));
-                            }
-                        }
-                        categoryCount = shortStoriesTopicList.get(0).getChild().size();
-                        for (int j = 0; j < categoryCount; j++) {
-                            if (shortStoriesTopicList.get(0).getChild().get(j).getId()
-                                    .equals(AppConstants.SHORT_STORY_CHALLENGE_ID)) {
-                                challengeCount = shortStoriesTopicList.get(0).getChild().get(j)
-                                        .getChild().size();
-                                for (int k = 0; k < challengeCount; k++) {
-                                    if (deepLinkChallengeId
-                                            .equals(shortStoriesTopicList.get(0).getChild().get(j)
-                                                    .getChild().get(k).getId())) {
-                                        if (shortStoriesTopicList.get(0).getChild().get(j)
-                                                .getChild().get(k).getExtraData() != null
-                                                && shortStoriesTopicList.get(0).getChild().get(j)
-                                                .getChild().get(k).getExtraData().size()
-                                                != 0) {
-                                            shortStoryChallengesList = shortStoriesTopicList.get(0)
-                                                    .getChild().get(j).getChild().get(k).getId();
-                                            deepLinkDisplayName = shortStoriesTopicList.get(0)
-                                                    .getChild().get(j).getChild().get(k)
-                                                    .getDisplay_name();
-                                            deepLinkImageUrl = shortStoriesTopicList.get(0)
-                                                    .getChild().get(j).getChild().get(k)
-                                                    .getExtraData().get(0).getChallenge()
-                                                    .getImageUrl();
-                                            break;
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                    } catch (FileNotFoundException e) {
-                        FirebaseCrashlytics.getInstance().recordException(e);
-                        Log.d("FileNotFoundException", Log.getStackTraceString(e));
-                    } catch (Exception e) {
-                        FirebaseCrashlytics.getInstance().recordException(e);
-                        Log.d("MC4KException", Log.getStackTraceString(e));
-                    }
-                }
-
-                @Override
-                public void onFailure(Call<ResponseBody> call, Throwable t) {
-                    FirebaseCrashlytics.getInstance().recordException(t);
-                    apiExceptions(t);
-                    Log.d("MC4KException", Log.getStackTraceString(t));
-                }
-            });
-        } catch (Exception e) {
-            FirebaseCrashlytics.getInstance().recordException(e);
-            Log.d("MC4KException", Log.getStackTraceString(e));
-        }
-    }
-
-    Callback<ShortStoryDetailResult> ssDetailResponseCallback = new Callback<ShortStoryDetailResult>() {
-        @Override
-        public void onResponse(Call<ShortStoryDetailResult> call,
-                retrofit2.Response<ShortStoryDetailResult> response) {
-            removeProgressDialog();
-            if (response.body() == null) {
-                return;
-            }
-            try {
-                ShortStoryDetailResult responseData = response.body();
-                Intent intent = new Intent(DashboardActivity.this, AddShortStoryActivity.class);
-                intent.putExtra("from", "publishedList");
-                intent.putExtra("title", responseData.getTitle());
-                intent.putExtra("body", responseData.getBody());
-                intent.putExtra("articleId", responseData.getId());
-                intent.putExtra("tag", new Gson().toJson(responseData.getTags()));
-                intent.putExtra("cities", new Gson().toJson(responseData.getCities()));
-                startActivity(intent);
-            } catch (Exception e) {
-                removeProgressDialog();
-                FirebaseCrashlytics.getInstance().recordException(e);
-                Log.d("MC4kException", Log.getStackTraceString(e));
-            }
-
-        }
-
-        @Override
-        public void onFailure(Call<ShortStoryDetailResult> call, Throwable t) {
-            removeProgressDialog();
-            FirebaseCrashlytics.getInstance().recordException(t);
-            apiExceptions(t);
-            Log.d("MC4kException", Log.getStackTraceString(t));
-        }
-    };
 
     @Override
     protected void onDestroy() {

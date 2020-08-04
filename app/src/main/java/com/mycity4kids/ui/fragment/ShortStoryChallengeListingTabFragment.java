@@ -70,12 +70,7 @@ public class ShortStoryChallengeListingTabFragment extends BaseFragment implemen
                 case R.id.mainView:
                 case R.id.getStartedTextView:
                     Intent intent = new Intent(getContext(), ShortStoryChallengeDetailActivity.class);
-                    intent.putExtra("Display_Name", displayName);
                     intent.putExtra("challenge", challengeId);
-                    intent.putExtra("position", position);
-                    intent.putExtra("topics", articledatamodal.getParentName());
-                    intent.putExtra("parentId", articledatamodal.getParentId());
-                    intent.putExtra("StringUrl", activeImageUrl);
                     startActivity(intent);
                 default:
                     break;

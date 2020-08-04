@@ -1,6 +1,5 @@
 package com.mycity4kids.ui.adapter;
 
-import android.content.Context;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -23,31 +22,27 @@ import java.util.ArrayList;
 public class ChallengeListingRecycleAdapter extends
         RecyclerView.Adapter<ChallengeListingRecycleAdapter.ChallengeListingViewHolder> {
 
-    private Context mContext;
-    private LayoutInflater mInflator;
     ArrayList<ArticleListingResult> articleDataModelsNew;
     private RecyclerViewClickListener recyclerViewClickListener;
-    private String selected_Name;
-    private String ActiveUrl;
+    private String challengeName;
+    private String challengeImageUrl;
 
-    public ChallengeListingRecycleAdapter(RecyclerViewClickListener recyclerViewClickListener, Context mContext,
-            int pos, String selected_Name, String ActiveUrl) {
-        mInflator = (LayoutInflater) mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        this.selected_Name = selected_Name;
-        this.mContext = mContext;
+    public ChallengeListingRecycleAdapter(RecyclerViewClickListener recyclerViewClickListener, String challengeName,
+            String challengeImageUrl) {
+        this.challengeName = challengeName;
         this.recyclerViewClickListener = recyclerViewClickListener;
-        this.ActiveUrl = ActiveUrl;
+        this.challengeImageUrl = challengeImageUrl;
     }
 
-    public void setListData(ArrayList<ArticleListingResult> mParentingLists) {
-        articleDataModelsNew = mParentingLists;
+    public void setListData(ArrayList<ArticleListingResult> articleListingResults) {
+        articleDataModelsNew = articleListingResults;
     }
 
     @Override
     public ChallengeListingViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        ChallengeListingViewHolder viewHolder = null;
-        View v0 = mInflator.inflate(R.layout.challenge_listing_adapter, parent, false);
-        viewHolder = new ChallengeListingViewHolder(v0, recyclerViewClickListener);
+        ChallengeListingViewHolder viewHolder;
+        View v0 = LayoutInflater.from(parent.getContext()).inflate(R.layout.challenge_listing_adapter, parent, false);
+        viewHolder = new ChallengeListingViewHolder(v0);
         return viewHolder;
     }
 
@@ -56,17 +51,19 @@ public class ChallengeListingRecycleAdapter extends
         if (position == 0) {
             holder.rootview.setVisibility(View.GONE);
             holder.challengeHeaderText.setVisibility(View.VISIBLE);
-            if (ActiveUrl != null) {
+            if (challengeImageUrl != null) {
                 holder.challengeNameImage.setVisibility(View.VISIBLE);
                 try {
-                    Glide.with(mContext).load(ActiveUrl).into(holder.challengeNameImage);
+                    Glide.with(holder.challengeNameImage.getContext()).load(challengeImageUrl)
+                            .into(holder.challengeNameImage);
                 } catch (Exception e) {
                     holder.challengeNameImage
-                            .setImageDrawable(ContextCompat.getDrawable(mContext, R.drawable.default_article));
+                            .setImageDrawable(ContextCompat
+                                    .getDrawable(holder.challengeNameImage.getContext(), R.drawable.default_article));
                 }
             } else {
-                holder.ChallengeNameText.setVisibility(View.VISIBLE);
-                holder.ChallengeNameText.setText(selected_Name);
+                holder.challengeNameTextView.setVisibility(View.VISIBLE);
+                holder.challengeNameTextView.setText(challengeName);
             }
         } else {
             holder.rootview.setVisibility(View.VISIBLE);
@@ -77,9 +74,11 @@ public class ChallengeListingRecycleAdapter extends
 
     private void viewListingResult(ChallengeListingViewHolder holder, int position) {
         if (articleDataModelsNew.get(position).getIsfollowing().equals("1")) {
-            holder.followAuthorTextView.setText(mContext.getResources().getString(R.string.ad_following_author));
+            holder.followAuthorTextView.setText(
+                    holder.followAuthorTextView.getContext().getResources().getString(R.string.ad_following_author));
         } else {
-            holder.followAuthorTextView.setText(mContext.getResources().getString(R.string.ad_follow_author));
+            holder.followAuthorTextView.setText(
+                    holder.followAuthorTextView.getContext().getResources().getString(R.string.ad_follow_author));
         }
         try {
             Picasso.get().load(articleDataModelsNew.get(position).getStoryImage().trim())
@@ -107,9 +106,11 @@ public class ChallengeListingRecycleAdapter extends
             holder.storyRecommendationCountTextView.setText(articleDataModelsNew.get(position).getLikesCount());
         }
         if (articleDataModelsNew.get(position).isLiked()) {
-            holder.likeImageView.setImageDrawable(ContextCompat.getDrawable(mContext, R.drawable.ic_recommended));
+            holder.likeImageView.setImageDrawable(
+                    ContextCompat.getDrawable(holder.likeImageView.getContext(), R.drawable.ic_recommended));
         } else {
-            holder.likeImageView.setImageDrawable(ContextCompat.getDrawable(mContext, R.drawable.ic_ss_like));
+            holder.likeImageView.setImageDrawable(
+                    ContextCompat.getDrawable(holder.likeImageView.getContext(), R.drawable.ic_ss_like));
         }
         holder.authorNameTextView.setText(articleDataModelsNew.get(position).getUserName());
     }
@@ -123,44 +124,51 @@ public class ChallengeListingRecycleAdapter extends
 
         private RelativeLayout rootview;
         private RelativeLayout challengeHeaderText;
-        private TextView ChallengeNameText;
+        private TextView challengeNameTextView;
         TextView authorNameTextView;
         TextView storyCommentCountTextView;
-        LinearLayout storyRecommendationContainer, storyCommentContainer;
+        LinearLayout storyRecommendationContainer;
+        LinearLayout storyCommentContainer;
         TextView storyRecommendationCountTextView;
-        ImageView storyImage, likeImageView;
-        ImageView facebookShareImageView, whatsappShareImageView, instagramShareImageView, genericShareImageView;
-        TextView submitChallenegLayout, followAuthorTextView;
-        ImageView challengeNameImage, menuItem;
+        ImageView storyImage;
+        ImageView likeImageView;
+        ImageView facebookShareImageView;
+        ImageView whatsappShareImageView;
+        ImageView instagramShareImageView;
+        ImageView genericShareImageView;
+        TextView submitChallenegLayout;
+        TextView followAuthorTextView;
+        ImageView challengeNameImage;
+        ImageView menuItem;
         StoryShareCardWidget storyShareCardWidget;
         ImageView shareStoryImageView;
         TextView storyAuthorTextView;
         ImageView logoImageView;
 
 
-        ChallengeListingViewHolder(View itemView, RecyclerViewClickListener recyclerViewClickListener) {
+        ChallengeListingViewHolder(View itemView) {
             super(itemView);
-            challengeNameImage = (ImageView) itemView.findViewById(R.id.ChallengeNameImage);
-            challengeHeaderText = (RelativeLayout) itemView.findViewById(R.id.challenge_header_text);
-            ChallengeNameText = (TextView) itemView.findViewById(R.id.ChallengeNameText);
-            authorNameTextView = (TextView) itemView.findViewById(R.id.authorNameTextView);
-            storyRecommendationContainer = (LinearLayout) itemView.findViewById(R.id.storyRecommendationContainer);
-            storyCommentContainer = (LinearLayout) itemView.findViewById(R.id.storyCommentContainer);
-            storyCommentCountTextView = (TextView) itemView.findViewById(R.id.storyCommentCountTextView);
-            storyRecommendationCountTextView = (TextView) itemView.findViewById(R.id.storyRecommendationCountTextView);
-            storyImage = (ImageView) itemView.findViewById(R.id.storyImageView1);
-            likeImageView = (ImageView) itemView.findViewById(R.id.likeImageView);
-            facebookShareImageView = (ImageView) itemView.findViewById(R.id.facebookShareImageView);
-            whatsappShareImageView = (ImageView) itemView.findViewById(R.id.whatsappShareImageView);
-            instagramShareImageView = (ImageView) itemView.findViewById(R.id.instagramShareImageView);
-            genericShareImageView = (ImageView) itemView.findViewById(R.id.genericShareImageView);
-            rootview = (RelativeLayout) itemView.findViewById(R.id.rootView);
-            submitChallenegLayout = (TextView) itemView.findViewById(R.id.submit_story_text);
+            challengeNameImage = itemView.findViewById(R.id.ChallengeNameImage);
+            challengeHeaderText = itemView.findViewById(R.id.challenge_header_text);
+            challengeNameTextView = itemView.findViewById(R.id.ChallengeNameText);
+            authorNameTextView = itemView.findViewById(R.id.authorNameTextView);
+            storyRecommendationContainer = itemView.findViewById(R.id.storyRecommendationContainer);
+            storyCommentContainer = itemView.findViewById(R.id.storyCommentContainer);
+            storyCommentCountTextView = itemView.findViewById(R.id.storyCommentCountTextView);
+            storyRecommendationCountTextView = itemView.findViewById(R.id.storyRecommendationCountTextView);
+            storyImage = itemView.findViewById(R.id.storyImageView1);
+            likeImageView = itemView.findViewById(R.id.likeImageView);
+            facebookShareImageView = itemView.findViewById(R.id.facebookShareImageView);
+            whatsappShareImageView = itemView.findViewById(R.id.whatsappShareImageView);
+            instagramShareImageView = itemView.findViewById(R.id.instagramShareImageView);
+            genericShareImageView = itemView.findViewById(R.id.genericShareImageView);
+            rootview = itemView.findViewById(R.id.rootView);
+            submitChallenegLayout = itemView.findViewById(R.id.submit_story_text);
             menuItem = itemView.findViewById(R.id.menuItem);
             followAuthorTextView = itemView.findViewById(R.id.followAuthorTextView);
-            storyShareCardWidget = (StoryShareCardWidget) itemView.findViewById(R.id.storyShareCardWidget);
-            shareStoryImageView = (ImageView) storyShareCardWidget.findViewById(R.id.storyImageView);
-            storyAuthorTextView = (TextView) storyShareCardWidget.findViewById(R.id.storyAuthorTextView);
+            storyShareCardWidget = itemView.findViewById(R.id.storyShareCardWidget);
+            shareStoryImageView = storyShareCardWidget.findViewById(R.id.storyImageView);
+            storyAuthorTextView = storyShareCardWidget.findViewById(R.id.storyAuthorTextView);
             logoImageView = storyShareCardWidget.findViewById(R.id.logoImageView);
             whatsappShareImageView.setTag(itemView);
             submitChallenegLayout.setOnClickListener(this);
@@ -180,7 +188,7 @@ public class ChallengeListingRecycleAdapter extends
 
         @Override
         public void onClick(View view) {
-            recyclerViewClickListener.onClick(view, getAdapterPosition() - 1, ActiveUrl);
+            recyclerViewClickListener.onClick(view, getAdapterPosition() - 1, challengeImageUrl);
         }
     }
 
