@@ -55,6 +55,7 @@ import com.mycity4kids.base.BaseFragment;
 import com.mycity4kids.constants.AppConstants;
 import com.mycity4kids.constants.Constants;
 import com.mycity4kids.gtmutils.Utils;
+import com.mycity4kids.models.BlockUserModel;
 import com.mycity4kids.models.TopCommentData;
 import com.mycity4kids.models.Topics;
 import com.mycity4kids.models.TopicsResponse;
@@ -4199,6 +4200,61 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
         FragmentManager fm = getChildFragmentManager();
         reportContentDialogFragment.show(fm, "Report Content");
     }
+
+    @Override
+    public void onBlockUser(int position, String responseType) {
+        showProgressDialog("please wait");
+        Retrofit retrofit = BaseApplication.getInstance().getRetrofit();
+        ArticleDetailsAPI articleDetailsAPI = retrofit.create(ArticleDetailsAPI.class);
+        BlockUserModel blockUserModel = new BlockUserModel();
+        blockUserModel.setBlocked_user_id(commentsList.get(position).getUserId());
+        Call<ResponseBody> call = articleDetailsAPI.blockUserApi(blockUserModel);
+        call.enqueue(blockUserCallBack);
+    }
+
+    private Callback<ResponseBody> blockUserCallBack = new Callback<ResponseBody>() {
+        @Override
+        public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+            removeProgressDialog();
+            if (response.body() == null) {
+                NetworkErrorException nee = new NetworkErrorException(response.raw().toString());
+                FirebaseCrashlytics.getInstance().recordException(nee);
+                if (isAdded()) {
+                    ToastUtils.showToast(getActivity(), "Please try again");
+                }
+                return;
+            }
+
+            try {
+                String resData = new String(response.body().bytes());
+                JSONObject jsonObject = new JSONObject(resData);
+                if (jsonObject.getInt("code") == 200 && jsonObject.getString("status").equals(Constants.SUCCESS)) {
+                    ToastUtils.showToast(getActivity(), jsonObject.getJSONObject("data").getString("msg").toString());
+                }
+
+
+            } catch (Exception t) {
+                removeProgressDialog();
+                if (isAdded()) {
+                    ToastUtils.showToast(getActivity(), "Please try again");
+                }
+                FirebaseCrashlytics.getInstance().recordException(t);
+                Log.d("MC4kException", Log.getStackTraceString(t));
+            }
+
+
+        }
+
+        @Override
+        public void onFailure(Call<ResponseBody> call, Throwable t) {
+            removeProgressDialog();
+            if (isAdded()) {
+                ToastUtils.showToast(getActivity(), "Please try again");
+            }
+            FirebaseCrashlytics.getInstance().recordException(t);
+            Log.d("MC4kException", Log.getStackTraceString(t));
+        }
+    };
 
     public void editComment(String content, String responseId, int position,
             Map<String, Mentions> mentions) {

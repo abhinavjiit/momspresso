@@ -7,6 +7,7 @@ import android.util.Log
 import android.view.View
 import android.widget.RelativeLayout
 import android.widget.TextView
+import android.widget.Toast
 import androidx.fragment.app.FragmentManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -18,6 +19,7 @@ import com.mycity4kids.base.BaseActivity
 import com.mycity4kids.constants.AppConstants
 import com.mycity4kids.constants.Constants
 import com.mycity4kids.gtmutils.Utils
+import com.mycity4kids.models.BlockUserModel
 import com.mycity4kids.models.TopCommentData
 import com.mycity4kids.models.request.AddEditCommentOrReplyRequest
 import com.mycity4kids.models.response.CommentListData
@@ -40,11 +42,12 @@ import io.reactivex.Observer
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable
 import io.reactivex.schedulers.Schedulers
-import java.util.ArrayList
 import okhttp3.ResponseBody
+import org.json.JSONObject
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
+import java.util.ArrayList
 
 class ContentCommentReplyNotificationActivity : BaseActivity(),
     ArticleCommentsRecyclerAdapter.RecyclerViewClickListener,
@@ -454,6 +457,53 @@ class ContentCommentReplyNotificationActivity : BaseActivity(),
             articleDetailsAPI.deleteCommentOrReply(commentList?.get(position)?.id)
         call.enqueue(deleteCommentResponseListener)
     }
+
+    override fun onBlockUser(position: Int, responseType: String?) {
+        showProgressDialog("please wait")
+        val ret = BaseApplication.getInstance().retrofit
+        val articleDetailsAPI = ret.create(ArticleDetailsAPI::class.java)
+        val blockUserModel = BlockUserModel(blocked_user_id = commentList?.get(position)?.userId)
+        val call = articleDetailsAPI.blockUserApi(blockUserModel)
+        call.enqueue(blockUserCallBack)
+
+    }
+
+    private val blockUserCallBack = object : Callback<ResponseBody> {
+        override fun onFailure(call: Call<ResponseBody>, t: Throwable) {
+            removeProgressDialog()
+            showToast("something went wrong")
+            FirebaseCrashlytics.getInstance().recordException(t)
+            Log.d("MC4kException", Log.getStackTraceString(t))
+        }
+
+        override fun onResponse(call: Call<ResponseBody>, response: Response<ResponseBody>) {
+            if (response.body() == null) {
+                return
+            }
+            try {
+                val resData = String(response.body()?.bytes()!!)
+                val jsonObject = JSONObject(resData)
+                if (jsonObject.get("Code") == 200 && jsonObject.get("status") == Constants.SUCCESS) {
+
+                    Toast.makeText(
+                        this@ContentCommentReplyNotificationActivity,
+                        jsonObject.getJSONObject("data").get("msg").toString(),
+                        Toast.LENGTH_SHORT
+                    ).show()
+                }
+
+
+            } catch (t: Exception) {
+                removeProgressDialog()
+                showToast("something went wrong")
+                FirebaseCrashlytics.getInstance().recordException(t)
+                Log.d("MC4kException", Log.getStackTraceString(t))
+            }
+
+        }
+
+    }
+
 
     private val deleteCommentResponseListener: Callback<CommentListResponse> =
         object : Callback<CommentListResponse> {

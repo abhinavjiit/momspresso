@@ -1,5 +1,6 @@
 package com.mycity4kids.retrofitAPIsInterfaces;
 
+import com.mycity4kids.models.BlockUserModel;
 import com.mycity4kids.models.TopCommentData;
 import com.mycity4kids.models.request.AddCommentRequest;
 import com.mycity4kids.models.request.AddEditCommentOrReplyRequest;
@@ -157,4 +158,8 @@ public interface ArticleDetailsAPI {
     //https://api.momspresso.com/v1/comments/enable-top-comment/
     @POST("/v1/comments/enable-top-comment/")
     Observable<ResponseBody> markedTopComment(@Body TopCommentData commentListData);
+
+
+    @POST("/v1/blocked-user/")
+    Call<ResponseBody> blockUserApi(@Body BlockUserModel blockUserModel);
 }

@@ -42,10 +42,12 @@ public class CommentOptionsDialogFragment extends DialogFragment implements OnCl
         TextView deleteCommentTextView = (TextView) rootView.findViewById(R.id.deleteCommentTextView);
         TextView editCommentTextView = (TextView) rootView.findViewById(R.id.editCommentTextView);
         TextView reportCommentTextView = (TextView) rootView.findViewById(R.id.reportCommentTextView);
+        TextView blockUserTextView = (TextView) rootView.findViewById(R.id.blockUserTextView);
 
         deleteCommentTextView.setOnClickListener(this);
         editCommentTextView.setOnClickListener(this);
         reportCommentTextView.setOnClickListener(this);
+        blockUserTextView.setOnClickListener(this);
 
         if (AppUtils.isContentCreator(blogWriterId)) {
             if (SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId().equals(authorId)) {
@@ -115,6 +117,19 @@ public class CommentOptionsDialogFragment extends DialogFragment implements OnCl
                     dismiss();
                 }
             }
+            case R.id.blockUserTextView: {
+                if (getActivity() != null && getActivity() instanceof ContentCommentReplyNotificationActivity) {
+                    ICommentOptionAction commentOptionAction = (ICommentOptionAction) getActivity();
+                    commentOptionAction.onBlockUser(position, responseType);
+                    dismiss();
+                } else {
+                    ICommentOptionAction commentOptionAction = (ICommentOptionAction) getParentFragment();
+                    commentOptionAction.onBlockUser(position, responseType);
+                    dismiss();
+                }
+
+
+            }
             break;
             default:
                 break;
@@ -128,5 +143,7 @@ public class CommentOptionsDialogFragment extends DialogFragment implements OnCl
         void onResponseEdit(int position, String responseType);
 
         void onResponseReport(int position, String responseType);
+
+        void onBlockUser(int position, String responseType);
     }
 }
