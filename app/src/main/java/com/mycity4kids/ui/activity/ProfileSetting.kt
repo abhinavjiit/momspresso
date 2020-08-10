@@ -57,6 +57,7 @@ class ProfileSetting : BaseActivity(), GoogleApiClient.OnConnectionFailedListene
     private var readArticlesTextView: TextView? = null
     private var isRewardAdded: String? = null
     private var toolbar: Toolbar? = null
+    private lateinit var securitySettingTextView: TextView
 
     internal var getTotalPayout: Callback<TotalPayoutResponse> =
         object : Callback<TotalPayoutResponse> {
@@ -114,6 +115,7 @@ class ProfileSetting : BaseActivity(), GoogleApiClient.OnConnectionFailedListene
         logout_layout = findViewById(R.id.logout_layout)
         activityTextView = findViewById(R.id.activityTextView)
         readArticlesTextView = findViewById(R.id.readArticlesTextView)
+        securitySettingTextView = findViewById(R.id.securitySettingTextView)
         setSupportActionBar(toolbar)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
         supportActionBar?.setDisplayShowHomeEnabled(true)
@@ -162,6 +164,7 @@ class ProfileSetting : BaseActivity(), GoogleApiClient.OnConnectionFailedListene
         activityTextView!!.setOnClickListener(this)
         readArticlesTextView!!.setOnClickListener(this)
         inviteContactTextView?.setOnClickListener(this)
+        securitySettingTextView.setOnClickListener(this)
     }
 
     override fun onClick(v: View) {
@@ -239,6 +242,10 @@ class ProfileSetting : BaseActivity(), GoogleApiClient.OnConnectionFailedListene
                     "Invite_Android",
                     "CTA_Invite_Phone_Contacts_S"
                 )
+            }
+            R.id.securitySettingTextView -> {
+                val intent = Intent(this@ProfileSetting, SecuritySettingActivity::class.java)
+                startActivity(intent)
             }
         }
     }

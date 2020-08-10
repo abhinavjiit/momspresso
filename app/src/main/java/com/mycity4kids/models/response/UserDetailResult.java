@@ -113,6 +113,8 @@ public class UserDetailResult implements Parcelable {
     private String isUserHandleUpdated;
     @SerializedName("requestMedium")
     private String requestMedium;
+    @SerializedName("isTaggable")
+    private String isTaggable = "0";
 
     protected UserDetailResult(Parcel in) {
         id = in.readString();
@@ -207,6 +209,13 @@ public class UserDetailResult implements Parcelable {
         this.longitude = longitude;
     }
 
+    public String getIsTaggable() {
+        return isTaggable;
+    }
+
+    public void setIsTaggable(String isTaggable) {
+        this.isTaggable = isTaggable;
+    }
 
     public String getPhoneNumber() {
         return phoneNumber;
@@ -632,6 +641,7 @@ public class UserDetailResult implements Parcelable {
     }
 
     public class SocialTokens {
+
         @SerializedName("fb")
         private SocialTokenDesc fb;
         @SerializedName("twitter")
@@ -664,6 +674,7 @@ public class UserDetailResult implements Parcelable {
         }
 
         public class SocialTokenDesc {
+
             @SerializedName("isExpired")
             private String isExpired;
             @SerializedName("token")

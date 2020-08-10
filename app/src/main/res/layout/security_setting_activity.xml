@@ -1,0 +1,167 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+  xmlns:app="http://schemas.android.com/apk/res-auto"
+  android:layout_width="match_parent"
+  android:layout_height="match_parent"
+  android:background="@color/white">
+
+  <androidx.appcompat.widget.Toolbar
+    android:id="@+id/toolbar"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/white"
+    android:minHeight="?attr/actionBarSize"
+    app:contentInsetEnd="0dp"
+    app:contentInsetLeft="0dp"
+    app:contentInsetRight="0dp"
+    app:contentInsetStart="0dp"
+    app:layout_constraintEnd_toEndOf="parent"
+    app:layout_constraintStart_toStartOf="parent"
+    app:layout_constraintTop_toTopOf="parent">
+
+    <RelativeLayout
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:background="@color/white">
+
+      <androidx.appcompat.widget.AppCompatImageView
+        android:id="@+id/backImageView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:padding="@dimen/space_10"
+        android:tint="@color/black"
+        app:srcCompat="@drawable/back_arroow" />
+
+      <com.mycity4kids.widget.CustomFontTextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
+        android:layout_toEndOf="@id/backImageView"
+        android:text="Security Settings"
+        android:textColor="@color/campaign_515151"
+        android:textSize="18sp"
+        app:fontName="Roboto-Bold.ttf" />
+    </RelativeLayout>
+
+
+  </androidx.appcompat.widget.Toolbar>
+
+
+  <View
+    android:id="@+id/divider1"
+    android:layout_width="match_parent"
+    android:layout_height="1dp"
+    android:background="#DADBDC"
+    app:layout_constraintEnd_toEndOf="parent"
+    app:layout_constraintStart_toStartOf="parent"
+    app:layout_constraintTop_toBottomOf="@id/toolbar" />
+
+  <androidx.constraintlayout.widget.ConstraintLayout
+    android:id="@+id/taggableContainer"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/white"
+    android:paddingStart="@dimen/space_16"
+    android:paddingTop="@dimen/space_16"
+    android:paddingEnd="@dimen/space_16"
+    android:paddingBottom="@dimen/space_16"
+    app:layout_constraintStart_toStartOf="parent"
+    app:layout_constraintTop_toBottomOf="@id/divider1">
+    <androidx.appcompat.widget.AppCompatImageView
+      android:id="@+id/taggableImageView"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      app:layout_constraintStart_toStartOf="parent"
+      app:layout_constraintTop_toTopOf="parent"
+      app:srcCompat="@drawable/ic_taggable" />
+
+    <com.mycity4kids.widget.CustomFontTextView
+      android:id="@+id/anyoneTagTextView"
+      android:layout_width="0dp"
+      android:layout_height="wrap_content"
+      android:layout_marginStart="@dimen/space_15"
+      android:paddingStart="0dp"
+      android:paddingEnd="@dimen/space_10"
+      android:text="Anyone can tag me"
+      android:textColor="#515151"
+      android:textSize="16sp"
+      app:fontName="Roboto-Medium.ttf"
+      app:layout_constraintEnd_toStartOf="@id/switchTextView"
+      app:layout_constraintStart_toEndOf="@id/taggableImageView"
+      app:layout_constraintTop_toTopOf="parent" />
+
+    <androidx.appcompat.widget.SwitchCompat
+      android:id="@+id/switchTextView"
+      android:layout_width="0dp"
+      android:layout_height="wrap_content"
+      android:thumb="@drawable/switch_button_thumb_selector"
+      app:layout_constraintEnd_toEndOf="parent"
+      app:layout_constraintTop_toTopOf="parent"
+      app:track="@drawable/switch_button_track_selector" />
+
+
+    <com.mycity4kids.widget.CustomFontTextView
+      android:layout_width="0dp"
+      android:layout_height="wrap_content"
+      android:layout_marginStart="@dimen/space_15"
+      android:paddingTop="@dimen/space_5"
+      android:paddingBottom="@dimen/space_5"
+      android:text="Allow/disallow anyone on Momspresso to tag you"
+      android:textColor="#9B9B9B"
+      android:textSize="12sp"
+      app:layout_constraintStart_toEndOf="@id/taggableImageView"
+      app:layout_constraintTop_toBottomOf="@id/anyoneTagTextView" />
+
+
+  </androidx.constraintlayout.widget.ConstraintLayout>
+
+  <View
+    android:id="@+id/divider2"
+    android:layout_width="match_parent"
+    android:layout_height="1dp"
+    android:layout_marginStart="@dimen/space_16"
+    android:layout_marginEnd="@dimen/space_16"
+    android:background="#DADBDC"
+    app:layout_constraintEnd_toEndOf="parent"
+    app:layout_constraintStart_toStartOf="parent"
+    app:layout_constraintTop_toBottomOf="@id/taggableContainer" />
+
+  <androidx.appcompat.widget.AppCompatImageView
+    android:id="@+id/blockUserImageView"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:paddingStart="@dimen/space_16"
+    android:paddingTop="@dimen/space_25"
+    android:paddingEnd="@dimen/space_16"
+    app:layout_constraintStart_toStartOf="parent"
+    app:layout_constraintTop_toBottomOf="@id/divider2"
+    app:srcCompat="@drawable/ic_block_user" />
+
+  <com.mycity4kids.widget.CustomFontTextView
+    android:id="@+id/blockUserTextView"
+    android:layout_width="0dp"
+    android:layout_height="wrap_content"
+    android:layout_marginStart="@dimen/space_15"
+    android:paddingTop="@dimen/space_25"
+    android:paddingBottom="@dimen/space_5"
+    android:text="Blocked Users"
+    android:textColor="@color/campaign_515151"
+    android:textSize="16sp"
+    app:fontName="Roboto-Medium.ttf"
+    app:layout_constraintEnd_toStartOf="@+id/blockUserRightArrowImageView"
+    app:layout_constraintStart_toEndOf="@id/blockUserImageView"
+    app:layout_constraintTop_toBottomOf="@id/divider2" />
+
+  <androidx.appcompat.widget.AppCompatImageView
+    android:id="@+id/blockUserRightArrowImageView"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:paddingStart="@dimen/space_16"
+    android:paddingTop="@dimen/space_25"
+    android:paddingEnd="@dimen/space_16"
+    app:layout_constraintEnd_toEndOf="parent"
+    app:layout_constraintTop_toBottomOf="@id/divider2"
+    app:srcCompat="@drawable/arrow_right" />
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>
