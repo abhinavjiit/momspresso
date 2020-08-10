@@ -58,6 +58,7 @@ public class CommentOptionsDialogFragment extends DialogFragment implements OnCl
                 deleteCommentTextView.setVisibility(View.VISIBLE);
                 editCommentTextView.setVisibility(View.GONE);
                 reportCommentTextView.setVisibility(View.VISIBLE);
+                blockUserTextView.setVisibility(View.VISIBLE);
             }
         } else {
             if (SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId().equals(authorId)) {

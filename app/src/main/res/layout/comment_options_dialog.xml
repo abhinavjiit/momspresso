@@ -16,7 +16,7 @@
     android:text="@string/groups.block_member"
     android:textColor="@color/spell_check.black"
     android:textSize="17sp"
-    android:visibility="visible"
+    android:visibility="gone"
     app:fontName="oswald.ttf" />
 
   <com.mycity4kids.widget.CustomFontTextView

@@ -527,6 +527,12 @@
     <activity
       android:name=".ui.activity.NotificationSettingActivity"
       android:screenOrientation="portrait" />
+    <activity
+      android:name=".ui.activity.BlockUnBlockUserActivity"
+      android:screenOrientation="portrait" />
+    <activity
+      android:name=".ui.activity.SecuritySettingActivity"
+      android:screenOrientation="portrait" />
 
     <service android:name=".sync.PushTokenService" />
     <service android:name=".sync.FetchAdvertisementInfoService" />

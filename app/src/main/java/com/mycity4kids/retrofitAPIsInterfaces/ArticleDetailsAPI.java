@@ -2,6 +2,7 @@ package com.mycity4kids.retrofitAPIsInterfaces;
 
 import com.mycity4kids.models.BlockUserModel;
 import com.mycity4kids.models.TopCommentData;
+import com.mycity4kids.models.UnBlockUserModel;
 import com.mycity4kids.models.request.AddCommentRequest;
 import com.mycity4kids.models.request.AddEditCommentOrReplyRequest;
 import com.mycity4kids.models.request.ArticleDetailRequest;
@@ -162,4 +163,7 @@ public interface ArticleDetailsAPI {
 
     @POST("/v1/blocked-user/")
     Call<ResponseBody> blockUserApi(@Body BlockUserModel blockUserModel);
+
+    @POST("/v1/blocked-user/")
+    Call<ResponseBody> unBlockUserApi(@Body UnBlockUserModel blockUserModel);
 }

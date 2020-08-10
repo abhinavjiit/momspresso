@@ -58,4 +58,9 @@ public interface FollowAPI {
 
     @POST("/v1/users/userfrdspoc/notification")
     Call<ResponseBody> inviteFBFriends(@Body FacebookInviteFriendsRequest body);
+
+    @GET("/v1/blocked-user/user/{userId}")
+    Call<FollowersFollowingResponse> getBlockUserList(@Path("userId") String userId,
+            @Query("start") int start,
+            @Query("limit") int limit);
 }

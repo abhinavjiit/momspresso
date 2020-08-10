@@ -2,11 +2,11 @@ package com.mycity4kids.models
 
 import com.google.gson.annotations.SerializedName
 
-data class BlockUserModel(
+data class UnBlockUserModel(
     @SerializedName("blocked_user_id")
     var blocked_user_id: String? = null,
     @SerializedName("blocking_area")
-    var blocking_area: IntArray = intArrayOf(1),
+    val blocking_area: Array<Int> = emptyArray(),
     @SerializedName("reason")
     var reason: String = ""
 ) {
@@ -14,7 +14,7 @@ data class BlockUserModel(
         if (this === other) return true
         if (javaClass != other?.javaClass) return false
 
-        other as BlockUserModel
+        other as UnBlockUserModel
 
         if (blocked_user_id != other.blocked_user_id) return false
         if (!blocking_area.contentEquals(other.blocking_area)) return false
@@ -30,4 +30,7 @@ data class BlockUserModel(
         return result
     }
 }
+
+
+
 

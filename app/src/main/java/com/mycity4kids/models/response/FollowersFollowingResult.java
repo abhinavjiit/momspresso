@@ -21,6 +21,15 @@ public class FollowersFollowingResult {
     private ProfilePic profilePicUrl;
     @SerializedName("followBack")
     private boolean isFollowed;
+    private boolean isBLocked = true;
+
+    public boolean isBLocked() {
+        return isBLocked;
+    }
+
+    public void setBLocked(boolean BLocked) {
+        isBLocked = BLocked;
+    }
 
     public String getUserId() {
         return userId;
