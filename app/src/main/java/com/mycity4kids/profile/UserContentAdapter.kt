@@ -35,11 +35,11 @@ import com.mycity4kids.utils.ImageKitUtils
 import com.mycity4kids.utils.StringUtils
 import com.mycity4kids.widget.StoryShareCardWidget
 import com.squareup.picasso.Picasso
-import java.util.Locale
 import kotlinx.android.synthetic.main.mom_vlog_follow_following_carousal.view.*
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
+import java.util.Locale
 
 /**
  * Created by hemant on 19/7/17.
@@ -113,7 +113,8 @@ class UserContentAdapter(
                 mixFeedList?.get(position),
                 position,
                 holder,
-                isPrivate
+                isPrivate,
+                holder.trophyImageView
             )
             is VideosViewHolder -> addVideoItem(
                 holder.winnerVlogImageView,
@@ -423,8 +424,10 @@ class UserContentAdapter(
         internal var watchLaterImageView: ImageView
         internal var editArticleTextView: TextView
         internal var menuItemImageView: ImageView
+        internal var trophyImageView: ImageView
 
         init {
+            trophyImageView = view.findViewById(R.id.trophyImageView)
             txvArticleTitle = view.findViewById<View>(R.id.txvArticleTitle) as TextView
             txvAuthorName = view.findViewById<View>(R.id.txvAuthorName) as TextView
             articleImageView = view.findViewById<View>(R.id.articleImageView) as ImageView
@@ -638,7 +641,8 @@ class UserContentAdapter(
         data: MixFeedResult?,
         position: Int,
         holder: FeedViewHolder,
-        private: Boolean
+        private: Boolean,
+        trophyImageView: ImageView
     ) {
         try {
             articleTitleTV.text = data?.title
@@ -717,6 +721,21 @@ class UserContentAdapter(
                     holder.bookmarkArticleImageView.setImageResource(R.drawable.ic_bookmarked)
                 }
             }
+            when {
+                data?.winner == 1 -> {
+                    trophyImageView.visibility=View.VISIBLE
+                    trophyImageView.setImageResource(R.drawable.ic_trophy)
+                }
+                data?.is_gold!! -> {
+                    trophyImageView.visibility=View.VISIBLE
+                    trophyImageView.setImageResource(R.drawable.ic_star_yellow)
+                }
+                else -> {
+                    trophyImageView.visibility = View.GONE
+                }
+            }
+
+
         } catch (e: Exception) {
             FirebaseCrashlytics.getInstance().recordException(e)
             Log.d("MC4kException", Log.getStackTraceString(e))
