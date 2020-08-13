@@ -21,6 +21,7 @@ import com.mycity4kids.retrofitAPIsInterfaces.SearchArticlesAuthorsAPI;
 import com.mycity4kids.ui.activity.ArticleDetailsContainerActivity;
 import com.mycity4kids.ui.activity.SearchAllActivity;
 import com.mycity4kids.ui.activity.ShortStoryContainerActivity;
+import com.mycity4kids.ui.activity.collection.UserCollectionItemListActivity;
 import com.mycity4kids.ui.adapter.SearchArticlesListingAdapter;
 import com.mycity4kids.utils.ConnectivityUtils;
 import com.mycity4kids.utils.StringUtils;
@@ -143,7 +144,7 @@ public class SearchAllArticlesTabFragment extends BaseFragment implements
         SearchArticlesAuthorsAPI searchArticlesAuthorsApi = retro.create(SearchArticlesAuthorsAPI.class);
         int from = (nextPageNumber - 1) * 15 + 1;
         Call<SearchResponse> call = searchArticlesAuthorsApi.getSearchTopicsResult(searchName,
-                "article", from, from + 15);
+                "article", from, from + 15, 1);
         call.enqueue(searchTopicsResponseCallback);
     }
 
@@ -226,6 +227,10 @@ public class SearchAllArticlesTabFragment extends BaseFragment implements
                 intent.putExtra(Constants.FROM_SCREEN, "SearchScreen");
                 intent.putExtra(Constants.ARTICLE_INDEX, "" + position);
                 intent.putExtra(Constants.AUTHOR, searchData.getUserId() + "~");
+                startActivity(intent);
+            } else if ("4".equals(searchData.getItemType())) {
+                Intent intent = new Intent(getActivity(), UserCollectionItemListActivity.class);
+                intent.putExtra("id", searchData.getUserCollectionId());
                 startActivity(intent);
             } else {
                 Intent intent = new Intent(getActivity(), ArticleDetailsContainerActivity.class);

@@ -1,42 +1,100 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
+  xmlns:app="http://schemas.android.com/apk/res-auto"
+  android:layout_width="match_parent"
+  android:layout_height="wrap_content"
+  android:orientation="vertical"
+  android:paddingLeft="10dp"
+  android:paddingTop="7dp"
+  android:paddingRight="10dp"
+  android:paddingBottom="7dp">
+
+
+  <androidx.cardview.widget.CardView
+    android:id="@+id/card"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:orientation="vertical"
-    android:paddingBottom="7dp"
-    android:paddingLeft="10dp"
-    android:paddingRight="10dp"
-    android:paddingTop="7dp">
+    android:elevation="@dimen/space_10"
+    android:layout_margin="@dimen/space_5"
+    android:visibility="visible">
+
+    <RelativeLayout
+      android:id="@+id/root"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:layout_margin="@dimen/space_16">
+
+      <androidx.appcompat.widget.AppCompatImageView
+        android:id="@+id/collectionImageView"
+        android:layout_width="@dimen/space_100"
+        android:layout_height="@dimen/space_65"
+        android:scaleType="centerCrop"
+        android:src="@drawable/default_article"/>
+
+      <com.mycity4kids.widget.CustomFontTextView
+        android:id="@+id/collectionTitleTextView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_marginLeft="@dimen/space_10"
+        android:layout_marginRight="@dimen/space_10"
+        android:layout_toEndOf="@id/collectionImageView"
+        android:ellipsize="end"
+        android:gravity="center_vertical"
+        android:maxLines="3"
+        android:textColor="@color/campaign_515151"
+        android:textSize="17sp"
+        app:fontName="Helvetica Bold.ttf" />
+
+      <com.mycity4kids.widget.CustomFontTextView
+        android:id="@+id/collectionAuthorName"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBottom="@id/collectionImageView"
+        android:layout_marginLeft="@dimen/space_10"
+        android:layout_marginBottom="@dimen/space_10"
+        android:layout_toRightOf="@id/collectionImageView"
+        android:textColor="@color/color_9D9D9D"
+        android:textSize="12sp" />
+
+    </RelativeLayout>
+  </androidx.cardview.widget.CardView>
+
+  <RelativeLayout
+    android:id="@+id/article_card"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_margin="@dimen/space_5">
 
     <ImageView
-        android:id="@+id/articleImageView"
-        android:layout_width="67dp"
-        android:layout_height="55dp"
-        android:src="@drawable/default_article" />
+      android:id="@+id/articleImageView"
+      android:layout_width="67dp"
+      android:layout_height="55dp"
+      android:src="@drawable/default_article" />
 
     <com.mycity4kids.widget.CustomFontTextView
-        android:id="@+id/articleTitleTextView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="10dp"
-        android:layout_toRightOf="@+id/articleImageView"
-        android:maxLines="1"
-        android:text=""
-        android:textColor="@color/search.article_title"
-        android:textSize="15sp"
-        app:fontName="oswald_regular.ttf" />
+      android:id="@+id/articleTitleTextView"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:layout_marginLeft="10dp"
+      android:layout_toRightOf="@+id/articleImageView"
+      android:maxLines="1"
+      android:text=""
+      android:textColor="@color/search.article_title"
+      android:textSize="15sp"
+      app:fontName="oswald_regular.ttf" />
 
     <com.mycity4kids.widget.CustomFontTextView
-        android:id="@+id/articleDescTextView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/articleTitleTextView"
-        android:layout_marginLeft="10dp"
-        android:layout_toRightOf="@+id/articleImageView"
-        android:maxLines="2"
-        android:text=""
-        android:textColor="@color/search.article_desc"
-        android:textSize="13sp"
-        app:fontName="oswald_regular.ttf" />
+      android:id="@+id/articleDescTextView"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:layout_below="@+id/articleTitleTextView"
+      android:layout_marginLeft="10dp"
+      android:layout_toRightOf="@+id/articleImageView"
+      android:maxLines="2"
+      android:text=""
+      android:textColor="@color/search.article_desc"
+      android:textSize="13sp"
+      app:fontName="oswald_regular.ttf" />
+  </RelativeLayout>
 </RelativeLayout>

@@ -144,7 +144,7 @@ public class SearchAllTopicsTabFragment extends BaseFragment implements
         SearchArticlesAuthorsAPI searchArticlesAuthorsAPI = retro.create(SearchArticlesAuthorsAPI.class);
         int from = (nextPageNumber - 1) * 15 + 1;
         Call<SearchResponse> call = searchArticlesAuthorsAPI.getSearchTopicsResult(searchName,
-                "topic", from, from + 15);
+                "topic", from, from + 15, 0);
 
         call.enqueue(searchTopicsResponseCallback);
     }

@@ -1,19 +1,19 @@
 package com.mycity4kids.ui.adapter;
 
 import android.content.Context;
-import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
-
-import com.mycity4kids.utils.StringUtils;
+import androidx.cardview.widget.CardView;
+import androidx.recyclerview.widget.RecyclerView;
 import com.mycity4kids.R;
 import com.mycity4kids.models.response.SearchArticleResult;
 import com.mycity4kids.utils.AppUtils;
+import com.mycity4kids.utils.StringUtils;
 import com.squareup.picasso.Picasso;
-
 import java.util.ArrayList;
 
 /**
@@ -49,18 +49,35 @@ public class SearchArticlesListingAdapter extends RecyclerView.Adapter<SearchArt
 
     @Override
     public void onBindViewHolder(ArticleViewHolder holder, int position) {
-        holder.titleTextView.setText(AppUtils.fromHtml(articleDataModelsNew.get(position).getTitle()));
-        if (StringUtils.isNullOrEmpty(articleDataModelsNew.get(position).getBody())) {
-            holder.bodyTextView.setText("");
+        if (articleDataModelsNew.get(position).getItemType().equals("4")) {
+            holder.card.setVisibility(View.VISIBLE);
+            holder.articleCard.setVisibility(View.GONE);
+            holder.collectionTitleTextView.setText(AppUtils.fromHtml(articleDataModelsNew.get(position).getName()));
+            holder.collectionAuthorName.setText(AppUtils.fromHtml(articleDataModelsNew.get(position).getUserName()));
+            try {
+                Picasso.get().load(articleDataModelsNew.get(position).getImageUrl().getThumbMin()).
+                        placeholder(R.drawable.default_article).error(R.drawable.default_article)
+                        .into(holder.collectionImageView);
+            } catch (Exception e) {
+                holder.collectionImageView.setBackgroundResource(R.drawable.article_default);
+            }
         } else {
-            holder.bodyTextView.setText(AppUtils.fromHtml(articleDataModelsNew.get(position).getBody()));
-        }
+            holder.card.setVisibility(View.GONE);
+            holder.articleCard.setVisibility(View.VISIBLE);
+            holder.titleTextView.setText(AppUtils.fromHtml(articleDataModelsNew.get(position).getTitle()));
+            if (StringUtils.isNullOrEmpty(articleDataModelsNew.get(position).getBody())) {
+                holder.bodyTextView.setText("");
+            } else {
+                holder.bodyTextView.setText(AppUtils.fromHtml(articleDataModelsNew.get(position).getBody()));
+            }
 
-        try {
-            Picasso.get().load(articleDataModelsNew.get(position).getImageUrl().getThumbMin()).
-                    placeholder(R.drawable.default_article).error(R.drawable.default_article).into(holder.articleImageView);
-        } catch (Exception e) {
-            holder.articleImageView.setBackgroundResource(R.drawable.article_default);
+            try {
+                Picasso.get().load(articleDataModelsNew.get(position).getImageUrl().getThumbMin()).
+                        placeholder(R.drawable.default_article).error(R.drawable.default_article)
+                        .into(holder.articleImageView);
+            } catch (Exception e) {
+                holder.articleImageView.setBackgroundResource(R.drawable.article_default);
+            }
         }
     }
 
@@ -70,15 +87,23 @@ public class SearchArticlesListingAdapter extends RecyclerView.Adapter<SearchArt
     }
 
     public class ArticleViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
-        TextView titleTextView;
+
+        TextView titleTextView, collectionTitleTextView,collectionAuthorName;
         TextView bodyTextView;
-        ImageView articleImageView;
+        ImageView articleImageView, collectionImageView;
+        CardView card;
+        RelativeLayout articleCard;
 
         public ArticleViewHolder(View itemView, RecyclerViewClickListener listener) {
             super(itemView);
             titleTextView = (TextView) itemView.findViewById(R.id.articleTitleTextView);
             bodyTextView = (TextView) itemView.findViewById(R.id.articleDescTextView);
             articleImageView = (ImageView) itemView.findViewById(R.id.articleImageView);
+            collectionTitleTextView = itemView.findViewById(R.id.collectionTitleTextView);
+            collectionAuthorName = itemView.findViewById(R.id.collectionAuthorName);
+            collectionImageView = itemView.findViewById(R.id.collectionImageView);
+            card = itemView.findViewById(R.id.card);
+            articleCard = itemView.findViewById(R.id.article_card);
             itemView.setOnClickListener(this);
         }
 
@@ -89,6 +114,7 @@ public class SearchArticlesListingAdapter extends RecyclerView.Adapter<SearchArt
     }
 
     public interface RecyclerViewClickListener {
+
         void onClick(View view, int position);
     }
 

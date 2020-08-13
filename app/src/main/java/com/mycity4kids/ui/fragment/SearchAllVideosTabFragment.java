@@ -141,7 +141,7 @@ public class SearchAllVideosTabFragment extends BaseFragment implements
         SearchArticlesAuthorsAPI searchArticlesAuthorsAPI = retro.create(SearchArticlesAuthorsAPI.class);
         int from = (nextPageNumber - 1) * 15 + 1;
         Call<SearchResponse> call = searchArticlesAuthorsAPI.getSearchTopicsResult(searchName,
-                "video", from, from + 15);
+                "video", from, from + 15, 0);
 
         call.enqueue(searchTopicsResponseCallback);
     }
