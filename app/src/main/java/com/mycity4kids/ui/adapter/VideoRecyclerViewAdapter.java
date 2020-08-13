@@ -57,11 +57,11 @@ import com.mycity4kids.ui.fragment.AddCollectionAndCollectionItemDialogFragment;
 import com.mycity4kids.ui.videochallengenewui.activity.NewVideoChallengeActivity;
 import com.mycity4kids.utils.AppUtils;
 import com.mycity4kids.utils.StringUtils;
+import com.mycity4kids.utils.ToastUtils;
 import com.mycity4kids.widget.MomspressoButtonWidget;
 import com.squareup.picasso.Picasso;
 import java.util.ArrayList;
 import java.util.List;
-import q.rorbin.badgeview.Badge;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -384,17 +384,17 @@ public class VideoRecyclerViewAdapter extends RecyclerView.Adapter<BaseViewHolde
                             responseData.getAuthor().getFirstName() + responseData.getAuthor().getLastName()));
             heart.setOnClickListener(view -> {
                 if (responseData.getIs_liked() != null && responseData.getIs_liked().equals("1")) {
-                    likeStatus = "0";
+                   /* likeStatus = "0";
                     vlogsListingAndDetailResults.get(position).setIs_liked(likeStatus);
-                    notifyItemChanged(position, this);
+                    notifyItemChanged(position, this);*/
                     ((ParallelFeedActivity) context)
-                            .recommendUnrecommentArticleApi(responseData.getId(), likeStatus, position);
+                            .recommendUnrecommentArticleApi(responseData.getId(), "0", position);
                 } else {
-                    likeStatus = "1";
+                   /* likeStatus = "1";
                     vlogsListingAndDetailResults.get(position).setIs_liked(likeStatus);
-                    notifyItemChanged(position, this);
+                    notifyItemChanged(position, this);*/
                     ((ParallelFeedActivity) context)
-                            .recommendUnrecommentArticleApi(responseData.getId(), likeStatus, position);
+                            .recommendUnrecommentArticleApi(responseData.getId(), "1", position);
                     Utils.shareEventTracking(context, "Video Detail", "Like_Android", "VlogDetail_Like");
                 }
             });
@@ -992,14 +992,14 @@ public class VideoRecyclerViewAdapter extends RecyclerView.Adapter<BaseViewHolde
             int index,
             TextView followFollowingTextView) {
 
-        vlogsListingAndDetailResults.get(position).getCarouselVideoList().get(index)
+      /*  vlogsListingAndDetailResults.get(position).getCarouselVideoList().get(index)
                 .setFollowing(false);
         GradientDrawable myGrad = (GradientDrawable) followFollowingTextView.getBackground();
         myGrad.setStroke(2, ContextCompat.getColor(context, R.color.app_red));
         followFollowingTextView.setTextColor(ContextCompat.getColor(context, R.color.white));
         myGrad.setColor(ContextCompat.getColor(context, R.color.app_red));
         followFollowingTextView.setText(StringUtils
-                .firstLetterToUpperCase(context.getResources().getString(R.string.ad_follow_author).toLowerCase()));
+                .firstLetterToUpperCase(context.getResources().getString(R.string.ad_follow_author).toLowerCase()));*/
         Retrofit retrofit = BaseApplication.getInstance().getRetrofit();
         FollowAPI vlogsListingAndDetailsApi = retrofit.create(FollowAPI.class);
         FollowUnfollowUserRequest followUnfollowUserRequest = new FollowUnfollowUserRequest();
@@ -1009,16 +1009,39 @@ public class VideoRecyclerViewAdapter extends RecyclerView.Adapter<BaseViewHolde
             @Override
             public void onResponse(@NonNull Call<FollowUnfollowUserResponse> call,
                     @NonNull Response<FollowUnfollowUserResponse> response) {
-
+                if (response.body() == null) {
+                    return;
+                }
+                try {
+                    FollowUnfollowUserResponse responseData = response.body();
+                    if (responseData.getCode() == 200 && "success".equals(responseData.getStatus())) {
+                        vlogsListingAndDetailResults.get(position).getCarouselVideoList().get(index)
+                                .setFollowing(false);
+                        GradientDrawable myGrad = (GradientDrawable) followFollowingTextView.getBackground();
+                        myGrad.setStroke(2, ContextCompat.getColor(context, R.color.app_red));
+                        followFollowingTextView.setTextColor(ContextCompat.getColor(context, R.color.white));
+                        myGrad.setColor(ContextCompat.getColor(context, R.color.app_red));
+                        followFollowingTextView.setText(StringUtils
+                                .firstLetterToUpperCase(
+                                        context.getResources().getString(R.string.ad_follow_author).toLowerCase()));
+                        ToastUtils.showToast(context, responseData.getData().getMsg());
+                    } else {
+                        ToastUtils.showToast(context, responseData.getData().getMsg());
+                    }
+                } catch (Exception e) {
+                    FirebaseCrashlytics.getInstance().recordException(e);
+                    Log.d("MC4kException", Log.getStackTraceString(e));
+                    ToastUtils.showToast(context, e.getMessage());
+                }
             }
 
             @Override
-            public void onFailure(@NonNull Call<FollowUnfollowUserResponse> call, @NonNull Throwable t) {
-
+            public void onFailure(@NonNull Call<FollowUnfollowUserResponse> call, @NonNull Throwable e) {
+                FirebaseCrashlytics.getInstance().recordException(e);
+                Log.d("MC4kException", Log.getStackTraceString(e));
+                ToastUtils.showToast(context, "something went wrong");
             }
         });
-
-
     }
 
 
@@ -1026,14 +1049,14 @@ public class VideoRecyclerViewAdapter extends RecyclerView.Adapter<BaseViewHolde
             int position,
             int index,
             TextView followFollowingTextView) {
-        vlogsListingAndDetailResults.get(position).getCarouselVideoList().get(index)
+     /*   vlogsListingAndDetailResults.get(position).getCarouselVideoList().get(index)
                 .setFollowing(true);
         GradientDrawable myGrad = (GradientDrawable) followFollowingTextView.getBackground();
         myGrad.setStroke(2, ContextCompat.getColor(context, R.color.color_BABABA));
         followFollowingTextView.setTextColor(ContextCompat.getColor(context, R.color.color_BABABA));
         myGrad.setColor(ContextCompat.getColor(context, R.color.video_feed_bg));
         followFollowingTextView.setText(StringUtils
-                .firstLetterToUpperCase(context.getResources().getString(R.string.ad_following_author).toLowerCase()));
+                .firstLetterToUpperCase(context.getResources().getString(R.string.ad_following_author).toLowerCase()));*/
         Retrofit retrofit = BaseApplication.getInstance().getRetrofit();
         FollowAPI vlogsListingAndDetailsApi = retrofit.create(FollowAPI.class);
         FollowUnfollowUserRequest followUnfollowUserRequest = new FollowUnfollowUserRequest();
@@ -1043,12 +1066,39 @@ public class VideoRecyclerViewAdapter extends RecyclerView.Adapter<BaseViewHolde
             @Override
             public void onResponse(@NonNull Call<FollowUnfollowUserResponse> call,
                     @NonNull Response<FollowUnfollowUserResponse> response) {
+                if (response.body() == null) {
+                    return;
+                }
+                try {
+                    FollowUnfollowUserResponse responseData = response.body();
+                    if (responseData.getCode() == 200 && "success".equals(responseData.getStatus())) {
+                        vlogsListingAndDetailResults.get(position).getCarouselVideoList().get(index)
+                                .setFollowing(true);
+                        GradientDrawable myGrad = (GradientDrawable) followFollowingTextView.getBackground();
+                        myGrad.setStroke(2, ContextCompat.getColor(context, R.color.color_BABABA));
+                        followFollowingTextView.setTextColor(ContextCompat.getColor(context, R.color.color_BABABA));
+                        myGrad.setColor(ContextCompat.getColor(context, R.color.video_feed_bg));
+                        followFollowingTextView.setText(StringUtils
+                                .firstLetterToUpperCase(
+                                        context.getResources().getString(R.string.ad_following_author).toLowerCase()));
+                        ToastUtils.showToast(context, responseData.getData().getMsg());
+                    } else {
+                        ToastUtils.showToast(context, responseData.getData().getMsg());
 
+                    }
+
+                } catch (Exception e) {
+                    FirebaseCrashlytics.getInstance().recordException(e);
+                    Log.d("MC4kException", Log.getStackTraceString(e));
+                    ToastUtils.showToast(context, e.getMessage());
+                }
             }
 
             @Override
-            public void onFailure(@NonNull Call<FollowUnfollowUserResponse> call, @NonNull Throwable t) {
-
+            public void onFailure(@NonNull Call<FollowUnfollowUserResponse> call, @NonNull Throwable e) {
+                FirebaseCrashlytics.getInstance().recordException(e);
+                Log.d("MC4kException", Log.getStackTraceString(e));
+                ToastUtils.showToast(context, "something went wrong");
             }
         });
     }

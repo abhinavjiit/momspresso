@@ -445,6 +445,7 @@ class ContentCommentReplyNotificationFragment : BaseFragment(),
                 args.putInt("position", 0)
                 args.putString("authorId", commentData.userId)
                 args.putString("responseType", "COMMENT")
+                args.putString("blogWriterId", authorId)
                 val commentOptionsDialogFragment =
                     CommentOptionsDialogFragment()
                 commentOptionsDialogFragment.arguments = args
@@ -762,13 +763,21 @@ class ContentCommentReplyNotificationFragment : BaseFragment(),
         showProgressDialog("please wait")
         val ret = BaseApplication.getInstance().retrofit
         val articleDetailsAPI = ret.create(ArticleDetailsAPI::class.java)
-        val blockUserModel: BlockUserModel = if (responseType == "REPLY") {
-            BlockUserModel(blocked_user_id = repliesData?.get(position)?.userId)
+        if (responseType == "REPLY") {
+            val blockUserModel =
+                BlockUserModel(blocked_user_id = repliesData?.get(position)?.userId)
+            repliesData?.removeAt(position)
+            val call = articleDetailsAPI.blockUserApi(blockUserModel)
+            call.enqueue(blockUserCallBack)
         } else {
-            BlockUserModel(blocked_user_id = commentData.userId)
+            val blockUserModel = BlockUserModel(blocked_user_id = commentData.userId)
+            val call = articleDetailsAPI.blockUserApi(blockUserModel)
+            call.enqueue(blockUserCallBack)
         }
-        val call = articleDetailsAPI.blockUserApi(blockUserModel)
-        call.enqueue(blockUserCallBack)
+        repliesData?.let {
+            contentCommentReplyNotificationAdapter.setRepliesList(it)
+            contentCommentReplyNotificationAdapter.notifyDataSetChanged()
+        }
     }
 
     private val blockUserCallBack = object : Callback<ResponseBody> {
@@ -780,13 +789,14 @@ class ContentCommentReplyNotificationFragment : BaseFragment(),
         }
 
         override fun onResponse(call: Call<ResponseBody>, response: Response<ResponseBody>) {
+            removeProgressDialog()
             if (response.body() == null) {
                 return
             }
             try {
                 val resData = String(response.body()?.bytes()!!)
                 val jsonObject = JSONObject(resData)
-                if (jsonObject.get("Code") == 200 && jsonObject.get("status") == Constants.SUCCESS) {
+                if (jsonObject.get("code") == 200 && jsonObject.get("status") == Constants.SUCCESS) {
 
                     Toast.makeText(
                         activity,

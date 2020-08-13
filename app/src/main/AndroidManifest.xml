@@ -253,7 +253,8 @@
       android:screenOrientation="portrait" />
     <activity
       android:name=".ui.activity.FollowersAndFollowingListActivity"
-      android:screenOrientation="portrait" />
+      android:screenOrientation="portrait"
+      android:theme="@style/EditorTheme"/>
     <activity
       android:name=".ui.activity.VideoTrimmerActivity"
       android:screenOrientation="portrait" />

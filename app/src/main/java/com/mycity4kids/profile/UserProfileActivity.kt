@@ -105,12 +105,12 @@ import io.reactivex.Observer
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable
 import io.reactivex.schedulers.Schedulers
-import java.io.File
-import java.net.SocketTimeoutException
-import java.net.UnknownHostException
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
+import java.io.File
+import java.net.SocketTimeoutException
+import java.net.UnknownHostException
 
 class UserProfileActivity : BaseActivity(),
     UserContentAdapter.RecyclerViewClickListener, View.OnClickListener,
@@ -510,9 +510,6 @@ class UserProfileActivity : BaseActivity(),
         val request = FollowUnfollowUserRequest()
         request.followee_id = authorId
         if (isFollowing) {
-            updateFollowingStatusInList("0")
-            isFollowing = false
-            followAuthorTextView.setText(R.string.ad_follow_author)
             val followUnfollowUserResponseCall = followAPI.unfollowUserV2(request)
             followUnfollowUserResponseCall.enqueue(unfollowUserResponseCallback)
             Utils.pushProfileEvents(
@@ -520,9 +517,6 @@ class UserProfileActivity : BaseActivity(),
                 "Unfollow", "-"
             )
         } else {
-            updateFollowingStatusInList("1")
-            isFollowing = true
-            followAuthorTextView.setText(R.string.ad_following_author)
             val followUnfollowUserResponseCall = followAPI.followUserV2(request)
             followUnfollowUserResponseCall.enqueue(followUserResponseCallback)
             Utils.shareEventTracking(
@@ -562,6 +556,9 @@ class UserProfileActivity : BaseActivity(),
                 try {
                     val responseData = response.body()
                     if (responseData!!.code == 200 && Constants.SUCCESS == responseData.status) {
+                        updateFollowingStatusInList("1")
+                        isFollowing = true
+                        followAuthorTextView.setText(R.string.ad_following_author)
                     } else {
                         followAuthorTextView.setText(R.string.ad_follow_author)
                         isFollowing = false
@@ -595,6 +592,9 @@ class UserProfileActivity : BaseActivity(),
                 try {
                     val responseData = response.body()
                     if (responseData!!.code == 200 && Constants.SUCCESS == responseData.status) {
+                        updateFollowingStatusInList("0")
+                        isFollowing = false
+                        followAuthorTextView.setText(R.string.ad_follow_author)
                     } else {
                         followAuthorTextView.setText(R.string.ad_following_author)
                         isFollowing = true
@@ -1696,6 +1696,7 @@ class UserProfileActivity : BaseActivity(),
                 isRecommendRequestRunning = false
                 FirebaseCrashlytics.getInstance().recordException(t)
                 Log.d("MC4kException", Log.getStackTraceString(t))
+                ToastUtils.showToast(this@UserProfileActivity, getString(R.string.went_wrong))
             }
         }
 

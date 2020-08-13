@@ -374,6 +374,7 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
     private TextView topCommentTextView;
     private boolean markedFirstTopComment = false;
     private boolean markedSecondTopComment = false;
+    private int likedDislikedCommentIndex;
 
 
     static {
@@ -1310,7 +1311,7 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
                 likeCount2.setText("");
 
             } else {
-                likeCount2.setText(commentsList.get(0).getLikeCount() + "");
+                likeCount2.setText(commentsList.get(1).getLikeCount() + "");
 
             }
             if (commentsList.get(1).getRepliesCount() == 0) {
@@ -1318,6 +1319,7 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
             } else {
                 replyCount2.setText("Reply(" + commentsList.get(1).getRepliesCount() + ")");
             }
+
             if (commentsList.get(0).isIs_top_comment()) {
                 topCommentTextView.setVisibility(View.VISIBLE);
             } else {
@@ -2149,7 +2151,7 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
                 break;
                 case R.id.likeTextView: {
                     if (recommendStatus == 0) {
-                        recommendStatus = 1;
+                      /*  recommendStatus = 1;
                         if (!isFollowing && !userDynamoId.equals(articleId)) {
                             setValuesInFollowPopUp();
                         }
@@ -2158,17 +2160,17 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
                         drawable.setColorFilter(
                                 ContextCompat.getColor(likeArticleTextView.getContext(), R.color.app_red),
                                 PorterDuff.Mode.SRC_IN);
-                        likeArticleTextView.setImageDrawable(drawable);
+                        likeArticleTextView.setImageDrawable(drawable);*/
                         recommendUnrecommendArticleApi("1");
                         Utils.shareEventTracking(getActivity(), "Article Detail", "Like_Android", "ArticleDetail_Like");
                     } else {
-                        Drawable drawable = ContextCompat
+                      /*  Drawable drawable = ContextCompat
                                 .getDrawable(likeArticleTextView.getContext(), R.drawable.ic_recommend);
                         drawable.setColorFilter(
                                 ContextCompat.getColor(likeArticleTextView.getContext(), R.color.app_red),
                                 PorterDuff.Mode.SRC_IN);
                         likeArticleTextView.setImageDrawable(drawable);
-                        recommendStatus = 0;
+                        recommendStatus = 0;*/
                         recommendUnrecommendArticleApi("0");
                         Utils.pushUnlikeArticleEvent(getActivity(), "DetailArticleScreen",
                                 userDynamoId + "", articleId, authorId + "~" + author);
@@ -2232,17 +2234,21 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
                 case R.id.replyCount2: {
                     Utils.shareEventTracking(getActivity(), "Article Detail", "Comment_Android",
                             "ArticleDetail_Reply_Comment");
-                    Bundle args = new Bundle();
-                    args.putParcelable("commentReplies", commentsList.get(1));
-                    args.putInt("totalRepliesCount", commentsList.get(1).getRepliesCount());
-                    args.putInt("position", 1);
-                    args.putString("blogWriterId", authorId);
-                    articleCommentRepliesDialogFragment =
-                            new ArticleCommentRepliesDialogFragment();
-                    articleCommentRepliesDialogFragment.setArguments(args);
-                    articleCommentRepliesDialogFragment.setCancelable(true);
-                    FragmentManager fm = getChildFragmentManager();
-                    articleCommentRepliesDialogFragment.show(fm, "View Replies");
+                    if (commentsList.get(1).getRepliesCount() == 0) {
+                        openAddCommentReplyDialog(commentsList.get(1), null);
+                    } else {
+                        Bundle args = new Bundle();
+                        args.putParcelable("commentReplies", commentsList.get(1));
+                        args.putInt("totalRepliesCount", commentsList.get(1).getRepliesCount());
+                        args.putInt("position", 1);
+                        args.putString("blogWriterId", authorId);
+                        articleCommentRepliesDialogFragment =
+                                new ArticleCommentRepliesDialogFragment();
+                        articleCommentRepliesDialogFragment.setArguments(args);
+                        articleCommentRepliesDialogFragment.setCancelable(true);
+                        FragmentManager fm = getChildFragmentManager();
+                        articleCommentRepliesDialogFragment.show(fm, "View Replies");
+                    }
                     break;
                 }
                 case R.id.replyCount: {
@@ -2402,40 +2408,9 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
     }
 
     private void likeDislikeComment(int index) {
+        likedDislikedCommentIndex = index;
         if (!commentsList.get(index).getLiked()) {
             Utils.shareEventTracking(getActivity(), "Article Detail", "Comment_Android", "ArticleDetail_Like_Comment");
-            if (index == 0) {
-                try {
-                    Drawable myDrawable = ContextCompat
-                            .getDrawable(likeCount1.getContext(), R.drawable.ic_recommended);
-                    myDrawable
-                            .setColorFilter(ContextCompat.getColor(getActivity(), R.color.app_red),
-                                    PorterDuff.Mode.SRC_IN);
-                    likeCount1
-                            .setCompoundDrawablesWithIntrinsicBounds(myDrawable, null, null, null);
-                    likeCount1.setText(commentsList.get(0).getLikeCount() + 1 + "");
-                    commentsList.get(0).setLikeCount(commentsList.get(0).getLikeCount() + 1);
-                } catch (NullPointerException e) {
-                    FirebaseCrashlytics.getInstance().recordException(e);
-                    Log.d("NullPointerException", Log.getStackTraceString(e));
-                }
-            } else {
-                try {
-                    Drawable myDrawable = ContextCompat
-                            .getDrawable(likeCount2.getContext(), R.drawable.ic_recommended);
-                    myDrawable
-                            .setColorFilter(ContextCompat.getColor(getActivity(), R.color.app_red),
-                                    PorterDuff.Mode.SRC_IN);
-                    likeCount2
-                            .setCompoundDrawablesWithIntrinsicBounds(myDrawable, null, null, null);
-                    likeCount2.setText(commentsList.get(1).getLikeCount() + 1 + "");
-                    commentsList.get(1).setLikeCount(commentsList.get(1).getLikeCount() + 1);
-                } catch (NullPointerException e) {
-                    FirebaseCrashlytics.getInstance().recordException(e);
-                    Log.d("NullPointerException", Log.getStackTraceString(e));
-                }
-            }
-            commentsList.get(index).setLiked(true);
             LikeReactionModel commentListData = new LikeReactionModel();
             commentListData.setReaction("like");
             commentListData.setStatus("1");
@@ -2445,48 +2420,6 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
                     .likeDislikeComment(commentsList.get(index).getId(), commentListData);
             call.enqueue(likeDisLikeCommentCallback);
         } else if (commentsList.get(index).getLiked()) {
-            if (index == 0) {
-                try {
-                    Drawable myDrawable = ContextCompat
-                            .getDrawable(likeCount1.getContext(), R.drawable.ic_recommend);
-                    myDrawable
-                            .setColorFilter(ContextCompat.getColor(getActivity(), R.color.grey),
-                                    PorterDuff.Mode.SRC_IN);
-                    likeCount1
-                            .setCompoundDrawablesWithIntrinsicBounds(myDrawable, null, null, null);
-                    if (commentsList.get(0).getLikeCount() - 1 != 0) {
-                        likeCount1.setText(commentsList.get(0).getLikeCount() - 1 + "");
-                    } else {
-                        likeCount1.setText("");
-                    }
-                    commentsList.get(0).setLikeCount(commentsList.get(0).getLikeCount() - 1);
-                } catch (NullPointerException e) {
-                    FirebaseCrashlytics.getInstance().recordException(e);
-                    Log.d("NullPointerException", Log.getStackTraceString(e));
-                }
-            } else {
-
-                try {
-                    Drawable myDrawable = ContextCompat
-                            .getDrawable(likeCount2.getContext(), R.drawable.ic_recommend);
-                    myDrawable
-                            .setColorFilter(ContextCompat.getColor(getActivity(), R.color.grey),
-                                    PorterDuff.Mode.SRC_IN);
-                    likeCount2
-                            .setCompoundDrawablesWithIntrinsicBounds(myDrawable, null, null, null);
-                    if (commentsList.get(1).getLikeCount() - 1 != 0) {
-                        likeCount2.setText(commentsList.get(1).getLikeCount() - 1 + "");
-                    } else {
-                        likeCount2.setText("");
-                    }
-                    commentsList.get(1).setLikeCount(commentsList.get(1).getLikeCount() - 1);
-
-                } catch (NullPointerException e) {
-                    FirebaseCrashlytics.getInstance().recordException(e);
-                    Log.d("NullPointerException", Log.getStackTraceString(e));
-                }
-            }
-            commentsList.get(index).setLiked(false);
             LikeReactionModel commentListData = new LikeReactionModel();
             commentListData.setReaction("like");
             commentListData.setStatus("0");
@@ -2502,10 +2435,118 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
     private Callback<ResponseBody> likeDisLikeCommentCallback = new Callback<ResponseBody>() {
         @Override
         public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+
+            if (null == response.body()) {
+                NetworkErrorException nee = new NetworkErrorException(response.raw().toString());
+                FirebaseCrashlytics.getInstance().recordException(nee);
+                if (isAdded()) {
+                    ToastUtils.showToast(getActivity(), getResources().getString(R.string.server_went_wrong));
+                }
+            }
+            try {
+                String res = new String(response.body().bytes());
+                JSONObject responsee = new JSONObject(res);
+                if (responsee.getInt("code") == 200 && responsee.get("status").equals("success")) {
+                    if (!commentsList.get(likedDislikedCommentIndex).getLiked()) {
+                        if (likedDislikedCommentIndex == 0) {
+                            try {
+                                Drawable myDrawable = ContextCompat
+                                        .getDrawable(likeCount1.getContext(), R.drawable.ic_recommended);
+                                myDrawable
+                                        .setColorFilter(ContextCompat.getColor(getActivity(), R.color.app_red),
+                                                PorterDuff.Mode.SRC_IN);
+                                likeCount1
+                                        .setCompoundDrawablesWithIntrinsicBounds(myDrawable, null, null, null);
+                                likeCount1.setText(commentsList.get(0).getLikeCount() + 1 + "");
+                                commentsList.get(0).setLikeCount(commentsList.get(0).getLikeCount() + 1);
+                            } catch (NullPointerException e) {
+                                ToastUtils.showToast(getActivity(), e.getMessage());
+                                FirebaseCrashlytics.getInstance().recordException(e);
+                                Log.d("NullPointerException", Log.getStackTraceString(e));
+                            }
+                        } else {
+                            try {
+                                Drawable myDrawable = ContextCompat
+                                        .getDrawable(likeCount2.getContext(), R.drawable.ic_recommended);
+                                myDrawable
+                                        .setColorFilter(ContextCompat.getColor(getActivity(), R.color.app_red),
+                                                PorterDuff.Mode.SRC_IN);
+                                likeCount2
+                                        .setCompoundDrawablesWithIntrinsicBounds(myDrawable, null, null, null);
+                                likeCount2.setText(commentsList.get(1).getLikeCount() + 1 + "");
+                                commentsList.get(1).setLikeCount(commentsList.get(1).getLikeCount() + 1);
+                            } catch (NullPointerException e) {
+                                ToastUtils.showToast(getActivity(), e.getMessage());
+                                FirebaseCrashlytics.getInstance().recordException(e);
+                                Log.d("NullPointerException", Log.getStackTraceString(e));
+                            }
+                        }
+                        commentsList.get(likedDislikedCommentIndex).setLiked(true);
+                    } else {
+                        if (likedDislikedCommentIndex == 0) {
+                            try {
+                                Drawable myDrawable = ContextCompat
+                                        .getDrawable(likeCount1.getContext(), R.drawable.ic_recommend);
+                                myDrawable
+                                        .setColorFilter(ContextCompat.getColor(getActivity(), R.color.grey),
+                                                PorterDuff.Mode.SRC_IN);
+                                likeCount1
+                                        .setCompoundDrawablesWithIntrinsicBounds(myDrawable, null, null, null);
+                                if (commentsList.get(0).getLikeCount() - 1 != 0) {
+                                    likeCount1.setText(commentsList.get(0).getLikeCount() - 1 + "");
+                                } else {
+                                    likeCount1.setText("");
+                                }
+                                commentsList.get(0).setLikeCount(commentsList.get(0).getLikeCount() - 1);
+                            } catch (NullPointerException e) {
+                                ToastUtils.showToast(getActivity(), e.getMessage());
+                                FirebaseCrashlytics.getInstance().recordException(e);
+                                Log.d("NullPointerException", Log.getStackTraceString(e));
+                            }
+                        } else {
+                            try {
+                                Drawable myDrawable = ContextCompat
+                                        .getDrawable(likeCount2.getContext(), R.drawable.ic_recommend);
+                                myDrawable
+                                        .setColorFilter(ContextCompat.getColor(getActivity(), R.color.grey),
+                                                PorterDuff.Mode.SRC_IN);
+                                likeCount2
+                                        .setCompoundDrawablesWithIntrinsicBounds(myDrawable, null, null, null);
+                                if (commentsList.get(1).getLikeCount() - 1 != 0) {
+                                    likeCount2.setText(commentsList.get(1).getLikeCount() - 1 + "");
+                                } else {
+                                    likeCount2.setText("");
+                                }
+                                commentsList.get(1).setLikeCount(commentsList.get(1).getLikeCount() - 1);
+
+                            } catch (NullPointerException e) {
+                                ToastUtils.showToast(getActivity(), e.getMessage());
+                                FirebaseCrashlytics.getInstance().recordException(e);
+                                Log.d("NullPointerException", Log.getStackTraceString(e));
+                            }
+                        }
+                        commentsList.get(likedDislikedCommentIndex).setLiked(false);
+                    }
+                    JSONObject data = responsee.getJSONObject("data");
+                    JSONObject result = data.getJSONObject("result");
+                    String msg = result.getString("msg");
+                    ToastUtils.showToast(getActivity(), msg);
+                } else {
+                    JSONObject data = responsee.getJSONObject("data");
+                    JSONObject result = data.getJSONObject("result");
+                    String msg = result.getString("msg");
+                    ToastUtils.showToast(getActivity(), msg);
+                }
+            } catch (Exception e) {
+                FirebaseCrashlytics.getInstance().recordException(e);
+                Log.d("MC4kException", Log.getStackTraceString(e));
+                ToastUtils.showToast(getActivity(), e.getMessage());
+            }
         }
 
         @Override
         public void onFailure(Call<ResponseBody> call, Throwable e) {
+            ToastUtils.showToast(getActivity(), e.getMessage());
             FirebaseCrashlytics.getInstance().recordException(e);
             Log.d("MC4kException", Log.getStackTraceString(e));
         }
@@ -2995,8 +3036,6 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
         FollowUnfollowUserRequest request = new FollowUnfollowUserRequest();
         request.setFollowee_id(authorId);
         if (isFollowing) {
-            isFollowing = false;
-            followTextViewFollowContainer.setText(getString(R.string.ad_follow_author));
             Utils.pushGenericEvent(getActivity(), "CTA_Unfollow_Article_Detail", userDynamoId,
                     "ArticleDetailsFragment");
             Call<FollowUnfollowUserResponse> followUnfollowUserResponseCall = followApi
@@ -3006,8 +3045,6 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
             if (followPopUpBottomContainer.getVisibility() == View.VISIBLE) {
                 followPopUpBottomContainer.setVisibility(View.GONE);
             }
-            isFollowing = true;
-            followTextViewFollowContainer.setText(getString(R.string.ad_following_author));
             Utils.shareEventTracking(getActivity(), "Article Detail", "Follow_Android", eventName);
             Call<FollowUnfollowUserResponse> followUnfollowUserResponseCall = followApi
                     .followUserV2(request);
@@ -4035,21 +4072,41 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
                     }
                     try {
                         RecommendUnrecommendArticleResponse responseData = response.body();
-                        if (responseData.getCode() == 200 && Constants.SUCCESS
-                                .equals(responseData.getStatus())) {
+                        if (responseData.getCode() == 200 && Constants.SUCCESS.equals(responseData.getStatus())) {
                             if (!isAdded()) {
                                 return;
                             }
+                            if (recommendStatus == 0) {
+                                recommendStatus = 1;
+                                if (!isFollowing && !userDynamoId.equals(articleId)) {
+                                    setValuesInFollowPopUp();
+                                }
+                                Drawable drawable = ContextCompat
+                                        .getDrawable(likeArticleTextView.getContext(), R.drawable.ic_recommended);
+                                drawable.setColorFilter(
+                                        ContextCompat.getColor(likeArticleTextView.getContext(), R.color.app_red),
+                                        PorterDuff.Mode.SRC_IN);
+                                likeArticleTextView.setImageDrawable(drawable);
+                            } else {
+                                Drawable drawable = ContextCompat
+                                        .getDrawable(likeArticleTextView.getContext(), R.drawable.ic_recommend);
+                                drawable.setColorFilter(
+                                        ContextCompat.getColor(likeArticleTextView.getContext(), R.color.app_red),
+                                        PorterDuff.Mode.SRC_IN);
+                                likeArticleTextView.setImageDrawable(drawable);
+                                recommendStatus = 0;
+                            }
+
                             ((ArticleDetailsContainerActivity) getActivity()).showToast(responseData.getReason());
                         } else {
                             ((ArticleDetailsContainerActivity) getActivity())
-                                    .showToast(getString(R.string.server_went_wrong));
+                                    .showToast(responseData.getReason());
                         }
                     } catch (Exception e) {
                         FirebaseCrashlytics.getInstance().recordException(e);
                         Log.d("MC4kException", Log.getStackTraceString(e));
                         if (isAdded()) {
-                            ((ArticleDetailsContainerActivity) getActivity()).showToast(getString(R.string.went_wrong));
+                            ((ArticleDetailsContainerActivity) getActivity()).showToast(e.getMessage());
                         }
                     }
                 }
@@ -4102,10 +4159,15 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
                     }
                     try {
                         FollowUnfollowUserResponse responseData = response.body();
-                        if (responseData.getCode() != 200 || !Constants.SUCCESS
+                        if (responseData.getCode() == 200 || Constants.SUCCESS
                                 .equals(responseData.getStatus())) {
-                            isFollowing = false;
+                            isFollowing = true;
+                            followTextViewFollowContainer.setText(getString(R.string.ad_following_author));
+                            ToastUtils.showToast(getActivity(), responseData.getData().getMsg());
+                        } else {
+                            ToastUtils.showToast(getActivity(), responseData.getData().getMsg());
                         }
+
                     } catch (Exception e) {
                         if (isAdded()) {
                             ((ArticleDetailsContainerActivity) getActivity())
@@ -4141,9 +4203,12 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
                     }
                     try {
                         FollowUnfollowUserResponse responseData = response.body();
-                        if (responseData.getCode() != 200 || !Constants.SUCCESS
-                                .equals(responseData.getStatus())) {
-                            isFollowing = true;
+                        if (responseData.getCode() == 200 || Constants.SUCCESS.equals(responseData.getStatus())) {
+                            followTextViewFollowContainer.setText(getString(R.string.ad_follow_author));
+                            isFollowing = false;
+                            ToastUtils.showToast(getActivity(), responseData.getData().getMsg());
+                        } else {
+                            ToastUtils.showToast(getActivity(), responseData.getData().getMsg());
                         }
                     } catch (Exception e) {
                         if (isAdded()) {

@@ -17,7 +17,6 @@ import androidx.fragment.app.FragmentManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import com.google.firebase.crashlytics.FirebaseCrashlytics;
-import com.google.gson.JsonObject;
 import com.mycity4kids.R;
 import com.mycity4kids.application.BaseApplication;
 import com.mycity4kids.base.BaseActivity;
@@ -35,7 +34,6 @@ import com.mycity4kids.preference.SharedPrefUtils;
 import com.mycity4kids.profile.UserProfileActivity;
 import com.mycity4kids.retrofitAPIsInterfaces.ArticleDetailsAPI;
 import com.mycity4kids.tagging.Mentions;
-import com.mycity4kids.ui.ContentCommentReplyNotificationActivity;
 import com.mycity4kids.ui.activity.ArticleDetailsContainerActivity;
 import com.mycity4kids.ui.activity.ParallelFeedActivity;
 import com.mycity4kids.ui.activity.ShortStoryContainerActivity;
@@ -96,6 +94,7 @@ public class ArticleCommentsFragment extends BaseFragment implements OnClickList
     private String contentType;
     private ImageView userImageView;
     private String authorId;
+    private int pos;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -418,6 +417,9 @@ public class ArticleCommentsFragment extends BaseFragment implements OnClickList
         blockUserModel.setBlocked_user_id(commentsList.get(position).getUserId());
         Call<ResponseBody> call = articleDetailsAPI.blockUserApi(blockUserModel);
         call.enqueue(blockUserCallBack);
+        commentsList.remove(position);
+        articleCommentsRecyclerAdapter.setData(commentsList);
+        articleCommentsRecyclerAdapter.notifyDataSetChanged();
     }
 
     private Callback<ResponseBody> blockUserCallBack = new Callback<ResponseBody>() {
@@ -463,9 +465,6 @@ public class ArticleCommentsFragment extends BaseFragment implements OnClickList
             Log.d("MC4kException", Log.getStackTraceString(t));
         }
     };
-
-
-
 
 
     private Callback<CommentListResponse> deleteCommentResponseListener = new Callback<CommentListResponse>() {
@@ -796,8 +795,8 @@ public class ArticleCommentsFragment extends BaseFragment implements OnClickList
                 startActivity(intent);
                 break;
             case R.id.likeTextView:
+                pos = position;
                 if (commentsList.get(position).getLiked()) {
-                    commentsList.get(position).setLiked(false);
                     LikeReactionModel commentListData = new LikeReactionModel();
                     commentListData.setReaction("like");
                     commentListData.setStatus("0");
@@ -809,7 +808,6 @@ public class ArticleCommentsFragment extends BaseFragment implements OnClickList
                     call.enqueue(likeDisLikeCommentCallback);
                 } else {
                     pushEvent("CD_Like_Comment");
-                    commentsList.get(position).setLiked(true);
                     LikeReactionModel commentListData = new LikeReactionModel();
                     commentListData.setReaction("like");
                     commentListData.setStatus("1");
@@ -820,7 +818,6 @@ public class ArticleCommentsFragment extends BaseFragment implements OnClickList
                             .likeDislikeComment(commentsList.get(position).getId(), commentListData);
                     call.enqueue(likeDisLikeCommentCallback);
                 }
-                articleCommentsRecyclerAdapter.notifyDataSetChanged();
                 break;
             case R.id.moreOptionImageView:
             case R.id.commentRootLayout: {
@@ -916,12 +913,38 @@ public class ArticleCommentsFragment extends BaseFragment implements OnClickList
                     ToastUtils.showToast(getActivity(), getResources().getString(R.string.server_went_wrong));
                 }
             }
+            try {
+                String res = new String(response.body().bytes());
+                JSONObject responsee = new JSONObject(res);
+                if (responsee.getInt("code") == 200 && responsee.get("status").equals("success")) {
+                    if (commentsList.get(pos).getLiked()) {
+                        commentsList.get(pos).setLiked(false);
+                    } else {
+                        commentsList.get(pos).setLiked(true);
+                    }
+                    articleCommentsRecyclerAdapter.notifyDataSetChanged();
+                    JSONObject data = responsee.getJSONObject("data");
+                    JSONObject result = data.getJSONObject("result");
+                    String msg = result.getString("msg");
+                    ToastUtils.showToast(getActivity(), msg);
+                } else {
+                    JSONObject data = responsee.getJSONObject("data");
+                    JSONObject result = data.getJSONObject("result");
+                    String msg = result.getString("msg");
+                    ToastUtils.showToast(getActivity(), msg);
+                }
+            } catch (Exception e) {
+                FirebaseCrashlytics.getInstance().recordException(e);
+                Log.d("MC4kException", Log.getStackTraceString(e));
+                ToastUtils.showToast(getActivity(), e.getMessage());
+            }
         }
 
         @Override
         public void onFailure(Call<ResponseBody> call, Throwable e) {
             FirebaseCrashlytics.getInstance().recordException(e);
             Log.d("MC4kException", Log.getStackTraceString(e));
+            ToastUtils.showToast(getActivity(), e.getMessage());
         }
     };
 

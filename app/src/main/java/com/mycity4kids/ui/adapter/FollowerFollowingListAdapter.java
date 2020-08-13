@@ -9,18 +9,24 @@ import android.view.ViewGroup;
 import android.view.animation.AnimationUtils;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
+import android.widget.PopupMenu;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import com.google.firebase.crashlytics.FirebaseCrashlytics;
 import com.google.gson.Gson;
 import com.mycity4kids.R;
+import com.mycity4kids.application.BaseApplication;
 import com.mycity4kids.constants.AppConstants;
 import com.mycity4kids.constants.Constants;
 import com.mycity4kids.gtmutils.Utils;
+import com.mycity4kids.models.BlockUserModel;
 import com.mycity4kids.models.request.FollowUnfollowUserRequest;
 import com.mycity4kids.models.response.FollowUnfollowUserResponse;
 import com.mycity4kids.models.response.FollowersFollowingResult;
 import com.mycity4kids.preference.SharedPrefUtils;
+import com.mycity4kids.retrofitAPIsInterfaces.ArticleDetailsAPI;
 import com.mycity4kids.utils.StringUtils;
+import com.mycity4kids.utils.ToastUtils;
 import com.squareup.picasso.Picasso;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
@@ -32,6 +38,11 @@ import java.io.Writer;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
+import okhttp3.ResponseBody;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+import retrofit2.Retrofit;
 
 /**
  * Created by hemant on 1/8/16.
@@ -79,6 +90,7 @@ public class FollowerFollowingListAdapter extends BaseAdapter {
         ImageView imgLoader;
         RelativeLayout relativeLoadingView;
         int position;
+        ImageView menuImageView;
     }
 
     @Override
@@ -94,6 +106,7 @@ public class FollowerFollowingListAdapter extends BaseAdapter {
             holder.imgLoader = (ImageView) view.findViewById(R.id.imgLoader);
             holder.relativeLoadingView = (RelativeLayout) view.findViewById(R.id.relativeLoadingView);
             holder.imgLoader = (ImageView) holder.relativeLoadingView.findViewById(R.id.imgLoader);
+            holder.menuImageView = (ImageView) view.findViewById(R.id.menuImageView);
             view.setTag(holder);
         } else {
             holder = (ViewHolder) view.getTag();
@@ -139,8 +152,59 @@ public class FollowerFollowingListAdapter extends BaseAdapter {
             Log.d("Follow", "Follow");
             followUserApi(position, holder);
         });
+        if (eventName.equals("SelfProfile_Followers_Follow")) {
+            holder.menuImageView.setVisibility(View.VISIBLE);
+        } else {
+            holder.menuImageView.setVisibility(View.INVISIBLE);
+
+        }
+
+        holder.menuImageView.setOnClickListener(v -> {
+            PopupMenu popupMenu = new PopupMenu(context, v);
+            popupMenu.getMenuInflater().inflate(R.menu.block_user_menu, popupMenu.getMenu());
+            popupMenu.setOnMenuItemClickListener(menuItem -> {
+                if (menuItem.getItemId() == R.id.blockUserTextView) {
+                    Retrofit retrofit = BaseApplication.getInstance().getRetrofit();
+                    ArticleDetailsAPI articleDetailsAPI = retrofit.create(ArticleDetailsAPI.class);
+                    BlockUserModel blockUserModel = new BlockUserModel();
+                    blockUserModel.setBlocked_user_id(dataList.get(position).getUserId());
+                    Call<ResponseBody> call = articleDetailsAPI.blockUserApi(blockUserModel);
+                    call.enqueue(blockUserCallBack);
+                    dataList.remove(position);
+                    notifyDataSetChanged();
+                    return true;
+                }
+                return false;
+            });
+
+            popupMenu.show();
+        });
         return view;
     }
+
+    private Callback<ResponseBody> blockUserCallBack = new Callback<ResponseBody>() {
+
+        @Override
+        public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+            if (null == response.body()) {
+                return;
+            }
+            try {
+                Log.d("Tag", "success");
+            } catch (Exception e) {
+                FirebaseCrashlytics.getInstance().recordException(e);
+                Log.d("MC4kException", Log.getStackTraceString(e));
+            }
+
+        }
+
+        @Override
+        public void onFailure(Call<ResponseBody> call, Throwable e) {
+            FirebaseCrashlytics.getInstance().recordException(e);
+            Log.d("MC4kException", Log.getStackTraceString(e));
+        }
+    };
+
 
     private void followUserApi(int position, ViewHolder holder) {
         FollowUnfollowUserRequest followUnfollowUserRequest = new FollowUnfollowUserRequest();
@@ -268,11 +332,15 @@ public class FollowerFollowingListAdapter extends BaseAdapter {
                             }
                         }
                     }
+                    ToastUtils.showToast(context, responseData.getData().getMsg());
                 } else {
+                    ToastUtils.showToast(context, responseData.getData().getMsg());
                     resetFollowUnfollowStatus();
                 }
             } catch (Exception e) {
                 resetFollowUnfollowStatus();
+                ToastUtils.showToast(context, e.getMessage());
+
             }
         }
 

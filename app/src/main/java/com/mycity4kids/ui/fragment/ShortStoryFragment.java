@@ -140,6 +140,7 @@ public class ShortStoryFragment extends BaseFragment implements View.OnClickList
     private ImageView shareStoryImageView;
     private ShortStoryDetailResult sharedStoryItem;
     private TextView viewAllTextView;
+    private int pos;
 
     @Nullable
     @Override
@@ -602,8 +603,8 @@ public class ShortStoryFragment extends BaseFragment implements View.OnClickList
                 startActivity(intent);
                 break;
             case R.id.likeTextView:
+                pos = position;
                 if (consolidatedList.get(position).getSsComment().getLiked()) {
-                    consolidatedList.get(position).getSsComment().setLiked(false);
                     LikeReactionModel commentListData = new LikeReactionModel();
                     commentListData.setReaction("like");
                     commentListData.setStatus("0");
@@ -616,7 +617,6 @@ public class ShortStoryFragment extends BaseFragment implements View.OnClickList
                     call.enqueue(likeDisLikeCommentCallback);
                 } else {
                     Utils.shareEventTracking(getActivity(), "100WS Detail", "Like_Android", "StoryDetail_Like_Comment");
-                    consolidatedList.get(position).getSsComment().setLiked(true);
                     LikeReactionModel commentListData = new LikeReactionModel();
                     commentListData.setReaction("like");
                     commentListData.setStatus("1");
@@ -628,7 +628,6 @@ public class ShortStoryFragment extends BaseFragment implements View.OnClickList
                             .likeDislikeComment(consolidatedList.get(position).getSsComment().getId(), commentListData);
                     call.enqueue(likeDisLikeCommentCallback);
                 }
-                adapter.notifyDataSetChanged();
                 break;
             case R.id.menuItem:
                 chooseMenuOptionsItem(view, position);
@@ -752,6 +751,38 @@ public class ShortStoryFragment extends BaseFragment implements View.OnClickList
     private Callback<ResponseBody> likeDisLikeCommentCallback = new Callback<ResponseBody>() {
         @Override
         public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+            if (null == response.body()) {
+                NetworkErrorException nee = new NetworkErrorException(response.raw().toString());
+                FirebaseCrashlytics.getInstance().recordException(nee);
+                if (isAdded()) {
+                    ToastUtils.showToast(getActivity(), getResources().getString(R.string.server_went_wrong));
+                }
+            }
+            try {
+                String res = new String(response.body().bytes());
+                JSONObject responsee = new JSONObject(res);
+                if (responsee.getInt("code") == 200 && responsee.get("status").equals("success")) {
+                    if (consolidatedList.get(pos).getSsComment().getLiked()) {
+                        consolidatedList.get(pos).getSsComment().setLiked(false);
+                    } else {
+                        consolidatedList.get(pos).getSsComment().setLiked(true);
+                    }
+                    adapter.notifyDataSetChanged();
+                    JSONObject data = responsee.getJSONObject("data");
+                    JSONObject result = data.getJSONObject("result");
+                    String msg = result.getString("msg");
+                    ToastUtils.showToast(getActivity(), msg);
+                } else {
+                    JSONObject data = responsee.getJSONObject("data");
+                    JSONObject result = data.getJSONObject("result");
+                    String msg = result.getString("msg");
+                    ToastUtils.showToast(getActivity(), msg);
+                }
+            } catch (Exception e) {
+                FirebaseCrashlytics.getInstance().recordException(e);
+                Log.d("MC4kException", Log.getStackTraceString(e));
+                ToastUtils.showToast(getActivity(), e.getMessage());
+            }
         }
 
         @Override
@@ -1336,6 +1367,7 @@ public class ShortStoryFragment extends BaseFragment implements View.OnClickList
         FragmentManager fm = getChildFragmentManager();
         reportContentDialogFragment.show(fm, "Report Content");
     }
+
     @Override
     public void onBlockUser(int position, String responseType) {
         showProgressDialog("please wait");
@@ -1345,6 +1377,9 @@ public class ShortStoryFragment extends BaseFragment implements View.OnClickList
         blockUserModel.setBlocked_user_id(consolidatedList.get(position).getSsComment().getUserId());
         Call<ResponseBody> call = articleDetailsAPI.blockUserApi(blockUserModel);
         call.enqueue(blockUserCallBack);
+        consolidatedList.remove(position);
+        adapter.setListData(consolidatedList);
+        adapter.notifyDataSetChanged();
     }
 
     private Callback<ResponseBody> blockUserCallBack = new Callback<ResponseBody>() {
