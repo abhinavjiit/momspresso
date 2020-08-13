@@ -30,7 +30,6 @@ class SecuritySettingActivity : BaseActivity(), View.OnClickListener {
     private var isTaggable = false
     val a = emptyArray<String>()
 
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.security_setting_activity)
@@ -46,7 +45,6 @@ class SecuritySettingActivity : BaseActivity(), View.OnClickListener {
         blockUserRightArrowImageView.setOnClickListener(this)
         switchTextView.setOnClickListener(this)
     }
-
 
     private fun getBloggerData() {
         val retrofit = BaseApplication.getInstance().retrofit
@@ -81,9 +79,7 @@ class SecuritySettingActivity : BaseActivity(), View.OnClickListener {
                 FirebaseCrashlytics.getInstance().recordException(e)
                 Log.d("MC4kException", Log.getStackTraceString(e))
             }
-
         }
-
     }
 
     override fun onClick(view: View?) {
@@ -98,7 +94,6 @@ class SecuritySettingActivity : BaseActivity(), View.OnClickListener {
                 } else {
                     userTaggableModel = UserTaggableModel(isTaggable = "1")
                     isTaggable = true
-
                 }
                 val call = bloggerDashboardAPI.updateUserTaggableSetting(
                     SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).dynamoId,
@@ -122,10 +117,6 @@ class SecuritySettingActivity : BaseActivity(), View.OnClickListener {
         }
 
         override fun onResponse(call: Call<ResponseBody>, response: Response<ResponseBody>) {
-
         }
     }
-
-
 }
-

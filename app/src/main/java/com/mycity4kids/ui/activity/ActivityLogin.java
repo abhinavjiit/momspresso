@@ -536,15 +536,13 @@ public class ActivityLogin extends BaseActivity implements IFacebookUser {
         @Override
         public void onResponse(Call<UserDetailResponse> call, retrofit2.Response<UserDetailResponse> response) {
             removeProgressDialog();
-            if (response == null || response.body() == null) {
+            if (response.body() == null) {
                 return;
             }
 
             try {
                 UserDetailResponse responseData = response.body();
-                if (responseData.getCode() == 200 && Constants.SUCCESS.equals(responseData.getStatus())) {
-
-                } else {
+                if (responseData.getCode() != 200 || !Constants.SUCCESS.equals(responseData.getStatus())) {
                     showToast(responseData.getReason());
                 }
             } catch (Exception e) {
@@ -558,7 +556,6 @@ public class ActivityLogin extends BaseActivity implements IFacebookUser {
             Log.d("MC4kException", Log.getStackTraceString(t));
             FirebaseCrashlytics.getInstance().recordException(t);
             apiExceptions(t);
-//            showToast(getString(R.string.went_wrong));
         }
     };
 
@@ -584,7 +581,7 @@ public class ActivityLogin extends BaseActivity implements IFacebookUser {
         public void onResponse(Call<UserDetailResponse> call, retrofit2.Response<UserDetailResponse> response) {
             removeProgressDialog();
             Log.d("SUCCESS", "" + response);
-            if (response == null || response.body() == null) {
+            if (response.body() == null) {
                 showToast(getString(R.string.went_wrong));
                 return;
             }
@@ -611,7 +608,6 @@ public class ActivityLogin extends BaseActivity implements IFacebookUser {
             Log.d("MC4kException", Log.getStackTraceString(t));
             FirebaseCrashlytics.getInstance().recordException(t);
             apiExceptions(t);
-//            showToast(getString(R.string.went_wrong));
         }
     };
 

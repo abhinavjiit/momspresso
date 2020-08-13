@@ -1555,5 +1555,7 @@ Thank you! We will be reviewing your story. You can expect to hear from us withi
   <string name="set_user_handle">Set your userhandle</string>
   <string name="tagging_coachmark">You can now tag your followers and friends on Momspresso</string>
   <string name="comment_placeholder">Type here. Tag your followers and friends on Momspresso by typing @, followed by their name and then select them from the dropdown! eg @ritu</string>
+  <string name="all_month">Month</string>
+  <string name="all_category">Category</string>
 </resources>
 

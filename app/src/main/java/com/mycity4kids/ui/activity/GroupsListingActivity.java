@@ -405,13 +405,13 @@ public class GroupsListingActivity extends BaseActivity implements GroupsRecycle
             if (comingFrom.equals("myFeed")) {
                 hideBottomDrawer.setVisibility(View.VISIBLE);
                 bottomSheetBehavior.setState(BottomSheetBehavior.STATE_EXPANDED);
-//                if (addPostContainer.getVisibility() == View.GONE) {
-//                    addPostContainer.setVisibility(View.VISIBLE);
-//                }
             } else {
                 Intent intent = new Intent(this, GroupDetailsActivity.class);
                 intent.putExtra("groupId", selectedGroup.getId());
                 intent.putExtra(AppConstants.GROUP_MEMBER_TYPE, userType);
+                intent.putExtra("membershipId", body.getData().getResult().get(0).getId());
+                intent.putExtra("questionnaireResponse",
+                        (LinkedTreeMap) body.getData().getResult().get(0).getQuestionnaireResponse());
                 startActivity(intent);
                 Utils.groupsEvent(GroupsListingActivity.this, "Groups you are member of_listing", "group card",
                         "android", SharedPrefUtils.getAppLocale(BaseApplication.getAppContext()),

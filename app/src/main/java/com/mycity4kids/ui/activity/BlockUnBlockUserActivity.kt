@@ -60,9 +60,8 @@ class BlockUnBlockUserActivity : BaseActivity(), BlockUnblockUserAdapter.Recycle
         }
     }
 
-
     private fun getBlockUserList() {
-        val ret = BaseApplication.getInstance().retrofit;
+        val ret = BaseApplication.getInstance().retrofit
         val followApi = ret.create(FollowAPI::class.java)
         val call = followApi.getBlockUserList(
             SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).dynamoId,
@@ -70,7 +69,6 @@ class BlockUnBlockUserActivity : BaseActivity(), BlockUnblockUserAdapter.Recycle
             10
         )
         call.enqueue(getBlockUserListCallBack)
-
     }
 
     private val getBlockUserListCallBack = object : Callback<FollowersFollowingResponse> {
@@ -96,14 +94,12 @@ class BlockUnBlockUserActivity : BaseActivity(), BlockUnblockUserAdapter.Recycle
                 Log.d("MC4kException", Log.getStackTraceString(e))
             }
         }
-
     }
-
 
     private fun processData(blockedUserList: ArrayList<FollowersFollowingResult>) {
         if (blockedUserList.isNullOrEmpty()) {
             if (!blockUserList.isNullOrEmpty()) {
-                //last page reached
+                // last page reached
             } else {
                 noBlockedUserTextView.visibility = View.VISIBLE
             }
@@ -122,7 +118,6 @@ class BlockUnBlockUserActivity : BaseActivity(), BlockUnblockUserAdapter.Recycle
         }
     }
 
-
     override fun onRecyclerClick(position: Int) {
         val retrofit = BaseApplication.getInstance().retrofit
         val articleDetailsApi = retrofit.create(ArticleDetailsAPI::class.java)
@@ -132,7 +127,6 @@ class BlockUnBlockUserActivity : BaseActivity(), BlockUnblockUserAdapter.Recycle
             val call = articleDetailsApi.unBlockUserApi(blockUnBlockRequest)
             blockUserList?.get(position)?.isBLocked = false
             call.enqueue(blockUnBlockCallback)
-
         } else {
             val blockUnBlockRequest = BlockUserModel(blockUserList?.get(position)?.userId)
             val call = articleDetailsApi.blockUserApi(blockUnBlockRequest)
@@ -142,7 +136,6 @@ class BlockUnBlockUserActivity : BaseActivity(), BlockUnblockUserAdapter.Recycle
         adapter.setListData(blockUserList)
         adapter.notifyDataSetChanged()
     }
-
 
     private val blockUnBlockCallback = object : Callback<ResponseBody> {
         override fun onFailure(call: Call<ResponseBody>, t: Throwable) {
@@ -157,14 +150,10 @@ class BlockUnBlockUserActivity : BaseActivity(), BlockUnblockUserAdapter.Recycle
             }
             try {
                 Log.d("Tag", "success")
-
             } catch (t: Exception) {
                 FirebaseCrashlytics.getInstance().recordException(t)
                 Log.d("MC4kException", Log.getStackTraceString(t))
             }
         }
-
     }
-
-
 }

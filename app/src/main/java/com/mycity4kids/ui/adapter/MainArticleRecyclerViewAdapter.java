@@ -1,9 +1,7 @@
 package com.mycity4kids.ui.adapter;
 
 import android.content.Context;
-import android.content.Intent;
 import android.os.AsyncTask;
-import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -15,7 +13,6 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 import androidx.cardview.widget.CardView;
 import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
@@ -25,7 +22,6 @@ import com.google.gson.GsonBuilder;
 import com.google.gson.JsonSyntaxException;
 import com.mikhaellopez.circularimageview.CircularImageView;
 import com.mixpanel.android.mpmetrics.MixpanelAPI;
-import com.mycity4kids.BuildConfig;
 import com.mycity4kids.R;
 import com.mycity4kids.application.BaseApplication;
 import com.mycity4kids.constants.AppConstants;
@@ -35,15 +31,9 @@ import com.mycity4kids.models.request.ArticleDetailRequest;
 import com.mycity4kids.models.request.DeleteBookmarkRequest;
 import com.mycity4kids.models.response.AddBookmarkResponse;
 import com.mycity4kids.models.response.ArticleListingResult;
-import com.mycity4kids.models.response.GroupsMembershipResponse;
 import com.mycity4kids.models.response.VlogsListingAndDetailResult;
 import com.mycity4kids.models.response.VlogsListingResponse;
 import com.mycity4kids.preference.SharedPrefUtils;
-import com.mycity4kids.ui.GroupMembershipStatus;
-import com.mycity4kids.ui.activity.DashboardActivity;
-import com.mycity4kids.ui.activity.GroupDetailsActivity;
-import com.mycity4kids.ui.activity.GroupsSummaryActivity;
-import com.mycity4kids.ui.fragment.GroupsViewFragment;
 import com.mycity4kids.utils.AppUtils;
 import com.mycity4kids.utils.ArrayAdapterFactory;
 import com.mycity4kids.utils.StringUtils;
@@ -60,21 +50,18 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Locale;
-import org.json.JSONObject;
 
 /**
  * Created by hemant on 4/12/17.
  */
 
-public class MainArticleRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> implements
-        GroupMembershipStatus.IMembershipStatus {
+public class MainArticleRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
     private MixpanelAPI mixpanel;
     private static int ARTICLE = 0;
     private static int AD = 1;
     private static int HEADER = 2;
     private static int STORY = 3;
-    private static int GROUPS = 4;
     private static int VIDEOS = 5;
     private static int MM_CAMPAIGN = 6;
     private static int TORCAI_AD = 7;
@@ -85,17 +72,12 @@ public class MainArticleRecyclerViewAdapter extends RecyclerView.Adapter<Recycle
     private RecyclerViewClickListener recyclerViewClickListener;
     private boolean topicHeaderVisibilityFlag;
     private boolean isRequestRunning;
-    private String heading;
-    private String subHeading;
-    private String gpImageUrl;
-    private int groupId;
     private String screenName;
     private Gson gson;
     private boolean showVideoFlag;
     private String htmlContent = "";
     private String dataType = "";
     private boolean showAds = false;
-
 
     public MainArticleRecyclerViewAdapter(Context context, RecyclerViewClickListener listener,
             boolean topicHeaderVisibilityFlag, String screenName, boolean showVideoFlag) {
@@ -109,39 +91,8 @@ public class MainArticleRecyclerViewAdapter extends RecyclerView.Adapter<Recycle
         this.showVideoFlag = showVideoFlag;
     }
 
-    public void hideFollowTopicHeader() {
-        topicHeaderVisibilityFlag = false;
-    }
-
     public void setNewListData(ArrayList<ArticleListingResult> articleDataModelsNew) {
         this.articleDataModelsNew = articleDataModelsNew;
-    }
-
-    public void setCampaignOrAdSlotData(String dataType, ArrayList<CampaignDataListResult> campaignList,
-            String adSlotHtml) {
-        this.dataType = dataType;
-        campaignListDataModels = campaignList;
-        this.htmlContent = adSlotHtml;
-    }
-
-    public void setTorcaiAdSlotData(boolean showAds, String adSlotHtml) {
-        this.showAds = showAds;
-        this.htmlContent = adSlotHtml;
-    }
-
-    public void setGroupInfo(int groupId, String heading, String subHeading, String gpImageUrl) {
-        if (StringUtils.isNullOrEmpty(heading)) {
-            this.heading = BaseApplication.getAppContext().getString(R.string.groups_join_support_gp);
-        } else {
-            this.heading = heading;
-        }
-        if (StringUtils.isNullOrEmpty(subHeading)) {
-            this.subHeading = BaseApplication.getAppContext().getString(R.string.groups_not_alone);
-        } else {
-            this.subHeading = subHeading;
-        }
-        this.gpImageUrl = gpImageUrl;
-        this.groupId = groupId;
     }
 
     @Override
@@ -186,9 +137,6 @@ public class MainArticleRecyclerViewAdapter extends RecyclerView.Adapter<Recycle
         } else if (viewType == HEADER) {
             View v0 = layoutInflater.inflate(R.layout.trending_list_header_item, parent, false);
             return new HeaderViewHolder(v0);
-        } else if (viewType == GROUPS) {
-            View v0 = layoutInflater.inflate(R.layout.join_group_article_item, parent, false);
-            return new JoinGroupViewHolder(v0);
         } else if (viewType == TORCAI_AD) {
             View v0 = layoutInflater.inflate(R.layout.campaign_carousel_container, parent, false);
             return new TorcaiAdsViewHolder(v0);
@@ -223,39 +171,6 @@ public class MainArticleRecyclerViewAdapter extends RecyclerView.Adapter<Recycle
                     viewHolder.articleImageView, viewHolder.videoIndicatorImageView,
                     viewHolder.bookmarkArticleImageView, viewHolder.watchLaterImageView,
                     articleDataModelsNew.get(position), position, viewHolder);
-        } else if (holder instanceof JoinGroupViewHolder) {
-            if (StringUtils.isNullOrEmpty(heading) || StringUtils.isNullOrEmpty(subHeading)) {
-                ((JoinGroupViewHolder) holder).groupHeadingTextView.setText("");
-                ((JoinGroupViewHolder) holder).groupSubHeadingTextView.setText("");
-                ((JoinGroupViewHolder) holder).joinGroupTextView.setVisibility(View.GONE);
-            } else {
-                ((JoinGroupViewHolder) holder).groupHeadingTextView.setText(heading);
-                ((JoinGroupViewHolder) holder).groupSubHeadingTextView.setText(subHeading);
-                ((JoinGroupViewHolder) holder).joinGroupTextView.setVisibility(View.VISIBLE);
-            }
-            try {
-                Picasso.get().load(gpImageUrl).placeholder(R.drawable.groups_generic)
-                        .error(R.drawable.groups_generic).into(((JoinGroupViewHolder) holder).groupHeaderImageView);
-            } catch (Exception e) {
-                ((JoinGroupViewHolder) holder).groupHeaderImageView.setImageResource(R.drawable.groups_generic);
-            }
-            JoinGroupViewHolder viewHolder = (JoinGroupViewHolder) holder;
-            if (AppConstants.CONTENT_TYPE_ARTICLE.equals(articleDataModelsNew.get(position).getContentType())) {
-                viewHolder.headerArticleView.setVisibility(View.VISIBLE);
-                viewHolder.storyHeaderView.setVisibility(View.GONE);
-                addArticleItem(viewHolder.txvArticleTitle, viewHolder.forYouInfoLL, viewHolder.viewCountTextView,
-                        viewHolder.commentCountTextView,
-                        viewHolder.recommendCountTextView, viewHolder.txvAuthorName, viewHolder.articleImageView,
-                        viewHolder.videoIndicatorImageView, viewHolder.bookmarkArticleImageView,
-                        viewHolder.watchLaterImageView, articleDataModelsNew.get(position), position, viewHolder);
-            } else {
-                viewHolder.headerArticleView.setVisibility(View.GONE);
-                viewHolder.storyHeaderView.setVisibility(View.VISIBLE);
-                addShortStoryItem(viewHolder, viewHolder.storyImage, viewHolder.authorNameTextView,
-                        viewHolder.storyCommentCountTextView, viewHolder.storyRecommendationCountTextView,
-                        viewHolder.likeImageView, articleDataModelsNew.get(position), viewHolder.followAuthorTextView,
-                        viewHolder.storyAuthorTextView, viewHolder.shareStoryImageView, viewHolder.logoImageView);
-            }
         } else if (holder instanceof VideoCarouselViewHolder) {
             if (!articleDataModelsNew.get(position).isCarouselRequestRunning() && !articleDataModelsNew.get(position)
                     .isResponseReceived()) {
@@ -567,61 +482,6 @@ public class MainArticleRecyclerViewAdapter extends RecyclerView.Adapter<Recycle
             FirebaseCrashlytics.getInstance().recordException(e);
             Log.d("MC4kException", Log.getStackTraceString(e));
         }
-    }
-
-    @Override
-    public void onMembershipStatusFetchSuccess(GroupsMembershipResponse body, int groupId) {
-        String userType = null;
-        if (body.getData().getResult() != null && !body.getData().getResult().isEmpty()) {
-            if (body.getData().getResult().get(0).getIsAdmin() == 1) {
-                userType = AppConstants.GROUP_MEMBER_TYPE_ADMIN;
-            } else if (body.getData().getResult().get(0).getIsModerator() == 1) {
-                userType = AppConstants.GROUP_MEMBER_TYPE_MODERATOR;
-            }
-        }
-        if (!AppConstants.GROUP_MEMBER_TYPE_MODERATOR.equals(userType) && !AppConstants.GROUP_MEMBER_TYPE_ADMIN
-                .equals(userType)) {
-            if ("male".equalsIgnoreCase(SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getGender())
-                    || "m".equalsIgnoreCase(
-                    SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getGender())) {
-                Toast.makeText(mainContext, mainContext.getString(R.string.women_only), Toast.LENGTH_SHORT).show();
-                if (!BuildConfig.DEBUG && !AppConstants.DEBUGGING_USER_ID
-                        .contains(SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId())) {
-                    return;
-                }
-            }
-        }
-        if (body.getData().getResult() == null || body.getData().getResult().isEmpty()) {
-            Intent intent = new Intent(mainContext, GroupsSummaryActivity.class);
-            intent.putExtra("groupId", groupId);
-            intent.putExtra(AppConstants.GROUP_MEMBER_TYPE, userType);
-            mainContext.startActivity(intent);
-        } else if (AppConstants.GROUP_MEMBERSHIP_STATUS_BLOCKED.equals(body.getData().getResult().get(0).getStatus())) {
-            Toast.makeText(mainContext, mainContext.getString(R.string.groups_user_blocked_msg), Toast.LENGTH_SHORT)
-                    .show();
-        } else if (AppConstants.GROUP_MEMBERSHIP_STATUS_MEMBER.equals(body.getData().getResult().get(0).getStatus())) {
-            Intent intent = new Intent(mainContext, GroupDetailsActivity.class);
-            intent.putExtra("groupId", groupId);
-            intent.putExtra(AppConstants.GROUP_MEMBER_TYPE, userType);
-            mainContext.startActivity(intent);
-        } else if (AppConstants.GROUP_MEMBERSHIP_STATUS_PENDING_MODERATION
-                .equals(body.getData().getResult().get(0).getStatus())) {
-            Intent intent = new Intent(mainContext, GroupsSummaryActivity.class);
-            intent.putExtra("groupId", groupId);
-            intent.putExtra("pendingMembershipFlag", true);
-            intent.putExtra(AppConstants.GROUP_MEMBER_TYPE, userType);
-            mainContext.startActivity(intent);
-        } else {
-            Intent intent = new Intent(mainContext, GroupsSummaryActivity.class);
-            intent.putExtra("groupId", groupId);
-            intent.putExtra(AppConstants.GROUP_MEMBER_TYPE, userType);
-            mainContext.startActivity(intent);
-        }
-    }
-
-    @Override
-    public void onMembershipStatusFetchFail() {
-
     }
 
     public class AdViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
@@ -1118,143 +978,6 @@ public class MainArticleRecyclerViewAdapter extends RecyclerView.Adapter<Recycle
         }
     }
 
-    public class JoinGroupViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
-
-        FrameLayout groupHeaderView;
-        TextView groupHeadingTextView;
-        TextView groupSubHeadingTextView;
-        TextView joinGroupTextView;
-        ImageView groupHeaderImageView;
-
-        FrameLayout headerArticleView;
-        TextView txvArticleTitle;
-        TextView txvAuthorName;
-        ImageView articleImageView;
-        ImageView videoIndicatorImageView;
-        LinearLayout forYouInfoLL;
-        TextView viewCountTextView;
-        TextView commentCountTextView;
-        TextView recommendCountTextView;
-        ImageView bookmarkArticleImageView;
-        ImageView watchLaterImageView;
-        ImageView menuItem;
-
-        RelativeLayout storyHeaderView;
-
-        TextView authorNameTextView;
-        TextView followAuthorTextView;
-        TextView storyCommentCountTextView;
-        LinearLayout storyRecommendationContainer;
-        LinearLayout storyCommentContainer;
-        TextView storyRecommendationCountTextView;
-        ImageView storyImage;
-        ImageView likeImageView;
-        ImageView facebookShareImageView;
-        ImageView whatsappShareImageView;
-        ImageView instagramShareImageView;
-        ImageView genericShareImageView;
-        StoryShareCardWidget storyShareCardWidget;
-        ImageView shareStoryImageView;
-        ImageView logoImageView;
-        TextView storyAuthorTextView;
-
-        JoinGroupViewHolder(View view) {
-            super(view);
-            groupHeaderView = (FrameLayout) view.findViewById(R.id.groupHeaderView);
-            groupHeadingTextView = (TextView) view.findViewById(R.id.groupHeadingTextView);
-            groupSubHeadingTextView = (TextView) view.findViewById(R.id.groupSubHeadingTextView);
-            joinGroupTextView = (TextView) view.findViewById(R.id.joinGroupTextView);
-            groupHeaderImageView = (ImageView) view.findViewById(R.id.groupHeaderImageView);
-
-            headerArticleView = (FrameLayout) view.findViewById(R.id.headerArticleView);
-            txvArticleTitle = (TextView) view.findViewById(R.id.txvArticleTitle);
-            txvAuthorName = (TextView) view.findViewById(R.id.txvAuthorName);
-            articleImageView = (ImageView) view.findViewById(R.id.articleImageView);
-            videoIndicatorImageView = (ImageView) view.findViewById(R.id.videoIndicatorImageView);
-            forYouInfoLL = (LinearLayout) view.findViewById(R.id.forYouInfoLL);
-            viewCountTextView = (TextView) view.findViewById(R.id.viewCountTextView);
-            commentCountTextView = (TextView) view.findViewById(R.id.commentCountTextView);
-            recommendCountTextView = (TextView) view.findViewById(R.id.recommendCountTextView);
-            bookmarkArticleImageView = (ImageView) view.findViewById(R.id.bookmarkArticleImageView);
-            watchLaterImageView = (ImageView) view.findViewById(R.id.watchLaterImageView);
-
-            storyHeaderView = (RelativeLayout) view.findViewById(R.id.storyHeaderView);
-
-            authorNameTextView = (TextView) view.findViewById(R.id.authorNameTextView);
-            storyRecommendationContainer = (LinearLayout) view.findViewById(R.id.storyRecommendationContainer);
-            storyCommentContainer = (LinearLayout) view.findViewById(R.id.storyCommentContainer);
-            storyCommentCountTextView = (TextView) view.findViewById(R.id.storyCommentCountTextView);
-            storyRecommendationCountTextView = (TextView) view.findViewById(R.id.storyRecommendationCountTextView);
-            storyImage = (ImageView) view.findViewById(R.id.storyImageView1);
-            likeImageView = (ImageView) view.findViewById(R.id.likeImageView);
-            facebookShareImageView = (ImageView) view.findViewById(R.id.facebookShareImageView);
-            whatsappShareImageView = (ImageView) view.findViewById(R.id.whatsappShareImageView);
-            instagramShareImageView = (ImageView) view.findViewById(R.id.instagramShareImageView);
-            genericShareImageView = (ImageView) view.findViewById(R.id.genericShareImageView);
-            menuItem = (ImageView) view.findViewById(R.id.menuItem);
-            followAuthorTextView = (TextView) view.findViewById(R.id.followAuthorTextView);
-            storyShareCardWidget = (StoryShareCardWidget) itemView.findViewById(R.id.storyShareCardWidget);
-            shareStoryImageView = (ImageView) storyShareCardWidget.findViewById(R.id.storyImageView);
-            logoImageView = (ImageView) storyShareCardWidget.findViewById(R.id.logoImageView);
-            storyAuthorTextView = (TextView) storyShareCardWidget.findViewById(R.id.storyAuthorTextView);
-            whatsappShareImageView.setTag(view);
-
-            headerArticleView.setOnClickListener(this);
-            storyHeaderView.setOnClickListener(this);
-            storyRecommendationContainer.setOnClickListener(this);
-            facebookShareImageView.setOnClickListener(this);
-            whatsappShareImageView.setOnClickListener(this);
-            instagramShareImageView.setOnClickListener(this);
-            genericShareImageView.setOnClickListener(this);
-            authorNameTextView.setOnClickListener(this);
-            storyImage.setOnClickListener(this);
-            menuItem.setOnClickListener(this);
-            followAuthorTextView.setOnClickListener(this);
-
-            groupHeaderView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    Log.d("groupHeaderView", "GROUPID-" + groupId);
-                    if (groupId == 0) {
-                        if (mainContext instanceof DashboardActivity) {
-                            GroupsViewFragment groupsFragment = new GroupsViewFragment();
-                            Bundle bundle = new Bundle();
-                            groupsFragment.setArguments(bundle);
-                            ((DashboardActivity) mainContext).addFragment(groupsFragment, bundle);
-                        } else {
-                            Intent groupIntent = new Intent(mainContext, DashboardActivity.class);
-                            groupIntent.putExtra("TabType", "group");
-                            mainContext.startActivity(groupIntent);
-                        }
-                    } else {
-                        GroupMembershipStatus groupMembershipStatus = new GroupMembershipStatus(
-                                MainArticleRecyclerViewAdapter.this);
-                        groupMembershipStatus.checkMembershipStatus(groupId,
-                                SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId());
-                    }
-
-                    try {
-                        JSONObject jsonObject = new JSONObject();
-                        jsonObject.put("userId",
-                                SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId());
-                        jsonObject.put("screenName", "" + screenName);
-                        jsonObject.put("Topic", "" + screenName);
-                        mixpanel.track("JoinSupportGroupBannerClick", jsonObject);
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
-                }
-            });
-        }
-
-        @Override
-        public void onClick(View v) {
-            if (getAdapterPosition() != RecyclerView.NO_POSITION) {
-                recyclerViewClickListener.onRecyclerItemClick(v, getAdapterPosition());
-            }
-        }
-    }
-
     public interface RecyclerViewClickListener {
 
         void onRecyclerItemClick(View view, int position);
@@ -1397,9 +1120,6 @@ public class MainArticleRecyclerViewAdapter extends RecyclerView.Adapter<Recycle
                                 } else if (viewHolder instanceof HeaderViewHolder) {
                                     ((HeaderViewHolder) viewHolder).bookmarkArticleImageView.setImageDrawable(
                                             ContextCompat.getDrawable(mainContext, R.drawable.ic_bookmarked));
-                                } else if (viewHolder instanceof JoinGroupViewHolder) {
-                                    ((JoinGroupViewHolder) viewHolder).bookmarkArticleImageView.setImageDrawable(
-                                            ContextCompat.getDrawable(mainContext, R.drawable.ic_bookmarked));
                                 }
                             } else if ("unbookmarkArticle".equals(type)) {
                                 articleDataModelsNew.get(i).setIs_bookmark("0");
@@ -1411,9 +1131,6 @@ public class MainArticleRecyclerViewAdapter extends RecyclerView.Adapter<Recycle
                                 } else if (viewHolder instanceof HeaderViewHolder) {
                                     ((HeaderViewHolder) viewHolder).bookmarkArticleImageView.setImageDrawable(
                                             ContextCompat.getDrawable(mainContext, R.drawable.ic_bookmark));
-                                } else if (viewHolder instanceof JoinGroupViewHolder) {
-                                    ((JoinGroupViewHolder) viewHolder).bookmarkArticleImageView.setImageDrawable(
-                                            ContextCompat.getDrawable(mainContext, R.drawable.ic_bookmarked));
                                 }
                             } else if ("bookmarkVideo".equals(type)) {
                                 articleDataModelsNew.get(i).setListingWatchLaterStatus(1);
@@ -1425,9 +1142,6 @@ public class MainArticleRecyclerViewAdapter extends RecyclerView.Adapter<Recycle
                                 } else if (viewHolder instanceof HeaderViewHolder) {
                                     ((HeaderViewHolder) viewHolder).watchLaterImageView.setImageDrawable(
                                             ContextCompat.getDrawable(mainContext, R.drawable.ic_watch_added));
-                                } else if (viewHolder instanceof JoinGroupViewHolder) {
-                                    ((JoinGroupViewHolder) viewHolder).bookmarkArticleImageView.setImageDrawable(
-                                            ContextCompat.getDrawable(mainContext, R.drawable.ic_bookmarked));
                                 }
                             } else if ("unbookmarkVideo".equals(type)) {
                                 articleDataModelsNew.get(i).setListingWatchLaterStatus(0);
@@ -1441,9 +1155,6 @@ public class MainArticleRecyclerViewAdapter extends RecyclerView.Adapter<Recycle
                                     ((HeaderViewHolder) viewHolder).watchLaterImageView
                                             .setImageDrawable(
                                                     ContextCompat.getDrawable(mainContext, R.drawable.ic_watch));
-                                } else if (viewHolder instanceof JoinGroupViewHolder) {
-                                    ((JoinGroupViewHolder) viewHolder).bookmarkArticleImageView.setImageDrawable(
-                                            ContextCompat.getDrawable(mainContext, R.drawable.ic_bookmarked));
                                 }
                             }
                         }
@@ -1466,9 +1177,6 @@ public class MainArticleRecyclerViewAdapter extends RecyclerView.Adapter<Recycle
                     } else if (viewHolder instanceof HeaderViewHolder) {
                         ((HeaderViewHolder) viewHolder).bookmarkArticleImageView
                                 .setImageDrawable(ContextCompat.getDrawable(mainContext, R.drawable.ic_bookmark));
-                    } else if (viewHolder instanceof JoinGroupViewHolder) {
-                        ((JoinGroupViewHolder) viewHolder).bookmarkArticleImageView
-                                .setImageDrawable(ContextCompat.getDrawable(mainContext, R.drawable.ic_bookmark));
                     } else if (viewHolder instanceof VideoCarouselViewHolder) {
                         ((VideoCarouselViewHolder) viewHolder).bookmarkArticleImageView
                                 .setImageDrawable(ContextCompat.getDrawable(mainContext, R.drawable.ic_bookmark));
@@ -1481,9 +1189,6 @@ public class MainArticleRecyclerViewAdapter extends RecyclerView.Adapter<Recycle
                     } else if (viewHolder instanceof HeaderViewHolder) {
                         ((HeaderViewHolder) viewHolder).bookmarkArticleImageView
                                 .setImageDrawable(ContextCompat.getDrawable(mainContext, R.drawable.ic_bookmarked));
-                    } else if (viewHolder instanceof JoinGroupViewHolder) {
-                        ((JoinGroupViewHolder) viewHolder).bookmarkArticleImageView
-                                .setImageDrawable(ContextCompat.getDrawable(mainContext, R.drawable.ic_bookmark));
                     } else if (viewHolder instanceof VideoCarouselViewHolder) {
                         ((VideoCarouselViewHolder) viewHolder).bookmarkArticleImageView
                                 .setImageDrawable(ContextCompat.getDrawable(mainContext, R.drawable.ic_bookmark));
@@ -1496,9 +1201,6 @@ public class MainArticleRecyclerViewAdapter extends RecyclerView.Adapter<Recycle
                     } else if (viewHolder instanceof HeaderViewHolder) {
                         ((HeaderViewHolder) viewHolder).watchLaterImageView
                                 .setImageDrawable(ContextCompat.getDrawable(mainContext, R.drawable.ic_watch));
-                    } else if (viewHolder instanceof JoinGroupViewHolder) {
-                        ((JoinGroupViewHolder) viewHolder).bookmarkArticleImageView
-                                .setImageDrawable(ContextCompat.getDrawable(mainContext, R.drawable.ic_bookmark));
                     } else if (viewHolder instanceof VideoCarouselViewHolder) {
                         ((VideoCarouselViewHolder) viewHolder).bookmarkArticleImageView
                                 .setImageDrawable(ContextCompat.getDrawable(mainContext, R.drawable.ic_bookmark));
@@ -1511,9 +1213,6 @@ public class MainArticleRecyclerViewAdapter extends RecyclerView.Adapter<Recycle
                     } else if (viewHolder instanceof HeaderViewHolder) {
                         ((HeaderViewHolder) viewHolder).watchLaterImageView
                                 .setImageDrawable(ContextCompat.getDrawable(mainContext, R.drawable.ic_watch_added));
-                    } else if (viewHolder instanceof JoinGroupViewHolder) {
-                        ((JoinGroupViewHolder) viewHolder).bookmarkArticleImageView
-                                .setImageDrawable(ContextCompat.getDrawable(mainContext, R.drawable.ic_bookmark));
                     } else if (viewHolder instanceof VideoCarouselViewHolder) {
                         ((VideoCarouselViewHolder) viewHolder).bookmarkArticleImageView
                                 .setImageDrawable(ContextCompat.getDrawable(mainContext, R.drawable.ic_bookmark));

@@ -21,6 +21,7 @@ import com.mycity4kids.models.request.JoinGroupRequest;
 import com.mycity4kids.models.request.UpdateGroupMembershipRequest;
 import com.mycity4kids.models.response.BaseResponse;
 import com.mycity4kids.models.response.GroupResult;
+import com.mycity4kids.models.response.GroupsJoinResponse;
 import com.mycity4kids.models.response.GroupsMembershipResponse;
 import com.mycity4kids.models.response.GroupsSettingResponse;
 import com.mycity4kids.preference.SharedPrefUtils;
@@ -194,13 +195,13 @@ public class GroupsQuestionnaireActivity extends BaseActivity implements View.On
 
         Retrofit retrofit = BaseApplication.getInstance().getGroupsRetrofit();
         GroupsAPI groupsAPI = retrofit.create(GroupsAPI.class);
-        Call<BaseResponse> call = groupsAPI.createMember(joinGroupRequest);
+        Call<GroupsJoinResponse> call = groupsAPI.createMember(joinGroupRequest);
         call.enqueue(groupJoinResponseCallback);
     }
 
-    private Callback<BaseResponse> groupJoinResponseCallback = new Callback<BaseResponse>() {
+    private Callback<GroupsJoinResponse> groupJoinResponseCallback = new Callback<GroupsJoinResponse>() {
         @Override
-        public void onResponse(Call<BaseResponse> call, retrofit2.Response<BaseResponse> response) {
+        public void onResponse(Call<GroupsJoinResponse> call, retrofit2.Response<GroupsJoinResponse> response) {
             progressBar.setVisibility(View.GONE);
             if (response == null || response.body() == null) {
                 if (response != null && response.raw() != null) {
@@ -254,7 +255,7 @@ public class GroupsQuestionnaireActivity extends BaseActivity implements View.On
         }
 
         @Override
-        public void onFailure(Call<BaseResponse> call, Throwable t) {
+        public void onFailure(Call<GroupsJoinResponse> call, Throwable t) {
             progressBar.setVisibility(View.GONE);
             showToast("Group Join Request wrong");
             FirebaseCrashlytics.getInstance().recordException(t);

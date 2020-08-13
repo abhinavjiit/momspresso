@@ -24,11 +24,11 @@ import com.mycity4kids.constants.AppConstants;
 import com.mycity4kids.gtmutils.Utils;
 import com.mycity4kids.models.request.JoinGroupRequest;
 import com.mycity4kids.models.request.UpdateGroupMembershipRequest;
-import com.mycity4kids.models.response.BaseResponse;
 import com.mycity4kids.models.response.GroupDetailResponse;
 import com.mycity4kids.models.response.GroupPostResponse;
 import com.mycity4kids.models.response.GroupPostResult;
 import com.mycity4kids.models.response.GroupResult;
+import com.mycity4kids.models.response.GroupsJoinResponse;
 import com.mycity4kids.models.response.GroupsMembershipResponse;
 import com.mycity4kids.preference.SharedPrefUtils;
 import com.mycity4kids.retrofitAPIsInterfaces.GroupsAPI;
@@ -297,22 +297,15 @@ public class GroupsSummaryActivity extends BaseActivity implements View.OnClickL
             JoinGroupRequest joinGroupRequest = new JoinGroupRequest();
             joinGroupRequest.setGroupId(selectedGroup.getId());
             joinGroupRequest.setUserId(SharedPrefUtils.getUserDetailModel(GroupsSummaryActivity.this).getDynamoId());
-            Call<BaseResponse> call = groupsApi.createMember(joinGroupRequest);
+            Call<GroupsJoinResponse> call = groupsApi.createMember(joinGroupRequest);
             call.enqueue(groupJoinResponseCallback);
         } else {
-            if (questionMap == null || questionMap.isEmpty()) {
-                JoinGroupRequest joinGroupRequest = new JoinGroupRequest();
-                joinGroupRequest.setGroupId(selectedGroup.getId());
-                joinGroupRequest
-                        .setUserId(SharedPrefUtils.getUserDetailModel(GroupsSummaryActivity.this).getDynamoId());
-                Call<BaseResponse> call = groupsApi.createMember(joinGroupRequest);
-                call.enqueue(groupJoinResponseCallback);
-            } else {
-                Intent intent = new Intent(GroupsSummaryActivity.this, GroupsQuestionnaireActivity.class);
-                intent.putExtra("groupItem", selectedGroup);
-                intent.putExtra("questionnaire", questionMap);
-                startActivity(intent);
-            }
+            JoinGroupRequest joinGroupRequest = new JoinGroupRequest();
+            joinGroupRequest.setGroupId(selectedGroup.getId());
+            joinGroupRequest
+                    .setUserId(SharedPrefUtils.getUserDetailModel(GroupsSummaryActivity.this).getDynamoId());
+            Call<GroupsJoinResponse> call = groupsApi.createMember(joinGroupRequest);
+            call.enqueue(groupJoinResponseCallback);
         }
     }
 
@@ -330,9 +323,9 @@ public class GroupsSummaryActivity extends BaseActivity implements View.OnClickL
     private void joinAndBecomeAdmin() {
     }
 
-    private Callback<BaseResponse> groupJoinResponseCallback = new Callback<BaseResponse>() {
+    private Callback<GroupsJoinResponse> groupJoinResponseCallback = new Callback<GroupsJoinResponse>() {
         @Override
-        public void onResponse(Call<BaseResponse> call, retrofit2.Response<BaseResponse> response) {
+        public void onResponse(Call<GroupsJoinResponse> call, retrofit2.Response<GroupsJoinResponse> response) {
             progressBar.setVisibility(View.GONE);
             if (response.body() == null) {
                 if (response.code() == 400) {
@@ -405,8 +398,13 @@ public class GroupsSummaryActivity extends BaseActivity implements View.OnClickL
                         e.printStackTrace();
                     }
                     if (AppConstants.GROUP_TYPE_OPEN_KEY.equals(selectedGroup.getType())) {
+                        GroupsJoinResponse membershipResponse = response.body();
                         Intent intent = new Intent(GroupsSummaryActivity.this, GroupDetailsActivity.class);
                         intent.putExtra("groupId", selectedGroup.getId());
+                        intent.putExtra("membershipId", membershipResponse.getData().getResult().get(0).getId());
+                        intent.putExtra("questionnaireResponse",
+                                (LinkedTreeMap) membershipResponse.getData().getResult().get(0)
+                                        .getQuestionnaireResponse());
                         intent.putExtra("justJoined", true);
                         startActivity(intent);
                         finish();
@@ -421,7 +419,7 @@ public class GroupsSummaryActivity extends BaseActivity implements View.OnClickL
         }
 
         @Override
-        public void onFailure(Call<BaseResponse> call, Throwable t) {
+        public void onFailure(Call<GroupsJoinResponse> call, Throwable t) {
             progressBar.setVisibility(View.GONE);
             FirebaseCrashlytics.getInstance().recordException(t);
             Log.d("MC4kException", Log.getStackTraceString(t));
@@ -440,6 +438,7 @@ public class GroupsSummaryActivity extends BaseActivity implements View.OnClickL
             }
             try {
                 if (response.isSuccessful()) {
+                    GroupsMembershipResponse membershipResponse = response.body();
                     MixpanelAPI mixpanel = MixpanelAPI
                             .getInstance(BaseApplication.getAppContext(), AppConstants.MIX_PANEL_TOKEN);
                     try {
@@ -454,6 +453,10 @@ public class GroupsSummaryActivity extends BaseActivity implements View.OnClickL
                     if (AppConstants.GROUP_TYPE_OPEN_KEY.equals(selectedGroup.getType())) {
                         Intent intent = new Intent(GroupsSummaryActivity.this, GroupDetailsActivity.class);
                         intent.putExtra("groupId", selectedGroup.getId());
+                        intent.putExtra("membershipId", membershipResponse.getData().getResult().get(0).getId());
+                        intent.putExtra("questionnaireResponse",
+                                (LinkedTreeMap) membershipResponse.getData().getResult().get(0)
+                                        .getQuestionnaireResponse());
                         startActivity(intent);
                         finish();
                     } else {
@@ -497,11 +500,17 @@ public class GroupsSummaryActivity extends BaseActivity implements View.OnClickL
                     }
                     try {
                         if (response.isSuccessful()) {
+                            GroupsMembershipResponse membershipResponse = response.body();
                             if (AppConstants.GROUP_TYPE_OPEN_KEY.equals(selectedGroup.getType())) {
                                 showToast("Group Join success");
                                 Intent intent = new Intent(GroupsSummaryActivity.this, GroupDetailsActivity.class);
                                 intent.putExtra("groupId", selectedGroup.getId());
                                 intent.putExtra("source", "questionnaire");
+                                intent.putExtra("membershipId",
+                                        membershipResponse.getData().getResult().get(0).getId());
+                                intent.putExtra("questionnaireResponse",
+                                        (LinkedTreeMap) membershipResponse.getData().getResult().get(0)
+                                                .getQuestionnaireResponse());
                                 startActivity(intent);
                                 finish();
                             } else {

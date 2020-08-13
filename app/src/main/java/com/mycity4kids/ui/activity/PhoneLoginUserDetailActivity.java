@@ -165,8 +165,7 @@ public class PhoneLoginUserDetailActivity extends BaseActivity implements View.O
     private Callback<UserDetailResponse> userDetailsUpdateResponseListener = new Callback<UserDetailResponse>() {
         @Override
         public void onResponse(Call<UserDetailResponse> call, retrofit2.Response<UserDetailResponse> response) {
-            if (response == null || response.body() == null) {
-//                showToast(getString(R.string.went_wrong));
+            if (response.body() == null) {
                 return;
             }
             UserDetailResponse responseData = response.body();
@@ -185,8 +184,6 @@ public class PhoneLoginUserDetailActivity extends BaseActivity implements View.O
                 SharedPrefUtils.setUserDetailModel(BaseApplication.getAppContext(), model);
                 Intent intent1 = new Intent(PhoneLoginUserDetailActivity.this, LoadingActivity.class);
                 startActivity(intent1);
-            } else {
-//                showToast(responseData.getReason());
             }
         }
 

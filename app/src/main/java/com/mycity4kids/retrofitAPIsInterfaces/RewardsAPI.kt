@@ -3,7 +3,6 @@ package com.mycity4kids.retrofitAPIsInterfaces
 import com.mycity4kids.models.campaignmodels.ReferralCodeResult
 import com.mycity4kids.models.campaignmodels.UserHandleAvailabilityResponse
 import com.mycity4kids.models.response.BaseResponseGeneric
-import com.mycity4kids.models.response.SetupBlogData
 import com.mycity4kids.models.response.ShortStoryImageData
 import com.mycity4kids.models.response.UserDetailResult
 import com.mycity4kids.models.response.UserHandleResult
@@ -18,22 +17,6 @@ import retrofit2.http.Path
 import retrofit2.http.Query
 
 interface RewardsAPI {
-    @PUT("/rewards/v1/users/{userId}")
-    fun sendRewardsapiData(
-        @Path("userId") userId: String,
-        @Body rewardsDetailsResultResonse: RewardsDetailsResultResonse,
-        @Query("fn") pageValue: Int
-    ):
-        Observable<BaseResponseGeneric<SetupBlogData>>
-
-    @PUT("/rewards/v1/users/{userId}")
-    fun sendRewardsapiDataTest(
-        @Path("userId") userId: String,
-        @Body rewardsDetailsResultResonse: RewardsDetailsResultResonse,
-        @Query("fn") pageValue: Int
-    ):
-        Call<RewardsPersonalResponse>
-
     @PUT("/rewards/v1/users/{userId}")
     fun sendRewardsapiDataForAny(
         @Path("userId") userId: String,

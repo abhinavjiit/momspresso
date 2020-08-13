@@ -16,6 +16,7 @@ import com.google.android.libraries.places.api.Places;
 import com.google.firebase.crashlytics.FirebaseCrashlytics;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.jakewharton.threetenabp.AndroidThreeTen;
 import com.mycity4kids.BuildConfig;
 import com.mycity4kids.MessageEvent;
 import com.mycity4kids.R;
@@ -182,7 +183,7 @@ public class BaseApplication extends Application {
         FirebaseCrashlytics.getInstance()
                 .setCustomKey("email", "" + SharedPrefUtils.getUserDetailModel(this).getEmail());
         setInstance(this);
-
+        AndroidThreeTen.init(this);
         createRetrofitInstance(AppConstants.LIVE_URL);
 
         Branch.enableLogging();

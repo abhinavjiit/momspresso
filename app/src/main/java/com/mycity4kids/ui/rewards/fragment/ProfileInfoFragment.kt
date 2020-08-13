@@ -241,16 +241,6 @@ class ProfileInfoFragment : BaseFragment(),
         lateinit var textView: TextView
         private lateinit var textDOB: TextView
         private lateinit var textKidsDOB: TextView
-        /*
-                @JvmStatic
-                fun newInstance(isComingFromRewards: Boolean = false, isComingfromCampaign: Boolean = false, referralCode: String = "") =
-                        ProfileInfoFragment().apply {
-                            arguments = Bundle().apply {
-                                this.putBoolean("isComingFromRewards", isComingFromRewards)
-                                this.putBoolean("isComingfromCampaign", isComingfromCampaign)
-                                this.putString("referralCode", referralCode)
-                            }
-                        }*/
     }
 
     override fun onCreateView(
@@ -416,8 +406,6 @@ class ProfileInfoFragment : BaseFragment(),
                 }
             }
         } else {
-            //            langLayout.visibility = View.GONE
-            //            editLanguage.visibility = View.GONE
             linearLanguage.visibility = View.GONE
             textEditLanguage.visibility = View.GONE
         }
@@ -442,8 +430,6 @@ class ProfileInfoFragment : BaseFragment(),
                 }
             }
         } else {
-            //            interestLayout.visibility = View.GONE
-            //            editInterest.visibility = View.GONE
             linearInterest.visibility = View.GONE
             textEditInterest.visibility = View.GONE
         }
@@ -1548,7 +1534,6 @@ class ProfileInfoFragment : BaseFragment(),
                             apiGetResponse = response.data!!.result
                             fetchCityData()
                             setValuesToComponents()
-                        } else {
                         }
                     }
 
@@ -1666,7 +1651,7 @@ class ProfileInfoFragment : BaseFragment(),
 
         override fun onDateSet(view: DatePicker, year: Int, month: Int, day: Int) {
             if (textView != null) {
-                textView.setText("" + day + "-" + (month + 1) + "-" + year)
+                textView.text = "" + day + "-" + (month + 1) + "-" + year
             }
         }
     }

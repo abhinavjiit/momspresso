@@ -30,6 +30,7 @@ import com.mycity4kids.models.response.GroupPostResponse;
 import com.mycity4kids.models.response.GroupsActionResponse;
 import com.mycity4kids.models.response.GroupsActionVoteResponse;
 import com.mycity4kids.models.response.GroupsCategoryMappingResponse;
+import com.mycity4kids.models.response.GroupsJoinResponse;
 import com.mycity4kids.models.response.GroupsListingResponse;
 import com.mycity4kids.models.response.GroupsMembershipResponse;
 import com.mycity4kids.models.response.GroupsReportContentResponse;
@@ -137,7 +138,7 @@ public interface GroupsAPI {
             @Query("userId") String userId);
 
     @POST("/api/v1/groups/members")
-    Call<BaseResponse> createMember(@Body JoinGroupRequest joinGroupRequest);
+    Call<GroupsJoinResponse> createMember(@Body JoinGroupRequest joinGroupRequest);
 
     @PATCH("/api/v1/groups/members/{memberId}")
     Call<GroupsMembershipResponse> updateMember(@Path("memberId") int memberId,

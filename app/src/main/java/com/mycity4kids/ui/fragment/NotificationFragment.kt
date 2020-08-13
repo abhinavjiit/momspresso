@@ -12,6 +12,7 @@ import android.widget.TextView
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.firebase.crashlytics.FirebaseCrashlytics
+import com.google.gson.internal.LinkedTreeMap
 import com.mycity4kids.BuildConfig
 import com.mycity4kids.R
 import com.mycity4kids.application.BaseApplication
@@ -994,6 +995,11 @@ class NotificationFragment : BaseFragment(), IMembershipStatus,
                 Intent(activity, GroupDetailsActivity::class.java)
             intent.putExtra("groupId", groupId)
             intent.putExtra(AppConstants.GROUP_MEMBER_TYPE, userType)
+            intent.putExtra("membershipId", body.data.result[0].id)
+            intent.putExtra(
+                "questionnaireResponse",
+                body.data.result[0].questionnaireResponse as LinkedTreeMap<*, *>
+            )
             startActivity(intent)
         } else if (AppConstants.GROUP_MEMBERSHIP_STATUS_PENDING_MODERATION
             == body.data.result[0].status) {

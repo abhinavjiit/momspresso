@@ -30,4 +30,3 @@ data class BlockUserModel(
         return result
     }
 }
-

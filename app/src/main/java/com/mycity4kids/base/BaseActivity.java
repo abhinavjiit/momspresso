@@ -27,6 +27,7 @@ import androidx.fragment.app.FragmentTransaction;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.crashlytics.FirebaseCrashlytics;
 import com.google.gson.Gson;
+import com.google.gson.internal.LinkedTreeMap;
 import com.mycity4kids.BuildConfig;
 import com.mycity4kids.MessageEvent;
 import com.mycity4kids.R;
@@ -370,6 +371,9 @@ public abstract class BaseActivity extends AppCompatActivity implements GroupMem
             Intent intent = new Intent(this, GroupDetailsActivity.class);
             intent.putExtra("groupId", groupId);
             intent.putExtra(AppConstants.GROUP_MEMBER_TYPE, userType);
+            intent.putExtra("membershipId", body.getData().getResult().get(0).getId());
+            intent.putExtra("questionnaireResponse",
+                    (LinkedTreeMap) body.getData().getResult().get(0).getQuestionnaireResponse());
             startActivity(intent);
         } else if (AppConstants.GROUP_MEMBERSHIP_STATUS_PENDING_MODERATION
                 .equals(body.getData().getResult().get(0).getStatus())) {

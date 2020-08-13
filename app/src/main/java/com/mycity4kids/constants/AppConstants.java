@@ -258,6 +258,7 @@ public class AppConstants {
     public static final String GROUP_SECTION_POLLS = "POLLS";
     public static final String GROUP_SECTION_ASK_AN_EXPERT = "ASK AN EXPERT";
     public static final String GROUP_SECTION_RESOURCES = "RESOURCES";
+    public static final String GROUP_SECTION_VIRTUAL_CLINIC = "VIRTUAL";
 
     public static final String POST_TYPE_TEXT = "textPost";
     public static final String POST_TYPE_MEDIA = "mediaPost";

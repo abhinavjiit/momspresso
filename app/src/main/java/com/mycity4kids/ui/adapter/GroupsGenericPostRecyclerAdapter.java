@@ -178,18 +178,29 @@ public class GroupsGenericPostRecyclerAdapter extends RecyclerView.Adapter<Recyc
                 if (postList != null && postList.size() != 0) {
                     if (postList.get(position) != null && postList.get(position).getUserInfo() != null
                             && postList.get(position).getUserInfo().getUserTag() != null) {
-                        if (postList.get(position).getUserInfo().getUserTag().size() != 0) {
+                        if (postList.get(position).getUserInfo().getUserTag().size() > 1) {
                             textPostViewHolder.userTag
-                                    .setText(postList.get(position).getUserInfo().getUserTag().get(0));
+                                    .setText("" + postList.get(position).getUserInfo().getUserTag().get(0));
                             textPostViewHolder.userTag.setVisibility(View.VISIBLE);
+                            textPostViewHolder.userTag1
+                                    .setText("" + postList.get(position).getUserInfo().getUserTag().get(1));
+                            textPostViewHolder.userTag1.setVisibility(View.VISIBLE);
+                        } else if (postList.get(position).getUserInfo().getUserTag().size() == 1) {
+                            textPostViewHolder.userTag
+                                    .setText("" + postList.get(position).getUserInfo().getUserTag().get(0));
+                            textPostViewHolder.userTag.setVisibility(View.VISIBLE);
+                            textPostViewHolder.userTag1.setVisibility(View.GONE);
                         } else {
                             textPostViewHolder.userTag.setVisibility(View.GONE);
+                            textPostViewHolder.userTag1.setVisibility(View.GONE);
                         }
                     } else {
                         textPostViewHolder.userTag.setVisibility(View.GONE);
+                        textPostViewHolder.userTag1.setVisibility(View.GONE);
                     }
                 } else {
                     textPostViewHolder.userTag.setVisibility(View.GONE);
+                    textPostViewHolder.userTag1.setVisibility(View.GONE);
                 }
             }
             textPostViewHolder.postDataTextView.setText(postList.get(position).getContent());
@@ -245,19 +256,29 @@ public class GroupsGenericPostRecyclerAdapter extends RecyclerView.Adapter<Recyc
                 if (postList != null && postList.size() != 0) {
                     if (postList.get(position) != null && postList.get(position).getUserInfo() != null
                             && postList.get(position).getUserInfo().getUserTag() != null) {
-                        if (postList.get(position).getUserInfo().getUserTag().size() != 0
-                                && postList.get(position).getUserInfo().getUserTag().get(0) != null) {
+                        if (postList != null && postList.size() > 1) {
                             audioCommentViewHolder.userTag
-                                    .setText(postList.get(position).getUserInfo().getUserTag().get(0));
+                                    .setText("" + postList.get(position).getUserInfo().getUserTag().get(0));
                             audioCommentViewHolder.userTag.setVisibility(View.VISIBLE);
+                            audioCommentViewHolder.userTag1
+                                    .setText("" + postList.get(position).getUserInfo().getUserTag().get(1));
+                            audioCommentViewHolder.userTag1.setVisibility(View.VISIBLE);
+                        } else if (postList.get(position).getUserInfo().getUserTag().size() == 1) {
+                            audioCommentViewHolder.userTag
+                                    .setText("" + postList.get(position).getUserInfo().getUserTag().get(0));
+                            audioCommentViewHolder.userTag.setVisibility(View.VISIBLE);
+                            audioCommentViewHolder.userTag1.setVisibility(View.GONE);
                         } else {
                             audioCommentViewHolder.userTag.setVisibility(View.GONE);
+                            audioCommentViewHolder.userTag1.setVisibility(View.GONE);
                         }
                     } else {
                         audioCommentViewHolder.userTag.setVisibility(View.GONE);
+                        audioCommentViewHolder.userTag1.setVisibility(View.GONE);
                     }
                 } else {
                     audioCommentViewHolder.userTag.setVisibility(View.GONE);
+                    audioCommentViewHolder.userTag1.setVisibility(View.GONE);
                 }
             }
             if (postList.get(position).getIsAnnon() == 1) {
@@ -356,19 +377,29 @@ public class GroupsGenericPostRecyclerAdapter extends RecyclerView.Adapter<Recyc
                 if (postList != null && postList.size() != 0) {
                     if (postList.get(position) != null && postList.get(position).getUserInfo() != null
                             && postList.get(position).getUserInfo().getUserTag() != null) {
-                        if (postList.get(position).getUserInfo().getUserTag().size() != 0
-                                && postList.get(position).getUserInfo().getUserTag().get(0) != null) {
+                        if (postList.get(position).getUserInfo().getUserTag().size() > 1) {
                             mediaPostViewHolder.userTag
-                                    .setText(postList.get(position).getUserInfo().getUserTag().get(0));
+                                    .setText("" + postList.get(position).getUserInfo().getUserTag().get(0));
                             mediaPostViewHolder.userTag.setVisibility(View.VISIBLE);
+                            mediaPostViewHolder.userTag1
+                                    .setText("" + postList.get(position).getUserInfo().getUserTag().get(1));
+                            mediaPostViewHolder.userTag1.setVisibility(View.VISIBLE);
+                        } else if (postList.get(position).getUserInfo().getUserTag().size() == 1) {
+                            mediaPostViewHolder.userTag
+                                    .setText("" + postList.get(position).getUserInfo().getUserTag().get(0));
+                            mediaPostViewHolder.userTag.setVisibility(View.VISIBLE);
+                            mediaPostViewHolder.userTag1.setVisibility(View.GONE);
                         } else {
                             mediaPostViewHolder.userTag.setVisibility(View.GONE);
+                            mediaPostViewHolder.userTag1.setVisibility(View.GONE);
                         }
                     } else {
                         mediaPostViewHolder.userTag.setVisibility(View.GONE);
+                        mediaPostViewHolder.userTag1.setVisibility(View.GONE);
                     }
                 } else {
                     mediaPostViewHolder.userTag.setVisibility(View.GONE);
+                    mediaPostViewHolder.userTag1.setVisibility(View.GONE);
                 }
             }
             if (postList.get(position).getMarkedHelpful() == 1) {
@@ -427,20 +458,29 @@ public class GroupsGenericPostRecyclerAdapter extends RecyclerView.Adapter<Recyc
                 if (postList != null && postList.size() != 0) {
                     if (postList.get(position) != null && postList.get(position).getUserInfo() != null
                             && postList.get(position).getUserInfo().getUserTag() != null) {
-                        if (postList.get(position).getUserInfo().getUserTag().size() != 0
-                                && postList.get(position).getUserInfo().getUserTag().get(0) != null) {
+                        if (postList.get(position).getUserInfo().getUserTag().size() > 1) {
                             textPollPostViewHolder.userTag
-                                    .setText(postList.get(position).getUserInfo().getUserTag().get(0));
+                                    .setText("" + postList.get(position).getUserInfo().getUserTag().get(0));
                             textPollPostViewHolder.userTag.setVisibility(View.VISIBLE);
-
+                            textPollPostViewHolder.userTag1
+                                    .setText("" + postList.get(position).getUserInfo().getUserTag().get(1));
+                            textPollPostViewHolder.userTag1.setVisibility(View.VISIBLE);
+                        } else if (postList.get(position).getUserInfo().getUserTag().size() == 1) {
+                            textPollPostViewHolder.userTag
+                                    .setText("" + postList.get(position).getUserInfo().getUserTag().get(0));
+                            textPollPostViewHolder.userTag.setVisibility(View.VISIBLE);
+                            textPollPostViewHolder.userTag1.setVisibility(View.GONE);
                         } else {
                             textPollPostViewHolder.userTag.setVisibility(View.GONE);
+                            textPollPostViewHolder.userTag1.setVisibility(View.GONE);
                         }
                     } else {
                         textPollPostViewHolder.userTag.setVisibility(View.GONE);
+                        textPollPostViewHolder.userTag1.setVisibility(View.GONE);
                     }
                 } else {
                     textPollPostViewHolder.userTag.setVisibility(View.GONE);
+                    textPollPostViewHolder.userTag1.setVisibility(View.GONE);
                 }
             }
             if (postList.get(position).getMarkedHelpful() == 1) {
@@ -535,18 +575,26 @@ public class GroupsGenericPostRecyclerAdapter extends RecyclerView.Adapter<Recyc
                 if (postList != null && postList.size() != 0) {
                     if (postList.get(position) != null && postList.get(position).getUserInfo() != null
                             && postList.get(position).getUserInfo().getUserTag() != null) {
-                        if (postList.get(position).getUserInfo().getUserTag().size() != 0
-                                && postList.get(position).getUserInfo().getUserTag().get(0) != null) {
-                            imageHolder.userTag.setText(postList.get(position).getUserInfo().getUserTag().get(0));
+                        if (postList.get(position).getUserInfo().getUserTag().size() > 1) {
+                            imageHolder.userTag.setText("" + postList.get(position).getUserInfo().getUserTag().get(0));
                             imageHolder.userTag.setVisibility(View.VISIBLE);
+                            imageHolder.userTag1.setText("" + postList.get(position).getUserInfo().getUserTag().get(1));
+                            imageHolder.userTag1.setVisibility(View.VISIBLE);
+                        } else if (postList.get(position).getUserInfo().getUserTag().size() == 1) {
+                            imageHolder.userTag.setText("" + postList.get(position).getUserInfo().getUserTag().get(0));
+                            imageHolder.userTag.setVisibility(View.VISIBLE);
+                            imageHolder.userTag1.setVisibility(View.GONE);
                         } else {
                             imageHolder.userTag.setVisibility(View.GONE);
+                            imageHolder.userTag1.setVisibility(View.GONE);
                         }
                     } else {
                         imageHolder.userTag.setVisibility(View.GONE);
+                        imageHolder.userTag1.setVisibility(View.GONE);
                     }
                 } else {
                     imageHolder.userTag.setVisibility(View.GONE);
+                    imageHolder.userTag1.setVisibility(View.GONE);
                 }
             }
             if (postList.get(position).getMarkedHelpful() == 1) {
@@ -795,6 +843,7 @@ public class GroupsGenericPostRecyclerAdapter extends RecyclerView.Adapter<Recyc
         TextView postDateTextView;
         TextView postDataTextView;
         TextView userTag;
+        TextView userTag1;
         TextView upvoteCountTextView;
         TextView downvoteCountTextView;
         LinearLayout upvoteContainer;
@@ -826,6 +875,7 @@ public class GroupsGenericPostRecyclerAdapter extends RecyclerView.Adapter<Recyc
             typeHere = (TextView) view.findViewById(R.id.typeHere);
             beTheFirstOne = (TextView) view.findViewById(R.id.beTheFirstOne);
             userTag = (TextView) view.findViewById(R.id.userTag);
+            userTag1 = (TextView) view.findViewById(R.id.userTag1);
 
             userImageView.setOnClickListener(this);
             usernameTextView.setOnClickListener(this);
@@ -876,6 +926,7 @@ public class GroupsGenericPostRecyclerAdapter extends RecyclerView.Adapter<Recyc
         TextView upvoteCountTextView;
         TextView downvoteCountTextView;
         TextView userTag;
+        TextView userTag1;
         LinearLayout upvoteContainer;
         LinearLayout downvoteContainer;
         TextView postCommentsTextView;
@@ -909,6 +960,7 @@ public class GroupsGenericPostRecyclerAdapter extends RecyclerView.Adapter<Recyc
             indexTextView = (TextView) view.findViewById(R.id.indexTextView);
             beTheFirstOne = (TextView) view.findViewById(R.id.beTheFirstOne);
             userTag = (TextView) view.findViewById(R.id.userTag);
+            userTag1 = (TextView) view.findViewById(R.id.userTag1);
 
             viewPagerAdapter = new GroupMediaPostViewPagerAdapter(context);
             postDataViewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
@@ -985,6 +1037,7 @@ public class GroupsGenericPostRecyclerAdapter extends RecyclerView.Adapter<Recyc
         TextView upvoteCommentCountTextView;
         TextView downvoteCommentCountTextView;
         TextView userTag;
+        TextView userTag1;
         LinearLayout upvoteCommentContainer;
         LinearLayout downvoteCommentContainer;
         RelativeLayout audiotRootView;
@@ -1021,6 +1074,7 @@ public class GroupsGenericPostRecyclerAdapter extends RecyclerView.Adapter<Recyc
             postSettingImageView = (ImageView) view.findViewById(R.id.postSettingImageView);
             beTheFirstOne = (TextView) view.findViewById(R.id.beTheFirstOne);
             userTag = (TextView) view.findViewById(R.id.userTag);
+            userTag1 = (TextView) view.findViewById(R.id.userTag1);
             profileImageView.setOnClickListener(this);
             whatsappShare.setOnClickListener(this);
 
@@ -1131,6 +1185,7 @@ public class GroupsGenericPostRecyclerAdapter extends RecyclerView.Adapter<Recyc
         TextView pollQuestionTextView;
         TextView beTheFirstOne;
         TextView userTag;
+        TextView userTag1;
         ImageView shareTextView;
         ImageView whatsappShare;
         RoundCornerProgressBar pollOption1ProgressBar;
@@ -1191,6 +1246,7 @@ public class GroupsGenericPostRecyclerAdapter extends RecyclerView.Adapter<Recyc
             option4Container = (RelativeLayout) view.findViewById(R.id.option4Container);
             beTheFirstOne = (TextView) view.findViewById(R.id.beTheFirstOne);
             userTag = (TextView) view.findViewById(R.id.userTag);
+            userTag1 = (TextView) view.findViewById(R.id.userTag1);
 
             userImageView.setOnClickListener(this);
             usernameTextView.setOnClickListener(this);
@@ -1249,6 +1305,7 @@ public class GroupsGenericPostRecyclerAdapter extends RecyclerView.Adapter<Recyc
         ImageView postSettingImageView;
         TextView pollQuestionTextView;
         TextView userTag;
+        TextView userTag1;
         ImageView shareTextView;
         ImageView upvoteImageVIew;
         ImageView option1ImageView;
@@ -1309,6 +1366,7 @@ public class GroupsGenericPostRecyclerAdapter extends RecyclerView.Adapter<Recyc
             beTheFirstOne = (TextView) view.findViewById(R.id.beTheFirstOne);
             commentLayout = (RelativeLayout) view.findViewById(R.id.commentLayout);
             userTag = (TextView) view.findViewById(R.id.userTag);
+            userTag1 = (TextView) view.findViewById(R.id.userTag1);
             userImageView.setOnClickListener(this);
             usernameTextView.setOnClickListener(this);
             postSettingImageView.setOnClickListener(this);

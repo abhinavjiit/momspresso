@@ -530,7 +530,6 @@ class RewardsPersonalInfoFragment : BaseFragment(),
         textAddChild.setOnClickListener {
             if (validateChildData()) {
                 createKidsDetailDynamicView()
-            } else {
             }
         }
 
@@ -739,11 +738,6 @@ class RewardsPersonalInfoFragment : BaseFragment(),
         } else {
             apiGetResponse.lastName = editLastName.text.toString()
         }
-
-        //        if (BuildConfig.DEBUG) {
-        //            accountKitAuthCode = "123"
-        //            apiGetResponse.contact = "9999999999"
-        //        }
 
         if (accountKitAuthCode.isNullOrEmpty() && apiGetResponse.contact.isNullOrEmpty()) {
             Toast.makeText(

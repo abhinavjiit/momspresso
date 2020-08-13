@@ -18,16 +18,13 @@ import androidx.appcompat.widget.AppCompatCheckBox
 import androidx.appcompat.widget.AppCompatRadioButton
 import androidx.appcompat.widget.AppCompatSpinner
 import androidx.fragment.app.Fragment
-import com.google.gson.Gson
 import com.mycity4kids.R
 import com.mycity4kids.application.BaseApplication
 import com.mycity4kids.base.BaseFragment
 import com.mycity4kids.constants.Constants
 import com.mycity4kids.models.response.BaseResponseGeneric
-import com.mycity4kids.models.response.SetupBlogData
 import com.mycity4kids.models.rewardsmodels.KidsInfoResponse
 import com.mycity4kids.models.rewardsmodels.RewardsDetailsResultResonse
-import com.mycity4kids.preference.SharedPrefUtils
 import com.mycity4kids.retrofitAPIsInterfaces.RewardsAPI
 import com.mycity4kids.ui.adapter.CustomSpinnerAdapter
 import com.mycity4kids.ui.rewards.dialog.PickerDialogFragment
@@ -121,8 +118,6 @@ class RewardsFamilyInfoFragment : BaseFragment(), PickerDialogFragment.OnClickDo
     }
 
     private lateinit var containerView: View
-    private lateinit var submitListener: SubmitListener
-    private lateinit var layoutNumberOfKids: RelativeLayout
     private lateinit var layoutMotherExptectedDate: RelativeLayout
     private lateinit var editExpectedDate: EditText
     private lateinit var checkNuclear: AppCompatRadioButton
@@ -131,7 +126,6 @@ class RewardsFamilyInfoFragment : BaseFragment(), PickerDialogFragment.OnClickDo
     private lateinit var spinnerGender: AppCompatSpinner
     private lateinit var radioYes: AppCompatRadioButton
     private lateinit var radioNo: AppCompatRadioButton
-    private lateinit var radioExpecting: AppCompatRadioButton
     private lateinit var linearKidsDetail: LinearLayout
     private var apiGetResponse: RewardsDetailsResultResonse = RewardsDetailsResultResonse()
     private lateinit var radioGroupWorkingStatus: RadioGroup
@@ -146,9 +140,7 @@ class RewardsFamilyInfoFragment : BaseFragment(), PickerDialogFragment.OnClickDo
     private lateinit var floatingLanguage: FlowLayout
     private lateinit var textEditInterest: TextView
     private lateinit var textEditLanguage: TextView
-    private lateinit var textAddChild: TextView
     private lateinit var radioGroupAreMother: RadioGroup
-    private lateinit var layoutDynamicNumberOfKids: LinearLayout
     private lateinit var textDeleteChild: TextView
     private lateinit var linearKidsEmptyView: LinearLayout
     private lateinit var editKidsName: EditText
@@ -589,7 +581,6 @@ class RewardsFamilyInfoFragment : BaseFragment(), PickerDialogFragment.OnClickDo
         var spinnerGender = indexView.findViewById<Spinner>(R.id.spinnerGender)
         var textDOB = indexView.findViewById<TextView>(R.id.textKidsDOB)
 
-        // textHeader.setText(String.format(resources.getString(R.string.kids_number), linearKidsDetail.childCount+1))
         val genderList = java.util.ArrayList<String>()
         genderList.add("Male")
         genderList.add("Female")
@@ -645,63 +636,5 @@ class RewardsFamilyInfoFragment : BaseFragment(), PickerDialogFragment.OnClickDo
         bundle.putBoolean("is_for_parent", isShowForParent)
         newFragment.arguments = bundle
         newFragment.show(activity!!.supportFragmentManager, "datePicker")
-    }
-
-    /*send data to server*/
-    private fun postDataofRewardsToServer() {
-        var userId =
-            com.mycity4kids.preference.SharedPrefUtils.getUserDetailModel(activity)?.dynamoId
-        //        var userId = "218f7fd8fe914c3887f508486fc9cf8e"
-        if (!userId.isNullOrEmpty()) {
-            Log.e("body to api ", Gson().toJson(apiGetResponse))
-            showProgressDialog(resources.getString(R.string.please_wait))
-            BaseApplication.getInstance().retrofit.create(RewardsAPI::class.java).sendRewardsapiData(
-                userId!!,
-                apiGetResponse,
-                2
-            ).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(
-                object : Observer<BaseResponseGeneric<SetupBlogData>> {
-                    override fun onComplete() {
-                        removeProgressDialog()
-                    }
-
-                    override fun onSubscribe(d: Disposable) {
-                    }
-
-                    override fun onNext(response: BaseResponseGeneric<SetupBlogData>) {
-                        if (response != null && response.code == 200 && Constants.SUCCESS == response.status && response.data != null && response.data!!.msg.equals(
-                                Constants.SUCCESS_MESSAGE
-                            )) {
-                            if (isComingFromCampaign) {
-                                SharedPrefUtils.setIsRewardsAdded(
-                                    BaseApplication.getAppContext(),
-                                    "1"
-                                )
-                            }
-                            submitListener.FamilyOnSubmit()
-                        } else {
-                        }
-                    }
-
-                    override fun onError(e: Throwable) {
-                        removeProgressDialog()
-                    }
-                })
-        }
-    }
-
-    //    override fun onAttach(context: Context?) {
-    //        super.onAttach(context)
-    //        if (context is RewardsContainerActivity) {
-    //            submitListener = context
-    //        }
-    //    }
-
-    fun convertStringToTimestamp(): Long {
-        return DateTimeUtils.convertStringToTimestamp(RewardsFamilyInfoFragment.textDOB.getText().toString())
-    }
-
-    interface SubmitListener {
-        fun FamilyOnSubmit()
     }
 }

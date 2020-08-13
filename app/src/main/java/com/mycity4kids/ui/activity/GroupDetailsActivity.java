@@ -1,6 +1,7 @@
 package com.mycity4kids.ui.activity;
 
 import android.accounts.NetworkErrorException;
+import android.app.DatePickerDialog;
 import android.app.Dialog;
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -14,6 +15,7 @@ import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -21,24 +23,31 @@ import android.view.Window;
 import android.view.WindowManager;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
+import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemSelectedListener;
 import android.widget.CheckBox;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.appcompat.widget.Toolbar;
+import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.coordinatorlayout.widget.CoordinatorLayout;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
+import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import com.getbase.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.bottomsheet.BottomSheetBehavior;
 import com.google.android.material.tabs.TabLayout;
 import com.google.firebase.crashlytics.FirebaseCrashlytics;
+import com.google.gson.internal.LinkedTreeMap;
 import com.mixpanel.android.mpmetrics.MixpanelAPI;
 import com.mycity4kids.R;
 import com.mycity4kids.application.BaseApplication;
@@ -67,22 +76,32 @@ import com.mycity4kids.models.response.GroupPostCommentResult;
 import com.mycity4kids.models.response.GroupPostResponse;
 import com.mycity4kids.models.response.GroupPostResult;
 import com.mycity4kids.models.response.GroupResult;
+import com.mycity4kids.models.response.GroupResult.VirtualClinicSettings.VirtualClinicCollectionSettings;
 import com.mycity4kids.models.response.GroupsActionResponse;
 import com.mycity4kids.models.response.GroupsCategoryMappingResponse;
 import com.mycity4kids.models.response.GroupsCategoryMappingResult;
 import com.mycity4kids.models.response.GroupsMembershipResponse;
+import com.mycity4kids.models.response.KidsModel;
+import com.mycity4kids.models.response.UserDetailResponse;
+import com.mycity4kids.models.response.UserDetailResult;
 import com.mycity4kids.models.response.UserPostSettingResponse;
 import com.mycity4kids.models.response.UserPostSettingResult;
+import com.mycity4kids.models.rewardsmodels.RewardsPersonalResponse;
 import com.mycity4kids.preference.SharedPrefUtils;
 import com.mycity4kids.profile.UserProfileActivity;
+import com.mycity4kids.retrofitAPIsInterfaces.BloggerDashboardAPI;
 import com.mycity4kids.retrofitAPIsInterfaces.CollectionsAPI;
 import com.mycity4kids.retrofitAPIsInterfaces.GroupsAPI;
+import com.mycity4kids.retrofitAPIsInterfaces.LoginRegistrationAPI;
 import com.mycity4kids.retrofitAPIsInterfaces.TopicsCategoryAPI;
+import com.mycity4kids.ui.activity.collection.UserCollectionItemListActivity;
 import com.mycity4kids.ui.adapter.CollectionItemsListAdapter;
 import com.mycity4kids.ui.adapter.CollectionItemsListAdapter.RecyclerViewClick;
+import com.mycity4kids.ui.adapter.CustomSpinnerAdapter;
 import com.mycity4kids.ui.adapter.GroupAboutRecyclerAdapter;
 import com.mycity4kids.ui.adapter.GroupAboutRecyclerAdapter.RecyclerViewClickListener;
 import com.mycity4kids.ui.adapter.GroupBlogsRecyclerAdapter;
+import com.mycity4kids.ui.adapter.GroupCollectionRecyclerAdapter;
 import com.mycity4kids.ui.adapter.GroupsGenericPostRecyclerAdapter;
 import com.mycity4kids.ui.fragment.AddGpPostCommentReplyDialogFragment;
 import com.mycity4kids.ui.fragment.GroupPostReportDialogFragment;
@@ -92,18 +111,26 @@ import com.mycity4kids.ui.fragment.ShareBlogInDiscussionDialogFragment;
 import com.mycity4kids.ui.fragment.ShareBlogInDiscussionDialogFragment.IForYourArticleRemove;
 import com.mycity4kids.utils.AppUtils;
 import com.mycity4kids.utils.ConnectivityUtils;
+import com.mycity4kids.utils.DateTimeUtils;
 import com.mycity4kids.utils.StringUtils;
 import com.mycity4kids.utils.ToastUtils;
+import com.mycity4kids.widget.MomspressoButtonWidget;
+import com.mycity4kids.widget.SpacesItemDecoration;
 import com.squareup.picasso.Picasso;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.Map;
 import java.util.TimerTask;
 import okhttp3.ResponseBody;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.threeten.bp.LocalDate;
+import org.threeten.bp.Period;
+import org.threeten.bp.format.DateTimeFormatter;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -116,11 +143,14 @@ import retrofit2.Retrofit;
 public class GroupDetailsActivity extends BaseActivity implements OnClickListener,
         RecyclerViewClickListener, GroupBlogsRecyclerAdapter.RecyclerViewClickListener,
         GroupsGenericPostRecyclerAdapter.RecyclerViewClickListener,
-        IForYourArticleRemove, TaskCallbacks, RecyclerViewClick {
+        IForYourArticleRemove, TaskCallbacks, RecyclerViewClick,
+        GroupCollectionRecyclerAdapter.RecyclerViewClickListener {
 
     private static final int EDIT_POST_REQUEST_CODE = 1010;
     private static final String[] sectionsKey = {"ABOUT", "DISCUSSION", "BLOGS", "POLLS", "ASK AN EXPERT"};
     private static final String[] sectionsKeyResources = {"ABOUT", "DISCUSSION", "RESOURCES", "POLLS", "ASK AN EXPERT"};
+    private static final String[] sectionsKeyVirtualClinic = {"ABOUT", "DISCUSSION", "VIRTUAL", "POLLS",
+            "ASK AN EXPERT"};
     private static final int TUTORIAL = 1;
     private ArrayList<GroupsCategoryMappingResult> groupMappedCategories;
     private int categoryIndex = 0;
@@ -137,7 +167,8 @@ public class GroupDetailsActivity extends BaseActivity implements OnClickListene
     private boolean isRequestRunning = false;
     private boolean isLastPageReached = false;
     private ArrayList<ArticleListingResult> articleDataModelsNew;
-    private ArrayList<UserCollectionsModel> vlogResourcesList;
+    private ArrayList<UserCollectionsModel> collectionItemsList;
+    private ArrayList<UserCollectionsModel> collectionList;
     private ArrayList<GroupPostResult> postList;
     private int pastVisiblesItems;
     private int visibleItemCount;
@@ -162,6 +193,7 @@ public class GroupDetailsActivity extends BaseActivity implements OnClickListene
     private GroupBlogsRecyclerAdapter groupBlogsRecyclerAdapter;
     private CollectionItemsListAdapter collectionItemsListAdapter;
     private GroupsGenericPostRecyclerAdapter groupsGenericPostRecyclerAdapter;
+    private GroupCollectionRecyclerAdapter groupCollectionRecyclerAdapter;
     private TabLayout groupPostTabLayout;
     private RelativeLayout addPostContainer;
     private FloatingActionButton addPostFab;
@@ -200,6 +232,13 @@ public class GroupDetailsActivity extends BaseActivity implements OnClickListene
     private CheckBox anonymousCheckbox;
     private Dialog dialog;
     private int start = 0;
+    private ConstraintLayout filterContentContainer;
+    private MomspressoButtonWidget forYouFilterWidget;
+    private MomspressoButtonWidget monthFilterWidget;
+    private MomspressoButtonWidget categoryFilterWidget;
+    private Map<String, String> questionnaireResponse;
+    private int currentUserMembershipId;
+    private String parentCollectionId;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -214,49 +253,55 @@ public class GroupDetailsActivity extends BaseActivity implements OnClickListene
 
         Utils.pushOpenScreenEvent(this, "GroupDetailsScreen",
                 SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId());
-        toolbar = (Toolbar) findViewById(R.id.toolbar);
-        postContainerR = (RelativeLayout) findViewById(R.id.postContainerR);
-        pollContainerR = (RelativeLayout) findViewById(R.id.pollContainerR);
-        announcementContainerR = (RelativeLayout) findViewById(R.id.announcementContainerR);
-        hideBottomDrawer = (View) findViewById(R.id.hideBottomDrawer);
-        bottomSheet = (LinearLayout) findViewById(R.id.bottom_sheet);
+        toolbar = findViewById(R.id.toolbar);
+        postContainerR = findViewById(R.id.postContainerR);
+        pollContainerR = findViewById(R.id.pollContainerR);
+        announcementContainerR = findViewById(R.id.announcementContainerR);
+        hideBottomDrawer = findViewById(R.id.hideBottomDrawer);
+        bottomSheet = findViewById(R.id.bottom_sheet);
         bottomSheetBehavior = BottomSheetBehavior.from(bottomSheet);
-        recyclerView = (RecyclerView) findViewById(R.id.recyclerView);
-        groupPostTabLayout = (TabLayout) findViewById(R.id.groupPostTabLayout);
-        addPostContainer = (RelativeLayout) findViewById(R.id.addPostContainer);
-        addPostFab = (FloatingActionButton) findViewById(R.id.addPostFAB);
-        postContainer = (LinearLayout) findViewById(R.id.postContainer);
-        postAudioContainer = (LinearLayout) findViewById(R.id.postAudioContainer);
-        pollContainer = (LinearLayout) findViewById(R.id.pollContainer);
-        closeImageView = (ImageView) findViewById(R.id.closeImageView);
-        noPostsTextView = (TextView) findViewById(R.id.noPostsTextView);
-        groupNameTextView = (TextView) findViewById(R.id.groupNameTextView);
-        shareGroupImageViewLinearLayoutContainer = (LinearLayout) findViewById(
+        recyclerView = findViewById(R.id.recyclerView);
+        groupPostTabLayout = findViewById(R.id.groupPostTabLayout);
+        addPostContainer = findViewById(R.id.addPostContainer);
+        addPostFab = findViewById(R.id.addPostFAB);
+        postContainer = findViewById(R.id.postContainer);
+        postAudioContainer = findViewById(R.id.postAudioContainer);
+        pollContainer = findViewById(R.id.pollContainer);
+        closeImageView = findViewById(R.id.closeImageView);
+        noPostsTextView = findViewById(R.id.noPostsTextView);
+        groupNameTextView = findViewById(R.id.groupNameTextView);
+        shareGroupImageViewLinearLayoutContainer = findViewById(
                 R.id.shareGroupImageViewLinearLayoutContainer);
-        toolbarTitle = (TextView) findViewById(R.id.toolbarTitle);
-        clearSearchImageView = (ImageView) findViewById(R.id.clearSearchImageView);
-        groupSettingsImageView = (ImageView) findViewById(R.id.groupSettingsImageView);
-        groupImageView = (ImageView) findViewById(R.id.groupImageView);
-        shareGroupImageView = (ImageView) findViewById(R.id.shareGroupImageView);
-        progressBar = (ProgressBar) findViewById(R.id.progressBar);
-        postSettingsContainer = (LinearLayout) findViewById(R.id.postSettingsContainer);
-        postSettingsContainerMain = (RelativeLayout) findViewById(R.id.postSettingsContainerMain);
+        toolbarTitle = findViewById(R.id.toolbarTitle);
+        clearSearchImageView = findViewById(R.id.clearSearchImageView);
+        groupSettingsImageView = findViewById(R.id.groupSettingsImageView);
+        groupImageView = findViewById(R.id.groupImageView);
+        shareGroupImageView = findViewById(R.id.shareGroupImageView);
+        progressBar = findViewById(R.id.progressBar);
+        postSettingsContainer = findViewById(R.id.postSettingsContainer);
+        postSettingsContainerMain = findViewById(R.id.postSettingsContainerMain);
         overlayView = findViewById(R.id.overlayView);
-        savePostTextView = (TextView) findViewById(R.id.savePostTextView);
-        deletePostTextView = (TextView) findViewById(R.id.deletePostTextView);
-        editPostTextView = (TextView) findViewById(R.id.editPostTextView);
-        blockUserTextView = (TextView) findViewById(R.id.blockUserTextView);
-        pinPostTextView = (TextView) findViewById(R.id.pinPostTextView);
-        memberCountTextView = (TextView) findViewById(R.id.memberCountTextView);
-        notificationToggleTextView = (TextView) findViewById(R.id.notificationToggleTextView);
-        commentToggleTextView = (TextView) findViewById(R.id.commentToggleTextView);
-        reportPostTextView = (TextView) findViewById(R.id.reportPostTextView);
-        selectedGroup = (GroupResult) getIntent().getParcelableExtra("groupItem");
+        savePostTextView = findViewById(R.id.savePostTextView);
+        deletePostTextView = findViewById(R.id.deletePostTextView);
+        editPostTextView = findViewById(R.id.editPostTextView);
+        blockUserTextView = findViewById(R.id.blockUserTextView);
+        pinPostTextView = findViewById(R.id.pinPostTextView);
+        memberCountTextView = findViewById(R.id.memberCountTextView);
+        notificationToggleTextView = findViewById(R.id.notificationToggleTextView);
+        commentToggleTextView = findViewById(R.id.commentToggleTextView);
+        reportPostTextView = findViewById(R.id.reportPostTextView);
+        filterContentContainer = findViewById(R.id.filterContentContainer);
+        forYouFilterWidget = findViewById(R.id.forYouFilterWidget);
+        monthFilterWidget = findViewById(R.id.monthFilterWidget);
+        categoryFilterWidget = findViewById(R.id.categoryFilterWidget);
+
+        selectedGroup = getIntent().getParcelableExtra("groupItem");
         groupId = getIntent().getIntExtra("groupId", 0);
         justJoined = getIntent().getBooleanExtra("justJoined", false);
         memberType = getIntent().getStringExtra(AppConstants.GROUP_MEMBER_TYPE);
         source = getIntent().getStringExtra("source");
-
+        questionnaireResponse = (Map<String, String>) getIntent().getSerializableExtra("questionnaireResponse");
+        currentUserMembershipId = getIntent().getIntExtra("membershipId", 0);
         MixpanelAPI mixpanel = MixpanelAPI.getInstance(BaseApplication.getAppContext(), AppConstants.MIX_PANEL_TOKEN);
 
         try {
@@ -297,6 +342,9 @@ public class GroupDetailsActivity extends BaseActivity implements OnClickListene
         clearSearchImageView.setOnClickListener(this);
         shareGroupImageView.setOnClickListener(this);
         shareGroupImageViewLinearLayoutContainer.setOnClickListener(this);
+        forYouFilterWidget.setOnClickListener(this);
+        monthFilterWidget.setOnClickListener(this);
+        categoryFilterWidget.setOnClickListener(this);
 
         getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
         bottomSheetStateChange();
@@ -305,15 +353,18 @@ public class GroupDetailsActivity extends BaseActivity implements OnClickListene
         llm.setOrientation(RecyclerView.VERTICAL);
         recyclerView.setLayoutManager(llm);
 
-        articleDataModelsNew = new ArrayList<>();
+        collectionList = new ArrayList<>();
+        groupCollectionRecyclerAdapter = new GroupCollectionRecyclerAdapter(this);
+        groupCollectionRecyclerAdapter.setData(collectionList);
 
+        articleDataModelsNew = new ArrayList<>();
         groupBlogsRecyclerAdapter = new GroupBlogsRecyclerAdapter(this, this);
         groupBlogsRecyclerAdapter.setData(articleDataModelsNew);
 
-        vlogResourcesList = new ArrayList<>();
+        collectionItemsList = new ArrayList<>();
         collectionItemsListAdapter = new CollectionItemsListAdapter(this, this);
         collectionItemsListAdapter.setListType(TUTORIAL);
-        collectionItemsListAdapter.setListData(vlogResourcesList);
+        collectionItemsListAdapter.setListData(collectionItemsList);
 
         postList = new ArrayList<>();
         groupsGenericPostRecyclerAdapter = new GroupsGenericPostRecyclerAdapter(this, this, selectedGroup, memberType);
@@ -334,6 +385,8 @@ public class GroupDetailsActivity extends BaseActivity implements OnClickListene
                                 getGroupPosts();
                             } else if (recyclerView.getAdapter() instanceof CollectionItemsListAdapter) {
                                 getUserCollectionItems(selectedGroup.getCollectionId(), start);
+                            } else if (recyclerView.getAdapter() instanceof GroupCollectionRecyclerAdapter) {
+                                getCollectionsList(parentCollectionId);
                             } else {
                                 if (groupMappedCategories != null && groupMappedCategories.size() != 0) {
                                     hitFilteredTopicsArticleListingApi(
@@ -424,7 +477,6 @@ public class GroupDetailsActivity extends BaseActivity implements OnClickListene
             try {
                 if (response.isSuccessful()) {
                     SharedPrefUtils.clearSavedPostData(BaseApplication.getAppContext(), selectedGroup.getId());
-                    AddGroupPostResponse responseModel = response.body();
                     setResult(RESULT_OK);
                     justJoinedPostTextView.setText("");
                     postList.clear();
@@ -457,7 +509,6 @@ public class GroupDetailsActivity extends BaseActivity implements OnClickListene
                     .searchWithinGroup(toolbarTitle.getText().toString(), "post", 1, groupId, skip, limit);
             call.enqueue(searchResultResponseCallback);
         }
-
     }
 
     private Callback<GroupPostResponse> searchResultResponseCallback = new Callback<GroupPostResponse>() {
@@ -507,7 +558,15 @@ public class GroupDetailsActivity extends BaseActivity implements OnClickListene
                     GroupDetailResponse groupPostResponse = response.body();
                     selectedGroup = groupPostResponse.getData().getResult();
                     toolbarTitle.setHint(getString(R.string.groups_search_in));
-                    if (StringUtils.isNullOrEmpty(selectedGroup.getCollectionId())) {
+                    if ("datetime".equals(selectedGroup.getQuestionnaire().get("type"))) {
+                        String[] sections = {
+                                getString(R.string.groups_sections_about),
+                                getString(R.string.groups_sections_discussions),
+                                getString(R.string.all_resources),
+                                getString(R.string.groups_sections_polls), getString(R.string.groups_sections_ask)
+                        };
+                        setUpTabLayout(sections, 2);
+                    } else if (StringUtils.isNullOrEmpty(selectedGroup.getCollectionId())) {
                         String[] sections = {
                                 getString(R.string.groups_sections_about),
                                 getString(R.string.groups_sections_discussions),
@@ -538,7 +597,14 @@ public class GroupDetailsActivity extends BaseActivity implements OnClickListene
                     TabLayout.Tab tab = groupPostTabLayout.getTabAt(1);
                     tab.select();
                     try {
-                        if (justJoined) {
+                        if (questionnaireResponse.isEmpty() && selectedGroup.getQuestionnaire() != null
+                                && !selectedGroup.getQuestionnaire().isEmpty()) {
+                            if ("expectedDate".equals(selectedGroup.getQuestionnaire().get("name"))) {
+                                getUserInfo("ExpectingMom");
+                            } else if ("dob".equals(selectedGroup.getQuestionnaire().get("name"))) {
+                                getUserInfo("NewMom");
+                            }
+                        } else if (justJoined) {
                             showFirstTimeJoinerDialog();
                         }
                         if (selectedGroup.getAnnonAllowed() != 0) {
@@ -568,8 +634,280 @@ public class GroupDetailsActivity extends BaseActivity implements OnClickListene
         }
     };
 
+    private void getUserInfo(String groupType) {
+        showProgressDialog(getString(R.string.please_wait));
+        Retrofit retrofit = BaseApplication.getInstance().getRetrofit();
+        BloggerDashboardAPI bloggerDashboardApi = retrofit.create(BloggerDashboardAPI.class);
+        Call<UserDetailResponse> call = bloggerDashboardApi
+                .getBloggerData(SharedPrefUtils.getUserDetailModel(this).getDynamoId());
+        call.enqueue(new Callback<UserDetailResponse>() {
+            @Override
+            public void onResponse(Call<UserDetailResponse> call, Response<UserDetailResponse> response) {
+                removeProgressDialog();
+                if (response.body() == null) {
+                    NetworkErrorException nee = new NetworkErrorException(response.raw().toString());
+                    FirebaseCrashlytics.getInstance().recordException(nee);
+                    return;
+                }
+                try {
+                    if (response.isSuccessful()) {
+                        UserDetailResponse userDetailResponse = response.body();
+                        if (userDetailResponse.getCode() == 200 && Constants.SUCCESS
+                                .equals(userDetailResponse.getStatus())) {
+                            if ("ExpectingMom".equals(groupType)) {
+                                if (StringUtils
+                                        .isNullOrEmpty(
+                                                userDetailResponse.getData().get(0).getResult().getExpectedDate())) {
+                                    showExpectedDateDialog();
+                                } else {
+                                    //Save Expecting Date to MemberShip Level
+                                    saveExpectedDateOrYoungestChildDobToMembership(
+                                            userDetailResponse.getData().get(0).getResult().getExpectedDate(),
+                                            "expectedDate");
+                                }
+                            } else if ("NewMom".equals(groupType)) {
+                                if ("0".equals(userDetailResponse.getData().get(0).getResult().getIsMother())) {
+                                    showNewMomDialog();
+                                } else if (
+                                        getDobYoungestChild(userDetailResponse.getData().get(0).getResult().getKids())
+                                                == 0) {
+                                    showNewMomDialog();
+                                } else {
+                                    //Save Youngest Dob to MemberShip Level
+                                    saveExpectedDateOrYoungestChildDobToMembership("" + getDobYoungestChild(
+                                            userDetailResponse.getData().get(0).getResult().getKids()), "dob");
+                                }
+                            }
+                        } else {
+                            showToast(userDetailResponse.getReason());
+                        }
+                    }
+                } catch (Exception e) {
+                    FirebaseCrashlytics.getInstance().recordException(e);
+                    Log.d("MC4kException", Log.getStackTraceString(e));
+                }
+            }
+
+            @Override
+            public void onFailure(Call<UserDetailResponse> call, Throwable t) {
+                removeProgressDialog();
+                FirebaseCrashlytics.getInstance().recordException(t);
+                Log.d("MC4kException", Log.getStackTraceString(t));
+            }
+        });
+    }
+
+    private long getDobYoungestChild(ArrayList<KidsModel> kids) {
+        try {
+            if (kids == null || kids.isEmpty()) {
+                return 0;
+            } else {
+                long maximumDate = Long.parseLong(kids.get(0).getBirthDay());
+                for (int i = 0; i < kids.size(); i++) {
+                    if (maximumDate < Long.parseLong(kids.get(i).getBirthDay())) {
+                        maximumDate = Long.parseLong(kids.get(i).getBirthDay());
+                    }
+                }
+                return maximumDate;
+            }
+        } catch (Exception e) {
+            return 0;
+        }
+    }
+
+    private void showExpectedDateDialog() {
+        dialog = new Dialog(this);
+        dialog.getWindow().requestFeature(Window.FEATURE_NO_TITLE);
+        dialog.setContentView(R.layout.dialog_expecting_mom);
+        dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+        dialog.show();
+
+        MomspressoButtonWidget continueButtonWidget = dialog.findViewById(R.id.continueButtonWidget);
+        ImageView cancelDialog = dialog.findViewById(R.id.cancel);
+        continueButtonWidget
+                .setText(org.apache.commons.lang3.StringUtils
+                        .capitalize(getString(R.string.dialog_continue).toLowerCase()));
+        MomspressoButtonWidget dateButtonWidget = dialog.findViewById(R.id.dateButtonWidget);
+        dateButtonWidget.setGravity(Gravity.START);
+        dateButtonWidget.setOnClickListener(v -> {
+            final Calendar cldr = Calendar.getInstance();
+            int day = cldr.get(Calendar.DAY_OF_MONTH);
+            int month = cldr.get(Calendar.MONTH);
+            int year = cldr.get(Calendar.YEAR);
+            DatePickerDialog picker = new DatePickerDialog(GroupDetailsActivity.this,
+                    android.R.style.Theme_Holo_Light_Dialog_NoActionBar,
+                    (view, year1, monthOfYear, dayOfMonth) -> dateButtonWidget
+                            .setText(dayOfMonth + "-" + (monthOfYear + 1) + "-" + year1), year, month, day);
+            Date referenceDate = new Date();
+            Calendar c = Calendar.getInstance();
+            c.setTime(referenceDate);
+            picker.getDatePicker().setMinDate(c.getTimeInMillis() - 10000);
+            c.add(Calendar.MONTH, 9);
+            picker.getDatePicker().setMaxDate(c.getTimeInMillis());
+            picker.show();
+        });
+
+        continueButtonWidget.setOnClickListener(view -> {
+            if (getString(R.string.rewards_expected_date).equals(dateButtonWidget.getText().toString())) {
+                showToast("Please select a valid date");
+            } else {
+                String date = dateButtonWidget.getText().toString();
+                long timeInMillis = DateTimeUtils.convertStringToMilliTimestamp(date);
+                if (timeInMillis == 0) {
+                    showToast("Please select a valid date");
+                } else {
+                    UserDetailResult userDetailResult = new UserDetailResult();
+                    userDetailResult.setIsExpected("1");
+                    userDetailResult.setExpectedDate("" + timeInMillis);
+                    saveExpectedDateOrKidsToUserDashboard(userDetailResult);
+                }
+            }
+        });
+        cancelDialog.setOnClickListener(view -> dialog.dismiss());
+        dialog.show();
+    }
+
+    private void showNewMomDialog() {
+        dialog = new Dialog(this);
+        dialog.getWindow().requestFeature(Window.FEATURE_NO_TITLE);
+        dialog.setContentView(R.layout.dialog_new_mom);
+        dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+        dialog.show();
+
+        MomspressoButtonWidget continueButtonWidget = dialog.findViewById(R.id.continueButtonWidget);
+        ImageView cancelDialog = dialog.findViewById(R.id.cancel);
+        continueButtonWidget
+                .setText(org.apache.commons.lang3.StringUtils
+                        .capitalize(getString(R.string.dialog_continue).toLowerCase()));
+        EditText kidsNameEditText = dialog.findViewById(R.id.editKidsName);
+        TextView kidsDobTextView = dialog.findViewById(R.id.textKidsDOB);
+        Spinner spinnerGender = dialog.findViewById(R.id.spinnerGender);
+        ArrayList<String> genderList = new ArrayList<>();
+        genderList.add("Male");
+        genderList.add("Female");
+
+        CustomSpinnerAdapter spinAdapter = new CustomSpinnerAdapter(this, genderList);
+        spinnerGender.setAdapter(spinAdapter);
+        spinnerGender.setOnItemSelectedListener(new OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+                spinnerGender.setSelection(i);
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> adapterView) {
+
+            }
+        });
+
+        TextView deleteTextView = dialog.findViewById(R.id.textDeleteChild);
+        deleteTextView.setVisibility(View.GONE);
+        kidsDobTextView.setOnClickListener(v -> {
+            final Calendar cldr = Calendar.getInstance();
+            int day = cldr.get(Calendar.DAY_OF_MONTH);
+            int month = cldr.get(Calendar.MONTH);
+            int year = cldr.get(Calendar.YEAR);
+            DatePickerDialog picker = new DatePickerDialog(GroupDetailsActivity.this,
+                    android.R.style.Theme_Holo_Light_Dialog_NoActionBar,
+                    (view, year1, monthOfYear, dayOfMonth) -> kidsDobTextView
+                            .setText(dayOfMonth + "-" + (monthOfYear + 1) + "-" + year1), year, month, day);
+            Date referenceDate = new Date();
+            Calendar c = Calendar.getInstance();
+            c.setTime(referenceDate);
+            picker.getDatePicker().setMaxDate(c.getTimeInMillis());
+            picker.show();
+        });
+
+        continueButtonWidget.setOnClickListener(view -> {
+            if (kidsDobTextView.getText() == null || StringUtils.isNullOrEmpty(kidsDobTextView.getText().toString())) {
+                showToast("Please select a valid date");
+            } else {
+                String date = kidsDobTextView.getText().toString();
+                long timeInMillis = DateTimeUtils.convertStringToMilliTimestamp(date);
+                if (timeInMillis == 0) {
+                    showToast("Please select a valid date");
+                } else {
+                    KidsModel kidsModel = new KidsModel();
+                    if (spinnerGender.getSelectedItemPosition() == 0) {
+                        kidsModel.setGender("Male");
+                    } else {
+                        kidsModel.setGender("Female");
+                    }
+                    kidsModel.setName(kidsNameEditText.getText().toString());
+                    kidsModel.setBirthDay("" + timeInMillis);
+                    ArrayList<KidsModel> kidsList = new ArrayList<>();
+                    kidsList.add(kidsModel);
+                    UserDetailResult userDetailResult = new UserDetailResult();
+                    userDetailResult.setIsMother("1");
+                    userDetailResult.setKids(kidsList);
+                    saveExpectedDateOrKidsToUserDashboard(userDetailResult);
+                }
+            }
+        });
+        cancelDialog.setOnClickListener(view -> dialog.dismiss());
+        dialog.show();
+    }
+
+    private void saveExpectedDateOrKidsToUserDashboard(UserDetailResult userDetailResult) {
+        Retrofit retrofit = BaseApplication.getInstance().getRetrofit();
+        LoginRegistrationAPI updateUserDetailApi = retrofit.create(LoginRegistrationAPI.class);
+        Call<RewardsPersonalResponse> call = updateUserDetailApi
+                .updateUserDetails(SharedPrefUtils.getUserDetailModel(this).getDynamoId(),
+                        userDetailResult);
+        call.enqueue(new Callback<RewardsPersonalResponse>() {
+            @Override
+            public void onResponse(Call<RewardsPersonalResponse> call,
+                    Response<RewardsPersonalResponse> response) {
+                if (response.body() == null) {
+                    NetworkErrorException nee = new NetworkErrorException(response.raw().toString());
+                    FirebaseCrashlytics.getInstance().recordException(nee);
+                    return;
+                }
+                try {
+                    if (response.isSuccessful()) {
+                        RewardsPersonalResponse updateUserResponse = response.body();
+                        if (updateUserResponse.getCode() == 200 && Constants.SUCCESS
+                                .equals(updateUserResponse.getStatus())) {
+                            if ("expectedDate".equals(selectedGroup.getQuestionnaire().get("name"))) {
+                                saveExpectedDateOrYoungestChildDobToMembership(userDetailResult.getExpectedDate(),
+                                        "expectedDate");
+                            } else if ("dob".equals(selectedGroup.getQuestionnaire().get("name"))) {
+                                saveExpectedDateOrYoungestChildDobToMembership(
+                                        userDetailResult.getKids().get(0).getBirthDay(), "dob");
+                            }
+                        } else {
+                            showToast(updateUserResponse.getReason());
+                        }
+                    }
+                } catch (Exception e) {
+                    FirebaseCrashlytics.getInstance().recordException(e);
+                    Log.d("MC4kException", Log.getStackTraceString(e));
+                }
+            }
+
+            @Override
+            public void onFailure(Call<RewardsPersonalResponse> call, Throwable t) {
+                FirebaseCrashlytics.getInstance().recordException(t);
+                Log.d("MC4kException", Log.getStackTraceString(t));
+            }
+        });
+    }
+
+    private void saveExpectedDateOrYoungestChildDobToMembership(String timeInMillis, String responseQuestionnaireKey) {
+        Retrofit retrofit = BaseApplication.getInstance().getGroupsRetrofit();
+        GroupsAPI groupsApi = retrofit.create(GroupsAPI.class);
+        UpdateGroupMembershipRequest updateRequest = new UpdateGroupMembershipRequest();
+        updateRequest.setUserId(SharedPrefUtils.getUserDetailModel(this).getDynamoId());
+        Map<String, String> map = new LinkedTreeMap<>();
+        map.put(responseQuestionnaireKey, timeInMillis);
+        updateRequest.setQuestionnaireResponse(map);
+        Call<GroupsMembershipResponse> groupsCall = groupsApi
+                .updateMember(currentUserMembershipId, updateRequest);
+        groupsCall.enqueue(updateGroupMembershipResponseCallback);
+    }
+
     private void showFirstTimeJoinerDialog() {
-        dialog = new Dialog(GroupDetailsActivity.this);
+        dialog = new Dialog(this);
         dialog.getWindow().requestFeature(Window.FEATURE_NO_TITLE);
         dialog.setContentView(R.layout.dialog_group_yourself);
         dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
@@ -864,6 +1202,8 @@ public class GroupDetailsActivity extends BaseActivity implements OnClickListene
                         String.valueOf(System.currentTimeMillis()), "Settings page", "", "");
                 Intent intent = new Intent(GroupDetailsActivity.this, GroupSettingsActivity.class);
                 intent.putExtra("groupItem", selectedGroup);
+                intent.putExtra("currentUserMembershipId", currentUserMembershipId);
+                intent.putExtra("expectedDate", questionnaireResponse.get("expectedDate"));
                 intent.putExtra("memberType", memberType);
                 startActivity(intent);
             }
@@ -918,7 +1258,6 @@ public class GroupDetailsActivity extends BaseActivity implements OnClickListene
                 }
                 break;
             case R.id.savePostTextView:
-                Log.d("savePostTextView", "" + selectedPost.getId());
                 if (savePostTextView.getText().toString().equals(getString(R.string.groups_save_post))) {
                     updateUserPostPreferences("savePost");
                 } else {
@@ -941,7 +1280,6 @@ public class GroupDetailsActivity extends BaseActivity implements OnClickListene
                 }
                 break;
             case R.id.notificationToggleTextView:
-                Log.d("notifToggleTextView", "" + selectedPost.getId());
                 if (notificationToggleTextView.getText().toString().equals("DISABLE NOTIFICATION")) {
                     Utils.groupsEvent(GroupDetailsActivity.this, "Group_discussion_Post ActionView (...)",
                             "enable notification ", "android",
@@ -959,7 +1297,6 @@ public class GroupDetailsActivity extends BaseActivity implements OnClickListene
                 }
                 break;
             case R.id.editPostTextView:
-                Log.d("editPostTextView", "" + selectedPost.getId());
                 openEditPostOption();
                 break;
             case R.id.deletePostTextView:
@@ -976,9 +1313,6 @@ public class GroupDetailsActivity extends BaseActivity implements OnClickListene
                         "Block this user", "android", SharedPrefUtils.getAppLocale(BaseApplication.getAppContext()),
                         SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId(),
                         String.valueOf(System.currentTimeMillis()), "click", "", String.valueOf(postId));
-
-                Log.d("blockUserTextView", "" + selectedPost.getId());
-                // updateAdminLevelPostPrefs("blockUser");
                 blockUserWithPostId(selectedPost.getId());
                 break;
             case R.id.pinPostTextView:
@@ -987,8 +1321,6 @@ public class GroupDetailsActivity extends BaseActivity implements OnClickListene
                         SharedPrefUtils.getAppLocale(BaseApplication.getAppContext()),
                         SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId(),
                         String.valueOf(System.currentTimeMillis()), "click", "", String.valueOf(postId));
-
-                Log.d("pinPostTextView", "" + selectedPost.getId());
                 if (pinPostTextView.getText().toString().equals(getString(R.string.groups_pin_post))) {
                     updateAdminLevelPostPrefs("pinPost");
                 } else {
@@ -1014,8 +1346,68 @@ public class GroupDetailsActivity extends BaseActivity implements OnClickListene
                 overlayView.setVisibility(View.GONE);
                 postSettingsContainer.setVisibility(View.GONE);
                 break;
+            case R.id.forYouFilterWidget:
+                removeRecyclerViewDecorator();
+                filterContentContainer.setVisibility(View.VISIBLE);
+                forYouFilterWidget.setSelected(true);
+                monthFilterWidget.setSelected(false);
+                categoryFilterWidget.setSelected(false);
+                initializeCollectionsItemsList(getCollectionIdForMonth());
+                break;
+            case R.id.monthFilterWidget:
+                removeRecyclerViewDecorator();
+                forYouFilterWidget.setSelected(false);
+                monthFilterWidget.setSelected(true);
+                categoryFilterWidget.setSelected(false);
+                GridLayoutManager llm1 = new GridLayoutManager(GroupDetailsActivity.this, 3);
+                parentCollectionId = selectedGroup.getCollectionByMonth();
+                initializeVirtualClinicLayout(llm1);
+                break;
+            case R.id.categoryFilterWidget:
+                removeRecyclerViewDecorator();
+                forYouFilterWidget.setSelected(false);
+                monthFilterWidget.setSelected(false);
+                categoryFilterWidget.setSelected(true);
+                GridLayoutManager llm2 = new GridLayoutManager(GroupDetailsActivity.this, 2);
+                parentCollectionId = selectedGroup.getCollectionByCategory();
+                initializeVirtualClinicLayout(llm2);
+                break;
             default:
                 break;
+        }
+    }
+
+    private String getCollectionIdForMonth() {
+        ArrayList<VirtualClinicCollectionSettings> collectionList = selectedGroup.getSettings().getCollectionSettings();
+        try {
+            String eventDate = "";
+            if ("expectedDate".equals(selectedGroup.getQuestionnaire().get("name"))) {
+                eventDate = DateTimeUtils.getDOBMilliTimestamp(questionnaireResponse.get("expectedDate"));
+            } else {
+                eventDate = DateTimeUtils.getDOBMilliTimestamp(questionnaireResponse.get("dob"));
+            }
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
+            LocalDate dt = LocalDate.parse(eventDate, formatter);
+            LocalDate currentdate = LocalDate.now();
+
+            Period period = Period.between(currentdate, dt);
+            int months;
+            if (period.getYears() < 1) {
+                months = period.getMonths();
+            } else {
+                months = period.getYears() * 12 + period.getMonths();
+            }
+            for (int i = 0; i < collectionList.size(); i++) {
+                if (collectionList.get(i).getMin() <= months && months < collectionList.get(i).getMax()) {
+                    Log.e("MIN", "MIN === " + collectionList.get(i).getMin());
+                    return collectionList.get(i).getCollectionId();
+                }
+            }
+            return collectionList.get(0).getCollectionId();
+        } catch (Exception e) {
+            FirebaseCrashlytics.getInstance().recordException(e);
+            Log.d("MC4kException", Log.getStackTraceString(e));
+            return collectionList.get(0).getCollectionId();
         }
     }
 
@@ -1136,6 +1528,9 @@ public class GroupDetailsActivity extends BaseActivity implements OnClickListene
                 @Override
                 public void onResponse(Call<GroupsMembershipResponse> call,
                         retrofit2.Response<GroupsMembershipResponse> response) {
+                    if (dialog != null) {
+                        dialog.dismiss();
+                    }
                     if (response.body() == null) {
                         NetworkErrorException nee = new NetworkErrorException(response.raw().toString());
                         FirebaseCrashlytics.getInstance().recordException(nee);
@@ -1144,6 +1539,8 @@ public class GroupDetailsActivity extends BaseActivity implements OnClickListene
                     try {
                         if (response.isSuccessful()) {
                             GroupsMembershipResponse groupsMembershipResponse = response.body();
+                            questionnaireResponse = groupsMembershipResponse.getData().getResult().get(0)
+                                    .getQuestionnaireResponse();
                             postSettingsContainerMain.setVisibility(View.GONE);
                         }
                     } catch (Exception e) {
@@ -1156,6 +1553,9 @@ public class GroupDetailsActivity extends BaseActivity implements OnClickListene
                 public void onFailure(Call<GroupsMembershipResponse> call, Throwable t) {
                     FirebaseCrashlytics.getInstance().recordException(t);
                     Log.d("MC4kException", Log.getStackTraceString(t));
+                    if (dialog != null) {
+                        dialog.dismiss();
+                    }
                 }
             };
 
@@ -1243,12 +1643,10 @@ public class GroupDetailsActivity extends BaseActivity implements OnClickListene
     private void updateUserPostPreferences(String action) {
         Retrofit retrofit = BaseApplication.getInstance().getGroupsRetrofit();
         GroupsAPI groupsApi = retrofit.create(GroupsAPI.class);
-
         UpdateUserPostSettingsRequest request = new UpdateUserPostSettingsRequest();
         request.setPostId(selectedPost.getId());
         request.setIsAnno(selectedPost.getIsAnnon());
         request.setUserId(SharedPrefUtils.getUserDetailModel(this).getDynamoId());
-
         if (currentPostPrefsForUser == null) {
             if ("savePost".equals(action)) {
                 request.setIsBookmarked(1);
@@ -1283,7 +1681,6 @@ public class GroupDetailsActivity extends BaseActivity implements OnClickListene
                     .updatePostSettingsForUser(currentPostPrefsForUser.getId(), request);
             call.enqueue(updatePostSettingForUserResponseCallback);
         }
-
     }
 
     private Callback<ResponseBody> createPostSettingForUserResponseCallback = new Callback<ResponseBody>() {
@@ -1320,7 +1717,8 @@ public class GroupDetailsActivity extends BaseActivity implements OnClickListene
 
         @Override
         public void onFailure(Call<ResponseBody> call, Throwable t) {
-
+            FirebaseCrashlytics.getInstance().recordException(t);
+            Log.d("MC4kException", Log.getStackTraceString(t));
         }
     };
 
@@ -1357,7 +1755,8 @@ public class GroupDetailsActivity extends BaseActivity implements OnClickListene
 
                 @Override
                 public void onFailure(Call<UserPostSettingResponse> call, Throwable t) {
-
+                    FirebaseCrashlytics.getInstance().recordException(t);
+                    Log.d("MC4kException", Log.getStackTraceString(t));
                 }
             };
 
@@ -1392,10 +1791,16 @@ public class GroupDetailsActivity extends BaseActivity implements OnClickListene
                 tab.setTag(sectionsKey[i]);
                 groupPostTabLayout.addTab(tab.setText(sections[i]));
             }
-        } else {
+        } else if (tabType == 1) {
             for (int i = 0; i < sections.length; i++) {
                 TabLayout.Tab tab = groupPostTabLayout.newTab();
                 tab.setTag(sectionsKeyResources[i]);
+                groupPostTabLayout.addTab(tab.setText(sections[i]));
+            }
+        } else {
+            for (int i = 0; i < sections.length; i++) {
+                TabLayout.Tab tab = groupPostTabLayout.newTab();
+                tab.setTag(sectionsKeyVirtualClinic[i]);
                 groupPostTabLayout.addTab(tab.setText(sections[i]));
             }
         }
@@ -1412,15 +1817,24 @@ public class GroupDetailsActivity extends BaseActivity implements OnClickListene
                             SharedPrefUtils.getAppLocale(BaseApplication.getAppContext()),
                             SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId(),
                             String.valueOf(System.currentTimeMillis()), "About Page", "", "");
-
+                    filterContentContainer.setVisibility(View.GONE);
+                    removeRecyclerViewDecorator();
+                    final LinearLayoutManager llm = new LinearLayoutManager(GroupDetailsActivity.this);
+                    llm.setOrientation(RecyclerView.VERTICAL);
+                    recyclerView.setLayoutManager(llm);
                     recyclerView.setAdapter(groupAboutRecyclerAdapter);
                 } else if (AppConstants.GROUP_SECTION_DISCUSSION.equalsIgnoreCase(tab.getTag().toString())) {
                     Utils.groupsEvent(GroupDetailsActivity.this, "Groups_Discussion", "discussion", "android",
                             SharedPrefUtils.getAppLocale(BaseApplication.getAppContext()),
                             SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId(),
                             String.valueOf(System.currentTimeMillis()), "discussion page", "", "");
+                    filterContentContainer.setVisibility(View.GONE);
+                    removeRecyclerViewDecorator();
                     isRequestRunning = false;
                     isLastPageReached = false;
+                    final LinearLayoutManager llm = new LinearLayoutManager(GroupDetailsActivity.this);
+                    llm.setOrientation(RecyclerView.VERTICAL);
+                    recyclerView.setLayoutManager(llm);
                     recyclerView.setAdapter(groupsGenericPostRecyclerAdapter);
                     postList.clear();
                     skip = 0;
@@ -1431,10 +1845,14 @@ public class GroupDetailsActivity extends BaseActivity implements OnClickListene
                             SharedPrefUtils.getAppLocale(BaseApplication.getAppContext()),
                             SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId(),
                             String.valueOf(System.currentTimeMillis()), "Blogs page", "", "");
-
+                    filterContentContainer.setVisibility(View.GONE);
+                    removeRecyclerViewDecorator();
                     isRequestRunning = false;
                     isLastPageReached = false;
                     nextPageNumber = 1;
+                    final LinearLayoutManager llm = new LinearLayoutManager(GroupDetailsActivity.this);
+                    llm.setOrientation(RecyclerView.VERTICAL);
+                    recyclerView.setLayoutManager(llm);
                     recyclerView.setAdapter(groupBlogsRecyclerAdapter);
                     if (StringUtils.isNullOrEmpty(commaSepCategoryList)) {
                         getCategoriesTaggedWithGroups();
@@ -1446,10 +1864,14 @@ public class GroupDetailsActivity extends BaseActivity implements OnClickListene
                             SharedPrefUtils.getAppLocale(BaseApplication.getAppContext()),
                             SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId(),
                             String.valueOf(System.currentTimeMillis()), "photos page", "", "");
-
+                    filterContentContainer.setVisibility(View.GONE);
+                    removeRecyclerViewDecorator();
+                    final LinearLayoutManager llm = new LinearLayoutManager(GroupDetailsActivity.this);
+                    llm.setOrientation(RecyclerView.VERTICAL);
+                    recyclerView.setLayoutManager(llm);
+                    recyclerView.setAdapter(groupsGenericPostRecyclerAdapter);
                     isRequestRunning = false;
                     isLastPageReached = false;
-                    recyclerView.setAdapter(groupsGenericPostRecyclerAdapter);
                     postList.clear();
                     skip = 0;
                     limit = 10;
@@ -1460,9 +1882,13 @@ public class GroupDetailsActivity extends BaseActivity implements OnClickListene
                             SharedPrefUtils.getAppLocale(BaseApplication.getAppContext()),
                             SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId(),
                             String.valueOf(System.currentTimeMillis()), "polls page", "", "");
-
+                    filterContentContainer.setVisibility(View.GONE);
+                    removeRecyclerViewDecorator();
                     isRequestRunning = false;
                     isLastPageReached = false;
+                    final LinearLayoutManager llm = new LinearLayoutManager(GroupDetailsActivity.this);
+                    llm.setOrientation(RecyclerView.VERTICAL);
+                    recyclerView.setLayoutManager(llm);
                     recyclerView.setAdapter(groupsGenericPostRecyclerAdapter);
                     postList.clear();
                     skip = 0;
@@ -1474,12 +1900,30 @@ public class GroupDetailsActivity extends BaseActivity implements OnClickListene
                             SharedPrefUtils.getAppLocale(BaseApplication.getAppContext()),
                             SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId(),
                             String.valueOf(System.currentTimeMillis()), "resources page", "", "");
-
-                    isRequestRunning = false;
-                    isLastPageReached = false;
-                    start = 0;
-                    recyclerView.setAdapter(collectionItemsListAdapter);
-                    getUserCollectionItems(selectedGroup.getCollectionId(), start);
+                    filterContentContainer.setVisibility(View.GONE);
+                    removeRecyclerViewDecorator();
+                    initializeCollectionsItemsList(selectedGroup.getCollectionId());
+                } else if (AppConstants.GROUP_SECTION_VIRTUAL_CLINIC.equalsIgnoreCase(tab.getTag().toString())) {
+                    Utils.groupsEvent(GroupDetailsActivity.this, "Groups_Discussion", "resources", "android",
+                            SharedPrefUtils.getAppLocale(BaseApplication.getAppContext()),
+                            SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId(),
+                            String.valueOf(System.currentTimeMillis()), "resources page", "", "");
+                    filterContentContainer.setVisibility(View.VISIBLE);
+                    if (StringUtils.isNullOrEmpty(questionnaireResponse.get("expectedDate"))) {
+                        forYouFilterWidget.setVisibility(View.GONE);
+                        monthFilterWidget.setSelected(true);
+                        categoryFilterWidget.setSelected(false);
+                        GridLayoutManager llm1 = new GridLayoutManager(GroupDetailsActivity.this, 3);
+                        parentCollectionId = selectedGroup.getCollectionByMonth();
+                        initializeVirtualClinicLayout(llm1);
+                    } else {
+                        forYouFilterWidget.setVisibility(View.VISIBLE);
+                        forYouFilterWidget.setSelected(true);
+                        monthFilterWidget.setSelected(false);
+                        categoryFilterWidget.setSelected(false);
+                        removeRecyclerViewDecorator();
+                        initializeCollectionsItemsList(getCollectionIdForMonth());
+                    }
                 }
             }
 
@@ -1533,6 +1977,87 @@ public class GroupDetailsActivity extends BaseActivity implements OnClickListene
         });
     }
 
+    private void initializeCollectionsItemsList(String collectionId) {
+        isRequestRunning = false;
+        isLastPageReached = false;
+        start = 0;
+        final LinearLayoutManager llm = new LinearLayoutManager(GroupDetailsActivity.this);
+        llm.setOrientation(RecyclerView.VERTICAL);
+        recyclerView.setLayoutManager(llm);
+        recyclerView.setAdapter(collectionItemsListAdapter);
+        getUserCollectionItems(collectionId, start);
+    }
+
+    private void initializeVirtualClinicLayout(GridLayoutManager llm1) {
+        recyclerView.setLayoutManager(llm1);
+        int spacingInPixels = getResources().getDimensionPixelSize(R.dimen.groups_column_spacing);
+        recyclerView.addItemDecoration(new SpacesItemDecoration(spacingInPixels));
+        filterContentContainer.setVisibility(View.VISIBLE);
+        isRequestRunning = false;
+        isLastPageReached = false;
+        start = 0;
+        if (collectionList != null) {
+            collectionList.clear();
+        }
+        recyclerView.setAdapter(groupCollectionRecyclerAdapter);
+        getCollectionsList(parentCollectionId);
+    }
+
+    private void getCollectionsList(String collectionId) {
+        Retrofit retrofit = BaseApplication.getInstance().getRetrofit();
+        CollectionsAPI collectionsAPI = retrofit.create(CollectionsAPI.class);
+        Call<BaseResponseGeneric<UserCollectionsListModel>> call = collectionsAPI
+                .getUserCollectionItem(collectionId, start, 10);
+        call.enqueue(collectionOfCollectionsResponseCallback);
+    }
+
+    private Callback<BaseResponseGeneric<UserCollectionsListModel>> collectionOfCollectionsResponseCallback =
+            new Callback<BaseResponseGeneric<UserCollectionsListModel>>() {
+                @Override
+                public void onResponse(Call<BaseResponseGeneric<UserCollectionsListModel>> call,
+                        Response<BaseResponseGeneric<UserCollectionsListModel>> response) {
+                    isRequestRunning = false;
+                    if (response.body() == null) {
+                        NetworkErrorException nee = new NetworkErrorException(response.raw().toString());
+                        FirebaseCrashlytics.getInstance().recordException(nee);
+                        return;
+                    }
+                    try {
+                        if (response.isSuccessful()) {
+                            BaseResponseGeneric<UserCollectionsListModel> userCollectionsListModel = response.body();
+                            processCollectionList(userCollectionsListModel);
+                        }
+                    } catch (Exception e) {
+                        FirebaseCrashlytics.getInstance().recordException(e);
+                        Log.d("MC4kException", Log.getStackTraceString(e));
+                    }
+                }
+
+                @Override
+                public void onFailure(Call<BaseResponseGeneric<UserCollectionsListModel>> call, Throwable t) {
+
+                }
+            };
+
+    private void processCollectionList(BaseResponseGeneric<UserCollectionsListModel> userCollectionsListModel) {
+        ArrayList<UserCollectionsModel> dataList = userCollectionsListModel.getData().getResult().getCollectionItems();
+        if (dataList.size() == 0) {
+            isLastPageReached = false;
+            if (null != collectionList && !collectionList.isEmpty()) {
+                isLastPageReached = true;
+            } else {
+                collectionList = dataList;
+                groupCollectionRecyclerAdapter.setData(collectionList);
+                groupCollectionRecyclerAdapter.notifyDataSetChanged();
+            }
+        } else {
+            collectionList.addAll(dataList);
+            groupCollectionRecyclerAdapter.setData(collectionList);
+            start = start + 10;
+            groupCollectionRecyclerAdapter.notifyDataSetChanged();
+        }
+    }
+
     private void getUserCollectionItems(String collectionId, int start) {
         Retrofit retrofit = BaseApplication.getInstance().getRetrofit();
         CollectionsAPI collectionsApi = retrofit.create(CollectionsAPI.class);
@@ -1573,16 +2098,16 @@ public class GroupDetailsActivity extends BaseActivity implements OnClickListene
         ArrayList<UserCollectionsModel> dataList = userCollectionsListModel.getData().getResult().getCollectionItems();
         if (dataList.size() == 0) {
             isLastPageReached = false;
-            if (null != vlogResourcesList && !vlogResourcesList.isEmpty()) {
+            if (null != collectionItemsList && !collectionItemsList.isEmpty()) {
                 isLastPageReached = true;
             } else {
-                vlogResourcesList = dataList;
-                collectionItemsListAdapter.setListData(vlogResourcesList);
+                collectionItemsList = dataList;
+                collectionItemsListAdapter.setListData(collectionItemsList);
                 collectionItemsListAdapter.notifyDataSetChanged();
             }
         } else {
-            vlogResourcesList.addAll(dataList);
-            collectionItemsListAdapter.setListData(vlogResourcesList);
+            collectionItemsList.addAll(dataList);
+            collectionItemsListAdapter.setListData(collectionItemsList);
             start = start + 10;
             collectionItemsListAdapter.notifyDataSetChanged();
         }
@@ -2245,11 +2770,33 @@ public class GroupDetailsActivity extends BaseActivity implements OnClickListene
 
     @Override
     public void onRecyclerViewclick(int position) {
-        Intent intent = new Intent(this, ParallelFeedActivity.class);
-        intent.putExtra(Constants.STREAM_URL, vlogResourcesList.get(position).getItem_info().getStreamUrl());
-        intent.putExtra(Constants.VIDEO_ID, vlogResourcesList.get(position).getItem());
-        intent.putExtra(AppConstants.COLLECTION_ID, AppConstants.MOM_VLOG_TUTORIAL_COLLECTION);
-        intent.putExtra(Constants.AUTHOR_ID, vlogResourcesList.get(position).getItem_info().getAuthor().getId());
+        if (AppConstants.CONTENT_TYPE_ARTICLE.equals(collectionItemsList.get(position).getItemType())) {
+            Intent intent = new Intent(this, ArticleDetailsContainerActivity.class);
+            intent.putExtra(Constants.ARTICLE_ID, collectionItemsList.get(position).getItem());
+            startActivity(intent);
+        } else if (AppConstants.CONTENT_TYPE_SHORT_STORY.equals(collectionItemsList.get(position).getItemType())) {
+            Intent intent = new Intent(this, ShortStoryContainerActivity.class);
+            intent.putExtra(Constants.ARTICLE_ID, collectionItemsList.get(position).getItem());
+        } else if (AppConstants.CONTENT_TYPE_VIDEO.equals(collectionItemsList.get(position).getItemType())) {
+            Intent intent = new Intent(this, ParallelFeedActivity.class);
+            intent.putExtra(Constants.STREAM_URL, collectionItemsList.get(position).getItem_info().getStreamUrl());
+            intent.putExtra(Constants.VIDEO_ID, collectionItemsList.get(position).getItem());
+            intent.putExtra(AppConstants.COLLECTION_ID, AppConstants.MOM_VLOG_TUTORIAL_COLLECTION);
+            intent.putExtra(Constants.AUTHOR_ID, collectionItemsList.get(position).getItem_info().getAuthor().getId());
+            startActivity(intent);
+        }
+    }
+
+    private void removeRecyclerViewDecorator() {
+        while (recyclerView.getItemDecorationCount() > 0) {
+            recyclerView.removeItemDecorationAt(0);
+        }
+    }
+
+    @Override
+    public void onCollectionClickListener(View view, int position) {
+        Intent intent = new Intent(this, UserCollectionItemListActivity.class);
+        intent.putExtra("id", collectionList.get(position).getItem());
         startActivity(intent);
     }
 }
