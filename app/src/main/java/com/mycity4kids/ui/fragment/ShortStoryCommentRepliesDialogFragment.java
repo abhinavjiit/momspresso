@@ -71,6 +71,7 @@ public class ShortStoryCommentRepliesDialogFragment extends DialogFragment imple
     private int downloadedReplies = 0;
     private int commentPosition;
     private String authorId;
+    private int pos;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -247,8 +248,8 @@ public class ShortStoryCommentRepliesDialogFragment extends DialogFragment imple
     @Override
     public void onRecyclerItemClick(View view, int position) {
         if (view.getId() == R.id.likeTextView) {
+            pos = position;
             if (repliesList.get(position).getLiked()) {
-                repliesList.get(position).setLiked(false);
                 LikeReactionModel commentListData = new LikeReactionModel();
                 commentListData.setReaction("like");
                 commentListData.setStatus("0");
@@ -260,7 +261,6 @@ public class ShortStoryCommentRepliesDialogFragment extends DialogFragment imple
                 call.enqueue(likeDisLikeCommentCallback);
             } else {
                 pushEvent("CD_Like_Comment");
-                repliesList.get(position).setLiked(true);
                 LikeReactionModel commentListData = new LikeReactionModel();
                 commentListData.setReaction("like");
                 commentListData.setStatus("1");
@@ -271,7 +271,6 @@ public class ShortStoryCommentRepliesDialogFragment extends DialogFragment imple
                         .likeDislikeComment(repliesList.get(position).getId(), commentListData);
                 call.enqueue(likeDisLikeCommentCallback);
             }
-            commentRepliesRecyclerAdapter.notifyDataSetChanged();
         } else if (view.getId() == R.id.replyCommentTextView) {
             pushEvent("CD_Reply_Comment");
             Fragment parentFragment = getParentFragment();
@@ -297,6 +296,7 @@ public class ShortStoryCommentRepliesDialogFragment extends DialogFragment imple
                 _args.putInt("position", position);
                 _args.putString("responseType", "COMMENT");
                 _args.putString("authorId", repliesList.get(position).getUserId());
+                _args.putString("blogWriterId", authorId);
                 commentOptionsDialogFragment.setArguments(_args);
                 commentOptionsDialogFragment.setCancelable(true);
                 commentOptionsDialogFragment.show(fm, "Comment Options");
@@ -397,6 +397,11 @@ public class ShortStoryCommentRepliesDialogFragment extends DialogFragment imple
         blockUserModel.setBlocked_user_id(repliesList.get(position).getUserId());
         Call<ResponseBody> call = articleDetailsAPI.blockUserApi(blockUserModel);
         call.enqueue(blockUserCallBack);
+        if ("Reply".equals(responseType)) {
+            repliesList.remove(position);
+            commentRepliesRecyclerAdapter.setData(repliesList);
+            commentRepliesRecyclerAdapter.notifyDataSetChanged();
+        }
     }
 
     private Callback<ResponseBody> blockUserCallBack = new Callback<ResponseBody>() {
@@ -446,6 +451,38 @@ public class ShortStoryCommentRepliesDialogFragment extends DialogFragment imple
     private Callback<ResponseBody> likeDisLikeCommentCallback = new Callback<ResponseBody>() {
         @Override
         public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+            if (null == response.body()) {
+                NetworkErrorException nee = new NetworkErrorException(response.raw().toString());
+                FirebaseCrashlytics.getInstance().recordException(nee);
+                if (isAdded()) {
+                    ToastUtils.showToast(getActivity(), getResources().getString(R.string.server_went_wrong));
+                }
+            }
+            try {
+                String res = new String(response.body().bytes());
+                JSONObject responsee = new JSONObject(res);
+                if (responsee.getInt("code") == 200 && responsee.get("status").equals("success")) {
+                    if (repliesList.get(pos).getLiked()) {
+                        repliesList.get(pos).setLiked(false);
+                    } else {
+                        repliesList.get(pos).setLiked(true);
+                    }
+                    commentRepliesRecyclerAdapter.notifyDataSetChanged();
+                    JSONObject data = responsee.getJSONObject("data");
+                    JSONObject result = data.getJSONObject("result");
+                    String msg = result.getString("msg");
+                    ToastUtils.showToast(getActivity(), msg);
+                } else {
+                    JSONObject data = responsee.getJSONObject("data");
+                    JSONObject result = data.getJSONObject("result");
+                    String msg = result.getString("msg");
+                    ToastUtils.showToast(getActivity(), msg);
+                }
+            } catch (Exception e) {
+                FirebaseCrashlytics.getInstance().recordException(e);
+                Log.d("MC4kException", Log.getStackTraceString(e));
+                ToastUtils.showToast(getActivity(), e.getMessage());
+            }
         }
 
         @Override

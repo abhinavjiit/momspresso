@@ -119,6 +119,7 @@ public class ParallelFeedActivity extends BaseActivity implements View.OnClickLi
     private int bookMarkPosition;
     private String collectionId;
     private boolean isLastPageReached = false;
+    private int position;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -612,6 +613,7 @@ public class ParallelFeedActivity extends BaseActivity implements View.OnClickLi
     }
 
     public void recommendUnrecommentArticleApi(String vidId, String likeStatus, int pos) {
+        position = pos;
         RecommendUnrecommendArticleRequest recommendUnrecommendArticleRequest =
                 new RecommendUnrecommendArticleRequest();
         recommendUnrecommendArticleRequest.setArticleId(vidId);
@@ -635,9 +637,16 @@ public class ParallelFeedActivity extends BaseActivity implements View.OnClickLi
                     try {
                         RecommendUnrecommendArticleResponse responseData = response.body();
                         if (responseData.getCode() == 200 && Constants.SUCCESS.equals(responseData.getStatus())) {
+                            if (finalList.get(position).getIs_liked().equals("1")) {
+                                finalList.get(position).setIs_liked("0");
+                            } else {
+                                finalList.get(position).setIs_liked("1");
+                            }
+                            videoRecyclerViewAdapter.updateList(finalList);
+                            videoRecyclerViewAdapter.notifyDataSetChanged();
                             showToast("" + responseData.getReason());
                         } else {
-                            showToast(getString(R.string.server_went_wrong));
+                            showToast(responseData.getReason());
                         }
                     } catch (Exception e) {
                         FirebaseCrashlytics.getInstance().recordException(e);

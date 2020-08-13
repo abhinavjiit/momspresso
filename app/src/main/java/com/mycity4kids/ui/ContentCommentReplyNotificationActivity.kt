@@ -465,6 +465,9 @@ class ContentCommentReplyNotificationActivity : BaseActivity(),
         val blockUserModel = BlockUserModel(blocked_user_id = commentList?.get(position)?.userId)
         val call = articleDetailsAPI.blockUserApi(blockUserModel)
         call.enqueue(blockUserCallBack)
+        commentList?.removeAt(position)
+        articleCommentsRecyclerAdapter.setData(commentList)
+        articleCommentsRecyclerAdapter.notifyDataSetChanged()
 
     }
 
@@ -477,14 +480,14 @@ class ContentCommentReplyNotificationActivity : BaseActivity(),
         }
 
         override fun onResponse(call: Call<ResponseBody>, response: Response<ResponseBody>) {
+            removeProgressDialog()
             if (response.body() == null) {
                 return
             }
             try {
                 val resData = String(response.body()?.bytes()!!)
                 val jsonObject = JSONObject(resData)
-                if (jsonObject.get("Code") == 200 && jsonObject.get("status") == Constants.SUCCESS) {
-
+                if (jsonObject.get("code") == 200 && jsonObject.get("status") == Constants.SUCCESS) {
                     Toast.makeText(
                         this@ContentCommentReplyNotificationActivity,
                         jsonObject.getJSONObject("data").get("msg").toString(),

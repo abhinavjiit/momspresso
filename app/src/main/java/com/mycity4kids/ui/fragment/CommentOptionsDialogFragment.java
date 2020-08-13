@@ -119,7 +119,12 @@ public class CommentOptionsDialogFragment extends DialogFragment implements OnCl
                 }
             }
             case R.id.blockUserTextView: {
-                if (getActivity() != null && getActivity() instanceof ContentCommentReplyNotificationActivity) {
+                if (getParentFragment() instanceof ContentCommentReplyNotificationFragment) {
+                    ICommentOptionAction commentOptionAction = (ICommentOptionAction) getParentFragment();
+                    commentOptionAction.onBlockUser(position, responseType);
+                    dismiss();
+
+                } else if (getActivity() != null && getActivity() instanceof ContentCommentReplyNotificationActivity) {
                     ICommentOptionAction commentOptionAction = (ICommentOptionAction) getActivity();
                     commentOptionAction.onBlockUser(position, responseType);
                     dismiss();

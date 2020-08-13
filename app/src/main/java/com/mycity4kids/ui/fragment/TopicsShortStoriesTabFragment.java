@@ -745,7 +745,7 @@ public class TopicsShortStoriesTabFragment extends BaseFragment implements View.
                         } else {
                             if (isAdded()) {
                                 ((ShortStoriesListingContainerActivity) getActivity())
-                                        .showToast(getString(R.string.server_went_wrong));
+                                        .showToast(responseData.getReason());
                             }
                         }
                     } catch (Exception e) {
@@ -763,6 +763,10 @@ public class TopicsShortStoriesTabFragment extends BaseFragment implements View.
                     isRecommendRequestRunning = false;
                     FirebaseCrashlytics.getInstance().recordException(t);
                     Log.d("MC4kException", Log.getStackTraceString(t));
+                    if (isAdded()) {
+                        ((ShortStoriesListingContainerActivity) getActivity())
+                                .showToast(getString(R.string.went_wrong));
+                    }
                 }
             };
 
