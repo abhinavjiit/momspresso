@@ -141,7 +141,6 @@
                     android:hint="DD/MM/YYYY"
                     android:paddingLeft="10dp"
                     android:textColor="@color/campaign_4A4A4A"
-
                     app:layout_constraintEnd_toEndOf="parent" />
             </LinearLayout>
         </LinearLayout>

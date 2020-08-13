@@ -3,6 +3,7 @@ package com.mycity4kids.models.response;
 import android.os.Parcel;
 import android.os.Parcelable;
 import com.google.gson.annotations.SerializedName;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -58,6 +59,12 @@ public class GroupResult implements Parcelable {
     private int highlight;
     @SerializedName("resources")
     private String collectionId;
+    @SerializedName("settings")
+    private VirtualClinicSettings settings;
+    @SerializedName("collectionByMonth")
+    private String collectionByMonth;
+    @SerializedName("collectionByCategory")
+    private String collectionByCategory;
 
     protected GroupResult(Parcel in) {
         id = in.readInt();
@@ -81,6 +88,7 @@ public class GroupResult implements Parcelable {
         sentiment = in.readString();
         highlight = in.readInt();
         collectionId = in.readString();
+//        settings = in.readParcelable(VirtualClinicSettings.class.getClassLoader());
     }
 
     public static final Creator<GroupResult> CREATOR = new Creator<GroupResult>() {
@@ -279,6 +287,30 @@ public class GroupResult implements Parcelable {
         this.collectionId = collectionId;
     }
 
+    public VirtualClinicSettings getSettings() {
+        return settings;
+    }
+
+    public void setSettings(VirtualClinicSettings settings) {
+        this.settings = settings;
+    }
+
+    public String getCollectionByMonth() {
+        return collectionByMonth;
+    }
+
+    public void setCollectionByMonth(String collectionByMonth) {
+        this.collectionByMonth = collectionByMonth;
+    }
+
+    public String getCollectionByCategory() {
+        return collectionByCategory;
+    }
+
+    public void setCollectionByCategory(String collectionByCategory) {
+        this.collectionByCategory = collectionByCategory;
+    }
+
     @Override
     public int describeContents() {
         return 0;
@@ -307,6 +339,7 @@ public class GroupResult implements Parcelable {
         dest.writeString(sentiment);
         dest.writeInt(highlight);
         dest.writeString(collectionId);
+//        dest.writeParcelable(settings, flags);
     }
 
     public class AdminMembers {
@@ -364,8 +397,6 @@ public class GroupResult implements Parcelable {
             private String status;
             @SerializedName("lastActivityOn")
             private String lastActivityOn;
-            @SerializedName("isOwner")
-            private int isOwner;
             @SerializedName("isAdmin")
             private int isAdmin;
             @SerializedName("isModerator")
@@ -421,14 +452,6 @@ public class GroupResult implements Parcelable {
 
             public void setLastActivityOn(String lastActivityOn) {
                 this.lastActivityOn = lastActivityOn;
-            }
-
-            public int getIsOwner() {
-                return isOwner;
-            }
-
-            public void setIsOwner(int isOwner) {
-                this.isOwner = isOwner;
             }
 
             public int getIsAdmin() {
@@ -493,6 +516,112 @@ public class GroupResult implements Parcelable {
 
             public void setUserInfo(UserDetailResult userInfo) {
                 this.userInfo = userInfo;
+            }
+        }
+    }
+
+    public static class VirtualClinicSettings implements Parcelable {
+
+        @SerializedName("collectionSettings")
+        private ArrayList<VirtualClinicCollectionSettings> collectionSettings;
+
+        public ArrayList<VirtualClinicCollectionSettings> getCollectionSettings() {
+            return collectionSettings;
+        }
+
+        public void setCollectionSettings(
+                ArrayList<VirtualClinicCollectionSettings> collectionSettings) {
+            this.collectionSettings = collectionSettings;
+        }
+
+        VirtualClinicSettings(Parcel in) {
+            collectionSettings = new ArrayList<>();
+            in.readTypedList(collectionSettings, VirtualClinicCollectionSettings.CREATOR);
+        }
+
+        public static final Creator<VirtualClinicSettings> CREATOR = new Creator<VirtualClinicSettings>() {
+            @Override
+            public VirtualClinicSettings createFromParcel(Parcel in) {
+                return new VirtualClinicSettings(in);
+            }
+
+            @Override
+            public VirtualClinicSettings[] newArray(int size) {
+                return new VirtualClinicSettings[size];
+            }
+        };
+
+        @Override
+        public int describeContents() {
+            return 0;
+        }
+
+        @Override
+        public void writeToParcel(Parcel parcel, int i) {
+            parcel.writeTypedList(collectionSettings);
+        }
+
+        public static class VirtualClinicCollectionSettings implements Parcelable {
+
+            @SerializedName("min")
+            private int min;
+            @SerializedName("max")
+            private int max;
+            @SerializedName("collectionId")
+            private String collectionId;
+
+            VirtualClinicCollectionSettings(Parcel in) {
+                min = in.readInt();
+                max = in.readInt();
+                collectionId = in.readString();
+            }
+
+            @Override
+            public void writeToParcel(Parcel dest, int flags) {
+                dest.writeInt(min);
+                dest.writeInt(max);
+                dest.writeString(collectionId);
+            }
+
+            @Override
+            public int describeContents() {
+                return 0;
+            }
+
+            public static final Creator<VirtualClinicCollectionSettings> CREATOR = new Creator<VirtualClinicCollectionSettings>() {
+                @Override
+                public VirtualClinicCollectionSettings createFromParcel(Parcel in) {
+                    return new VirtualClinicCollectionSettings(in);
+                }
+
+                @Override
+                public VirtualClinicCollectionSettings[] newArray(int size) {
+                    return new VirtualClinicCollectionSettings[size];
+                }
+            };
+
+            public int getMin() {
+                return min;
+            }
+
+            public void setMin(int min) {
+                this.min = min;
+            }
+
+            public int getMax() {
+                return max;
+            }
+
+            public void setMax(int max) {
+                this.max = max;
+            }
+
+            public String getCollectionId() {
+                return collectionId;
+            }
+
+            public void setCollectionId(String collectionId) {
+                this.collectionId = collectionId;
             }
         }
     }

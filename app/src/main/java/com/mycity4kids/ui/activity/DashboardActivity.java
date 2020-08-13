@@ -46,6 +46,7 @@ import com.google.firebase.remoteconfig.FirebaseRemoteConfigSettings;
 import com.google.gson.Gson;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonParser;
+import com.google.gson.internal.LinkedTreeMap;
 import com.google.gson.reflect.TypeToken;
 import com.ittianyu.bottomnavigationviewex.BottomNavigationViewEx;
 import com.mixpanel.android.mpmetrics.MixpanelAPI;
@@ -58,7 +59,6 @@ import com.mycity4kids.constants.Constants;
 import com.mycity4kids.editor.NewEditor;
 import com.mycity4kids.gtmutils.Utils;
 import com.mycity4kids.models.BranchModel;
-import com.mycity4kids.models.TopicsResponse;
 import com.mycity4kids.models.request.VlogsEventRequest;
 import com.mycity4kids.models.response.AllDraftsResponse;
 import com.mycity4kids.models.response.DraftListResult;
@@ -188,8 +188,6 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
     private UserAllDraftsRecyclerAdapter userAllDraftsRecyclerAdapter;
 
     private TextView selectedLangTextView;
-    private TopicsResponse res;
-    private int categoryCount;
     private String currentVersion;
     private String onlineVersionCode;
     private FrameLayout root;
@@ -1787,6 +1785,9 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
             Intent intent = new Intent(this, GroupDetailsActivity.class);
             intent.putExtra("groupId", groupId);
             intent.putExtra(AppConstants.GROUP_MEMBER_TYPE, userType);
+            intent.putExtra("membershipId", body.getData().getResult().get(0).getId());
+            intent.putExtra("questionnaireResponse",
+                    (LinkedTreeMap) body.getData().getResult().get(0).getQuestionnaireResponse());
             startActivity(intent);
         } else if (AppConstants.GROUP_MEMBERSHIP_STATUS_PENDING_MODERATION
                 .equals(body.getData().getResult().get(0).getStatus())) {

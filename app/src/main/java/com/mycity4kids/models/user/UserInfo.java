@@ -2,10 +2,10 @@ package com.mycity4kids.models.user;
 
 import android.os.Parcel;
 import android.os.Parcelable;
-
 import com.google.gson.annotations.SerializedName;
 
 public class UserInfo implements Parcelable {
+
     @SerializedName("id")
     private String id;
     @SerializedName("dynamoId")

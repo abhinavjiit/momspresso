@@ -9,8 +9,8 @@ import androidx.recyclerview.widget.RecyclerView
 import com.mycity4kids.R
 import com.mycity4kids.models.response.FollowersFollowingResult
 import com.squareup.picasso.Picasso
-import kotlinx.android.synthetic.main.block_unblock_user_adapter.view.*
 import java.util.ArrayList
+import kotlinx.android.synthetic.main.block_unblock_user_adapter.view.*
 
 class BlockUnblockUserAdapter(val recyclerViewClick: RecyclerViewClickListener) :
     RecyclerView.Adapter<RecyclerView.ViewHolder>() {
@@ -55,7 +55,6 @@ class BlockUnblockUserAdapter(val recyclerViewClick: RecyclerViewClickListener) 
         }
     }
 
-
     inner class ViewHolder(view: View) : RecyclerView.ViewHolder(view), View.OnClickListener {
         internal val authorImageView: ImageView
         internal val followingTextView: TextView
@@ -73,10 +72,7 @@ class BlockUnblockUserAdapter(val recyclerViewClick: RecyclerViewClickListener) 
                 recyclerViewClick.onRecyclerClick(adapterPosition)
             }
         }
-
-
     }
-
 
     interface RecyclerViewClickListener {
         fun onRecyclerClick(position: Int)

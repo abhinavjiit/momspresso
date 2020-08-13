@@ -20,6 +20,7 @@ import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import com.google.firebase.crashlytics.FirebaseCrashlytics;
+import com.google.gson.internal.LinkedTreeMap;
 import com.mycity4kids.BuildConfig;
 import com.mycity4kids.R;
 import com.mycity4kids.application.BaseApplication;
@@ -275,6 +276,9 @@ public class GroupsSearchActivity extends BaseActivity implements View.OnClickLi
             Intent intent = new Intent(this, GroupDetailsActivity.class);
             intent.putExtra("groupId", selectedGroup.getId());
             intent.putExtra(AppConstants.GROUP_MEMBER_TYPE, userType);
+            intent.putExtra("membershipId", body.getData().getResult().get(0).getId());
+            intent.putExtra("questionnaireResponse",
+                    (LinkedTreeMap) body.getData().getResult().get(0).getQuestionnaireResponse());
             startActivity(intent);
         } else if (AppConstants.GROUP_MEMBERSHIP_STATUS_PENDING_MODERATION
                 .equals(body.getData().getResult().get(0).getStatus())) {

@@ -44,7 +44,6 @@ public class UserCollectionsModel {
     @SerializedName("user_info")
     private CollectionUserInfo user_info;
 
-
     public ItemInfoModel getItem_info() {
         return item_info;
     }

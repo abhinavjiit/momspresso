@@ -7,7 +7,7 @@ import java.util.Map;
  * Created by hemant on 25/4/18.
  */
 
-public class GroupsMembershipResult {
+public class GroupsJoinResult {
 
     @SerializedName("id")
     private int id;
@@ -19,10 +19,6 @@ public class GroupsMembershipResult {
     private String status;
     @SerializedName("lastActivityOn")
     private String lastActivityOn;
-    @SerializedName("isAdmin")
-    private int isAdmin;
-    @SerializedName("isModerator")
-    private int isModerator;
     @SerializedName("referedBy")
     private String referedBy;
     @SerializedName("questionnaireResponse")
@@ -76,22 +72,6 @@ public class GroupsMembershipResult {
 
     public void setLastActivityOn(String lastActivityOn) {
         this.lastActivityOn = lastActivityOn;
-    }
-
-    public int getIsAdmin() {
-        return isAdmin;
-    }
-
-    public void setIsAdmin(int isAdmin) {
-        this.isAdmin = isAdmin;
-    }
-
-    public int getIsModerator() {
-        return isModerator;
-    }
-
-    public void setIsModerator(int isModerator) {
-        this.isModerator = isModerator;
     }
 
     public String getReferedBy() {

@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+  xmlns:app="http://schemas.android.com/apk/res-auto"
+  android:layout_width="match_parent"
+  android:layout_height="match_parent">
+
+  <LinearLayout
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_marginTop="12dp"
+    android:layout_marginEnd="12dp"
+    android:background="@color/white_color"
+    android:orientation="vertical"
+    android:paddingStart="12dp"
+    android:paddingTop="16dp"
+    android:paddingEnd="12dp"
+    android:paddingBottom="16dp">
+
+    <androidx.cardview.widget.CardView
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      app:cardCornerRadius="4dp"
+      app:cardElevation="0dp">
+      <ImageView
+        android:id="@+id/headerImageView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:adjustViewBounds="true"
+        android:src="@drawable/default_article" />
+    </androidx.cardview.widget.CardView>
+
+    <TextView
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:layout_marginStart="4dp"
+      android:layout_marginTop="12dp"
+      android:layout_marginEnd="4dp"
+      android:text="FEFE  f eFEF  FEF E FE FEF EF EF EF EF"
+      android:textColor="@color/app_dark_black"
+      android:textSize="18sp"
+      android:textStyle="bold" />
+
+    <TextView
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:layout_marginStart="4dp"
+      android:layout_marginTop="14dp"
+      android:layout_marginEnd="4dp"
+      android:text="Expecting date of delivery"
+      android:textColor="#9D9D9D"
+      android:textSize="18sp" />
+
+    <com.mycity4kids.widget.MomspressoButtonWidget
+      android:id="@+id/dateButtonWidget"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:layout_marginStart="4dp"
+      android:layout_marginTop="10dp"
+      android:layout_marginEnd="4dp"
+      android:paddingTop="10dp"
+      android:paddingBottom="10dp"
+      android:textSize="18sp"
+      app:fb_borderColor="#DADADA"
+      app:fb_borderWidth="1dp"
+      app:fb_defaultColor="#FBFBFB"
+      app:fb_iconPaddingLeft="6dp"
+      app:fb_iconPosition="left"
+      app:fb_iconResource="@drawable/ic_calendar"
+      app:fb_radius="4dp"
+      app:fb_text="@string/rewards_expected_date"
+      app:fb_textColor="@color/app_dark_black" />
+
+    <com.mycity4kids.widget.MomspressoButtonWidget
+      android:id="@+id/continueButtonWidget"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:layout_marginStart="4dp"
+      android:layout_marginTop="16dp"
+      android:layout_marginEnd="4dp"
+      android:paddingTop="10dp"
+      android:paddingBottom="10dp"
+      app:fb_defaultColor="@color/app_red"
+      app:fb_radius="4dp"
+      app:fb_text="@string/dialog_continue"
+      app:fb_textColor="@color/white_color"
+      app:fb_textSize="20sp" />
+
+  </LinearLayout>
+
+  <androidx.appcompat.widget.AppCompatImageView
+    android:id="@+id/cancel"
+    android:layout_width="24dp"
+    android:layout_height="24dp"
+    android:layout_gravity="end"
+    android:background="@drawable/expecting_mom_cross_bg"
+    android:padding="8dp"
+    android:src="@drawable/cross_icon_back"
+    android:tint="@color/white_color" />
+
+</FrameLayout>

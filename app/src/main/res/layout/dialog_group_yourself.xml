@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:layout_width="match_parent"
+  xmlns:tools="http://schemas.android.com/tools"
+  android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:background="@android:color/white">
 
@@ -15,11 +16,11 @@
             android:layout_width="@dimen/space_20"
             android:layout_height="@dimen/space_20"
             android:layout_alignParentTop="true"
-            android:layout_alignParentRight="true"
-            android:layout_gravity="right"
+            android:layout_alignParentEnd="true"
+            android:layout_gravity="end"
             android:tint="@color/app_red"
             android:layout_marginTop="@dimen/space_10"
-            android:layout_marginRight="@dimen/space_10"
+            android:layout_marginEnd="@dimen/space_10"
             android:src="@drawable/cross_icon_back" />
 
         <com.mycity4kids.widget.CustomFontTextView
@@ -27,7 +28,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_below="@+id/cross"
-            android:layout_marginLeft="16dp"
+            android:layout_marginStart="16dp"
             android:text="@string/join_dialog_heading"
             android:textColor="@color/campaign_515151"
             android:textSize="18sp"
@@ -38,7 +39,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_below="@+id/heading"
-            android:layout_marginLeft="16dp"
+            android:layout_marginStart="16dp"
             android:text="@string/join_dialog_ask_question"
             android:textColor="@color/grey_faded"
             android:textSize="13sp"
@@ -57,7 +58,7 @@
             android:layout_width="match_parent"
             android:layout_height="160dp"
             android:layout_below="@+id/border"
-            android:layout_marginLeft="@dimen/space_20"
+            android:layout_marginStart="@dimen/space_20"
             android:gravity="top"
             android:layout_marginTop="@dimen/space_20"
             android:background="@null"
@@ -77,7 +78,7 @@
                 android:id="@+id/anonymousImageView"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_toRightOf="@id/anonymousCheckbox"
+                android:layout_toEndOf="@id/anonymousCheckbox"
                 android:padding="10dp"
                 android:src="@drawable/ic_incognito" />
 
@@ -87,9 +88,9 @@
                 android:layout_height="wrap_content"
                 android:layout_alignTop="@+id/anonymousImageView"
                 android:layout_alignBottom="@+id/anonymousImageView"
-                android:layout_toRightOf="@+id/anonymousImageView"
+                android:layout_toEndOf="@+id/anonymousImageView"
                 android:gravity="center_vertical"
-                android:paddingRight="10dp"
+                android:paddingEnd="10dp"
                 android:text="@string/groups.anonymous" />
 
             <CheckBox
@@ -98,26 +99,27 @@
                 android:layout_height="wrap_content"
                 android:layout_alignParentStart="true"
                 android:layout_alignParentLeft="true"
-                android:layout_marginLeft="16dp"
+                android:layout_marginStart="16dp"
                 android:button="@drawable/language_selector_checkbox"
                 android:buttonTint="@color/app_red"
                 android:checked="false"
                 android:focusable="false"
                 android:focusableInTouchMode="false"
                 android:gravity="center_vertical"
-                android:paddingLeft="10dp"
+                android:paddingStart="10dp"
                 android:paddingTop="10dp"
-                android:paddingRight="2dp"
+                android:paddingEnd="2dp"
                 android:paddingBottom="10dp"
                 android:textColor="@color/app_red"
-                android:textSize="16sp" />
+                android:textSize="16sp"
+              tools:ignore="RtlHardcoded" />
 
             <com.mycity4kids.widget.CustomFontTextView
                 android:id="@+id/postTextView"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_alignParentRight="true"
-                android:layout_marginRight="@dimen/space_10"
+                android:layout_alignParentEnd="true"
+                android:layout_marginEnd="@dimen/space_10"
                 android:background="@drawable/youself_post_bg"
                 android:gravity="center_vertical"
                 android:paddingLeft="@dimen/space_35"

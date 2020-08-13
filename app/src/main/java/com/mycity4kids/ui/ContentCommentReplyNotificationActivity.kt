@@ -42,12 +42,12 @@ import io.reactivex.Observer
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable
 import io.reactivex.schedulers.Schedulers
+import java.util.ArrayList
 import okhttp3.ResponseBody
 import org.json.JSONObject
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
-import java.util.ArrayList
 
 class ContentCommentReplyNotificationActivity : BaseActivity(),
     ArticleCommentsRecyclerAdapter.RecyclerViewClickListener,
@@ -468,7 +468,6 @@ class ContentCommentReplyNotificationActivity : BaseActivity(),
         commentList?.removeAt(position)
         articleCommentsRecyclerAdapter.setData(commentList)
         articleCommentsRecyclerAdapter.notifyDataSetChanged()
-
     }
 
     private val blockUserCallBack = object : Callback<ResponseBody> {
@@ -494,19 +493,14 @@ class ContentCommentReplyNotificationActivity : BaseActivity(),
                         Toast.LENGTH_SHORT
                     ).show()
                 }
-
-
             } catch (t: Exception) {
                 removeProgressDialog()
                 showToast("something went wrong")
                 FirebaseCrashlytics.getInstance().recordException(t)
                 Log.d("MC4kException", Log.getStackTraceString(t))
             }
-
         }
-
     }
-
 
     private val deleteCommentResponseListener: Callback<CommentListResponse> =
         object : Callback<CommentListResponse> {

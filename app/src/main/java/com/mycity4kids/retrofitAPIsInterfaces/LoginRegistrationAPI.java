@@ -9,6 +9,9 @@ import com.mycity4kids.models.response.ChangePasswordResponse;
 import com.mycity4kids.models.response.FBPhoneLoginResponse;
 import com.mycity4kids.models.response.ForgotPasswordResponse;
 import com.mycity4kids.models.response.UserDetailResponse;
+import com.mycity4kids.models.response.UserDetailResult;
+import com.mycity4kids.models.response.UserHandleResult;
+import com.mycity4kids.models.rewardsmodels.RewardsPersonalResponse;
 import com.mycity4kids.ui.activity.CustomSignUpActivity;
 import okhttp3.ResponseBody;
 import retrofit2.Call;
@@ -68,4 +71,8 @@ public interface LoginRegistrationAPI {
             @Query("cityId") int cityId,
             @Query("pushToken") String pushToken,
             @Query("fcmToken") String fcmToken);
+
+    @PUT("/v2/users/{userId}")
+    Call<RewardsPersonalResponse> updateUserDetails(@Path("userId") String userId,
+            @Body UserDetailResult userDetailResult);
 }

@@ -804,17 +804,13 @@ class ContentCommentReplyNotificationFragment : BaseFragment(),
                         Toast.LENGTH_SHORT
                     ).show()
                 }
-
-
             } catch (t: Exception) {
                 removeProgressDialog()
                 ToastUtils.showToast(activity, "something went wrong")
                 FirebaseCrashlytics.getInstance().recordException(t)
                 Log.d("MC4kException", Log.getStackTraceString(t))
             }
-
         }
-
     }
     private val deleteCommentResponseListener: Callback<CommentListResponse> =
         object : Callback<CommentListResponse> {

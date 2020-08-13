@@ -549,7 +549,7 @@ public class MomspressoButtonWidget extends LinearLayout {
         }
 
         this.setGravity(Gravity.CENTER);
-        // disable click listeners for fix bug in this issue as: 
+        // disable click listeners for fix bug in this issue as:
         // https://github.com/medyo/Fancybuttons/issues/100 
         //this.setClickable(true);
         //this.setFocusable(true);

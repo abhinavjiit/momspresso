@@ -13,6 +13,7 @@ import android.widget.Toast;
 import androidx.annotation.Nullable;
 import androidx.recyclerview.widget.RecyclerView;
 import com.google.firebase.crashlytics.FirebaseCrashlytics;
+import com.google.gson.internal.LinkedTreeMap;
 import com.mixpanel.android.mpmetrics.MixpanelAPI;
 import com.mycity4kids.BuildConfig;
 import com.mycity4kids.R;
@@ -34,6 +35,7 @@ import com.mycity4kids.ui.adapter.GroupsRecyclerGridAdapter;
 import com.mycity4kids.widget.NoScrollGridLayoutManager;
 import com.mycity4kids.widget.SpacesItemDecoration;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import org.json.JSONObject;
 import retrofit2.Call;
@@ -326,6 +328,9 @@ public class GroupsFragment extends BaseFragment implements View.OnClickListener
             Intent intent = new Intent(getActivity(), GroupDetailsActivity.class);
             intent.putExtra("groupId", selectedGroup.getId());
             intent.putExtra(AppConstants.GROUP_MEMBER_TYPE, userType);
+            intent.putExtra("membershipId", body.getData().getResult().get(0).getId());
+            intent.putExtra("questionnaireResponse",
+                    (LinkedTreeMap) body.getData().getResult().get(0).getQuestionnaireResponse());
             startActivity(intent);
             Utils.groupsEvent(getActivity(), "Home Screen", "Groups you are member of_group card", "android",
                     SharedPrefUtils.getAppLocale(BaseApplication.getAppContext()),

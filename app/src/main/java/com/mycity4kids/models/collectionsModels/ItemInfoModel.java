@@ -30,6 +30,10 @@ public class ItemInfoModel {
     private String titleSlug;
     @SerializedName("userId")
     private String userId;
+    @SerializedName("name")
+    private String name;
+    @SerializedName("collectionImageUrl")
+    private String collectionImageUrl;
 
     public String getUserId() {
         return userId;
@@ -125,5 +129,21 @@ public class ItemInfoModel {
 
     public void setThumbnail(String thumbnail) {
         this.thumbnail = thumbnail;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getCollectionImageUrl() {
+        return collectionImageUrl;
+    }
+
+    public void setCollectionImageUrl(String collectionImageUrl) {
+        this.collectionImageUrl = collectionImageUrl;
     }
 }

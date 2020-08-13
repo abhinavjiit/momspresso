@@ -77,7 +77,6 @@
             android:textSize="12sp"
             app:fontName="oswald_regular.ttf" />
 
-
         <com.mycity4kids.widget.CustomFontTextView
             android:id="@+id/userTag"
             android:layout_width="wrap_content"
@@ -98,6 +97,27 @@
             android:textColor="#80828f"
             android:textSize="10sp"
             android:visibility="gone" />
+
+        <com.mycity4kids.widget.CustomFontTextView
+          android:id="@+id/userTag1"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:layout_marginStart="2dp"
+          android:layout_marginLeft="2dp"
+          android:layout_marginTop="5dp"
+          android:layout_toRightOf="@+id/userTag"
+          android:background="@drawable/user_tag_round_layout"
+          android:ellipsize="end"
+          android:fontFamily="sans-serif"
+          android:gravity="center"
+          android:paddingLeft="10dp"
+          android:paddingTop="2dp"
+          android:paddingRight="10dp"
+          android:paddingBottom="3dp"
+          android:text=""
+          android:textColor="#80828f"
+          android:textSize="10sp"
+          android:visibility="gone" />
 
         <com.mycity4kids.widget.CustomFontTextView
             android:id="@+id/postDateTextView"

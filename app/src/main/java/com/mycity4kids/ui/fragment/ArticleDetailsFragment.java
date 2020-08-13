@@ -45,6 +45,7 @@ import com.facebook.share.widget.ShareDialog;
 import com.google.firebase.crashlytics.FirebaseCrashlytics;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.google.gson.internal.LinkedTreeMap;
 import com.google.gson.reflect.TypeToken;
 import com.mixpanel.android.mpmetrics.MixpanelAPI;
 import com.mycity4kids.BuildConfig;
@@ -1345,6 +1346,8 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
     private void showFbComments(List<CommentsData> fbCommentsList) {
         likeCount1.setVisibility(View.GONE);
         likeCount2.setVisibility(View.GONE);
+        markedTopComment1.setVisibility(View.GONE);
+        markedTopComment2.setVisibility(View.GONE);
         if (fbCommentsList.size() == 1) {
             commentContainer2.setVisibility(View.GONE);
             viewMoreTextView.setVisibility(View.VISIBLE);
@@ -3008,6 +3011,9 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
                 Intent intent = new Intent(getActivity(), GroupDetailsActivity.class);
                 intent.putExtra("groupId", groupId);
                 intent.putExtra(AppConstants.GROUP_MEMBER_TYPE, userType);
+                intent.putExtra("membershipId", body.getData().getResult().get(0).getId());
+                intent.putExtra("questionnaireResponse",
+                        (LinkedTreeMap) body.getData().getResult().get(0).getQuestionnaireResponse());
                 startActivity(intent);
             } else if (AppConstants.GROUP_MEMBERSHIP_STATUS_PENDING_MODERATION
                     .equals(body.getData().getResult().get(0).getStatus())) {
