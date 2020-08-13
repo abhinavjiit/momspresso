@@ -105,12 +105,12 @@ import io.reactivex.Observer
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable
 import io.reactivex.schedulers.Schedulers
-import java.io.File
-import java.net.SocketTimeoutException
-import java.net.UnknownHostException
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
+import java.io.File
+import java.net.SocketTimeoutException
+import java.net.UnknownHostException
 
 class UserProfileActivity : BaseActivity(),
     UserContentAdapter.RecyclerViewClickListener, View.OnClickListener,
