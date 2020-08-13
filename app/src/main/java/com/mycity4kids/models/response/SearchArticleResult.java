@@ -25,6 +25,16 @@ public class SearchArticleResult {
     private String contentType;
     @SerializedName("imageUrl")
     private ImageURL imageUrl;
+    @SerializedName("userCollectionId")
+    private String userCollectionId;
+    @SerializedName("name")
+    private String name;
+    @SerializedName("slugUrl")
+    private String slugUrl;
+    @SerializedName("itemType")
+    private String itemType;
+    @SerializedName("userName")
+    private String userName;
 
     public String getId() {
         return id;
@@ -97,4 +107,46 @@ public class SearchArticleResult {
     public void setImageUrl(ImageURL imageUrl) {
         this.imageUrl = imageUrl;
     }
+
+    public String getUserCollectionId() {
+        return userCollectionId;
+    }
+
+    public void setUserCollectionId(String userCollectionId) {
+        this.userCollectionId = userCollectionId;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getSlugUrl() {
+        return slugUrl;
+    }
+
+    public void setSlugUrl(String slugUrl) {
+        this.slugUrl = slugUrl;
+    }
+
+    public String getItemType() {
+        return itemType;
+    }
+
+    public void setItemType(String itemType) {
+        this.itemType = itemType;
+    }
+
+    public String getUserName() {
+        return userName;
+    }
+
+    public void setUserName(String userName) {
+        this.userName = userName;
+    }
+
+
 }

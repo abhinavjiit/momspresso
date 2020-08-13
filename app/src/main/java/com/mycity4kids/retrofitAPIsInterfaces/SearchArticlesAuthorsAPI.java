@@ -32,7 +32,8 @@ public interface SearchArticlesAuthorsAPI {
     Call<SearchResponse> getSearchTopicsResult(@Query("q") String searchString,
             @Query("type") String type,
             @Query("start") int start,
-            @Query("end") int end);
+            @Query("end") int end,
+            @Query("gc") int gc);
 
     @GET("/v1/search/usersearch")
     Call<SearchTrendsAndHistoryResponse> getSearchTrendAndHistory();
