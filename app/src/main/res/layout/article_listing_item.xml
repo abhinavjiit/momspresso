@@ -52,6 +52,15 @@
           android:contentDescription="@string/author_img"
           android:scaleType="centerCrop" />
 
+        <androidx.appcompat.widget.AppCompatImageView
+          android:id="@+id/trophyImageView"
+          android:layout_width="24dp"
+          android:layout_height="24dp"
+          android:layout_alignEnd="@id/articleImageView"
+          android:layout_margin="@dimen/space_10"
+          android:visibility="gone"
+          card_view:srcCompat="@drawable/ic_trophy" />
+
         <View
           android:layout_width="match_parent"
           android:layout_height="@dimen/article_listing.article_image"
