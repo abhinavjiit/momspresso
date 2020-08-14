@@ -1382,9 +1382,9 @@ public class ShortStoryFragment extends BaseFragment implements View.OnClickList
         blockUserModel.setBlocked_user_id(consolidatedList.get(position).getSsComment().getUserId());
         Call<ResponseBody> call = articleDetailsAPI.blockUserApi(blockUserModel);
         call.enqueue(blockUserCallBack);
-        consolidatedList.remove(position);
+       /* consolidatedList.remove(position);
         adapter.setListData(consolidatedList);
-        adapter.notifyDataSetChanged();
+        adapter.notifyDataSetChanged();*/
     }
 
     private Callback<ResponseBody> blockUserCallBack = new Callback<ResponseBody>() {

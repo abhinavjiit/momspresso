@@ -495,9 +495,9 @@ class ContentCommentReplyNotificationActivity : BaseActivity(),
         val blockUserModel = BlockUserModel(blocked_user_id = commentList?.get(position)?.userId)
         val call = articleDetailsAPI.blockUserApi(blockUserModel)
         call.enqueue(blockUserCallBack)
-        commentList?.removeAt(position)
+      /*  commentList?.removeAt(position)
         articleCommentsRecyclerAdapter.setData(commentList)
-        articleCommentsRecyclerAdapter.notifyDataSetChanged()
+        articleCommentsRecyclerAdapter.notifyDataSetChanged()*/
     }
 
     private val blockUserCallBack = object : Callback<ResponseBody> {

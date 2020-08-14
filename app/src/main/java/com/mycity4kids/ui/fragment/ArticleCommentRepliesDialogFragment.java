@@ -354,6 +354,7 @@ public class ArticleCommentRepliesDialogFragment extends DialogFragment implemen
                 args.putInt("position", position);
                 args.putString("responseType", "REPLY");
                 args.putString("authorId", repliesList.get(position).getUserId());
+                args.putString("blogWriterId", authorId);
                 CommentOptionsDialogFragment commentOptionsDialogFragment = new CommentOptionsDialogFragment();
                 commentOptionsDialogFragment.setArguments(args);
                 commentOptionsDialogFragment.setCancelable(true);
@@ -489,11 +490,11 @@ public class ArticleCommentRepliesDialogFragment extends DialogFragment implemen
         blockUserModel.setBlocked_user_id(repliesList.get(position).getUserId());
         Call<ResponseBody> call = articleDetailsAPI.blockUserApi(blockUserModel);
         call.enqueue(blockUserCallBack);
-        if ("Reply".equals(responseType)) {
+       /* if ("Reply".equals(responseType)) {
             repliesList.remove(position);
             commentRepliesRecyclerAdapter.setData(repliesList);
             commentRepliesRecyclerAdapter.notifyDataSetChanged();
-        }
+        }*/
     }
 
     private Callback<ResponseBody> blockUserCallBack = new Callback<ResponseBody>() {

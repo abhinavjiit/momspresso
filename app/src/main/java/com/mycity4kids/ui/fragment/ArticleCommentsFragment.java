@@ -421,9 +421,9 @@ public class ArticleCommentsFragment extends BaseFragment implements OnClickList
         blockUserModel.setBlocked_user_id(commentsList.get(position).getUserId());
         Call<ResponseBody> call = articleDetailsAPI.blockUserApi(blockUserModel);
         call.enqueue(blockUserCallBack);
-        commentsList.remove(position);
-        articleCommentsRecyclerAdapter.setData(commentsList);
-        articleCommentsRecyclerAdapter.notifyDataSetChanged();
+       // commentsList.remove(position);
+       /* articleCommentsRecyclerAdapter.setData(commentsList);
+        articleCommentsRecyclerAdapter.notifyDataSetChanged();*/
     }
 
     private Callback<ResponseBody> blockUserCallBack = new Callback<ResponseBody>() {
