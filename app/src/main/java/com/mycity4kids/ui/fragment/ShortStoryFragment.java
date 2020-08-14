@@ -507,8 +507,13 @@ public class ShortStoryFragment extends BaseFragment implements View.OnClickList
                                 ((ShortStoryContainerActivity) getActivity()).showToast("" + responseData.getReason());
                             }
                         } else {
-                            ((ShortStoryContainerActivity) getActivity())
-                                    .showToast(getString(R.string.server_went_wrong));
+                            if (responseData.getCode() == 401) {
+                                ((ShortStoryContainerActivity) getActivity())
+                                        .showToast(responseData.getReason());
+                            } else {
+                                ((ShortStoryContainerActivity) getActivity())
+                                        .showToast(getString(R.string.server_went_wrong));
+                            }
                         }
                     } catch (Exception e) {
                         FirebaseCrashlytics.getInstance().recordException(e);

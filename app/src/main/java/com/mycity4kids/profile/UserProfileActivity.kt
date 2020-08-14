@@ -559,7 +559,9 @@ class UserProfileActivity : BaseActivity(),
                         updateFollowingStatusInList("1")
                         isFollowing = true
                         followAuthorTextView.setText(R.string.ad_following_author)
+                        ToastUtils.showToast(this@UserProfileActivity, responseData.data.msg)
                     } else {
+                        ToastUtils.showToast(this@UserProfileActivity, responseData.data.msg)
                         followAuthorTextView.setText(R.string.ad_follow_author)
                         isFollowing = false
                     }
@@ -1682,7 +1684,7 @@ class UserProfileActivity : BaseActivity(),
 
                         ToastUtils.showToast(
                             this@UserProfileActivity,
-                            getString(R.string.server_went_wrong)
+                            responseData.reason
                         )
                     }
                 } catch (e: Exception) {

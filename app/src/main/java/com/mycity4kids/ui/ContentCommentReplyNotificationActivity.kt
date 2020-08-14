@@ -390,14 +390,7 @@ class ContentCommentReplyNotificationActivity : BaseActivity(),
     fun addReply(content: String?, commentId: String, mentionsMap: Map<String, Mentions>?) {
         commentList?.let { commentList ->
 
-            for (i in 0 until commentList.size) {
-                if (commentList[i].id == commentId) {
-                    commentList[i].repliesCount = commentList[i].repliesCount.plus(1)
-                    articleCommentsRecyclerAdapter.setData(commentList)
-                    articleCommentsRecyclerAdapter.notifyDataSetChanged()
-                    break
-                }
-            }
+
             content?.let { content ->
                 showProgressDialog("Adding Reply")
                 val addEditCommentOrReplyRequest =
@@ -421,7 +414,10 @@ class ContentCommentReplyNotificationActivity : BaseActivity(),
                 val articleDetailArticle = retrofit.create(ArticleDetailsAPI::class.java)
                 val call = articleDetailArticle.addCommentOrReply(addEditCommentOrReplyRequest)
                 call.enqueue(object : Callback<CommentListResponse> {
-                    override fun onFailure(call: Call<CommentListResponse>, t: Throwable) {
+                    override fun onFailure(call: Call<CommentListResponse>, e: Throwable) {
+                        removeProgressDialog()
+                        FirebaseCrashlytics.getInstance().recordException(e)
+                        Log.d("MC4kException", Log.getStackTraceString(e))
                     }
 
                     override fun onResponse(
@@ -429,6 +425,40 @@ class ContentCommentReplyNotificationActivity : BaseActivity(),
                         response: Response<CommentListResponse>
                     ) {
                         removeProgressDialog()
+
+                        if (response.body() == null) {
+                            return
+                        }
+                        try {
+                            val res = response.body()
+                            if (res?.code == 200 && res.status == "success") {
+                                for (i in 0 until commentList.size) {
+                                    if (commentList[i].id == commentId) {
+                                        commentList[i].repliesCount =
+                                            commentList[i].repliesCount.plus(1)
+                                        articleCommentsRecyclerAdapter.setData(commentList)
+                                        articleCommentsRecyclerAdapter.notifyDataSetChanged()
+                                        break
+                                    }
+                                }
+                                ToastUtils.showToast(
+                                    this@ContentCommentReplyNotificationActivity,
+                                    res.reason
+                                )
+                            } else {
+                                if (res?.code == 401) {
+                                    ToastUtils.showToast(
+                                        this@ContentCommentReplyNotificationActivity,
+                                        res.reason
+                                    )
+                                }
+                            }
+
+                        } catch (e: Exception) {
+                            FirebaseCrashlytics.getInstance().recordException(e)
+                            Log.d("MC4kException", Log.getStackTraceString(e))
+                        }
+
                     }
                 })
             }
@@ -737,10 +767,17 @@ class ContentCommentReplyNotificationActivity : BaseActivity(),
                             articleCommentsRecyclerAdapter.notifyDataSetChanged()
                         }
                     } else {
-                        ToastUtils.showToast(
-                            this@ContentCommentReplyNotificationActivity,
-                            "Failed to add comment. Please try again"
-                        )
+                        if (responseData?.code == 401) {
+                            ToastUtils.showToast(
+                                this@ContentCommentReplyNotificationActivity,
+                                responseData.reason
+                            )
+                        } else {
+                            ToastUtils.showToast(
+                                this@ContentCommentReplyNotificationActivity,
+                                "Failed to add comment. Please try again"
+                            )
+                        }
                     }
                 } catch (e: Exception) {
                     ToastUtils.showToast(

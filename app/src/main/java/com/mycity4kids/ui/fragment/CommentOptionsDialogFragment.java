@@ -70,7 +70,6 @@ public class CommentOptionsDialogFragment extends DialogFragment implements OnCl
                 editCommentTextView.setVisibility(View.GONE);
                 reportCommentTextView.setVisibility(View.VISIBLE);
             }
-
         }
         return rootView;
     }

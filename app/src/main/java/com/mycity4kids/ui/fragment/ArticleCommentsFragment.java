@@ -287,7 +287,11 @@ public class ArticleCommentsFragment extends BaseFragment implements OnClickList
                     }
                 } else {
                     if (isAdded()) {
-                        ToastUtils.showToast(getActivity(), "Failed to add comment. Please try again");
+                        if (responseData.getCode() == 401) {
+                            ToastUtils.showToast(getActivity(), responseData.getReason());
+                        } else {
+                            ToastUtils.showToast(getActivity(), "Failed to add comment. Please try again");
+                        }
                     }
                 }
             } catch (Exception e) {
@@ -581,8 +585,11 @@ public class ArticleCommentsFragment extends BaseFragment implements OnClickList
                     }
                 } else {
                     if (isAdded()) {
-                        ToastUtils.showToast(getActivity(), "Failed to add comment. Please try again");
-                    }
+                        if (responseData.getCode() == 401) {
+                            ToastUtils.showToast(getActivity(), responseData.getReason());
+                        } else {
+                            ToastUtils.showToast(getActivity(), "Failed to add comment. Please try again");
+                        }                    }
                 }
             } catch (Exception e) {
                 if (isAdded()) {
@@ -945,6 +952,8 @@ public class ArticleCommentsFragment extends BaseFragment implements OnClickList
             FirebaseCrashlytics.getInstance().recordException(e);
             Log.d("MC4kException", Log.getStackTraceString(e));
             ToastUtils.showToast(getActivity(), e.getMessage());
+
+
         }
     };
 
