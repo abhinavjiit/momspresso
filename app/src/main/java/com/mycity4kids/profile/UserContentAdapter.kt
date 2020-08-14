@@ -35,11 +35,12 @@ import com.mycity4kids.utils.ImageKitUtils
 import com.mycity4kids.utils.StringUtils
 import com.mycity4kids.widget.StoryShareCardWidget
 import com.squareup.picasso.Picasso
-import java.util.Locale
 import kotlinx.android.synthetic.main.mom_vlog_follow_following_carousal.view.*
+import kotlinx.android.synthetic.main.short_story_listing_item.view.*
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
+import java.util.Locale
 
 /**
  * Created by hemant on 19/7/17.
@@ -140,7 +141,8 @@ class UserContentAdapter(
                 holder.likeImageView,
                 mixFeedList?.get(position),
                 holder,
-                isPrivate
+                isPrivate,
+                holder.trophyImageView
             )
             is FollowFollowingCarousel -> {
                 try {
@@ -483,8 +485,10 @@ class UserContentAdapter(
         internal var storyAuthorTextView: TextView
         internal var logoImageView: ImageView
         internal var editStoryTextView: TextView
+        internal var trophyImageView: ImageView
 
         init {
+            trophyImageView = itemView.trophyImageView
             authorNameTextView = itemView.findViewById<View>(R.id.authorNameTextView) as TextView
             storyRecommendationContainer =
                 itemView.findViewById<View>(R.id.storyRecommendationContainer) as LinearLayout
@@ -751,7 +755,8 @@ class UserContentAdapter(
         likeIV: ImageView,
         data: MixFeedResult?,
         holder: ShortStoriesViewHolder,
-        private: Boolean
+        private: Boolean,
+        trophyImageView: ImageView
     ) {
         try {
             authorNameTV.text = data?.userName
@@ -828,6 +833,19 @@ class UserContentAdapter(
                         holder.followAuthorTextView.context.getString(R.string.all_follow).toUpperCase(
                             Locale.getDefault()
                         )
+                }
+            }
+            when {
+                data?.winner == 1 -> {
+                    trophyImageView.visibility = View.VISIBLE
+                    trophyImageView.setImageResource(R.drawable.ic_trophy)
+                }
+                data?.is_gold!! -> {
+                    trophyImageView.visibility = View.VISIBLE
+                    trophyImageView.setImageResource(R.drawable.ic_star_yellow)
+                }
+                else -> {
+                    trophyImageView.visibility = View.GONE
                 }
             }
         } catch (e: Exception) {
