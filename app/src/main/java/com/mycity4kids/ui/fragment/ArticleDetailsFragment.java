@@ -2745,7 +2745,14 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
                             break;
                         }
                     }
+                } else {
+                    if (res.getCode() == 401) {
+                        ToastUtils.showToast(getActivity(), res.getReason());
+                    } else {
+                        ToastUtils.showToast(getActivity(), "Failed to add comment. Please try again");
+                    }
                 }
+
             } catch (Exception e) {
                 FirebaseCrashlytics.getInstance().recordException(e);
                 Log.d("MC4kException", Log.getStackTraceString(e));
@@ -4105,8 +4112,13 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
 
                             ((ArticleDetailsContainerActivity) getActivity()).showToast(responseData.getReason());
                         } else {
-                            ((ArticleDetailsContainerActivity) getActivity())
-                                    .showToast(responseData.getReason());
+                            if (responseData.getCode() == 401) {
+                                ((ArticleDetailsContainerActivity) getActivity())
+                                        .showToast(responseData.getReason());
+                            } else {
+                                ((ArticleDetailsContainerActivity) getActivity())
+                                        .showToast(getString(R.string.went_wrong));
+                            }
                         }
                     } catch (Exception e) {
                         FirebaseCrashlytics.getInstance().recordException(e);

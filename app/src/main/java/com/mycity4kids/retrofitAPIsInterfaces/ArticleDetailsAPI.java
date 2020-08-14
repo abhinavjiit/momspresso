@@ -156,7 +156,6 @@ public interface ArticleDetailsAPI {
     @POST("v1/articles/chronos/")
     Call<ResponseBody> updateArticleTimeSpent(@Body ArticleReadTimeRequest body);
 
-    //https://api.momspresso.com/v1/comments/enable-top-comment/
     @POST("/v1/comments/enable-top-comment/")
     Observable<ResponseBody> markedTopComment(@Body TopCommentData commentListData);
 

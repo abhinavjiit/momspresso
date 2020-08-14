@@ -703,10 +703,17 @@ class ContentCommentReplyNotificationFragment : BaseFragment(),
                         }
                     } else {
                         if (isAdded) {
-                            ToastUtils.showToast(
-                                activity,
-                                "Failed to add comment. Please try again"
-                            )
+                            if (responseData?.code == 401) {
+                                ToastUtils.showToast(
+                                    activity,
+                                    responseData.reason
+                                )
+                            } else {
+                                ToastUtils.showToast(
+                                    activity,
+                                    "Failed to add comment. Please try again"
+                                )
+                            }
                         }
                     }
                 } catch (e: Exception) {

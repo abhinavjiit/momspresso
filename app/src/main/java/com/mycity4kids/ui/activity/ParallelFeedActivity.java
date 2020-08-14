@@ -66,6 +66,7 @@ import com.mycity4kids.utils.DividerItemDecoration;
 import com.mycity4kids.utils.EndlessScrollListener;
 import com.mycity4kids.utils.MixPanelUtils;
 import com.mycity4kids.utils.StringUtils;
+import com.mycity4kids.utils.ToastUtils;
 import com.mycity4kids.vlogs.VlogsCategoryWiseChallengesResponse;
 import java.net.SocketTimeoutException;
 import java.net.UnknownHostException;
@@ -427,11 +428,9 @@ public class ParallelFeedActivity extends BaseActivity implements View.OnClickLi
             followUnfollowUserResponseCall.enqueue(unfollowUserResponseCallback);
             videoRecyclerViewAdapter.setListUpdate(updateFollowPos, finalList);
         } else {
-            finalList.get(updateFollowPos).setFollowed(true);
             Utils.shareEventTracking(this, "Video Detail", "Follow_Android", "VlogDetail_Follow");
             Call<FollowUnfollowUserResponse> followUnfollowUserResponseCall = followApi.followUserV2(request);
             followUnfollowUserResponseCall.enqueue(followUserResponseCallback);
-            videoRecyclerViewAdapter.setListUpdate(updateFollowPos, finalList);
         }
     }
 
@@ -444,9 +443,24 @@ public class ParallelFeedActivity extends BaseActivity implements View.OnClickLi
             }
             try {
                 FollowUnfollowUserResponse responseData = response.body();
-                if (responseData.getCode() != 200 || !Constants.SUCCESS.equals(responseData.getStatus())) {
-                    finalList.get(updateFollowPos).setFollowed(false);
+                if (responseData.getCode() == 200 && Constants.SUCCESS.equals(responseData.getStatus())) {
+                    finalList.get(updateFollowPos).setFollowed(true);
+                    videoRecyclerViewAdapter.setListUpdate(updateFollowPos, finalList);
+                    ToastUtils.showToast(ParallelFeedActivity.this, responseData.getData().getMsg());
                 }
+                if (responseData.getCode() != 200 || !Constants.SUCCESS.equals(responseData.getStatus())) {
+                    if (responseData.getCode() == 401) {
+                        finalList.get(updateFollowPos).setFollowed(false);
+                        videoRecyclerViewAdapter.setListUpdate(updateFollowPos, finalList);
+                        ToastUtils.showToast(ParallelFeedActivity.this, responseData.getData().getMsg());
+                    } else {
+                        finalList.get(updateFollowPos).setFollowed(true);
+                        videoRecyclerViewAdapter.setListUpdate(updateFollowPos, finalList);
+                        ToastUtils.showToast(ParallelFeedActivity.this, responseData.getData().getMsg());
+                    }
+                }
+
+
             } catch (Exception e) {
                 FirebaseCrashlytics.getInstance().recordException(e);
                 Log.d("MC4kException", Log.getStackTraceString(e));
