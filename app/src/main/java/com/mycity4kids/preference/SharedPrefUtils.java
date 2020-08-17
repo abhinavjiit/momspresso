@@ -207,7 +207,7 @@ public class SharedPrefUtils {
         user.setUserType(sharedPref.getString(USER_TYPE, "0"));
         user.setGender(sharedPref.getString(GENDER, "0"));
         user.setIsNewUser(sharedPref.getString(NEW_USER_FLAG, "0"));
-        user.setIsNewUser(sharedPref.getString(LOGIN_MODE, ""));
+        user.setLoginMode(sharedPref.getString(LOGIN_MODE, ""));
         user.setIsUserHandleUpdated(sharedPref.getString(IS_USER_HANDLE_UPDATED, "0"));
         user.setUserHandle(sharedPref.getString(USER_HANDLE, ""));
         user.setRequestMedium(sharedPref.getString(REQUEST_MEDIUM, ""));
