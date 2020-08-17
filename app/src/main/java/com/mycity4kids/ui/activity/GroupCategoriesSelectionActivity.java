@@ -68,7 +68,7 @@ public class GroupCategoriesSelectionActivity extends BaseActivity implements Vi
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.add_article_topics_activity_new);
+        setContentView(R.layout.group_category_selection_activity_new);
         root = findViewById(R.id.root);
         ((BaseApplication) getApplication()).setView(root);
         ((BaseApplication) getApplication()).setActivity(this);

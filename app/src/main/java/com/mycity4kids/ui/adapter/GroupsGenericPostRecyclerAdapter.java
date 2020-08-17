@@ -256,7 +256,7 @@ public class GroupsGenericPostRecyclerAdapter extends RecyclerView.Adapter<Recyc
                 if (postList != null && postList.size() != 0) {
                     if (postList.get(position) != null && postList.get(position).getUserInfo() != null
                             && postList.get(position).getUserInfo().getUserTag() != null) {
-                        if (postList != null && postList.size() > 1) {
+                        if (postList.get(position).getUserInfo().getUserTag().size() > 1) {
                             audioCommentViewHolder.userTag
                                     .setText("" + postList.get(position).getUserInfo().getUserTag().get(0));
                             audioCommentViewHolder.userTag.setVisibility(View.VISIBLE);

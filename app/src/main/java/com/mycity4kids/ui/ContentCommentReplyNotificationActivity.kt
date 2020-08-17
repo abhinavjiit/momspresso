@@ -390,7 +390,6 @@ class ContentCommentReplyNotificationActivity : BaseActivity(),
     fun addReply(content: String?, commentId: String, mentionsMap: Map<String, Mentions>?) {
         commentList?.let { commentList ->
 
-
             content?.let { content ->
                 showProgressDialog("Adding Reply")
                 val addEditCommentOrReplyRequest =
@@ -453,12 +452,10 @@ class ContentCommentReplyNotificationActivity : BaseActivity(),
                                     )
                                 }
                             }
-
                         } catch (e: Exception) {
                             FirebaseCrashlytics.getInstance().recordException(e)
                             Log.d("MC4kException", Log.getStackTraceString(e))
                         }
-
                     }
                 })
             }
@@ -495,9 +492,6 @@ class ContentCommentReplyNotificationActivity : BaseActivity(),
         val blockUserModel = BlockUserModel(blocked_user_id = commentList?.get(position)?.userId)
         val call = articleDetailsAPI.blockUserApi(blockUserModel)
         call.enqueue(blockUserCallBack)
-      /*  commentList?.removeAt(position)
-        articleCommentsRecyclerAdapter.setData(commentList)
-        articleCommentsRecyclerAdapter.notifyDataSetChanged()*/
     }
 
     private val blockUserCallBack = object : Callback<ResponseBody> {
