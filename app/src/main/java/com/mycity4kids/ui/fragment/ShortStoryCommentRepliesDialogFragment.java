@@ -103,7 +103,7 @@ public class ShortStoryCommentRepliesDialogFragment extends DialogFragment imple
             data = extras.getParcelable("commentReplies");
             totalRepliesCount = extras.getInt("totalRepliesCount");
             commentPosition = extras.getInt("position");
-            authorId = extras.getString("articleWriterId");
+            authorId = extras.getString("blogWriterId");
         }
 
         repliesList.add(data);
@@ -310,6 +310,7 @@ public class ShortStoryCommentRepliesDialogFragment extends DialogFragment imple
                 _args.putInt("position", position);
                 _args.putString("responseType", "REPLY");
                 _args.putString("authorId", repliesList.get(position).getUserId());
+                _args.putString("blogWriterId", authorId);
                 commentOptionsDialogFragment.setArguments(_args);
                 commentOptionsDialogFragment.setCancelable(true);
                 commentOptionsDialogFragment.show(fm, "Comment Options");

@@ -28,12 +28,21 @@
           android:id="@+id/articleImageView1"
           android:layout_width="245dp"
           android:layout_height="114dp"
-          android:adjustViewBounds="true"
           android:layout_alignParentTop="true"
           android:layout_centerInParent="true"
+          android:adjustViewBounds="true"
           android:contentDescription="@string/author_img"
           android:scaleType="fitXY"
           android:src="@drawable/default_article" />
+
+        <androidx.appcompat.widget.AppCompatImageView
+          android:id="@+id/trophyImageView1"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:layout_alignEnd="@+id/articleImageView1"
+          android:padding="@dimen/space_10"
+          android:src="@drawable/ic_trophy"
+          android:visibility="gone" />
 
         <com.mycity4kids.widget.CustomFontTextView
           android:id="@+id/txvArticleTitle1"
@@ -141,10 +150,18 @@
           android:layout_height="114dp"
           android:layout_alignParentTop="true"
           android:layout_centerInParent="true"
+          android:adjustViewBounds="true"
           android:contentDescription="@string/author_img"
           android:scaleType="fitXY"
-          android:adjustViewBounds="true"
           android:src="@drawable/default_article" />
+        <androidx.appcompat.widget.AppCompatImageView
+          android:id="@+id/trophyImageView2"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:layout_alignEnd="@+id/articleImageView2"
+          android:padding="@dimen/space_10"
+          android:src="@drawable/ic_trophy"
+          android:visibility="gone" />
 
         <com.mycity4kids.widget.CustomFontTextView
           android:id="@+id/txvArticleTitle2"
@@ -252,10 +269,18 @@
           android:layout_height="114dp"
           android:layout_alignParentTop="true"
           android:layout_centerInParent="true"
+          android:adjustViewBounds="true"
           android:contentDescription="@string/author_img"
           android:scaleType="fitXY"
-          android:adjustViewBounds="true"
           android:src="@drawable/default_article" />
+        <androidx.appcompat.widget.AppCompatImageView
+          android:id="@+id/trophyImageView3"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:layout_alignEnd="@+id/articleImageView3"
+          android:padding="@dimen/space_10"
+          android:src="@drawable/ic_trophy"
+          android:visibility="gone" />
 
         <com.mycity4kids.widget.CustomFontTextView
           android:id="@+id/txvArticleTitle3"
@@ -363,11 +388,18 @@
           android:layout_height="114dp"
           android:layout_alignParentTop="true"
           android:layout_centerInParent="true"
+          android:adjustViewBounds="true"
           android:contentDescription="@string/author_img"
           android:scaleType="fitXY"
-          android:adjustViewBounds="true"
           android:src="@drawable/default_article" />
-
+        <androidx.appcompat.widget.AppCompatImageView
+          android:id="@+id/trophyImageView4"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:layout_alignEnd="@+id/articleImageView4"
+          android:padding="@dimen/space_10"
+          android:src="@drawable/ic_trophy"
+          android:visibility="gone" />
         <com.mycity4kids.widget.CustomFontTextView
           android:id="@+id/txvArticleTitle4"
           android:layout_width="match_parent"
@@ -475,10 +507,19 @@
           android:layout_height="114dp"
           android:layout_alignParentTop="true"
           android:layout_centerInParent="true"
+          android:adjustViewBounds="true"
           android:contentDescription="@string/author_img"
           android:scaleType="fitXY"
-          android:adjustViewBounds="true"
           android:src="@drawable/default_article" />
+
+        <androidx.appcompat.widget.AppCompatImageView
+          android:id="@+id/trophyImageView5"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:layout_alignEnd="@+id/articleImageView5"
+          android:padding="@dimen/space_10"
+          android:src="@drawable/ic_trophy"
+          android:visibility="gone" />
 
         <com.mycity4kids.widget.CustomFontTextView
           android:id="@+id/txvArticleTitle5"

@@ -568,6 +568,7 @@ class ContentCommentReplyNotificationFragment : BaseFragment(),
             _args.putInt("position", position)
             _args.putString("responseType", "REPLY")
             _args.putString("authorId", repliesData?.get(position)?.userId)
+            _args.putString("blogWriterId", authorId)
             commentOptionsDialogFragment.arguments = _args
             commentOptionsDialogFragment.isCancelable = true
             commentOptionsDialogFragment.show(fm, "Comment Options")

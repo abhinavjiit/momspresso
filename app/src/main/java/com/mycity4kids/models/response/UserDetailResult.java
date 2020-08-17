@@ -114,7 +114,7 @@ public class UserDetailResult implements Parcelable {
     @SerializedName("requestMedium")
     private String requestMedium;
     @SerializedName("isTaggable")
-    private String isTaggable = "0";
+    private String isTaggable = "1";
 
     protected UserDetailResult(Parcel in) {
         id = in.readString();

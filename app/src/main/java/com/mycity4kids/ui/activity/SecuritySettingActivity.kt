@@ -72,12 +72,12 @@ class SecuritySettingActivity : BaseActivity(), View.OnClickListener {
 
             try {
                 val resData = response.body()
-                if (resData?.data?.get(0)?.result?.isTaggable == "1") {
-                    switchTextView.isChecked = true
-                    isTaggable = true
-                } else {
+                if (resData?.data?.get(0)?.result?.isTaggable == "0") {
                     switchTextView.isChecked = false
                     isTaggable = false
+                } else {
+                    switchTextView.isChecked = true
+                    isTaggable = true
                 }
             } catch (e: Exception) {
                 FirebaseCrashlytics.getInstance().recordException(e)
