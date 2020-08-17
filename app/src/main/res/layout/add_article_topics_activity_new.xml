@@ -1,127 +1,181 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:id="@+id/root"
+  xmlns:app="http://schemas.android.com/apk/res-auto"
+  android:id="@+id/root"
+  android:layout_width="match_parent"
+  android:layout_height="match_parent"
+  android:background="@color/white_color">
+
+  <androidx.appcompat.widget.Toolbar
+    android:id="@+id/toolbar"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="@color/white_color">
-
-    <androidx.appcompat.widget.Toolbar
-        android:id="@+id/toolbar"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="?attr/colorPrimary"
-        android:minHeight="?attr/actionBarSize"
-        app:theme="@style/ToolbarTheme"
-        app:titleTextAppearance="@style/ToolbarTheme.Title">
-
-        <RelativeLayout
-            android:id="@+id/toolbarRelativeLayout"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:visibility="visible">
-
-            <com.mycity4kids.widget.CustomFontTextView
-                android:id="@+id/toolbarTitle"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_centerVertical="true"
-                android:text="@string/add_article_topics.toolbar.title"
-                android:textColor="@color/add_article_topics.toolbar.title"
-                android:textSize="20sp"
-                app:fontName="oswald_regular.ttf" />
-
-            <com.mycity4kids.widget.CustomFontTextView
-                android:id="@+id/clearAllTextView"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentEnd="true"
-                android:layout_alignParentRight="true"
-                android:layout_centerVertical="true"
-                android:paddingBottom="12dp"
-                android:paddingEnd="10dp"
-                android:paddingLeft="5dp"
-                android:paddingRight="10dp"
-                android:paddingStart="5dp"
-                android:paddingTop="12dp"
-                android:text="@string/add_article_topics.clear_all"
-                android:textColor="@color/add_article_topics.clear_all"
-                app:fontName="oswald_regular.ttf" />
-
-        </RelativeLayout>
-    </androidx.appcompat.widget.Toolbar>
-
-    <View
-        android:id="@+id/toolbarUnderline"
-        android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:layout_below="@+id/toolbar"
-        android:background="@color/light_underline" />
-
-    <com.google.android.material.tabs.TabLayout
-        android:id="@+id/tab_layout"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/toolbarUnderline"
-        android:background="?attr/colorPrimary"
-        android:elevation="3dp"
-        android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
-        app:tabIndicatorColor="@color/app_red"
-        app:tabIndicatorHeight="3dp"
-        app:tabMode="scrollable"
-        app:tabSelectedTextColor="@color/home.trending.tabbar_text"
-        app:tabTextAppearance="@style/CustomTabText"
-        app:tabTextColor="@color/home.trending.tabbar_text" />
-
-    <androidx.viewpager.widget.ViewPager
-        android:id="@+id/pager"
-        android:layout_width="match_parent"
-        android:layout_height="fill_parent"
-        android:layout_above="@+id/bottombarUnderline"
-        android:layout_below="@id/tab_layout" />
-
-    <View
-        android:id="@+id/bottombarUnderline"
-        android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:layout_above="@+id/changeTopicsContainer"
-        android:background="@color/light_underline" />
+    android:layout_height="wrap_content"
+    android:background="?attr/colorPrimary"
+    android:minHeight="?attr/actionBarSize"
+    app:theme="@style/ToolbarTheme"
+    app:titleTextAppearance="@style/ToolbarTheme.Title">
 
     <RelativeLayout
-        android:id="@+id/changeTopicsContainer"
+      android:id="@+id/toolbarRelativeLayout"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:visibility="visible">
+
+      <androidx.cardview.widget.CardView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true">
+        android:layout_marginStart="10dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="10dp"
+        android:layout_marginBottom="8dp"
+        android:layout_toStartOf="@+id/nextTextView"
+        app:cardBackgroundColor="#EEEEEE"
+        app:cardCornerRadius="6dp"
+        app:cardElevation="0dp">
+        <com.mycity4kids.widget.CustomFontEditText
+          android:id="@+id/searchEditText"
+          android:layout_width="match_parent"
+          android:layout_height="wrap_content"
+          android:background="@null"
+          android:drawableStart="@drawable/search"
+          android:drawablePadding="10dp"
+          android:hint="@string/type_to_search"
+          android:padding="10dp"
+          android:textColor="@color/app_dark_black"
+          app:drawableTint="@color/app_grey"
+          app:fontName="oswald_regular.ttf" />
 
-        <com.mycity4kids.widget.CustomFontTextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentLeft="true"
-            android:layout_alignParentStart="true"
-            android:layout_toLeftOf="@+id/applyTextView"
-            android:layout_toStartOf="@+id/applyTextView"
-            android:padding="20dp"
-            android:text="@string/add_article_topics.max_topics"
-            android:textColor="@color/add_article_topics.max_topics"
-            app:fontName="oswald.ttf" />
+        <ImageView
+          android:id="@+id/clearSearchImageView"
+          android:layout_width="32dp"
+          android:layout_height="32dp"
+          android:layout_gravity="center_vertical|end"
+          android:layout_marginEnd="4dp"
+          android:padding="6dp"
+          android:src="@drawable/ic_clear_search"
+          android:tint="@color/app_grey" />
+      </androidx.cardview.widget.CardView>
 
-        <com.mycity4kids.widget.CustomFontTextView
-            android:id="@+id/applyTextView"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentEnd="true"
-            android:layout_alignParentRight="true"
-            android:padding="20dp"
-            android:text="@string/add_article_topics.apply"
-            android:textColor="@color/app_red"
-            app:fontName="oswald_regular.ttf" />
-    </RelativeLayout>
-
-    <ProgressBar
-        android:id="@+id/progressBar"
+      <com.mycity4kids.widget.CustomFontTextView
+        android:id="@+id/nextTextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_centerHorizontal="true"
+        android:layout_alignParentEnd="true"
         android:layout_centerVertical="true"
-        android:visibility="gone" />
+        android:layout_marginEnd="10dp"
+        android:background="@drawable/next_button_bg_selector"
+        android:gravity="center"
+        android:paddingStart="16dp"
+        android:paddingTop="8dp"
+        android:paddingEnd="16dp"
+        android:paddingBottom="8dp"
+        android:text="@string/editor.next"
+        android:textColor="@color/white_color"
+        app:fontName="oswald_regular.ttf" />
+    </RelativeLayout>
+  </androidx.appcompat.widget.Toolbar>
+
+  <View
+    android:id="@+id/toolbarUnderline"
+    android:layout_width="match_parent"
+    android:layout_height="1dp"
+    android:layout_below="@+id/toolbar"
+    android:background="@color/light_underline" />
+
+  <HorizontalScrollView
+    android:id="@+id/parentTagScrollView"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_below="@+id/toolbarUnderline">
+    <LinearLayout
+      android:id="@+id/filterContentContainer"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:background="#F9F9F9"
+      android:orientation="horizontal"
+      android:paddingTop="10dp"
+      android:paddingBottom="6dp">
+
+    </LinearLayout>
+  </HorizontalScrollView>
+  <ScrollView
+    android:id="@+id/subTopicScollView"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_above="@+id/bottombarUnderline"
+    android:layout_below="@+id/parentTagScrollView">
+    <org.apmem.tools.layouts.FlowLayout
+      android:id="@+id/subTopicsListContainer"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content">
+
+    </org.apmem.tools.layouts.FlowLayout>
+  </ScrollView>
+
+  <View
+    android:id="@+id/bottombarUnderline"
+    android:layout_width="match_parent"
+    android:layout_height="1dp"
+    android:layout_above="@+id/selectedTagsLabel"
+    android:background="@color/light_underline" />
+
+  <TextView
+    android:id="@+id/selectedTagsLabel"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_above="@+id/selectedTopicsScrollView"
+    android:layout_alignParentStart="true"
+    android:layout_marginStart="8dp"
+    android:padding="8dp"
+    android:text="@string/selected_tags"
+    android:textColor="@color/app_dark_black"
+    android:visibility="gone" />
+
+  <TextView
+    android:id="@+id/clearAllTextView"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_above="@+id/selectedTopicsScrollView"
+    android:layout_alignParentEnd="true"
+    android:layout_marginEnd="8dp"
+    android:padding="8dp"
+    android:text="@string/add_article_topics.clear_all"
+    android:visibility="gone" />
+  <ScrollView
+    android:id="@+id/selectedTopicsScrollView"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_above="@+id/maxTopicsLabel">
+
+    <org.apmem.tools.layouts.FlowLayout
+      android:id="@+id/selectedTopicsContainer"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content" />
+  </ScrollView>
+
+  <com.mycity4kids.widget.CustomFontTextView
+    android:id="@+id/maxTopicsLabel"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_above="@+id/bottomView"
+    android:layout_alignParentStart="true"
+    android:padding="20dp"
+    android:text="@string/add_article_topics.max_topics"
+    android:textColor="@color/add_article_topics.max_topics"
+    android:visibility="visible"
+    app:fontName="oswald.ttf" />
+
+  <View
+    android:id="@+id/bottomView"
+    android:layout_width="match_parent"
+    android:layout_height="0dp"
+    android:layout_alignParentBottom="true" />
+
+  <ProgressBar
+    android:id="@+id/progressBar"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_centerHorizontal="true"
+    android:layout_centerVertical="true"
+    android:visibility="gone" />
 </RelativeLayout>
