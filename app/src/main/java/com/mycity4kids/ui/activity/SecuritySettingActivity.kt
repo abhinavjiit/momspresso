@@ -27,7 +27,7 @@ class SecuritySettingActivity : BaseActivity(), View.OnClickListener {
     private lateinit var switchTextView: SwitchCompat
     private lateinit var blockUserRightArrowImageView: ImageView
     private lateinit var blockUserTextView: TextView
-    private var isTaggable = false
+    private var isTaggable = true
     val a = emptyArray<String>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -38,6 +38,7 @@ class SecuritySettingActivity : BaseActivity(), View.OnClickListener {
         switchTextView = findViewById(R.id.switchTextView)
         blockUserRightArrowImageView = findViewById(R.id.blockUserRightArrowImageView)
         blockUserTextView = findViewById(R.id.blockUserTextView)
+        switchTextView.isChecked = true
         getBloggerData()
         backImageView.setOnClickListener {
             onBackPressed()
@@ -74,6 +75,9 @@ class SecuritySettingActivity : BaseActivity(), View.OnClickListener {
                 if (resData?.data?.get(0)?.result?.isTaggable == "1") {
                     switchTextView.isChecked = true
                     isTaggable = true
+                } else {
+                    switchTextView.isChecked = false
+                    isTaggable = false
                 }
             } catch (e: Exception) {
                 FirebaseCrashlytics.getInstance().recordException(e)
