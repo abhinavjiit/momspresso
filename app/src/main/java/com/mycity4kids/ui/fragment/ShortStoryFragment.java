@@ -661,7 +661,7 @@ public class ShortStoryFragment extends BaseFragment implements View.OnClickList
                     args.putParcelable("commentReplies", consolidatedList.get(position).getSsComment());
                     args.putInt("totalRepliesCount", consolidatedList.get(position).getSsComment().getRepliesCount());
                     args.putInt("position", position);
-                    args.putString("articleWriterId", authorId);
+                    args.putString("blogWriterId", authorId);
                     shortStoryCommentRepliesDialogFragment.setArguments(args);
                     shortStoryCommentRepliesDialogFragment.setCancelable(true);
                     FragmentManager fm = getChildFragmentManager();
