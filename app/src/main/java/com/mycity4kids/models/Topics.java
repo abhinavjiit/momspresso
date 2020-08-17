@@ -2,9 +2,7 @@ package com.mycity4kids.models;
 
 import android.os.Parcel;
 import android.os.Parcelable;
-
 import com.google.gson.annotations.SerializedName;
-
 import com.mycity4kids.models.ExploreTopicsModel.ExtraData.CategoryImage;
 import java.util.ArrayList;
 import java.util.List;
@@ -168,8 +166,6 @@ public class Topics implements Parcelable {
 
         public static class Challenges implements Parcelable {
 
-            @SerializedName("active")
-            private String active;
             @SerializedName("videoUrl")
             private String videoUrl;
             @SerializedName("imageUrl")
@@ -210,24 +206,6 @@ public class Topics implements Parcelable {
             }
 
             private String rules;
-
-
-            public Challenges(String active, String videoUrl, String imageUrl, int type, String desc) {
-                this.active = active;
-                this.videoUrl = videoUrl;
-                this.imageUrl = imageUrl;
-                this.type = type;
-
-                this.desc = desc;
-            }
-
-            public String getActive() {
-                return active;
-            }
-
-            public void setActive(String active) {
-                this.active = active;
-            }
 
             public String getVideoUrl() {
                 return videoUrl;
@@ -270,7 +248,6 @@ public class Topics implements Parcelable {
             }
 
             protected Challenges(Parcel in) {
-                active = in.readString();
                 videoUrl = in.readString();
                 imageUrl = in.readString();
                 type = in.readInt();
@@ -283,7 +260,6 @@ public class Topics implements Parcelable {
 
             @Override
             public void writeToParcel(Parcel dest, int flags) {
-                dest.writeString(active);
                 dest.writeString(videoUrl);
                 dest.writeString(imageUrl);
                 dest.writeInt(type);

@@ -1394,4 +1394,7 @@ Thank you! We will be reviewing your story. You can expect to hear from us withi
   <string name="all_category">Category</string>
   <string name="type_to_search">Type to Search</string>
   <string name="selected_tags">SELECTED TAGS</string>
+  <string name="virtual_clinic_popup_header">Want Curated Premium Expert Content?</string>
+  <string name="expected_mom_popup_msg">Let us know your expected date of delivery and we will show you just what you need to know!</string>
+  <string name="new_mom_popup_msg">Let us know your child\'s birth date and we will show you just what you need to know for that age!</string>
 </resources>

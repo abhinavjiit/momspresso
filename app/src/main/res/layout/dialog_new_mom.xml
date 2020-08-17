@@ -35,10 +35,20 @@
       android:layout_marginStart="4dp"
       android:layout_marginTop="12dp"
       android:layout_marginEnd="4dp"
-      android:text="Please add DOB of your youngest child"
+      android:text="@string/virtual_clinic_popup_header"
       android:textColor="@color/app_dark_black"
       android:textSize="18sp"
       android:textStyle="bold" />
+
+    <TextView
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:layout_marginStart="4dp"
+      android:layout_marginTop="14dp"
+      android:layout_marginEnd="4dp"
+      android:text="@string/new_mom_popup_msg"
+      android:textColor="#9D9D9D"
+      android:textSize="18sp" />
 
     <include
       layout="@layout/dynamic_child_view"

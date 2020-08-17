@@ -2,9 +2,7 @@ package com.mycity4kids.models;
 
 import android.os.Parcel;
 import android.os.Parcelable;
-
 import com.google.gson.annotations.SerializedName;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -33,7 +31,8 @@ public class ExploreTopicsModel implements Parcelable {
     @SerializedName("extraData")
     private List<ExtraData> extraData;
 
-    public class ExtraData  {
+    public class ExtraData {
+
         @SerializedName("challenges")
         private Challenges challenges;
         @SerializedName("metaTitle")
@@ -86,6 +85,7 @@ public class ExploreTopicsModel implements Parcelable {
         }
 
         public class CategoryImage {
+
             @SerializedName("web")
             private String web;
             @SerializedName("app")
@@ -119,18 +119,13 @@ public class ExploreTopicsModel implements Parcelable {
         }
 
         private class Challenges {
-            @SerializedName("active")
-            private String active;
+
             @SerializedName("type")
             private String type;
             @SerializedName("desc")
             private String desc;
             @SerializedName("imageUrl")
             private String imageUrl;
-
-            public String getActive() {
-                return active;
-            }
 
             public String getDesc() {
                 return desc;
@@ -142,10 +137,6 @@ public class ExploreTopicsModel implements Parcelable {
 
             public String getType() {
                 return type;
-            }
-
-            public void setActive(String active) {
-                this.active = active;
             }
 
             public void setDesc(String desc) {
@@ -166,7 +157,8 @@ public class ExploreTopicsModel implements Parcelable {
 
     }
 
-    public ExploreTopicsModel(String id, String title, boolean isSelected, ArrayList<ExploreTopicsModel> child, String parentId, String parentName) {
+    public ExploreTopicsModel(String id, String title, boolean isSelected, ArrayList<ExploreTopicsModel> child,
+            String parentId, String parentName) {
         this.id = id;
         this.title = title;
         this.isSelected = isSelected;

@@ -52,13 +52,7 @@ public class ShortStoryChallengesRecyclerAdapter extends
             if (articleDataModelsNew != null) {
                 for (int i = articleDataModelsNew.getChild().size() - 1; i >= 0; i--) {
                     if ("1".equals(articleDataModelsNew.getChild().get(i).getPublicVisibility())) {
-                        if (articleDataModelsNew.getChild().get(i).getExtraData() != null
-                                && articleDataModelsNew.getChild().get(i).getExtraData().size() != 0) {
-                            if ("1".equals(articleDataModelsNew.getChild().get(i).getExtraData().get(0).getChallenge()
-                                    .getActive())) {
-                                articleDataModels.add(articleDataModelsNew.getChild().get(i));
-                            }
-                        }
+                        articleDataModels.add(articleDataModelsNew.getChild().get(i));
                     }
                 }
             }

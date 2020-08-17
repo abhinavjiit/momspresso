@@ -125,7 +125,6 @@ class UserContentAdapter(
                 holder.viewCountTextView,
                 holder.commentCountTextView,
                 holder.recommendCountTextView,
-                holder.goldVlogImageView,
                 mixFeedList?.get(position),
                 holder,
                 isPrivate
@@ -550,11 +549,9 @@ class UserContentAdapter(
         internal var viewCountTextView: TextView
         internal var commentCountTextView: TextView
         internal var recommendCountTextView: TextView
-        internal var goldVlogImageView: ImageView
 
         init {
             winnerVlogImageView = itemView.findViewById(R.id.winnerVlogImageView)
-            goldVlogImageView = itemView.findViewById(R.id.goldVlogImageView)
             txvArticleTitle = itemView.findViewById(R.id.txvArticleTitle)
             txvAuthorName = itemView.findViewById(R.id.txvAuthorName)
             articleImageView = itemView.findViewById(R.id.articleImageView)
@@ -725,19 +722,7 @@ class UserContentAdapter(
                     holder.bookmarkArticleImageView.setImageResource(R.drawable.ic_bookmarked)
                 }
             }
-            when {
-                data?.winner == 1 -> {
-                    trophyImageView.visibility = View.VISIBLE
-                    trophyImageView.setImageResource(R.drawable.ic_trophy)
-                }
-                data?.is_gold!! -> {
-                    trophyImageView.visibility = View.VISIBLE
-                    trophyImageView.setImageResource(R.drawable.ic_star_yellow)
-                }
-                else -> {
-                    trophyImageView.visibility = View.GONE
-                }
-            }
+            showWinnerOrGoldMark(data, trophyImageView)
         } catch (e: Exception) {
             FirebaseCrashlytics.getInstance().recordException(e)
             Log.d("MC4kException", Log.getStackTraceString(e))
@@ -835,19 +820,7 @@ class UserContentAdapter(
                         )
                 }
             }
-            when {
-                data?.winner == 1 -> {
-                    trophyImageView.visibility = View.VISIBLE
-                    trophyImageView.setImageResource(R.drawable.ic_trophy)
-                }
-                data?.is_gold!! -> {
-                    trophyImageView.visibility = View.VISIBLE
-                    trophyImageView.setImageResource(R.drawable.ic_star_yellow)
-                }
-                else -> {
-                    trophyImageView.visibility = View.GONE
-                }
-            }
+            showWinnerOrGoldMark(data, trophyImageView)
         } catch (e: Exception) {
             FirebaseCrashlytics.getInstance().recordException(e)
             Log.d("MC4kException", Log.getStackTraceString(e))
@@ -862,7 +835,6 @@ class UserContentAdapter(
         viewCountTextView: TextView,
         commentCountTextView: TextView,
         recommendCountTextView: TextView,
-        goldVlogImageView: ImageView,
         data: MixFeedResult?,
         holder: RecyclerView.ViewHolder,
         private: Boolean
@@ -910,19 +882,33 @@ class UserContentAdapter(
             } catch (e: Exception) {
                 articleImageView.setImageResource(R.drawable.default_article)
             }
+            showWinnerOrGoldMark(data, winnerVlogImageView)
+        } catch (e: Exception) {
+            FirebaseCrashlytics.getInstance().recordException(e)
+            Log.d("MC4kException", Log.getStackTraceString(e))
+        }
+    }
 
-            if (data?.is_gold != null && data.is_gold) {
-                goldVlogImageView.visibility = View.VISIBLE
-            } else {
-                goldVlogImageView.visibility = View.GONE
-            }
-            if (data?.winner != null && data.winner as Boolean) {
-                winnerVlogImageView.visibility = View.VISIBLE
-            } else {
-                winnerVlogImageView.visibility = View.GONE
+    private fun showWinnerOrGoldMark(
+        data: MixFeedResult?,
+        winnerOrGoldImageView: ImageView
+    ) {
+        try {
+            when {
+                data?.winner == "1" || data?.winner as Boolean -> {
+                    winnerOrGoldImageView.visibility = View.VISIBLE
+                    winnerOrGoldImageView.setImageResource(R.drawable.ic_trophy)
+                }
+                data.is_gold -> {
+                    winnerOrGoldImageView.visibility = View.VISIBLE
+                    winnerOrGoldImageView.setImageResource(R.drawable.ic_star_yellow)
+                }
+                else -> {
+                    winnerOrGoldImageView.visibility = View.GONE
+                }
             }
         } catch (e: Exception) {
-            winnerVlogImageView.visibility = View.GONE
+            winnerOrGoldImageView.visibility = View.GONE
             FirebaseCrashlytics.getInstance().recordException(e)
             Log.d("MC4kException", Log.getStackTraceString(e))
         }

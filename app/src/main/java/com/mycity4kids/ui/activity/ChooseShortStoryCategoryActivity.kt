@@ -12,7 +12,6 @@ import com.mycity4kids.R
 import com.mycity4kids.application.BaseApplication
 import com.mycity4kids.base.BaseActivity
 import com.mycity4kids.constants.AppConstants
-import com.mycity4kids.models.ExploreTopicsModel
 import com.mycity4kids.models.Topics
 import com.mycity4kids.retrofitAPIsInterfaces.VlogsListingAndDetailsAPI
 import com.mycity4kids.ui.adapter.ShortStoryChallengeTopicsAdapter
@@ -32,7 +31,6 @@ class ChooseShortStoryCategoryActivity : BaseActivity(),
     val adapter: ShortStoryTopicsGridAdapter by lazy { ShortStoryTopicsGridAdapter() }
     private lateinit var shortShortTopicsData: ArrayList<Topics>
     private lateinit var shortStoryChallengesData: ArrayList<Topics>
-    private var publicShortStoryTopics: ArrayList<ExploreTopicsModel>? = null
     private var source: String? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -56,11 +54,11 @@ class ChooseShortStoryCategoryActivity : BaseActivity(),
             finish()
         }
         topicsGridView.setOnItemClickListener { parent, view, position, id ->
-            val topicId = publicShortStoryTopics?.get(position)?.id
+            val topicId = shortShortTopicsData.get(position).id
             val intent =
                 Intent(this@ChooseShortStoryCategoryActivity, AddShortStoryActivity::class.java)
             intent.putExtra("categoryId", topicId)
-            intent.putExtra("categoryName", publicShortStoryTopics?.get(position)?.display_name)
+            intent.putExtra("categoryName", shortShortTopicsData.get(position).display_name)
             startActivity(intent)
         }
 

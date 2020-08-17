@@ -722,6 +722,8 @@ public class GroupDetailsActivity extends BaseActivity implements OnClickListene
         dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
         dialog.show();
 
+        ImageView headerImageView = dialog.findViewById(R.id.headerImageView);
+        Picasso.get().load(selectedGroup.getQuestionnaire().get("imageUrl")).into(headerImageView);
         MomspressoButtonWidget continueButtonWidget = dialog.findViewById(R.id.continueButtonWidget);
         ImageView cancelDialog = dialog.findViewById(R.id.cancel);
         continueButtonWidget
@@ -774,6 +776,8 @@ public class GroupDetailsActivity extends BaseActivity implements OnClickListene
         dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
         dialog.show();
 
+        ImageView headerImageView = dialog.findViewById(R.id.headerImageView);
+        Picasso.get().load(selectedGroup.getQuestionnaire().get("imageUrl")).into(headerImageView);
         MomspressoButtonWidget continueButtonWidget = dialog.findViewById(R.id.continueButtonWidget);
         ImageView cancelDialog = dialog.findViewById(R.id.cancel);
         continueButtonWidget
