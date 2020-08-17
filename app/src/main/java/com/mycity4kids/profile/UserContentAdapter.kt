@@ -35,12 +35,12 @@ import com.mycity4kids.utils.ImageKitUtils
 import com.mycity4kids.utils.StringUtils
 import com.mycity4kids.widget.StoryShareCardWidget
 import com.squareup.picasso.Picasso
+import java.util.Locale
 import kotlinx.android.synthetic.main.mom_vlog_follow_following_carousal.view.*
 import kotlinx.android.synthetic.main.short_story_listing_item.view.*
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
-import java.util.Locale
 
 /**
  * Created by hemant on 19/7/17.
