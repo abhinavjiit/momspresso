@@ -774,7 +774,6 @@ class ContentCommentReplyNotificationFragment : BaseFragment(),
         if (responseType == "REPLY") {
             val blockUserModel =
                 BlockUserModel(blocked_user_id = repliesData?.get(position)?.userId)
-            repliesData?.removeAt(position)
             val call = articleDetailsAPI.blockUserApi(blockUserModel)
             call.enqueue(blockUserCallBack)
         } else {
