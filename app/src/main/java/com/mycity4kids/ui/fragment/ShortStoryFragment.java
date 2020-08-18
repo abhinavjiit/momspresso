@@ -1522,16 +1522,10 @@ public class ShortStoryFragment extends BaseFragment implements View.OnClickList
         FollowUnfollowUserRequest request = new FollowUnfollowUserRequest();
         request.setFollowee_id(authorId);
         if (isFollowing) {
-            isFollowing = false;
-            adapter.setAuthorFollowingStatus(AppConstants.STATUS_NOT_FOLLOWING);
-            adapter.notifyItemChanged(0);
             Utils.pushGenericEvent(getActivity(), "CTA_Unfollow_100WS_Detail", userDynamoId, "ShortStoryFragment");
             Call<FollowUnfollowUserResponse> followUnfollowUserResponseCall = followApi.unfollowUserV2(request);
             followUnfollowUserResponseCall.enqueue(unfollowUserResponseCallback);
         } else {
-            isFollowing = true;
-            adapter.setAuthorFollowingStatus(AppConstants.STATUS_FOLLOWING);
-            adapter.notifyItemChanged(0);
             Utils.shareEventTracking(getActivity(), "100WS Detail", "Follow_Android", "StoryDetail_Follow");
             Call<FollowUnfollowUserResponse> followUnfollowUserResponseCall = followApi.followUserV2(request);
             followUnfollowUserResponseCall.enqueue(followUserResponseCallback);
@@ -1551,11 +1545,17 @@ public class ShortStoryFragment extends BaseFragment implements View.OnClickList
                     }
                     try {
                         FollowUnfollowUserResponse responseData = response.body();
+                        if (responseData.getCode() == 200 || Constants.SUCCESS.equals(responseData.getStatus())) {
+                            isFollowing = false;
+                            adapter.setAuthorFollowingStatus(AppConstants.STATUS_NOT_FOLLOWING);
+                            adapter.notifyItemChanged(0);
+                            ToastUtils.showToast(getActivity(), responseData.getData().getMsg());
+
+                        }
                         if (responseData.getCode() != 200 || !Constants.SUCCESS.equals(responseData.getStatus())) {
                             adapter.setAuthorFollowingStatus(AppConstants.STATUS_FOLLOWING);
                             adapter.notifyItemChanged(0);
-                            followAuthorTextView
-                                    .setText(BaseApplication.getAppContext().getString(R.string.ad_following_author));
+                            ToastUtils.showToast(getActivity(), responseData.getData().getMsg());
                             isFollowing = true;
                         }
                     } catch (Exception e) {
@@ -1591,13 +1591,22 @@ public class ShortStoryFragment extends BaseFragment implements View.OnClickList
                     }
                     try {
                         FollowUnfollowUserResponse responseData = response.body();
+                        if (responseData.getCode() == 200 || Constants.SUCCESS.equals(responseData.getStatus())) {
+                            isFollowing = true;
+                            adapter.setAuthorFollowingStatus(AppConstants.STATUS_FOLLOWING);
+                            adapter.notifyItemChanged(0);
+                            ToastUtils.showToast(getActivity(), responseData.getData().getMsg());
+
+                        }
+
                         if (responseData.getCode() != 200 || !Constants.SUCCESS.equals(responseData.getStatus())) {
                             adapter.setAuthorFollowingStatus(AppConstants.STATUS_NOT_FOLLOWING);
                             adapter.notifyItemChanged(0);
-                            followAuthorTextView
-                                    .setText(BaseApplication.getAppContext().getString(R.string.ad_follow_author));
                             isFollowing = false;
+                            ToastUtils.showToast(getActivity(), responseData.getData().getMsg());
+
                         }
+
                     } catch (Exception e) {
                         if (isAdded()) {
                             ((ArticleDetailsContainerActivity) getActivity())
