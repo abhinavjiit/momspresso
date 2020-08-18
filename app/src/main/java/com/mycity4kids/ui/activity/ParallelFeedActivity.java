@@ -651,13 +651,12 @@ public class ParallelFeedActivity extends BaseActivity implements View.OnClickLi
                     try {
                         RecommendUnrecommendArticleResponse responseData = response.body();
                         if (responseData.getCode() == 200 && Constants.SUCCESS.equals(responseData.getStatus())) {
-                            if (finalList.get(position).getIs_liked().equals("1")) {
+                            if ("1".equals(finalList.get(position).getIs_liked())) {
                                 finalList.get(position).setIs_liked("0");
                             } else {
                                 finalList.get(position).setIs_liked("1");
                             }
-                            videoRecyclerViewAdapter.updateList(finalList);
-                            videoRecyclerViewAdapter.notifyDataSetChanged();
+                            videoRecyclerViewAdapter.updateLikeStatus(position, finalList);
                             showToast("" + responseData.getReason());
                         } else {
                             showToast(responseData.getReason());

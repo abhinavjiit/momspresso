@@ -97,6 +97,11 @@ public class VideoRecyclerViewAdapter extends RecyclerView.Adapter<BaseViewHolde
         notifyItemChanged(updatePos, viewHolder.followText);
     }
 
+    public void updateLikeStatus(int updatePos, ArrayList<VlogsListingAndDetailResult> infoList) {
+        vlogsListingAndDetailResults = infoList;
+        notifyItemChanged(updatePos, viewHolder.heart);
+    }
+
     public void updateList(ArrayList<VlogsListingAndDetailResult> infoList) {
         vlogsListingAndDetailResults = infoList;
     }
@@ -384,15 +389,9 @@ public class VideoRecyclerViewAdapter extends RecyclerView.Adapter<BaseViewHolde
                             responseData.getAuthor().getFirstName() + responseData.getAuthor().getLastName()));
             heart.setOnClickListener(view -> {
                 if (responseData.getIs_liked() != null && responseData.getIs_liked().equals("1")) {
-                   /* likeStatus = "0";
-                    vlogsListingAndDetailResults.get(position).setIs_liked(likeStatus);
-                    notifyItemChanged(position, this);*/
                     ((ParallelFeedActivity) context)
                             .recommendUnrecommentArticleApi(responseData.getId(), "0", position);
                 } else {
-                   /* likeStatus = "1";
-                    vlogsListingAndDetailResults.get(position).setIs_liked(likeStatus);
-                    notifyItemChanged(position, this);*/
                     ((ParallelFeedActivity) context)
                             .recommendUnrecommentArticleApi(responseData.getId(), "1", position);
                     Utils.shareEventTracking(context, "Video Detail", "Like_Android", "VlogDetail_Like");
@@ -992,14 +991,6 @@ public class VideoRecyclerViewAdapter extends RecyclerView.Adapter<BaseViewHolde
             int index,
             TextView followFollowingTextView) {
 
-      /*  vlogsListingAndDetailResults.get(position).getCarouselVideoList().get(index)
-                .setFollowing(false);
-        GradientDrawable myGrad = (GradientDrawable) followFollowingTextView.getBackground();
-        myGrad.setStroke(2, ContextCompat.getColor(context, R.color.app_red));
-        followFollowingTextView.setTextColor(ContextCompat.getColor(context, R.color.white));
-        myGrad.setColor(ContextCompat.getColor(context, R.color.app_red));
-        followFollowingTextView.setText(StringUtils
-                .firstLetterToUpperCase(context.getResources().getString(R.string.ad_follow_author).toLowerCase()));*/
         Retrofit retrofit = BaseApplication.getInstance().getRetrofit();
         FollowAPI vlogsListingAndDetailsApi = retrofit.create(FollowAPI.class);
         FollowUnfollowUserRequest followUnfollowUserRequest = new FollowUnfollowUserRequest();
@@ -1049,14 +1040,6 @@ public class VideoRecyclerViewAdapter extends RecyclerView.Adapter<BaseViewHolde
             int position,
             int index,
             TextView followFollowingTextView) {
-     /*   vlogsListingAndDetailResults.get(position).getCarouselVideoList().get(index)
-                .setFollowing(true);
-        GradientDrawable myGrad = (GradientDrawable) followFollowingTextView.getBackground();
-        myGrad.setStroke(2, ContextCompat.getColor(context, R.color.color_BABABA));
-        followFollowingTextView.setTextColor(ContextCompat.getColor(context, R.color.color_BABABA));
-        myGrad.setColor(ContextCompat.getColor(context, R.color.video_feed_bg));
-        followFollowingTextView.setText(StringUtils
-                .firstLetterToUpperCase(context.getResources().getString(R.string.ad_following_author).toLowerCase()));*/
         Retrofit retrofit = BaseApplication.getInstance().getRetrofit();
         FollowAPI vlogsListingAndDetailsApi = retrofit.create(FollowAPI.class);
         FollowUnfollowUserRequest followUnfollowUserRequest = new FollowUnfollowUserRequest();
