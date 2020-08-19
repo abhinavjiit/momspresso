@@ -70,7 +70,7 @@ public class SharedPrefUtils {
     private static final String COACHMARK_MOMVLOG = "coachmarkMomVlog";
     private static final String COACHMARK_STORY = "coachmarkStory";
     private static final String COACHMARK_TAGGING = "coachmarkTagging";
-
+    private static final String COACHMARK_TOPCOMMENT = "coachmarkTopComment";
     private static final String LOCATION_LATITUDE = "latitude";
     private static final String LOCATION_LONGITUDE = "longitude";
 
@@ -333,6 +333,8 @@ public class SharedPrefUtils {
             editor.putBoolean(COACHMARK_STORY, flag);
         } else if ("taggingCoachmark".equals(screenName)) {
             editor.putBoolean(COACHMARK_TAGGING, flag);
+        } else if ("topCommentCoachMark".equals(screenName)) {
+            editor.putBoolean(COACHMARK_TOPCOMMENT, flag);
         }
         editor.commit();
     }
@@ -361,6 +363,8 @@ public class SharedPrefUtils {
             return sharedPref.getBoolean(COACHMARK_STORY, false);
         } else if ("taggingCoachmark".equals(screenName)) {
             return sharedPref.getBoolean(COACHMARK_TAGGING, false);
+        } else if ("topCommentCoachMark".equals(screenName)) {
+            return sharedPref.getBoolean(COACHMARK_TOPCOMMENT, false);
         }
         return true;
     }

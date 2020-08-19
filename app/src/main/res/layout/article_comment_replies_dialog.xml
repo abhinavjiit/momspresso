@@ -154,8 +154,6 @@
       android:layout_marginBottom="81dp"
       android:background="#99cecece" />
   </RelativeLayout>
-
-
   <com.mycity4kids.widget.CustomFontTextView
     android:id="@+id/noCommentsTextView"
     android:layout_width="wrap_content"
@@ -166,4 +164,9 @@
     android:textSize="16sp"
     android:visibility="gone"
     app:fontName="oswald_regular.ttf" />
+
+
+  
+
+
 </RelativeLayout>
