@@ -43,6 +43,7 @@ import androidx.fragment.app.FragmentManager;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.recyclerview.widget.RecyclerView.LayoutManager;
 import com.getbase.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.bottomsheet.BottomSheetBehavior;
 import com.google.android.material.tabs.TabLayout;
@@ -374,9 +375,16 @@ public class GroupDetailsActivity extends BaseActivity implements OnClickListene
             @Override
             public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
                 if (dy > 0) {
-                    visibleItemCount = llm.getChildCount();
-                    totalItemCount = llm.getItemCount();
-                    pastVisiblesItems = llm.findFirstVisibleItemPosition();
+                    LayoutManager llm = recyclerView.getLayoutManager();
+                    if (llm instanceof LinearLayoutManager) {
+                        visibleItemCount = llm.getChildCount();
+                        totalItemCount = llm.getItemCount();
+                        pastVisiblesItems = ((LinearLayoutManager) llm).findFirstVisibleItemPosition();
+                    } else {
+                        visibleItemCount = llm.getChildCount();
+                        totalItemCount = llm.getItemCount();
+                        pastVisiblesItems = ((GridLayoutManager) llm).findFirstVisibleItemPosition();
+                    }
 
                     if (!isRequestRunning && !isLastPageReached) {
                         if ((visibleItemCount + pastVisiblesItems) >= totalItemCount) {
@@ -725,7 +733,6 @@ public class GroupDetailsActivity extends BaseActivity implements OnClickListene
         ImageView headerImageView = dialog.findViewById(R.id.headerImageView);
         Picasso.get().load(selectedGroup.getQuestionnaire().get("imageUrl")).into(headerImageView);
         MomspressoButtonWidget continueButtonWidget = dialog.findViewById(R.id.continueButtonWidget);
-        ImageView cancelDialog = dialog.findViewById(R.id.cancel);
         continueButtonWidget
                 .setText(org.apache.commons.lang3.StringUtils
                         .capitalize(getString(R.string.dialog_continue).toLowerCase()));
@@ -765,6 +772,7 @@ public class GroupDetailsActivity extends BaseActivity implements OnClickListene
                 }
             }
         });
+        ImageView cancelDialog = dialog.findViewById(R.id.cancel);
         cancelDialog.setOnClickListener(view -> dialog.dismiss());
         dialog.show();
     }
@@ -779,18 +787,14 @@ public class GroupDetailsActivity extends BaseActivity implements OnClickListene
         ImageView headerImageView = dialog.findViewById(R.id.headerImageView);
         Picasso.get().load(selectedGroup.getQuestionnaire().get("imageUrl")).into(headerImageView);
         MomspressoButtonWidget continueButtonWidget = dialog.findViewById(R.id.continueButtonWidget);
-        ImageView cancelDialog = dialog.findViewById(R.id.cancel);
         continueButtonWidget
                 .setText(org.apache.commons.lang3.StringUtils
                         .capitalize(getString(R.string.dialog_continue).toLowerCase()));
-        EditText kidsNameEditText = dialog.findViewById(R.id.editKidsName);
-        TextView kidsDobTextView = dialog.findViewById(R.id.textKidsDOB);
-        Spinner spinnerGender = dialog.findViewById(R.id.spinnerGender);
         ArrayList<String> genderList = new ArrayList<>();
         genderList.add("Male");
         genderList.add("Female");
-
         CustomSpinnerAdapter spinAdapter = new CustomSpinnerAdapter(this, genderList);
+        Spinner spinnerGender = dialog.findViewById(R.id.spinnerGender);
         spinnerGender.setAdapter(spinAdapter);
         spinnerGender.setOnItemSelectedListener(new OnItemSelectedListener() {
             @Override
@@ -806,6 +810,7 @@ public class GroupDetailsActivity extends BaseActivity implements OnClickListene
 
         TextView deleteTextView = dialog.findViewById(R.id.textDeleteChild);
         deleteTextView.setVisibility(View.GONE);
+        TextView kidsDobTextView = dialog.findViewById(R.id.textKidsDOB);
         kidsDobTextView.setOnClickListener(v -> {
             final Calendar cldr = Calendar.getInstance();
             int day = cldr.get(Calendar.DAY_OF_MONTH);
@@ -822,6 +827,7 @@ public class GroupDetailsActivity extends BaseActivity implements OnClickListene
             picker.show();
         });
 
+        EditText kidsNameEditText = dialog.findViewById(R.id.editKidsName);
         continueButtonWidget.setOnClickListener(view -> {
             if (kidsDobTextView.getText() == null || StringUtils.isNullOrEmpty(kidsDobTextView.getText().toString())) {
                 showToast("Please select a valid date");
@@ -848,6 +854,7 @@ public class GroupDetailsActivity extends BaseActivity implements OnClickListene
                 }
             }
         });
+        ImageView cancelDialog = dialog.findViewById(R.id.cancel);
         cancelDialog.setOnClickListener(view -> dialog.dismiss());
         dialog.show();
     }
@@ -898,13 +905,13 @@ public class GroupDetailsActivity extends BaseActivity implements OnClickListene
     }
 
     private void saveExpectedDateOrYoungestChildDobToMembership(String timeInMillis, String responseQuestionnaireKey) {
-        Retrofit retrofit = BaseApplication.getInstance().getGroupsRetrofit();
-        GroupsAPI groupsApi = retrofit.create(GroupsAPI.class);
         UpdateGroupMembershipRequest updateRequest = new UpdateGroupMembershipRequest();
         updateRequest.setUserId(SharedPrefUtils.getUserDetailModel(this).getDynamoId());
         Map<String, String> map = new LinkedTreeMap<>();
         map.put(responseQuestionnaireKey, timeInMillis);
         updateRequest.setQuestionnaireResponse(map);
+        Retrofit retrofit = BaseApplication.getInstance().getGroupsRetrofit();
+        GroupsAPI groupsApi = retrofit.create(GroupsAPI.class);
         Call<GroupsMembershipResponse> groupsCall = groupsApi
                 .updateMember(currentUserMembershipId, updateRequest);
         groupsCall.enqueue(updateGroupMembershipResponseCallback);
@@ -1904,6 +1911,9 @@ public class GroupDetailsActivity extends BaseActivity implements OnClickListene
                             SharedPrefUtils.getAppLocale(BaseApplication.getAppContext()),
                             SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId(),
                             String.valueOf(System.currentTimeMillis()), "resources page", "", "");
+                    if (collectionItemsList != null) {
+                        collectionItemsList.clear();
+                    }
                     filterContentContainer.setVisibility(View.GONE);
                     removeRecyclerViewDecorator();
                     initializeCollectionsItemsList(selectedGroup.getCollectionId());
@@ -1913,7 +1923,8 @@ public class GroupDetailsActivity extends BaseActivity implements OnClickListene
                             SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId(),
                             String.valueOf(System.currentTimeMillis()), "resources page", "", "");
                     filterContentContainer.setVisibility(View.VISIBLE);
-                    if (StringUtils.isNullOrEmpty(questionnaireResponse.get("expectedDate"))) {
+                    if (StringUtils.isNullOrEmpty(questionnaireResponse.get("expectedDate")) && StringUtils
+                            .isNullOrEmpty(questionnaireResponse.get("dob"))) {
                         forYouFilterWidget.setVisibility(View.GONE);
                         monthFilterWidget.setSelected(true);
                         categoryFilterWidget.setSelected(false);
@@ -2009,8 +2020,8 @@ public class GroupDetailsActivity extends BaseActivity implements OnClickListene
 
     private void getCollectionsList(String collectionId) {
         Retrofit retrofit = BaseApplication.getInstance().getRetrofit();
-        CollectionsAPI collectionsAPI = retrofit.create(CollectionsAPI.class);
-        Call<BaseResponseGeneric<UserCollectionsListModel>> call = collectionsAPI
+        CollectionsAPI collectionsApi = retrofit.create(CollectionsAPI.class);
+        Call<BaseResponseGeneric<UserCollectionsListModel>> call = collectionsApi
                 .getUserCollectionItem(collectionId, start, 10);
         call.enqueue(collectionOfCollectionsResponseCallback);
     }

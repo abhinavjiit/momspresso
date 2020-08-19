@@ -280,7 +280,7 @@
           android:id="@+id/expectedDateLabelTextView"
           android:layout_width="wrap_content"
           android:layout_height="wrap_content"
-          android:text="@string/groups.reported_content"
+          android:text="@string/rewards_expected_date_delivery"
           android:textColor="@color/app_red"
           android:textSize="15sp"
           app:fontName="oswald_regular.ttf" />
@@ -319,7 +319,6 @@
           app:fb_textColor="@color/app_red"
           app:fb_textSize="14sp"
           app:layout_constraintBottom_toBottomOf="parent"
-          app:layout_constraintEnd_toStartOf="@+id/monthFilterWidget"
           app:layout_constraintHorizontal_bias="0.5"
           app:layout_constraintStart_toStartOf="parent"
           app:layout_constraintTop_toTopOf="parent" />
