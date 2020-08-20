@@ -28,7 +28,6 @@ import com.mycity4kids.constants.Constants;
 import com.mycity4kids.gtmutils.Utils;
 import com.mycity4kids.models.response.CommentListData;
 import com.mycity4kids.profile.UserProfileActivity;
-import com.mycity4kids.retrofitAPIsInterfaces.ArticleDetailsAPI;
 import com.mycity4kids.retrofitAPIsInterfaces.SearchArticlesAuthorsAPI;
 import com.mycity4kids.tagging.Mentions;
 import com.mycity4kids.tagging.MentionsResponse;

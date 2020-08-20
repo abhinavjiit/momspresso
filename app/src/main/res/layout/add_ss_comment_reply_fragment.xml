@@ -171,6 +171,10 @@
     android:id="@+id/commentReplyEditText"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:layout_below="@+id/separator" />
+    android:layout_below="@+id/separator"
+
+
+
+    />
 
 </RelativeLayout>

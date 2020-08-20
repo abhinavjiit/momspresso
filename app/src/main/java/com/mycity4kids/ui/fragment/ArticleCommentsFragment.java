@@ -226,7 +226,7 @@ public class ArticleCommentsFragment extends BaseFragment implements OnClickList
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
-            case R.id.addCommentFAB:
+       /*     case R.id.addCommentFAB:
                 pushEvent("CD_Comment");
                 Bundle args = new Bundle();
                 AddArticleCommentReplyDialogFragment addArticleCommentReplyDialogFragment =
@@ -237,7 +237,7 @@ public class ArticleCommentsFragment extends BaseFragment implements OnClickList
                 addArticleCommentReplyDialogFragment.show(fm, "Add Comment");
                 break;
             default:
-                break;
+                break;*/
         }
     }
 

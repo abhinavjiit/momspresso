@@ -32,7 +32,7 @@
   <RelativeLayout
     android:id="@+id/rLayout"
     android:layout_width="match_parent"
-    android:layout_height="70dp"
+    android:layout_height="wrap_content"
     android:layout_alignParentBottom="true"
     android:background="#f0f0f0"
     android:elevation="5dp">
@@ -58,15 +58,16 @@
       android:visibility="visible">
 
 
-      <com.mycity4kids.widget.CustomFontTextView
+      <com.mycity4kids.widget.CustomFontEditText
         android:id="@+id/typeHere"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerVertical="true"
-        android:layout_marginLeft="@dimen/space_10"
+        android:layout_marginStart="@dimen/space_10"
         android:gravity="center_vertical"
+        android:hint="Write a comment"
+        android:maxLines="4"
         android:padding="12dp"
-        android:text="Write a comment"
         android:textColor="#a1a4a8"
         android:textSize="18sp"
         android:visibility="visible"
