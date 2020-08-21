@@ -34,23 +34,6 @@
                     android:layout_marginRight="4dp"
                     android:background="@drawable/round_border_groups">
 
-                    <com.mycity4kids.widget.CustomFontTextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_alignParentTop="true"
-                        android:layout_marginBottom="10dp"
-                        android:background="@drawable/rectangular_btn_green_bg"
-                        android:backgroundTint="@color/white_color"
-                        android:paddingLeft="10dp"
-                        android:paddingRight="10dp"
-                        android:layout_marginLeft="@dimen/space_5"
-                        android:layout_marginTop="@dimen/space_5"
-                        android:text="NEW"
-                        android:textAllCaps="true"
-                        android:textColor="@color/campaign_list_buttons"
-                        android:textSize="14sp"
-                        app:fontName="oswald_regular.ttf" />
-
                     <ImageView
                         android:id="@+id/rewardsImageView"
                         android:layout_width="26dp"
