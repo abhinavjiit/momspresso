@@ -1730,14 +1730,14 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
         if (number.equals("0")) {
             badge.hide(false);
         }
-
+/*
         new QBadgeView(this)
                 .setBadgeText(" " + getString(R.string.new_label) + " ")
                 .setBadgeTextSize(7, true)
                 .setBadgePadding(3, true)
                 .setBadgeGravity(Gravity.TOP | Gravity.CENTER_HORIZONTAL)
                 .setGravityOffset(0, 0, true)
-                .bindTarget(bottomNavigationView.getBottomNavigationItemView(1));
+                .bindTarget(bottomNavigationView.getBottomNavigationItemView(1));*/
 
         return badge;
     }

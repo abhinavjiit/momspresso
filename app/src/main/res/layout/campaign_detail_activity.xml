@@ -180,6 +180,7 @@
         android:background="@drawable/read_this_background"
         android:orientation="vertical"
         android:padding="@dimen/space_10"
+        android:visibility="gone"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/demo_upload_layout">

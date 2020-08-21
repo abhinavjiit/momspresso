@@ -220,21 +220,6 @@
       android:layout_alignParentRight="true"
       android:layout_marginTop="8dp">
 
-      <com.mycity4kids.widget.CustomFontTextView
-        android:id="@+id/newTextView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center_vertical"
-        android:layout_marginRight="25dp"
-        android:background="@drawable/new_drawer_bg"
-        android:paddingLeft="@dimen/space_10"
-        android:paddingTop="2dp"
-        android:paddingRight="@dimen/space_10"
-        android:paddingBottom="2dp"
-        android:text="@string/new_label"
-        android:textColor="@color/white_color"
-        android:textSize="12sp"
-        app:fontName="oswald.ttf" />
     </LinearLayout>
 
     <View

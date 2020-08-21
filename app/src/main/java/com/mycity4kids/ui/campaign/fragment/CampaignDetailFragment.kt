@@ -77,15 +77,15 @@ import io.reactivex.Observer
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable
 import io.reactivex.schedulers.Schedulers
-import java.text.SimpleDateFormat
-import java.util.Calendar
-import java.util.regex.Pattern
 import kotlinx.coroutines.CoroutineExceptionHandler
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import retrofit2.Call
 import retrofit2.Callback
+import java.text.SimpleDateFormat
+import java.util.Calendar
+import java.util.regex.Pattern
 
 const val REWARDS_FILL_FORM_REQUEST = 1000
 const val SURVEY_CAMPAIGN_REQUEST = 10000
@@ -475,6 +475,13 @@ class CampaignDetailFragment : BaseFragment(), IMembershipStatus {
         startDateText.setText(getDate(apiGetResponse!!.startTime!!, "dd MMM yyyy"))
         endDateText.setText(getDate(apiGetResponse!!.endTime!!, "dd MMM yyyy"))
 
+        status = apiGetResponse!!.campaignStatus!!
+        if (status == 2 || status == 21 || status == 22 || status == 16 || status == 3 || status == 7 || status == 9 || status == 10 || status == 17) {
+            readThisBox.visibility = View.GONE
+        } else {
+            readThisBox.visibility = View.VISIBLE
+        }
+
         val descBuilder = StringBuilder()
         for (instructions in apiGetResponse!!.description?.instructions!!) {
             if (!instructions.isNullOrEmpty() && !instructions.equals(""))
@@ -499,7 +506,7 @@ class CampaignDetailFragment : BaseFragment(), IMembershipStatus {
         if (!termBuilder.isEmpty()) {
             getOffset(termBuilder.toString(), termText)
         }
-        status = apiGetResponse!!.campaignStatus!!
+
 
         if (apiGetResponse!!.deliverables!!.size > 0) {
             detail_recyclerview.layoutManager = linearLayoutManager
