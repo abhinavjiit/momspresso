@@ -32,4 +32,5 @@
     android:layout_height="match_parent"
     android:layout_below="@+id/text_editor"
     android:visibility="gone" />
+
 </merge>

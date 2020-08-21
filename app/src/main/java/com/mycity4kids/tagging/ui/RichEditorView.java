@@ -73,7 +73,7 @@ public class RichEditorView extends RelativeLayout implements TextWatcher, Query
         SuggestionsResultListener, SuggestionsVisibilityManager {
 
     private MentionsEditText mentionsEditText;
-    private int originalInputType = InputType.TYPE_CLASS_TEXT; // Default to plain text
+    private int originalInputType = InputType.TYPE_TEXT_FLAG_MULTI_LINE; // Default to plain text
     private TextView textCounterView;
     private ListView suggestionsList;
 
@@ -82,7 +82,7 @@ public class RichEditorView extends RelativeLayout implements TextWatcher, Query
     private OnSuggestionsVisibilityChangeListener actionListener;
 
     private ViewGroup.LayoutParams prevEditTextParams;
-    private boolean editTextShouldWrapContent = false; // Default to match parent in height
+    private boolean editTextShouldWrapContent = true; // Default to match parent in height
     private int prevEditTextBottomPadding;
 
     private int textCountLimit = -1;
@@ -136,6 +136,7 @@ public class RichEditorView extends RelativeLayout implements TextWatcher, Query
         mentionsEditText.addTextChangedListener(this);
         mentionsEditText.setQueryTokenReceiver(this);
         mentionsEditText.setAvoidPrefixOnTap(true);
+        mentionsEditText.setBackgroundColor(getResources().getColor(R.color.transparent));
 
         // Set the suggestions adapter
         SuggestionsListBuilder listBuilder = new BasicSuggestionsListBuilder();
@@ -243,6 +244,11 @@ public class RichEditorView extends RelativeLayout implements TextWatcher, Query
         }
         return -1;
     }
+
+    public void setMaxLines() {
+        mentionsEditText.setMaxLines(4);
+    }
+
 
     /*
      * Show or hide the text counter view.
@@ -668,8 +674,8 @@ public class RichEditorView extends RelativeLayout implements TextWatcher, Query
      * Sets the {@link com.mycity4kids.tagging.suggestions.interfaces.SuggestionsVisibilityManager} to use (determines
      * which and how the suggestions are displayed).
      *
-     * @param suggestionsVisibilityManager 
-     * the {@link com.mycity4kids.tagging.suggestions.interfaces.SuggestionsVisibilityManager} to use
+     * @param suggestionsVisibilityManager the {@link com.mycity4kids.tagging.suggestions.interfaces.SuggestionsVisibilityManager}
+     * to use
      */
     public void setSuggestionsManager(final @NonNull SuggestionsVisibilityManager suggestionsVisibilityManager) {
         if (mentionsEditText != null && suggestionsAdapter != null) {

@@ -13,6 +13,7 @@ import android.view.Window;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import androidx.annotation.NonNull;
 import androidx.fragment.app.FragmentManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -34,6 +35,8 @@ import com.mycity4kids.preference.SharedPrefUtils;
 import com.mycity4kids.profile.UserProfileActivity;
 import com.mycity4kids.retrofitAPIsInterfaces.ArticleDetailsAPI;
 import com.mycity4kids.tagging.Mentions;
+import com.mycity4kids.tagging.tokenization.QueryToken;
+import com.mycity4kids.tagging.tokenization.interfaces.QueryTokenReceiver;
 import com.mycity4kids.ui.activity.ArticleDetailsContainerActivity;
 import com.mycity4kids.ui.activity.ParallelFeedActivity;
 import com.mycity4kids.ui.activity.ShortStoryContainerActivity;
@@ -61,7 +64,8 @@ import retrofit2.Retrofit;
  */
 public class ArticleCommentsFragment extends BaseFragment implements OnClickListener,
         ArticleCommentsRecyclerAdapter.RecyclerViewClickListener,
-        CommentOptionsDialogFragment.ICommentOptionAction, AddArticleCommentReplyDialogFragment.AddComments {
+        CommentOptionsDialogFragment.ICommentOptionAction, AddArticleCommentReplyDialogFragment.AddComments,
+        QueryTokenReceiver {
 
     private int pastVisiblesItems;
     private int visibleItemCount;
@@ -95,6 +99,7 @@ public class ArticleCommentsFragment extends BaseFragment implements OnClickList
     private ImageView userImageView;
     private String authorId;
     private int pos;
+    //  private TextView typeHere;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -106,6 +111,9 @@ public class ArticleCommentsFragment extends BaseFragment implements OnClickList
         addCommentFab = (RelativeLayout) rootView.findViewById(R.id.addCommentFAB);
         commentsRecyclerView = (RecyclerView) rootView.findViewById(R.id.commentsRecyclerView);
         noCommentsTextView = (TextView) rootView.findViewById(R.id.noCommentsTextView);
+      /*  typeHere = rootView.findViewById(R.id.typeHere);
+        typeHere.setMaxLines();
+        typeHere.displayTextCounter(false);*/
 
         addCommentFab.setOnClickListener(this);
 
@@ -226,7 +234,7 @@ public class ArticleCommentsFragment extends BaseFragment implements OnClickList
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
-       /*     case R.id.addCommentFAB:
+            case R.id.addCommentFAB:
                 pushEvent("CD_Comment");
                 Bundle args = new Bundle();
                 AddArticleCommentReplyDialogFragment addArticleCommentReplyDialogFragment =
@@ -237,7 +245,7 @@ public class ArticleCommentsFragment extends BaseFragment implements OnClickList
                 addArticleCommentReplyDialogFragment.show(fm, "Add Comment");
                 break;
             default:
-                break;*/
+                break;
         }
     }
 
@@ -1002,5 +1010,11 @@ public class ArticleCommentsFragment extends BaseFragment implements OnClickList
         addEditCommentOrReplyRequest.setMentions(mentionsMap);
         Call<CommentListResponse> call = articleDetailsApi.addCommentOrReply(addEditCommentOrReplyRequest);
         call.enqueue(addCommentResponseListener);
+    }
+
+    @NonNull
+    @Override
+    public List<String> onQueryReceived(@NonNull QueryToken queryToken) {
+        return null;
     }
 }

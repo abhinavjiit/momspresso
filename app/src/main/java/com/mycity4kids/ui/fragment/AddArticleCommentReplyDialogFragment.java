@@ -122,7 +122,8 @@ public class AddArticleCommentReplyDialogFragment extends DialogFragment impleme
         if (commentOrReplyData == null) {
             headingTextView.setText(BaseApplication.getAppContext().getString(R.string.short_s_add_comment));
             relativeMainContainer.setVisibility(View.GONE);
-        } else {
+        }
+        else {
             if ("EDIT_COMMENT".equals(actionType) || "EDIT_REPLY".equals(actionType)) {
                 headingTextView.setText(BaseApplication.getAppContext().getString(R.string.ad_comments_edit_label));
                 relativeMainContainer.setVisibility(View.GONE);
