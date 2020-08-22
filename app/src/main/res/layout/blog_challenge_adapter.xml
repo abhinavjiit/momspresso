@@ -3,27 +3,43 @@
   xmlns:app="http://schemas.android.com/apk/res-auto"
   android:layout_width="wrap_content"
   android:layout_height="wrap_content"
-  android:layout_marginEnd="12dp"
-  android:layout_marginBottom="10dp"
+  android:layout_marginStart="@dimen/space_16"
+  android:layout_marginTop="@dimen/space_10"
+  android:layout_marginEnd="@dimen/space_16"
   android:elevation="0dp"
   app:cardCornerRadius="4dp"
   app:cardElevation="0dp">
+
 
   <RelativeLayout
     android:id="@+id/topicContainer"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content">
 
+    <com.mycity4kids.widget.CustomFontTextView
+      android:id="@+id/categoryTextView"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:layout_alignParentStart="true"
+      android:layout_alignParentTop="true"
+      android:layout_marginStart="0dp"
+      android:layout_marginTop="0dp"
+      android:paddingBottom="@dimen/space_16"
+      android:text="Previous Week’s Challenges"
+      android:textColor="@color/app_dark_black"
+      android:textSize="20sp" />
     <ImageView
       android:id="@+id/tagImageView"
-      android:layout_width="246dp"
-      android:layout_height="180dp"
+      android:layout_width="match_parent"
+      android:layout_height="215dp"
+      android:layout_below="@id/categoryTextView"
+      android:layout_marginTop="0dp"
+      android:layout_marginEnd="0dp"
+      android:layout_marginBottom="0dp"
       android:adjustViewBounds="true"
       android:foreground="@drawable/gradient_in_video_challenge_image"
       android:scaleType="centerCrop"
       android:src="@drawable/default_article" />
-
-
     <com.mycity4kids.widget.CustomFontTextView
       android:id="@+id/liveTextViewVideoChallenge"
       android:layout_width="wrap_content"
@@ -47,6 +63,7 @@
       android:id="@+id/info"
       android:layout_width="26dp"
       android:layout_height="26dp"
+      android:layout_below="@id/categoryTextView"
       android:layout_alignRight="@+id/tagImageView"
       android:layout_margin="10dp"
       android:background="@drawable/round_circle"
