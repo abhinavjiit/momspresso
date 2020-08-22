@@ -48,6 +48,7 @@ public class ShortStoryChallengesRecyclerAdapter extends
 
     public void setListData(Topics mParentingLists) {
         try {
+            articleDataModels.clear();
             articleDataModelsNew = mParentingLists;
             if (articleDataModelsNew != null) {
                 for (int i = articleDataModelsNew.getChild().size() - 1; i >= 0; i--) {

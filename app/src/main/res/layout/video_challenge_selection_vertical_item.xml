@@ -2,14 +2,16 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
   android:layout_width="match_parent"
   android:layout_height="wrap_content"
-  android:layout_marginBottom="12dp"
   android:orientation="vertical">
 
   <com.mycity4kids.widget.CustomFontTextView
     android:id="@+id/categoryTextView"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
-    android:text=""
+    android:paddingStart="16dp"
+    android:paddingTop="10dp"
+    android:paddingEnd="16dp"
+    android:text="LIVE "
     android:textColor="@color/app_dark_black"
     android:textSize="20sp" />
 
@@ -17,6 +19,8 @@
     android:id="@+id/challengeRecyclerView"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:layout_marginTop="12dp" />
+    android:paddingStart="16dp"
+    android:paddingTop="16dp"
+    android:paddingEnd="16dp" />
 
 </LinearLayout>

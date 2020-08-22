@@ -14,9 +14,6 @@
       android:id="@+id/challengesRecyclerView"
       android:layout_width="match_parent"
       android:layout_height="match_parent"
-      android:paddingStart="16dp"
-      android:paddingTop="16dp"
-      android:paddingEnd="16dp"
       android:visibility="visible" />
   </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 </RelativeLayout>

@@ -3,6 +3,7 @@ package com.mycity4kids.ui.fragment
 import android.Manifest
 import android.accounts.NetworkErrorException
 import android.annotation.SuppressLint
+import android.app.Dialog
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.graphics.PorterDuff
@@ -16,6 +17,7 @@ import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
 import android.view.animation.AnimationUtils
+import android.webkit.WebView
 import android.widget.FrameLayout
 import android.widget.ImageView
 import android.widget.LinearLayout
@@ -43,6 +45,7 @@ import com.mycity4kids.base.BaseFragment
 import com.mycity4kids.constants.AppConstants
 import com.mycity4kids.constants.Constants
 import com.mycity4kids.gtmutils.Utils
+import com.mycity4kids.models.Topics
 import com.mycity4kids.models.campaignmodels.AllCampaignDataResponse
 import com.mycity4kids.models.campaignmodels.CampaignDataListResult
 import com.mycity4kids.models.request.ArticleDetailRequest
@@ -61,10 +64,16 @@ import com.mycity4kids.retrofitAPIsInterfaces.CampaignAPI
 import com.mycity4kids.retrofitAPIsInterfaces.FollowAPI
 import com.mycity4kids.retrofitAPIsInterfaces.RecommendationAPI
 import com.mycity4kids.retrofitAPIsInterfaces.TopicsCategoryAPI
+import com.mycity4kids.retrofitAPIsInterfaces.VlogsListingAndDetailsAPI
+import com.mycity4kids.ui.activity.ArticleChallengeDetailActivity
 import com.mycity4kids.ui.activity.ArticleDetailsContainerActivity
 import com.mycity4kids.ui.activity.ExploreArticleListingTypeActivity
 import com.mycity4kids.ui.activity.ParallelFeedActivity
+import com.mycity4kids.ui.activity.ShortStoryChallengeDetailActivity
 import com.mycity4kids.ui.activity.ShortStoryContainerActivity
+import com.mycity4kids.ui.adapter.BlogChallengeAdapter
+import com.mycity4kids.ui.adapter.ShortStoryChallengesRecyclerAdapter
+import com.mycity4kids.ui.videochallengenewui.activity.NewVideoChallengeActivity
 import com.mycity4kids.utils.AppUtils
 import com.mycity4kids.utils.ConnectivityUtils
 import com.mycity4kids.utils.DateTimeUtils
@@ -72,18 +81,23 @@ import com.mycity4kids.utils.PermissionUtil
 import com.mycity4kids.utils.SharingUtils
 import com.mycity4kids.utils.StringUtils
 import com.mycity4kids.utils.ToastUtils
+import com.mycity4kids.vlogs.ContentChallengeSelectionHorizontalAdapter
+import com.mycity4kids.vlogs.VideoChallengeSelectionVerticalAdapter
+import com.mycity4kids.vlogs.VlogsCategoryWiseChallengesResponse
 import com.mycity4kids.widget.MomspressoButtonWidget
 import com.mycity4kids.widget.StoryShareCardWidget
-import java.io.File
-import java.util.ArrayList
 import okhttp3.ResponseBody
 import org.apache.commons.lang3.text.WordUtils
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
+import java.io.File
 
 class ArticleListingFragment : BaseFragment(), View.OnClickListener,
-    OnRefreshListener, UserContentAdapter.RecyclerViewClickListener {
+    OnRefreshListener, UserContentAdapter.RecyclerViewClickListener,
+    ContentChallengeSelectionHorizontalAdapter.RecyclerViewClickListener,
+    ShortStoryChallengesRecyclerAdapter.RecyclerViewClickListener,
+    BlogChallengeAdapter.BlogsPriviousWeekChallengesClickListener {
     private var mixfeedList: ArrayList<MixFeedResult>? = null
     private var campaignListDataModels: ArrayList<CampaignDataListResult>? = null
     private var sortType: String? = null
@@ -121,6 +135,21 @@ class ArticleListingFragment : BaseFragment(), View.OnClickListener,
     private lateinit var storyFilterTextView: MomspressoButtonWidget
     private lateinit var vlogsFilterTextView: MomspressoButtonWidget
     private lateinit var filterContentContainer: LinearLayout
+    private lateinit var articleChallengesList: ArrayList<Topics>
+    private lateinit var articleLiveChallenges: ArrayList<Topics>
+    private var categoryWiseChallengeList = ArrayList<Topics>()
+
+
+    private val blogChallengeAdapter: BlogChallengeAdapter by lazy {
+        BlogChallengeAdapter(articleChallengesList, articleLiveChallenges, this, this)
+    }
+    private val shortStoryChallengeAdapter: ShortStoryChallengesRecyclerAdapter by lazy {
+        ShortStoryChallengesRecyclerAdapter(this)
+    }
+    private val videoChallengeSelectionVerticalAdapter: VideoChallengeSelectionVerticalAdapter by lazy {
+        VideoChallengeSelectionVerticalAdapter(this)
+    }
+
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -187,28 +216,41 @@ class ArticleListingFragment : BaseFragment(), View.OnClickListener,
             sortType = arguments!!.getString(Constants.SORT_TYPE)
             tabPosition = arguments!!.getInt(Constants.TAB_POSITION)
         }
-        mixfeedAdapter = UserContentAdapter(this, false)
-        mixfeedList = ArrayList()
-        campaignListDataModels = ArrayList()
-        mixfeedList = ArrayList()
-        nextPageNumber = 1
-        hitArticleListingApi(sortType)
         val llm =
             LinearLayoutManager(activity)
         llm.orientation = RecyclerView.VERTICAL
         recyclerView.layoutManager = llm
-        mixfeedAdapter.setListData(mixfeedList)
-        recyclerView.adapter = mixfeedAdapter
-        pullToRefresh.setOnRefreshListener {
-            mixfeedList!!.clear()
-            mixfeedAdapter.notifyDataSetChanged()
-            shimmerFrameLayout.visibility = View.VISIBLE
-            shimmerFrameLayout.startShimmerAnimation()
-            sortType = arguments!!.getString(Constants.SORT_TYPE)
+        hitArticleListingApi(sortType)
+        if (Constants.KEY_CHALLENGE == (sortType)) {
+            articleChallengesList = ArrayList()
+            articleLiveChallenges = ArrayList()
+            recyclerView.adapter = blogChallengeAdapter
+            blogChallengeAdapter.notifyDataSetChanged()
+            loadingView.visibility = View.GONE
+        } else {
+            mixfeedAdapter = UserContentAdapter(this, false)
+            mixfeedList = ArrayList()
+            campaignListDataModels = ArrayList()
+            mixfeedList = ArrayList()
             nextPageNumber = 1
-            fromPullToRefresh = true
-            hitArticleListingApi(sortType)
-            pullToRefresh.isRefreshing = false
+            mixfeedAdapter.setListData(mixfeedList)
+            recyclerView.adapter = mixfeedAdapter
+        }
+
+        pullToRefresh.setOnRefreshListener {
+            if (Constants.KEY_CHALLENGE == (sortType)) {
+                pullToRefresh.isRefreshing = false
+            } else {
+                mixfeedList!!.clear()
+                mixfeedAdapter.notifyDataSetChanged()
+                shimmerFrameLayout.visibility = View.VISIBLE
+                shimmerFrameLayout.startShimmerAnimation()
+                sortType = arguments!!.getString(Constants.SORT_TYPE)
+                nextPageNumber = 1
+                fromPullToRefresh = true
+                hitArticleListingApi(sortType)
+                pullToRefresh.isRefreshing = false
+            }
         }
         recyclerView.addOnScrollListener(object :
             RecyclerView.OnScrollListener() {
@@ -218,14 +260,16 @@ class ArticleListingFragment : BaseFragment(), View.OnClickListener,
                 dy: Int
             ) {
                 if (dy > 0) {
-                    visibleItemCount = llm.childCount
-                    totalItemCount = llm.itemCount
-                    pastVisibleItems = llm.findFirstVisibleItemPosition()
-                    if (!isRequestRunning && !isLastPageReached) {
-                        if (visibleItemCount + pastVisibleItems >= totalItemCount) {
-                            isRequestRunning = true
-                            loadingView.visibility = View.VISIBLE
-                            hitArticleListingApi(sortType)
+                    if (Constants.KEY_CHALLENGE != (sortType)) {
+                        visibleItemCount = llm.childCount
+                        totalItemCount = llm.itemCount
+                        pastVisibleItems = llm.findFirstVisibleItemPosition()
+                        if (!isRequestRunning && !isLastPageReached) {
+                            if (visibleItemCount + pastVisibleItems >= totalItemCount) {
+                                isRequestRunning = true
+                                loadingView.visibility = View.VISIBLE
+                                hitArticleListingApi(sortType)
+                            }
                         }
                     }
                 }
@@ -293,6 +337,44 @@ class ArticleListingFragment : BaseFragment(), View.OnClickListener,
                 getContentFilters()
             )
             filterCall.enqueue(articleListingResponseCallback)
+        } else if (Constants.KEY_CHALLENGE == sortKey) {
+            if (getContentFilters() == "0") {
+                showProgressDialog("please wait")
+                val retrofit = BaseApplication.getInstance().retrofit
+                val vlogsListingAndDetailsApi =
+                    retrofit.create(
+                        VlogsListingAndDetailsAPI::class.java
+                    )
+                val callRecentVideoArticles =
+                    vlogsListingAndDetailsApi
+                        .getCategoryDetails(AppConstants.ARTICLE_CHALLENGE_CATEGORY_ID)
+                callRecentVideoArticles.enqueue(blogsChallengeResponseCallBack)
+            } else if (getContentFilters() == "1") {
+                showProgressDialog("please wait")
+                val retrofit = BaseApplication.getInstance().retrofit
+                val topicsCategoryApi = retrofit.create(
+                    TopicsCategoryAPI::class.java
+                )
+                val call = topicsCategoryApi
+                    .momVlogTopics(AppConstants.SHORT_STORY_CHALLENGE_ID)
+                call.enqueue(shortStroyChallengeCallBack)
+            } else {
+                showProgressDialog("please wait")
+                if (!ConnectivityUtils.isNetworkEnabled(activity)) {
+                    removeProgressDialog()
+                    return
+                }
+                val retrofit = BaseApplication.getInstance().retrofit
+                val vlogsListingAndDetailsApi =
+                    retrofit.create(
+                        VlogsListingAndDetailsAPI::class.java
+                    )
+                val callRecentVideoArticles =
+                    vlogsListingAndDetailsApi.vlogsCategoryWiseChallenges
+                callRecentVideoArticles.enqueue(vlogChallengeResponseCallBack)
+
+
+            }
         } else {
             filterContentContainer.visibility = View.VISIBLE
             val retrofit = BaseApplication.getInstance().retrofit
@@ -334,6 +416,138 @@ class ArticleListingFragment : BaseFragment(), View.OnClickListener,
         }
         return filter
     }
+
+
+    private val shortStroyChallengeCallBack = object : Callback<Topics> {
+        override fun onFailure(call: Call<Topics>, t: Throwable) {
+            removeProgressDialog()
+        }
+
+        override fun onResponse(call: Call<Topics>, response: Response<Topics>) {
+            removeProgressDialog()
+            if (null == response.body()) {
+                return
+            }
+            try {
+                val res = response.body()
+                res?.let {
+                    shortStoryChallengeAdapter.setListData(it)
+                    shortStoryChallengeAdapter.notifyDataSetChanged()
+                }
+
+            } catch (e: Exception) {
+
+            }
+        }
+
+    }
+
+
+    private val vlogChallengeResponseCallBack: Callback<VlogsCategoryWiseChallengesResponse> =
+        object : Callback<VlogsCategoryWiseChallengesResponse> {
+            override fun onResponse(
+                call: Call<VlogsCategoryWiseChallengesResponse?>,
+                response: Response<VlogsCategoryWiseChallengesResponse?>
+            ) {
+                removeProgressDialog()
+                if (null == response.body()) {
+                    val nee =
+                        NetworkErrorException(response.raw().toString())
+                    FirebaseCrashlytics.getInstance().recordException(nee)
+                    return
+                }
+                if (response.isSuccessful) {
+                    try {
+                        val responseData = response.body()
+                        if (responseData?.code == 200 && Constants.SUCCESS == responseData.status) {
+                            processVlogChallengesData(responseData.data.result)
+                        }
+                    } catch (e: Exception) {
+                        FirebaseCrashlytics.getInstance().recordException(e)
+                        Log.d("MC4kException", Log.getStackTraceString(e))
+                    }
+                }
+            }
+
+            override fun onFailure(
+                call: Call<VlogsCategoryWiseChallengesResponse?>,
+                e: Throwable
+            ) {
+                removeProgressDialog()
+                FirebaseCrashlytics.getInstance().recordException(e)
+                Log.d("MC4kException", Log.getStackTraceString(e))
+            }
+        }
+
+
+    private val blogsChallengeResponseCallBack: Callback<Topics> =
+        object : Callback<Topics> {
+            override fun onResponse(
+                call: Call<Topics>,
+                response: Response<Topics>
+            ) {
+                removeProgressDialog()
+                if (null == response.body()) {
+                    val nee =
+                        NetworkErrorException(response.raw().toString())
+                    FirebaseCrashlytics.getInstance().recordException(nee)
+                    return
+                }
+                if (response.isSuccessful) {
+                    try {
+                        //  challengesShimmerLayout.stopShimmerAnimation()
+                        // challengesShimmerLayout.visibility = View.GONE
+                        val responseData = response.body()
+                        responseData?.child?.let {
+                            processChallengesData(it)
+                        }
+                    } catch (e: Exception) {
+                        FirebaseCrashlytics.getInstance().recordException(e)
+                        Log.d("MC4kException", Log.getStackTraceString(e))
+                    }
+                }
+            }
+
+            override fun onFailure(
+                call: Call<Topics>,
+                e: Throwable
+            ) {
+                FirebaseCrashlytics.getInstance().recordException(e)
+                Log.d("MC4kException", Log.getStackTraceString(e))
+                removeProgressDialog()
+            }
+        }
+
+    private fun processVlogChallengesData(catWiseChallengeList: ArrayList<Topics>) {
+        categoryWiseChallengeList.clear()
+        for (i in catWiseChallengeList.indices) {
+            val originalChallengeList = ArrayList<Topics>()
+            originalChallengeList.addAll(catWiseChallengeList[i].child)
+            categoryWiseChallengeList.add(catWiseChallengeList[i])
+            categoryWiseChallengeList[i].child = ArrayList()
+            for (j in originalChallengeList.indices) {
+                if ("1" == originalChallengeList[j].publicVisibility) {
+                    categoryWiseChallengeList[i].child.add(originalChallengeList[j])
+                }
+            }
+        }
+        videoChallengeSelectionVerticalAdapter.setListData(categoryWiseChallengeList)
+        videoChallengeSelectionVerticalAdapter.setSource("vlogsListing")
+        videoChallengeSelectionVerticalAdapter.notifyDataSetChanged()
+    }
+
+
+    private fun processChallengesData(catWiseChallengeList: ArrayList<Topics>) {
+        catWiseChallengeList.forEach {
+            if (it.extraData.get(0).challenge.is_live == "1") {
+                articleLiveChallenges.add(it)
+            } else {
+                articleChallengesList.add(it)
+            }
+        }
+        blogChallengeAdapter.notifyDataSetChanged()
+    }
+
 
     private val followingFeedResponseCallback: Callback<MixFeedResponse?> =
         object : Callback<MixFeedResponse?> {
@@ -734,14 +948,36 @@ class ArticleListingFragment : BaseFragment(), View.OnClickListener,
     }
 
     private fun filterCurrentFeed() {
-        mixfeedList!!.clear()
-        mixfeedAdapter.notifyDataSetChanged()
-        shimmerFrameLayout.visibility = View.VISIBLE
-        shimmerFrameLayout.startShimmerAnimation()
-        nextPageNumber = 1
+        if (Constants.KEY_CHALLENGE == sortType) {
+            when (getContentFilters()) {
+                "0" -> {
+                    articleChallengesList.clear()
+                    articleLiveChallenges.clear()
+                    recyclerView.adapter = blogChallengeAdapter
+                }
+                "1" -> {
+                    recyclerView.adapter = shortStoryChallengeAdapter
+                }
+                "2" -> {
+                    recyclerView.adapter = videoChallengeSelectionVerticalAdapter
+                }
+                else
+                -> {
+
+                }
+            }
+
+
+        } else {
+            mixfeedList!!.clear()
+            mixfeedAdapter.notifyDataSetChanged()
+            shimmerFrameLayout.visibility = View.VISIBLE
+            shimmerFrameLayout.startShimmerAnimation()
+            nextPageNumber = 1
+        }
         when (sortType) {
-            Constants.KEY_TRENDING -> {
-                logFilterEvent("TrendingScreen")
+            Constants.KEY_CHALLENGE -> {
+                logFilterEvent("ChallengeScreen")
             }
             Constants.KEY_RECENT -> {
                 logFilterEvent("RecentScreen")
@@ -749,6 +985,7 @@ class ArticleListingFragment : BaseFragment(), View.OnClickListener,
             Constants.KEY_TODAYS_BEST -> {
                 logFilterEvent("TodaysBestScreen")
             }
+
         }
         hitArticleListingApi(sortType)
     }
@@ -1535,5 +1772,93 @@ class ArticleListingFragment : BaseFragment(), View.OnClickListener,
             Manifest.permission.READ_EXTERNAL_STORAGE,
             Manifest.permission.WRITE_EXTERNAL_STORAGE
         )
+    }
+
+    override fun onChallengeItemClick(view: View, topics: Topics) {
+        when (view.id) {
+            R.id.tagImageView -> {
+                if (getContentFilters() == "2") {
+                    val intent = Intent(activity, NewVideoChallengeActivity::class.java)
+                    intent.putExtra("challenge", topics.id)
+                    intent.putExtra("comingFrom", "vlog_listing")
+                    startActivity(intent)
+                } else {
+                    val intent = Intent(activity, ArticleChallengeDetailActivity::class.java)
+                    intent.putExtra("articleChallengeId", topics.id)
+                    intent.putExtra("challengeName", topics.display_name)
+                    startActivity(intent)
+                }
+            }
+            R.id.info -> {
+                topics.extraData[0].challenge.rules?.let {
+                    val dialog = Dialog(context!!)
+                    dialog.setContentView(R.layout.challenge_rules_dialog)
+                    dialog.setTitle("Title...")
+                    val imageView =
+                        dialog.findViewById<View>(R.id.closeEditorImageView) as ImageView
+                    val webView =
+                        dialog.findViewById<View>(R.id.videoChallengeRulesWebView) as WebView
+                    webView.loadDataWithBaseURL(
+                        "",
+                        it,
+                        "text/html",
+                        "UTF-8",
+                        ""
+                    )
+                    imageView.setOnClickListener { view2: View? -> dialog.dismiss() }
+                    dialog.show()
+                }
+            }
+
+
+        }
+    }
+
+    override fun onClick(
+        view: View?,
+        position: Int,
+        challengeId: String?,
+        Display_Name: String?,
+        articledatamodelsnew: Topics?,
+        activeImageUrl: String?
+    ) {
+        when (view?.id) {
+            R.id.mainView, R.id.getStartedTextView -> {
+                val intent = Intent(activity, ShortStoryChallengeDetailActivity::class.java)
+                intent.putExtra("challenge", challengeId)
+                startActivity(intent)
+            }
+        }
+    }
+
+    override fun onPriviousWeekChallengeClick(v: View?, topics: Topics) {
+        when (v?.id) {
+            R.id.tagImageView -> {
+                val intent = Intent(activity, ArticleChallengeDetailActivity::class.java)
+                intent.putExtra("articleChallengeId", topics.id)
+                intent.putExtra("challengeName", topics.display_name)
+                startActivity(intent)
+            }
+            R.id.info -> {
+                topics.extraData[0].challenge.rules?.let {
+                    val dialog = Dialog(context!!)
+                    dialog.setContentView(R.layout.challenge_rules_dialog)
+                    dialog.setTitle("Title...")
+                    val imageView =
+                        dialog.findViewById<View>(R.id.closeEditorImageView) as ImageView
+                    val webView =
+                        dialog.findViewById<View>(R.id.videoChallengeRulesWebView) as WebView
+                    webView.loadDataWithBaseURL(
+                        "",
+                        it,
+                        "text/html",
+                        "UTF-8",
+                        ""
+                    )
+                    imageView.setOnClickListener { view2: View? -> dialog.dismiss() }
+                    dialog.show()
+                }
+            }
+        }
     }
 }
