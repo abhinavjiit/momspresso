@@ -52,11 +52,11 @@ public class FragmentMC4KHomeNew extends BaseFragment implements View.OnClickLis
         tabLayout.setTabGravity(TabLayout.GRAVITY_CENTER);
         // FirebaseRemoteConfig firebaseRemoteConfig = FirebaseRemoteConfig.getInstance();
         // feedOrderArray = mFirebaseRemoteConfig.getString(HOME_PAGE_FEED_ORDER).split(",");
-        feedOrderArray = new String[] {"todaysBest", "following", "challenge", "recent"};
+        feedOrderArray = new String[] {"todaysBest", "following", "recent", "challenge"};
         for (String s : feedOrderArray) {
             switch (s) {
                 case Constants.KEY_CHALLENGE:
-                    tabLayout.addTab(tabLayout.newTab().setText(getString(R.string.home_screen_trending_title)));
+                    tabLayout.addTab(tabLayout.newTab().setText("Challenge"));
                     break;
                 case Constants.KEY_TODAYS_BEST:
                     tabLayout.addTab(tabLayout.newTab()

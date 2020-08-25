@@ -421,7 +421,7 @@ public class ArticleCommentsFragment extends BaseFragment implements OnClickList
         blockUserModel.setBlocked_user_id(commentsList.get(position).getUserId());
         Call<ResponseBody> call = articleDetailsAPI.blockUserApi(blockUserModel);
         call.enqueue(blockUserCallBack);
-       // commentsList.remove(position);
+        // commentsList.remove(position);
        /* articleCommentsRecyclerAdapter.setData(commentsList);
         articleCommentsRecyclerAdapter.notifyDataSetChanged();*/
     }
@@ -589,7 +589,8 @@ public class ArticleCommentsFragment extends BaseFragment implements OnClickList
                             ToastUtils.showToast(getActivity(), responseData.getReason());
                         } else {
                             ToastUtils.showToast(getActivity(), "Failed to add comment. Please try again");
-                        }                    }
+                        }
+                    }
                 }
             } catch (Exception e) {
                 if (isAdded()) {

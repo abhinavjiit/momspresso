@@ -1,5 +1,6 @@
 package com.mycity4kids.ui.adapter
 
+import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -15,98 +16,58 @@ import kotlinx.android.synthetic.main.blog_challenge_adapter.view.*
 import java.lang.Exception
 
 class BlogChallengeAdapter(
-    private val priviousWeekChallenges: ArrayList<Topics>,
-    private val liveChallenges: ArrayList<Topics>,
+    private var challengeList: ArrayList<Topics>,
     private val listener: ContentChallengeSelectionHorizontalAdapter.RecyclerViewClickListener
-    , private val priviousWeekChallengesListner: BlogsPriviousWeekChallengesClickListener
+    , private val priviousWeekChallengesListner: BlogsPriviousWeekChallengesClickListener,
+    private val context: Context?
 ) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
-        if (viewType == 2) {
-            val view = LayoutInflater.from(parent.context).inflate(
-                R.layout.blog_challenge_adapter,
-                parent,
-                false
-            )
-            return ViewHolder(view)
-        } else {
-            val view = LayoutInflater.from(parent.context).inflate(
-                R.layout.video_challenge_selection_vertical_item,
-                parent,
-                false
-            )
-            return HorizontalViewHolder(view)
-        }
+        val view = LayoutInflater.from(parent.context).inflate(
+            R.layout.blog_challenge_adapter,
+            parent,
+            false
+        )
+        return ViewHolder(view)
     }
+
 
     override fun getItemCount(): Int {
-
-        return if (priviousWeekChallenges.isNullOrEmpty() && liveChallenges.isNullOrEmpty()) {
-            0
-        } else {
-            if (liveChallenges.isNullOrEmpty() && priviousWeekChallenges.isNotEmpty()) {
-                priviousWeekChallenges.size
-            } else if (liveChallenges.isNotEmpty() && priviousWeekChallenges.isNullOrEmpty()) {
-                1
-            } else {
-                priviousWeekChallenges.size + 1
-            }
-
-        }
+        return challengeList.size ?: 0
     }
 
-
-    override fun getItemViewType(position: Int): Int {
-        return if (position == 0 && liveChallenges.isNotEmpty()) {
-            1
-        } else 2
-    }
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
         try {
-            if (holder is HorizontalViewHolder) {
-                holder.challengeRecyclerView.adapter = ContentChallengeSelectionHorizontalAdapter(
-                    listener,
-                    liveChallenges,
-                    ""
-                )
-                holder.challengeRecyclerView.layoutManager = LinearLayoutManager(
-                    holder.challengeRecyclerView.context,
-                    LinearLayoutManager.HORIZONTAL,
-                    false
-                )
-                holder.challengeRecyclerView.setHasFixedSize(true)
-                holder.categoryTextView.text = "Live Challenges"
-            } else if (holder is ViewHolder) {
-                if (liveChallenges.isEmpty()) {
-                    holder.apply {
-                        if (position == 0) {
-                            categoryTextView.visibility = View.VISIBLE
-                        } else {
+            if (holder is ViewHolder) {
+                holder.apply {
+                    when (position) {
+                        0 -> {
+                            categoryTextView.text =
+                                context?.resources?.getString(R.string.this_week_challenge)
+                        }
+                        1 -> {
+                            categoryTextView.text =
+                                context?.resources?.getString(R.string.previous_week_challenge)
+                        }
+                        else -> {
                             categoryTextView.visibility = View.GONE
                         }
-                        Picasso.get().load(priviousWeekChallenges[position].extraData[0].challenge.imageUrl).error(
-                            R.drawable.default_article
-                        ).into(tagImageView)
-                        challengeNameText.text = priviousWeekChallenges[position].display_name
-
                     }
-                } else {
-                    holder.apply {
-                        if (position - 1 == 0) {
-                            categoryTextView.visibility = View.VISIBLE
-                        } else {
-                            categoryTextView.visibility = View.GONE
-                        }
-
-                        Picasso.get().load(priviousWeekChallenges[position - 1].extraData[0].challenge.imageUrl).error(
-                            R.drawable.default_article
-                        ).into(tagImageView)
-                        challengeNameText.text = priviousWeekChallenges[position - 1].display_name
-
+                    Picasso.get().load(challengeList[position].extraData[0].challenge.imageUrl).error(
+                        R.drawable.default_article
+                    ).into(tagImageView)
+                    challengeNameText.text = challengeList[position].display_name
+                    if (challengeList[position].extraData[0].challenge.is_live == "1") {
+                        liveTextViewVideoChallenge.visibility = View.VISIBLE
+                    } else {
+                        liveTextViewVideoChallenge.visibility = View.GONE
                     }
+
                 }
             }
+
+
         } catch (e: Exception) {
 
         }
@@ -117,6 +78,7 @@ class BlogChallengeAdapter(
         internal val info: ImageView = view.info
         internal val challengeNameText: TextView = view.challengeNameText
         internal val categoryTextView: TextView = view.categoryTextView
+        internal val liveTextViewVideoChallenge: TextView = view.liveTextViewVideoChallenge
 
         init {
             tagImageView.setOnClickListener(this)
@@ -126,41 +88,23 @@ class BlogChallengeAdapter(
         override fun onClick(v: View?) {
             when (v?.id) {
                 R.id.tagImageView -> {
-                    if (liveChallenges.isEmpty()) {
-                        priviousWeekChallengesListner.onPriviousWeekChallengeClick(
-                            v,
-                            priviousWeekChallenges[adapterPosition]
-                        )
-                    } else {
-                        priviousWeekChallengesListner.onPriviousWeekChallengeClick(
-                            v,
-                            priviousWeekChallenges[adapterPosition - 1]
-                        )
-                    }
+                    priviousWeekChallengesListner.onPriviousWeekChallengeClick(
+                        v,
+                        challengeList[adapterPosition]
+                    )
+
                 }
                 R.id.info -> {
-                    if (liveChallenges.isEmpty()) {
-                        priviousWeekChallengesListner.onPriviousWeekChallengeClick(
-                            v,
-                            priviousWeekChallenges[adapterPosition]
-                        )
-                    } else {
-                        priviousWeekChallengesListner.onPriviousWeekChallengeClick(
-                            v,
-                            priviousWeekChallenges[adapterPosition - 1]
-                        )
-                    }
+                    priviousWeekChallengesListner.onPriviousWeekChallengeClick(
+                        v,
+                        challengeList[adapterPosition]
+                    )
+
                 }
             }
         }
     }
 
-    inner class HorizontalViewHolder(view: View) : RecyclerView.ViewHolder(view) {
-        var challengeRecyclerView: RecyclerView =
-            itemView.findViewById<View>(R.id.challengeRecyclerView) as RecyclerView
-        var categoryTextView: TextView =
-            itemView.findViewById<View>(R.id.categoryTextView) as TextView
-    }
 
     interface BlogsPriviousWeekChallengesClickListener {
         fun onPriviousWeekChallengeClick(

@@ -136,12 +136,11 @@ class ArticleListingFragment : BaseFragment(), View.OnClickListener,
     private lateinit var vlogsFilterTextView: MomspressoButtonWidget
     private lateinit var filterContentContainer: LinearLayout
     private lateinit var articleChallengesList: ArrayList<Topics>
-    private lateinit var articleLiveChallenges: ArrayList<Topics>
     private var categoryWiseChallengeList = ArrayList<Topics>()
 
 
     private val blogChallengeAdapter: BlogChallengeAdapter by lazy {
-        BlogChallengeAdapter(articleChallengesList, articleLiveChallenges, this, this)
+        BlogChallengeAdapter(articleChallengesList, this, this,context)
     }
     private val shortStoryChallengeAdapter: ShortStoryChallengesRecyclerAdapter by lazy {
         ShortStoryChallengesRecyclerAdapter(this)
@@ -223,7 +222,6 @@ class ArticleListingFragment : BaseFragment(), View.OnClickListener,
         hitArticleListingApi(sortType)
         if (Constants.KEY_CHALLENGE == (sortType)) {
             articleChallengesList = ArrayList()
-            articleLiveChallenges = ArrayList()
             recyclerView.adapter = blogChallengeAdapter
             blogChallengeAdapter.notifyDataSetChanged()
             loadingView.visibility = View.GONE
@@ -434,7 +432,6 @@ class ArticleListingFragment : BaseFragment(), View.OnClickListener,
                     shortStoryChallengeAdapter.setListData(it)
                     shortStoryChallengeAdapter.notifyDataSetChanged()
                 }
-
             } catch (e: Exception) {
 
             }
@@ -478,7 +475,6 @@ class ArticleListingFragment : BaseFragment(), View.OnClickListener,
                 Log.d("MC4kException", Log.getStackTraceString(e))
             }
         }
-
 
     private val blogsChallengeResponseCallBack: Callback<Topics> =
         object : Callback<Topics> {
@@ -538,13 +534,9 @@ class ArticleListingFragment : BaseFragment(), View.OnClickListener,
 
 
     private fun processChallengesData(catWiseChallengeList: ArrayList<Topics>) {
-        catWiseChallengeList.forEach {
-            if (it.extraData.get(0).challenge.is_live == "1") {
-                articleLiveChallenges.add(it)
-            } else {
-                articleChallengesList.add(it)
-            }
-        }
+        articleChallengesList.addAll(
+            catWiseChallengeList
+        )
         blogChallengeAdapter.notifyDataSetChanged()
     }
 
@@ -952,7 +944,6 @@ class ArticleListingFragment : BaseFragment(), View.OnClickListener,
             when (getContentFilters()) {
                 "0" -> {
                     articleChallengesList.clear()
-                    articleLiveChallenges.clear()
                     recyclerView.adapter = blogChallengeAdapter
                 }
                 "1" -> {
