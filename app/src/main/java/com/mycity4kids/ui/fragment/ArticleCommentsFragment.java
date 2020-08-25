@@ -2,6 +2,7 @@ package com.mycity4kids.ui.fragment;
 
 import android.accounts.NetworkErrorException;
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
@@ -10,9 +11,11 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.view.Window;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.fragment.app.FragmentManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -34,22 +37,33 @@ import com.mycity4kids.models.response.LikeReactionModel;
 import com.mycity4kids.preference.SharedPrefUtils;
 import com.mycity4kids.profile.UserProfileActivity;
 import com.mycity4kids.retrofitAPIsInterfaces.ArticleDetailsAPI;
+import com.mycity4kids.retrofitAPIsInterfaces.SearchArticlesAuthorsAPI;
 import com.mycity4kids.tagging.Mentions;
+import com.mycity4kids.tagging.MentionsResponse;
+import com.mycity4kids.tagging.mentions.MentionSpan;
+import com.mycity4kids.tagging.mentions.MentionsEditable;
+import com.mycity4kids.tagging.suggestions.SuggestionsResult;
 import com.mycity4kids.tagging.tokenization.QueryToken;
 import com.mycity4kids.tagging.tokenization.interfaces.QueryTokenReceiver;
+import com.mycity4kids.tagging.ui.RichEditorView;
 import com.mycity4kids.ui.activity.ArticleDetailsContainerActivity;
 import com.mycity4kids.ui.activity.ParallelFeedActivity;
 import com.mycity4kids.ui.activity.ShortStoryContainerActivity;
 import com.mycity4kids.ui.adapter.ArticleCommentsRecyclerAdapter;
+import com.mycity4kids.ui.fragment.AddArticleCommentReplyDialogFragment.MentionIndex;
 import com.mycity4kids.utils.AppUtils;
 import com.mycity4kids.utils.StringUtils;
 import com.mycity4kids.utils.ToastUtils;
+import com.mycity4kids.widget.MomspressoButtonWidget;
 import com.squareup.picasso.Picasso;
 import io.reactivex.Observer;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.schedulers.Schedulers;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import okhttp3.ResponseBody;
@@ -99,7 +113,9 @@ public class ArticleCommentsFragment extends BaseFragment implements OnClickList
     private ImageView userImageView;
     private String authorId;
     private int pos;
-    //  private TextView typeHere;
+    private RichEditorView typeHere;
+    private MomspressoButtonWidget disableStatePostTextView;
+
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -111,12 +127,20 @@ public class ArticleCommentsFragment extends BaseFragment implements OnClickList
         addCommentFab = (RelativeLayout) rootView.findViewById(R.id.addCommentFAB);
         commentsRecyclerView = (RecyclerView) rootView.findViewById(R.id.commentsRecyclerView);
         noCommentsTextView = (TextView) rootView.findViewById(R.id.noCommentsTextView);
-      /*  typeHere = rootView.findViewById(R.id.typeHere);
+        disableStatePostTextView = rootView.findViewById(R.id.disableStatePostTextView);
+        typeHere = rootView.findViewById(R.id.typeHere);
         typeHere.setMaxLines();
-        typeHere.displayTextCounter(false);*/
-
+        typeHere.displayTextCounter(false);
+        typeHere.setOnClickListener(this);
         addCommentFab.setOnClickListener(this);
-
+        disableStatePostTextView.setOnClickListener(this);
+        typeHere.requestFocus();
+        typeHere.setQueryTokenReceiver(this);
+        if (getContext() != null) {
+            InputMethodManager inputMethodManager = (InputMethodManager) getContext()
+                    .getSystemService(Context.INPUT_METHOD_SERVICE);
+            inputMethodManager.toggleSoftInput(InputMethodManager.SHOW_FORCED, 0);
+        }
         userDynamoId = SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId();
 
         final LinearLayoutManager llm = new LinearLayoutManager(getActivity());
@@ -235,6 +259,7 @@ public class ArticleCommentsFragment extends BaseFragment implements OnClickList
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.addCommentFAB:
+            case R.id.typeHere:
                 pushEvent("CD_Comment");
                 Bundle args = new Bundle();
                 AddArticleCommentReplyDialogFragment addArticleCommentReplyDialogFragment =
@@ -244,10 +269,135 @@ public class ArticleCommentsFragment extends BaseFragment implements OnClickList
                 FragmentManager fm = getChildFragmentManager();
                 addArticleCommentReplyDialogFragment.show(fm, "Add Comment");
                 break;
+            case R.id.disableStatePostTextView: {
+                if (isValid()) {
+                    formatMentionDataForApiRequest();
+
+
+                }
+
+            }
+
             default:
                 break;
         }
     }
+
+    private boolean isValid() {
+        if (StringUtils.isNullOrEmpty(typeHere.getText().toString())) {
+            if (isAdded()) {
+                Toast.makeText(getActivity(), getString(R.string.ad_comments_toast_empty_comment), Toast.LENGTH_LONG)
+                        .show();
+            }
+            return false;
+        }
+        return true;
+    }
+
+
+    private void formatMentionDataForApiRequest() {
+        Map<String, Mentions> mentionsMap = new HashMap<>();
+        StringBuilder commentBody = new StringBuilder();
+        try {
+            MentionsEditable mentionsEditable = typeHere.getText();
+            List<MentionIndex> marker = new ArrayList<>();
+            marker.add(new MentionIndex(0, null));
+            List<MentionSpan> mentionsList = typeHere.getMentionSpans();
+            for (int i = 0; i < mentionsList.size(); i++) {
+                Mentions mention = (Mentions) mentionsList.get(i).getMention();
+                marker.add(new MentionIndex(mentionsEditable.getSpanStart(mentionsList.get(i)),
+                        mention));
+                mentionsMap.put(mention.getUserId(), mention);
+            }
+            marker.add(new MentionIndex(mentionsEditable.length(), null));
+            Collections.sort(marker);
+            ArrayList<MentionIndex> splittedComment = new ArrayList<>();
+            for (int i = 0; i < marker.size() - 1; i++) {
+                CharSequence value = mentionsEditable
+                        .subSequence(marker.get(i).index, marker.get(i + 1).index);
+                splittedComment.add(new MentionIndex(value, marker.get(i).mention));
+            }
+            for (int i = 0; i < splittedComment.size(); i++) {
+                if (splittedComment.get(i).mention != null) {
+                    commentBody.append(org.apache.commons.lang3.StringUtils
+                            .replaceFirst(splittedComment.get(i).charSequence.toString(),
+                                    splittedComment.get(i).mention.getName(),
+                                    "[~userId:" + splittedComment.get(i).mention.getUserId() + "]"));
+                } else {
+                    commentBody.append(splittedComment.get(i).charSequence);
+                }
+            }
+        } catch (Exception e) {
+            FirebaseCrashlytics.getInstance().recordException(e);
+            Log.d("MC4kException", Log.getStackTraceString(e));
+        }
+        addComment(commentBody.toString(), mentionsMap);
+
+       /* Fragment parentFragment = getParentFragment();
+        if ("EDIT_COMMENT".equals(actionType)) {
+            if (parentFragment instanceof ArticleCommentsFragment) {
+                ((ArticleCommentsFragment) getParentFragment())
+                        .editComment(String.valueOf(commentBody), commentOrReplyData.getId(), position, mentionsMap);
+            } else if (parentFragment instanceof ArticleDetailsFragment) {
+                ((ArticleDetailsFragment) getParentFragment())
+                        .editComment(String.valueOf(commentBody), commentOrReplyData.getId(), position, mentionsMap);
+            } else if (parentFragment instanceof ContentCommentReplyNotificationFragment) {
+                ((ContentCommentReplyNotificationFragment) getParentFragment())
+                        .editComment(String.valueOf(commentBody), commentOrReplyData.getId(), position, mentionsMap);
+            } else if (getActivity() != null
+                    && getActivity() instanceof ContentCommentReplyNotificationActivity) {
+                ((ContentCommentReplyNotificationActivity) getActivity())
+                        .editComment(String.valueOf(commentBody), commentOrReplyData.getId(), position, mentionsMap);
+            }
+        } else if ("EDIT_REPLY".equals(actionType)) {
+            Fragment fragment = getParentFragment();
+            if (fragment instanceof ArticleCommentsFragment) {
+                ((ArticleCommentsFragment) getParentFragment())
+                        .editReply(String.valueOf(commentBody), commentOrReplyData.getParentCommentId(),
+                                commentOrReplyData.getId(), mentionsMap);
+            } else if (fragment instanceof ArticleCommentRepliesDialogFragment) {
+                Fragment parentOfParentFragment = fragment.getParentFragment();
+                if (parentOfParentFragment instanceof ArticleCommentsFragment) {
+                    ((ArticleCommentsFragment) parentOfParentFragment)
+                            .editReply(String.valueOf(commentBody), commentOrReplyData.getParentCommentId(),
+                                    commentOrReplyData.getId(), mentionsMap);
+                } else if (parentOfParentFragment instanceof ArticleDetailsFragment) {
+                    ((ArticleDetailsFragment) parentOfParentFragment)
+                            .editReply(String.valueOf(commentBody), commentOrReplyData.getParentCommentId(),
+                                    commentOrReplyData.getId(), mentionsMap);
+                }
+            } else if (fragment instanceof ContentCommentReplyNotificationFragment) {
+                ((ContentCommentReplyNotificationFragment) getParentFragment())
+                        .editReply(String.valueOf(commentBody), commentOrReplyData.getParentCommentId(),
+                                commentOrReplyData.getId(), position, commentOrReplyData.getMentions());
+            }
+        } else {
+            if (commentOrReplyData == null) {
+                if (getActivity() != null && getActivity() instanceof ContentCommentReplyNotificationActivity) {
+                    ((ContentCommentReplyNotificationActivity) getActivity())
+                            .addComment(String.valueOf(commentBody), mentionsMap);
+                } else {
+                    ((AddComments) this.getParentFragment()).addComments(String.valueOf(commentBody), mentionsMap);
+                }
+            } else {
+                if (getParentFragment() instanceof ArticleCommentsFragment) {
+                    ((ArticleCommentsFragment) getParentFragment())
+                            .addReply(String.valueOf(commentBody), commentOrReplyData.getId(), mentionsMap);
+                } else if (getParentFragment() instanceof ContentCommentReplyNotificationFragment) {
+                    ((ContentCommentReplyNotificationFragment) getParentFragment())
+                            .addReply(String.valueOf(commentBody), commentOrReplyData.getId(), mentionsMap);
+                } else if (getActivity() != null
+                        && (getActivity()) instanceof ContentCommentReplyNotificationActivity) {
+                    ((ContentCommentReplyNotificationActivity) getActivity())
+                            .addReply(String.valueOf(commentBody), commentOrReplyData.getId(), mentionsMap);
+                } else if (getParentFragment() instanceof ArticleDetailsFragment) {
+                    ((ArticleDetailsFragment) getParentFragment())
+                            .addReply(String.valueOf(commentBody), commentOrReplyData.getId(), mentionsMap);
+                }
+            }
+        }*/
+    }
+
 
     private Callback<CommentListResponse> addCommentResponseListener = new Callback<CommentListResponse>() {
         @Override
@@ -995,26 +1145,53 @@ public class ArticleCommentsFragment extends BaseFragment implements OnClickList
 
     @Override
     public void addComments(String content, Map<String, Mentions> mentionsMap) {
+
+    }
+
+
+    private void addComment(String content, Map<String, Mentions> mentionsMap) {
         showProgressDialog("Adding Comment");
         AddEditCommentOrReplyRequest addEditCommentOrReplyRequest = new AddEditCommentOrReplyRequest();
         addEditCommentOrReplyRequest.setPost_id(articleId);
         addEditCommentOrReplyRequest.setMessage(content);
         addEditCommentOrReplyRequest.setParent_id("0");
-        if (AppConstants.CONTENT_TYPE_VIDEO.equals(contentType)) {
-            addEditCommentOrReplyRequest.setType("video");
-        } else if (AppConstants.CONTENT_TYPE_SHORT_STORY.equals(contentType)) {
-            addEditCommentOrReplyRequest.setType("story");
-        } else {
-            addEditCommentOrReplyRequest.setType("article");
-        }
+        addEditCommentOrReplyRequest.setType("article");
         addEditCommentOrReplyRequest.setMentions(mentionsMap);
         Call<CommentListResponse> call = articleDetailsApi.addCommentOrReply(addEditCommentOrReplyRequest);
         call.enqueue(addCommentResponseListener);
     }
 
+
     @NonNull
     @Override
     public List<String> onQueryReceived(@NonNull QueryToken queryToken) {
-        return null;
+        final QueryTokenReceiver receiver = typeHere;
+        Retrofit retro = BaseApplication.getInstance().getRetrofit();
+        SearchArticlesAuthorsAPI searchArticlesAuthorsApi = retro.create(SearchArticlesAuthorsAPI.class);
+        Call<MentionsResponse> call = searchArticlesAuthorsApi.searchUserHandles(queryToken.getKeywords());
+        call.enqueue(new Callback<MentionsResponse>() {
+            @Override
+            public void onResponse(Call<MentionsResponse> call, Response<MentionsResponse> response) {
+                try {
+                    if (response.isSuccessful()) {
+                        MentionsResponse responseModel = response.body();
+                        List<Mentions> suggestions = new ArrayList<>(responseModel.getData().getResult());
+                        SuggestionsResult result = new SuggestionsResult(queryToken, suggestions);
+                        typeHere.onReceiveSuggestionsResult(result, "dddd");
+                    }
+                } catch (Exception e) {
+                    FirebaseCrashlytics.getInstance().recordException(e);
+                    Log.d("MC4kException", Log.getStackTraceString(e));
+                }
+            }
+
+            @Override
+            public void onFailure(Call<MentionsResponse> call, Throwable t) {
+                FirebaseCrashlytics.getInstance().recordException(t);
+                Log.d("MC4kException", Log.getStackTraceString(t));
+            }
+        });
+
+        return Arrays.asList("dddd");
     }
 }

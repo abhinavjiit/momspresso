@@ -26,9 +26,11 @@ import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewGroup.LayoutParams;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
+import android.widget.Spinner;
 import android.widget.TextView;
 import androidx.annotation.ColorInt;
 import androidx.annotation.NonNull;
@@ -76,6 +78,7 @@ public class RichEditorView extends RelativeLayout implements TextWatcher, Query
     private int originalInputType = InputType.TYPE_TEXT_FLAG_MULTI_LINE; // Default to plain text
     private TextView textCounterView;
     private ListView suggestionsList;
+    private Spinner spinner;
 
     private QueryTokenReceiver hostQueryTokenReceiver;
     private SuggestionsAdapter suggestionsAdapter;
@@ -120,6 +123,7 @@ public class RichEditorView extends RelativeLayout implements TextWatcher, Query
         mentionsEditText = findViewById(R.id.text_editor);
         textCounterView = findViewById(R.id.text_counter);
         suggestionsList = findViewById(R.id.suggestions_list);
+        spinner = findViewById(R.id.spinner);
 
         // Get the MentionSpanConfig from custom XML attributes and set it
         MentionSpanConfig mentionSpanConfig = parseMentionSpanConfigFromAttributes(attrs, defStyleAttr);
@@ -364,7 +368,7 @@ public class RichEditorView extends RelativeLayout implements TextWatcher, Query
                     mentionsEditText.getPaddingEnd(), mentionsEditText.getPaddingTop());
             int height = mentionsEditText.getPaddingTop() + mentionsEditText.getLineHeight() + mentionsEditText
                     .getPaddingBottom();
-            mentionsEditText.setLayoutParams(new LayoutParams(LayoutParams.MATCH_PARENT, height));
+            mentionsEditText.setLayoutParams(new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT));
             mentionsEditText.setVerticalScrollBarEnabled(false);
             int cursorLine = getCurrentCursorLine();
             Layout layout = mentionsEditText.getLayout();
