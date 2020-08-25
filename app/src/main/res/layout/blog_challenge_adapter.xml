@@ -24,11 +24,12 @@
       android:layout_alignParentTop="true"
       android:layout_marginStart="0dp"
       android:layout_marginTop="0dp"
-      android:paddingBottom="@dimen/space_16"
-      android:text="Previous Week’s Challenges"
+      android:paddingTop="@dimen/space_10"
+      android:paddingBottom="@dimen/space_10"
+      android:text=""
       android:textColor="@color/app_dark_black"
       android:textSize="20sp" />
-    <ImageView
+    <androidx.appcompat.widget.AppCompatImageView
       android:id="@+id/tagImageView"
       android:layout_width="match_parent"
       android:layout_height="215dp"
@@ -44,8 +45,8 @@
       android:id="@+id/liveTextViewVideoChallenge"
       android:layout_width="wrap_content"
       android:layout_height="wrap_content"
+      android:layout_below="@id/categoryTextView"
       android:layout_marginStart="7dp"
-      android:layout_marginLeft="7dp"
       android:layout_marginTop="7dp"
       android:background="@drawable/border_live_text_on_image_video_challenge"
       android:elevation="4dp"
@@ -59,12 +60,12 @@
       android:visibility="gone"
       app:fontName="Oswald-Medium.ttf" />
 
-    <ImageView
+    <androidx.appcompat.widget.AppCompatImageView
       android:id="@+id/info"
       android:layout_width="26dp"
       android:layout_height="26dp"
       android:layout_below="@id/categoryTextView"
-      android:layout_alignRight="@+id/tagImageView"
+      android:layout_alignEnd="@+id/tagImageView"
       android:layout_margin="10dp"
       android:background="@drawable/round_circle"
       android:elevation="7dp"
