@@ -49,6 +49,7 @@ import com.mycity4kids.gtmutils.Utils
 import com.mycity4kids.models.collectionsModels.FeaturedOnModel
 import com.mycity4kids.models.collectionsModels.UserCollectionsListModel
 import com.mycity4kids.models.request.ArticleDetailRequest
+import com.mycity4kids.models.request.DeleteBookmarkRequest
 import com.mycity4kids.models.request.FollowUnfollowUserRequest
 import com.mycity4kids.models.request.RecommendUnrecommendArticleRequest
 import com.mycity4kids.models.response.AddBookmarkResponse
@@ -105,12 +106,12 @@ import io.reactivex.Observer
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable
 import io.reactivex.schedulers.Schedulers
-import java.io.File
-import java.net.SocketTimeoutException
-import java.net.UnknownHostException
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
+import java.io.File
+import java.net.SocketTimeoutException
+import java.net.UnknownHostException
 
 class UserProfileActivity : BaseActivity(),
     UserContentAdapter.RecyclerViewClickListener, View.OnClickListener,
@@ -1928,11 +1929,101 @@ class UserProfileActivity : BaseActivity(),
                 launchContentDetail(userBookmarkList?.get(position))
             }
             view.id == R.id.removeBookmarkTextView -> {
+                if (userBookmarkList?.get(position)?.itemType.equals("2")) {
+                    removeVideoBookmark(userBookmarkList?.get(position)?.bookmarkId, position)
+                } else {
+                    removeBookmark(userBookmarkList?.get(position)?.bookmarkId, position)
+                }
+
             }
             view.id == R.id.shareImageView -> {
                 shareContent(userBookmarkList?.get(position))
             }
         }
+    }
+
+    private fun removeBookmark(id: String?, position: Int) {
+        val deleteBookmarkRequest = DeleteBookmarkRequest()
+        deleteBookmarkRequest.id = id
+        val retro = BaseApplication.getInstance().retrofit
+        val articleDetailsAPI = retro.create(
+            ArticleDetailsAPI::class.java
+        )
+        val call =
+            articleDetailsAPI.deleteBookmark(deleteBookmarkRequest)
+        call.enqueue(object : Callback<AddBookmarkResponse> {
+            override fun onFailure(call: Call<AddBookmarkResponse>, t: Throwable) {
+                ToastUtils.showToast(
+                    this@UserProfileActivity,
+                    getString(R.string.server_went_wrong)
+                )
+                FirebaseCrashlytics.getInstance().recordException(t)
+                Log.d("MC4kException", Log.getStackTraceString(t))
+            }
+
+            override fun onResponse(
+                call: Call<AddBookmarkResponse>,
+                response: Response<AddBookmarkResponse>
+            ) {
+                if (null == response.body()) {
+                    ToastUtils.showToast(
+                        this@UserProfileActivity,
+                        getString(R.string.server_went_wrong)
+                    )
+                    return
+                }
+                val responseData = response.body()
+                if (responseData?.code == 200) {
+                    userBookmarkList?.get(position)?.isbookmark = 0
+                    userBookmarkList?.get(position)?.bookmarkId = ""
+                    userBookmarkList?.removeAt(position)
+                    usersBookmarksAdapter.setListData(userBookmarkList)
+                    usersBookmarksAdapter.notifyDataSetChanged()
+                }
+            }
+        })
+    }
+
+    private fun removeVideoBookmark(id: String?, position: Int) {
+        val deleteBookmarkRequest = DeleteBookmarkRequest()
+        deleteBookmarkRequest.id = id
+        val retro = BaseApplication.getInstance().retrofit
+        val articleDetailsAPI = retro.create(
+            ArticleDetailsAPI::class.java
+        )
+        val call =
+            articleDetailsAPI.deleteVideoWatchLater(deleteBookmarkRequest)
+        call.enqueue(object : Callback<AddBookmarkResponse> {
+            override fun onFailure(call: Call<AddBookmarkResponse>, t: Throwable) {
+                ToastUtils.showToast(
+                    this@UserProfileActivity,
+                    getString(R.string.server_went_wrong)
+                )
+                FirebaseCrashlytics.getInstance().recordException(t)
+                Log.d("MC4kException", Log.getStackTraceString(t))
+            }
+
+            override fun onResponse(
+                call: Call<AddBookmarkResponse>,
+                response: Response<AddBookmarkResponse>
+            ) {
+                if (null == response.body()) {
+                    ToastUtils.showToast(
+                        this@UserProfileActivity,
+                        getString(R.string.server_went_wrong)
+                    )
+                    return
+                }
+                val responseData = response.body()
+                if (responseData?.code == 200) {
+                    userBookmarkList?.get(position)?.isbookmark = 0
+                    userBookmarkList?.get(position)?.bookmarkId = ""
+                    userBookmarkList?.removeAt(position)
+                    usersBookmarksAdapter.setListData(userBookmarkList)
+                    usersBookmarksAdapter.notifyDataSetChanged()
+                }
+            }
+        })
     }
 
     private fun shareContent(data: MixFeedResult?) {
