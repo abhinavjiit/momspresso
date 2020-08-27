@@ -14,7 +14,8 @@ import com.squareup.picasso.Picasso
 /**
  * Created by hemant on 19/7/17.
  */
-class UsersBookmarksAdapter(private val mListener: RecyclerViewClickListener) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
+class UsersBookmarksAdapter(private val mListener: RecyclerViewClickListener) :
+    RecyclerView.Adapter<RecyclerView.ViewHolder>() {
     private var mixFeedResult: ArrayList<MixFeedResult>? = null
 
     fun setListData(mixFeedResult: ArrayList<MixFeedResult>?) {
@@ -31,10 +32,18 @@ class UsersBookmarksAdapter(private val mListener: RecyclerViewClickListener) : 
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
         if (viewType == CONTENT_TYPE_ARTICLE) {
-            val v0 = LayoutInflater.from(parent.context).inflate(R.layout.users_bookmark_generic_item, parent, false)
+            val v0 = LayoutInflater.from(parent.context).inflate(
+                R.layout.users_bookmark_generic_item,
+                parent,
+                false
+            )
             return UserArticleBookmarksViewHolder(v0, mListener)
         } else {
-            val v0 = LayoutInflater.from(parent.context).inflate(R.layout.users_bookmark_generic_item, parent, false)
+            val v0 = LayoutInflater.from(parent.context).inflate(
+                R.layout.users_bookmark_generic_item,
+                parent,
+                false
+            )
             return UserVideoBookmarksViewHolder(v0, mListener)
         }
     }
@@ -42,7 +51,11 @@ class UsersBookmarksAdapter(private val mListener: RecyclerViewClickListener) : 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
         if (holder is UserArticleBookmarksViewHolder) {
             holder.contentTitleTextView.text = mixFeedResult?.get(position)?.title
-            holder.authorTextView.text = holder.itemView.context.getString(R.string.user_activities_bookmarks_by) +
+            if (StringUtils.isNullOrEmpty(mixFeedResult?.get(position)?.bookmarkId)) {
+                holder.removeBookmarkTextView.visibility = View.GONE
+            }
+            holder.authorTextView.text =
+                holder.itemView.context.getString(R.string.user_activities_bookmarks_by) +
                     " " + mixFeedResult?.get(position)?.userName
 
             if (0 == mixFeedResult?.get(position)?.articleCount) {
@@ -67,14 +80,16 @@ class UsersBookmarksAdapter(private val mListener: RecyclerViewClickListener) : 
             }
             try {
                 if (!StringUtils.isNullOrEmpty(mixFeedResult?.get(position)?.imageUrl?.clientApp) &&
-                        (mixFeedResult?.get(position)?.imageUrl?.thumbMax == null ||
-                                mixFeedResult?.get(position)?.imageUrl?.thumbMax?.endsWith("default.jpg")!!)) {
+                    (mixFeedResult?.get(position)?.imageUrl?.thumbMax == null ||
+                        mixFeedResult?.get(position)?.imageUrl?.thumbMax?.endsWith("default.jpg")!!)) {
                     Picasso.get().load(mixFeedResult?.get(position)?.imageUrl?.clientApp).placeholder(
-                            R.drawable.default_article).into(holder.contentImageView)
+                        R.drawable.default_article
+                    ).into(holder.contentImageView)
                 } else {
                     if (!StringUtils.isNullOrEmpty(mixFeedResult?.get(position)?.imageUrl?.thumbMax)) {
                         Picasso.get().load(mixFeedResult?.get(position)?.imageUrl?.thumbMax).placeholder(
-                                R.drawable.default_article).error(R.drawable.default_article).into(holder.contentImageView)
+                            R.drawable.default_article
+                        ).error(R.drawable.default_article).into(holder.contentImageView)
                     } else {
                         holder.contentImageView.setBackgroundResource(R.drawable.default_article)
                     }
@@ -85,7 +100,9 @@ class UsersBookmarksAdapter(private val mListener: RecyclerViewClickListener) : 
         } else if (holder is UserVideoBookmarksViewHolder) {
             holder.contentTitleTextView.text = mixFeedResult?.get(position)?.title
             holder.authorTextView.text = ""
-
+            if (StringUtils.isNullOrEmpty(mixFeedResult?.get(position)?.bookmarkId)) {
+                holder.removeBookmarkTextView.visibility = View.GONE
+            }
             if (0 == mixFeedResult?.get(position)?.view_count) {
                 holder.viewCountTextView.visibility = View.GONE
             } else {
@@ -109,7 +126,8 @@ class UsersBookmarksAdapter(private val mListener: RecyclerViewClickListener) : 
             try {
                 if (!StringUtils.isNullOrEmpty(mixFeedResult?.get(position)?.thumbnail)) {
                     Picasso.get().load(mixFeedResult?.get(position)?.thumbnail).placeholder(
-                            R.drawable.default_article).into(holder.contentImageView)
+                        R.drawable.default_article
+                    ).into(holder.contentImageView)
                 } else {
                     holder.contentImageView.setBackgroundResource(R.drawable.default_article)
                 }
@@ -123,7 +141,10 @@ class UsersBookmarksAdapter(private val mListener: RecyclerViewClickListener) : 
         return if (mixFeedResult == null) 0 else mixFeedResult!!.size
     }
 
-    inner class UserArticleBookmarksViewHolder(itemView: View, val listener: RecyclerViewClickListener) : RecyclerView.ViewHolder(itemView), View.OnClickListener {
+    inner class UserArticleBookmarksViewHolder(
+        itemView: View,
+        val listener: RecyclerViewClickListener
+    ) : RecyclerView.ViewHolder(itemView), View.OnClickListener {
         internal var authorTextView: TextView
         internal var contentImageView: ImageView
         internal var itemTypeImageView: ImageView
@@ -135,16 +156,20 @@ class UsersBookmarksAdapter(private val mListener: RecyclerViewClickListener) : 
         internal var shareImageView: ImageView
 
         init {
-            contentTitleTextView = itemView.findViewById<View>(R.id.contentTitleTextView) as TextView
+            contentTitleTextView =
+                itemView.findViewById<View>(R.id.contentTitleTextView) as TextView
             contentImageView = itemView.findViewById<View>(R.id.contentImageView) as ImageView
             itemTypeImageView = itemView.findViewById<View>(R.id.itemTypeImageView) as ImageView
             authorTextView = itemView.findViewById<View>(R.id.authorTextView) as TextView
             viewCountTextView = itemView.findViewById<View>(R.id.viewCountTextView) as TextView
-            commentCountTextView = itemView.findViewById<View>(R.id.commentCountTextView) as TextView
-            recommendCountTextView = itemView.findViewById<View>(R.id.recommendCountTextView) as TextView
-            removeBookmarkTextView = itemView.findViewById<View>(R.id.removeBookmarkTextView) as TextView
+            commentCountTextView =
+                itemView.findViewById<View>(R.id.commentCountTextView) as TextView
+            recommendCountTextView =
+                itemView.findViewById<View>(R.id.recommendCountTextView) as TextView
+            removeBookmarkTextView =
+                itemView.findViewById<View>(R.id.removeBookmarkTextView) as TextView
             shareImageView = itemView.findViewById<View>(R.id.shareImageView) as ImageView
-            removeBookmarkTextView.visibility = View.GONE
+            //            removeBookmarkTextView.visibility = View.GONE
             itemTypeImageView.setImageResource(R.drawable.draft_red)
             shareImageView.setOnClickListener(this)
             removeBookmarkTextView.setOnClickListener(this)
@@ -156,7 +181,10 @@ class UsersBookmarksAdapter(private val mListener: RecyclerViewClickListener) : 
         }
     }
 
-    inner class UserVideoBookmarksViewHolder(itemView: View, val listener: RecyclerViewClickListener) : RecyclerView.ViewHolder(itemView), View.OnClickListener {
+    inner class UserVideoBookmarksViewHolder(
+        itemView: View,
+        val listener: RecyclerViewClickListener
+    ) : RecyclerView.ViewHolder(itemView), View.OnClickListener {
         internal var authorTextView: TextView
         internal var contentImageView: ImageView
         internal var itemTypeImageView: ImageView
@@ -168,17 +196,21 @@ class UsersBookmarksAdapter(private val mListener: RecyclerViewClickListener) : 
         internal var shareImageView: ImageView
 
         init {
-            contentTitleTextView = itemView.findViewById<View>(R.id.contentTitleTextView) as TextView
+            contentTitleTextView =
+                itemView.findViewById<View>(R.id.contentTitleTextView) as TextView
             contentImageView = itemView.findViewById<View>(R.id.contentImageView) as ImageView
             itemTypeImageView = itemView.findViewById<View>(R.id.itemTypeImageView) as ImageView
             authorTextView = itemView.findViewById<View>(R.id.authorTextView) as TextView
             viewCountTextView = itemView.findViewById<View>(R.id.viewCountTextView) as TextView
-            commentCountTextView = itemView.findViewById<View>(R.id.commentCountTextView) as TextView
-            recommendCountTextView = itemView.findViewById<View>(R.id.recommendCountTextView) as TextView
-            removeBookmarkTextView = itemView.findViewById<View>(R.id.removeBookmarkTextView) as TextView
+            commentCountTextView =
+                itemView.findViewById<View>(R.id.commentCountTextView) as TextView
+            recommendCountTextView =
+                itemView.findViewById<View>(R.id.recommendCountTextView) as TextView
+            removeBookmarkTextView =
+                itemView.findViewById<View>(R.id.removeBookmarkTextView) as TextView
             shareImageView = itemView.findViewById<View>(R.id.shareImageView) as ImageView
             itemTypeImageView.setImageResource(R.drawable.ic_video)
-            removeBookmarkTextView.visibility = View.GONE
+            //            removeBookmarkTextView.visibility = View.GONE
             shareImageView.setOnClickListener(this)
             removeBookmarkTextView.setOnClickListener(this)
             itemView.setOnClickListener(this)

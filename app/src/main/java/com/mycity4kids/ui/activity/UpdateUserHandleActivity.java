@@ -433,8 +433,10 @@ public class UpdateUserHandleActivity extends BaseActivity {
             }
         }
         if (StringUtils.isNullOrEmpty(emailEditView.getText().toString())) {
-            Toast.makeText(this, "EmailId cannot be blank", Toast.LENGTH_SHORT).show();
-            return false;
+            if (!loginMode.equals("phone")) {
+                Toast.makeText(this, "EmailId cannot be blank", Toast.LENGTH_SHORT).show();
+                return false;
+            }
         } else if (!StringUtils.isValidEmail(emailEditView.getText().toString())) {
             emailEditView.setFocusableInTouchMode(true);
             emailEditView.setError(getString(R.string.enter_valid_email));
