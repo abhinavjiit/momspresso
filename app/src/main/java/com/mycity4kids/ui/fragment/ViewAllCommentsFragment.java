@@ -10,7 +10,6 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.FragmentManager;
 import androidx.viewpager.widget.ViewPager;
 import com.google.android.material.tabs.TabLayout;
-import com.mycity4kids.BuildConfig;
 import com.mycity4kids.R;
 import com.mycity4kids.application.BaseApplication;
 import com.mycity4kids.base.BaseFragment;
@@ -39,6 +38,7 @@ public class ViewAllCommentsFragment extends BaseFragment implements View.OnClic
     private String contentType;
     private String authorId;
     private RelativeLayout taggingCoachmark;
+    private View topCommentCoachMark;
 
     @Nullable
     @Override
@@ -48,7 +48,7 @@ public class ViewAllCommentsFragment extends BaseFragment implements View.OnClic
         tabLayout = view.findViewById(R.id.tab_layout);
         closeImageView = view.findViewById(R.id.closeImageView);
         taggingCoachmark = view.findViewById(R.id.taggingCoachmark);
-
+        topCommentCoachMark = view.findViewById(R.id.topCommentCoachMark);
         closeImageView.setOnClickListener(this);
         taggingCoachmark.setOnClickListener(this);
         fbCommentUrl = getArguments().getString("fbCommentURL");
@@ -61,11 +61,19 @@ public class ViewAllCommentsFragment extends BaseFragment implements View.OnClic
         contentType = getArguments().getString("contentType");
         authorId = getArguments().getString(Constants.AUTHOR_ID);
 
-        if (!SharedPrefUtils.isCoachmarksShownFlag(BaseApplication.getAppContext(), "taggingCoachmark")) {
-            taggingCoachmark.setVisibility(View.VISIBLE);
+        if (!SharedPrefUtils.isCoachmarksShownFlag(BaseApplication.getAppContext(), "topCommentCoachMark")) {
+            topCommentCoachMark.setVisibility(View.VISIBLE);
         } else {
-            taggingCoachmark.setVisibility(View.GONE);
+            topCommentCoachMark.setVisibility(View.GONE);
+            if (!SharedPrefUtils.isCoachmarksShownFlag(BaseApplication.getAppContext(), "taggingCoachmark")) {
+                taggingCoachmark.setVisibility(View.VISIBLE);
+            } else {
+                taggingCoachmark.setVisibility(View.GONE);
+
+            }
         }
+
+        topCommentCoachMark.setOnClickListener(this);
         addCommentTabs();
         return view;
     }
@@ -109,6 +117,11 @@ public class ViewAllCommentsFragment extends BaseFragment implements View.OnClic
             case R.id.closeImageView:
                 FragmentManager fm = getActivity().getSupportFragmentManager();
                 fm.popBackStack();
+                break;
+            case R.id.topCommentCoachMark:
+                topCommentCoachMark.setVisibility(View.GONE);
+                SharedPrefUtils.setCoachmarksShownFlag(BaseApplication.getAppContext(), "topCommentCoachMark", true);
+                taggingCoachmark.setVisibility(View.VISIBLE);
                 break;
             case R.id.taggingCoachmark:
                 taggingCoachmark.setVisibility(View.GONE);

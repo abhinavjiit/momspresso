@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+  xmlns:app="http://schemas.android.com/apk/res-auto"
+  android:layout_width="match_parent"
+  android:layout_height="match_parent"
+  android:elevation="8dp"
+  android:background="#BF000000">
+  <androidx.constraintlayout.widget.ConstraintLayout
+    android:layout_width="0dp"
+    android:layout_height="wrap_content"
+    app:layout_constraintBottom_toBottomOf="parent"
+    app:layout_constraintEnd_toEndOf="parent"
+    app:layout_constraintStart_toStartOf="parent"
+    app:layout_constraintTop_toTopOf="parent">
+
+
+    <androidx.appcompat.widget.AppCompatImageView
+      android:id="@+id/favImageView"
+      android:layout_width="66dp"
+      android:layout_height="66dp"
+      app:layout_constraintEnd_toEndOf="parent"
+      app:layout_constraintStart_toStartOf="parent"
+      app:layout_constraintTop_toTopOf="parent"
+      app:srcCompat="@drawable/ic_favorite" />
+
+
+    <com.mycity4kids.widget.CustomFontTextView
+      android:id="@+id/pinYourCommentTextView"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:layout_marginTop="47dp"
+      android:text="Pin Your Top Comment"
+      android:textColor="@color/white"
+      android:textSize="20sp"
+      app:fontName="Roboto-Bold.ttf"
+      app:layout_constraintEnd_toEndOf="parent"
+      app:layout_constraintStart_toStartOf="parent"
+      app:layout_constraintTop_toBottomOf="@id/favImageView" />
+
+    <com.mycity4kids.widget.CustomFontTextView
+      android:id="@+id/longTextView"
+      android:layout_width="0dp"
+      android:layout_height="wrap_content"
+      android:layout_marginStart="@dimen/space_16"
+      android:layout_marginTop="21dp"
+      android:layout_marginEnd="@dimen/space_16"
+      android:gravity="center"
+      android:text="Pin top comment to show them at the top of your post. When you pin a comment, we will notify the person who wrote it."
+      android:textColor="@color/white"
+      android:textSize="20sp"
+      app:fontName="Roboto-Regular.ttf"
+      app:layout_constraintEnd_toEndOf="parent"
+      app:layout_constraintStart_toStartOf="parent"
+      app:layout_constraintTop_toBottomOf="@id/pinYourCommentTextView" />
+
+
+    <com.mycity4kids.widget.MomspressoButtonWidget
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:layout_marginTop="20dp"
+      android:paddingStart="38dp"
+      android:paddingTop="@dimen/space_10"
+      android:paddingEnd="38dp"
+      android:paddingBottom="@dimen/space_10"
+      android:text="Ok, Got it"
+      android:textSize="18sp"
+      app:fb_defaultColor="@color/white"
+      app:fb_radius="21dp"
+      app:fb_textColor="@color/campaign_4A4A4A"
+      app:fb_textFont="Roboto-Bold.ttf"
+      app:layout_constraintEnd_toEndOf="parent"
+      app:layout_constraintStart_toStartOf="parent"
+      app:layout_constraintTop_toBottomOf="@id/longTextView" />
+
+  </androidx.constraintlayout.widget.ConstraintLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>
