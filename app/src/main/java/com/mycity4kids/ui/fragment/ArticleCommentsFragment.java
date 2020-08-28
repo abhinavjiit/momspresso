@@ -13,7 +13,6 @@ import android.view.ViewGroup;
 import android.view.Window;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.ImageView;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 import androidx.annotation.NonNull;
@@ -103,7 +102,7 @@ public class ArticleCommentsFragment extends BaseFragment implements OnClickList
     private String titleSlug;
     private String blogSlug;
     private String userType;
-    private RelativeLayout addCommentFab;
+    //   private RelativeLayout addCommentFab;
     private RecyclerView commentsRecyclerView;
     private ArticleCommentsRecyclerAdapter articleCommentsRecyclerAdapter;
     private ArticleDetailsAPI articleDetailsApi;
@@ -124,7 +123,7 @@ public class ArticleCommentsFragment extends BaseFragment implements OnClickList
         final View rootView = inflater.inflate(R.layout.article_comment_replies_dialog, container,
                 false);
         userImageView = rootView.findViewById(R.id.userImageView);
-        addCommentFab = (RelativeLayout) rootView.findViewById(R.id.addCommentFAB);
+        //    addCommentFab = (RelativeLayout) rootView.findViewById(R.id.addCommentFAB);
         commentsRecyclerView = (RecyclerView) rootView.findViewById(R.id.commentsRecyclerView);
         noCommentsTextView = (TextView) rootView.findViewById(R.id.noCommentsTextView);
         disableStatePostTextView = rootView.findViewById(R.id.disableStatePostTextView);
@@ -132,7 +131,7 @@ public class ArticleCommentsFragment extends BaseFragment implements OnClickList
         typeHere.setMaxLines();
         typeHere.displayTextCounter(false);
         typeHere.setOnClickListener(this);
-        addCommentFab.setOnClickListener(this);
+        //   addCommentFab.setOnClickListener(this);
         disableStatePostTextView.setOnClickListener(this);
         typeHere.requestFocus();
         typeHere.setQueryTokenReceiver(this);
@@ -258,7 +257,7 @@ public class ArticleCommentsFragment extends BaseFragment implements OnClickList
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
-            case R.id.addCommentFAB:
+            //   case R.id.addCommentFAB:
             case R.id.typeHere:
                 pushEvent("CD_Comment");
                 Bundle args = new Bundle();
@@ -414,7 +413,7 @@ public class ArticleCommentsFragment extends BaseFragment implements OnClickList
             try {
                 CommentListResponse responseData = response.body();
                 if (responseData.getCode() == 200 && Constants.SUCCESS.equals(responseData.getStatus())) {
-
+                    typeHere.setText("");
                     CommentListData commentModel = new CommentListData();
                     commentModel.setId(responseData.getData().get(0).getId());
                     commentModel.setMessage(responseData.getData().get(0).getMessage());
@@ -433,6 +432,7 @@ public class ArticleCommentsFragment extends BaseFragment implements OnClickList
                         noCommentsTextView.setVisibility(View.GONE);
                     }
                     articleCommentsRecyclerAdapter.notifyDataSetChanged();
+
                     if (!StringUtils.isNullOrEmpty(userType) && !StringUtils.isNullOrEmpty(titleSlug) && !StringUtils
                             .isNullOrEmpty(blogSlug)) {
                         String shareUrl = AppUtils.getShareUrl(userType, blogSlug, titleSlug);
