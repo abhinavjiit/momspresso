@@ -61,18 +61,17 @@ public class ViewAllCommentsFragment extends BaseFragment implements View.OnClic
         contentType = getArguments().getString("contentType");
         authorId = getArguments().getString(Constants.AUTHOR_ID);
 
-        if (!SharedPrefUtils.isCoachmarksShownFlag(BaseApplication.getAppContext(), "topCommentCoachMark")) {
-            topCommentCoachMark.setVisibility(View.VISIBLE);
+        if (!SharedPrefUtils.isCoachmarksShownFlag(BaseApplication.getAppContext(), "taggingCoachmark")) {
+            taggingCoachmark.setVisibility(View.VISIBLE);
         } else {
-            topCommentCoachMark.setVisibility(View.GONE);
-            if (!SharedPrefUtils.isCoachmarksShownFlag(BaseApplication.getAppContext(), "taggingCoachmark")) {
-                taggingCoachmark.setVisibility(View.VISIBLE);
-            } else {
-                taggingCoachmark.setVisibility(View.GONE);
-
+            if (SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId()
+                    .equals(authorId) && !SharedPrefUtils
+                    .isCoachmarksShownFlag(BaseApplication.getAppContext(), "topCommentCoachMark")) {
+                topCommentCoachMark.setVisibility(View.VISIBLE);
             }
         }
 
+        taggingCoachmark.setOnClickListener(this);
         topCommentCoachMark.setOnClickListener(this);
         addCommentTabs();
         return view;
@@ -121,11 +120,17 @@ public class ViewAllCommentsFragment extends BaseFragment implements View.OnClic
             case R.id.topCommentCoachMark:
                 topCommentCoachMark.setVisibility(View.GONE);
                 SharedPrefUtils.setCoachmarksShownFlag(BaseApplication.getAppContext(), "topCommentCoachMark", true);
-                taggingCoachmark.setVisibility(View.VISIBLE);
                 break;
             case R.id.taggingCoachmark:
                 taggingCoachmark.setVisibility(View.GONE);
                 SharedPrefUtils.setCoachmarksShownFlag(BaseApplication.getAppContext(), "taggingCoachmark", true);
+                if (SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId()
+                        .equals(authorId)) {
+                    if (!SharedPrefUtils
+                            .isCoachmarksShownFlag(BaseApplication.getAppContext(), "topCommentCoachMark")) {
+                        topCommentCoachMark.setVisibility(View.VISIBLE);
+                    }
+                }
                 break;
             default:
                 break;

@@ -201,4 +201,276 @@
     app:layout_constraintStart_toEndOf="parent"
     app:layout_constraintTop_toBottomOf="@id/toolbar" />
 
+  <RelativeLayout
+    android:id="@+id/taggingCoachmark"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/dark_transparent"
+    android:elevation="8dp"
+    android:gravity="center_vertical"
+    android:visibility="gone">
+    <androidx.cardview.widget.CardView
+      android:id="@+id/l"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:layout_marginStart="@dimen/space_20"
+      android:layout_marginEnd="@dimen/space_20"
+      app:cardCornerRadius="@dimen/space_4">
+      <LinearLayout
+
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+
+        android:background="@color/white"
+        android:orientation="vertical">
+        <RelativeLayout
+          android:layout_width="match_parent"
+          android:layout_height="wrap_content"
+          android:layout_marginStart="@dimen/space_10"
+          android:layout_marginTop="@dimen/space_8"
+          android:paddingTop="@dimen/space_10"
+          android:paddingBottom="@dimen/space_8">
+
+          <com.mikhaellopez.circularimageview.CircularImageView
+            android:id="@+id/imageView1"
+            android:layout_width="34dp"
+            android:layout_height="34dp"
+            android:src="@drawable/default_commentor_img" />
+          <com.mycity4kids.widget.CustomFontTextView
+            android:id="@+id/nameTextView1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/space_20"
+            android:layout_toEndOf="@id/imageView1"
+            android:text="Vijay Lakshmi Murthy"
+            android:textColor="#4A4A4A"
+            android:textSize="14sp"
+            app:fontName="Roboto-Regular.ttf" />
+          <com.mycity4kids.widget.CustomFontTextView
+            android:id="@+id/desTextView1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/nameTextView1"
+            android:layout_marginStart="@dimen/space_20"
+            android:layout_toEndOf="@id/imageView1"
+            android:text="@lakshmi980"
+            android:textColor="#9B9B9B"
+            android:textSize="14sp" />
+        </RelativeLayout>
+        <RelativeLayout
+          android:layout_width="match_parent"
+          android:layout_height="wrap_content"
+          android:layout_marginStart="@dimen/space_10"
+          android:layout_marginTop="@dimen/space_8"
+          android:paddingTop="@dimen/space_8"
+          android:paddingBottom="@dimen/space_8">
+
+          <com.mikhaellopez.circularimageview.CircularImageView
+            android:id="@+id/imageView2"
+            android:layout_width="34dp"
+            android:layout_height="34dp"
+            android:src="@drawable/default_commentor_img" />
+          <com.mycity4kids.widget.CustomFontTextView
+            android:id="@+id/nameTextView2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/space_20"
+            android:layout_toEndOf="@id/imageView2"
+            android:text="Vijay Lakshmi N.Rao"
+            android:textColor="#4A4A4A"
+            android:textSize="14sp"
+            app:fontName="Roboto-Regular.ttf" />
+          <com.mycity4kids.widget.CustomFontTextView
+            android:id="@+id/desTextView2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/nameTextView2"
+            android:layout_marginStart="@dimen/space_20"
+            android:layout_toEndOf="@id/imageView2"
+            android:text="@Vlakshmi8978"
+            android:textColor="#9B9B9B"
+            android:textSize="14sp" />
+        </RelativeLayout>
+        <RelativeLayout
+          android:layout_width="match_parent"
+          android:layout_height="wrap_content"
+          android:layout_marginStart="@dimen/space_10"
+          android:layout_marginTop="@dimen/space_8"
+          android:layout_marginBottom="@dimen/space_8"
+          android:paddingTop="@dimen/space_8"
+          android:paddingBottom="@dimen/space_8">
+
+          <com.mikhaellopez.circularimageview.CircularImageView
+            android:id="@+id/imageView3"
+            android:layout_width="34dp"
+            android:layout_height="34dp"
+            android:src="@drawable/default_commentor_img" />
+          <com.mycity4kids.widget.CustomFontTextView
+            android:id="@+id/nameTextView3"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/space_20"
+            android:layout_toEndOf="@id/imageView3"
+            android:text="Vijay Lakshmi Kumari Sharma"
+            android:textColor="#4A4A4A"
+            android:textSize="14sp"
+            app:fontName="Roboto-Regular.ttf" />
+          <com.mycity4kids.widget.CustomFontTextView
+            android:id="@+id/desTextView3"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/nameTextView3"
+            android:layout_marginStart="@dimen/space_20"
+            android:layout_toEndOf="@id/imageView3"
+            android:text="@Vlk876501"
+            android:textColor="#9B9B9B"
+            android:textSize="14sp" />
+        </RelativeLayout>
+      </LinearLayout>
+    </androidx.cardview.widget.CardView>
+
+    <androidx.cardview.widget.CardView
+      android:id="@+id/r"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:layout_below="@id/l"
+      android:layout_marginStart="@dimen/space_20"
+      android:layout_marginTop="@dimen/space_10"
+      android:layout_marginEnd="@dimen/space_20">
+
+      <RelativeLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="#f0f0f0"
+        android:elevation="5dp"
+        android:paddingStart="@dimen/space_10"
+        android:paddingTop="@dimen/space_8"
+        android:paddingEnd="@dimen/space_10"
+        android:paddingBottom="@dimen/space_8">
+
+        <com.mikhaellopez.circularimageview.CircularImageView
+          android:id="@+id/userImageView"
+          android:layout_width="34dp"
+          android:layout_height="34dp"
+          android:layout_centerVertical="true"
+          android:src="@drawable/default_commentor_img" />
+
+        <RelativeLayout
+          android:id="@+id/addCommentFAB"
+          android:layout_width="match_parent"
+          android:layout_height="wrap_content"
+          android:layout_centerVertical="true"
+          android:layout_marginLeft="10dp"
+          android:layout_marginRight="10dp"
+          android:layout_toEndOf="@id/userImageView"
+          android:background="@drawable/rectangular_border"
+          android:gravity="center_vertical"
+          android:visibility="visible">
+
+          <com.mycity4kids.widget.CustomFontTextView
+            android:id="@+id/typeHere"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="@dimen/space_10"
+            android:gravity="center_vertical"
+            android:padding="10dp"
+            android:text="@Vijaylakshmi"
+            android:textColor="#4A90E2"
+            android:textSize="14sp"
+            android:visibility="visible"
+            app:fontName="Roboto-Regular.ttf" />
+
+          <com.mycity4kids.widget.CustomFontTextView
+            android:id="@+id/beTheFirstOne"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="@dimen/space_10"
+            android:text="Be the first one"
+            android:textColor="@color/groups.grey"
+            android:textSize="12sp"
+            android:visibility="gone" />
+
+          <com.mycity4kids.widget.MomspressoButtonWidget
+            android:id="@+id/disableStatePostTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_centerVertical="true"
+            android:layout_marginEnd="@dimen/space_10"
+            android:paddingStart="@dimen/space_20"
+            android:paddingTop="@dimen/space_7"
+            android:paddingEnd="@dimen/space_20"
+            android:paddingBottom="@dimen/space_7"
+            android:text="Post"
+            android:textStyle="bold"
+            app:fb_borderColor="#D8D8D8"
+            app:fb_borderWidth="1dp"
+            app:fb_defaultColor="@color/white_color"
+            app:fb_radius="@dimen/space_30"
+            app:fb_textColor="#D8D8D8"
+            app:fb_textSize="14sp" />
+          <com.mycity4kids.widget.MomspressoButtonWidget
+            android:id="@+id/enableStatePostTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_centerVertical="true"
+            android:layout_marginEnd="@dimen/space_10"
+            android:paddingStart="@dimen/space_20"
+            android:paddingTop="@dimen/space_10"
+            android:paddingEnd="@dimen/space_20"
+            android:paddingBottom="@dimen/space_10"
+            android:text="Post"
+            android:textStyle="bold"
+            android:visibility="gone"
+            app:fb_borderColor="@color/app_red"
+            app:fb_borderWidth="1dp"
+            app:fb_defaultColor="@color/app_red"
+            app:fb_radius="@dimen/space_30"
+            app:fb_textColor="@color/white"
+            app:fb_textSize="14sp" />
+
+        </RelativeLayout>
+      </RelativeLayout>
+    </androidx.cardview.widget.CardView>
+
+    <com.mycity4kids.widget.CustomFontTextView
+      android:id="@+id/followFriendsTextView"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:layout_below="@+id/r"
+      android:layout_marginTop="@dimen/space_10"
+      android:gravity="center"
+      android:padding="20dp"
+      android:text="@string/tagging_coachmark"
+      android:textColor="@color/white_color"
+      android:textSize="18sp"
+      app:fontName="Roboto-Bold.ttf" />
+
+    <com.mycity4kids.widget.MomspressoButtonWidget
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:layout_below="@+id/followFriendsTextView"
+      android:layout_centerHorizontal="true"
+      android:layout_marginTop="@dimen/space_30"
+      android:paddingStart="38dp"
+      android:paddingTop="@dimen/space_10"
+      android:paddingEnd="38dp"
+      android:paddingBottom="@dimen/space_10"
+      android:text="Ok, Got it"
+      android:textSize="18sp"
+      app:fb_defaultColor="@color/white"
+      app:fb_radius="21dp"
+      app:fb_textColor="@color/campaign_4A4A4A"
+      app:fb_textFont="Roboto-Bold.ttf" />
+  </RelativeLayout>
+  <include
+    android:id="@+id/topCommentCoachMark"
+    layout="@layout/top_comment_coachmark_layout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:visibility="gone" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>

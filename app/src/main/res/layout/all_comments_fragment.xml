@@ -3,7 +3,6 @@
   xmlns:app="http://schemas.android.com/apk/res-auto"
   android:layout_width="match_parent"
   android:layout_height="match_parent">
-
   <androidx.appcompat.widget.Toolbar
     android:id="@+id/toolbar"
     android:layout_width="match_parent"
@@ -12,11 +11,9 @@
     android:minHeight="?attr/actionBarSize"
     app:theme="@style/ToolbarTheme"
     app:titleTextAppearance="@style/ToolbarTheme.Title">
-
     <RelativeLayout
       android:layout_width="match_parent"
       android:layout_height="wrap_content">
-
       <ImageView
         android:id="@+id/closeImageView"
         android:layout_width="wrap_content"
@@ -25,7 +22,6 @@
         android:paddingRight="20dp"
         android:paddingBottom="20dp"
         android:src="@drawable/cross_icon_back" />
-
       <com.mycity4kids.widget.CustomFontTextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -37,14 +33,12 @@
         app:fontName="oswald_regular.ttf" />
     </RelativeLayout>
   </androidx.appcompat.widget.Toolbar>
-
   <View
     android:id="@+id/toolbarUnderline"
     android:layout_width="match_parent"
     android:layout_height="1dp"
     android:layout_below="@+id/toolbar"
     android:background="@color/light_underline" />
-
   <com.google.android.material.tabs.TabLayout
     android:id="@+id/tab_layout"
     android:layout_width="match_parent"
@@ -59,13 +53,11 @@
     app:tabSelectedTextColor="@color/app_red"
     app:tabTextAppearance="@style/CustomTabText"
     app:tabTextColor="@color/home.trending.tabbar_text" />
-
   <androidx.viewpager.widget.ViewPager
     android:id="@+id/pager"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:layout_below="@id/tab_layout" />
-
   <RelativeLayout
     android:id="@+id/taggingCoachmark"
     android:layout_width="match_parent"
@@ -73,7 +65,7 @@
     android:background="@color/dark_transparent"
     android:elevation="8dp"
     android:gravity="center_vertical"
-    android:visibility="visible">
+    android:visibility="gone">
     <androidx.cardview.widget.CardView
       android:id="@+id/l"
       android:layout_width="match_parent"
@@ -82,10 +74,8 @@
       android:layout_marginEnd="@dimen/space_20"
       app:cardCornerRadius="@dimen/space_4">
       <LinearLayout
-
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-
         android:background="@color/white"
         android:orientation="vertical">
         <RelativeLayout
@@ -95,7 +85,6 @@
           android:layout_marginTop="@dimen/space_8"
           android:paddingTop="@dimen/space_10"
           android:paddingBottom="@dimen/space_8">
-
           <com.mikhaellopez.circularimageview.CircularImageView
             android:id="@+id/imageView1"
             android:layout_width="34dp"
@@ -118,7 +107,7 @@
             android:layout_below="@id/nameTextView1"
             android:layout_marginStart="@dimen/space_20"
             android:layout_toEndOf="@id/imageView1"
-            android:text="@lakshmi980"
+            android:text=" @lakshmi980"
             android:textColor="#9B9B9B"
             android:textSize="14sp" />
         </RelativeLayout>
@@ -129,7 +118,6 @@
           android:layout_marginTop="@dimen/space_8"
           android:paddingTop="@dimen/space_8"
           android:paddingBottom="@dimen/space_8">
-
           <com.mikhaellopez.circularimageview.CircularImageView
             android:id="@+id/imageView2"
             android:layout_width="34dp"
@@ -152,7 +140,7 @@
             android:layout_below="@id/nameTextView2"
             android:layout_marginStart="@dimen/space_20"
             android:layout_toEndOf="@id/imageView2"
-            android:text="@Vlakshmi8978"
+            android:text=" @Vlakshmi8978"
             android:textColor="#9B9B9B"
             android:textSize="14sp" />
         </RelativeLayout>
@@ -164,7 +152,6 @@
           android:layout_marginBottom="@dimen/space_8"
           android:paddingTop="@dimen/space_8"
           android:paddingBottom="@dimen/space_8">
-
           <com.mikhaellopez.circularimageview.CircularImageView
             android:id="@+id/imageView3"
             android:layout_width="34dp"
@@ -187,13 +174,12 @@
             android:layout_below="@id/nameTextView3"
             android:layout_marginStart="@dimen/space_20"
             android:layout_toEndOf="@id/imageView3"
-            android:text="@Vlk876501"
+            android:text=" @Vlk876501"
             android:textColor="#9B9B9B"
             android:textSize="14sp" />
         </RelativeLayout>
       </LinearLayout>
     </androidx.cardview.widget.CardView>
-
     <androidx.cardview.widget.CardView
       android:id="@+id/r"
       android:layout_width="match_parent"
@@ -202,7 +188,6 @@
       android:layout_marginStart="@dimen/space_20"
       android:layout_marginTop="@dimen/space_10"
       android:layout_marginEnd="@dimen/space_20">
-
       <RelativeLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -212,14 +197,12 @@
         android:paddingTop="@dimen/space_8"
         android:paddingEnd="@dimen/space_10"
         android:paddingBottom="@dimen/space_8">
-
         <com.mikhaellopez.circularimageview.CircularImageView
           android:id="@+id/userImageView"
           android:layout_width="34dp"
           android:layout_height="34dp"
           android:layout_centerVertical="true"
           android:src="@drawable/default_commentor_img" />
-
         <RelativeLayout
           android:id="@+id/addCommentFAB"
           android:layout_width="match_parent"
@@ -231,7 +214,6 @@
           android:background="@drawable/rectangular_border"
           android:gravity="center_vertical"
           android:visibility="visible">
-
           <com.mycity4kids.widget.CustomFontTextView
             android:id="@+id/typeHere"
             android:layout_width="wrap_content"
@@ -240,12 +222,11 @@
             android:layout_marginLeft="@dimen/space_10"
             android:gravity="center_vertical"
             android:padding="10dp"
-            android:text="@Vijaylakshmi"
+            android:text=" @Vijaylakshmi"
             android:textColor="#4A90E2"
             android:textSize="14sp"
             android:visibility="visible"
             app:fontName="Roboto-Regular.ttf" />
-
           <com.mycity4kids.widget.CustomFontTextView
             android:id="@+id/beTheFirstOne"
             android:layout_width="wrap_content"
@@ -256,7 +237,6 @@
             android:textColor="@color/groups.grey"
             android:textSize="12sp"
             android:visibility="gone" />
-
           <com.mycity4kids.widget.MomspressoButtonWidget
             android:id="@+id/disableStatePostTextView"
             android:layout_width="wrap_content"
@@ -296,11 +276,9 @@
             app:fb_radius="@dimen/space_30"
             app:fb_textColor="@color/white"
             app:fb_textSize="14sp" />
-
         </RelativeLayout>
       </RelativeLayout>
     </androidx.cardview.widget.CardView>
-
     <com.mycity4kids.widget.CustomFontTextView
       android:id="@+id/followFriendsTextView"
       android:layout_width="match_parent"
@@ -313,7 +291,6 @@
       android:textColor="@color/white_color"
       android:textSize="18sp"
       app:fontName="Roboto-Bold.ttf" />
-
     <com.mycity4kids.widget.MomspressoButtonWidget
       android:layout_width="wrap_content"
       android:layout_height="wrap_content"
@@ -331,7 +308,6 @@
       app:fb_textColor="@color/campaign_4A4A4A"
       app:fb_textFont="Roboto-Bold.ttf" />
   </RelativeLayout>
-
   <include
     android:id="@+id/topCommentCoachMark"
     layout="@layout/top_comment_coachmark_layout"
