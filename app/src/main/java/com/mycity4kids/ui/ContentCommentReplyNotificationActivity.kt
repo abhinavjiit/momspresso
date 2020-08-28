@@ -25,6 +25,7 @@ import com.mycity4kids.models.request.AddEditCommentOrReplyRequest
 import com.mycity4kids.models.response.CommentListData
 import com.mycity4kids.models.response.CommentListResponse
 import com.mycity4kids.models.response.LikeReactionModel
+import com.mycity4kids.preference.SharedPrefUtils
 import com.mycity4kids.profile.UserProfileActivity
 import com.mycity4kids.retrofitAPIsInterfaces.ArticleDetailsAPI
 import com.mycity4kids.tagging.Mentions
@@ -42,12 +43,12 @@ import io.reactivex.Observer
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable
 import io.reactivex.schedulers.Schedulers
-import java.util.ArrayList
 import okhttp3.ResponseBody
 import org.json.JSONObject
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
+import java.util.ArrayList
 
 class ContentCommentReplyNotificationActivity : BaseActivity(),
     ArticleCommentsRecyclerAdapter.RecyclerViewClickListener,
@@ -65,6 +66,8 @@ class ContentCommentReplyNotificationActivity : BaseActivity(),
     private var contentType: String? = null
     private lateinit var rLayout: RelativeLayout
     private var blogWriterId: String? = null
+    private lateinit var taggingCoachmark: RelativeLayout
+    private lateinit var topCommentCoachMark: View
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.content_comment_reply_notification_activity)
@@ -72,6 +75,8 @@ class ContentCommentReplyNotificationActivity : BaseActivity(),
         commentToolbarTextView = findViewById(R.id.commentToolbarTextView)
         commentRecyclerView = findViewById(R.id.commentRecyclerView)
         rLayout = findViewById(R.id.rLayout)
+        taggingCoachmark = findViewById(R.id.taggingCoachmark)
+        topCommentCoachMark = findViewById(R.id.topCommentCoachMark)
         contentType = intent?.getStringExtra("contentType")
         articleId = intent?.getStringExtra("articleId")
         replyId = intent?.getStringExtra("replyId")
@@ -97,8 +102,26 @@ class ContentCommentReplyNotificationActivity : BaseActivity(),
                 getComments("comment")
             }
         })
+        if (!SharedPrefUtils.isCoachmarksShownFlag(
+                BaseApplication.getAppContext(),
+                "taggingCoachmark"
+            )) {
+            taggingCoachmark.visibility = View.VISIBLE
+        } else {
+            if ((SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).dynamoId
+                    == blogWriterId) && !SharedPrefUtils
+                    .isCoachmarksShownFlag(
+                        BaseApplication.getAppContext(),
+                        "topCommentCoachMark"
+                    )) {
+                topCommentCoachMark.visibility = View.VISIBLE
+            }
+        }
+
         commentToolbarTextView.setOnClickListener(this)
         rLayout.setOnClickListener(this)
+        taggingCoachmark.setOnClickListener(this)
+        topCommentCoachMark.setOnClickListener(this)
     }
 
     private fun getComments(type: String?) {
@@ -658,6 +681,29 @@ class ContentCommentReplyNotificationActivity : BaseActivity(),
             addArticleCommentReplyDialogFragment.isCancelable = true
             val fm: FragmentManager = supportFragmentManager
             addArticleCommentReplyDialogFragment.show(fm, "Add Comment")
+        } else if (v?.id == R.id.topCommentCoachMark) {
+            topCommentCoachMark.visibility = View.GONE
+            SharedPrefUtils.setCoachmarksShownFlag(
+                BaseApplication.getAppContext(),
+                "topCommentCoachMark",
+                true
+            )
+        } else if (v?.id == R.id.taggingCoachmark) {
+            taggingCoachmark.visibility = View.GONE
+            SharedPrefUtils.setCoachmarksShownFlag(
+                BaseApplication.getAppContext(),
+                "taggingCoachmark",
+                true
+            )
+            if (SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).dynamoId == blogWriterId) {
+                if (!SharedPrefUtils
+                        .isCoachmarksShownFlag(
+                            BaseApplication.getAppContext(),
+                            "topCommentCoachMark"
+                        )) {
+                    topCommentCoachMark.visibility = View.VISIBLE
+                }
+            }
         }
     }
 
