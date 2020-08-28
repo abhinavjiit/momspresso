@@ -182,7 +182,7 @@
         android:layout_below="@id/suggestionRadioGroup"
         android:layout_marginStart="@dimen/space_16"
         android:layout_marginTop="@dimen/space_20"
-        android:text="@string/profile_emailid"
+        android:text="@string/profile_emailid_optional"
         android:textColor="@color/color_85848A"
         android:textSize="16sp" />
 
