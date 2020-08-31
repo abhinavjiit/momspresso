@@ -22,6 +22,16 @@
           android:adjustViewBounds="true"
           android:scaleType="fitXY"
           android:src="@drawable/default_article" />
+
+        <androidx.appcompat.widget.AppCompatImageView
+          android:id="@+id/todaysTrophyImageView1"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:layout_alignEnd="@+id/todaysBestImageView1"
+          android:padding="@dimen/space_10"
+          android:src="@drawable/ic_trophy"
+          android:visibility="gone" />
+
         <com.mycity4kids.widget.CustomFontTextView
           android:id="@+id/todaysBestArticleTextView1"
           android:layout_width="match_parent"
@@ -182,6 +192,16 @@
           android:adjustViewBounds="true"
           android:scaleType="fitXY"
           android:src="@drawable/default_article" />
+
+        <androidx.appcompat.widget.AppCompatImageView
+          android:id="@+id/todaysTrophyImageView2"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:layout_alignEnd="@+id/todaysBestImageView2"
+          android:padding="@dimen/space_10"
+          android:src="@drawable/ic_trophy"
+          android:visibility="gone" />
+
         <com.mycity4kids.widget.CustomFontTextView
           android:id="@+id/todaysBestArticleTextView2"
           android:layout_width="match_parent"
@@ -335,6 +355,16 @@
           android:adjustViewBounds="true"
           android:scaleType="fitXY"
           android:src="@drawable/default_article" />
+
+        <androidx.appcompat.widget.AppCompatImageView
+          android:id="@+id/todaysTrophyImageView3"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:layout_alignEnd="@+id/todaysBestImageView3"
+          android:padding="@dimen/space_10"
+          android:src="@drawable/ic_trophy"
+          android:visibility="gone" />
+
         <com.mycity4kids.widget.CustomFontTextView
           android:id="@+id/todaysBestArticleTextView3"
           android:layout_width="match_parent"
@@ -492,6 +522,16 @@
           android:adjustViewBounds="true"
           android:scaleType="fitXY"
           android:src="@drawable/default_article" />
+
+        <androidx.appcompat.widget.AppCompatImageView
+          android:id="@+id/todaysTrophyImageView4"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:layout_alignEnd="@+id/todaysBestImageView4"
+          android:padding="@dimen/space_10"
+          android:src="@drawable/ic_trophy"
+          android:visibility="gone" />
+
         <com.mycity4kids.widget.CustomFontTextView
           android:id="@+id/todaysBestArticleTextView4"
           android:layout_width="match_parent"
@@ -647,6 +687,16 @@
           android:adjustViewBounds="true"
           android:scaleType="fitXY"
           android:src="@drawable/default_article" />
+
+        <androidx.appcompat.widget.AppCompatImageView
+          android:id="@+id/todaysTrophyImageView5"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:layout_alignEnd="@+id/todaysBestImageView5"
+          android:padding="@dimen/space_10"
+          android:src="@drawable/ic_trophy"
+          android:visibility="gone" />
+
         <com.mycity4kids.widget.CustomFontTextView
           android:id="@+id/todaysBestArticleTextView5"
           android:layout_width="match_parent"

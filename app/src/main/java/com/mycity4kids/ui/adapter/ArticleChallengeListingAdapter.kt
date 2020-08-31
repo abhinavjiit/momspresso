@@ -1,5 +1,6 @@
 package com.mycity4kids.ui.adapter
 
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -7,6 +8,7 @@ import android.widget.FrameLayout
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
+import com.google.firebase.crashlytics.FirebaseCrashlytics
 import com.mycity4kids.R
 import com.mycity4kids.models.response.ArticleListingResult
 import com.squareup.picasso.Picasso
@@ -55,7 +57,33 @@ class ArticleChallengeListingAdapter(
                 } catch (e: Exception) {
                     this.articleImageView.setImageResource(R.drawable.default_article)
                 }
+                showWinnerOrGoldFlag(trophyImageView, articleListingData[position])
             }
+        }
+    }
+
+    private fun showWinnerOrGoldFlag(
+        winnerOrGoldImageView: ImageView,
+        data: ArticleListingResult?
+    ) {
+        try {
+            when {
+                data?.winner == "1" || data?.winner == "true" -> {
+                    winnerOrGoldImageView.visibility = View.VISIBLE
+                    winnerOrGoldImageView.setImageResource(R.drawable.ic_trophy)
+                }
+                data?.isGold == "1" || data?.isGold == "true" -> {
+                    winnerOrGoldImageView.visibility = View.VISIBLE
+                    winnerOrGoldImageView.setImageResource(R.drawable.ic_star_yellow)
+                }
+                else -> {
+                    winnerOrGoldImageView.visibility = View.GONE
+                }
+            }
+        } catch (e: Exception) {
+            winnerOrGoldImageView.visibility = View.GONE
+            FirebaseCrashlytics.getInstance().recordException(e)
+            Log.d("MC4kException", Log.getStackTraceString(e))
         }
     }
 
@@ -73,6 +101,7 @@ class ArticleChallengeListingAdapter(
         val recommendCountTextView: TextView = view.recommendCountTextView
         val bookmarkArticleImageView: ImageView = view.bookmarkArticleImageView
         val articleItemView: FrameLayout = view.articleItemView
+        val trophyImageView: ImageView = view.trophyImageView
 
         init {
             txvAuthorName.setOnClickListener(this)

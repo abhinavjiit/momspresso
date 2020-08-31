@@ -1514,4 +1514,5 @@ Thank you! We will be reviewing your story. You can expect to hear from us withi
   <string name="expected_mom_popup_msg">Let us know your expected date of delivery and we will show you just what you need to know!</string>
   <string name="new_mom_popup_msg">Let us know your child\'s birth date and we will show you just what you need to know for that age!</string>
   <string name="profile_emailid_optional">Email Id (optional)</string>
+  <string name="all_questions">Questions</string>
 </resources>

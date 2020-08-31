@@ -86,12 +86,12 @@ import com.mycity4kids.vlogs.VideoChallengeSelectionVerticalAdapter
 import com.mycity4kids.vlogs.VlogsCategoryWiseChallengesResponse
 import com.mycity4kids.widget.MomspressoButtonWidget
 import com.mycity4kids.widget.StoryShareCardWidget
+import java.io.File
 import okhttp3.ResponseBody
 import org.apache.commons.lang3.text.WordUtils
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
-import java.io.File
 
 class ArticleListingFragment : BaseFragment(), View.OnClickListener,
     OnRefreshListener, UserContentAdapter.RecyclerViewClickListener,
@@ -101,7 +101,7 @@ class ArticleListingFragment : BaseFragment(), View.OnClickListener,
     private var mixfeedList: ArrayList<MixFeedResult>? = null
     private var campaignListDataModels: ArrayList<CampaignDataListResult>? = null
     private var sortType: String? = null
-    private var nextPageNumber = 0
+    private var nextPageNumber = 1
     private var isLastPageReached = false
     private var isRequestRunning = false
     private lateinit var progressBar: ProgressBar
@@ -138,9 +138,8 @@ class ArticleListingFragment : BaseFragment(), View.OnClickListener,
     private lateinit var articleChallengesList: ArrayList<Topics>
     private var categoryWiseChallengeList = ArrayList<Topics>()
 
-
     private val blogChallengeAdapter: BlogChallengeAdapter by lazy {
-        BlogChallengeAdapter(articleChallengesList, this, this,context)
+        BlogChallengeAdapter(articleChallengesList, this, this, context)
     }
     private val shortStoryChallengeAdapter: ShortStoryChallengesRecyclerAdapter by lazy {
         ShortStoryChallengesRecyclerAdapter(this)
@@ -148,7 +147,6 @@ class ArticleListingFragment : BaseFragment(), View.OnClickListener,
     private val videoChallengeSelectionVerticalAdapter: VideoChallengeSelectionVerticalAdapter by lazy {
         VideoChallengeSelectionVerticalAdapter(this)
     }
-
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -370,8 +368,6 @@ class ArticleListingFragment : BaseFragment(), View.OnClickListener,
                 val callRecentVideoArticles =
                     vlogsListingAndDetailsApi.vlogsCategoryWiseChallenges
                 callRecentVideoArticles.enqueue(vlogChallengeResponseCallBack)
-
-
             }
         } else {
             filterContentContainer.visibility = View.VISIBLE
@@ -415,7 +411,6 @@ class ArticleListingFragment : BaseFragment(), View.OnClickListener,
         return filter
     }
 
-
     private val shortStroyChallengeCallBack = object : Callback<Topics> {
         override fun onFailure(call: Call<Topics>, t: Throwable) {
             removeProgressDialog()
@@ -433,12 +428,9 @@ class ArticleListingFragment : BaseFragment(), View.OnClickListener,
                     shortStoryChallengeAdapter.notifyDataSetChanged()
                 }
             } catch (e: Exception) {
-
             }
         }
-
     }
-
 
     private val vlogChallengeResponseCallBack: Callback<VlogsCategoryWiseChallengesResponse> =
         object : Callback<VlogsCategoryWiseChallengesResponse> {
@@ -491,8 +483,6 @@ class ArticleListingFragment : BaseFragment(), View.OnClickListener,
                 }
                 if (response.isSuccessful) {
                     try {
-                        //  challengesShimmerLayout.stopShimmerAnimation()
-                        // challengesShimmerLayout.visibility = View.GONE
                         val responseData = response.body()
                         responseData?.child?.let {
                             processChallengesData(it)
@@ -532,14 +522,14 @@ class ArticleListingFragment : BaseFragment(), View.OnClickListener,
         videoChallengeSelectionVerticalAdapter.notifyDataSetChanged()
     }
 
-
     private fun processChallengesData(catWiseChallengeList: ArrayList<Topics>) {
-        articleChallengesList.addAll(
-            catWiseChallengeList
-        )
+        for (i in 0 until catWiseChallengeList.size) {
+            if ("1" == catWiseChallengeList[i].publicVisibility) {
+                articleChallengesList.add(catWiseChallengeList[i])
+            }
+        }
         blogChallengeAdapter.notifyDataSetChanged()
     }
-
 
     private val followingFeedResponseCallback: Callback<MixFeedResponse?> =
         object : Callback<MixFeedResponse?> {
@@ -954,11 +944,8 @@ class ArticleListingFragment : BaseFragment(), View.OnClickListener,
                 }
                 else
                 -> {
-
                 }
             }
-
-
         } else {
             mixfeedList!!.clear()
             mixfeedAdapter.notifyDataSetChanged()
@@ -976,7 +963,6 @@ class ArticleListingFragment : BaseFragment(), View.OnClickListener,
             Constants.KEY_TODAYS_BEST -> {
                 logFilterEvent("TodaysBestScreen")
             }
-
         }
         hitArticleListingApi(sortType)
     }
@@ -1800,8 +1786,6 @@ class ArticleListingFragment : BaseFragment(), View.OnClickListener,
                     dialog.show()
                 }
             }
-
-
         }
     }
 

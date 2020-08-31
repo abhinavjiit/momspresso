@@ -113,6 +113,26 @@ public class ChallengeListingRecycleAdapter extends
                     ContextCompat.getDrawable(holder.likeImageView.getContext(), R.drawable.ic_ss_like));
         }
         holder.authorNameTextView.setText(articleDataModelsNew.get(position).getUserName());
+        setWinnerOrGoldFlag(holder.trophyImageView, articleDataModelsNew.get(position));
+    }
+
+    private void setWinnerOrGoldFlag(ImageView winnerGoldImageView, ArticleListingResult articleListingResult) {
+        try {
+            if ("1".equals(articleListingResult.getWinner()) || "true".equals(articleListingResult.getWinner())) {
+                winnerGoldImageView.setImageResource(R.drawable.ic_trophy);
+                winnerGoldImageView.setVisibility(View.VISIBLE);
+            } else if ("1".equals(articleListingResult.getIsGold()) || "true"
+                    .equals(articleListingResult.getIsGold())) {
+                winnerGoldImageView.setImageResource(R.drawable.ic_star_yellow);
+                winnerGoldImageView.setVisibility(View.VISIBLE);
+            } else {
+                winnerGoldImageView.setVisibility(View.GONE);
+            }
+        } catch (Exception e) {
+            winnerGoldImageView.setVisibility(View.GONE);
+            FirebaseCrashlytics.getInstance().recordException(e);
+            Log.d("MC4kException", Log.getStackTraceString(e));
+        }
     }
 
     @Override
@@ -144,7 +164,7 @@ public class ChallengeListingRecycleAdapter extends
         ImageView shareStoryImageView;
         TextView storyAuthorTextView;
         ImageView logoImageView;
-
+        ImageView trophyImageView;
 
         ChallengeListingViewHolder(View itemView) {
             super(itemView);
@@ -167,6 +187,7 @@ public class ChallengeListingRecycleAdapter extends
             menuItem = itemView.findViewById(R.id.menuItem);
             followAuthorTextView = itemView.findViewById(R.id.followAuthorTextView);
             storyShareCardWidget = itemView.findViewById(R.id.storyShareCardWidget);
+            trophyImageView = itemView.findViewById(R.id.trophyImageView);
             shareStoryImageView = storyShareCardWidget.findViewById(R.id.storyImageView);
             storyAuthorTextView = storyShareCardWidget.findViewById(R.id.storyAuthorTextView);
             logoImageView = storyShareCardWidget.findViewById(R.id.logoImageView);

@@ -126,7 +126,7 @@ public class ArticleCommentsFragment extends BaseFragment implements OnClickList
         }
 
         commentsList = new ArrayList<>();
-        articleCommentsRecyclerAdapter = new ArticleCommentsRecyclerAdapter(getActivity(), this, authorId);
+        articleCommentsRecyclerAdapter = new ArticleCommentsRecyclerAdapter(this, authorId);
         articleCommentsRecyclerAdapter.setData(commentsList);
         commentsRecyclerView.setAdapter(articleCommentsRecyclerAdapter);
 
@@ -780,7 +780,6 @@ public class ArticleCommentsFragment extends BaseFragment implements OnClickList
     public void onRecyclerItemClick(View view, int position) {
         switch (view.getId()) {
             case R.id.topCommentMarkedTextView:
-
                 if (!commentsList.get(position).isTopCommentMarked()) {
                     TopCommentData commentListData = new TopCommentData(commentsList.get(position).getPostId(),
                             commentsList.get(position).getId(), true);
@@ -866,6 +865,7 @@ public class ArticleCommentsFragment extends BaseFragment implements OnClickList
     }
 
     private void markedUnMarkedTopComment(TopCommentData commentListData) {
+        pushTopCommentEvent();
         BaseApplication.getInstance().getRetrofit().create(ArticleDetailsAPI.class).markedTopComment(commentListData)
                 .subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Observer<ResponseBody>() {
@@ -904,6 +904,21 @@ public class ArticleCommentsFragment extends BaseFragment implements OnClickList
             } else if (getActivity() instanceof ParallelFeedActivity) {
                 Utils.shareEventTracking(getActivity(), "Video Detail", "Comment_Android",
                         "VlogDetail_" + eventSuffix);
+            }
+        } catch (Exception e) {
+            FirebaseCrashlytics.getInstance().recordException(e);
+            Log.d("MC4kException", Log.getStackTraceString(e));
+        }
+    }
+
+    private void pushTopCommentEvent() {
+        try {
+            if (getActivity() instanceof ArticleDetailsContainerActivity) {
+                Utils.shareEventTracking(getActivity(), "Article Detail", "TopComment_Android", "AD_TopComment");
+            } else if (getActivity() instanceof ShortStoryContainerActivity) {
+                Utils.shareEventTracking(getActivity(), "100WS Detail", "TopComment_Android", "SD_TopComment");
+            } else if (getActivity() instanceof ParallelFeedActivity) {
+                Utils.shareEventTracking(getActivity(), "Video Detail", "TopComment_Android", "VD_TopComment");
             }
         } catch (Exception e) {
             FirebaseCrashlytics.getInstance().recordException(e);

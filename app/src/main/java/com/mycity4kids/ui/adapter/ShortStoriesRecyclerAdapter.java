@@ -98,6 +98,26 @@ public class ShortStoriesRecyclerAdapter extends
         } else {
             holder.followAuthorTextView.setText(mContext.getResources().getString(R.string.ad_follow_author));
         }
+        setWinnerOrGoldFlag(holder.trophyImageView, articleDataModelsNew.get(position));
+    }
+
+    private void setWinnerOrGoldFlag(ImageView winnerGoldImageView, ArticleListingResult articleListingResult) {
+        try {
+            if ("1".equals(articleListingResult.getWinner()) || "true".equals(articleListingResult.getWinner())) {
+                winnerGoldImageView.setImageResource(R.drawable.ic_trophy);
+                winnerGoldImageView.setVisibility(View.VISIBLE);
+            } else if ("1".equals(articleListingResult.getIsGold()) || "true"
+                    .equals(articleListingResult.getIsGold())) {
+                winnerGoldImageView.setImageResource(R.drawable.ic_star_yellow);
+                winnerGoldImageView.setVisibility(View.VISIBLE);
+            } else {
+                winnerGoldImageView.setVisibility(View.GONE);
+            }
+        } catch (Exception e) {
+            winnerGoldImageView.setVisibility(View.GONE);
+            FirebaseCrashlytics.getInstance().recordException(e);
+            Log.d("MC4kException", Log.getStackTraceString(e));
+        }
     }
 
     @Override
@@ -117,6 +137,7 @@ public class ShortStoriesRecyclerAdapter extends
         ImageView shareStoryImageView;
         TextView storyAuthorTextView;
         ImageView logoImageView;
+        ImageView trophyImageView;
 
         ShortStoriesViewHolder(View itemView) {
             super(itemView);
@@ -132,6 +153,7 @@ public class ShortStoriesRecyclerAdapter extends
             instagramShareImageView = itemView.findViewById(R.id.instagramShareImageView);
             genericShareImageView = itemView.findViewById(R.id.genericShareImageView);
             storyImage = itemView.findViewById(R.id.storyImageView1);
+            trophyImageView = itemView.findViewById(R.id.trophyImageView);
             menuItem = itemView.findViewById(R.id.menuItem);
             storyShareCardWidget = itemView.findViewById(R.id.storyShareCardWidget);
             shareStoryImageView = storyShareCardWidget.findViewById(R.id.storyImageView);

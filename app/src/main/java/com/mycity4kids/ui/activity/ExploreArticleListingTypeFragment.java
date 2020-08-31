@@ -26,20 +26,25 @@ import com.mycity4kids.gtmutils.Utils;
 import com.mycity4kids.models.ExploreTopicsModel;
 import com.mycity4kids.models.ExploreTopicsResponse;
 import com.mycity4kids.preference.SharedPrefUtils;
+import com.mycity4kids.retrofitAPIsInterfaces.ArticleDetailsAPI;
 import com.mycity4kids.retrofitAPIsInterfaces.TopicsCategoryAPI;
 import com.mycity4kids.ui.adapter.ParentTopicsGridAdapter;
 import com.mycity4kids.ui.adapter.TopicsRecyclerGridAdapter;
 import com.mycity4kids.ui.campaign.activity.CampaignContainerActivity;
 import com.mycity4kids.ui.fragment.GroupsViewFragment;
+import com.mycity4kids.ui.livestreaming.LiveStreamResponse;
+import com.mycity4kids.ui.livestreaming.NewLiveStreamingActivity;
 import com.mycity4kids.utils.AppUtils;
 import com.mycity4kids.utils.ArrayAdapterFactory;
 import com.mycity4kids.widget.HeaderGridView;
+import com.mycity4kids.widget.MomspressoButtonWidget;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
+import retrofit2.Response;
 import retrofit2.Retrofit;
 
 /**
@@ -64,18 +69,18 @@ public class ExploreArticleListingTypeFragment extends BaseFragment implements V
     private View view;
     private EditText searchTopicsEditText;
     private TextView exploreCategoriesLabel;
-    //    private TabLayout guideTabLayout;
     private RelativeLayout guideOverLay;
     private TextView guideTopicTextView1;
     private TextView guideTopicTextView2;
     private HorizontalScrollView quickLinkContainer;
-    private TextView todaysBestTextView, editorsPickTextView, /*shortStoryTextView,*/
-            forYouTextView, /*videosTextView,*/
-            recentTextView;
+    private TextView todaysBestTextView, editorsPickTextView, forYouTextView, recentTextView;
     private TextView continueTextView;
     private FrameLayout container;
     private LinearLayout coachmarkMymoneyLinearLayout;
     private RelativeLayout videosContainer, storyContainer, groupsContainer, momsTVContainer, rewardsContainer;
+    private LiveStreamResponse liveStreamResponse;
+    private MomspressoButtonWidget liveStreamIndicator;
+    private LinearLayout sectionContainer;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -92,9 +97,7 @@ public class ExploreArticleListingTypeFragment extends BaseFragment implements V
         guideTopicTextView2 = (TextView) view.findViewById(R.id.guideTopicTextView2);
         todaysBestTextView = (TextView) view.findViewById(R.id.todaysBestTextView);
         editorsPickTextView = (TextView) view.findViewById(R.id.editorsPickTextView);
-//        shortStoryTextView = (TextView) view.findViewById(R.id.shortStoryTextView);
         forYouTextView = (TextView) view.findViewById(R.id.forYouTextView);
-//        videosTextView = (TextView) view.findViewById(R.id.videosTextView);
         recentTextView = (TextView) view.findViewById(R.id.recentTextView);
         continueTextView = (TextView) view.findViewById(R.id.continueTextView);
         coachmarkMyMoney = (View) view.findViewById(R.id.coachmarkMyMoney);
@@ -105,9 +108,7 @@ public class ExploreArticleListingTypeFragment extends BaseFragment implements V
 
         todaysBestTextView.setOnClickListener(this);
         editorsPickTextView.setOnClickListener(this);
-//        shortStoryTextView.setOnClickListener(this);
         forYouTextView.setOnClickListener(this);
-//        videosTextView.setOnClickListener(this);
         recentTextView.setOnClickListener(this);
         coachmarkMyMoney.setOnClickListener(this);
         quickLinkContainer.setOnClickListener(this);
@@ -116,27 +117,32 @@ public class ExploreArticleListingTypeFragment extends BaseFragment implements V
         guideOverLay.setOnClickListener(this);
 
         gridViewHeader = inflater.inflate(R.layout.grid_view_header, null, false);
-        videosContainer = (RelativeLayout) gridViewHeader.findViewById(R.id.videosContainer);
-        storyContainer = (RelativeLayout) gridViewHeader.findViewById(R.id.storyContainer);
-        groupsContainer = (RelativeLayout) gridViewHeader.findViewById(R.id.groupsContainer);
-        momsTVContainer = (RelativeLayout) gridViewHeader.findViewById(R.id.momsTVContainer);
-        rewardsContainer = (RelativeLayout) gridViewHeader.findViewById(R.id.rewardsContainer);
+        sectionContainer = gridViewHeader.findViewById(R.id.sectionContainer);
+        videosContainer = gridViewHeader.findViewById(R.id.videosContainer);
+        storyContainer = gridViewHeader.findViewById(R.id.storyContainer);
+        groupsContainer = gridViewHeader.findViewById(R.id.groupsContainer);
+        momsTVContainer = gridViewHeader.findViewById(R.id.momsTVContainer);
+        rewardsContainer = gridViewHeader.findViewById(R.id.rewardsContainer);
+        liveStreamIndicator = gridViewHeader.findViewById(R.id.liveStreamIndicator);
+        getLiveStream();
 
         videosContainer.setOnClickListener(this);
         storyContainer.setOnClickListener(this);
         groupsContainer.setOnClickListener(this);
-        momsTVContainer.setOnClickListener(this);
+        momsTVContainer.setOnClickListener(view -> {
+            Intent intent = new Intent(getActivity(), FilteredTopicsArticleListingActivity.class);
+            intent.putExtra("selectedTopics", AppConstants.MOMSPRESSO_CATEGORYID);
+            intent.putExtra("displayName", getString(R.string.all_videos_tabbar_momspresso_label));
+            startActivity(intent);
+        });
         rewardsContainer.setOnClickListener(this);
 
         if (SharedPrefUtils.getMyMoney(BaseApplication.getAppContext()) == 0) {
             coachmarkMyMoney.setVisibility(View.GONE);
             coachmarkMymoneyLinearLayout.setVisibility(View.GONE);
             quickLinkContainer.setVisibility(View.VISIBLE);
-
-
         } else {
             quickLinkContainer.setVisibility(View.VISIBLE);
-
         }
 
         try {
@@ -217,6 +223,38 @@ public class ExploreArticleListingTypeFragment extends BaseFragment implements V
         return view;
     }
 
+    private void getLiveStream() {
+        Retrofit retrofit = BaseApplication.getInstance().getRetrofit();
+        ArticleDetailsAPI articleDetailsApi = retrofit.create(ArticleDetailsAPI.class);
+        Call<LiveStreamResponse> call = articleDetailsApi.getVideoId();
+        call.enqueue(new Callback<LiveStreamResponse>() {
+            @Override
+            public void onResponse(Call<LiveStreamResponse> call, Response<LiveStreamResponse> response) {
+                try {
+                    liveStreamResponse = response.body();
+                    if (liveStreamResponse.getData().getStatus() == 2) {
+                        sectionContainer.removeViewAt(2);
+                        sectionContainer.addView(momsTVContainer, 0);
+                        liveStreamIndicator.setVisibility(View.VISIBLE);
+                        momsTVContainer.setOnClickListener(view -> {
+                            Intent intent = new Intent(getActivity(), NewLiveStreamingActivity.class);
+                            startActivity(intent);
+                        });
+                    }
+                } catch (Exception e) {
+                    FirebaseCrashlytics.getInstance().recordException(e);
+                    Log.d("MC4KException", Log.getStackTraceString(e));
+                }
+            }
+
+            @Override
+            public void onFailure(Call<LiveStreamResponse> call, Throwable t) {
+                FirebaseCrashlytics.getInstance().recordException(t);
+                Log.d("MC4KException", Log.getStackTraceString(t));
+            }
+        });
+    }
+
     private void createTopicsData(ExploreTopicsResponse responseData) {
         try {
             mainTopicsList = new ArrayList<>();
@@ -241,19 +279,6 @@ public class ExploreArticleListingTypeFragment extends BaseFragment implements V
             Log.d("MC4kException", Log.getStackTraceString(e));
         }
     }
-
-    @Override
-    public void onStop() {
-        super.onStop();
-        Log.d("ExploreArticle", "onStop");
-    }
-
-    @Override
-    public void onDestroy() {
-        super.onDestroy();
-        Log.d("ExploreArticle", "onDestroy");
-    }
-
 
     @Override
     public void onClick(View v) {
@@ -295,7 +320,6 @@ public class ExploreArticleListingTypeFragment extends BaseFragment implements V
                 startActivity(cityIntent);
             }
             break;
-//            case R.id.shortStoryTextView:
             case R.id.storyContainer: {
                 Intent intent = new Intent(getActivity(), ShortStoriesListingContainerActivity.class);
                 intent.putExtra("parentTopicId", AppConstants.SHORT_STORY_CATEGORYID);
@@ -303,13 +327,6 @@ public class ExploreArticleListingTypeFragment extends BaseFragment implements V
             }
             break;
             case R.id.forYouTextView: {
-
-              /*  Tracker t = ((BaseApplication) getActivity().getApplication()).getTracker(BaseApplication.TrackerName.APP_TRACKER);
-                if (t != null) {
-
-                    t.setScreenName("For You");
-                    t.send(new HitBuilders.EventBuilder().setCategory("ForYouTextClick").setAction("click").setLabel("foryou").build());
-                }*/
                 Utils.pushOpenScreenEvent(getActivity(), "ForYouScreen", dynamoUserId + "");
                 Utils.pushViewQuickLinkArticlesEvent(getActivity(), "TopicScreen", dynamoUserId + "", "ForYouScreen");
                 Intent intent = new Intent(getActivity(), ArticleListingActivity.class);
@@ -344,14 +361,6 @@ public class ExploreArticleListingTypeFragment extends BaseFragment implements V
                 ((DashboardActivity) getActivity()).addFragment(fragment0, mBundle0);
             }
             break;
-            case R.id.momsTVContainer: {
-                Intent intent = new Intent(getActivity(), FilteredTopicsArticleListingActivity.class);
-                intent.putExtra("selectedTopics", AppConstants.MOMSPRESSO_CATEGORYID);
-                intent.putExtra("displayName", getString(R.string.all_videos_tabbar_momspresso_label));
-                startActivity(intent);
-            }
-            break;
-
         }
     }
 

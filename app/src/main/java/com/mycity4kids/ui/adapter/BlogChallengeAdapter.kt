@@ -6,19 +6,18 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
-import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.mycity4kids.R
 import com.mycity4kids.models.Topics
 import com.mycity4kids.vlogs.ContentChallengeSelectionHorizontalAdapter
 import com.squareup.picasso.Picasso
-import kotlinx.android.synthetic.main.blog_challenge_adapter.view.*
 import java.lang.Exception
+import kotlinx.android.synthetic.main.blog_challenge_adapter.view.*
 
 class BlogChallengeAdapter(
     private var challengeList: ArrayList<Topics>,
-    private val listener: ContentChallengeSelectionHorizontalAdapter.RecyclerViewClickListener
-    , private val priviousWeekChallengesListner: BlogsPriviousWeekChallengesClickListener,
+    private val listener: ContentChallengeSelectionHorizontalAdapter.RecyclerViewClickListener,
+    private val priviousWeekChallengesListner: BlogsPriviousWeekChallengesClickListener,
     private val context: Context?
 ) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
@@ -31,11 +30,9 @@ class BlogChallengeAdapter(
         return ViewHolder(view)
     }
 
-
     override fun getItemCount(): Int {
         return challengeList.size ?: 0
     }
-
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
         try {
@@ -63,13 +60,9 @@ class BlogChallengeAdapter(
                     } else {
                         liveTextViewVideoChallenge.visibility = View.GONE
                     }
-
                 }
             }
-
-
         } catch (e: Exception) {
-
         }
     }
 
@@ -92,19 +85,16 @@ class BlogChallengeAdapter(
                         v,
                         challengeList[adapterPosition]
                     )
-
                 }
                 R.id.info -> {
                     priviousWeekChallengesListner.onPriviousWeekChallengeClick(
                         v,
                         challengeList[adapterPosition]
                     )
-
                 }
             }
         }
     }
-
 
     interface BlogsPriviousWeekChallengesClickListener {
         fun onPriviousWeekChallengeClick(
@@ -112,5 +102,4 @@ class BlogChallengeAdapter(
             topics: Topics
         )
     }
-
 }

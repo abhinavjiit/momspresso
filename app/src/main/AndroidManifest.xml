@@ -254,7 +254,7 @@
     <activity
       android:name=".ui.activity.FollowersAndFollowingListActivity"
       android:screenOrientation="portrait"
-      android:theme="@style/EditorTheme"/>
+      android:theme="@style/EditorTheme" />
     <activity
       android:name=".ui.activity.VideoTrimmerActivity"
       android:screenOrientation="portrait" />
@@ -534,6 +534,15 @@
     <activity
       android:name=".ui.activity.SecuritySettingActivity"
       android:screenOrientation="portrait" />
+    <activity
+      android:name=".ui.livestreaming.LiveStreamingActivity"
+      android:configChanges="orientation|screenSize|keyboardHidden|smallestScreenSize|screenLayout" />
+    <activity
+      android:name=".ui.livestreaming.NewLiveStreamingActivity"
+      android:configChanges="orientation|screenSize|keyboardHidden|smallestScreenSize|screenLayout" />
+    <activity
+      android:name=".ui.livestreaming.RoomListActivity"
+      android:configChanges="orientation|screenSize|keyboardHidden|smallestScreenSize|screenLayout" />
 
     <service android:name=".sync.PushTokenService" />
     <service android:name=".sync.FetchAdvertisementInfoService" />

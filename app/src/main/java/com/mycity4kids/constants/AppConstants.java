@@ -160,6 +160,7 @@ public class AppConstants {
     public static final String NOTIFICATION_TYPE_ANNOUNCEMENT = "announcement";
     public static final String NOTIFICATION_TYPE_PERSONAL_INFO = "personal_info";
     public static final String NOTIFICATION_TYPE_ARTICLE_CHALLENGE = "article_challenge_detail";
+    public static final String NOTIFICATION_TYPE_LIVE_STREAM = "live_stream";
 
     public static final String NOTIFICATION_CENTER_APP_SETTINGS = "-1";
     public static final String NOTIFICATION_CENTER_WEB_VIEW = "0";
@@ -202,6 +203,7 @@ public class AppConstants {
     public static final String NOTIFICATION_CENTER_ANNOUNCEMENT = "38";
     public static final String NOTIFICATION_CENTER_PERSONAL_INFO = "39";
     public static final String NOTIFICATION_CENTER_ARTICLE_CHALLENGE = "40";
+    public static final String NOTIFICATION_CENTER_MY_MONEY_EARNINGS = "41";
 
     public static final String VIDEO_STATUS_DRAFT = "0";
     public static final String VIDEO_STATUS_APPROVAL_PENDING = "1";

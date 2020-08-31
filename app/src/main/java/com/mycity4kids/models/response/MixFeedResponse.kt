@@ -91,7 +91,7 @@ data class MixFeedResult(
     @SerializedName("is_auto_published")
     val is_auto_published: Boolean = false,
     @SerializedName("is_gold")
-    val is_gold: Boolean = false,
+    val is_gold: String? = "0",
     @SerializedName("is_group")
     val is_group: Boolean = false,
     @SerializedName("is_popular")
@@ -153,7 +153,7 @@ data class MixFeedResult(
     @SerializedName("view_count")
     var view_count: Int = 0,
     @SerializedName("winner")
-    val winner: Any? = -1,
+    val winner: String? = "0",
     @SerializedName("itemType")
     val itemType: String = "",
     @SerializedName("collectionList")

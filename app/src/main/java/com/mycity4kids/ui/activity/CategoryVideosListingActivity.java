@@ -64,16 +64,16 @@ public class CategoryVideosListingActivity extends BaseActivity implements View.
         setContentView(R.layout.topic_listing_activity);
         root = findViewById(R.id.root);
         ((BaseApplication) getApplication()).setActivity(this);
-        fabAdd = (FloatingActionButton) findViewById(R.id.fabAdd);
+        fabAdd = findViewById(R.id.fabAdd);
         subTopicsList = new ArrayList<>();
         fabAdd.setVisibility(View.VISIBLE);
         getAllMomVlogCategories();
-        toolbar = (Toolbar) findViewById(R.id.toolbar);
-        tabLayout = (TabLayout) findViewById(R.id.tab_layout);
-        topLayerGuideLayout = (FrameLayout) findViewById(R.id.topLayerGuideLayout);
-        viewPager = (ViewPager) findViewById(R.id.pager);
-        toolbarTitleTextView = (TextView) findViewById(R.id.toolbarTitleTextView);
-        imageSortBy = (ImageView) findViewById(R.id.imageSortBy);
+        toolbar = findViewById(R.id.toolbar);
+        tabLayout = findViewById(R.id.tab_layout);
+        topLayerGuideLayout = findViewById(R.id.topLayerGuideLayout);
+        viewPager = findViewById(R.id.pager);
+        toolbarTitleTextView = findViewById(R.id.toolbarTitleTextView);
+        imageSortBy = findViewById(R.id.imageSortBy);
         imageSortBy.setVisibility(View.GONE);
 
         imageSortBy.setOnClickListener(view -> {
@@ -100,7 +100,7 @@ public class CategoryVideosListingActivity extends BaseActivity implements View.
         getSupportActionBar().setDisplayShowHomeEnabled(true);
         selectedTabCategoryId = getIntent().getStringExtra("categoryId");
         if (StringUtils.isNullOrEmpty(selectedTabCategoryId)) {
-            selectedTabCategoryId = "category-eed5fd2777a24bd48ba9a7e1e4dd4b47";
+            selectedTabCategoryId = AppConstants.HOME_VIDEOS_CATEGORYID;
         }
 
         toolbarTitleTextView.setText(getString(R.string.myprofile_section_videos_label));
@@ -121,10 +121,13 @@ public class CategoryVideosListingActivity extends BaseActivity implements View.
                 removeProgressDialog();
                 if (response.isSuccessful() && response.body() != null) {
                     categoriesList = response.body().getChild();
+                    Topics topics = new Topics();
+                    topics.setId(response.body().getId());
+                    topics.setDisplay_name(getString(R.string.all_categories_label));
+                    topics.setChild(new ArrayList<>());
+                    subTopicsList.add(topics);
+
                     for (int i = 0; i < categoriesList.size(); i++) {
-                        // if ("1".equals(categoriesList.get(i).getShowInMenu())) {
-                        // subTopicsList.add(categoriesList.get(i));
-                        // }
                         if (("category-eed5fd2777a24bd48ba9a7e1e4dd4b47").equals(categoriesList.get(i).getId())
                                 || ("category-958b29175e174f578c2d92a925451d4f").equals(categoriesList.get(i).getId())
                                 || ("category-2ce9257cbf4c4794acacacb173feda13").equals(categoriesList.get(i).getId())

@@ -895,11 +895,11 @@ class UserContentAdapter(
     ) {
         try {
             when {
-                data?.winner == "1" || data?.winner as Boolean -> {
+                data?.winner == "1" || data?.winner == "true" -> {
                     winnerOrGoldImageView.visibility = View.VISIBLE
                     winnerOrGoldImageView.setImageResource(R.drawable.ic_trophy)
                 }
-                data.is_gold -> {
+                data?.is_gold == "1" || data?.is_gold == "true" -> {
                     winnerOrGoldImageView.visibility = View.VISIBLE
                     winnerOrGoldImageView.setImageResource(R.drawable.ic_star_yellow)
                 }

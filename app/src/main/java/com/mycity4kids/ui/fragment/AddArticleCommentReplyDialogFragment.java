@@ -33,10 +33,12 @@ import com.mycity4kids.retrofitAPIsInterfaces.SearchArticlesAuthorsAPI;
 import com.mycity4kids.tagging.Mentions;
 import com.mycity4kids.tagging.MentionsResponse;
 import com.mycity4kids.tagging.mentions.MentionSpan;
+import com.mycity4kids.tagging.mentions.Mentionable;
 import com.mycity4kids.tagging.mentions.MentionsEditable;
 import com.mycity4kids.tagging.suggestions.SuggestionsResult;
 import com.mycity4kids.tagging.tokenization.QueryToken;
 import com.mycity4kids.tagging.tokenization.interfaces.QueryTokenReceiver;
+import com.mycity4kids.tagging.ui.MentionsEditText.MentionWatcher;
 import com.mycity4kids.tagging.ui.RichEditorView;
 import com.mycity4kids.ui.ContentCommentReplyNotificationActivity;
 import com.mycity4kids.ui.activity.ArticleDetailsContainerActivity;
@@ -101,6 +103,23 @@ public class AddArticleCommentReplyDialogFragment extends DialogFragment impleme
         actionType = (String) extras.get("action");
         position = extras.getInt("position");
         commentReplyEditText.setQueryTokenReceiver(this);
+        commentReplyEditText.addMentionWatcher(new MentionWatcher() {
+            @Override
+            public void onMentionAdded(@NonNull Mentionable mention, @NonNull String text, int start, int end) {
+                pushTaggingEvent("Tagging");
+            }
+
+            @Override
+            public void onMentionDeleted(@NonNull Mentionable mention, @NonNull String text, int start, int end) {
+
+            }
+
+            @Override
+            public void onMentionPartiallyDeleted(@NonNull Mentionable mention, @NonNull String text, int start,
+                    int end) {
+
+            }
+        });
         if (commentOrReplyData == null) {
             headingTextView.setText(BaseApplication.getAppContext().getString(R.string.short_s_add_comment));
             relativeMainContainer.setVisibility(View.GONE);
@@ -410,6 +429,9 @@ public class AddArticleCommentReplyDialogFragment extends DialogFragment impleme
                         MentionsResponse responseModel = response.body();
                         List<Mentions> suggestions = new ArrayList<>(responseModel.getData().getResult());
                         SuggestionsResult result = new SuggestionsResult(queryToken, suggestions);
+                        if (!commentReplyEditText.isDisplayingSuggestions() && suggestions.size() > 0) {
+                            pushTaggingEvent("DD_Tagging");
+                        }
                         commentReplyEditText.onReceiveSuggestionsResult(result, "dddd");
                     }
                 } catch (Exception e) {
@@ -426,6 +448,31 @@ public class AddArticleCommentReplyDialogFragment extends DialogFragment impleme
         });
 
         return Arrays.asList("dddd");
+    }
+
+    private void pushTaggingEvent(String suffix) {
+        try {
+            if (getActivity() instanceof ArticleDetailsContainerActivity) {
+                Utils.shareEventTracking(getActivity(), "Article Detail", "Tagging_Android", "AD_" + suffix);
+            } else if (getActivity() instanceof ShortStoryContainerActivity) {
+                Utils.shareEventTracking(getActivity(), "100WS Detail", "Tagging_Android", "SD_" + suffix);
+            } else if (getActivity() instanceof ParallelFeedActivity) {
+                Utils.shareEventTracking(getActivity(), "Video Detail", "Tagging_Android", "VD_" + suffix);
+            } else if (getActivity() instanceof ContentCommentReplyNotificationActivity) {
+                if (getArguments() != null) {
+                    if ("0".equals(getArguments().getString("contentType"))) {
+                        Utils.shareEventTracking(getActivity(), "Article Detail", "Tagging_Android", "AD_" + suffix);
+                    } else if ("1".equals(getArguments().getString("contentType"))) {
+                        Utils.shareEventTracking(getActivity(), "100WS Detail", "Tagging_Android", "SD_" + suffix);
+                    } else if ("2".equals(getArguments().getString("contentType"))) {
+                        Utils.shareEventTracking(getActivity(), "Video Detail", "Tagging_Android", "VD_" + suffix);
+                    }
+                }
+            }
+        } catch (Exception e) {
+            FirebaseCrashlytics.getInstance().recordException(e);
+            Log.d("MC4kException", Log.getStackTraceString(e));
+        }
     }
 
     public interface AddComments {

@@ -86,6 +86,10 @@ public class ArticleListingResult implements Parcelable {
     private ArrayList<VlogsListingAndDetailResult> carouselVideoList;
     @SerializedName("isfollowing")
     private String isfollowing = "0";
+    @SerializedName("winner")
+    private String winner = "0";
+    @SerializedName("is_gold")
+    private String isGold = "0";
 
     public ArticleListingResult() {
     }
@@ -418,6 +422,22 @@ public class ArticleListingResult implements Parcelable {
 
     public void setCarouselVideoList(ArrayList<VlogsListingAndDetailResult> carouselVideoList) {
         this.carouselVideoList = carouselVideoList;
+    }
+
+    public String getWinner() {
+        return winner;
+    }
+
+    public void setWinner(String winner) {
+        this.winner = winner;
+    }
+
+    public String getIsGold() {
+        return isGold;
+    }
+
+    public void setIsGold(String isGold) {
+        this.isGold = isGold;
     }
 
     @Override

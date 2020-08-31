@@ -15,6 +15,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.google.firebase.crashlytics.FirebaseCrashlytics;
 import com.mycity4kids.R;
 import com.mycity4kids.constants.AppConstants;
+import com.mycity4kids.models.response.ShortStoryDetailResult;
 import com.mycity4kids.ui.fragment.ShortStoryFragment;
 import com.mycity4kids.utils.AppUtils;
 import com.mycity4kids.utils.DateTimeUtils;
@@ -135,6 +136,7 @@ public class ShortStoriesDetailRecyclerAdapter extends RecyclerView.Adapter<Recy
                     ssViewHolder.likeImageView
                             .setImageDrawable(ContextCompat.getDrawable(context, R.drawable.ic_ss_like));
                 }
+                setWinnerOrGoldFlag(ssViewHolder.trophyImageView, datalist.get(position).getSsResult());
             } else {
                 SSCommentViewHolder ssCommentViewHolder = (SSCommentViewHolder) holder;
                 ssCommentViewHolder.commentorUsernameTextView
@@ -223,6 +225,25 @@ public class ShortStoriesDetailRecyclerAdapter extends RecyclerView.Adapter<Recy
         }
     }
 
+    private void setWinnerOrGoldFlag(ImageView winnerGoldImageView, ShortStoryDetailResult articleListingResult) {
+        try {
+            if ("1".equals(articleListingResult.getWinner()) || "true".equals(articleListingResult.getWinner())) {
+                winnerGoldImageView.setImageResource(R.drawable.ic_trophy);
+                winnerGoldImageView.setVisibility(View.VISIBLE);
+            } else if ("1".equals(articleListingResult.getIsGold()) || "true"
+                    .equals(articleListingResult.getIsGold())) {
+                winnerGoldImageView.setImageResource(R.drawable.ic_star_yellow);
+                winnerGoldImageView.setVisibility(View.VISIBLE);
+            } else {
+                winnerGoldImageView.setVisibility(View.GONE);
+            }
+        } catch (Exception e) {
+            winnerGoldImageView.setVisibility(View.GONE);
+            FirebaseCrashlytics.getInstance().recordException(e);
+            Log.d("MC4kException", Log.getStackTraceString(e));
+        }
+    }
+
     @Override
     public int getItemCount() {
         return datalist == null ? 0 : datalist.size();
@@ -247,6 +268,7 @@ public class ShortStoriesDetailRecyclerAdapter extends RecyclerView.Adapter<Recy
         ImageView shareStoryImageView;
         TextView storyAuthorTextView;
         ImageView logoImageView;
+        ImageView trophyImageView;
 
         ShortStoriesViewHolder(View itemView, RecyclerViewClickListener listener) {
             super(itemView);
@@ -263,6 +285,7 @@ public class ShortStoriesDetailRecyclerAdapter extends RecyclerView.Adapter<Recy
             instagramShareImageView = (ImageView) itemView.findViewById(R.id.instagramShareImageView);
             genericShareImageView = (ImageView) itemView.findViewById(R.id.genericShareImageView);
             menuItem = (ImageView) itemView.findViewById(R.id.menuItem);
+            trophyImageView = itemView.findViewById(R.id.trophyImageView);
             storyShareCardWidget = (StoryShareCardWidget) itemView.findViewById(R.id.storyShareCardWidget);
             shareStoryImageView = (ImageView) storyShareCardWidget.findViewById(R.id.storyImageView);
             storyAuthorTextView = (TextView) storyShareCardWidget.findViewById(R.id.storyAuthorTextView);

@@ -386,6 +386,7 @@ public class ArticleCommentRepliesDialogFragment extends DialogFragment implemen
     }
 
     private void markedUnMarkedTopComment(TopCommentData commentListData) {
+        pushTopCommentEvent();
         BaseApplication.getInstance().getRetrofit().create(ArticleDetailsAPI.class).markedTopComment(commentListData)
                 .subscribeOn(
                         Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(
@@ -412,9 +413,23 @@ public class ArticleCommentRepliesDialogFragment extends DialogFragment implemen
 
                     }
                 });
-
-
     }
+
+    private void pushTopCommentEvent() {
+        try {
+            if (getActivity() instanceof ArticleDetailsContainerActivity) {
+                Utils.shareEventTracking(getActivity(), "Article Detail", "TopComment_Android", "AD_TopComment");
+            } else if (getActivity() instanceof ShortStoryContainerActivity) {
+                Utils.shareEventTracking(getActivity(), "100WS Detail", "TopComment_Android", "SD_TopComment");
+            } else if (getActivity() instanceof ParallelFeedActivity) {
+                Utils.shareEventTracking(getActivity(), "Video Detail", "TopComment_Android", "VD_TopComment");
+            }
+        } catch (Exception e) {
+            FirebaseCrashlytics.getInstance().recordException(e);
+            Log.d("MC4kException", Log.getStackTraceString(e));
+        }
+    }
+
 
     public void updateRepliesList(CommentListData ssComment) {
         if (repliesList != null) {
@@ -490,11 +505,6 @@ public class ArticleCommentRepliesDialogFragment extends DialogFragment implemen
         blockUserModel.setBlocked_user_id(repliesList.get(position).getUserId());
         Call<ResponseBody> call = articleDetailsAPI.blockUserApi(blockUserModel);
         call.enqueue(blockUserCallBack);
-       /* if ("Reply".equals(responseType)) {
-            repliesList.remove(position);
-            commentRepliesRecyclerAdapter.setData(repliesList);
-            commentRepliesRecyclerAdapter.notifyDataSetChanged();
-        }*/
     }
 
     private Callback<ResponseBody> blockUserCallBack = new Callback<ResponseBody>() {
