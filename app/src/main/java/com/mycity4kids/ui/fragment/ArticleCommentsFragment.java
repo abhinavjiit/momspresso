@@ -271,8 +271,6 @@ public class ArticleCommentsFragment extends BaseFragment implements OnClickList
             case R.id.disableStatePostTextView: {
                 if (isValid()) {
                     formatMentionDataForApiRequest();
-
-
                 }
 
             }
@@ -1155,7 +1153,15 @@ public class ArticleCommentsFragment extends BaseFragment implements OnClickList
         addEditCommentOrReplyRequest.setPost_id(articleId);
         addEditCommentOrReplyRequest.setMessage(content);
         addEditCommentOrReplyRequest.setParent_id("0");
-        addEditCommentOrReplyRequest.setType("article");
+        if (contentType.equals("0")) {
+            addEditCommentOrReplyRequest.setType("article");
+        } else if ("1".equals(contentType)) {
+            addEditCommentOrReplyRequest.setType("story");
+
+        } else {
+            addEditCommentOrReplyRequest.setType("video");
+
+        }
         addEditCommentOrReplyRequest.setMentions(mentionsMap);
         Call<CommentListResponse> call = articleDetailsApi.addCommentOrReply(addEditCommentOrReplyRequest);
         call.enqueue(addCommentResponseListener);
