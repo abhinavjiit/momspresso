@@ -43,12 +43,12 @@ import io.reactivex.Observer
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable
 import io.reactivex.schedulers.Schedulers
+import java.util.ArrayList
 import okhttp3.ResponseBody
 import org.json.JSONObject
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
-import java.util.ArrayList
 
 class ContentCommentReplyNotificationActivity : BaseActivity(),
     ArticleCommentsRecyclerAdapter.RecyclerViewClickListener,
@@ -90,7 +90,7 @@ class ContentCommentReplyNotificationActivity : BaseActivity(),
         } else if ("reply" == show) {
             showReplyFragment()
         }
-        articleCommentsRecyclerAdapter = ArticleCommentsRecyclerAdapter(this, this, blogWriterId)
+        articleCommentsRecyclerAdapter = ArticleCommentsRecyclerAdapter(this, blogWriterId)
         val linearLayoutManager = LinearLayoutManager(this)
         commentRecyclerView.layoutManager = linearLayoutManager
         commentRecyclerView.adapter = articleCommentsRecyclerAdapter
@@ -294,6 +294,7 @@ class ContentCommentReplyNotificationActivity : BaseActivity(),
     }
 
     private fun markedUnMarkedTopComment(topCommentData: TopCommentData) {
+        pushTopCommentEvent()
         BaseApplication.getInstance().retrofit.create(ArticleDetailsAPI::class.java).markedTopComment(
             topCommentData
         )
@@ -729,7 +730,35 @@ class ContentCommentReplyNotificationActivity : BaseActivity(),
                     )
                 }
             }
-        } catch (e: java.lang.Exception) {
+        } catch (e: Exception) {
+            FirebaseCrashlytics.getInstance().recordException(e)
+            Log.d("MC4kException", Log.getStackTraceString(e))
+        }
+    }
+
+    private fun pushTopCommentEvent() {
+        try {
+            when (contentType) {
+                "0" -> {
+                    Utils.shareEventTracking(
+                        this, "Article Detail", "TopComment_Android",
+                        "AD_TopComment"
+                    )
+                }
+                "1" -> {
+                    Utils.shareEventTracking(
+                        this, "100WS Detail", "TopComment_Android",
+                        "SD_TopComment"
+                    )
+                }
+                "2" -> {
+                    Utils.shareEventTracking(
+                        this, "Video Detail", "TopComment_Android",
+                        "VD_TopComment"
+                    )
+                }
+            }
+        } catch (e: Exception) {
             FirebaseCrashlytics.getInstance().recordException(e)
             Log.d("MC4kException", Log.getStackTraceString(e))
         }

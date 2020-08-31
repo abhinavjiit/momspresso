@@ -139,7 +139,11 @@ class ArticleChallengeOrTopicSelectionActivity : BaseActivity(),
         }
 
     private fun processChallengesData(catWiseChallengeList: ArrayList<Topics>) {
-        articleChallengesList.addAll(catWiseChallengeList)
+        for (i in 0 until catWiseChallengeList.size) {
+            if ("1" == catWiseChallengeList[i].publicVisibility) {
+                articleChallengesList.add(catWiseChallengeList[i])
+            }
+        }
         articleChallengesRecyclerAdapter.notifyDataSetChanged()
     }
 

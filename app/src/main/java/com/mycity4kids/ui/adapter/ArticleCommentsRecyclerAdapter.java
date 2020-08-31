@@ -22,15 +22,11 @@ import java.util.ArrayList;
 public class ArticleCommentsRecyclerAdapter extends
         RecyclerView.Adapter<ArticleCommentsRecyclerAdapter.CommentsViewHolder> {
 
-    private final Context context;
-    private final LayoutInflater layoutInflater;
     private ArrayList<CommentListData> commentList;
     private RecyclerViewClickListener recyclerViewClickListener;
     private String authorId;
 
-    public ArticleCommentsRecyclerAdapter(Context context, RecyclerViewClickListener listener, String authorId) {
-        this.context = context;
-        layoutInflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+    public ArticleCommentsRecyclerAdapter(RecyclerViewClickListener listener, String authorId) {
         recyclerViewClickListener = listener;
         this.authorId = authorId;
     }
@@ -46,7 +42,7 @@ public class ArticleCommentsRecyclerAdapter extends
 
     @Override
     public CommentsViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View v0 = layoutInflater.inflate(R.layout.ss_comment_item, parent, false);
+        View v0 = LayoutInflater.from(parent.getContext()).inflate(R.layout.ss_comment_item, parent, false);
         return new CommentsViewHolder(v0);
     }
 
@@ -63,10 +59,12 @@ public class ArticleCommentsRecyclerAdapter extends
                 .getDateFromNanoMilliTimestamp(Long.parseLong(commentList.get(position).getCreatedTime())));
         if (commentList.get(position).getReplies() == null || commentList.get(position).getReplies().isEmpty()
                 || commentList.get(position).getRepliesCount() == 0) {
-            commentsViewHolder.replyCommentTextView.setText(context.getString(R.string.reply));
+            commentsViewHolder.replyCommentTextView
+                    .setText(commentsViewHolder.replyCommentTextView.getContext().getString(R.string.reply));
         } else {
             commentsViewHolder.replyCommentTextView.setText(
-                    context.getString(R.string.reply) + "(" + commentList.get(position).getRepliesCount() + ")");
+                    commentsViewHolder.replyCommentTextView.getContext().getString(R.string.reply) + "(" + commentList
+                            .get(position).getRepliesCount() + ")");
         }
         try {
             Picasso.get().load(commentList.get(position).getUserPic().getClientAppMin())
@@ -103,8 +101,9 @@ public class ArticleCommentsRecyclerAdapter extends
             } else {
                 commentsViewHolder.topCommentMarkedTextView.setVisibility(View.VISIBLE);
                 if (commentList.get(position).isTopCommentMarked()) {
-                    commentsViewHolder.topCommentMarkedTextView
-                            .setText(context.getResources().getString(R.string.top_comment_marked_string));
+                    commentsViewHolder.topCommentMarkedTextView.setText(
+                            commentsViewHolder.topCommentMarkedTextView.getContext().getResources()
+                                    .getString(R.string.top_comment_marked_string));
                     Drawable myDrawable = ContextCompat
                             .getDrawable(commentsViewHolder.topCommentMarkedTextView.getContext(),
                                     R.drawable.ic_top_comment_marked_golden);

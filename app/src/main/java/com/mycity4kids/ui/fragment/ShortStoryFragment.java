@@ -726,6 +726,7 @@ public class ShortStoryFragment extends BaseFragment implements View.OnClickList
     }
 
     private void markedUnMarkedTopComment(TopCommentData commentListData) {
+        Utils.shareEventTracking(getActivity(), "100WS Detail", "TopComment_Android", "SD_TopComment");
         BaseApplication.getInstance().getRetrofit().create(ArticleDetailsAPI.class).markedTopComment(commentListData)
                 .subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Observer<ResponseBody>() {

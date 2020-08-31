@@ -287,6 +287,11 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
     private TextView txvArticleTitle3;
     private TextView txvArticleTitle4;
     private TextView txvArticleTitle5;
+    private ImageView winnerGoldImageView1;
+    private ImageView winnerGoldImageView2;
+    private ImageView winnerGoldImageView3;
+    private ImageView winnerGoldImageView4;
+    private ImageView winnerGoldImageView5;
     private TextView viewCountTextView1;
     private TextView viewCountTextView2;
     private TextView viewCountTextView3;
@@ -317,6 +322,11 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
     private ImageView todaysBestImageView3;
     private ImageView todaysBestImageView4;
     private ImageView todaysBestImageView5;
+    private ImageView todaysTrophyImageView1;
+    private ImageView todaysTrophyImageView2;
+    private ImageView todaysTrophyImageView3;
+    private ImageView todaysTrophyImageView4;
+    private ImageView todaysTrophyImageView5;
     private TextView todaysBestArticleTextView1;
     private TextView todaysBestArticleTextView2;
     private TextView todaysBestArticleTextView3;
@@ -415,6 +425,12 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
             todaysBestImageView4 = fragmentView.findViewById(R.id.todaysBestImageView4);
             todaysBestImageView5 = fragmentView.findViewById(R.id.todaysBestImageView5);
 
+            todaysTrophyImageView1 = fragmentView.findViewById(R.id.todaysTrophyImageView1);
+            todaysTrophyImageView2 = fragmentView.findViewById(R.id.todaysTrophyImageView2);
+            todaysTrophyImageView3 = fragmentView.findViewById(R.id.todaysTrophyImageView3);
+            todaysTrophyImageView4 = fragmentView.findViewById(R.id.todaysTrophyImageView4);
+            todaysTrophyImageView5 = fragmentView.findViewById(R.id.todaysTrophyImageView5);
+
             todaysBestArticleTextView1 = fragmentView.findViewById(R.id.todaysBestArticleTextView1);
             todaysBestArticleTextView2 = fragmentView.findViewById(R.id.todaysBestArticleTextView2);
             todaysBestArticleTextView3 = fragmentView.findViewById(R.id.todaysBestArticleTextView3);
@@ -479,6 +495,11 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
             txvArticleTitle3 = fragmentView.findViewById(R.id.txvArticleTitle3);
             txvArticleTitle4 = fragmentView.findViewById(R.id.txvArticleTitle4);
             txvArticleTitle5 = fragmentView.findViewById(R.id.txvArticleTitle5);
+            winnerGoldImageView1 = fragmentView.findViewById(R.id.trophyImageView1);
+            winnerGoldImageView2 = fragmentView.findViewById(R.id.trophyImageView2);
+            winnerGoldImageView3 = fragmentView.findViewById(R.id.trophyImageView3);
+            winnerGoldImageView4 = fragmentView.findViewById(R.id.trophyImageView4);
+            winnerGoldImageView5 = fragmentView.findViewById(R.id.trophyImageView5);
             viewCountTextView1 = fragmentView.findViewById(R.id.viewCountTextView1);
             viewCountTextView2 = fragmentView.findViewById(R.id.viewCountTextView2);
             viewCountTextView3 = fragmentView.findViewById(R.id.viewCountTextView3);
@@ -857,14 +878,14 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
                 setDataIntoTodayBestContainer(todaysBestListData.get(0), todaysBestImageView1,
                         todaysBestArticleTextView1, authorName1, articleViewCountTextView1,
                         articleCommentCountTextView1, articleRecommendationCountTextView1, bodyTextView1,
-                        bookmarkTodaysBestArticle1);
+                        bookmarkTodaysBestArticle1, todaysTrophyImageView1);
             }
             if (todaysBestListData.size() >= 2) {
                 todaysBestContainer2.setVisibility(View.VISIBLE);
                 setDataIntoTodayBestContainer(todaysBestListData.get(1), todaysBestImageView2,
                         todaysBestArticleTextView2, authorName2, articleViewCountTextView2,
                         articleCommentCountTextView2, articleRecommendationCountTextView2, bodyTextView2,
-                        bookmarkTodaysBestArticle2);
+                        bookmarkTodaysBestArticle2, todaysTrophyImageView2);
             }
 
             if (todaysBestListData.size() >= 3) {
@@ -872,7 +893,7 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
                 setDataIntoTodayBestContainer(todaysBestListData.get(2), todaysBestImageView3,
                         todaysBestArticleTextView3, authorName3, articleViewCountTextView3,
                         articleCommentCountTextView3, articleRecommendationCountTextView3, bodyTextView3,
-                        bookmarkTodaysBestArticle3);
+                        bookmarkTodaysBestArticle3, todaysTrophyImageView3);
             }
 
             if (todaysBestListData.size() >= 4) {
@@ -880,14 +901,14 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
                 setDataIntoTodayBestContainer(todaysBestListData.get(3), todaysBestImageView4,
                         todaysBestArticleTextView4, authorName4, articleViewCountTextView4,
                         articleCommentCountTextView4, articleRecommendationCountTextView4, bodyTextView4,
-                        bookmarkTodaysBestArticle4);
+                        bookmarkTodaysBestArticle4, todaysTrophyImageView4);
             }
             if (todaysBestListData.size() >= 5) {
                 todaysBestContainer5.setVisibility(View.VISIBLE);
                 setDataIntoTodayBestContainer(todaysBestListData.get(4), todaysBestImageView5,
                         todaysBestArticleTextView5, authorName5, articleViewCountTextView5,
                         articleCommentCountTextView5, articleRecommendationCountTextView5, bodyTextView5,
-                        bookmarkTodaysBestArticle5);
+                        bookmarkTodaysBestArticle5, todaysTrophyImageView5);
             }
 
         }
@@ -897,7 +918,7 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
 
     private void setDataIntoTodayBestContainer(MixFeedResult dataList, ImageView coverImageView, TextView title,
             TextView authorName, TextView viewCount, TextView commentCount, TextView likeCount, TextView body,
-            ImageView bookmarkImageView) {
+            ImageView bookmarkImageView, ImageView winnerGoldImageView) {
 
         Picasso.get().load(dataList.getImageUrl().getThumbMax())
                 .error(R.drawable.default_article).into(coverImageView);
@@ -921,7 +942,21 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
                     PorterDuff.Mode.SRC_IN);
             bookmarkImageView.setImageDrawable(top);
         }
-
+        try {
+            if ("1".equals(dataList.getWinner()) || "true".equals(dataList.getWinner())) {
+                winnerGoldImageView.setImageResource(R.drawable.ic_trophy);
+                winnerGoldImageView.setVisibility(View.VISIBLE);
+            } else if ("1".equals(dataList.is_gold()) || "true".equals(dataList.is_gold())) {
+                winnerGoldImageView.setImageResource(R.drawable.ic_star_yellow);
+                winnerGoldImageView.setVisibility(View.VISIBLE);
+            } else {
+                winnerGoldImageView.setVisibility(View.GONE);
+            }
+        } catch (Exception e) {
+            winnerGoldImageView.setVisibility(View.GONE);
+            FirebaseCrashlytics.getInstance().recordException(e);
+            Log.d("MC4kException", Log.getStackTraceString(e));
+        }
     }
 
     private void getUsersData() {
@@ -1562,17 +1597,6 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
         Call<ArticleDetailResponse> callBookmark = bookmarFollowingStatusApi
                 .checkFollowingBookmarkStatus(articleId, authorId);
         callBookmark.enqueue(isBookmarkedFollowedResponseCallback);
-    }
-
-    private void hitBookmarkVideoStatusApi() {
-        ArticleDetailRequest articleDetailRequest = new ArticleDetailRequest();
-        articleDetailRequest.setArticleId(articleId);
-        Retrofit retro = BaseApplication.getInstance().getRetrofit();
-        ArticleDetailsAPI bookmarkVideoStatusApi = retro.create(ArticleDetailsAPI.class);
-
-        Call<ArticleDetailResponse> callBookmark = bookmarkVideoStatusApi
-                .checkBookmarkVideoStatus(articleDetailRequest);
-        callBookmark.enqueue(isBookmarkedVideoResponseCallback);
     }
 
     private void hitRelatedArticleApi() {
@@ -2370,6 +2394,7 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
 
 
     private void markedUnMarkedTopComment(TopCommentData commentListData) {
+        Utils.shareEventTracking(getActivity(), "Article Detail", "TopComment_Android", "AD_TopComment");
         BaseApplication.getInstance().getRetrofit().create(ArticleDetailsAPI.class).markedTopComment(commentListData)
                 .subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Observer<ResponseBody>() {
@@ -2575,15 +2600,9 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
             top.setColorFilter(ContextCompat.getColor(bookmarkImageViewNew.getContext(), R.color.app_red),
                     PorterDuff.Mode.SRC_IN);
             bookmarkImageViewNew.setImageDrawable(top);
-            if ("1".equals(todaysBestListData.get(index - 1).isMomspresso())) {
-                Call<AddBookmarkResponse> call = articleDetailsApi
-                        .addVideoWatchLater(articleDetailRequest);
-                call.enqueue(addTodaysBestBookmarkCallback);
-            } else {
-                Call<AddBookmarkResponse> call = articleDetailsApi
-                        .addBookmark(articleDetailRequest);
-                call.enqueue(addTodaysBestBookmarkCallback);
-            }
+            Call<AddBookmarkResponse> call = articleDetailsApi
+                    .addBookmark(articleDetailRequest);
+            call.enqueue(addTodaysBestBookmarkCallback);
         } else {
             DeleteBookmarkRequest deleteBookmarkRequest = new DeleteBookmarkRequest();
             deleteBookmarkRequest.setId(todaysBestListData.get(index - 1).getBookmarkId());
@@ -2593,17 +2612,9 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
             top.setColorFilter(ContextCompat.getColor(bookmarkImageViewNew.getContext(), R.color.grey),
                     PorterDuff.Mode.SRC_IN);
             bookmarkImageViewNew.setImageDrawable(top);
-
-            if ("1".equals(todaysBestListData.get(index - 1).isMomspresso())) {
-                Call<AddBookmarkResponse> call = articleDetailsApi
-                        .deleteVideoWatchLater(deleteBookmarkRequest);
-                call.enqueue(addTodaysBestBookmarkCallback);
-
-            } else {
-                Call<AddBookmarkResponse> call = articleDetailsApi
-                        .deleteBookmark(deleteBookmarkRequest);
-                call.enqueue(addTodaysBestBookmarkCallback);
-            }
+            Call<AddBookmarkResponse> call = articleDetailsApi
+                    .deleteBookmark(deleteBookmarkRequest);
+            call.enqueue(addTodaysBestBookmarkCallback);
         }
     }
 
@@ -3074,43 +3085,24 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
             top.setColorFilter(ContextCompat.getColor(bookmarkImageViewNew.getContext(), R.color.app_red),
                     PorterDuff.Mode.SRC_IN);
             bookmarkImageViewNew.setImageDrawable(top);
-
-            if ("1".equals(isMomspresso)) {
-                Call<AddBookmarkResponse> call = articleDetailsApi
-                        .addVideoWatchLater(articleDetailRequest);
-                call.enqueue(addBookmarkResponseCallback);
-                Utils.pushWatchLaterArticleEvent(getActivity(), "DetailArticleScreen",
-                        userDynamoId + "", articleId, authorId + "~" + author);
-            } else {
-                Call<AddBookmarkResponse> call = articleDetailsApi
-                        .addBookmark(articleDetailRequest);
-                call.enqueue(addBookmarkResponseCallback);
-                Utils.pushBookmarkArticleEvent(getActivity(), "DetailArticleScreen",
-                        userDynamoId + "", articleId, authorId + "~" + author);
-            }
+            Call<AddBookmarkResponse> call = articleDetailsApi
+                    .addBookmark(articleDetailRequest);
+            call.enqueue(addBookmarkResponseCallback);
+            Utils.pushBookmarkArticleEvent(getActivity(), "DetailArticleScreen",
+                    userDynamoId + "", articleId, authorId + "~" + author);
         } else {
             DeleteBookmarkRequest deleteBookmarkRequest = new DeleteBookmarkRequest();
             deleteBookmarkRequest.setId(bookmarkId);
             bookmarkStatus = 0;
-
             Drawable top = ContextCompat.getDrawable(bookmarkImageViewNew.getContext(), R.drawable.ic_bookmark);
             top.setColorFilter(ContextCompat.getColor(bookmarkImageViewNew.getContext(), R.color.grey),
                     PorterDuff.Mode.SRC_IN);
             bookmarkImageViewNew.setImageDrawable(top);
-
-            if ("1".equals(isMomspresso)) {
-                Call<AddBookmarkResponse> call = articleDetailsApi
-                        .deleteVideoWatchLater(deleteBookmarkRequest);
-                call.enqueue(addBookmarkResponseCallback);
-                Utils.pushRemoveWatchLaterArticleEvent(getActivity(), "DetailArticleScreen",
-                        userDynamoId + "", articleId, authorId + "~" + author);
-            } else {
-                Call<AddBookmarkResponse> call = articleDetailsApi
-                        .deleteBookmark(deleteBookmarkRequest);
-                call.enqueue(addBookmarkResponseCallback);
-                Utils.pushUnbookmarkArticleEvent(getActivity(), "DetailArticleScreen",
-                        userDynamoId + "", articleId, authorId + "~" + author);
-            }
+            Call<AddBookmarkResponse> call = articleDetailsApi
+                    .deleteBookmark(deleteBookmarkRequest);
+            call.enqueue(addBookmarkResponseCallback);
+            Utils.pushUnbookmarkArticleEvent(getActivity(), "DetailArticleScreen",
+                    userDynamoId + "", articleId, authorId + "~" + author);
         }
     }
 
@@ -3206,9 +3198,6 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
                 getUsersData();
                 isArticleDetailLoaded = true;
                 hitBookmarkFollowingStatusApi();
-                if ("1".equals(isMomspresso)) {
-                    hitBookmarkVideoStatusApi();
-                }
                 hitRelatedArticleApi();
                 commentUrl = responseData.getCommentsUri();
                 commentMainUrl = responseData.getCommentsUri();
@@ -3390,6 +3379,7 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
                             recommendCountTextView1.setText(dataList.get(0).getLikesCount());
                             commentCountTextView1.setText(dataList.get(0).getCommentsCount());
                             viewCountTextView1.setText(dataList.get(0).getArticleCount());
+                            setWinnerOrGoldFlag(winnerGoldImageView1, dataList.get(0));
                         }
 
                         if (dataList.size() >= 2) {
@@ -3401,6 +3391,7 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
                             recommendCountTextView2.setText(dataList.get(1).getLikesCount());
                             commentCountTextView2.setText(dataList.get(1).getCommentsCount());
                             viewCountTextView2.setText(dataList.get(1).getArticleCount());
+                            setWinnerOrGoldFlag(winnerGoldImageView2, dataList.get(1));
                         }
 
                         if (dataList.size() >= 3) {
@@ -3413,6 +3404,7 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
                             recommendCountTextView3.setText(dataList.get(2).getLikesCount());
                             commentCountTextView3.setText(dataList.get(2).getCommentsCount());
                             viewCountTextView3.setText(dataList.get(2).getArticleCount());
+                            setWinnerOrGoldFlag(winnerGoldImageView3, dataList.get(2));
                         }
 
                         if (dataList.size() >= 4) {
@@ -3425,8 +3417,7 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
                             recommendCountTextView4.setText(dataList.get(3).getLikesCount());
                             commentCountTextView4.setText(dataList.get(3).getCommentsCount());
                             viewCountTextView4.setText(dataList.get(3).getArticleCount());
-
-
+                            setWinnerOrGoldFlag(winnerGoldImageView4, dataList.get(3));
                         }
 
                         if (dataList.size() >= 5) {
@@ -3439,7 +3430,7 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
                             recommendCountTextView5.setText(dataList.get(4).getLikesCount());
                             commentCountTextView5.setText(dataList.get(4).getCommentsCount());
                             viewCountTextView5.setText(dataList.get(4).getArticleCount());
-
+                            setWinnerOrGoldFlag(winnerGoldImageView5, dataList.get(4));
                         }
                     }
                 } else {
@@ -3466,6 +3457,25 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
             handleExceptions(t);
         }
     };
+
+    private void setWinnerOrGoldFlag(ImageView winnerGoldImageView, ArticleListingResult articleListingResult) {
+        try {
+            if ("1".equals(articleListingResult.getWinner()) || "true".equals(articleListingResult.getWinner())) {
+                winnerGoldImageView.setImageResource(R.drawable.ic_trophy);
+                winnerGoldImageView.setVisibility(View.VISIBLE);
+            } else if ("1".equals(articleListingResult.getIsGold()) || "true"
+                    .equals(articleListingResult.getIsGold())) {
+                winnerGoldImageView.setImageResource(R.drawable.ic_star_yellow);
+                winnerGoldImageView.setVisibility(View.VISIBLE);
+            } else {
+                winnerGoldImageView.setVisibility(View.GONE);
+            }
+        } catch (Exception e) {
+            winnerGoldImageView.setVisibility(View.GONE);
+            FirebaseCrashlytics.getInstance().recordException(e);
+            Log.d("MC4kException", Log.getStackTraceString(e));
+        }
+    }
 
     private Callback<ArticleListingResponse> categoryArticleResponseCallback = new Callback<ArticleListingResponse>() {
         @Override
@@ -3890,34 +3900,32 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
                     ArticleDetailResponse responseData = response.body();
                     if (responseData.getCode() == 200 && Constants.SUCCESS
                             .equals(responseData.getStatus())) {
-                        if (!"1".equals(isMomspresso)) {
-                            bookmarkFlag = responseData.getData().getResult().getBookmarkStatus();
-                            if (!isAdded()) {
-                                return;
-                            }
-                            if (!bookmarkFlag) {
-                                bookmarkStatus = 0;
-                                if (getActivity() != null) {
-                                    Drawable top = ContextCompat
-                                            .getDrawable(getActivity(), R.drawable.ic_bookmark);
-                                    top.setColorFilter(ContextCompat.getColor(getActivity(), R.color.grey),
-                                            PorterDuff.Mode.SRC_IN);
-                                    bookmarkImageViewNew.setImageDrawable(top);
-
-                                }
-                            } else {
-                                if (getActivity() != null) {
-                                    Drawable top = ContextCompat
-                                            .getDrawable(getActivity(), R.drawable.ic_bookmarked);
-                                    top.setColorFilter(ContextCompat.getColor(getActivity(), R.color.app_red),
-                                            PorterDuff.Mode.SRC_IN);
-                                    bookmarkImageViewNew.setImageDrawable(top);
-
-                                }
-                                bookmarkStatus = 1;
-                            }
-                            bookmarkId = responseData.getData().getResult().getBookmarkId();
+                        bookmarkFlag = responseData.getData().getResult().getBookmarkStatus();
+                        if (!isAdded()) {
+                            return;
                         }
+                        if (!bookmarkFlag) {
+                            bookmarkStatus = 0;
+                            if (getActivity() != null) {
+                                Drawable top = ContextCompat
+                                        .getDrawable(getActivity(), R.drawable.ic_bookmark);
+                                top.setColorFilter(ContextCompat.getColor(getActivity(), R.color.grey),
+                                        PorterDuff.Mode.SRC_IN);
+                                bookmarkImageViewNew.setImageDrawable(top);
+
+                            }
+                        } else {
+                            if (getActivity() != null) {
+                                Drawable top = ContextCompat
+                                        .getDrawable(getActivity(), R.drawable.ic_bookmarked);
+                                top.setColorFilter(ContextCompat.getColor(getActivity(), R.color.app_red),
+                                        PorterDuff.Mode.SRC_IN);
+                                bookmarkImageViewNew.setImageDrawable(top);
+
+                            }
+                            bookmarkStatus = 1;
+                        }
+                        bookmarkId = responseData.getData().getResult().getBookmarkId();
                         if (userDynamoId.equals(authorId)) {
                             userFollowView.setVisibility(View.GONE);
                         } else {
@@ -3946,61 +3954,6 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
                     handleExceptions(t);
                 }
             };
-
-    private Callback<ArticleDetailResponse> isBookmarkedVideoResponseCallback = new Callback<ArticleDetailResponse>() {
-        @Override
-        public void onResponse(Call<ArticleDetailResponse> call,
-                retrofit2.Response<ArticleDetailResponse> response) {
-            if (null == response.body()) {
-                if (!isAdded()) {
-                    return;
-                }
-                ((ArticleDetailsContainerActivity) getActivity())
-                        .showToast(getString(R.string.server_went_wrong));
-                return;
-            }
-
-            ArticleDetailResponse responseData = response.body();
-            if (responseData.getCode() == 200 && Constants.SUCCESS
-                    .equals(responseData.getStatus())) {
-                bookmarkFlag = responseData.getData().getResult().getBookmarkStatus();
-                if (!isAdded()) {
-                    return;
-                }
-                if (!bookmarkFlag) {
-                    bookmarkStatus = 0;
-                    if (getActivity() != null) {
-                        Drawable top = ContextCompat
-                                .getDrawable(getActivity(), R.drawable.ic_bookmark);
-                        top.setColorFilter(ContextCompat.getColor(getActivity(), R.color.grey), PorterDuff.Mode.SRC_IN);
-                        bookmarkImageViewNew.setImageDrawable(top);
-
-                    }
-                } else {
-                    if (getActivity() != null) {
-                        Drawable top = ContextCompat
-                                .getDrawable(getActivity(), R.drawable.ic_bookmarked);
-                        top.setColorFilter(ContextCompat.getColor(getActivity(), R.color.app_red),
-                                PorterDuff.Mode.SRC_IN);
-                        bookmarkImageViewNew.setImageDrawable(top);
-
-                    }
-                    bookmarkStatus = 1;
-                }
-                bookmarkId = responseData.getData().getResult().getBookmarkId();
-            } else {
-                if (isAdded()) {
-                    ((ArticleDetailsContainerActivity) getActivity())
-                            .showToast(getString(R.string.server_went_wrong));
-                }
-            }
-        }
-
-        @Override
-        public void onFailure(Call<ArticleDetailResponse> call, Throwable t) {
-            handleExceptions(t);
-        }
-    };
 
     private Callback<ResponseBody> updateViewCountResponseCallback = new Callback<ResponseBody>() {
         @Override

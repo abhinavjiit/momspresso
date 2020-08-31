@@ -440,6 +440,28 @@ public class MainArticleRecyclerViewAdapter extends RecyclerView.Adapter<Recycle
                     SharedPrefUtils.getUserDetailModel(mainContext).getDynamoId() + "",
                     data.getId(), data.getUserId() + "~" + data.getUserName());
         });
+        if (holder instanceof FeedViewHolder) {
+            setWinnerOrGoldFlag(((FeedViewHolder) holder).trophyImageView, articleDataModelsNew.get(position));
+        }
+    }
+
+    private void setWinnerOrGoldFlag(ImageView winnerGoldImageView, ArticleListingResult articleListingResult) {
+        try {
+            if ("1".equals(articleListingResult.getWinner()) || "true".equals(articleListingResult.getWinner())) {
+                winnerGoldImageView.setImageResource(R.drawable.ic_trophy);
+                winnerGoldImageView.setVisibility(View.VISIBLE);
+            } else if ("1".equals(articleListingResult.getIsGold()) || "true"
+                    .equals(articleListingResult.getIsGold())) {
+                winnerGoldImageView.setImageResource(R.drawable.ic_star_yellow);
+                winnerGoldImageView.setVisibility(View.VISIBLE);
+            } else {
+                winnerGoldImageView.setVisibility(View.GONE);
+            }
+        } catch (Exception e) {
+            winnerGoldImageView.setVisibility(View.GONE);
+            FirebaseCrashlytics.getInstance().recordException(e);
+            Log.d("MC4kException", Log.getStackTraceString(e));
+        }
     }
 
     private void addShortStoryItem(final RecyclerView.ViewHolder holder, ImageView storyImage, TextView authorNameTV,
@@ -510,6 +532,7 @@ public class MainArticleRecyclerViewAdapter extends RecyclerView.Adapter<Recycle
         TextView recommendCountTextView;
         ImageView bookmarkArticleImageView;
         ImageView watchLaterImageView;
+        ImageView trophyImageView;
 
         FeedViewHolder(View view) {
             super(view);
@@ -523,6 +546,7 @@ public class MainArticleRecyclerViewAdapter extends RecyclerView.Adapter<Recycle
             recommendCountTextView = (TextView) view.findViewById(R.id.recommendCountTextView);
             bookmarkArticleImageView = (ImageView) view.findViewById(R.id.bookmarkArticleImageView);
             watchLaterImageView = (ImageView) view.findViewById(R.id.watchLaterImageView);
+            trophyImageView = (ImageView) view.findViewById(R.id.trophyImageView);
             view.setOnClickListener(this);
         }
 

@@ -37,6 +37,7 @@ import com.mycity4kids.utils.ArrayAdapterFactory;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import okhttp3.ResponseBody;
@@ -336,6 +337,9 @@ public class TopicsListingActivity extends BaseActivity {
                 Utils.pushViewTopicArticlesEvent(this, "TopicArticlesListingScreen",
                         SharedPrefUtils.getUserDetailModel(this).getDynamoId() + "",
                         allTopicsList.get(i).getId() + "~" + allTopicsList.get(i).getDisplay_name());
+                if (AppConstants.ARTICLE_CHALLENGE_CATEGORY_ID.equals(allTopicsList.get(i).getId())) {
+                    Collections.reverse(subTopicsList);
+                }
                 return;
             }
         }

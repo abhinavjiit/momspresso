@@ -63,6 +63,10 @@ public class ShortStoryDetailResult {
     private boolean isLiked;
     @SerializedName("storyImage")
     private String storyImage;
+    @SerializedName("winner")
+    private String winner = "0";
+    @SerializedName("is_gold")
+    private String isGold = "0";
 
     public String getId() {
         return id;
@@ -286,5 +290,21 @@ public class ShortStoryDetailResult {
 
     public void setStoryImage(String storyImage) {
         this.storyImage = storyImage;
+    }
+
+    public String getWinner() {
+        return winner;
+    }
+
+    public void setWinner(String winner) {
+        this.winner = winner;
+    }
+
+    public String getIsGold() {
+        return isGold;
+    }
+
+    public void setIsGold(String isGold) {
+        this.isGold = isGold;
     }
 }

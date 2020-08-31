@@ -494,6 +494,7 @@ class ContentCommentReplyNotificationFragment : BaseFragment(),
     }
 
     private fun markedUnMarkedTopComment(topCommentData: TopCommentData) {
+        pushTopCommentEvent()
         BaseApplication.getInstance().retrofit.create(ArticleDetailsAPI::class.java).markedTopComment(
             topCommentData
         )
@@ -513,6 +514,34 @@ class ContentCommentReplyNotificationFragment : BaseFragment(),
 
                     override fun onComplete() {}
                 })
+    }
+
+    private fun pushTopCommentEvent() {
+        try {
+            when (contentType) {
+                "0" -> {
+                    Utils.shareEventTracking(
+                        activity, "Article Detail", "TopComment_Android",
+                        "AD_TopComment"
+                    )
+                }
+                "1" -> {
+                    Utils.shareEventTracking(
+                        activity, "100WS Detail", "TopComment_Android",
+                        "SD_TopComment"
+                    )
+                }
+                "2" -> {
+                    Utils.shareEventTracking(
+                        activity, "Video Detail", "TopComment_Android",
+                        "VD_TopComment"
+                    )
+                }
+            }
+        } catch (e: Exception) {
+            FirebaseCrashlytics.getInstance().recordException(e)
+            Log.d("MC4kException", Log.getStackTraceString(e))
+        }
     }
 
     fun openAddCommentReplyDialog(commentData: CommentListData) {

@@ -37,7 +37,6 @@
       android:visibility="gone"
       card_view:srcCompat="@drawable/ic_trophy" />
 
-
     <androidx.constraintlayout.widget.ConstraintLayout
       android:id="@+id/followAuthorRelativeContainer"
       android:layout_width="match_parent"

@@ -45,6 +45,7 @@ import com.mycity4kids.ui.activity.GroupDetailsActivity
 import com.mycity4kids.ui.activity.GroupPostDetailActivity
 import com.mycity4kids.ui.activity.GroupsSummaryActivity
 import com.mycity4kids.ui.activity.LoadWebViewActivity
+import com.mycity4kids.ui.activity.MyTotalEarningActivity
 import com.mycity4kids.ui.activity.ParallelFeedActivity
 import com.mycity4kids.ui.activity.ShortStoriesListingContainerActivity
 import com.mycity4kids.ui.activity.ShortStoryChallengeDetailActivity
@@ -833,6 +834,11 @@ class NotificationFragment : BaseFragment(), IMembershipStatus,
                     )
                     startActivity(intent)
                     pushEvent("NOTIFICATION_CENTER_ARTICLE_CHALLENGE")
+                }
+                AppConstants.NOTIFICATION_CENTER_MY_MONEY_EARNINGS -> {
+                    val intent = Intent(activity, MyTotalEarningActivity::class.java)
+                    startActivity(intent)
+                    pushEvent("NOTIFICATION_CENTER_MY_MONEY_EARNINGS")
                 }
                 else -> {
                 }

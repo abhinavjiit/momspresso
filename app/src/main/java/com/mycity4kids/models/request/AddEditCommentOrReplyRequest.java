@@ -18,6 +18,8 @@ public class AddEditCommentOrReplyRequest {
     private String parent_id;
     @SerializedName("type")
     private String type;
+    @SerializedName("is_live")
+    private String is_live;
     @SerializedName("mentions")
     private Map<String, Mentions> mentions;
 
@@ -59,5 +61,13 @@ public class AddEditCommentOrReplyRequest {
 
     public void setMentions(Map<String, Mentions> mentions) {
         this.mentions = mentions;
+    }
+
+    public String getIs_live() {
+        return is_live;
+    }
+
+    public void setIs_live(String is_live) {
+        this.is_live = is_live;
     }
 }

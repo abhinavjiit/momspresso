@@ -63,23 +63,21 @@ public class CategoryVideosTabFragment extends BaseFragment implements View.OnCl
     private FloatingActionsMenu fabMenu;
     private RecyclerView listView;
     private RelativeLayout lodingView;
-    TextView noBlogsTextView;
+    private TextView noBlogsTextView;
     private FloatingActionButton popularSortFab;
     private FloatingActionButton recentSortFab;
     private FloatingActionButton fabSort;
     private FrameLayout frameLayout;
     private View rootLayout;
-    Topics topic;
+    private Topics topic;
     private int sortType = 0;
     private int nextPageNumber;
     private int limit = 10;
     private boolean isLastPageReached = false;
     private boolean isReuqestRunning = false;
     private ProgressBar progressBar;
-    private String fromScreen;
     private ShimmerFrameLayout funnyvideosshimmer;
     private String videoCategory;
-    private MixpanelAPI mixpanel;
     private SwipeRefreshLayout pullToRefresh;
     private RecyclerView scrollView;
     private MomVlogHorizontalRecyclerAdapter momVlogHorizontalRecyclerAdapter;
@@ -99,16 +97,16 @@ public class CategoryVideosTabFragment extends BaseFragment implements View.OnCl
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.funny_videos_tab_fragment, container, false);
         rootLayout = view.findViewById(R.id.rootLayout);
-        listView = (RecyclerView) view.findViewById(R.id.vlogsListView);
-        lodingView = (RelativeLayout) view.findViewById(R.id.relativeLoadingView);
-        noBlogsTextView = (TextView) view.findViewById(R.id.noBlogsTextView);
-        progressBar = (ProgressBar) view.findViewById(R.id.progressBar);
-        frameLayout = (FrameLayout) view.findViewById(R.id.frame_layout);
-        fabMenu = (FloatingActionsMenu) view.findViewById(R.id.fab_menu);
-        popularSortFab = (FloatingActionButton) view.findViewById(R.id.popularSortFAB);
-        recentSortFab = (FloatingActionButton) view.findViewById(R.id.recentSortFAB);
-        fabSort = (FloatingActionButton) view.findViewById(R.id.fabSort);
-        funnyvideosshimmer = (ShimmerFrameLayout) view.findViewById(R.id.shimmer_funny_videos_article);
+        listView = view.findViewById(R.id.vlogsListView);
+        lodingView = view.findViewById(R.id.relativeLoadingView);
+        noBlogsTextView = view.findViewById(R.id.noBlogsTextView);
+        progressBar = view.findViewById(R.id.progressBar);
+        frameLayout = view.findViewById(R.id.frame_layout);
+        fabMenu = view.findViewById(R.id.fab_menu);
+        popularSortFab = view.findViewById(R.id.popularSortFAB);
+        recentSortFab = view.findViewById(R.id.recentSortFAB);
+        fabSort = view.findViewById(R.id.fabSort);
+        funnyvideosshimmer = view.findViewById(R.id.shimmer_funny_videos_article);
         scrollView = view.findViewById(R.id.scrollView);
         frameLayout.getBackground().setAlpha(0);
         pullToRefresh = view.findViewById(R.id.pullToRefresh);
@@ -119,7 +117,6 @@ public class CategoryVideosTabFragment extends BaseFragment implements View.OnCl
             topic = getArguments().getParcelable("currentSubTopic");
         }
 
-        mixpanel = MixpanelAPI.getInstance(BaseApplication.getAppContext(), AppConstants.MIX_PANEL_TOKEN);
         popularSortFab.setOnClickListener(this);
         recentSortFab.setOnClickListener(this);
         subCategoriesTopicList = new ArrayList<>();
@@ -156,12 +153,9 @@ public class CategoryVideosTabFragment extends BaseFragment implements View.OnCl
             @Override
             public void onMenuExpanded() {
                 frameLayout.getBackground().setAlpha(240);
-                frameLayout.setOnTouchListener(new View.OnTouchListener() {
-                    @Override
-                    public boolean onTouch(View v, MotionEvent event) {
-                        fabMenu.collapse();
-                        return true;
-                    }
+                frameLayout.setOnTouchListener((v, event) -> {
+                    fabMenu.collapse();
+                    return true;
                 });
             }
 
@@ -198,14 +192,8 @@ public class CategoryVideosTabFragment extends BaseFragment implements View.OnCl
                     outRect.bottom = 0;
                 } else {
                     if (((GridLayoutManager.LayoutParams) view.getLayoutParams()).getSpanIndex() == 0) {
-                        // int column = position % spanCount; // item column
-                        ;
-                        Log.d("Position____item",
-                                ((GridLayoutManager.LayoutParams) view.getLayoutParams()).getSpanIndex() + "");
                         outRect.right = 4;
                     } else if (((GridLayoutManager.LayoutParams) view.getLayoutParams()).getSpanIndex() == 1) {
-                        Log.d("Position____item1",
-                                ((GridLayoutManager.LayoutParams) view.getLayoutParams()).getSpanIndex() + "");
                         outRect.left = 4;
                     } else {
                         outRect.left = 0;
@@ -263,10 +251,15 @@ public class CategoryVideosTabFragment extends BaseFragment implements View.OnCl
         }
         Retrofit retrofit = BaseApplication.getInstance().getRetrofit();
         VlogsListingAndDetailsAPI vlogsListingAndDetailsApi = retrofit.create(VlogsListingAndDetailsAPI.class);
-        Log.d("VIDEO CATEGORY", "--" + videoCategory);
-        Call<VlogsListingResponse> callRecentVideoArticles = vlogsListingAndDetailsApi
-                .getVlogsList(from, end, sortType, 3, videoCategory);
-        callRecentVideoArticles.enqueue(recentArticleResponseCallback);
+        if (AppConstants.HOME_VIDEOS_CATEGORYID.equals(videoCategory)) {
+            Call<VlogsListingResponse> callRecentVideoArticles = vlogsListingAndDetailsApi
+                    .getVlogsList(from, end, sortType, 3, null);
+            callRecentVideoArticles.enqueue(recentArticleResponseCallback);
+        } else {
+            Call<VlogsListingResponse> callRecentVideoArticles = vlogsListingAndDetailsApi
+                    .getVlogsList(from, end, sortType, 3, videoCategory);
+            callRecentVideoArticles.enqueue(recentArticleResponseCallback);
+        }
     }
 
     private Callback<VlogsListingResponse> recentArticleResponseCallback = new Callback<VlogsListingResponse>() {
@@ -275,7 +268,7 @@ public class CategoryVideosTabFragment extends BaseFragment implements View.OnCl
             progressBar.setVisibility(View.GONE);
             lodingView.setVisibility(View.GONE);
             isReuqestRunning = false;
-            if (response == null || null == response.body()) {
+            if (null == response.body()) {
                 NetworkErrorException nee = new NetworkErrorException(response.raw().toString());
                 FirebaseCrashlytics.getInstance().recordException(nee);
                 return;
@@ -338,24 +331,19 @@ public class CategoryVideosTabFragment extends BaseFragment implements View.OnCl
                 articlesListingAdapter.notifyDataSetChanged();
             }
         } else {
-            // ArrayList<VlogsListingAndDetailResult> forFollow = new ArrayList<>();
             noBlogsTextView.setVisibility(View.GONE);
             if (nextPageNumber == 1) {
                 articleDataModelsNew = dataList;
-                // forFollow = dataList;
                 getSingleChallenge();
             } else {
                 articleDataModelsNew.addAll(dataList);
                 if (dataList.size() >= 10) {
-                    // forFollow = dataList;
-                    // forFollow.add(new VlogsListingAndDetailResult(1));
                     articleDataModelsNew.add(new VlogsListingAndDetailResult(1));
                     articlesListingAdapter.setNewListData(articleDataModelsNew);
                     nextPageNumber = nextPageNumber + 1;
                     articlesListingAdapter.notifyDataSetChanged();
                 }
             }
-            // articlesListingAdapter.setTestData(forFollow);
         }
     }
 
@@ -409,7 +397,7 @@ public class CategoryVideosTabFragment extends BaseFragment implements View.OnCl
         }
     }
 
-    public void hitArticleListingSortByRecent() {
+    private void hitArticleListingSortByRecent() {
         funnyvideosshimmer.startShimmerAnimation();
         funnyvideosshimmer.setVisibility(View.VISIBLE);
         isLastPageReached = false;
@@ -420,7 +408,7 @@ public class CategoryVideosTabFragment extends BaseFragment implements View.OnCl
         hitArticleListingApi();
     }
 
-    public void hitArticleListingSortByPopular() {
+    private void hitArticleListingSortByPopular() {
         funnyvideosshimmer.startShimmerAnimation();
         funnyvideosshimmer.setVisibility(View.VISIBLE);
         isLastPageReached = false;
@@ -437,29 +425,18 @@ public class CategoryVideosTabFragment extends BaseFragment implements View.OnCl
             dialog.getWindow().requestFeature(Window.FEATURE_NO_TITLE);
             dialog.setContentView(R.layout.dialog_sort_by);
             dialog.setCancelable(true);
-            dialog.findViewById(R.id.linearSortByPopular).setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    hitArticleListingSortByPopular();
-                    dialog.dismiss();
-                }
+            dialog.findViewById(R.id.linearSortByPopular).setOnClickListener(view -> {
+                hitArticleListingSortByPopular();
+                dialog.dismiss();
             });
 
-            dialog.findViewById(R.id.linearSortByRecent).setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    hitArticleListingSortByRecent();
-                    dialog.dismiss();
-                }
+            dialog.findViewById(R.id.linearSortByRecent).setOnClickListener(view -> {
+                hitArticleListingSortByRecent();
+                dialog.dismiss();
             });
 
             dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
-            dialog.findViewById(R.id.textUpdate).setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    dialog.dismiss();
-                }
-            });
+            dialog.findViewById(R.id.textUpdate).setOnClickListener(view -> dialog.dismiss());
 
             dialog.show();
         }

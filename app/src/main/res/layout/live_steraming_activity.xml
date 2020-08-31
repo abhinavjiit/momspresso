@@ -1,0 +1,140 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+  xmlns:app="http://schemas.android.com/apk/res-auto"
+  android:layout_width="match_parent"
+  android:layout_height="match_parent"
+  android:orientation="vertical">
+
+  <com.pierfrancescosoffritti.androidyoutubeplayer.core.player.views.YouTubePlayerView
+    android:id="@+id/youTubePlayerView"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_alignParentTop="true"
+    app:enableLiveVideoUi="true" />
+
+  <RelativeLayout
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_alignParentStart="true"
+    android:layout_alignParentTop="true">
+    <ImageView
+      android:id="@+id/backNavigationImageView"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:layout_centerVertical="true"
+      android:padding="10dp"
+      android:src="@drawable/back_arroow"
+      android:tint="@color/white_color" />
+
+    <com.mycity4kids.widget.MomspressoButtonWidget
+      android:id="@+id/liveLabel"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:layout_alignParentTop="true"
+      android:layout_centerVertical="true"
+      android:layout_toEndOf="@+id/backNavigationImageView"
+      app:fb_defaultColor="@color/app_red"
+      app:fb_radius="4dp"
+      app:fb_text="LIVE"
+      app:fb_textColor="@color/white_color" />
+
+    <androidx.cardview.widget.CardView
+      android:id="@+id/userCountWidget"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:layout_alignParentTop="true"
+      android:layout_centerVertical="true"
+      android:layout_marginStart="10dp"
+      android:layout_toEndOf="@+id/liveLabel"
+      app:cardBackgroundColor="@color/trans_gray"
+      app:cardCornerRadius="4dp">
+
+      <TextView
+        android:id="@+id/userCountTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:drawableStart="@drawable/ic_views"
+        android:drawablePadding="4dp"
+        android:paddingStart="4dp"
+        android:paddingEnd="4dp"
+        android:text=""
+        android:textColor="@color/white_color"
+        app:drawableTint="@color/white_color" />
+    </androidx.cardview.widget.CardView>
+  </RelativeLayout>
+
+  <com.google.android.material.tabs.TabLayout
+    android:id="@+id/tabsLayout"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_below="@+id/youTubePlayerView"
+    app:tabIndicatorColor="@color/app_red"
+    app:tabSelectedTextColor="@color/app_red"
+    app:tabTextColor="@color/grey" />
+
+  <androidx.viewpager.widget.ViewPager
+    android:id="@+id/viewPager"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_below="@+id/tabsLayout" />
+
+  <!--  <androidx.recyclerview.widget.RecyclerView-->
+  <!--    android:id="@+id/chatRecyclerView"-->
+  <!--    android:layout_width="match_parent"-->
+  <!--    android:layout_height="match_parent"-->
+  <!--    android:layout_above="@+id/commentContainer"-->
+  <!--    android:layout_below="@+id/youTubePlayerView" />-->
+
+  <!--  <LinearLayout-->
+  <!--    android:id="@+id/commentContainer"-->
+  <!--    android:layout_width="match_parent"-->
+  <!--    android:layout_height="wrap_content"-->
+  <!--    android:layout_alignParentStart="true"-->
+  <!--    android:layout_alignParentBottom="true"-->
+  <!--    android:background="#ECECEC"-->
+  <!--    android:orientation="horizontal"-->
+  <!--    android:paddingStart="10dp"-->
+  <!--    android:paddingTop="8dp"-->
+  <!--    android:paddingEnd="8dp"-->
+  <!--    android:paddingBottom="8dp">-->
+
+  <!--    <com.mikhaellopez.circularimageview.CircularImageView-->
+  <!--      android:id="@+id/commentorImageView"-->
+  <!--      android:layout_width="@dimen/ad_comments_profile_pic_width"-->
+  <!--      android:layout_height="@dimen/ad_comments_profile_pic_width"-->
+  <!--      android:contentDescription="@string/author_img"-->
+  <!--      android:src="@drawable/default_commentor_img"-->
+  <!--      app:civ_border="false"-->
+  <!--      app:civ_shadow="false" />-->
+
+  <!--    <RelativeLayout-->
+  <!--      android:layout_width="match_parent"-->
+  <!--      android:layout_height="wrap_content"-->
+  <!--      android:layout_gravity="center_vertical"-->
+  <!--      android:layout_marginStart="5dp"-->
+  <!--      android:background="@drawable/chat_input_bg">-->
+  <!--      <EditText-->
+  <!--        android:id="@+id/inputEditText"-->
+  <!--        android:layout_width="match_parent"-->
+  <!--        android:layout_height="wrap_content"-->
+  <!--        android:layout_centerVertical="true"-->
+  <!--        android:layout_toStartOf="@+id/addCommentImageView"-->
+  <!--        android:background="@null"-->
+  <!--        android:hint="Leave your question here..."-->
+  <!--        android:maxLines="4"-->
+  <!--        android:paddingStart="8dp"-->
+  <!--        android:scrollbars="vertical"-->
+  <!--        android:textColor="@color/app_dark_black" />-->
+
+  <!--      <ImageView-->
+  <!--        android:id="@+id/addCommentImageView"-->
+  <!--        android:layout_width="wrap_content"-->
+  <!--        android:layout_height="wrap_content"-->
+  <!--        android:layout_alignParentEnd="true"-->
+  <!--        android:layout_centerVertical="true"-->
+  <!--        android:padding="8dp"-->
+  <!--        android:src="@drawable/ic_chat_arrow" />-->
+
+  <!--    </RelativeLayout>-->
+  <!--  </LinearLayout>-->
+</RelativeLayout>

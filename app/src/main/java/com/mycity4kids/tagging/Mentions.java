@@ -16,6 +16,10 @@ public class Mentions implements Mentionable {
     @SerializedName("profileUrl")
     private String profileUrl;
 
+    public Mentions() {
+
+    }
+
     public Mentions(String userId, String name, String userHandle, String profileUrl) {
         this.userId = userId;
         this.name = name;
