@@ -287,6 +287,10 @@
     app:layout_constraintStart_toEndOf="parent"
     app:layout_constraintTop_toBottomOf="@id/toolbar" />
 
+
+
+
+
   <RelativeLayout
     android:id="@+id/taggingCoachmark"
     android:layout_width="match_parent"
@@ -416,7 +420,7 @@
     </androidx.cardview.widget.CardView>
 
     <androidx.cardview.widget.CardView
-      android:id="@+id/r"
+      android:id="@+id/r1"
       android:layout_width="match_parent"
       android:layout_height="wrap_content"
       android:layout_below="@id/l"
@@ -435,7 +439,7 @@
         android:paddingBottom="@dimen/space_8">
 
         <com.mikhaellopez.circularimageview.CircularImageView
-          android:id="@+id/userImageView"
+          android:id="@+id/userImageView1"
           android:layout_width="34dp"
           android:layout_height="34dp"
           android:layout_centerVertical="true"
@@ -448,13 +452,13 @@
           android:layout_centerVertical="true"
           android:layout_marginLeft="10dp"
           android:layout_marginRight="10dp"
-          android:layout_toEndOf="@id/userImageView"
+          android:layout_toEndOf="@id/userImageView1"
           android:background="@drawable/rectangular_border"
           android:gravity="center_vertical"
           android:visibility="visible">
 
           <com.mycity4kids.widget.CustomFontTextView
-            android:id="@+id/typeHere"
+            android:id="@+id/typeHere1"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
@@ -479,7 +483,7 @@
             android:visibility="gone" />
 
           <com.mycity4kids.widget.MomspressoButtonWidget
-            android:id="@+id/disableStatePostTextView"
+            android:id="@+id/disableStatePostTextView1"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentEnd="true"
@@ -526,7 +530,7 @@
       android:id="@+id/followFriendsTextView"
       android:layout_width="match_parent"
       android:layout_height="wrap_content"
-      android:layout_below="@+id/r"
+      android:layout_below="@+id/r1"
       android:layout_marginTop="@dimen/space_10"
       android:gravity="center"
       android:padding="20dp"
