@@ -298,7 +298,7 @@ public class AddArticleTopicsActivityNew extends BaseActivity implements View.On
                     for (int i = 0; i < list.size(); i++) {
                         if (list.get(i).equals(tempList.get(j).getChild().get(k).getId())) {
                             tempList.get(j).getChild().get(k).setIsSelected(true);
-                            modifySelectedTopicContainer("add", tempList.get(j));
+                            modifySelectedTopicContainer("add", tempList.get(j).getChild().get(k));
                         }
                     }
                 }
@@ -410,7 +410,8 @@ public class AddArticleTopicsActivityNew extends BaseActivity implements View.On
                 for (int i = 0; i < selectTopic.get(j).getChild().size(); i++) {
                     if (searchTerm == null || selectTopic.get(j).getChild().get(i).getDisplay_name().toLowerCase()
                             .contains(searchTerm.toLowerCase())) {
-                        LinearLayout ll = (LinearLayout) layoutInflater.inflate(R.layout.topic_follow_unfollow_item, null);
+                        LinearLayout ll = (LinearLayout) layoutInflater
+                                .inflate(R.layout.topic_follow_unfollow_item, null);
                         final TextView tv = ((TextView) ll.getChildAt(0));
                         tv.setText(selectTopic.get(j).getChild().get(i).getDisplay_name().toUpperCase());
                         tv.setTag(selectTopic.get(j).getChild().get(i));
@@ -457,6 +458,12 @@ public class AddArticleTopicsActivityNew extends BaseActivity implements View.On
         chosenTopicsList.clear();
         for (int i = 0; i < topicList.size(); i++) {
             for (int j = 0; j < topicList.get(i).getChild().size(); j++) {
+                if (topicList.get(i).getChild().get(j).getChild().size() == 0) {
+                    if (topicList.get(i).getChild().get(j).isSelected()) {
+                        chosenTopicsList.add(topicList.get(i).getChild().get(j));
+                    }
+                }
+
                 for (int k = 0; k < topicList.get(i).getChild().get(j).getChild().size(); k++) {
                     if (topicList.get(i).getChild().get(j).getChild().get(k).isSelected()) {
                         chosenTopicsList.add(topicList.get(i).getChild().get(j).getChild().get(k));
