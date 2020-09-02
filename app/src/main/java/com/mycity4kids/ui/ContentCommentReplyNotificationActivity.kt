@@ -846,6 +846,7 @@ class ContentCommentReplyNotificationActivity : BaseActivity(),
                 try {
                     val responseData = response.body()
                     if (responseData?.code == 200 && Constants.SUCCESS == responseData.status) {
+                        typeHere.setText("")
                         val commentModel = CommentListData()
                         commentModel.id = responseData.data[0].id
                         commentModel.message = responseData.data[0].message

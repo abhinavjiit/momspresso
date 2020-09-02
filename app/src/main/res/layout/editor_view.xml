@@ -17,10 +17,8 @@
       android:layout_width="wrap_content"
       android:layout_height="wrap_content"
       android:layout_alignEnd="@+id/text_editor"
-      android:layout_alignRight="@+id/text_editor"
       android:layout_alignBottom="@+id/text_editor"
       android:layout_marginEnd="12dp"
-      android:layout_marginRight="12dp"
       android:layout_marginBottom="12dp"
       android:textSize="15sp"
       android:textStyle="bold"
@@ -30,7 +28,6 @@
       android:id="@+id/suggestions_list"
       android:layout_width="match_parent"
       android:layout_height="wrap_content"
-      android:layout_alignParentTop="true"
       android:visibility="gone" />
 
 
