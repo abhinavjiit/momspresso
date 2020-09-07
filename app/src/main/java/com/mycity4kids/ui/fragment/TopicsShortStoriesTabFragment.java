@@ -138,6 +138,9 @@ public class TopicsShortStoriesTabFragment extends BaseFragment implements View.
     private StoryShareCardWidget storyShareCardWidget;
     private ImageView shareStoryImageView;
     private ArticleListingResult sharedStoryItem;
+    private String challengeId;
+    private String tabPosition = "0";
+    private int start = 0;
 
     @Nullable
     @Override
@@ -212,12 +215,22 @@ public class TopicsShortStoriesTabFragment extends BaseFragment implements View.
 
         Bundle extras = getArguments();
         if (extras != null) {
-            jsonMyObject = extras.getString("currentSubTopic");
-
-            currentSubTopic = new Gson().fromJson(jsonMyObject, Topics.class);
-            selectedTopic = currentSubTopic;
+            if (extras.containsKey("currentSubTopic")) {
+                jsonMyObject = extras.getString("currentSubTopic");
+                currentSubTopic = new Gson().fromJson(jsonMyObject, Topics.class);
+                selectedTopic = currentSubTopic;
+            } else if (extras.containsKey("shortStoryChallengeId") && extras.containsKey("position")) {
+                tabPosition = extras.getString("position");
+                challengeId = extras.getString("shortStoryChallengeId");
+                pullToRefresh.setEnabled(false);
+            }
         }
-        hitFilteredTopicsArticleListingApi(sortType);
+        if ("0".equals(tabPosition)) {
+            hitFilteredTopicsArticleListingApi(sortType);
+        } else {
+            writeArticleCell.setVisibility(View.GONE);
+            getWinnerShortStories(start);
+        }
 
         pullToRefresh.setOnRefreshListener(() -> {
             articleListingResults.clear();
@@ -238,7 +251,11 @@ public class TopicsShortStoriesTabFragment extends BaseFragment implements View.
                         if ((visibleItemCount + pastVisiblesItems) >= totalItemCount) {
                             isReuqestRunning = true;
                             lodingView.setVisibility(View.VISIBLE);
-                            hitFilteredTopicsArticleListingApi(sortType);
+                            if ("0".equals(tabPosition)) {
+                                hitFilteredTopicsArticleListingApi(sortType);
+                            } else {
+                                getWinnerShortStories(start);
+                            }
                         }
                     }
                 }
@@ -251,6 +268,18 @@ public class TopicsShortStoriesTabFragment extends BaseFragment implements View.
     @Override
     public void onResume() {
         super.onResume();
+    }
+
+    private void getWinnerShortStories(int start) {
+        if (!ConnectivityUtils.isNetworkEnabled(getActivity())) {
+            ToastUtils.showToast(getActivity(), getString(R.string.error_network));
+            return;
+        }
+        Retrofit retrofit = BaseApplication.getInstance().getRetrofit();
+        TopicsCategoryAPI topicsApi = retrofit.create(TopicsCategoryAPI.class);
+        Call<ArticleListingResponse> filterCall = topicsApi
+                .getWinnerArticleChallenge(start, 10, challengeId, "1");
+        filterCall.enqueue(articleListingResponseCallback);
     }
 
     private void hitFilteredTopicsArticleListingApi(int sortType) {
@@ -266,6 +295,10 @@ public class TopicsShortStoriesTabFragment extends BaseFragment implements View.
         if (selectedTopic != null) {
             Call<ArticleListingResponse> filterCall = topicsApi
                     .getArticlesForCategory(selectedTopic.getId(), sortType, from, from + limit - 1, "0");
+            filterCall.enqueue(articleListingResponseCallback);
+        } else {
+            Call<ArticleListingResponse> filterCall = topicsApi
+                    .getArticlesForCategory(challengeId, sortType, from, from + limit - 1, "0");
             filterCall.enqueue(articleListingResponseCallback);
         }
     }
@@ -283,7 +316,11 @@ public class TopicsShortStoriesTabFragment extends BaseFragment implements View.
             try {
                 ArticleListingResponse responseData = response.body();
                 if (responseData.getCode() == 200 && Constants.SUCCESS.equals(responseData.getStatus())) {
-                    processArticleListingResponse(responseData);
+                    if (tabPosition.equals("0")) {
+                        processArticleListingResponse(responseData);
+                    } else {
+                        processWinnerArticleListingResponse(responseData);
+                    }
                 }
             } catch (Exception e) {
                 FirebaseCrashlytics.getInstance().recordException(e);
@@ -301,6 +338,32 @@ public class TopicsShortStoriesTabFragment extends BaseFragment implements View.
         }
     };
 
+    private void processWinnerArticleListingResponse(ArticleListingResponse responseData) {
+        ArrayList<ArticleListingResult> dataList = responseData.getData().get(0).getResult();
+        if (dataList.size() == 0) {
+            isLastPageReached = false;
+            if (null != articleListingResults && !articleListingResults.isEmpty()) {
+                //No more next results for search from pagination
+                isLastPageReached = true;
+            } else {
+
+                articleListingResults = dataList;
+                recyclerAdapter.setListData(articleListingResults);
+                recyclerAdapter.notifyDataSetChanged();
+            }
+        } else {
+            if (start == 0) {
+                articleListingResults = dataList;
+
+            } else {
+                articleListingResults.addAll(dataList);
+            }
+            recyclerAdapter.setListData(articleListingResults);
+            start = start + 10;
+            recyclerAdapter.notifyDataSetChanged();
+        }
+    }
+
     private void processArticleListingResponse(ArticleListingResponse responseData) {
         ArrayList<ArticleListingResult> dataList = responseData.getData().get(0).getResult();
         if (dataList.size() == 0) {
@@ -309,7 +372,9 @@ public class TopicsShortStoriesTabFragment extends BaseFragment implements View.
                 //No more next results for search from pagination
                 isLastPageReached = true;
             } else {
-                writeArticleCell.setVisibility(View.VISIBLE);
+                if (tabPosition.equals("0")) {
+                    writeArticleCell.setVisibility(View.VISIBLE);
+                }
                 articleListingResults = dataList;
                 recyclerAdapter.setListData(articleListingResults);
                 recyclerAdapter.notifyDataSetChanged();
@@ -402,8 +467,13 @@ public class TopicsShortStoriesTabFragment extends BaseFragment implements View.
                 intent.putExtra(Constants.AUTHOR_ID, articleListingResults.get(position).getUserId());
                 intent.putExtra(Constants.BLOG_SLUG, articleListingResults.get(position).getBlogPageSlug());
                 intent.putExtra(Constants.TITLE_SLUG, articleListingResults.get(position).getTitleSlug());
-                intent.putExtra(Constants.ARTICLE_OPENED_FROM,
-                        "" + currentSubTopic.getParentName());
+                if (currentSubTopic != null) {
+                    intent.putExtra(Constants.ARTICLE_OPENED_FROM,
+                            "" + currentSubTopic.getParentName());
+                } else {
+                    intent.putExtra(Constants.ARTICLE_OPENED_FROM,
+                            "" + "ShortStoryChallenge");
+                }
                 intent.putExtra(Constants.FROM_SCREEN, "TopicsShortStoryTabFragment");
                 intent.putExtra(Constants.AUTHOR,
                         articleListingResults.get(position).getUserId() + "~" + articleListingResults.get(position)

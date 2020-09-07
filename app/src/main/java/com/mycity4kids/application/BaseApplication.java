@@ -16,6 +16,7 @@ import com.google.android.libraries.places.api.Places;
 import com.google.firebase.crashlytics.FirebaseCrashlytics;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.jakewharton.retrofit2.adapter.kotlin.coroutines.CoroutineCallAdapterFactory;
 import com.jakewharton.threetenabp.AndroidThreeTen;
 import com.mycity4kids.BuildConfig;
 import com.mycity4kids.MessageEvent;
@@ -343,6 +344,7 @@ public class BaseApplication extends Application {
                 .baseUrl(baseUrl)
                 .addConverterFactory(buildGsonConverter())
                 .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
+                .addCallAdapterFactory(CoroutineCallAdapterFactory.create())
                 .client(client)
                 .build();
         return retrofit;

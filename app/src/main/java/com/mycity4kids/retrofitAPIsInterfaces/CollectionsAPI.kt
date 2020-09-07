@@ -6,6 +6,7 @@ import com.mycity4kids.models.collectionsModels.FollowCollectionRequestModel
 import com.mycity4kids.models.collectionsModels.TutorialCollectionsListModel
 import com.mycity4kids.models.collectionsModels.UpdateCollectionRequestModel
 import com.mycity4kids.models.collectionsModels.UserCollectionsListModel
+import com.mycity4kids.models.response.ArticleListingResponse
 import com.mycity4kids.models.response.BaseResponseGeneric
 import com.mycity4kids.models.response.FollowUnfollowUserResponse
 import com.mycity4kids.models.response.MixFeedResponse
@@ -102,4 +103,13 @@ interface CollectionsAPI {
 
     @POST("/v1/collectionItem/addItems/")
     fun addMultipleCollectionItem(@Body multipleCollectionItems: ArrayList<UpdateCollectionRequestModel>): Call<BaseResponseGeneric<AddCollectionRequestModel>>
+
+
+    @GET("/winner/content/")
+    suspend fun getWinnerArticleChallenge(
+        @Query("start") start: Int,
+        @Query("size") size: Int,
+        @Query("category_id") category_id: String?,
+        @Query("content_type") content_type: String?
+    ): ArticleListingResponse?
 }

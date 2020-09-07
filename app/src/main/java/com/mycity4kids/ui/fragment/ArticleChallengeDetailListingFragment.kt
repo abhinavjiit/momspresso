@@ -22,13 +22,18 @@ import com.mycity4kids.models.response.ArticleListingResponse
 import com.mycity4kids.models.response.ArticleListingResult
 import com.mycity4kids.preference.SharedPrefUtils
 import com.mycity4kids.retrofitAPIsInterfaces.ArticleDetailsAPI
+import com.mycity4kids.retrofitAPIsInterfaces.CollectionsAPI
 import com.mycity4kids.retrofitAPIsInterfaces.TopicsCategoryAPI
 import com.mycity4kids.ui.activity.ArticleDetailsContainerActivity
 import com.mycity4kids.ui.adapter.ArticleChallengeListingAdapter
-import java.util.ArrayList
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.async
+import kotlinx.coroutines.launch
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
+import java.util.ArrayList
 
 class ArticleChallengeDetailListingFragment : BaseFragment(),
     ArticleChallengeListingAdapter.RecyclerViewItemClickListener {
@@ -47,6 +52,8 @@ class ArticleChallengeDetailListingFragment : BaseFragment(),
     private lateinit var loadingView: RelativeLayout
     private lateinit var shimmer1: ShimmerFrameLayout
     private lateinit var noArticleTextView: TextView
+    private var tabPosition: String? = null
+    private var start = 0
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -60,14 +67,21 @@ class ArticleChallengeDetailListingFragment : BaseFragment(),
         shimmer1 = view.findViewById(R.id.shimmer1)
         noArticleTextView = view.findViewById(R.id.noArticleTextView)
         articleChallengeId = arguments?.getString("articleChallengeId")
+        tabPosition = arguments?.getString("position")
         articleListingResults = ArrayList()
         val llm = LinearLayoutManager(activity)
         recyclerViewArticleChallengeListing.layoutManager = llm
-        adapter = ArticleChallengeListingAdapter(this)
+        adapter = if ("1" == tabPosition)
+            ArticleChallengeListingAdapter(this)
+        else
+            ArticleChallengeListingAdapter(this, "winnerTab")
         recyclerViewArticleChallengeListing.adapter = adapter
         adapter.setListData(articleListingResults!!)
         adapter.notifyDataSetChanged()
-        getArticleChallengeListing
+        if ("1" == tabPosition)
+            getArticleChallengeListing
+        else
+            getArticleChallengeWinnersListing
 
         recyclerViewArticleChallengeListing.addOnScrollListener(object :
             RecyclerView.OnScrollListener() {
@@ -80,7 +94,10 @@ class ArticleChallengeDetailListingFragment : BaseFragment(),
                         if (visibleItemCount + pastVisiblesItems >= totalItemCount) {
                             isRequestingRunning = true
                             loadingView.visibility = View.VISIBLE
-                            getArticleChallengeListing
+                            if ("1" == tabPosition)
+                                getArticleChallengeListing
+                            else
+                                getArticleChallengeWinnersListing
                         }
                     }
                 }
@@ -102,6 +119,45 @@ class ArticleChallengeDetailListingFragment : BaseFragment(),
                 SharedPrefUtils.getLanguageFilters(BaseApplication.getAppContext())
             )
             call.enqueue(articleListing)
+        }
+
+    private val getArticleChallengeWinnersListing: Unit
+        get() {
+            CoroutineScope(Dispatchers.IO).launch {
+                val ret = BaseApplication.getInstance().retrofit
+                val topicsCategoryAPI = ret.create(CollectionsAPI::class.java)
+                val responseData =
+                    async {
+                        topicsCategoryAPI.getWinnerArticleChallenge(
+                            start,
+                            10,
+                            articleChallengeId,
+                            "0"
+                        )
+                    }
+                try {
+                    val response = responseData.await()
+                    launch(Dispatchers.Main)
+                    {
+                        isRequestingRunning = false
+                        if (loadingView.visibility == View.VISIBLE) {
+                            loadingView.visibility = View.GONE
+                        }
+                        if (response?.code == 200 && response.status == Constants.SUCCESS) {
+                            processWinnerArticleListingResponse(response)
+                            shimmer1.stopShimmerAnimation()
+                            shimmer1.visibility = View.GONE
+                        }
+                    }
+                } catch (e: Exception) {
+                    FirebaseCrashlytics.getInstance().recordException(e)
+                    Log.d("MC4KException", Log.getStackTraceString(e))
+                } catch (t: Throwable) {
+                    FirebaseCrashlytics.getInstance().recordException(t)
+                    Log.d("MC4KException", Log.getStackTraceString(t))
+                }
+
+            }
         }
 
     private var articleListing = object : Callback<ArticleListingResponse> {
@@ -135,6 +191,32 @@ class ArticleChallengeDetailListingFragment : BaseFragment(),
         }
     }
 
+    private fun processWinnerArticleListingResponse(response: ArticleListingResponse) {
+        val dataList: ArrayList<ArticleListingResult> =
+            response.data[0].result
+
+        if (dataList.size == 0) {
+            isLastPageReached = false
+            if (null != articleListingResults && articleListingResults!!.isNotEmpty()) {
+                isLastPageReached = true
+            } else {
+                noArticleTextView.visibility = View.VISIBLE
+                articleListingResults = dataList
+                adapter.notifyDataSetChanged()
+            }
+        } else {
+            noArticleTextView.visibility = View.GONE
+            if (start == 0) {
+                articleListingResults = dataList
+            } else {
+                articleListingResults?.addAll(dataList)
+            }
+            start += 10
+            adapter.setListData(articleListingResults!!)
+            adapter.notifyDataSetChanged()
+        }
+    }
+
     private fun processArticleListingResponse(response: ArticleListingResponse) {
         val dataList: ArrayList<ArticleListingResult> =
             response.data[0].result
@@ -165,7 +247,10 @@ class ArticleChallengeDetailListingFragment : BaseFragment(),
         when (view.id) {
             R.id.articleItemView -> {
                 val intent = Intent(activity, ArticleDetailsContainerActivity::class.java)
-                intent.putExtra(Constants.ARTICLE_ID, articleListingResults?.get(position)?.id)
+                intent.putExtra(
+                    Constants.ARTICLE_ID,
+                    articleListingResults?.get(position)?.id
+                )
                 startActivity(intent)
             }
             R.id.bookmarkArticleImageView -> {
@@ -173,7 +258,8 @@ class ArticleChallengeDetailListingFragment : BaseFragment(),
                 val articleDetailsApi = ret.create(ArticleDetailsAPI::class.java)
                 if (articleListingResults?.get(position)?.is_bookmark == "0") {
                     val articleDetailRequest = ArticleDetailRequest()
-                    articleDetailRequest.articleId = articleListingResults?.get(position)?.id
+                    articleDetailRequest.articleId =
+                        articleListingResults?.get(position)?.id
                     articleListingResults?.get(position)?.is_bookmark = "1"
                     adapter.setListData(articleListingResults!!)
                     adapter.notifyDataSetChanged()
