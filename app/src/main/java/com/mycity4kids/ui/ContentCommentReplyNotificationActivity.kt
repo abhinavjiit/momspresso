@@ -1,10 +1,12 @@
 package com.mycity4kids.ui
 
 import android.accounts.NetworkErrorException
+import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.view.View
+import android.view.inputmethod.InputMethodManager
 import android.widget.RelativeLayout
 import android.widget.TextView
 import android.widget.Toast
@@ -28,7 +30,13 @@ import com.mycity4kids.models.response.LikeReactionModel
 import com.mycity4kids.preference.SharedPrefUtils
 import com.mycity4kids.profile.UserProfileActivity
 import com.mycity4kids.retrofitAPIsInterfaces.ArticleDetailsAPI
+import com.mycity4kids.retrofitAPIsInterfaces.SearchArticlesAuthorsAPI
 import com.mycity4kids.tagging.Mentions
+import com.mycity4kids.tagging.MentionsResponse
+import com.mycity4kids.tagging.suggestions.SuggestionsResult
+import com.mycity4kids.tagging.tokenization.QueryToken
+import com.mycity4kids.tagging.tokenization.interfaces.QueryTokenReceiver
+import com.mycity4kids.tagging.ui.RichEditorView
 import com.mycity4kids.ui.activity.ArticleDetailsContainerActivity
 import com.mycity4kids.ui.activity.ParallelFeedActivity
 import com.mycity4kids.ui.activity.ShortStoryContainerActivity
@@ -38,21 +46,24 @@ import com.mycity4kids.ui.fragment.CommentOptionsDialogFragment
 import com.mycity4kids.ui.fragment.ContentCommentReplyNotificationFragment
 import com.mycity4kids.ui.fragment.ReportContentDialogFragment
 import com.mycity4kids.utils.EndlessScrollListener
+import com.mycity4kids.utils.StringUtils
 import com.mycity4kids.utils.ToastUtils
+import com.mycity4kids.widget.MomspressoButtonWidget
 import io.reactivex.Observer
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable
 import io.reactivex.schedulers.Schedulers
-import java.util.ArrayList
 import okhttp3.ResponseBody
 import org.json.JSONObject
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
+import java.util.ArrayList
+import java.util.HashMap
 
 class ContentCommentReplyNotificationActivity : BaseActivity(),
     ArticleCommentsRecyclerAdapter.RecyclerViewClickListener,
-    CommentOptionsDialogFragment.ICommentOptionAction, View.OnClickListener {
+    CommentOptionsDialogFragment.ICommentOptionAction, View.OnClickListener, QueryTokenReceiver {
 
     private lateinit var commentToolbarTextView: TextView
     private lateinit var commentRecyclerView: RecyclerView
@@ -68,6 +79,9 @@ class ContentCommentReplyNotificationActivity : BaseActivity(),
     private var blogWriterId: String? = null
     private lateinit var taggingCoachmark: RelativeLayout
     private lateinit var topCommentCoachMark: View
+    private lateinit var typeHere: RichEditorView
+    private lateinit var disableStatePostTextView: MomspressoButtonWidget
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.content_comment_reply_notification_activity)
@@ -77,6 +91,8 @@ class ContentCommentReplyNotificationActivity : BaseActivity(),
         rLayout = findViewById(R.id.rLayout)
         taggingCoachmark = findViewById(R.id.taggingCoachmark)
         topCommentCoachMark = findViewById(R.id.topCommentCoachMark)
+        typeHere = findViewById(R.id.typeHere)
+        disableStatePostTextView = findViewById(R.id.disableStatePostTextView)
         contentType = intent?.getStringExtra("contentType")
         articleId = intent?.getStringExtra("articleId")
         replyId = intent?.getStringExtra("replyId")
@@ -102,6 +118,7 @@ class ContentCommentReplyNotificationActivity : BaseActivity(),
                 getComments("comment")
             }
         })
+
         if (!SharedPrefUtils.isCoachmarksShownFlag(
                 BaseApplication.getAppContext(),
                 "taggingCoachmark"
@@ -118,8 +135,21 @@ class ContentCommentReplyNotificationActivity : BaseActivity(),
             }
         }
 
+
+        val inputMethodManager =
+            getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+        inputMethodManager.toggleSoftInput(
+            InputMethodManager.SHOW_FORCED,
+            0
+        )
+        typeHere.setMaxLines()
+        typeHere.displayTextCounter(false)
+        typeHere.requestFocus()
+        typeHere.setQueryTokenReceiver(this)
         commentToolbarTextView.setOnClickListener(this)
         rLayout.setOnClickListener(this)
+        typeHere.setOnClickListener(this)
+        disableStatePostTextView.setOnClickListener(this)
         taggingCoachmark.setOnClickListener(this)
         topCommentCoachMark.setOnClickListener(this)
     }
@@ -705,6 +735,10 @@ class ContentCommentReplyNotificationActivity : BaseActivity(),
                     topCommentCoachMark.visibility = View.VISIBLE
                 }
             }
+        } else if (v?.id == R.id.disableStatePostTextView) {
+            if (isValid()) {
+                formatMentionDataForApiRequest()
+            }
         }
     }
 
@@ -812,6 +846,7 @@ class ContentCommentReplyNotificationActivity : BaseActivity(),
                 try {
                     val responseData = response.body()
                     if (responseData?.code == 200 && Constants.SUCCESS == responseData.status) {
+                        typeHere.setText("")
                         val commentModel = CommentListData()
                         commentModel.id = responseData.data[0].id
                         commentModel.message = responseData.data[0].message
@@ -834,6 +869,7 @@ class ContentCommentReplyNotificationActivity : BaseActivity(),
                         commentList?.let {
                             articleCommentsRecyclerAdapter.setData(it)
                             articleCommentsRecyclerAdapter.notifyDataSetChanged()
+                            typeHere.setText("")
                         }
                     } else {
                         if (responseData?.code == 401) {
@@ -872,4 +908,204 @@ class ContentCommentReplyNotificationActivity : BaseActivity(),
                 Log.d("MC4kException", Log.getStackTraceString(t))
             }
         }
+
+    private fun isValid(): Boolean {
+        if (StringUtils.isNullOrEmpty(typeHere.text.toString())) {
+            Toast.makeText(
+                this,
+                getString(R.string.ad_comments_toast_empty_comment),
+                Toast.LENGTH_LONG
+            )
+                .show()
+
+            return false
+        }
+        return true
+    }
+
+    private fun formatMentionDataForApiRequest() {
+        val mentionsMap: MutableMap<String, Mentions> =
+            HashMap()
+        val commentBody = StringBuilder()
+        try {
+            val mentionsEditable = typeHere.text
+            val marker: MutableList<MentionIndex> =
+                ArrayList()
+            marker.add(MentionIndex(0, null))
+            val mentionsList = typeHere.mentionSpans
+            for (i in mentionsList.indices) {
+                val mention = mentionsList[i].mention as Mentions
+                marker.add(
+                    MentionIndex(
+                        mentionsEditable.getSpanStart(mentionsList[i]),
+                        mention
+                    )
+                )
+                mentionsMap[mention.userId] = mention
+            }
+            marker.add(
+                MentionIndex(
+                    mentionsEditable.length,
+                    null
+                )
+            )
+            marker.sort()
+            val splittedComment =
+                ArrayList<MentionIndex>()
+            for (i in 0 until marker.size - 1) {
+                val value = mentionsEditable
+                    .subSequence(marker[i].index, marker[i + 1].index)
+                splittedComment.add(
+                    MentionIndex(
+                        value,
+                        marker[i].mention
+                    )
+                )
+            }
+            for (i in splittedComment.indices) {
+                if (splittedComment[i].mention != null) {
+                    commentBody.append(
+                        org.apache.commons.lang3.StringUtils
+                            .replaceFirst(
+                                splittedComment[i].charSequence.toString(),
+                                splittedComment[i].mention?.name,
+                                "[~userId:" + splittedComment[i].mention?.userId + "]"
+                            )
+                    )
+                } else {
+                    commentBody.append(splittedComment[i].charSequence)
+                }
+            }
+        } catch (e: java.lang.Exception) {
+            FirebaseCrashlytics.getInstance().recordException(e)
+            Log.d("MC4kException", Log.getStackTraceString(e))
+        }
+        addComment(commentBody.toString(), mentionsMap)
+
+        /* Fragment parentFragment = getParentFragment();
+        if ("EDIT_COMMENT".equals(actionType)) {
+            if (parentFragment instanceof ArticleCommentsFragment) {
+                ((ArticleCommentsFragment) getParentFragment())
+                        .editComment(String.valueOf(commentBody), commentOrReplyData.getId(), position, mentionsMap);
+            } else if (parentFragment instanceof ArticleDetailsFragment) {
+                ((ArticleDetailsFragment) getParentFragment())
+                        .editComment(String.valueOf(commentBody), commentOrReplyData.getId(), position, mentionsMap);
+            } else if (parentFragment instanceof ContentCommentReplyNotificationFragment) {
+                ((ContentCommentReplyNotificationFragment) getParentFragment())
+                        .editComment(String.valueOf(commentBody), commentOrReplyData.getId(), position, mentionsMap);
+            } else if (getActivity() != null
+                    && getActivity() instanceof ContentCommentReplyNotificationActivity) {
+                ((ContentCommentReplyNotificationActivity) getActivity())
+                        .editComment(String.valueOf(commentBody), commentOrReplyData.getId(), position, mentionsMap);
+            }
+        } else if ("EDIT_REPLY".equals(actionType)) {
+            Fragment fragment = getParentFragment();
+            if (fragment instanceof ArticleCommentsFragment) {
+                ((ArticleCommentsFragment) getParentFragment())
+                        .editReply(String.valueOf(commentBody), commentOrReplyData.getParentCommentId(),
+                                commentOrReplyData.getId(), mentionsMap);
+            } else if (fragment instanceof ArticleCommentRepliesDialogFragment) {
+                Fragment parentOfParentFragment = fragment.getParentFragment();
+                if (parentOfParentFragment instanceof ArticleCommentsFragment) {
+                    ((ArticleCommentsFragment) parentOfParentFragment)
+                            .editReply(String.valueOf(commentBody), commentOrReplyData.getParentCommentId(),
+                                    commentOrReplyData.getId(), mentionsMap);
+                } else if (parentOfParentFragment instanceof ArticleDetailsFragment) {
+                    ((ArticleDetailsFragment) parentOfParentFragment)
+                            .editReply(String.valueOf(commentBody), commentOrReplyData.getParentCommentId(),
+                                    commentOrReplyData.getId(), mentionsMap);
+                }
+            } else if (fragment instanceof ContentCommentReplyNotificationFragment) {
+                ((ContentCommentReplyNotificationFragment) getParentFragment())
+                        .editReply(String.valueOf(commentBody), commentOrReplyData.getParentCommentId(),
+                                commentOrReplyData.getId(), position, commentOrReplyData.getMentions());
+            }
+        } else {
+            if (commentOrReplyData == null) {
+                if (getActivity() != null && getActivity() instanceof ContentCommentReplyNotificationActivity) {
+                    ((ContentCommentReplyNotificationActivity) getActivity())
+                            .addComment(String.valueOf(commentBody), mentionsMap);
+                } else {
+                    ((AddComments) this.getParentFragment()).addComments(String.valueOf(commentBody), mentionsMap);
+                }
+            } else {
+                if (getParentFragment() instanceof ArticleCommentsFragment) {
+                    ((ArticleCommentsFragment) getParentFragment())
+                            .addReply(String.valueOf(commentBody), commentOrReplyData.getId(), mentionsMap);
+                } else if (getParentFragment() instanceof ContentCommentReplyNotificationFragment) {
+                    ((ContentCommentReplyNotificationFragment) getParentFragment())
+                            .addReply(String.valueOf(commentBody), commentOrReplyData.getId(), mentionsMap);
+                } else if (getActivity() != null
+                        && (getActivity()) instanceof ContentCommentReplyNotificationActivity) {
+                    ((ContentCommentReplyNotificationActivity) getActivity())
+                            .addReply(String.valueOf(commentBody), commentOrReplyData.getId(), mentionsMap);
+                } else if (getParentFragment() instanceof ArticleDetailsFragment) {
+                    ((ArticleDetailsFragment) getParentFragment())
+                            .addReply(String.valueOf(commentBody), commentOrReplyData.getId(), mentionsMap);
+                }
+            }
+        }*/
+    }
+
+    override fun onQueryReceived(queryToken: QueryToken): MutableList<String> {
+        val receiver: QueryTokenReceiver = typeHere
+        val retro = BaseApplication.getInstance().retrofit
+        val searchArticlesAuthorsApi =
+            retro.create(
+                SearchArticlesAuthorsAPI::class.java
+            )
+        val call =
+            searchArticlesAuthorsApi.searchUserHandles(queryToken.keywords)
+        call.enqueue(object : Callback<MentionsResponse?> {
+            override fun onResponse(
+                call: Call<MentionsResponse?>,
+                response: Response<MentionsResponse?>
+            ) {
+                try {
+                    if (response.isSuccessful) {
+                        val responseModel = response.body()
+                        val suggestions: List<Mentions> =
+                            ArrayList(responseModel!!.data.result)
+                        val result = SuggestionsResult(queryToken, suggestions)
+                        typeHere.onReceiveSuggestionsResult(result, "dddd")
+                    }
+                } catch (e: Exception) {
+                    FirebaseCrashlytics.getInstance().recordException(e)
+                    Log.d("MC4kException", Log.getStackTraceString(e))
+                }
+            }
+
+            override fun onFailure(
+                call: Call<MentionsResponse?>,
+                t: Throwable
+            ) {
+                FirebaseCrashlytics.getInstance().recordException(t)
+                Log.d("MC4kException", Log.getStackTraceString(t))
+            }
+        })
+
+        return mutableListOf("dddd")
+    }
+
+
+    inner class MentionIndex : Comparable<MentionIndex> {
+        var index = 0
+        var mention: Mentions? = null
+        var charSequence: CharSequence? = null
+
+        internal constructor(index: Int, mention: Mentions?) {
+            this.index = index
+            this.mention = mention
+        }
+
+        internal constructor(charSequence: CharSequence?, mention: Mentions?) {
+            this.charSequence = charSequence
+            this.mention = mention
+        }
+
+        override operator fun compareTo(other: MentionIndex): Int {
+            return index - other.index
+
+        }
+    }
 }
