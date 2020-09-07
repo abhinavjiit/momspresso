@@ -2,7 +2,6 @@ package com.mycity4kids.retrofitAPIsInterfaces;
 
 import com.mycity4kids.models.request.SaveDraftRequest;
 import com.mycity4kids.models.response.ArticleDraftResponse;
-
 import java.util.List;
 import java.util.Map;
 import okhttp3.ResponseBody;
@@ -21,6 +20,7 @@ import retrofit2.http.Url;
  * Created by anshul on 4/29/16.
  */
 public interface ArticleDraftAPI {
+
     @FormUrlEncoded
     @POST("v1/articles/")
     Call<ArticleDraftResponse> saveDraft(
@@ -32,7 +32,7 @@ public interface ArticleDraftAPI {
 
     @PUT
     Call<ArticleDraftResponse> updateDrafts(@Url String url,
-                                            @Body SaveDraftRequest saveDraftRequest);
+            @Body SaveDraftRequest saveDraftRequest);
 
     @GET("v1/articles/")
     Call<ResponseBody> getDraftsList(@Query("aType") String aType);
@@ -42,4 +42,6 @@ public interface ArticleDraftAPI {
 
     @GET("v1/articles/drafts/")
     Call<ResponseBody> getAllDrafts(@Query("aType") String aType);
+
+
 }

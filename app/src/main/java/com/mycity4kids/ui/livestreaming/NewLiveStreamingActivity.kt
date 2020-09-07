@@ -85,6 +85,7 @@ class NewLiveStreamingActivity : BaseActivity(), LiveChatRecyclerAdapter.Recycle
         val articleDetailsApi = retrofit.create(ArticleDetailsAPI::class.java)
         val call: Call<CommentListResponse> =
             articleDetailsApi.addCommentOrReply(addEditCommentOrReplyRequest)
+
         call.enqueue(object : Callback<CommentListResponse> {
             override fun onFailure(call: Call<CommentListResponse>, t: Throwable) {
             }

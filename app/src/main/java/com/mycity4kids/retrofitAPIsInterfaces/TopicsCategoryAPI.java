@@ -117,4 +117,21 @@ public interface TopicsCategoryAPI {
 
     @GET("v2/categories/parent")
     Call<Topics> getCategorySiblings(@Query("id") String categoryId);
+
+    @GET("/winner/content/")
+    Call<ArticleListingResponse> getWinnerArticleChallenge(
+            @Query("start") int start,
+            @Query("size") int size,
+            @Query("category_id") String category_id,
+            @Query("content_type") String content_type
+    );
+
+/*
+    GET /winner/content/?start=0&size=10&content_type=0&category_id=category-66b6883fd0434683b053f18aa4d52b59 HTTP/1.1
+    Host: api.momspresso.com
+    Accept-Language: en
+    Cookie: session=5a5f8423-5ef1-4f5a-a9f2-d8c966b919c6
+            Collapse*/
+
+
 }

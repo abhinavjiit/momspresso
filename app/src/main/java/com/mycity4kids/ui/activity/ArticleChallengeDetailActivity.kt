@@ -55,6 +55,7 @@ class ArticleChallengeDetailActivity : BaseActivity() {
         tabs.apply {
             addTab(tabs.newTab().setText(R.string.about_txt))
             addTab(tabs.newTab().setText(R.string.groups_sections_blogs))
+            addTab(tabs.newTab().setText("Winner"))
         }
 
         if (!articleChallengeId.isNullOrBlank()) {
