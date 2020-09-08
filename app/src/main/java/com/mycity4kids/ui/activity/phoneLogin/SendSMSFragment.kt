@@ -84,14 +84,54 @@ class SendSMSFragment : BaseFragment(), View.OnClickListener {
     override fun onClick(v: View?) {
         when {
             v?.id == R.id.useSmsTextView -> {
-                val phoneLoginRequest = PhoneLoginRequest()
+                /*val phoneLoginRequest = PhoneLoginRequest()
                 phoneLoginRequest.phone = phoneEditText?.text?.toString()
 
                 val retrofit = BaseApplication.getInstance().retrofit
                 val loginRegistrationAPI = retrofit.create(LoginRegistrationAPI::class.java)
                 val call = loginRegistrationAPI.triggerSMS(phoneLoginRequest)
                 //                launchVerifySMSFragment("dwdwdw")
-                call.enqueue(triggerSMSResponseCallback)
+                call.enqueue(triggerSMSResponseCallback)*/
+
+
+                val verifySMSFragment = VerifySMSFragment()
+                val bundle = Bundle()
+                bundle.putString("smsToken", "91")
+                bundle.putString("phoneNumber", phoneEditText?.text?.toString())
+                verifySMSFragment.arguments = bundle
+                //        (activity as ActivityLogin).addFragment(verifySMSFragment, bundle, true, null)
+
+                if (activity?.javaClass?.simpleName.equals("ActivityLogin")) {
+                    (activity as ActivityLogin).addFragment(verifySMSFragment, bundle, null)
+                } else if (activity?.javaClass?.simpleName.equals("OTPActivity")) {
+                    (activity as OTPActivity).supportFragmentManager.popBackStack()
+                    activity!!.supportFragmentManager.beginTransaction().replace(
+                        R.id.container, verifySMSFragment,
+                        VerifySMSFragment::class.java.simpleName
+                    ).addToBackStack(null)
+                        .commit()
+                } else if (activity?.javaClass?.simpleName.equals("UpdateUserHandleActivity")) {
+                    (activity as UpdateUserHandleActivity).addFragment(verifySMSFragment, bundle, null)
+                }
+
+
+
+
+
+                /*val verificationIntent = Intent(
+                    activity,
+                    VerificationCodeActivity::class.java
+                )
+                verificationIntent.putExtra(
+                    AppConstants.PhoneNumber,
+                    phoneEditText?.text?.toString()
+                )
+                verificationIntent.putExtra(
+                    AppConstants.PhoneCode,
+                    "91"
+                )
+                verificationIntent.flags = Intent.FLAG_ACTIVITY_FORWARD_RESULT
+                startActivity(verificationIntent)*/
             }
         }
     }

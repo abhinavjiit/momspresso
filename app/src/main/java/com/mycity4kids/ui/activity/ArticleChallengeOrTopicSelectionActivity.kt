@@ -3,9 +3,12 @@ package com.mycity4kids.ui.activity
 import android.accounts.NetworkErrorException
 import android.app.Dialog
 import android.content.Intent
+import android.graphics.Color
+import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
 import android.util.Log
 import android.view.View
+import android.view.Window
 import android.webkit.WebView
 import android.widget.ImageView
 import android.widget.RelativeLayout
@@ -23,6 +26,7 @@ import com.mycity4kids.constants.Constants
 import com.mycity4kids.editor.NewEditor
 import com.mycity4kids.models.Topics
 import com.mycity4kids.models.response.SuggestedTopicsResponse
+import com.mycity4kids.preference.SharedPrefUtils
 import com.mycity4kids.retrofitAPIsInterfaces.TopicsCategoryAPI
 import com.mycity4kids.retrofitAPIsInterfaces.VlogsListingAndDetailsAPI
 import com.mycity4kids.ui.adapter.SuggestedTopicsRecyclerAdapter
@@ -88,6 +92,10 @@ class ArticleChallengeOrTopicSelectionActivity : BaseActivity(),
         }
         mToolbar.setOnClickListener {
             onBackPressed()
+        }
+
+        if (!SharedPrefUtils.getOriginalContentChallengeClick(this)) {
+            showOriginalContentDialog()
         }
     }
 
@@ -228,5 +236,18 @@ class ArticleChallengeOrTopicSelectionActivity : BaseActivity(),
     override fun onSuggestedTopicClick() {
         val intent = Intent(this, NewEditor::class.java)
         startActivity(intent)
+    }
+
+    fun showOriginalContentDialog() {
+        val dialog = Dialog(this)
+        dialog.window!!.requestFeature(Window.FEATURE_NO_TITLE)
+        dialog.setContentView(R.layout.dialog_original_content)
+        dialog.setCancelable(false)
+        dialog.findViewById<View>(R.id.okBtn).setOnClickListener { view: View? ->
+            SharedPrefUtils.setOriginalContentChallengeClick(this, true)
+            dialog.dismiss()
+        }
+        dialog.window!!.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+        dialog.show()
     }
 }

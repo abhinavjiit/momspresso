@@ -95,4 +95,5 @@
     <dimen name="space_17">17dp</dimen>
     <dimen name="space_22">22dp</dimen>
   <dimen name="space_58">58dp</dimen>
+  <dimen name="space_31">31dp</dimen>
 </resources>

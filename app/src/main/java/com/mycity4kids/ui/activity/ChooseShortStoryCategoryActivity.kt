@@ -1,10 +1,14 @@
 package com.mycity4kids.ui.activity
 
 import android.accounts.NetworkErrorException
+import android.app.Dialog
 import android.content.Intent
+import android.graphics.Color
+import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
 import android.util.Log
 import android.view.View
+import android.view.Window
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.firebase.crashlytics.FirebaseCrashlytics
@@ -13,6 +17,7 @@ import com.mycity4kids.application.BaseApplication
 import com.mycity4kids.base.BaseActivity
 import com.mycity4kids.constants.AppConstants
 import com.mycity4kids.models.Topics
+import com.mycity4kids.preference.SharedPrefUtils
 import com.mycity4kids.retrofitAPIsInterfaces.VlogsListingAndDetailsAPI
 import com.mycity4kids.ui.adapter.ShortStoryChallengeTopicsAdapter
 import com.mycity4kids.ui.adapter.ShortStoryTopicsGridAdapter
@@ -64,6 +69,10 @@ class ChooseShortStoryCategoryActivity : BaseActivity(),
 
         getCategoriesData()
         getChallengeData()
+
+        if (!SharedPrefUtils.getOriginalContentStoryClick(this)) {
+            showOriginalContentDialog()
+        }
     }
 
     private fun getCategoriesData() {
@@ -179,5 +188,18 @@ class ChooseShortStoryCategoryActivity : BaseActivity(),
         val intent = Intent(this, ShortStoryChallengeDetailActivity::class.java)
         intent.putExtra("challenge", shortStoryChallengesData.get(position).id)
         startActivity(intent)
+    }
+
+    fun showOriginalContentDialog() {
+        val dialog = Dialog(this)
+        dialog.window!!.requestFeature(Window.FEATURE_NO_TITLE)
+        dialog.setContentView(R.layout.dialog_original_content)
+        dialog.setCancelable(false)
+        dialog.findViewById<View>(R.id.okBtn).setOnClickListener { view: View? ->
+            SharedPrefUtils.setOriginalContentStoryClick(this, true)
+            dialog.dismiss()
+        }
+        dialog.window!!.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+        dialog.show()
     }
 }

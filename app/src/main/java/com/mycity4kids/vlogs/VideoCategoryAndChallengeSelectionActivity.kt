@@ -6,12 +6,15 @@ import android.app.Activity
 import android.app.Dialog
 import android.content.Intent
 import android.content.pm.PackageManager
+import android.graphics.Color
+import android.graphics.drawable.ColorDrawable
 import android.net.Uri
 import android.os.Bundle
 import android.provider.MediaStore
 import android.util.Log
 import android.view.MenuItem
 import android.view.View
+import android.view.Window
 import android.webkit.WebView
 import android.widget.ImageView
 import android.widget.Toast
@@ -94,6 +97,10 @@ class VideoCategoryAndChallengeSelectionActivity : BaseActivity(),
 
         getCategoriesData()
         getChallengeData()
+
+        if (!SharedPrefUtils.getOriginalContentVideoClick(this)) {
+            showOriginalContentDialog()
+        }
     }
 
     private fun getCategoriesData() {
@@ -486,5 +493,18 @@ class VideoCategoryAndChallengeSelectionActivity : BaseActivity(),
             intent.putExtra(AppConstants.COLLECTION_ID, AppConstants.MOM_VLOG_TUTORIAL_COLLECTION)
             startActivity(intent)
         }
+    }
+
+    fun showOriginalContentDialog() {
+        val dialog = Dialog(this)
+        dialog.window!!.requestFeature(Window.FEATURE_NO_TITLE)
+        dialog.setContentView(R.layout.dialog_original_content)
+        dialog.setCancelable(false)
+        dialog.findViewById<View>(R.id.okBtn).setOnClickListener { view: View? ->
+            SharedPrefUtils.setOriginalContentVideoClick(this, true)
+            dialog.dismiss()
+        }
+        dialog.window!!.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+        dialog.show()
     }
 }
