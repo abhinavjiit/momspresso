@@ -1,10 +1,14 @@
 package com.mycity4kids.ui.fragment;
 
+import android.app.Dialog;
 import android.content.Intent;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
 import android.widget.TextView;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
@@ -13,6 +17,7 @@ import androidx.fragment.app.FragmentStatePagerAdapter;
 import androidx.viewpager.widget.ViewPager;
 import com.mycity4kids.R;
 import com.mycity4kids.base.BaseFragment;
+import com.mycity4kids.preference.SharedPrefUtils;
 import com.mycity4kids.ui.activity.ArticleChallengeOrTopicSelectionActivity;
 
 /**
@@ -46,6 +51,9 @@ public class BecomeBloggerFragment extends BaseFragment {
             Intent intent = new Intent(getActivity(), ArticleChallengeOrTopicSelectionActivity.class);
             startActivity(intent);
         });
+        if (!SharedPrefUtils.getOriginalContentBlogClick(getActivity())) {
+            showOriginalContentDialog();
+        }
         return view;
     }
 
@@ -73,6 +81,22 @@ public class BecomeBloggerFragment extends BaseFragment {
         @Override
         public int getCount() {
             return numOfTabs;
+        }
+    }
+
+    private void showOriginalContentDialog() {
+        if (getActivity() != null) {
+            final Dialog dialog = new Dialog(getActivity());
+            dialog.getWindow().requestFeature(Window.FEATURE_NO_TITLE);
+            dialog.setContentView(R.layout.dialog_original_content);
+            dialog.setCancelable(false);
+            dialog.findViewById(R.id.okBtn).setOnClickListener(view -> {
+                SharedPrefUtils.setOriginalContentBlogClick(getActivity(), true);
+                dialog.dismiss();
+            });
+
+            dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+            dialog.show();
         }
     }
 }

@@ -44,11 +44,12 @@ import io.reactivex.Observer
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable
 import io.reactivex.schedulers.Schedulers
+import retrofit2.HttpException
 import java.io.InputStreamReader
 import java.util.regex.Pattern
-import retrofit2.HttpException
 
-class CampaignPaymentModesFragment : BaseFragment(), PaymentModesAdapter.ClickListener, View.OnClickListener {
+class CampaignPaymentModesFragment : BaseFragment(), PaymentModesAdapter.ClickListener,
+    View.OnClickListener {
 
     private var mContext: Context? = null
     private var selectedPaymantIdPosition: Int = 0
@@ -139,89 +140,142 @@ class CampaignPaymentModesFragment : BaseFragment(), PaymentModesAdapter.ClickLi
 
             if (matcher.matches()) {
                 if (!panNumber.isNullOrEmpty()) {
-                    val proofPostModel = ProofPostModel(pan = panCardDetailEditTextView.text.toString())
+                    val proofPostModel =
+                        ProofPostModel(pan = panCardDetailEditTextView.text.toString())
                     showProgressDialog(resources.getString(R.string.please_wait))
-                    BaseApplication.getInstance().retrofit.create(CampaignAPI::class.java).updatePanNumber(proofPostModel).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(object : Observer<BaseResponseGeneric<ProofPostModel>> {
-                        override fun onComplete() {
-                            removeProgressDialog()
-                        }
+                    BaseApplication.getInstance().retrofit.create(CampaignAPI::class.java).updatePanNumber(
+                        proofPostModel
+                    ).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(
+                        object : Observer<BaseResponseGeneric<ProofPostModel>> {
+                            override fun onComplete() {
+                                removeProgressDialog()
+                            }
 
-                        override fun onSubscribe(d: Disposable) {
-                        }
+                            override fun onSubscribe(d: Disposable) {
+                            }
 
-                        override fun onNext(response: BaseResponseGeneric<ProofPostModel>) {
-                            if (response.code == 200 && response.data != null && response.data!!.result != null) {
-                                if (isComingFromRewards) {
-                                    ToastUtils.showToast(context, "panCard Updated Successfully")
-                                    submitOnClickListener.onPanCardDone()
-                                } else {
-                                    Utils.campaignEvent(activity, "Thank you screen", "Pan Card", "Submit", "", "android", SharedPrefUtils.getAppLocale(activity), SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).dynamoId, System.currentTimeMillis().toString(), "Show_Submission_Success")
-                                    var campaignCongratulationFragment = CampaignCongratulationFragment.newInstance()
-                                    (context as CampaignContainerActivity).supportFragmentManager.beginTransaction().add(R.id.container, campaignCongratulationFragment,
-                                            CampaignCongratulationFragment::class.java.simpleName).addToBackStack("CampaignCongratulationFragment")
+                            override fun onNext(response: BaseResponseGeneric<ProofPostModel>) {
+                                if (response.code == 200 && response.data != null && response.data!!.result != null) {
+                                    if (isComingFromRewards) {
+                                        ToastUtils.showToast(
+                                            context,
+                                            "panCard Updated Successfully"
+                                        )
+                                        submitOnClickListener.onPanCardDone()
+                                    } else {
+                                        Utils.campaignEvent(
+                                            activity,
+                                            "Thank you screen",
+                                            "Pan Card",
+                                            "Submit",
+                                            "",
+                                            "android",
+                                            SharedPrefUtils.getAppLocale(activity),
+                                            SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).dynamoId,
+                                            System.currentTimeMillis().toString(),
+                                            "Show_Submission_Success"
+                                        )
+                                        var campaignCongratulationFragment =
+                                            CampaignCongratulationFragment.newInstance()
+                                        (context as CampaignContainerActivity).supportFragmentManager.beginTransaction().add(
+                                            R.id.container, campaignCongratulationFragment,
+                                            CampaignCongratulationFragment::class.java.simpleName
+                                        ).addToBackStack("CampaignCongratulationFragment")
                                             .commit()
+                                    }
                                 }
                             }
-                        }
 
-                        override fun onError(e: Throwable) {
-                            removeProgressDialog()
-                            val code = (e as HttpException).code()
-                            if (code == 400) {
-                                val data = e.response()?.errorBody()!!.byteStream()
-                                val jsonParser = JsonParser()
-                                val jsonObject = jsonParser.parse(
-                                        InputStreamReader(data, "UTF-8")) as JsonObject
-                                val reason = jsonObject.get("reason")
-                                Toast.makeText(context, reason.asString, Toast.LENGTH_SHORT).show()
+                            override fun onError(e: Throwable) {
+                                removeProgressDialog()
+                                val code = (e as HttpException).code()
+                                if (code == 400) {
+                                    val data = e.response()?.errorBody()!!.byteStream()
+                                    val jsonParser = JsonParser()
+                                    val jsonObject = jsonParser.parse(
+                                        InputStreamReader(data, "UTF-8")
+                                    ) as JsonObject
+                                    val reason = jsonObject.get("reason")
+                                    Toast.makeText(
+                                        context,
+                                        reason.asString,
+                                        Toast.LENGTH_SHORT
+                                    ).show()
+                                }
+
+                                Log.e("exception in error", e.message.toString())
                             }
-
-                            Log.e("exception in error", e.message.toString())
-                        }
-                    })
+                        })
                 } else {
-                    val proofPostModel = ProofPostModel(pan = panCardDetailEditTextView.text.toString())
+                    val proofPostModel =
+                        ProofPostModel(pan = panCardDetailEditTextView.text.toString())
                     showProgressDialog(resources.getString(R.string.please_wait))
-                    BaseApplication.getInstance().retrofit.create(CampaignAPI::class.java).addPanNumber(proofPostModel).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(object : Observer<BaseResponseGeneric<ProofPostModel>> {
-                        override fun onComplete() {
-                            removeProgressDialog()
-                        }
+                    BaseApplication.getInstance().retrofit.create(CampaignAPI::class.java).addPanNumber(
+                        proofPostModel
+                    ).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(
+                        object : Observer<BaseResponseGeneric<ProofPostModel>> {
+                            override fun onComplete() {
+                                removeProgressDialog()
+                            }
 
-                        override fun onSubscribe(d: Disposable) {
-                        }
+                            override fun onSubscribe(d: Disposable) {
+                            }
 
-                        override fun onNext(response: BaseResponseGeneric<ProofPostModel>) {
-                            if (response.code == 200 && response.data != null) {
-                                if (isComingFromRewards) {
-                                    submitOnClickListener.onPanCardDone()
-                                } else {
-                                    Utils.campaignEvent(activity, "Thank you screen", "Pan Card", "Submit", "", "android", SharedPrefUtils.getAppLocale(activity), SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).dynamoId, System.currentTimeMillis().toString(), "Show_Submission_Success")
-                                    var campaignCongratulationFragment = CampaignCongratulationFragment.newInstance()
-                                    (context as CampaignContainerActivity).supportFragmentManager.beginTransaction().add(R.id.container, campaignCongratulationFragment,
-                                            CampaignCongratulationFragment::class.java.simpleName).addToBackStack("CampaignCongratulationFragment")
+                            override fun onNext(response: BaseResponseGeneric<ProofPostModel>) {
+                                if (response.code == 200 && response.data != null) {
+                                    if (isComingFromRewards) {
+                                        submitOnClickListener.onPanCardDone()
+                                    } else {
+                                        Utils.campaignEvent(
+                                            activity,
+                                            "Thank you screen",
+                                            "Pan Card",
+                                            "Submit",
+                                            "",
+                                            "android",
+                                            SharedPrefUtils.getAppLocale(activity),
+                                            SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).dynamoId,
+                                            System.currentTimeMillis().toString(),
+                                            "Show_Submission_Success"
+                                        )
+                                        var campaignCongratulationFragment =
+                                            CampaignCongratulationFragment.newInstance()
+                                        (context as CampaignContainerActivity).supportFragmentManager.beginTransaction().add(
+                                            R.id.container, campaignCongratulationFragment,
+                                            CampaignCongratulationFragment::class.java.simpleName
+                                        ).addToBackStack("CampaignCongratulationFragment")
                                             .commit()
+                                    }
                                 }
                             }
-                        }
 
-                        override fun onError(e: Throwable) {
-                            removeProgressDialog()
-                            val code = (e as HttpException).code()
-                            if (code == 400) {
-                                var data = e.response()?.errorBody()!!.byteStream()
-                                var jsonParser = JsonParser()
-                                var jsonObject = jsonParser.parse(
-                                        InputStreamReader(data, "UTF-8")) as JsonObject
-                                var reason = jsonObject.get("reason")
-                                Toast.makeText(context, reason.asString, Toast.LENGTH_SHORT).show()
+                            override fun onError(e: Throwable) {
+                                removeProgressDialog()
+                                val code = (e as HttpException).code()
+                                if (code == 400) {
+                                    var data = e.response()?.errorBody()!!.byteStream()
+                                    var jsonParser = JsonParser()
+                                    var jsonObject = jsonParser.parse(
+                                        InputStreamReader(data, "UTF-8")
+                                    ) as JsonObject
+                                    var reason = jsonObject.get("reason")
+                                    Toast.makeText(
+                                        context,
+                                        reason.asString,
+                                        Toast.LENGTH_SHORT
+                                    ).show()
+                                }
+
+                                Log.e("exception in error", e.message.toString())
                             }
-
-                            Log.e("exception in error", e.message.toString())
-                        }
-                    })
+                        })
                 }
             } else {
-                Toast.makeText(activity, panCardNumber + " is Not Matching the Correct Formate", Toast.LENGTH_SHORT).show()
+                Toast.makeText(
+                    activity,
+                    panCardNumber + " is Not Matching the Correct Formate",
+                    Toast.LENGTH_SHORT
+                ).show()
             }
         } else {
             Toast.makeText(activity, "field cann't be empty", Toast.LENGTH_SHORT).show()
@@ -231,7 +285,10 @@ class CampaignPaymentModesFragment : BaseFragment(), PaymentModesAdapter.ClickLi
     private fun postApiForDefaultPaymantMode(paymentModeId: Int) {
         val proofPostModel = ProofPostModel(id = paymentModeId.toString())
         showProgressDialog(resources.getString(R.string.please_wait))
-        BaseApplication.getInstance().retrofit.create(CampaignAPI::class.java).postForDefaultAccount(proofPostModel).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(object : Observer<BaseResponseGeneric<ProofPostModel>> {
+        BaseApplication.getInstance().retrofit.create(CampaignAPI::class.java).postForDefaultAccount(
+            proofPostModel
+        ).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(object :
+            Observer<BaseResponseGeneric<ProofPostModel>> {
             override fun onComplete() {
                 removeProgressDialog()
             }
@@ -250,21 +307,31 @@ class CampaignPaymentModesFragment : BaseFragment(), PaymentModesAdapter.ClickLi
     }
 
     override fun onCellClick(paymentModeId: Int, position: Int, ID: Int) {
-        var paymentModeDtailsSubmissionFragment = PaymentModeDtailsSubmissionFragment.newInstance(paymentModeId, comingFrom = "comingForEdit", isComingFromRewards = isComingFromRewards, Id = ID)
-        paymentModeDtailsSubmissionFragment.setTargetFragment(this@CampaignPaymentModesFragment, 2019)
-        (activity)!!.supportFragmentManager.beginTransaction().add(R.id.container, paymentModeDtailsSubmissionFragment,
-                PanCardDetailsSubmissionFragment::class.java.simpleName).addToBackStack("PaymentModeDtailsSubmissionFragment")
-                .commit()
+        var paymentModeDtailsSubmissionFragment = PaymentModeDtailsSubmissionFragment.newInstance(
+            paymentModeId,
+            comingFrom = "comingForEdit",
+            isComingFromRewards = isComingFromRewards,
+            Id = ID
+        )
+        paymentModeDtailsSubmissionFragment.setTargetFragment(
+            this@CampaignPaymentModesFragment,
+            2019
+        )
+        (activity)!!.supportFragmentManager.beginTransaction().add(
+            R.id.container, paymentModeDtailsSubmissionFragment,
+            PanCardDetailsSubmissionFragment::class.java.simpleName
+        ).addToBackStack("PaymentModeDtailsSubmissionFragment")
+            .commit()
     }
 
     companion object {
         @JvmStatic
         fun newInstance(isComingFromRewards: Boolean = false) =
-                CampaignPaymentModesFragment().apply {
-                    arguments = Bundle().apply {
-                        this.putBoolean("isComingFromRewards", isComingFromRewards)
-                    }
+            CampaignPaymentModesFragment().apply {
+                arguments = Bundle().apply {
+                    this.putBoolean("isComingFromRewards", isComingFromRewards)
                 }
+            }
     }
 
     override fun onCreateView(
@@ -311,16 +378,19 @@ class CampaignPaymentModesFragment : BaseFragment(), PaymentModesAdapter.ClickLi
                 submitOnClickListener.onPanCardDone()
             } else {
                 var campaignCongratulationFragment = CampaignCongratulationFragment.newInstance()
-                (context as CampaignContainerActivity).supportFragmentManager.beginTransaction().add(R.id.container, campaignCongratulationFragment,
-                        CampaignCongratulationFragment::class.java.simpleName).addToBackStack("CampaignCongratulationFragment")
-                        .commit()
+                (context as CampaignContainerActivity).supportFragmentManager.beginTransaction().add(
+                    R.id.container, campaignCongratulationFragment,
+                    CampaignCongratulationFragment::class.java.simpleName
+                ).addToBackStack("CampaignCongratulationFragment")
+                    .commit()
             }
         }
 
         // Set the adapter
         panCardDisclaimerFour = view.findViewById(R.id.pan_card_disclaimer_four)
         panCardDetailEditTextView = view.findViewById(R.id.panCardDetailEditTextView)
-        recyclerPaymentModesOption = view.findViewById<RecyclerView>(R.id.recyclerPaymentModesOption)
+        recyclerPaymentModesOption =
+            view.findViewById<RecyclerView>(R.id.recyclerPaymentModesOption)
         saveContinueTextView = view.findViewById(R.id.saveContinueTextView)
         recyclerPaymentModesOption.layoutManager = LinearLayoutManager(context)
 
@@ -355,7 +425,10 @@ class CampaignPaymentModesFragment : BaseFragment(), PaymentModesAdapter.ClickLi
 
     private fun fetchPanNumber() {
         showProgressDialog(resources.getString(R.string.please_wait))
-        BaseApplication.getInstance().retrofit.create(CampaignAPI::class.java).getPanNumber().subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(object : Observer<BaseResponseGeneric<ProofPostModel>> {
+        BaseApplication.getInstance().retrofit.create(CampaignAPI::class.java).getPanNumber().subscribeOn(
+            Schedulers.io()
+        ).observeOn(AndroidSchedulers.mainThread()).subscribe(object :
+            Observer<BaseResponseGeneric<ProofPostModel>> {
             override fun onComplete() {
                 removeProgressDialog()
             }
@@ -381,7 +454,10 @@ class CampaignPaymentModesFragment : BaseFragment(), PaymentModesAdapter.ClickLi
     /*fetch data from server*/
     private fun fetchPaymentModes() {
         showProgressDialog(resources.getString(R.string.please_wait))
-        BaseApplication.getInstance().retrofit.create(CampaignAPI::class.java).getPaymentModes().subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(object : Observer<BaseResponseGeneric<PaymentModeListModal>> {
+        BaseApplication.getInstance().retrofit.create(CampaignAPI::class.java).getPaymentModes().subscribeOn(
+            Schedulers.io()
+        ).observeOn(AndroidSchedulers.mainThread()).subscribe(object :
+            Observer<BaseResponseGeneric<PaymentModeListModal>> {
 
             override fun onComplete() {
                 removeProgressDialog()
@@ -392,7 +468,7 @@ class CampaignPaymentModesFragment : BaseFragment(), PaymentModesAdapter.ClickLi
 
             override fun onNext(response: BaseResponseGeneric<PaymentModeListModal>) {
                 if (response != null && response.code == 200 && Constants.SUCCESS == response.status &&
-                        response.data != null && response.data!!.result != null && response.data!!.result.available!!.isNotEmpty()) {
+                    response.data != null && response.data!!.result != null && response.data!!.result.available!!.isNotEmpty()) {
                     allPaymentData = response.data!!.result
                     allPaymantModes.clear()
                     availableList.clear()
@@ -407,9 +483,21 @@ class CampaignPaymentModesFragment : BaseFragment(), PaymentModesAdapter.ClickLi
                         for (i in 0..availableList!!.size - 1) {
                             var paymentMOdesModal: PaymentModesModal? = null
                             if (availableList!!.get(i).exists != null && availableList!!.get(i).exists!!.account_number!!.isNotEmpty()) {
-                                paymentMOdesModal = PaymentModesModal(icon = availableList[i].icon, type_id = availableList!!.get(i).type_id, isDefault = false, accountNumber = availableList!!.get(i).exists!!.account_number, id = availableList[i].exists!!.id)
+                                paymentMOdesModal = PaymentModesModal(
+                                    icon = availableList[i].icon,
+                                    type_id = availableList!!.get(i).type_id,
+                                    isDefault = false,
+                                    accountNumber = availableList!!.get(i).exists!!.account_number,
+                                    id = availableList[i].exists!!.id
+                                )
                             } else {
-                                paymentMOdesModal = PaymentModesModal(icon = availableList[i].icon, type_id = availableList!!.get(i).type_id, isDefault = false, accountNumber = null, id = -1)
+                                paymentMOdesModal = PaymentModesModal(
+                                    icon = availableList[i].icon,
+                                    type_id = availableList!!.get(i).type_id,
+                                    isDefault = false,
+                                    accountNumber = null,
+                                    id = -1
+                                )
                             }
                             allPaymantModes.add(paymentMOdesModal)
                         }
@@ -418,14 +506,27 @@ class CampaignPaymentModesFragment : BaseFragment(), PaymentModesAdapter.ClickLi
                         for (i in 0..availableList!!.size - 1) {
                             var paymentMOdesModal: PaymentModesModal? = null
                             if (availableList!!.get(i).exists != null && availableList!!.get(i).exists!!.account_number!!.isNotEmpty()) {
-                                paymentMOdesModal = PaymentModesModal(icon = availableList[i].icon, type_id = availableList!!.get(i).type_id, isDefault = false, accountNumber = availableList!!.get(i).exists!!.account_number, id = availableList[i].exists!!.id)
+                                paymentMOdesModal = PaymentModesModal(
+                                    icon = availableList[i].icon,
+                                    type_id = availableList!!.get(i).type_id,
+                                    isDefault = false,
+                                    accountNumber = availableList!!.get(i).exists!!.account_number,
+                                    id = availableList[i].exists!!.id
+                                )
                             } else {
-                                paymentMOdesModal = PaymentModesModal(icon = availableList[i].icon, type_id = availableList!!.get(i).type_id, isDefault = false, accountNumber = null, id = -1)
+                                paymentMOdesModal = PaymentModesModal(
+                                    icon = availableList[i].icon,
+                                    type_id = availableList!!.get(i).type_id,
+                                    isDefault = false,
+                                    accountNumber = null,
+                                    id = -1
+                                )
                             }
                             allPaymantModes.add(paymentMOdesModal)
                         }
                     }
-                    paymentModesAdapter = PaymentModesAdapter(allPaymantModes, this@CampaignPaymentModesFragment)
+                    paymentModesAdapter =
+                        PaymentModesAdapter(allPaymantModes, this@CampaignPaymentModesFragment)
                     recyclerPaymentModesOption.adapter = paymentModesAdapter
                     // faqRecyclerAdapter.notifyDataSetChanged()
                 } else {

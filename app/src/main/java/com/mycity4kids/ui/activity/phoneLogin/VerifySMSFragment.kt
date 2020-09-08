@@ -10,6 +10,7 @@ import android.content.IntentFilter
 import android.os.Bundle
 import android.os.CountDownTimer
 import android.text.Editable
+import android.text.TextUtils
 import android.text.TextWatcher
 import android.util.Log
 import android.view.KeyEvent
@@ -18,10 +19,21 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.EditText
 import android.widget.TextView
+import android.widget.Toast
 import androidx.fragment.app.FragmentManager
 import com.google.android.gms.auth.api.phone.SmsRetriever
 import com.google.android.gms.common.api.CommonStatusCodes
 import com.google.android.gms.common.api.Status
+import com.google.android.gms.tasks.OnCompleteListener
+import com.google.firebase.FirebaseException
+import com.google.firebase.FirebaseTooManyRequestsException
+import com.google.firebase.auth.AuthResult
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException
+import com.google.firebase.auth.PhoneAuthCredential
+import com.google.firebase.auth.PhoneAuthProvider
+import com.google.firebase.auth.PhoneAuthProvider.ForceResendingToken
+import com.google.firebase.auth.PhoneAuthProvider.OnVerificationStateChangedCallbacks
 import com.google.firebase.crashlytics.FirebaseCrashlytics
 import com.mycity4kids.R
 import com.mycity4kids.application.BaseApplication
@@ -32,10 +44,12 @@ import com.mycity4kids.retrofitAPIsInterfaces.LoginRegistrationAPI
 import com.mycity4kids.ui.activity.ActivityLogin
 import com.mycity4kids.ui.activity.OTPActivity
 import com.mycity4kids.ui.activity.UpdateUserHandleActivity
+import okhttp3.OkHttpClient
 import okhttp3.ResponseBody
 import org.json.JSONObject
 import retrofit2.Call
 import retrofit2.Callback
+import java.util.concurrent.TimeUnit
 
 class VerifySMSFragment : BaseFragment(), View.OnClickListener {
 
@@ -51,6 +65,11 @@ class VerifySMSFragment : BaseFragment(), View.OnClickListener {
 
     var smsToken: String? = null
     var phoneNumber: String? = null
+    var mAuth: FirebaseAuth? = null
+    var mCallbacks: PhoneAuthProvider.OnVerificationStateChangedCallbacks? = null
+    var mResendToken: ForceResendingToken? = null
+    var countDownTimer: CountDownTimer? = null
+    var mVerificationId: String? = null
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -71,6 +90,8 @@ class VerifySMSFragment : BaseFragment(), View.OnClickListener {
 
         smsToken = arguments?.getString("smsToken")
         phoneNumber = arguments?.getString("phoneNumber")
+
+        mAuth = FirebaseAuth.getInstance()
 
         activity?.let {
             verifySmsTextView?.text =
@@ -97,9 +118,190 @@ class VerifySMSFragment : BaseFragment(), View.OnClickListener {
         verifySmsTextView?.setOnClickListener(this)
         resendSmsTextView?.setOnClickListener(this)
 
-        startSMSRetrieverAPI()
+        //        startSMSRetrieverAPI()
+
+        mCallbacks = object : OnVerificationStateChangedCallbacks() {
+            override fun onVerificationCompleted(credential: PhoneAuthCredential) {
+
+            }
+
+            override fun onVerificationFailed(e: FirebaseException) {
+                if (e is FirebaseAuthInvalidCredentialsException) {
+                } else if (e is FirebaseTooManyRequestsException) {
+                }
+            }
+
+            override fun onCodeSent(
+                verificationId: String,
+                token: ForceResendingToken
+            ) {
+                mVerificationId = verificationId
+                mResendToken = token
+            }
+        }
+        startPhoneNumberVerification("+$smsToken$phoneNumber")
+
 
         return view
+    }
+
+
+    fun startPhoneNumberVerification(phoneNumber: String) {
+        PhoneAuthProvider.getInstance().verifyPhoneNumber(
+            phoneNumber,
+            30,
+            TimeUnit.SECONDS,
+            fetchActivity(),
+            mCallbacks as OnVerificationStateChangedCallbacks
+        )
+        startCounter()
+    }
+
+
+    private fun startCounter() {
+        if (countDownTimer != null) {
+            countDownTimer!!.cancel()
+        }
+        countDownTimer = object : CountDownTimer(30000, 1000) {
+            override fun onTick(millisUntilFinished: Long) {
+                countdownTimerTextView?.setText("" + millisUntilFinished / 1000)
+            }
+
+            override fun onFinish() {
+                countdownTimerTextView?.setText("")
+                resendSmsTextView?.setEnabled(true)
+            }
+        }
+        countDownTimer!!.start()
+    }
+
+    private fun resendVerificationCode(
+        phoneNumber: String,
+        token: ForceResendingToken
+    ) {
+        PhoneAuthProvider.getInstance().verifyPhoneNumber(
+            phoneNumber,  // Phone number to verify
+            30,  // Timeout duration
+            TimeUnit.SECONDS,  // Unit of timeout
+            fetchActivity(),
+            mCallbacks as OnVerificationStateChangedCallbacks,
+            token
+        )
+        startCounter()
+        resendSmsTextView?.setEnabled(false)
+    }
+
+    private fun verifyPhoneNumberWithCode(
+        verificationId: String,
+        code: String
+    ) {
+        val credential = PhoneAuthProvider.getCredential(verificationId, code)
+        signInWithPhoneAuthCredential(credential)
+    }
+
+    private fun signOut() {
+        mAuth!!.signOut()
+    }
+
+
+    private fun validate(): Boolean {
+        if (TextUtils.isEmpty(otpEditText1?.getText().toString().trim({ it <= ' ' }))) {
+            return false
+        } else if (TextUtils.isEmpty(otpEditText2?.getText().toString().trim({ it <= ' ' }))) {
+            return false
+        } else if (TextUtils.isEmpty(otpEditText3?.getText().toString().trim({ it <= ' ' }))) {
+            return false
+        } else if (TextUtils.isEmpty(otpEditText4?.getText().toString().trim({ it <= ' ' }))) {
+            return false
+        } else if (TextUtils.isEmpty(otpEditText5?.getText().toString().trim({ it <= ' ' }))) {
+            return false
+        } else if (TextUtils.isEmpty(otpEditText6?.getText().toString().trim({ it <= ' ' }))) {
+            return false
+        }
+        return true
+    }
+
+    private fun signInWithPhoneAuthCredential(credential: PhoneAuthCredential) {
+        var mUser = FirebaseAuth.getInstance().currentUser
+        mAuth!!.signInWithCredential(credential)
+            .addOnCompleteListener(
+                fetchActivity(),
+                OnCompleteListener<AuthResult> { task ->
+                    if (task.isSuccessful) {
+                        mUser = task.result!!.user
+                    } else {
+
+                        if (task.exception is FirebaseAuthInvalidCredentialsException) {
+                        }
+
+                        if (activity?.javaClass?.simpleName.equals("ActivityLogin")) {
+                            (activity as ActivityLogin).finish()
+                        } else if (activity?.javaClass?.simpleName.equals("OTPActivity")) {
+                            val intent = Intent()
+                            intent.putExtra("PHONE_NUMBER", "")
+                            (activity as OTPActivity).setResult(Activity.RESULT_OK, intent)
+                            (activity as OTPActivity).finish()
+                        } else if (activity?.javaClass?.simpleName.equals("UpdateUserHandleActivity")) {
+                            (activity as UpdateUserHandleActivity).finish()
+                        }
+                    }
+                })
+
+        mUser!!.getIdToken(true)
+            .addOnCompleteListener { task ->
+                if (task.isSuccessful) {
+                    val idToken = task.result!!.token
+
+                    if (activity?.javaClass?.simpleName.equals("ActivityLogin")) {
+                        (activity as ActivityLogin).phoneLogin(idToken)
+                    } else if (activity?.javaClass?.simpleName.equals("OTPActivity")) {
+                        val intent = Intent()
+                        intent.putExtra("auth_token", idToken)
+                        intent.putExtra("phone", mUser!!.phoneNumber)
+                        (activity as OTPActivity).setResult(Activity.RESULT_OK, intent)
+                        (activity as OTPActivity).finish()
+                    } else if (activity?.javaClass?.simpleName.equals("UpdateUserHandleActivity")) {
+                        val intent = Intent()
+                        intent.putExtra("auth_token", idToken)
+                        (activity as UpdateUserHandleActivity).setResult(
+                            Activity.RESULT_OK,
+                            intent
+                        )
+                        val fm: FragmentManager =
+                            (activity as UpdateUserHandleActivity).supportFragmentManager
+                        val count = fm.backStackEntryCount
+                        for (i in 0 until count) {
+                            fm.popBackStackImmediate()
+                        }
+                    }
+                } else {
+                    if (task.exception is FirebaseAuthInvalidCredentialsException) {
+                    }
+
+                    if (activity?.javaClass?.simpleName.equals("ActivityLogin")) {
+                        (activity as ActivityLogin).finish()
+                    } else if (activity?.javaClass?.simpleName.equals("OTPActivity")) {
+                        val intent = Intent()
+                        intent.putExtra("PHONE_NUMBER", "")
+                        (activity as OTPActivity).setResult(Activity.RESULT_OK, intent)
+                        (activity as OTPActivity).finish()
+                    } else if (activity?.javaClass?.simpleName.equals("UpdateUserHandleActivity")) {
+                        (activity as UpdateUserHandleActivity).finish()
+                    }
+                }
+            }
+    }
+
+    private fun fetchActivity(): Activity {
+        var activities: Activity? = null
+        if (activity?.javaClass?.simpleName.equals("ActivityLogin")) {
+            activities = (activity as ActivityLogin)
+        } else if (activity?.javaClass?.simpleName.equals("OTPActivity")) {
+            activities = (activity as OTPActivity)
+        } else if (activity?.javaClass?.simpleName.equals("UpdateUserHandleActivity")) {
+            activities = (activity as UpdateUserHandleActivity)
+        }
+        return activities!!
     }
 
     override fun onResume() {
@@ -173,10 +375,35 @@ class VerifySMSFragment : BaseFragment(), View.OnClickListener {
     override fun onClick(v: View?) {
         when {
             v?.id == R.id.verifySmsTextView -> {
-                verifySMS(smsToken)
+                //                verifySMS(smsToken)
+                if (!TextUtils.isEmpty(mVerificationId)) {
+                    verifyPhoneNumberWithCode(
+                        mVerificationId!!,
+                        otpEditText1?.text.toString().trim { it <= ' ' } +
+                            otpEditText2?.text.toString().trim { it <= ' ' } +
+                            otpEditText3?.text.toString().trim { it <= ' ' } +
+                            otpEditText4?.text.toString().trim { it <= ' ' } +
+                            otpEditText5?.text.toString().trim { it <= ' ' } +
+                            otpEditText6?.text.toString().trim { it <= ' ' }
+                    )
+                } else {
+                    Toast.makeText(
+                        activity, "Verification id not received",
+                        Toast.LENGTH_SHORT
+                    )
+                }
             }
             v?.id == R.id.resendSmsTextView -> {
-                resendOTP()
+                //                Utility.hideKeyBoardFromView(mActivity);
+                if (mResendToken != null) {
+                    resendVerificationCode("+$smsToken$phoneNumber", mResendToken!!)
+                } else {
+                    Toast.makeText(
+                        activity,
+                        "Resend token null",
+                        Toast.LENGTH_SHORT
+                    )
+                }
             }
         }
     }
@@ -186,7 +413,7 @@ class VerifySMSFragment : BaseFragment(), View.OnClickListener {
             showProgressDialog(getString(R.string.please_wait))
         }
         countdownTimerTextView?.visibility = View.VISIBLE
-        countDownTimer.start()
+        countDownTimer?.start()
         resendSmsTextView?.visibility = View.GONE
 
         val phoneLoginRequest = PhoneLoginRequest()
@@ -320,7 +547,7 @@ class VerifySMSFragment : BaseFragment(), View.OnClickListener {
                                     for (i in 0 until count) {
                                         fm.popBackStackImmediate()
                                     }
-//                                    activity!!.supportFragmentManager.popBackStackImmediate()
+                                    //                                    activity!!.supportFragmentManager.popBackStackImmediate()
                                 }
                             }
                         } else if (response.code() == 401) {
@@ -430,7 +657,7 @@ class VerifySMSFragment : BaseFragment(), View.OnClickListener {
         otpEditText6?.isCursorVisible = false
     }
 
-    private val countDownTimer = object : CountDownTimer(30 * 1000, 1000) {
+    /*private var countDownTimer = object : CountDownTimer(30 * 1000, 1000) {
         override fun onFinish() {
             countdownTimerTextView?.visibility = View.GONE
             resendSmsTextView?.visibility = View.VISIBLE
@@ -442,7 +669,7 @@ class VerifySMSFragment : BaseFragment(), View.OnClickListener {
                     getString(R.string.login_remaining_time, millisUntilFinished / 1000)
             }
         }
-    }
+    }*/
 
     fun parseAndFillOTP(message: String?) {
         try {

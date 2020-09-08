@@ -233,6 +233,7 @@
           android:paddingStart="16dp"
           android:paddingEnd="6dp"
           android:text="+91"
+          android:visibility="gone"
           android:textColor="@color/app_dark_black"
           android:textSize="16sp" />
 
@@ -244,6 +245,7 @@
           android:gravity="center_vertical"
           android:hint="Phone Number"
           android:inputType="phone"
+          android:padding="@dimen/space_13"
           android:maxLength="10"
           android:textColor="@color/campaign_4A4A4A"
           android:textSize="16sp" />

@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+  android:id="@+id/bottom_sheet"
+  android:layout_width="match_parent"
+  android:layout_height="match_parent"
+  android:background="@drawable/shape_shadow_rectangle"
+  android:clickable="true"
+  android:orientation="vertical"
+  android:paddingBottom="10dp">
+
+  <ImageView
+    android:layout_width="match_parent"
+    android:layout_height="250dp"
+    android:layout_marginLeft="@dimen/space_20"
+    android:layout_marginTop="@dimen/space_20"
+    android:layout_marginRight="@dimen/space_20"
+    android:scaleType="centerCrop"
+    android:src="@drawable/original_content" />
+
+  <com.mycity4kids.widget.CustomFontTextView
+    android:id="@+id/original_content"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_marginLeft="@dimen/space_20"
+    android:layout_marginTop="@dimen/space_13"
+    android:layout_marginRight="@dimen/space_20"
+    android:gravity="center"
+    android:text="@string/original_content"
+    android:textColor="@color/campaign_515151"
+    android:textSize="16sp" />
+
+
+  <com.mycity4kids.widget.CustomFontTextView
+    android:id="@+id/okBtn"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_gravity="center_horizontal"
+    android:layout_marginLeft="@dimen/space_20"
+    android:layout_marginTop="@dimen/space_13"
+    android:layout_marginRight="@dimen/space_20"
+    android:background="@drawable/campaign_detail_red_bg"
+    android:gravity="center"
+    android:paddingLeft="@dimen/space_31"
+    android:paddingTop="@dimen/space_16"
+    android:paddingRight="@dimen/space_31"
+    android:paddingBottom="@dimen/space_16"
+    android:text="@string/ok_got_it"
+    android:textAllCaps="true"
+    android:textColor="@color/white"
+    android:textSize="16sp" />
+
+</LinearLayout>

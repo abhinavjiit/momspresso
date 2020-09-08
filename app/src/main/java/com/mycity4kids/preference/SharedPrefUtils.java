@@ -711,4 +711,52 @@ public class SharedPrefUtils {
         editor.putBoolean("isFiveClickDone", isFiveClickDone);
         editor.commit();
     }
+
+    public static Boolean getOriginalContentBlogClick(Context context) {
+        SharedPreferences sharedPref = context.getSharedPreferences(COMMON_PREF_FILE, Context.MODE_PRIVATE);
+        return (sharedPref.getBoolean("isBlogClickDone", false));
+    }
+
+    public static void setOriginalContentBlogClick(Context context, Boolean isFiveClickDone) {
+        SharedPreferences sharedPref = context.getSharedPreferences(COMMON_PREF_FILE, Context.MODE_PRIVATE);
+        Editor editor = sharedPref.edit();
+        editor.putBoolean("isBlogClickDone", isFiveClickDone);
+        editor.commit();
+    }
+
+    public static Boolean getOriginalContentChallengeClick(Context context) {
+        SharedPreferences sharedPref = context.getSharedPreferences(COMMON_PREF_FILE, Context.MODE_PRIVATE);
+        return (sharedPref.getBoolean("isChallengeClickDone", false));
+    }
+
+    public static void setOriginalContentChallengeClick(Context context, Boolean isFiveClickDone) {
+        SharedPreferences sharedPref = context.getSharedPreferences(COMMON_PREF_FILE, Context.MODE_PRIVATE);
+        Editor editor = sharedPref.edit();
+        editor.putBoolean("isChallengeClickDone", isFiveClickDone);
+        editor.commit();
+    }
+
+    public static Boolean getOriginalContentStoryClick(Context context) {
+        SharedPreferences sharedPref = context.getSharedPreferences(COMMON_PREF_FILE, Context.MODE_PRIVATE);
+        return (sharedPref.getBoolean("isStoryClickDone", false));
+    }
+
+    public static void setOriginalContentStoryClick(Context context, Boolean isFiveClickDone) {
+        SharedPreferences sharedPref = context.getSharedPreferences(COMMON_PREF_FILE, Context.MODE_PRIVATE);
+        Editor editor = sharedPref.edit();
+        editor.putBoolean("isStoryClickDone", isFiveClickDone);
+        editor.commit();
+    }
+
+    public static Boolean getOriginalContentVideoClick(Context context) {
+        SharedPreferences sharedPref = context.getSharedPreferences(COMMON_PREF_FILE, Context.MODE_PRIVATE);
+        return (sharedPref.getBoolean("isVideoClickDone", false));
+    }
+
+    public static void setOriginalContentVideoClick(Context context, Boolean isFiveClickDone) {
+        SharedPreferences sharedPref = context.getSharedPreferences(COMMON_PREF_FILE, Context.MODE_PRIVATE);
+        Editor editor = sharedPref.edit();
+        editor.putBoolean("isVideoClickDone", isFiveClickDone);
+        editor.commit();
+    }
 }

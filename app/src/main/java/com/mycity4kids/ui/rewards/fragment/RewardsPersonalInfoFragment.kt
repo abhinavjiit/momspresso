@@ -75,10 +75,10 @@ import io.reactivex.Observer
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable
 import io.reactivex.schedulers.Schedulers
+import org.apmem.tools.layouts.FlowLayout
 import java.util.ArrayList
 import java.util.Calendar
 import java.util.Collections
-import org.apmem.tools.layouts.FlowLayout
 
 const val VERIFY_NUMBER_ACCOUNTKIT_REQUEST_CODE = 1000
 const val REQUEST_SELECT_PLACE = 2000
@@ -687,7 +687,8 @@ class RewardsPersonalInfoFragment : BaseFragment(),
                 }
             }
 
-        spannable = SpannableString(resources.getString(R.string.rewards_payment_disclaimer_note_two))
+        spannable =
+            SpannableString(resources.getString(R.string.rewards_payment_disclaimer_note_two))
 
         val clickableSpan = object : ClickableSpan() {
             override fun onClick(p0: View) {

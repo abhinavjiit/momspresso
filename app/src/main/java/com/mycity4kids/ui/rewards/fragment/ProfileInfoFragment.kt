@@ -95,6 +95,12 @@ import io.reactivex.Observer
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable
 import io.reactivex.schedulers.Schedulers
+import okhttp3.MediaType.Companion.toMediaTypeOrNull
+import okhttp3.RequestBody.Companion.asRequestBody
+import okhttp3.RequestBody.Companion.toRequestBody
+import org.apmem.tools.layouts.FlowLayout
+import retrofit2.Call
+import retrofit2.Callback
 import java.io.ByteArrayOutputStream
 import java.io.File
 import java.io.IOException
@@ -103,12 +109,6 @@ import java.util.ArrayList
 import java.util.Calendar
 import java.util.Collections
 import java.util.Date
-import okhttp3.MediaType.Companion.toMediaTypeOrNull
-import okhttp3.RequestBody.Companion.asRequestBody
-import okhttp3.RequestBody.Companion.toRequestBody
-import org.apmem.tools.layouts.FlowLayout
-import retrofit2.Call
-import retrofit2.Callback
 
 const val ADD_MEDIA_ACTIVITY_REQUEST_CODE = 1111
 const val ADD_MEDIA_CAMERA_ACTIVITY_REQUEST_CODE = 1113
@@ -179,6 +179,7 @@ class ProfileInfoFragment : BaseFragment(),
     private var currentCityName: String? = null
     private var cityName: String? = null
     private var accountKitAuthCode = ""
+    private var mobileNumber = ""
     private lateinit var layoutNumberOfKids: RelativeLayout
     private lateinit var layoutMotherExptectedDate: RelativeLayout
     private lateinit var editExpectedDate: EditText
@@ -303,7 +304,8 @@ class ProfileInfoFragment : BaseFragment(),
         initializeXMLComponents()
         fetchRewardsData()
 
-        spannable = SpannableString(resources.getString(R.string.rewards_payment_disclaimer_note_two))
+        spannable =
+            SpannableString(resources.getString(R.string.rewards_payment_disclaimer_note_two))
 
         val clickableSpan = object : ClickableSpan() {
             override fun onClick(p0: View) {
@@ -1173,8 +1175,8 @@ class ProfileInfoFragment : BaseFragment(),
             return false
         } else {
             if (apiGetResponse.mobile != null && !apiGetResponse.mobile.trim().isEmpty()) {
-                apiGetResponse.mobile = apiGetResponse.mobile
-                apiGetResponse.mobileToken = ""
+                apiGetResponse.mobile = mobileNumber
+                apiGetResponse.mobileToken = accountKitAuthCode
             } else if (!accountKitAuthCode.trim().isEmpty()) {
                 apiGetResponse.mobileToken = accountKitAuthCode
                 apiGetResponse.mobile = ""
@@ -1388,7 +1390,9 @@ class ProfileInfoFragment : BaseFragment(),
                 if (data != null && resultCode == Activity.RESULT_OK) {
                     //                    accountKitAuthCode = (data!!.getParcelableExtra(AccountKitLoginResult.RESULT_KEY) as AccountKitLoginResult).authorizationCode!!
                     accountKitAuthCode = data.getStringExtra("auth_token")!!
+                    mobileNumber = data.getStringExtra("phone")!!
                     Log.d("account code ", accountKitAuthCode)
+                    Log.d("mobileNumber ", mobileNumber)
                     //                        apiGetResponse.contact = null
                     editPhone.visibility = View.VISIBLE
                     textVerify.visibility = View.VISIBLE
