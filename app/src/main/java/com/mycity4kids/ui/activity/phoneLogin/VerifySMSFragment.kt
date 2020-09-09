@@ -19,7 +19,6 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.EditText
 import android.widget.TextView
-import android.widget.Toast
 import androidx.fragment.app.FragmentManager
 import com.google.android.gms.auth.api.phone.SmsRetriever
 import com.google.android.gms.common.api.CommonStatusCodes
@@ -44,7 +43,6 @@ import com.mycity4kids.retrofitAPIsInterfaces.LoginRegistrationAPI
 import com.mycity4kids.ui.activity.ActivityLogin
 import com.mycity4kids.ui.activity.OTPActivity
 import com.mycity4kids.ui.activity.UpdateUserHandleActivity
-import okhttp3.OkHttpClient
 import okhttp3.ResponseBody
 import org.json.JSONObject
 import retrofit2.Call
@@ -70,6 +68,7 @@ class VerifySMSFragment : BaseFragment(), View.OnClickListener {
     var mResendToken: ForceResendingToken? = null
     var countDownTimer: CountDownTimer? = null
     var mVerificationId: String? = null
+    var codeVerified: Boolean = false
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -154,21 +153,25 @@ class VerifySMSFragment : BaseFragment(), View.OnClickListener {
             fetchActivity(),
             mCallbacks as OnVerificationStateChangedCallbacks
         )
-        startCounter()
+        //        startCounter()
     }
 
 
     private fun startCounter() {
+        countdownTimerTextView?.visibility = View.VISIBLE
+        resendSmsTextView?.visibility = View.GONE
         if (countDownTimer != null) {
             countDownTimer!!.cancel()
         }
         countDownTimer = object : CountDownTimer(30000, 1000) {
             override fun onTick(millisUntilFinished: Long) {
-                countdownTimerTextView?.setText("" + millisUntilFinished / 1000)
+                countdownTimerTextView?.text =
+                    getString(R.string.login_remaining_time, millisUntilFinished / 1000)
             }
 
             override fun onFinish() {
-                countdownTimerTextView?.setText("")
+                countdownTimerTextView?.visibility = View.GONE
+                resendSmsTextView?.visibility = View.VISIBLE
                 resendSmsTextView?.setEnabled(true)
             }
         }
@@ -229,24 +232,25 @@ class VerifySMSFragment : BaseFragment(), View.OnClickListener {
                 OnCompleteListener<AuthResult> { task ->
                     if (task.isSuccessful) {
                         mUser = task.result!!.user
+                        fetchToken()
+//                        codeVerified = true
                     } else {
-
+//                        codeVerified = false
                         if (task.exception is FirebaseAuthInvalidCredentialsException) {
-                        }
-
-                        if (activity?.javaClass?.simpleName.equals("ActivityLogin")) {
-                            (activity as ActivityLogin).finish()
-                        } else if (activity?.javaClass?.simpleName.equals("OTPActivity")) {
-                            val intent = Intent()
-                            intent.putExtra("PHONE_NUMBER", "")
-                            (activity as OTPActivity).setResult(Activity.RESULT_OK, intent)
-                            (activity as OTPActivity).finish()
-                        } else if (activity?.javaClass?.simpleName.equals("UpdateUserHandleActivity")) {
-                            (activity as UpdateUserHandleActivity).finish()
+                            if (activity?.javaClass?.simpleName.equals("ActivityLogin")) {
+                                (activity as ActivityLogin).showToast(getString(R.string.please_enter_a_valid_code))
+                            } else if (activity?.javaClass?.simpleName.equals("OTPActivity")) {
+                                (activity as OTPActivity).showToast(getString(R.string.please_enter_a_valid_code))
+                            } else if (activity?.javaClass?.simpleName.equals("UpdateUserHandleActivity")) {
+                                (activity as UpdateUserHandleActivity).showToast(getString(R.string.please_enter_a_valid_code))
+                            }
                         }
                     }
                 })
+    }
 
+    private fun fetchToken() {
+        var mUser = FirebaseAuth.getInstance().currentUser
         mUser!!.getIdToken(true)
             .addOnCompleteListener { task ->
                 if (task.isSuccessful) {
@@ -387,22 +391,23 @@ class VerifySMSFragment : BaseFragment(), View.OnClickListener {
                             otpEditText6?.text.toString().trim { it <= ' ' }
                     )
                 } else {
-                    Toast.makeText(
-                        activity, "Verification id not received",
-                        Toast.LENGTH_SHORT
-                    )
+                    if (activity?.javaClass?.simpleName.equals("ActivityLogin")) {
+                        (activity as ActivityLogin).showToast(getString(R.string.please_retry))
+                    } else if (activity?.javaClass?.simpleName.equals("OTPActivity")) {
+                        (activity as OTPActivity).showToast(getString(R.string.please_retry))
+                    }
                 }
             }
             v?.id == R.id.resendSmsTextView -> {
-                //                Utility.hideKeyBoardFromView(mActivity);
+                // Utility.hideKeyBoardFromView(mActivity);
                 if (mResendToken != null) {
                     resendVerificationCode("+$smsToken$phoneNumber", mResendToken!!)
                 } else {
-                    Toast.makeText(
-                        activity,
-                        "Resend token null",
-                        Toast.LENGTH_SHORT
-                    )
+                    if (activity?.javaClass?.simpleName.equals("ActivityLogin")) {
+                        (activity as ActivityLogin).showToast(getString(R.string.please_retry))
+                    } else if (activity?.javaClass?.simpleName.equals("OTPActivity")) {
+                        (activity as OTPActivity).showToast(getString(R.string.please_retry))
+                    }
                 }
             }
         }
