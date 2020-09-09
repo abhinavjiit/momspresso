@@ -306,7 +306,7 @@ class ContentCommentReplyNotificationActivity : BaseActivity(),
                 args.putString("responseType", "COMMENT")
                 args.putString("blogWriterId", blogWriterId)
                 val commentOptionsDialogFragment =
-                    CommentOptionsDialogFragment()
+                    CommentOptionsDialogFragment(this)
                 commentOptionsDialogFragment.arguments = args
                 commentOptionsDialogFragment.isCancelable = true
                 val fm: FragmentManager = supportFragmentManager
@@ -1108,4 +1108,6 @@ class ContentCommentReplyNotificationActivity : BaseActivity(),
 
         }
     }
+
+
 }

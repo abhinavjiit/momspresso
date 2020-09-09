@@ -13,13 +13,18 @@ import androidx.fragment.app.DialogFragment;
 import com.mycity4kids.R;
 import com.mycity4kids.application.BaseApplication;
 import com.mycity4kids.preference.SharedPrefUtils;
-import com.mycity4kids.ui.ContentCommentReplyNotificationActivity;
 import com.mycity4kids.utils.AppUtils;
 
 /**
  * Created by user on 08-06-2015.
  */
 public class CommentOptionsDialogFragment extends DialogFragment implements OnClickListener {
+
+    private ICommentOptionAction impl;
+
+    public CommentOptionsDialogFragment(ICommentOptionAction impl) {
+        this.impl = impl;
+    }
 
     private int position;
     private String responseType;
@@ -83,57 +88,23 @@ public class CommentOptionsDialogFragment extends DialogFragment implements OnCl
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.deleteCommentTextView: {
-                if (getActivity() != null && getActivity() instanceof ContentCommentReplyNotificationActivity) {
-                    ICommentOptionAction commentOptionAction = (ICommentOptionAction) getActivity();
-                    commentOptionAction.onResponseDelete(position, responseType);
-                    dismiss();
-                } else {
-                    ICommentOptionAction commentOptionAction = (ICommentOptionAction) getParentFragment();
-                    commentOptionAction.onResponseDelete(position, responseType);
-                    dismiss();
-                }
+                impl.onResponseDelete(position, responseType);
+                dismiss();
             }
             break;
             case R.id.editCommentTextView: {
-                if (getActivity() != null && getActivity() instanceof ContentCommentReplyNotificationActivity) {
-                    ICommentOptionAction commentOptionAction = (ICommentOptionAction) getActivity();
-                    commentOptionAction.onResponseEdit(position, responseType);
-                    dismiss();
-                } else {
-                    ICommentOptionAction commentOptionAction = (ICommentOptionAction) getParentFragment();
-                    commentOptionAction.onResponseEdit(position, responseType);
-                    dismiss();
-                }
+                impl.onResponseEdit(position, responseType);
+                dismiss();
             }
             break;
             case R.id.reportCommentTextView: {
-                if (getActivity() != null && getActivity() instanceof ContentCommentReplyNotificationActivity) {
-                    ICommentOptionAction commentOptionAction = (ICommentOptionAction) getActivity();
-                    commentOptionAction.onResponseReport(position, responseType);
-                    dismiss();
-                } else {
-                    ICommentOptionAction commentOptionAction = (ICommentOptionAction) getParentFragment();
-                    commentOptionAction.onResponseReport(position, responseType);
-                    dismiss();
-                }
+                impl.onResponseReport(position, responseType);
+                dismiss();
             }
+            break;
             case R.id.blockUserTextView: {
-                if (getParentFragment() instanceof ContentCommentReplyNotificationFragment) {
-                    ICommentOptionAction commentOptionAction = (ICommentOptionAction) getParentFragment();
-                    commentOptionAction.onBlockUser(position, responseType);
-                    dismiss();
-
-                } else if (getActivity() != null && getActivity() instanceof ContentCommentReplyNotificationActivity) {
-                    ICommentOptionAction commentOptionAction = (ICommentOptionAction) getActivity();
-                    commentOptionAction.onBlockUser(position, responseType);
-                    dismiss();
-                } else {
-                    ICommentOptionAction commentOptionAction = (ICommentOptionAction) getParentFragment();
-                    commentOptionAction.onBlockUser(position, responseType);
-                    dismiss();
-                }
-
-
+                impl.onBlockUser(position, responseType);
+                dismiss();
             }
             break;
             default:
