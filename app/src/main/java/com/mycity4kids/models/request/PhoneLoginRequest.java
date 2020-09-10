@@ -16,7 +16,7 @@ public class PhoneLoginRequest {
     private String verification_code;
     @SerializedName("sms_token")
     private String sms_token;
-    @SerializedName("fireBaseAuthToken")
+    @SerializedName("auth_token")
     private String auth_token;
 
     public String getCode() {

@@ -52,7 +52,7 @@ class ProfileSetting : BaseActivity(), GoogleApiClient.OnConnectionFailedListene
     private lateinit var myMoneyContainer: TextView
     private var logout_layout: LinearLayout? = null
     private var mGoogleApiClient: GoogleApiClient? = null
-    private var totalPayout = 0
+    private var totalPayout = 0.0
     private var activityTextView: TextView? = null
     private var readArticlesTextView: TextView? = null
     private var isRewardAdded: String? = null

@@ -95,8 +95,8 @@ public class UserDetailResult implements Parcelable {
     private String isExpected;
     @SerializedName("expectedDate")
     private String expectedDate;
-    @SerializedName("fireBaseAuthToken")
-    private String fireBaseAuthToken;
+    @SerializedName("mobileAuthToken")
+    private String mobileAuthToken;
     @SerializedName("mobile")
     private String mobile;
     @SerializedName("gender")
@@ -153,7 +153,7 @@ public class UserDetailResult implements Parcelable {
         dob = in.readString();
         isExpected = in.readString();
         expectedDate = in.readString();
-        fireBaseAuthToken = in.readString();
+        mobileAuthToken = in.readString();
         mobile = in.readString();
         isNewUser = in.readString();
         userHandle = in.readString();
@@ -322,11 +322,11 @@ public class UserDetailResult implements Parcelable {
     }
 
     public String getMobileToken() {
-        return fireBaseAuthToken;
+        return mobileAuthToken;
     }
 
     public void setMobileToken(String mobileToken) {
-        this.fireBaseAuthToken = mobileToken;
+        this.mobileAuthToken = mobileToken;
     }
 
     public String getMobile() {
@@ -632,7 +632,7 @@ public class UserDetailResult implements Parcelable {
         parcel.writeString(dob);
         parcel.writeString(isExpected);
         parcel.writeString(expectedDate);
-        parcel.writeString(fireBaseAuthToken);
+        parcel.writeString(mobileAuthToken);
         parcel.writeString(mobile);
         parcel.writeString(isNewUser);
         parcel.writeString(userHandle);

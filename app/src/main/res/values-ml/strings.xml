@@ -1447,7 +1447,7 @@ Thank you! We will be reviewing your story. You can expect to hear from us withi
   <string name="new_mom_popup_msg">Let us know your child\'s birth date and we will show you just what you need to know for that age!</string>
   <string name="profile_emailid_optional">Email Id (optional)</string>
   <string name="all_questions">Questions</string>
-  <string name="original_content">Kindly publish only original content at Momspresso. Plagiarised content i.e. content copied even partially from any source, will not be accepted</string>
+  <string name="original_content">മോംസ്പ്രെസ്സോ സൈറ്റിൽ നിങ്ങളുടെ സ്വന്തം സൃഷ്ടികൾ പ്രസിദ്ധീകരിക്കുക. മറ്റൊരാളുടെ സൃഷ്ടിയോ അതിന്റെ ഭാഗമോ പകർത്തി മോംസ്പ്രെസ്സോയിൽ പോസ്റ്റുചെയ്യുന്നത് സ്വീകാര്യമല്ല.</string>
   <string name="ok_got_it">Ok, got It</string>
   <string name="please_enter_a_valid_code">Please enter a valid verification code.</string>
 </resources>
