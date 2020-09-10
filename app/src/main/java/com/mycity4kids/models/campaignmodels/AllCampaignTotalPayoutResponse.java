@@ -45,19 +45,19 @@ public class AllCampaignTotalPayoutResponse extends BaseResponse {
         @SerializedName("campaign_details")
         private CampaignDetail campaign_details;
         @SerializedName("final_payout")
-        private int final_payout;
+        private double final_payout;
         @SerializedName("reimbursement")
-        private int reimbursement;
+        private double reimbursement;
         @SerializedName("payment_meta")
         private List<PaymentMeta> payment_meta;
         @SerializedName("payment_status")
         private int payment_status;
 
-        public int getReimbursement() {
+        public double getReimbursement() {
             return reimbursement;
         }
 
-        public void setReimbursement(int reimbursement) {
+        public void setReimbursement(double reimbursement) {
             this.reimbursement = reimbursement;
         }
 
@@ -69,11 +69,11 @@ public class AllCampaignTotalPayoutResponse extends BaseResponse {
             this.campaign_details = campaignDetails;
         }
 
-        public int getFinal_payout() {
+        public double getFinal_payout() {
             return final_payout + reimbursement;
         }
 
-        public void setFinal_payout(int final_payout) {
+        public void setFinal_payout(double final_payout) {
             this.final_payout = final_payout;
         }
 

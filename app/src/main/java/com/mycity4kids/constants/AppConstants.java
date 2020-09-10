@@ -400,6 +400,4 @@ public class AppConstants {
 
 
     public static final String ARTICLE_CHALLENGE_CATEGORY_ID = "category-c0ab155724d7482cbee69a8d3040dbaf";
-    public static final String PhoneNumber = "PhoneNumber";
-    public static final String PhoneCode = "PhoneCode";
 }

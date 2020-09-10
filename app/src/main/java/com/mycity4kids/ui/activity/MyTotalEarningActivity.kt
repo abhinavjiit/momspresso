@@ -32,7 +32,7 @@ class MyTotalEarningActivity : BaseActivity() {
 
     private lateinit var recyclerEarnings: RecyclerView
     private lateinit var earningRecyclerAdapter: EarningRecyclerAdapter
-    private var totalPayout: Int = 0
+    private var totalPayout = 0.0
     private lateinit var textTotalPayout: TextView
     private lateinit var profileImageView: ImageView
     private lateinit var startCampaign: TextView
@@ -51,7 +51,7 @@ class MyTotalEarningActivity : BaseActivity() {
         (application as BaseApplication).view = root
         (application as BaseApplication).activity = this
 
-        totalPayout = intent.getIntExtra("totalPayout", 0)
+        totalPayout = intent.getDoubleExtra("totalPayout", 0.0)
 
         textTotalPayout = findViewById(R.id.total_amount)
         recyclerEarnings = findViewById(R.id.recyclerEarnings)

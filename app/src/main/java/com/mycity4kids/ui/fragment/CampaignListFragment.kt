@@ -87,7 +87,7 @@ class CampaignListFragment : BaseFragment() {
     private var apiResponse: UserDetailResult = UserDetailResult()
     private lateinit var profileImageView: ImageView
     private lateinit var loader: ProgressBar
-    private var totalPayout = 0
+    private var totalPayout = 0.0
     private var totalCampaignCount = 0
     private lateinit var dashboardLayout: ConstraintLayout
     private lateinit var campaignNos: TextView

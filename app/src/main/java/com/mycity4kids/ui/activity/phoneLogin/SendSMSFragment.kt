@@ -84,17 +84,17 @@ class SendSMSFragment : BaseFragment(), View.OnClickListener {
     override fun onClick(v: View?) {
         when {
             v?.id == R.id.useSmsTextView -> {
-                /*val phoneLoginRequest = PhoneLoginRequest()
+                val phoneLoginRequest = PhoneLoginRequest()
                 phoneLoginRequest.phone = phoneEditText?.text?.toString()
 
                 val retrofit = BaseApplication.getInstance().retrofit
                 val loginRegistrationAPI = retrofit.create(LoginRegistrationAPI::class.java)
                 val call = loginRegistrationAPI.triggerSMS(phoneLoginRequest)
                 //                launchVerifySMSFragment("dwdwdw")
-                call.enqueue(triggerSMSResponseCallback)*/
+                call.enqueue(triggerSMSResponseCallback)
 
 
-                val verifySMSFragment = VerifySMSFragment()
+                /*val verifySMSFragment = VerifySMSFragment()
                 val bundle = Bundle()
                 bundle.putString("smsToken", "91")
                 bundle.putString("phoneNumber", phoneEditText?.text?.toString())
@@ -112,7 +112,7 @@ class SendSMSFragment : BaseFragment(), View.OnClickListener {
                         .commit()
                 } else if (activity?.javaClass?.simpleName.equals("UpdateUserHandleActivity")) {
                     (activity as UpdateUserHandleActivity).addFragment(verifySMSFragment, bundle, null)
-                }
+                }*/
 
 
 

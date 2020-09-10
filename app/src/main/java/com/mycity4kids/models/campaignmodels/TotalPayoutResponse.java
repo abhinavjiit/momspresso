@@ -44,11 +44,11 @@ public class TotalPayoutResponse extends BaseResponse {
 
     public class PayoutResult {
         @SerializedName("total_payout")
-        private int total_payout;
+        private double total_payout;
         @SerializedName("total_payout_campaign_count")
         private int total_payout_campaign_count;
 
-        public int getTotal_payout() {
+        public double getTotal_payout() {
             return total_payout;
         }
 

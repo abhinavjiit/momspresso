@@ -15,7 +15,7 @@ public class UserHandleResult implements Parcelable {
     private String lastName;
     @SerializedName("email")
     private String email;
-    @SerializedName("fireBaseAuthToken")
+    @SerializedName("mobileAuthToken")
     private String mobileAuthToken;
     @SerializedName("mobile")
     private String mobile;

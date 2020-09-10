@@ -57,7 +57,7 @@ public interface LoginRegistrationAPI {
     @POST("v1/smsapi/verify/")
     Call<ResponseBody> verifySMS(@Body PhoneLoginRequest phoneLoginRequest);
 
-    @POST("v1/users/loginfirebasenumber/")
+    @POST("v1/users/loginmobilenumber/")
     Call<FBPhoneLoginResponse> loginWithPhoneToken(@Body PhoneLoginRequest phoneLoginRequest);
 
     @POST("apiusers/logoutV1/")
