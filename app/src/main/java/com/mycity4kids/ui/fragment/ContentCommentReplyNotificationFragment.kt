@@ -447,7 +447,7 @@ class ContentCommentReplyNotificationFragment : BaseFragment(),
                 args.putString("responseType", "COMMENT")
                 args.putString("blogWriterId", authorId)
                 val commentOptionsDialogFragment =
-                    CommentOptionsDialogFragment()
+                    CommentOptionsDialogFragment(this)
                 commentOptionsDialogFragment.arguments = args
                 commentOptionsDialogFragment.isCancelable = true
                 val fm = childFragmentManager
@@ -591,7 +591,7 @@ class ContentCommentReplyNotificationFragment : BaseFragment(),
             contentCommentReplyNotificationAdapter.notifyDataSetChanged()
         } else if (v?.id == R.id.moreOptionImageView) {
             val commentOptionsDialogFragment =
-                CommentOptionsDialogFragment()
+                CommentOptionsDialogFragment(this)
             val fm = childFragmentManager
             val _args = Bundle()
             _args.putInt("position", position)

@@ -644,7 +644,7 @@ public class ShortStoryFragment extends BaseFragment implements View.OnClickList
                 args.putString("authorId", consolidatedList.get(position).getSsComment().getUserId());
                 args.putString("responseType", "COMMENT");
                 args.putString("blogWriterId", authorId);
-                CommentOptionsDialogFragment commentOptionsDialogFragment = new CommentOptionsDialogFragment();
+                CommentOptionsDialogFragment commentOptionsDialogFragment = new CommentOptionsDialogFragment(this);
                 commentOptionsDialogFragment.setArguments(args);
                 commentOptionsDialogFragment.setCancelable(true);
                 FragmentManager fm = getChildFragmentManager();

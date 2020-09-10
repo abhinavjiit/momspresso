@@ -290,7 +290,7 @@ public class ShortStoryCommentRepliesDialogFragment extends DialogFragment imple
         switch (view.getId()) {
             case R.id.moreOptionImageView:
             case R.id.commentRootLayout: {
-                CommentOptionsDialogFragment commentOptionsDialogFragment = new CommentOptionsDialogFragment();
+                CommentOptionsDialogFragment commentOptionsDialogFragment = new CommentOptionsDialogFragment(this);
                 FragmentManager fm = getChildFragmentManager();
                 Bundle _args = new Bundle();
                 _args.putInt("position", position);
@@ -304,7 +304,7 @@ public class ShortStoryCommentRepliesDialogFragment extends DialogFragment imple
             break;
             case R.id.moreOptionRepliesImageView:
             case R.id.replyRootView: {
-                CommentOptionsDialogFragment commentOptionsDialogFragment = new CommentOptionsDialogFragment();
+                CommentOptionsDialogFragment commentOptionsDialogFragment = new CommentOptionsDialogFragment(this);
                 FragmentManager fm = getChildFragmentManager();
                 Bundle _args = new Bundle();
                 _args.putInt("position", position);

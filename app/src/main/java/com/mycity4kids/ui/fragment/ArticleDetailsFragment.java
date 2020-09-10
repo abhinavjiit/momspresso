@@ -2428,7 +2428,7 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
         args.putString("authorId", commentsList.get(position).getUserId());
         args.putString("responseType", "COMMENT");
         args.putString("blogWriterId", authorId);
-        CommentOptionsDialogFragment commentOptionsDialogFragment = new CommentOptionsDialogFragment();
+        CommentOptionsDialogFragment commentOptionsDialogFragment = new CommentOptionsDialogFragment(this);
         commentOptionsDialogFragment.setArguments(args);
         commentOptionsDialogFragment.setCancelable(true);
         FragmentManager fm = getChildFragmentManager();
@@ -4411,7 +4411,6 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
             Log.d("MC4kException", Log.getStackTraceString(t));
         }
     };
-
 
     private class MyWebChromeClient extends WebChromeClient {
 

@@ -341,7 +341,7 @@ public class ArticleCommentRepliesDialogFragment extends DialogFragment implemen
                 args.putString("responseType", "COMMENT");
                 args.putString("authorId", repliesList.get(position).getUserId());
                 args.putString("blogWriterId", authorId);
-                CommentOptionsDialogFragment commentOptionsDialogFragment = new CommentOptionsDialogFragment();
+                CommentOptionsDialogFragment commentOptionsDialogFragment = new CommentOptionsDialogFragment(this);
                 commentOptionsDialogFragment.setArguments(args);
                 commentOptionsDialogFragment.setCancelable(true);
                 FragmentManager fm = getChildFragmentManager();
@@ -355,7 +355,7 @@ public class ArticleCommentRepliesDialogFragment extends DialogFragment implemen
                 args.putString("responseType", "REPLY");
                 args.putString("authorId", repliesList.get(position).getUserId());
                 args.putString("blogWriterId", authorId);
-                CommentOptionsDialogFragment commentOptionsDialogFragment = new CommentOptionsDialogFragment();
+                CommentOptionsDialogFragment commentOptionsDialogFragment = new CommentOptionsDialogFragment(this);
                 commentOptionsDialogFragment.setArguments(args);
                 commentOptionsDialogFragment.setCancelable(true);
                 FragmentManager fm = getChildFragmentManager();
