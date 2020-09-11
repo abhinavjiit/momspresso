@@ -52,6 +52,19 @@
             app:fontName="open_sans.ttf" />
 
         <com.mycity4kids.widget.CustomFontTextView
+          android:id="@+id/payment_date"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:layout_below="@id/campaign_name"
+          android:layout_gravity="center"
+          android:layout_marginLeft="@dimen/space_15"
+          android:layout_marginTop="@dimen/space_5"
+          android:layout_marginRight="@dimen/space_5"
+          android:layout_toRightOf="@id/brandImageView"
+          android:textColor="@color/campaign_expired"
+          android:textSize="12sp" />
+
+        <com.mycity4kids.widget.CustomFontTextView
             android:id="@+id/settle_amount"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"

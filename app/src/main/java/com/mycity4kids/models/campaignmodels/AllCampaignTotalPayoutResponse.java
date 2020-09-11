@@ -1,5 +1,6 @@
 package com.mycity4kids.models.campaignmodels;
 
+import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 import com.mycity4kids.models.response.BaseResponse;
 
@@ -44,8 +45,12 @@ public class AllCampaignTotalPayoutResponse extends BaseResponse {
     public class TotalPayoutResult {
         @SerializedName("campaign_details")
         private CampaignDetail campaign_details;
+        @SerializedName("expected_payment_time")
+        private Long expectedDate;
         @SerializedName("final_payout")
         private double final_payout;
+        @SerializedName("gateway_update_time")
+        private Long paidDate;
         @SerializedName("reimbursement")
         private double reimbursement;
         @SerializedName("payment_meta")
@@ -71,6 +76,23 @@ public class AllCampaignTotalPayoutResponse extends BaseResponse {
 
         public double getFinal_payout() {
             return final_payout + reimbursement;
+        }
+
+
+        public Long getExpectedDate() {
+            return expectedDate;
+        }
+
+        public void setExpectedDate(Long expectedDate) {
+            this.expectedDate = expectedDate;
+        }
+
+        public Long getPaidDate() {
+            return paidDate;
+        }
+
+        public void setPaidDate(Long paidDate) {
+            this.paidDate = paidDate;
         }
 
         public void setFinal_payout(double final_payout) {
