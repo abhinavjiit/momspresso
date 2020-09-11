@@ -13,6 +13,8 @@ import com.mycity4kids.R
 import com.mycity4kids.models.campaignmodels.AllCampaignTotalPayoutResponse
 import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.recycler_myearning.view.*
+import java.text.SimpleDateFormat
+import java.util.Calendar
 
 class EarningRecyclerAdapter(
     private val payoutList: List<AllCampaignTotalPayoutResponse.TotalPayoutResult>,
@@ -34,14 +36,16 @@ class EarningRecyclerAdapter(
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val view = LayoutInflater.from(parent.context)
-                .inflate(R.layout.recycler_myearning, parent, false)
+            .inflate(R.layout.recycler_myearning, parent, false)
         return ViewHolder(view)
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         if (payoutsList!!.isNotEmpty()) {
             val item = payoutsList!!.get(position)
-            Picasso.get().load(item.campaignDetails.brandDetails.imageUrl).placeholder(R.drawable.default_article).error(R.drawable.default_article).into(holder.brandImageView)
+            Picasso.get().load(item.campaignDetails.brandDetails.imageUrl).placeholder(R.drawable.default_article).error(
+                R.drawable.default_article
+            ).into(holder.brandImageView)
             holder.settleAmount.text = ("\u20b9" + item.final_payout)
             holder.brandName.text = (item.campaignDetails.brandDetails.name)
             holder.campaignName.text = (item.campaignDetails.name)
@@ -49,11 +53,21 @@ class EarningRecyclerAdapter(
             if (item.payment_meta.size == 1) {
                 if (item.payment_meta[0].source == "rewards") {
                     holder.relativeFour.visibility = View.GONE
-                    holder.totalAmount.text = ("\u20b9" + item.payment_meta[0].total_amount.toString())
+                    holder.totalAmount.text =
+                        ("\u20b9" + item.payment_meta[0].total_amount.toString())
                     holder.netAmount.text = ("\u20b9" + item.payment_meta[0].net_amount)
                     holder.tds.text = ("TDS (" + item.payment_meta[0].tax_percentage + "%)")
                     holder.paymentStatus.text = (setStatus(item.payment_status, holder))
                     holder.taxAmount.text = ("- \u20b9" + item.payment_meta[0].tax_amount)
+                    if (item.payment_status == 1) {
+                        if (item.paidDate != null)
+                            holder.paymentDate.text =
+                                ("Paid: \u20b9" + getDate(item.paidDate, "dd MMM yyyy"))
+                    } else {
+                        if (item.expectedDate != null)
+                            holder.paymentDate.text =
+                                ("Expected: \u20b9" + getDate(item.expectedDate, "dd MMM yyyy"))
+                    }
                     holder.earningss.visibility = View.VISIBLE
                     holder.Tds.visibility = View.VISIBLE
                 } else {
@@ -63,21 +77,50 @@ class EarningRecyclerAdapter(
                     holder.relativeFour.visibility = View.VISIBLE
                     holder.netAmount.text = ("\u20b9" + item.payment_meta[0].net_amount)
                     holder.paymentStatus.text = (setStatus(item.payment_status, holder))
+                    if (item.payment_status == 1) {
+                        if (item.paidDate != null)
+                            holder.paymentDate.text =
+                                ("Paid: \u20b9" + getDate(item.paidDate, "dd MMM yyyy"))
+                    } else {
+                        if (item.expectedDate != null)
+                            holder.paymentDate.text =
+                                ("Expected: \u20b9" + getDate(item.expectedDate, "dd MMM yyyy"))
+                    }
                 }
             } else {
                 totalEarning = 0.0
                 for (i in 0 until item.payment_meta.size) {
                     if (item.payment_meta[i].source == "rewards") {
-                        holder.totalAmount.text = ("\u20b9" + item.payment_meta[i].total_amount.toString())
+                        holder.totalAmount.text =
+                            ("\u20b9" + item.payment_meta[i].total_amount.toString())
 
                         totalEarning += item.payment_meta[i].net_amount
                         holder.tds.text = ("TDS (" + item.payment_meta[i].tax_percentage + "%)")
                         holder.paymentStatus.text = (setStatus(item.payment_status, holder))
                         holder.taxAmount.text = ("- \u20b9" + item.payment_meta[i].tax_amount)
+                        if (item.payment_status == 1) {
+                            if (item.paidDate != null)
+                                holder.paymentDate.text =
+                                    ("Paid: \u20b9" + getDate(item.paidDate, "dd MMM yyyy"))
+                        } else {
+                            if (item.expectedDate != null)
+                                holder.paymentDate.text =
+                                    ("Expected: \u20b9" + getDate(item.expectedDate, "dd MMM yyyy"))
+                        }
                     } else {
-                        holder.reimbursementAmount.text = item.payment_meta[i].total_amount.toString()
+                        holder.reimbursementAmount.text =
+                            item.payment_meta[i].total_amount.toString()
                         holder.paymentStatus.text = (setStatus(item.payment_status, holder))
                         totalEarning += item.payment_meta[i].net_amount
+                        if (item.payment_status == 1) {
+                            if (item.paidDate != null)
+                                holder.paymentDate.text =
+                                    ("Paid: \u20b9" + getDate(item.paidDate, "dd MMM yyyy"))
+                        } else {
+                            if (item.expectedDate != null)
+                                holder.paymentDate.text =
+                                    ("Expected: \u20b9" + getDate(item.expectedDate, "dd MMM yyyy"))
+                        }
                     }
                 }
                 holder.netAmount.text = ("\u20b9" + totalEarning)
@@ -95,6 +138,14 @@ class EarningRecyclerAdapter(
                 setOnClickListener(mOnClickListener)
             }
         }
+    }
+
+    fun getDate(milliSeconds: Long, dateFormat: String): String {
+        val formatter = SimpleDateFormat(dateFormat)
+
+        val calendar = Calendar.getInstance()
+        calendar.timeInMillis = milliSeconds * 1000
+        return formatter.format(calendar.time)
     }
 
     private fun setStatus(payment_status: Int, holder: ViewHolder): String {
@@ -117,6 +168,7 @@ class EarningRecyclerAdapter(
         var totalAmount: TextView = mView.total_amount
         var netAmount: TextView = mView.net_amount
         var paymentStatus: TextView = mView.payment_status
+        var paymentDate: TextView = mView.payment_date
         var brandName: TextView = mView.brand_name
         var campaignName: TextView = mView.campaign_name
         var tds: TextView = mView.tds
