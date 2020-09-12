@@ -74,7 +74,9 @@ public class CommentRepliesRecyclerAdapter extends RecyclerView.Adapter<Recycler
                     AppUtils.createSpannableForMentionHandling(repliesList.get(position).getUserId(),
                             repliesList.get(position).getUserName(), repliesList.get(position).getMessage(),
                             repliesList.get(position).getMentions(), ContextCompat
-                                    .getColor(commentsViewHolder.commentDataTextView.getContext(), R.color.app_red)));
+                                    .getColor(commentsViewHolder.commentDataTextView.getContext(), R.color.app_red),
+                            ContextCompat
+                                    .getColor(commentsViewHolder.commentDataTextView.getContext(), R.color.user_tag)));
             commentsViewHolder.commentDataTextView.setMovementMethod(LinkMovementMethod.getInstance());
             commentsViewHolder.dateTextView.setText(DateTimeUtils
                     .getDateFromNanoMilliTimestamp(Long.parseLong(repliesList.get(position).getCreatedTime())));
@@ -139,7 +141,9 @@ public class CommentRepliesRecyclerAdapter extends RecyclerView.Adapter<Recycler
                     AppUtils.createSpannableForMentionHandling(repliesList.get(position).getUserId(),
                             repliesList.get(position).getUserName(), repliesList.get(position).getMessage(),
                             repliesList.get(position).getMentions(), ContextCompat
-                                    .getColor(repliesViewHolder.commentDataTextView.getContext(), R.color.app_red)));
+                                    .getColor(repliesViewHolder.commentDataTextView.getContext(), R.color.app_red),
+                            ContextCompat
+                                    .getColor(repliesViewHolder.commentDataTextView.getContext(), R.color.user_tag)));
             repliesViewHolder.commentDataTextView.setMovementMethod(LinkMovementMethod.getInstance());
             repliesViewHolder.commentorUsernameTextView.setText(repliesList.get(position).getUserName());
             repliesViewHolder.commentDateTextView.setText(DateTimeUtils

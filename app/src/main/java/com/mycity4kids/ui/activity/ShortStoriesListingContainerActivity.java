@@ -175,7 +175,10 @@ public class ShortStoriesListingContainerActivity extends BaseActivity implement
             subTopicsList.add(mainTopic);
         }
         for (int i = 0; i < subTopicsList.size(); i++) {
-            tabLayout.addTab(tabLayout.newTab().setText(subTopicsList.get(i).getDisplay_name()));
+            TabLayout.Tab tab = tabLayout.newTab();
+            tab.setText(subTopicsList.get(i).getDisplay_name());
+            tab.setTag(subTopicsList.get(i).getId());
+            tabLayout.addTab(tab);
             if (subTopicsList.get(i).getId().equals(selectedTabCategoryId)) {
                 selectedTab = i;
             }
@@ -191,6 +194,14 @@ public class ShortStoriesListingContainerActivity extends BaseActivity implement
         tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
             @Override
             public void onTabSelected(TabLayout.Tab tab) {
+                try {
+                    if (tab.getTag().toString().equals(AppConstants.SHORT_STORY_CHALLENGE_ID)) {
+                        Utils.shareEventTracking(ShortStoriesListingContainerActivity.this, "100WS listing",
+                                "Story_Challenges_Android", "SS_Show_SCListing_Challenge");
+                    }
+                } catch (Exception e) {
+
+                }
                 viewPager.setCurrentItem(tab.getPosition());
                 Fragment fragment = pagerAdapter.getItem(tab.getPosition());
                 if (fragment != null) {

@@ -41,9 +41,7 @@
       app:civ_border="true"
       app:civ_border_color="@color/white_color"
       app:civ_border_width="0dp"
-      app:civ_shadow="true"
-      app:civ_shadow_color="@color/grey"
-      app:civ_shadow_radius="4" />
+      app:civ_shadow="false" />
 
     <com.mycity4kids.widget.CustomFontTextView
       android:id="@+id/commentorUsernameTextView"

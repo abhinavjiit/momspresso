@@ -24,6 +24,7 @@ import com.mycity4kids.preference.SharedPrefUtils;
 import com.mycity4kids.retrofitAPIsInterfaces.ForceUpdateAPI;
 import com.mycity4kids.sync.CategorySyncService;
 import com.mycity4kids.sync.FetchAdvertisementInfoService;
+import com.mycity4kids.sync.FetchPublicIpAddressService;
 import com.mycity4kids.sync.PushTokenService;
 import com.mycity4kids.utils.AppUtils;
 import com.mycity4kids.utils.ConnectivityUtils;
@@ -162,11 +163,15 @@ public class SplashActivity extends BaseActivity {
                 startForegroundService(intent);
                 Intent adIntent = new Intent(this, FetchAdvertisementInfoService.class);
                 startForegroundService(adIntent);
+                Intent ipIntent = new Intent(this, FetchPublicIpAddressService.class);
+                startService(ipIntent);
             } else {
                 Intent intent = new Intent(this, PushTokenService.class);
                 startService(intent);
                 Intent adIntent = new Intent(this, FetchAdvertisementInfoService.class);
                 startService(adIntent);
+                Intent ipIntent = new Intent(this, FetchPublicIpAddressService.class);
+                startService(ipIntent);
             }
             startSyncingUserInfo();
             try {

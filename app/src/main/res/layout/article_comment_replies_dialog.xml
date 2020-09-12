@@ -39,10 +39,9 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_alignParentBottom="true"
-    android:background="@color/white"
+    android:background="#f0f0f0"
     android:elevation="@dimen/space_5">
-
-
+    
     <RelativeLayout
       android:layout_width="match_parent"
       android:layout_height="50dp"
@@ -68,16 +67,15 @@
         android:paddingTop="@dimen/space_10"
         android:paddingEnd="@dimen/space_20"
         android:paddingBottom="@dimen/space_10"
-        android:text="Post"
+        android:text="@string/join_dialog_post"
         android:textStyle="bold"
         android:visibility="visible"
         app:fb_borderColor="#D8D8D8"
         app:fb_borderWidth="1dp"
-        app:fb_defaultColor="@color/white_color"
-        app:fb_radius="@dimen/space_30"
-        app:fb_textColor="#D8D8D8"
+        app:fb_defaultColor="@color/app_red"
+        app:fb_radius="20dp"
+        app:fb_textColor="@color/white_color"
         app:fb_textSize="14sp" />
-
 
     </RelativeLayout>
 
@@ -128,9 +126,6 @@
     android:textSize="16sp"
     android:visibility="gone"
     app:fontName="oswald_regular.ttf" />
-
-
-  
 
 
 </RelativeLayout>

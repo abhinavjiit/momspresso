@@ -5,25 +5,28 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentPagerAdapter;
 
-public class LiveStreamPagerAdapter extends FragmentPagerAdapter {
+public class UpcomingLivesPagerAdapter extends FragmentPagerAdapter {
 
-    private LiveStreamAboutTabFragment liveStreamAboutTabFragment;
+    private UpcomingLiveAboutTabFragment upcomingLiveAboutTabFragment;
     private LiveStreamCommentTabFragment liveStreamCommentTabFragment;
+    private LiveStreamResult item;
 
-    public LiveStreamPagerAdapter(FragmentManager fm) {
+    public UpcomingLivesPagerAdapter(FragmentManager fm, LiveStreamResult item) {
         super(fm, BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT);
+        this.item = item;
     }
 
     @Override
     public Fragment getItem(int position) {
         Bundle bundle = new Bundle();
+        bundle.putParcelable("item", item);
         switch (position) {
             case 0:
-                if (liveStreamAboutTabFragment == null) {
-                    liveStreamAboutTabFragment = new LiveStreamAboutTabFragment();
+                if (upcomingLiveAboutTabFragment == null) {
+                    upcomingLiveAboutTabFragment = new UpcomingLiveAboutTabFragment();
                 }
-                liveStreamAboutTabFragment.setArguments(bundle);
-                return liveStreamAboutTabFragment;
+                upcomingLiveAboutTabFragment.setArguments(bundle);
+                return upcomingLiveAboutTabFragment;
             case 1:
                 if (liveStreamCommentTabFragment == null) {
                     liveStreamCommentTabFragment = new LiveStreamCommentTabFragment();

@@ -535,17 +535,19 @@
       android:name=".ui.activity.SecuritySettingActivity"
       android:screenOrientation="portrait" />
     <activity
+      android:name=".ui.momspressotv.MomspressoTelevisionActivity"
+      android:screenOrientation="portrait" />
+    <activity
+      android:name=".ui.livestreaming.UpcomingLivesActivity"
+      android:configChanges="orientation|screenSize|keyboardHidden|smallestScreenSize|screenLayout"
+      android:windowSoftInputMode="adjustPan" />
+    <activity
       android:name=".ui.livestreaming.LiveStreamingActivity"
-      android:configChanges="orientation|screenSize|keyboardHidden|smallestScreenSize|screenLayout" />
-    <activity
-      android:name=".ui.livestreaming.NewLiveStreamingActivity"
-      android:configChanges="orientation|screenSize|keyboardHidden|smallestScreenSize|screenLayout" />
-    <activity
-      android:name=".ui.livestreaming.RoomListActivity"
       android:configChanges="orientation|screenSize|keyboardHidden|smallestScreenSize|screenLayout" />
 
     <service android:name=".sync.PushTokenService" />
     <service android:name=".sync.FetchAdvertisementInfoService" />
+    <service android:name=".sync.FetchPublicIpAddressService" />
     <service android:name=".sync.SyncUserInfoService" />
     <service android:name=".tts.ReadArticleService" />
 

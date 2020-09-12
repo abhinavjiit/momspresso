@@ -2,9 +2,7 @@ package com.mycity4kids.models.response;
 
 import android.os.Parcel;
 import android.os.Parcelable;
-
 import com.google.gson.annotations.SerializedName;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -90,6 +88,8 @@ public class ArticleListingResult implements Parcelable {
     private String winner = "0";
     @SerializedName("is_gold")
     private String isGold = "0";
+    @SerializedName(value = "event_id", alternate = {"eventId"})
+    private String eventId;
 
     public ArticleListingResult() {
     }
@@ -438,6 +438,14 @@ public class ArticleListingResult implements Parcelable {
 
     public void setIsGold(String isGold) {
         this.isGold = isGold;
+    }
+
+    public String getEventId() {
+        return eventId;
+    }
+
+    public void setEventId(String eventId) {
+        this.eventId = eventId;
     }
 
     @Override

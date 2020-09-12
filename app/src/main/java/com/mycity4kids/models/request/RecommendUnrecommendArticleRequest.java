@@ -12,6 +12,8 @@ public class RecommendUnrecommendArticleRequest {
     private String status;
     @SerializedName("type")
     private String type;
+    @SerializedName("is_live")
+    private String is_live;
 
     public String getArticleId() {
         return articleId;
@@ -35,5 +37,13 @@ public class RecommendUnrecommendArticleRequest {
 
     public void setType(String type) {
         this.type = type;
+    }
+
+    public String getIs_live() {
+        return is_live;
+    }
+
+    public void setIs_live(String is_live) {
+        this.is_live = is_live;
     }
 }

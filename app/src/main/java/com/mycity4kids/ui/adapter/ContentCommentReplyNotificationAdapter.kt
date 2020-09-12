@@ -40,7 +40,8 @@ class ContentCommentReplyNotificationAdapter(val recyclerViewClickListner: Recyc
             repliesList?.get(position)?.userName,
             repliesList?.get(position)?.message,
             repliesList?.get(position)?.mentions,
-            ContextCompat.getColor(holder.commentDataTextView.context, R.color.app_red)
+            ContextCompat.getColor(holder.commentDataTextView.context, R.color.app_red),
+            ContextCompat.getColor(holder.commentDataTextView.context, R.color.user_tag)
         )
         holder.commentDataTextView.movementMethod = LinkMovementMethod.getInstance()
         holder.DateTextView.text =

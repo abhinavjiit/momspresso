@@ -45,6 +45,7 @@ import com.mycity4kids.preference.SharedPrefUtils;
 import com.mycity4kids.profile.UserProfileActivity;
 import com.mycity4kids.retrofitAPIsInterfaces.BloggerDashboardAPI;
 import com.mycity4kids.retrofitAPIsInterfaces.DeepLinkingAPI;
+import com.mycity4kids.retrofitAPIsInterfaces.LiveStreamApi;
 import com.mycity4kids.retrofitAPIsInterfaces.ShortStoryAPI;
 import com.mycity4kids.sync.SyncUserInfoService;
 import com.mycity4kids.ui.GroupMembershipStatus;
@@ -72,6 +73,9 @@ import com.mycity4kids.ui.activity.ViewGroupPostCommentsRepliesActivity;
 import com.mycity4kids.ui.activity.collection.CollectionsActivity;
 import com.mycity4kids.ui.activity.collection.UserCollectionItemListActivity;
 import com.mycity4kids.ui.campaign.activity.CampaignContainerActivity;
+import com.mycity4kids.ui.livestreaming.LiveStreamResponse;
+import com.mycity4kids.ui.livestreaming.LiveStreamingActivity;
+import com.mycity4kids.ui.livestreaming.UpcomingLivesActivity;
 import com.mycity4kids.ui.rewards.activity.RewardsContainerActivity;
 import com.mycity4kids.ui.videochallengenewui.activity.NewVideoChallengeActivity;
 import com.mycity4kids.utils.AppUtils;
@@ -90,6 +94,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import retrofit2.Call;
 import retrofit2.Callback;
+import retrofit2.Response;
 import retrofit2.Retrofit;
 
 /**
@@ -125,6 +130,11 @@ public abstract class BaseActivity extends AppCompatActivity implements GroupMem
         displayMetrics = getResources().getDisplayMetrics();
         baseApplication = (BaseApplication) getApplication();
         String userId = SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId();
+
+        if (getIntent().hasExtra("eventId")) {
+            getLiveStreamInfoFromId(Integer.parseInt(getIntent().getStringExtra("eventId")));
+        }
+
         try {
             if (BaseApplication.getMSocket() != null && !TextUtils.isEmpty(userId)) {
                 JSONObject obj = new JSONObject();
@@ -964,6 +974,14 @@ public abstract class BaseActivity extends AppCompatActivity implements GroupMem
                 startActivity(intent);
                 return true;
             }
+
+            Pattern pattern16 = Pattern.compile(AppConstants.LIVE_STREAM_DETAIL_REGEX);
+            Matcher matcher16 = pattern16.matcher(urlWithNoParams);
+            if (matcher16.matches()) {
+                String[] separated = urlWithNoParams.split("/");
+                getLiveStreamInfoFromSlug(separated[separated.length - 1]);
+                return true;
+            }
         } catch (Exception e) {
             FirebaseCrashlytics.getInstance().recordException(e);
             Log.d("MC4kException", Log.getStackTraceString(e));
@@ -1170,4 +1188,68 @@ public abstract class BaseActivity extends AppCompatActivity implements GroupMem
         Intent intent = new Intent(this, NewEditor.class);
         startActivity(intent);
     }
+
+    public void getLiveStreamInfoFromSlug(String slug) {
+        showProgressDialog(getResources().getString(R.string.please_wait));
+        Retrofit retrofit = BaseApplication.getInstance().getRetrofit();
+        LiveStreamApi liveStreamApi = retrofit.create(LiveStreamApi.class);
+
+        Call<LiveStreamResponse> call = liveStreamApi.getLiveStreamDetailsFromSlug(slug);
+        call.enqueue(liveStreamResponseCallback);
+    }
+
+    public void getLiveStreamInfoFromId(int itemId) {
+        showProgressDialog(getResources().getString(R.string.please_wait));
+        Retrofit retrofit = BaseApplication.getInstance().getRetrofit();
+        LiveStreamApi liveStreamApi = retrofit.create(LiveStreamApi.class);
+
+        Call<LiveStreamResponse> call = liveStreamApi.getLiveStreamDetails(itemId);
+        call.enqueue(liveStreamResponseCallback);
+    }
+
+    Callback<LiveStreamResponse> liveStreamResponseCallback = new Callback<LiveStreamResponse>() {
+        @Override
+        public void onResponse(Call<LiveStreamResponse> call, Response<LiveStreamResponse> response) {
+            removeProgressDialog();
+            if (response.body() == null) {
+                showToast(getString(R.string.went_wrong));
+                return;
+            }
+            try {
+                LiveStreamResponse resData = response.body();
+                switch (resData.getData().getResult().getStatus()) {
+                    case AppConstants.LIVE_STREAM_STATUS_ONGOING: {
+                        Intent intent = new Intent(BaseActivity.this, LiveStreamingActivity.class);
+                        intent.putExtra("item", resData.getData().getResult());
+                        startActivity(intent);
+                    }
+                    break;
+                    case AppConstants.LIVE_STREAM_STATUS_UPCOMING: {
+                        Intent intent = new Intent(BaseActivity.this, UpcomingLivesActivity.class);
+                        intent.putExtra("item", resData.getData().getResult());
+                        startActivity(intent);
+                    }
+                    break;
+                    case AppConstants.LIVE_STREAM_STATUS_ENDED: {
+                        Intent intent = new Intent(BaseActivity.this, ArticleDetailsContainerActivity.class);
+                        intent.putExtra(Constants.ARTICLE_ID, resData.getData().getResult().getItem_id());
+                        startActivity(intent);
+                    }
+                    break;
+                    default:
+                        break;
+                }
+            } catch (Exception e) {
+                FirebaseCrashlytics.getInstance().recordException(e);
+                Log.d("MC4KException", Log.getStackTraceString(e));
+            }
+        }
+
+        @Override
+        public void onFailure(Call<LiveStreamResponse> call, Throwable t) {
+            removeProgressDialog();
+            FirebaseCrashlytics.getInstance().recordException(t);
+            Log.d("MC4KException", Log.getStackTraceString(t));
+        }
+    };
 }

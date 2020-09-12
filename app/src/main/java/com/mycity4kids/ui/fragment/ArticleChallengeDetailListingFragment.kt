@@ -26,6 +26,7 @@ import com.mycity4kids.retrofitAPIsInterfaces.CollectionsAPI
 import com.mycity4kids.retrofitAPIsInterfaces.TopicsCategoryAPI
 import com.mycity4kids.ui.activity.ArticleDetailsContainerActivity
 import com.mycity4kids.ui.adapter.ArticleChallengeListingAdapter
+import java.util.ArrayList
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
@@ -33,7 +34,6 @@ import kotlinx.coroutines.launch
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
-import java.util.ArrayList
 
 class ArticleChallengeDetailListingFragment : BaseFragment(),
     ArticleChallengeListingAdapter.RecyclerViewItemClickListener {
@@ -137,8 +137,7 @@ class ArticleChallengeDetailListingFragment : BaseFragment(),
                     }
                 try {
                     val response = responseData.await()
-                    launch(Dispatchers.Main)
-                    {
+                    launch(Dispatchers.Main) {
                         isRequestingRunning = false
                         if (loadingView.visibility == View.VISIBLE) {
                             loadingView.visibility = View.GONE
@@ -156,7 +155,6 @@ class ArticleChallengeDetailListingFragment : BaseFragment(),
                     FirebaseCrashlytics.getInstance().recordException(t)
                     Log.d("MC4KException", Log.getStackTraceString(t))
                 }
-
             }
         }
 

@@ -22,7 +22,7 @@
       <WebView
         android:id="@+id/topAdSlotWebView"
         android:layout_width="320dp"
-        android:layout_height="50dp"
+        android:layout_height="60dp"
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true" />
 
@@ -217,7 +217,7 @@
       <WebView
         android:id="@+id/bottomAdSlotWebView"
         android:layout_width="320dp"
-        android:layout_height="250dp"
+        android:layout_height="260dp"
         android:layout_below="@+id/articleWebView"
         android:layout_centerHorizontal="true" />
 

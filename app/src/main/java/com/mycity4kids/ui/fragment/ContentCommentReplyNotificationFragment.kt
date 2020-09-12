@@ -184,7 +184,8 @@ class ContentCommentReplyNotificationFragment : BaseFragment(),
                 it.userName,
                 it.message,
                 it.mentions,
-                ContextCompat.getColor(commentDataTextView.context, R.color.app_red)
+                ContextCompat.getColor(commentDataTextView.context, R.color.app_red),
+                ContextCompat.getColor(commentDataTextView.context, R.color.user_tag)
             )
             DateTextView.text =
                 DateTimeUtils

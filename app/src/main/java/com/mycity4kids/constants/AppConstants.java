@@ -25,7 +25,8 @@ public class AppConstants {
     public static final String VIDEO_ARTICLE_SHARE_URL = "https://www.momspresso.com/" + "parenting/";
     public static final String BLOG_SHARE_BASE_URL = "https://www.momspresso.com";
     public static final String USER_PROFILE_SHARE_BASE_URL = "https://www.momspresso.com/parenting/user/";
-    public static final String VLOG_CHALLENGES_BASE_SHARE_URL = ".momspresso.com/parenting/videos/challenges/";
+    public static final String VLOG_CHALLENGES_BASE_SHARE_URL = "https://www.momspresso.com/parenting/videos/challenges/";
+    public static final String LIVE_STREAM_SHARE_URL = "https://www.momspresso.com/live/";
 
     public static final int REQUEST_VIDEO_TRIMMER = 1019;
 
@@ -160,7 +161,7 @@ public class AppConstants {
     public static final String NOTIFICATION_TYPE_ANNOUNCEMENT = "announcement";
     public static final String NOTIFICATION_TYPE_PERSONAL_INFO = "personal_info";
     public static final String NOTIFICATION_TYPE_ARTICLE_CHALLENGE = "article_challenge_detail";
-    public static final String NOTIFICATION_TYPE_LIVE_STREAM = "live_stream";
+    public static final String NOTIFICATION_TYPE_LIVE_STREAM = "event_detail";
 
     public static final String NOTIFICATION_CENTER_APP_SETTINGS = "-1";
     public static final String NOTIFICATION_CENTER_WEB_VIEW = "0";
@@ -204,6 +205,7 @@ public class AppConstants {
     public static final String NOTIFICATION_CENTER_PERSONAL_INFO = "39";
     public static final String NOTIFICATION_CENTER_ARTICLE_CHALLENGE = "40";
     public static final String NOTIFICATION_CENTER_MY_MONEY_EARNINGS = "41";
+    public static final String NOTIFICATION_CENTER_LIVE_STREAM = "42";
 
     public static final String VIDEO_STATUS_DRAFT = "0";
     public static final String VIDEO_STATUS_APPROVAL_PENDING = "1";
@@ -284,6 +286,9 @@ public class AppConstants {
     public static final String GROUP_ACTION_TYPE_VOTE_KEY = "3";
     public static final String GROUP_ACTION_TYPE_TAG_KEY = "4";
 
+    public static final String CONTENT_TYPE_TORCAI_ADS = "8";
+    public static final String CONTENT_TYPE_UPCOMING_LIVE_STREAM = "7";
+    public static final String CONTENT_TYPE_RECENT_LIVE_STREAM = "6";
     public static final String CONTENT_TYPE_SUGGESTED_BLOGGERS = "5";
     public static final String CONTENT_TYPE_MYMONEY = "4";
     public static final String CONTENT_TYPE_VIDEO = "2";
@@ -368,6 +373,7 @@ public class AppConstants {
     public static final String BLOGS_CHALLENGE_DETAIL_REGEX = ".+?(parenting\\/topic\\/challenges\\/)([a-zA-Z0-9-]+$)";
     public static final String STORY_CHALLENGE_DETAIL_REGEX =
             ".+?(parenting\\/topic\\/short-stories\\/challenges\\/)([a-zA-Z0-9-]+$)";
+    public static final String LIVE_STREAM_DETAIL_REGEX = ".+?(live\\/)([a-zA-Z0-9-]+$)";
 
     public static final String BADGE_ID = "badgeId";
     public static final String MILESTONE_ID = "milestoneId";
@@ -398,6 +404,9 @@ public class AppConstants {
     public static final String NOTIFICATION_CENTER_RECENT_HEADER = "recent";
     public static final String NOTIFICATION_CENTER_EARLIER_HEADER = "earlier";
 
-
     public static final String ARTICLE_CHALLENGE_CATEGORY_ID = "category-c0ab155724d7482cbee69a8d3040dbaf";
+
+    public static final int LIVE_STREAM_STATUS_ONGOING = 1;
+    public static final int LIVE_STREAM_STATUS_UPCOMING = 2;
+    public static final int LIVE_STREAM_STATUS_ENDED = 3;
 }

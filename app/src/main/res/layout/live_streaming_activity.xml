@@ -1,0 +1,214 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+  xmlns:app="http://schemas.android.com/apk/res-auto"
+  android:layout_width="match_parent"
+  android:layout_height="match_parent"
+  android:orientation="vertical">
+
+  <com.pierfrancescosoffritti.androidyoutubeplayer.core.player.views.YouTubePlayerView
+    android:id="@+id/youTubePlayerView"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_alignParentTop="true"
+    app:enableLiveVideoUi="true" />
+
+  <RelativeLayout
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_alignParentStart="true"
+    android:layout_alignParentTop="true">
+    <ImageView
+      android:id="@+id/backNavigationImageView"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:layout_centerVertical="true"
+      android:padding="10dp"
+      android:src="@drawable/back_arroow"
+      android:tint="@color/white_color" />
+
+    <com.mycity4kids.widget.MomspressoButtonWidget
+      android:id="@+id/liveLabel"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:layout_alignParentTop="true"
+      android:layout_centerVertical="true"
+      android:layout_toEndOf="@+id/backNavigationImageView"
+      app:fb_defaultColor="@color/app_red"
+      app:fb_radius="4dp"
+      app:fb_text="LIVE"
+      app:fb_textColor="@color/white_color" />
+
+  </RelativeLayout>
+
+  <TextView
+    android:id="@+id/titleTextView"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_below="@+id/youTubePlayerView"
+    android:layout_margin="12dp"
+    android:maxLines="2"
+    android:textColor="@color/app_dark_black"
+    android:textSize="18sp"
+    android:textStyle="bold" />
+
+  <com.mycity4kids.widget.ResizableTextView
+    android:id="@+id/descriptionTextView"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_below="@+id/titleTextView"
+    android:layout_marginStart="12dp"
+    android:layout_marginEnd="12dp"
+    android:layout_marginBottom="12dp"
+    android:gravity="start"
+    android:textColor="@color/app_dark_black"
+    app:maxLines="2" />
+
+  <androidx.cardview.widget.CardView
+    android:id="@+id/statsCardView"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_below="@+id/descriptionTextView"
+    app:cardElevation="4dp">
+
+    <RelativeLayout
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:orientation="horizontal">
+      <TextView
+        android:id="@+id/userCountTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentStart="true"
+        android:padding="12dp"
+        android:text="0 Watching"
+        android:textColor="@color/app_light_black"
+        android:textSize="13sp" />
+
+      <View
+        android:id="@+id/dotSeparator"
+        android:layout_width="10dp"
+        android:layout_height="10dp"
+        android:layout_centerVertical="true"
+        android:layout_toEndOf="@+id/userCountTextView"
+        android:background="@drawable/ic_red_dot"
+        android:backgroundTint="@color/app_grey" />
+
+      <TextView
+        android:id="@+id/commentCountTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_toEndOf="@+id/dotSeparator"
+        android:padding="12dp"
+        android:text="0 Comment"
+        android:textColor="@color/app_light_black"
+        android:textSize="13sp" />
+
+      <ImageView
+        android:id="@+id/whatsappShareImageView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:layout_centerVertical="true"
+        android:layout_marginEnd="6dp"
+        android:padding="8dp"
+        android:src="@drawable/ic_whatsapp_camp" />
+
+      <TextView
+        android:id="@+id/likeCountTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_toStartOf="@+id/whatsappShareImageView"
+        android:paddingTop="12dp"
+        android:paddingEnd="8dp"
+        android:paddingBottom="12dp"
+        android:text="12" />
+
+      <ImageView
+        android:id="@+id/likeImageView"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:layout_centerVertical="true"
+        android:layout_toStartOf="@+id/likeCountTextView"
+        android:paddingStart="6dp"
+        android:paddingTop="6dp"
+        android:paddingEnd="6dp"
+        android:paddingBottom="6dp"
+        android:src="@drawable/ic_like_grey"
+        android:tint="@color/app_red" />
+    </RelativeLayout>
+
+
+  </androidx.cardview.widget.CardView>
+
+  <androidx.recyclerview.widget.RecyclerView
+    android:id="@+id/chatRecyclerView"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_above="@+id/commentContainer"
+    android:layout_below="@+id/statsCardView" />
+
+  <RelativeLayout
+    android:id="@+id/commentContainer"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_alignParentStart="true"
+    android:layout_alignParentBottom="true"
+    android:background="#ECECEC"
+    android:elevation="@dimen/space_5"
+    android:orientation="horizontal"
+    android:paddingStart="10dp"
+    android:paddingTop="8dp"
+    android:paddingEnd="8dp"
+    android:paddingBottom="8dp">
+
+    <RelativeLayout
+      android:layout_width="match_parent"
+      android:layout_height="50dp"
+      android:background="#ECECEC">
+
+      <com.mikhaellopez.circularimageview.CircularImageView
+        android:id="@+id/userImageView"
+        android:layout_width="@dimen/ad_comments_profile_pic_width"
+        android:layout_height="@dimen/ad_comments_profile_pic_width"
+        android:contentDescription="@string/author_img"
+        android:src="@drawable/default_commentor_img"
+        app:civ_border="false"
+        app:civ_shadow="false" />
+
+      <ImageView
+        android:id="@+id/addCommentImageView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:layout_centerVertical="true"
+        android:padding="8dp"
+        android:src="@drawable/ic_chat_arrow" />
+
+    </RelativeLayout>
+
+    <RelativeLayout
+      android:id="@+id/r"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:layout_marginStart="50dp"
+      android:layout_marginEnd="50dp"
+      android:background="@color/white">
+
+      <com.mycity4kids.tagging.ui.RichEditorView
+        android:id="@+id/inputEditText"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
+        android:layout_marginStart="@dimen/space_10"
+        android:background="@color/transparent"
+        android:gravity="center_vertical"
+        android:hint="Write a comment"
+        android:maxLines="4"
+        android:textColor="#a1a4a8"
+        android:textSize="18sp"
+        android:visibility="visible"
+        app:fontName="oswald.ttf" />
+
+    </RelativeLayout>
+  </RelativeLayout>
+</RelativeLayout>

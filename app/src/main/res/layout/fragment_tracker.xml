@@ -49,8 +49,7 @@
                     app:civ_border="true"
                     app:civ_border_color="@color/white_color"
                     app:civ_border_width="2dp"
-                    app:civ_shadow="true"
-                    app:civ_shadow_radius="4"
+                    app:civ_shadow="false"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />

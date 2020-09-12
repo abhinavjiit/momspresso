@@ -271,8 +271,10 @@ public class ArticleCommentsFragment extends BaseFragment implements OnClickList
             case R.id.disableStatePostTextView: {
                 if (isValid()) {
                     formatMentionDataForApiRequest();
+                    InputMethodManager imm = (InputMethodManager) getContext()
+                            .getSystemService(Context.INPUT_METHOD_SERVICE);
+                    imm.hideSoftInputFromWindow(typeHere.getWindowToken(), 0);
                 }
-
             }
 
             default:
@@ -329,70 +331,6 @@ public class ArticleCommentsFragment extends BaseFragment implements OnClickList
             Log.d("MC4kException", Log.getStackTraceString(e));
         }
         addComment(commentBody.toString(), mentionsMap);
-
-       /* Fragment parentFragment = getParentFragment();
-        if ("EDIT_COMMENT".equals(actionType)) {
-            if (parentFragment instanceof ArticleCommentsFragment) {
-                ((ArticleCommentsFragment) getParentFragment())
-                        .editComment(String.valueOf(commentBody), commentOrReplyData.getId(), position, mentionsMap);
-            } else if (parentFragment instanceof ArticleDetailsFragment) {
-                ((ArticleDetailsFragment) getParentFragment())
-                        .editComment(String.valueOf(commentBody), commentOrReplyData.getId(), position, mentionsMap);
-            } else if (parentFragment instanceof ContentCommentReplyNotificationFragment) {
-                ((ContentCommentReplyNotificationFragment) getParentFragment())
-                        .editComment(String.valueOf(commentBody), commentOrReplyData.getId(), position, mentionsMap);
-            } else if (getActivity() != null
-                    && getActivity() instanceof ContentCommentReplyNotificationActivity) {
-                ((ContentCommentReplyNotificationActivity) getActivity())
-                        .editComment(String.valueOf(commentBody), commentOrReplyData.getId(), position, mentionsMap);
-            }
-        } else if ("EDIT_REPLY".equals(actionType)) {
-            Fragment fragment = getParentFragment();
-            if (fragment instanceof ArticleCommentsFragment) {
-                ((ArticleCommentsFragment) getParentFragment())
-                        .editReply(String.valueOf(commentBody), commentOrReplyData.getParentCommentId(),
-                                commentOrReplyData.getId(), mentionsMap);
-            } else if (fragment instanceof ArticleCommentRepliesDialogFragment) {
-                Fragment parentOfParentFragment = fragment.getParentFragment();
-                if (parentOfParentFragment instanceof ArticleCommentsFragment) {
-                    ((ArticleCommentsFragment) parentOfParentFragment)
-                            .editReply(String.valueOf(commentBody), commentOrReplyData.getParentCommentId(),
-                                    commentOrReplyData.getId(), mentionsMap);
-                } else if (parentOfParentFragment instanceof ArticleDetailsFragment) {
-                    ((ArticleDetailsFragment) parentOfParentFragment)
-                            .editReply(String.valueOf(commentBody), commentOrReplyData.getParentCommentId(),
-                                    commentOrReplyData.getId(), mentionsMap);
-                }
-            } else if (fragment instanceof ContentCommentReplyNotificationFragment) {
-                ((ContentCommentReplyNotificationFragment) getParentFragment())
-                        .editReply(String.valueOf(commentBody), commentOrReplyData.getParentCommentId(),
-                                commentOrReplyData.getId(), position, commentOrReplyData.getMentions());
-            }
-        } else {
-            if (commentOrReplyData == null) {
-                if (getActivity() != null && getActivity() instanceof ContentCommentReplyNotificationActivity) {
-                    ((ContentCommentReplyNotificationActivity) getActivity())
-                            .addComment(String.valueOf(commentBody), mentionsMap);
-                } else {
-                    ((AddComments) this.getParentFragment()).addComments(String.valueOf(commentBody), mentionsMap);
-                }
-            } else {
-                if (getParentFragment() instanceof ArticleCommentsFragment) {
-                    ((ArticleCommentsFragment) getParentFragment())
-                            .addReply(String.valueOf(commentBody), commentOrReplyData.getId(), mentionsMap);
-                } else if (getParentFragment() instanceof ContentCommentReplyNotificationFragment) {
-                    ((ContentCommentReplyNotificationFragment) getParentFragment())
-                            .addReply(String.valueOf(commentBody), commentOrReplyData.getId(), mentionsMap);
-                } else if (getActivity() != null
-                        && (getActivity()) instanceof ContentCommentReplyNotificationActivity) {
-                    ((ContentCommentReplyNotificationActivity) getActivity())
-                            .addReply(String.valueOf(commentBody), commentOrReplyData.getId(), mentionsMap);
-                } else if (getParentFragment() instanceof ArticleDetailsFragment) {
-                    ((ArticleDetailsFragment) getParentFragment())
-                            .addReply(String.valueOf(commentBody), commentOrReplyData.getId(), mentionsMap);
-                }
-            }
-        }*/
     }
 
 
@@ -577,9 +515,6 @@ public class ArticleCommentsFragment extends BaseFragment implements OnClickList
         blockUserModel.setBlocked_user_id(commentsList.get(position).getUserId());
         Call<ResponseBody> call = articleDetailsAPI.blockUserApi(blockUserModel);
         call.enqueue(blockUserCallBack);
-        // commentsList.remove(position);
-       /* articleCommentsRecyclerAdapter.setData(commentsList);
-        articleCommentsRecyclerAdapter.notifyDataSetChanged();*/
     }
 
     private Callback<ResponseBody> blockUserCallBack = new Callback<ResponseBody>() {
@@ -601,8 +536,6 @@ public class ArticleCommentsFragment extends BaseFragment implements OnClickList
                 if (jsonObject.getInt("code") == 200 && jsonObject.getString("status").equals(Constants.SUCCESS)) {
                     ToastUtils.showToast(getActivity(), jsonObject.getJSONObject("data").getString("msg").toString());
                 }
-
-
             } catch (Exception t) {
                 removeProgressDialog();
                 if (isAdded()) {
@@ -611,8 +544,6 @@ public class ArticleCommentsFragment extends BaseFragment implements OnClickList
                 FirebaseCrashlytics.getInstance().recordException(t);
                 Log.d("MC4kException", Log.getStackTraceString(t));
             }
-
-
         }
 
         @Override
@@ -1146,7 +1077,6 @@ public class ArticleCommentsFragment extends BaseFragment implements OnClickList
 
     }
 
-
     private void addComment(String content, Map<String, Mentions> mentionsMap) {
         showProgressDialog("Adding Comment");
         AddEditCommentOrReplyRequest addEditCommentOrReplyRequest = new AddEditCommentOrReplyRequest();
@@ -1166,7 +1096,6 @@ public class ArticleCommentsFragment extends BaseFragment implements OnClickList
         Call<CommentListResponse> call = articleDetailsApi.addCommentOrReply(addEditCommentOrReplyRequest);
         call.enqueue(addCommentResponseListener);
     }
-
 
     @NonNull
     @Override
@@ -1201,4 +1130,16 @@ public class ArticleCommentsFragment extends BaseFragment implements OnClickList
         return Arrays.asList("dddd");
     }
 
+    @Override
+    public void onStop() {
+        super.onStop();
+        try{
+            InputMethodManager imm = (InputMethodManager) getContext()
+                    .getSystemService(Context.INPUT_METHOD_SERVICE);
+            imm.hideSoftInputFromWindow(typeHere.getWindowToken(), 0);
+        }catch (Exception e){
+            FirebaseCrashlytics.getInstance().recordException(e);
+            Log.d("MC4kException", Log.getStackTraceString(e));
+        }
+    }
 }

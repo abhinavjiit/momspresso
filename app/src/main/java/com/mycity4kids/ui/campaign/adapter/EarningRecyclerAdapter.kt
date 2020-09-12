@@ -12,9 +12,9 @@ import androidx.recyclerview.widget.RecyclerView
 import com.mycity4kids.R
 import com.mycity4kids.models.campaignmodels.AllCampaignTotalPayoutResponse
 import com.squareup.picasso.Picasso
-import kotlinx.android.synthetic.main.recycler_myearning.view.*
 import java.text.SimpleDateFormat
 import java.util.Calendar
+import kotlinx.android.synthetic.main.recycler_myearning.view.*
 
 class EarningRecyclerAdapter(
     private val payoutList: List<AllCampaignTotalPayoutResponse.TotalPayoutResult>,
@@ -62,11 +62,11 @@ class EarningRecyclerAdapter(
                     if (item.payment_status == 1) {
                         if (item.paidDate != null)
                             holder.paymentDate.text =
-                                ("Paid: \u20b9" + getDate(item.paidDate, "dd MMM yyyy"))
+                                ("Paid: " + getDate(item.paidDate, "dd MMM yyyy"))
                     } else {
                         if (item.expectedDate != null)
                             holder.paymentDate.text =
-                                ("Expected: \u20b9" + getDate(item.expectedDate, "dd MMM yyyy"))
+                                ("Expected: " + getDate(item.expectedDate, "dd MMM yyyy"))
                     }
                     holder.earningss.visibility = View.VISIBLE
                     holder.Tds.visibility = View.VISIBLE
@@ -80,11 +80,11 @@ class EarningRecyclerAdapter(
                     if (item.payment_status == 1) {
                         if (item.paidDate != null)
                             holder.paymentDate.text =
-                                ("Paid: \u20b9" + getDate(item.paidDate, "dd MMM yyyy"))
+                                ("Paid: " + getDate(item.paidDate, "dd MMM yyyy"))
                     } else {
                         if (item.expectedDate != null)
                             holder.paymentDate.text =
-                                ("Expected: \u20b9" + getDate(item.expectedDate, "dd MMM yyyy"))
+                                ("Expected: " + getDate(item.expectedDate, "dd MMM yyyy"))
                     }
                 }
             } else {
@@ -101,11 +101,11 @@ class EarningRecyclerAdapter(
                         if (item.payment_status == 1) {
                             if (item.paidDate != null)
                                 holder.paymentDate.text =
-                                    ("Paid: \u20b9" + getDate(item.paidDate, "dd MMM yyyy"))
+                                    ("Paid: " + getDate(item.paidDate, "dd MMM yyyy"))
                         } else {
                             if (item.expectedDate != null)
                                 holder.paymentDate.text =
-                                    ("Expected: \u20b9" + getDate(item.expectedDate, "dd MMM yyyy"))
+                                    ("Expected: " + getDate(item.expectedDate, "dd MMM yyyy"))
                         }
                     } else {
                         holder.reimbursementAmount.text =
@@ -115,11 +115,11 @@ class EarningRecyclerAdapter(
                         if (item.payment_status == 1) {
                             if (item.paidDate != null)
                                 holder.paymentDate.text =
-                                    ("Paid: \u20b9" + getDate(item.paidDate, "dd MMM yyyy"))
+                                    ("Paid: " + getDate(item.paidDate, "dd MMM yyyy"))
                         } else {
                             if (item.expectedDate != null)
                                 holder.paymentDate.text =
-                                    ("Expected: \u20b9" + getDate(item.expectedDate, "dd MMM yyyy"))
+                                    ("Expected: " + getDate(item.expectedDate, "dd MMM yyyy"))
                         }
                     }
                 }

@@ -26,6 +26,7 @@ import android.view.Window;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -141,6 +142,7 @@ public class TopicsShortStoriesTabFragment extends BaseFragment implements View.
     private String challengeId;
     private String tabPosition = "0";
     private int start = 0;
+    private TextView noBlogsTextView;
 
     @Nullable
     @Override
@@ -158,7 +160,7 @@ public class TopicsShortStoriesTabFragment extends BaseFragment implements View.
         guideOverlay = (RelativeLayout) view.findViewById(R.id.guideOverlay);
         writeArticleCell = (RelativeLayout) view.findViewById(R.id.writeArticleCell);
         frameLayout = (FrameLayout) view.findViewById(R.id.frame_layout);
-
+        noBlogsTextView = (TextView) view.findViewById(R.id.noBlogsTextView);
         pullToRefresh = view.findViewById(R.id.pullToRefresh);
 
         frameLayout.getBackground().setAlpha(0);
@@ -346,15 +348,15 @@ public class TopicsShortStoriesTabFragment extends BaseFragment implements View.
                 //No more next results for search from pagination
                 isLastPageReached = true;
             } else {
-
+                noBlogsTextView.setVisibility(View.VISIBLE);
                 articleListingResults = dataList;
                 recyclerAdapter.setListData(articleListingResults);
                 recyclerAdapter.notifyDataSetChanged();
             }
         } else {
+            noBlogsTextView.setVisibility(View.GONE);
             if (start == 0) {
                 articleListingResults = dataList;
-
             } else {
                 articleListingResults.addAll(dataList);
             }

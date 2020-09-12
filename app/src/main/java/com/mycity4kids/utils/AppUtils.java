@@ -1129,7 +1129,7 @@ public class AppUtils {
     }
 
     public static SpannableString createSpannableForMentionHandling(String commenterId, String userName, String message,
-            Map<String, Mentions> mentions, int color) {
+            Map<String, Mentions> mentions, int color, int tagColor) {
         try {
             StringBuilder consolidateMessage = new StringBuilder(userName + " " + message);
             ArrayList<SpanData> list = new ArrayList<>();
@@ -1164,7 +1164,7 @@ public class AppUtils {
                     messageSpannable.setSpan(new ForegroundColorSpan(color), list.get(i).start, list.get(i).end,
                             Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
                 } else {
-                    messageSpannable.setSpan(new ForegroundColorSpan(Color.BLACK), list.get(i).start, list.get(i).end,
+                    messageSpannable.setSpan(new ForegroundColorSpan(tagColor), list.get(i).start, list.get(i).end,
                             Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
                 }
                 messageSpannable.setSpan(new StyleSpan(Typeface.BOLD), list.get(i).start, list.get(i).end,

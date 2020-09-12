@@ -60,7 +60,6 @@ public class MainArticleRecyclerViewAdapter extends RecyclerView.Adapter<Recycle
     private MixpanelAPI mixpanel;
     private static int ARTICLE = 0;
     private static int AD = 1;
-    private static int HEADER = 2;
     private static int STORY = 3;
     private static int VIDEOS = 5;
     private static int MM_CAMPAIGN = 6;
@@ -70,7 +69,6 @@ public class MainArticleRecyclerViewAdapter extends RecyclerView.Adapter<Recycle
     private ArrayList<ArticleListingResult> articleDataModelsNew;
     private ArrayList<CampaignDataListResult> campaignListDataModels;
     private RecyclerViewClickListener recyclerViewClickListener;
-    private boolean topicHeaderVisibilityFlag;
     private boolean isRequestRunning;
     private String screenName;
     private Gson gson;
@@ -85,7 +83,6 @@ public class MainArticleRecyclerViewAdapter extends RecyclerView.Adapter<Recycle
         layoutInflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         gson = new GsonBuilder().registerTypeAdapterFactory(new ArrayAdapterFactory()).create();
         recyclerViewClickListener = listener;
-        this.topicHeaderVisibilityFlag = topicHeaderVisibilityFlag;
         mixpanel = MixpanelAPI.getInstance(BaseApplication.getAppContext(), AppConstants.MIX_PANEL_TOKEN);
         this.screenName = screenName;
         this.showVideoFlag = showVideoFlag;
@@ -102,9 +99,7 @@ public class MainArticleRecyclerViewAdapter extends RecyclerView.Adapter<Recycle
 
     @Override
     public int getItemViewType(int position) {
-        if (topicHeaderVisibilityFlag && position == 0) {
-            return HEADER;
-        } else if (position == 3) {
+        if (position == 3) {
             return TORCAI_AD;
         } else if (position > 3 && position % 3 == 0) {
             if (showVideoFlag) {
@@ -134,9 +129,6 @@ public class MainArticleRecyclerViewAdapter extends RecyclerView.Adapter<Recycle
         if (viewType == AD) {
             View v0 = layoutInflater.inflate(R.layout.facebook_ad_list_item, parent, false);
             return new AdViewHolder(v0);
-        } else if (viewType == HEADER) {
-            View v0 = layoutInflater.inflate(R.layout.trending_list_header_item, parent, false);
-            return new HeaderViewHolder(v0);
         } else if (viewType == TORCAI_AD) {
             View v0 = layoutInflater.inflate(R.layout.campaign_carousel_container, parent, false);
             return new TorcaiAdsViewHolder(v0);

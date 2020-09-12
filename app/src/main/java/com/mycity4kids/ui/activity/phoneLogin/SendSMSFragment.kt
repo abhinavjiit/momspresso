@@ -93,7 +93,6 @@ class SendSMSFragment : BaseFragment(), View.OnClickListener {
                 //                launchVerifySMSFragment("dwdwdw")
                 call.enqueue(triggerSMSResponseCallback)
 
-
                 /*val verifySMSFragment = VerifySMSFragment()
                 val bundle = Bundle()
                 bundle.putString("smsToken", "91")
@@ -113,10 +112,6 @@ class SendSMSFragment : BaseFragment(), View.OnClickListener {
                 } else if (activity?.javaClass?.simpleName.equals("UpdateUserHandleActivity")) {
                     (activity as UpdateUserHandleActivity).addFragment(verifySMSFragment, bundle, null)
                 }*/
-
-
-
-
 
                 /*val verificationIntent = Intent(
                     activity,

@@ -91,6 +91,8 @@ import com.mycity4kids.ui.fragment.AddCollectionPopUpDialogFragment
 import com.mycity4kids.ui.fragment.InviteFriendsDialogFragment
 import com.mycity4kids.ui.fragment.ReportContentDialogFragment
 import com.mycity4kids.ui.fragment.UserBioDialogFragment
+import com.mycity4kids.ui.livestreaming.LiveStreamResult
+import com.mycity4kids.ui.livestreaming.RecentOrUpcomingLiveStreamsHorizontalAdapter
 import com.mycity4kids.utils.AppUtils
 import com.mycity4kids.utils.ConnectivityUtils
 import com.mycity4kids.utils.PermissionUtil
@@ -120,7 +122,8 @@ class UserProfileActivity : BaseActivity(),
     UsersBookmarksAdapter.RecyclerViewClickListener,
     ResizableTextView.SeeMore,
     UserProfileCreatedCollectionsAdapter.CollectionRecyclerViewClickListener,
-    UserProfileFollowedCollectionAdapter.CollectionRecyclerViewClickListener {
+    UserProfileFollowedCollectionAdapter.CollectionRecyclerViewClickListener,
+    RecentOrUpcomingLiveStreamsHorizontalAdapter.HorizontalRecyclerViewClickListener {
 
     override fun onCollectionsClick(position: Int, id: String?) {
         id?.let {
@@ -225,6 +228,7 @@ class UserProfileActivity : BaseActivity(),
 
     private val userContentAdapter: UserContentAdapter by lazy {
         UserContentAdapter(
+            this,
             this,
             AppUtils.isPrivateProfile(authorId)
         )
@@ -2357,5 +2361,8 @@ class UserProfileActivity : BaseActivity(),
                 }
             }
         }
+    }
+
+    override fun onLiveStreamItemClick(view: View, liveStreamResult: LiveStreamResult?) {
     }
 }
