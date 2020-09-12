@@ -1,32 +1,29 @@
 package com.mycity4kids.ui.adapter;
 
 import android.os.Bundle;
-
+import android.view.ViewGroup;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentStatePagerAdapter;
-
-import android.view.ViewGroup;
-
 import com.google.gson.Gson;
 import com.mycity4kids.constants.AppConstants;
 import com.mycity4kids.models.Topics;
 import com.mycity4kids.ui.fragment.ShortStoryChallengeListingTabFragment;
 import com.mycity4kids.ui.fragment.TopicsShortStoriesTabFragment;
-
 import java.util.ArrayList;
 
 /**
  * Created by hemant on 24/5/17.
  */
 public class TopicsShortStoriesPagerAdapter extends FragmentStatePagerAdapter {
+
     private int mNumOfTabs;
     private ArrayList<Topics> subTopicsList;
     private int challengeIdPostion;
     private Fragment currentFragment;
 
     public TopicsShortStoriesPagerAdapter(FragmentManager fm, int NumOfTabs, ArrayList<Topics> subTopicsList) {
-        super(fm);
+        super(fm, BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT);
         this.mNumOfTabs = NumOfTabs;
         this.subTopicsList = subTopicsList;
     }

@@ -44,9 +44,9 @@ import io.reactivex.Observer
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable
 import io.reactivex.schedulers.Schedulers
-import retrofit2.HttpException
 import java.io.InputStreamReader
 import java.util.regex.Pattern
+import retrofit2.HttpException
 
 class CampaignPaymentModesFragment : BaseFragment(), PaymentModesAdapter.ClickListener,
     View.OnClickListener {

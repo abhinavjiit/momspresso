@@ -1,6 +1,5 @@
 package com.mycity4kids.ui.adapter
 
-import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -9,16 +8,12 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.mycity4kids.R
 import com.mycity4kids.models.Topics
-import com.mycity4kids.vlogs.ContentChallengeSelectionHorizontalAdapter
 import com.squareup.picasso.Picasso
-import java.lang.Exception
 import kotlinx.android.synthetic.main.blog_challenge_adapter.view.*
 
 class BlogChallengeAdapter(
     private var challengeList: ArrayList<Topics>,
-    private val listener: ContentChallengeSelectionHorizontalAdapter.RecyclerViewClickListener,
-    private val priviousWeekChallengesListner: BlogsPriviousWeekChallengesClickListener,
-    private val context: Context?
+    private val challengesListener: BlogsChallengesClickListener
 ) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
@@ -31,7 +26,7 @@ class BlogChallengeAdapter(
     }
 
     override fun getItemCount(): Int {
-        return challengeList.size ?: 0
+        return challengeList.size
     }
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
@@ -41,11 +36,11 @@ class BlogChallengeAdapter(
                     when (position) {
                         0 -> {
                             categoryTextView.text =
-                                context?.resources?.getString(R.string.this_week_challenge)
+                                categoryTextView.context.resources.getString(R.string.this_week_challenge)
                         }
                         1 -> {
                             categoryTextView.text =
-                                context?.resources?.getString(R.string.previous_week_challenge)
+                                categoryTextView.context.resources.getString(R.string.previous_week_challenge)
                         }
                         else -> {
                             categoryTextView.visibility = View.GONE
@@ -81,13 +76,15 @@ class BlogChallengeAdapter(
         override fun onClick(v: View?) {
             when (v?.id) {
                 R.id.tagImageView -> {
-                    priviousWeekChallengesListner.onPriviousWeekChallengeClick(
+                    challengesListener.onBlogChallengeItemClick(
+                        adapterPosition,
                         v,
                         challengeList[adapterPosition]
                     )
                 }
                 R.id.info -> {
-                    priviousWeekChallengesListner.onPriviousWeekChallengeClick(
+                    challengesListener.onBlogChallengeItemClick(
+                        adapterPosition,
                         v,
                         challengeList[adapterPosition]
                     )
@@ -96,8 +93,9 @@ class BlogChallengeAdapter(
         }
     }
 
-    interface BlogsPriviousWeekChallengesClickListener {
-        fun onPriviousWeekChallengeClick(
+    interface BlogsChallengesClickListener {
+        fun onBlogChallengeItemClick(
+            position: Int,
             v: View?,
             topics: Topics
         )

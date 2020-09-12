@@ -1,0 +1,129 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+  xmlns:app="http://schemas.android.com/apk/res-auto"
+  android:layout_width="match_parent"
+  android:layout_height="match_parent"
+  android:orientation="vertical">
+
+  <ImageView
+    android:id="@+id/headerImageView"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_alignParentTop="true"
+    android:adjustViewBounds="true"
+    android:src="@drawable/default_article" />
+
+  <RelativeLayout
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_alignParentStart="true"
+    android:layout_alignParentTop="true">
+    <ImageView
+      android:id="@+id/backNavigationImageView"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:layout_centerVertical="true"
+      android:padding="10dp"
+      android:src="@drawable/back_arroow"
+      android:tint="@color/white_color" />
+
+    <androidx.cardview.widget.CardView
+      android:id="@+id/upcomingLiveTimeWidget"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:layout_alignParentTop="true"
+      android:layout_centerVertical="true"
+      android:layout_marginStart="10dp"
+      android:layout_toEndOf="@+id/backNavigationImageView"
+      app:cardBackgroundColor="@color/white_color"
+      app:cardCornerRadius="4dp">
+
+      <ImageView
+        android:layout_width="26dp"
+        android:layout_height="26dp"
+        android:padding="4dp"
+        android:src="@drawable/ic_clock" />
+
+      <TextView
+        android:id="@+id/remainingTimeTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="26dp"
+        android:layout_marginStart="28dp"
+        android:gravity="center_vertical"
+        android:paddingEnd="6dp"
+        android:text="24:05"
+        android:textColor="@color/app_light_black"
+        app:drawableTint="@color/app_light_black" />
+    </androidx.cardview.widget.CardView>
+
+  </RelativeLayout>
+
+  <RelativeLayout
+    android:id="@+id/statsContainer"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_below="@+id/headerImageView"
+    android:background="#F5F5F5"
+    android:paddingTop="8dp"
+    android:paddingBottom="8dp">
+    <ImageView
+      android:id="@+id/liveStreamIndicator"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:layout_centerVertical="true"
+      android:layout_marginStart="20dp"
+      android:layout_marginEnd="20dp"
+      android:src="@drawable/ic_tv_icon"
+      android:tint="@color/app_red" />
+
+    <com.mycity4kids.widget.CustomFontTextView
+      android:id="@+id/liveStartsLabel"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:layout_toEndOf="@+id/liveStreamIndicator"
+      android:text="LIVE Starts"
+      android:textSize="16sp"
+      app:fontName="Roboto-Medium.ttf" />
+
+    <TextView
+      android:id="@+id/liveStartTimeTextView"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:layout_below="@+id/liveStartsLabel"
+      android:layout_toEndOf="@+id/liveStreamIndicator"
+      android:text="18 Aug 2020 12:30 AM" />
+
+    <androidx.cardview.widget.CardView
+      android:id="@+id/whatsappShareCardView"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:layout_alignParentEnd="true"
+      android:layout_centerVertical="true"
+      android:layout_marginEnd="20dp"
+      app:cardBackgroundColor="@color/all_whatsapp_share"
+      app:cardCornerRadius="4dp">
+      <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:padding="10dp"
+        android:src="@drawable/ic_whatsapp" />
+    </androidx.cardview.widget.CardView>
+
+  </RelativeLayout>
+
+  <com.google.android.material.tabs.TabLayout
+    android:id="@+id/tabsLayout"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_below="@+id/statsContainer"
+    app:tabIndicatorColor="@color/app_red"
+    app:tabSelectedTextColor="@color/app_red"
+    app:tabTextColor="@color/grey" />
+
+  <androidx.viewpager.widget.ViewPager
+    android:id="@+id/viewPager"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_below="@+id/tabsLayout" />
+
+</RelativeLayout>

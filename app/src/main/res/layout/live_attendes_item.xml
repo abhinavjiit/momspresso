@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+  xmlns:app="http://schemas.android.com/apk/res-auto"
+  android:layout_width="match_parent"
+  android:layout_height="wrap_content"
+  android:orientation="vertical">
+
+  <TextView
+    android:id="@+id/guestNameTextView"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:textColor="@color/app_dark_black"
+    android:textStyle="bold" />
+
+  <com.mycity4kids.widget.CustomFontTextView
+    android:id="@+id/guestDesignationTextView"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:textColor="@color/app_dark_black"
+    app:fontName="Roboto-Medium.ttf" />
+
+  <TextView
+    android:id="@+id/guestDescriptionTextView"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:textColor="@color/app_dark_black" />
+</LinearLayout>

@@ -791,24 +791,23 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
                 TorcaiAdsAPI torcaiAdsApi = retro.create(TorcaiAdsAPI.class);
                 Call<ResponseBody> topAdsCall;
                 Call<ResponseBody> endAdsCall;
-                if (BuildConfig.DEBUG) {
+                if (!BuildConfig.DEBUG) {
                     topAdsCall = torcaiAdsApi.getTorcaiAd();
                     endAdsCall = torcaiAdsApi.getTorcaiAd();
                 } else {
                     topAdsCall = torcaiAdsApi.getTorcaiAd(AppUtils.getAdSlotId("ART", "TOP"),
                             "www.momspresso.com",
-                            AppUtils.getIpAddress(true),
+                            SharedPrefUtils.getPublicIpAddress(BaseApplication.getAppContext()),
                             "1",
                             "Momspresso",
                             AppUtils.getAppVersion(BaseApplication.getAppContext()),
-                            "https://play.google.com/store/apps/details?id=com.mycity4kids&hl=en_IN",
-                            "mobile",
+                            "https://play.google.com/store/apps/details?id=com.mycity4kids&hl=en_IN", "mobile",
                             SharedPrefUtils.getAdvertisementId(BaseApplication.getAppContext()),
                             "" + System.getProperty("http.agent"));
 
                     endAdsCall = torcaiAdsApi.getTorcaiAd(AppUtils.getAdSlotId("ART", "END"),
                             "www.momspresso.com",
-                            AppUtils.getIpAddress(true),
+                            SharedPrefUtils.getPublicIpAddress(BaseApplication.getAppContext()),
                             "1",
                             "Momspresso",
                             AppUtils.getAppVersion(BaseApplication.getAppContext()),
@@ -1128,7 +1127,8 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
                     commentsList.get(0).getUserName(),
                     commentsList.get(0).getMessage(),
                     commentsList.get(0).getMentions(),
-                    ContextCompat.getColor(commentatorNameAndCommentTextView1.getContext(), R.color.app_red)
+                    ContextCompat.getColor(commentatorNameAndCommentTextView1.getContext(), R.color.app_red),
+                    ContextCompat.getColor(commentatorNameAndCommentTextView1.getContext(), R.color.user_tag)
             ));
             commentatorNameAndCommentTextView1.setMovementMethod(LinkMovementMethod.getInstance());
             commentDateTextView1.setText(
@@ -1193,7 +1193,8 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
                     commentsList.get(0).getUserName(),
                     commentsList.get(0).getMessage(),
                     commentsList.get(0).getMentions(),
-                    ContextCompat.getColor(commentatorNameAndCommentTextView1.getContext(), R.color.app_red)
+                    ContextCompat.getColor(commentatorNameAndCommentTextView1.getContext(), R.color.app_red),
+                    ContextCompat.getColor(commentatorNameAndCommentTextView1.getContext(), R.color.user_tag)
             ));
             commentatorNameAndCommentTextView1.setMovementMethod(LinkMovementMethod.getInstance());
             commentDateTextView1.setText(
@@ -1241,7 +1242,8 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
                     commentsList.get(1).getUserName(),
                     commentsList.get(1).getMessage(),
                     commentsList.get(1).getMentions(),
-                    ContextCompat.getColor(commentatorNameAndCommentTextView2.getContext(), R.color.app_red)
+                    ContextCompat.getColor(commentatorNameAndCommentTextView2.getContext(), R.color.app_red),
+                    ContextCompat.getColor(commentatorNameAndCommentTextView2.getContext(), R.color.user_tag)
             ));
             commentatorNameAndCommentTextView2.setMovementMethod(LinkMovementMethod.getInstance());
 
@@ -1293,7 +1295,8 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
                     commentsList.get(0).getUserName(),
                     commentsList.get(0).getMessage(),
                     commentsList.get(0).getMentions(),
-                    ContextCompat.getColor(commentatorNameAndCommentTextView1.getContext(), R.color.app_red)
+                    ContextCompat.getColor(commentatorNameAndCommentTextView1.getContext(), R.color.app_red),
+                    ContextCompat.getColor(commentatorNameAndCommentTextView1.getContext(), R.color.user_tag)
             ));
             commentatorNameAndCommentTextView1.setMovementMethod(LinkMovementMethod.getInstance());
 
@@ -1326,7 +1329,8 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
                     commentsList.get(1).getUserName(),
                     commentsList.get(1).getMessage(),
                     commentsList.get(1).getMentions(),
-                    ContextCompat.getColor(commentatorNameAndCommentTextView2.getContext(), R.color.app_red)
+                    ContextCompat.getColor(commentatorNameAndCommentTextView2.getContext(), R.color.app_red),
+                    ContextCompat.getColor(commentatorNameAndCommentTextView2.getContext(), R.color.user_tag)
             ));
             commentatorNameAndCommentTextView2.setMovementMethod(LinkMovementMethod.getInstance());
             commentDateTextView2.setText(
@@ -3508,7 +3512,6 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
                         relatedTrendingSeparator.setVisibility(View.GONE);
                         relatedArticleHorizontalScrollView.setVisibility(View.GONE);
                         moreFromAuthorTextView.setVisibility(View.GONE);
-
                     } else {
                         impressionList.addAll(dataList);
                         Collections.shuffle(dataList);

@@ -53,7 +53,9 @@ public class ArticleCommentsRecyclerAdapter extends
                 AppUtils.createSpannableForMentionHandling(commentList.get(position).getUserId(),
                         commentList.get(position).getUserName(), commentList.get(position).getMessage(),
                         commentList.get(position).getMentions(), ContextCompat
-                                .getColor(commentsViewHolder.commentDataTextView.getContext(), R.color.app_red)));
+                                .getColor(commentsViewHolder.commentDataTextView.getContext(), R.color.app_red),
+                        ContextCompat
+                                .getColor(commentsViewHolder.commentDataTextView.getContext(), R.color.user_tag)));
         commentsViewHolder.commentDataTextView.setMovementMethod(LinkMovementMethod.getInstance());
         commentsViewHolder.dateTextView.setText(DateTimeUtils
                 .getDateFromNanoMilliTimestamp(Long.parseLong(commentList.get(position).getCreatedTime())));

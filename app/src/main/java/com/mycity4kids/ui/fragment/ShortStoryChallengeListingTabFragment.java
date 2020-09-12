@@ -14,6 +14,7 @@ import com.google.firebase.crashlytics.FirebaseCrashlytics;
 import com.mycity4kids.R;
 import com.mycity4kids.application.BaseApplication;
 import com.mycity4kids.base.BaseFragment;
+import com.mycity4kids.gtmutils.Utils;
 import com.mycity4kids.models.Topics;
 import com.mycity4kids.preference.SharedPrefUtils;
 import com.mycity4kids.ui.activity.ShortStoryChallengeDetailActivity;
@@ -69,6 +70,13 @@ public class ShortStoryChallengeListingTabFragment extends BaseFragment implemen
             switch (view.getId()) {
                 case R.id.mainView:
                 case R.id.getStartedTextView:
+                    if (position == 0) {
+                        Utils.shareEventTracking(getActivity(), "100WS listing", "Story_Challenges_Android",
+                                "SS_SCL_ThisWeek_Challenge");
+                    } else {
+                        Utils.shareEventTracking(getActivity(), "100WS listing", "Story_Challenges_Android",
+                                "SS_SCL_PreviousWeeks_Challenge");
+                    }
                     Intent intent = new Intent(getContext(), ShortStoryChallengeDetailActivity.class);
                     intent.putExtra("challenge", challengeId);
                     startActivity(intent);

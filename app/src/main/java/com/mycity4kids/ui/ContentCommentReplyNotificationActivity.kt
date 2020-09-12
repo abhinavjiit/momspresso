@@ -53,13 +53,13 @@ import io.reactivex.Observer
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable
 import io.reactivex.schedulers.Schedulers
+import java.util.ArrayList
+import java.util.HashMap
 import okhttp3.ResponseBody
 import org.json.JSONObject
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
-import java.util.ArrayList
-import java.util.HashMap
 
 class ContentCommentReplyNotificationActivity : BaseActivity(),
     ArticleCommentsRecyclerAdapter.RecyclerViewClickListener,
@@ -134,7 +134,6 @@ class ContentCommentReplyNotificationActivity : BaseActivity(),
                 topCommentCoachMark.visibility = View.VISIBLE
             }
         }
-
 
         val inputMethodManager =
             getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
@@ -1087,7 +1086,6 @@ class ContentCommentReplyNotificationActivity : BaseActivity(),
         return mutableListOf("dddd")
     }
 
-
     inner class MentionIndex : Comparable<MentionIndex> {
         var index = 0
         var mention: Mentions? = null
@@ -1105,9 +1103,6 @@ class ContentCommentReplyNotificationActivity : BaseActivity(),
 
         override operator fun compareTo(other: MentionIndex): Int {
             return index - other.index
-
         }
     }
-
-
 }

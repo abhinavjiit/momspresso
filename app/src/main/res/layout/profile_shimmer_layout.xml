@@ -20,7 +20,7 @@
         app:civ_border_color="@color/white_color"
         app:civ_border_width="1dp"
         app:civ_shadow="false"
-        app:civ_shadow_radius="1" />
+        app:civ_shadow_radius="1dp" />
 
     <com.mycity4kids.widget.CustomFontTextView
         android:id="@+id/shimmerAuthorNameTextView"

@@ -1,6 +1,10 @@
 package com.mycity4kids.ui.livestreaming
-import com.google.gson.annotations.SerializedName
 
+import android.os.Parcelable
+import com.google.gson.annotations.SerializedName
+import kotlinx.android.parcel.Parcelize
+
+@Parcelize
 data class LiveStreamResponse(
     @SerializedName("code")
     val code: Int,
@@ -9,9 +13,9 @@ data class LiveStreamResponse(
     @SerializedName("error")
     val error: Boolean,
     @SerializedName("error_code")
-    val errorCode: String,
+    val errorCode: String?,
     @SerializedName("reason")
     val reason: String,
     @SerializedName("status")
     val status: String
-)
+) : Parcelable

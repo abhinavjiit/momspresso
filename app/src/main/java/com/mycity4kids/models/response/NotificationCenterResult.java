@@ -84,7 +84,8 @@ public class NotificationCenterResult {
     private String recyclerItemType;
     @SerializedName("content_author")
     private String contentAuthor;
-
+    @SerializedName(value = "event_id", alternate = {"eventId"})
+    private int eventId;
     @SerializedName("Name")
     private String name;
     @SerializedName("Disabled")
@@ -405,6 +406,14 @@ public class NotificationCenterResult {
 
     public void setContentAuthor(String contentAuthor) {
         this.contentAuthor = contentAuthor;
+    }
+
+    public int getEventId() {
+        return eventId;
+    }
+
+    public void setEventId(int eventId) {
+        this.eventId = eventId;
     }
 
     public class NotificationUserInfo {

@@ -15,7 +15,8 @@ import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.article_challenge_listing_adapter_layout.view.*
 
 class ArticleChallengeListingAdapter(
-    var clickListener: RecyclerViewItemClickListener, private var type: String? = null
+    var clickListener: RecyclerViewItemClickListener,
+    private var type: String? = null
 ) :
     RecyclerView.Adapter<RecyclerView.ViewHolder>() {
     private lateinit var articleListingData: ArrayList<ArticleListingResult>
@@ -59,9 +60,8 @@ class ArticleChallengeListingAdapter(
                 }
                 type?.let {
                     trophyImageView.visibility = View.VISIBLE
-                } ?:run {
+                } ?: run {
                     showWinnerOrGoldFlag(trophyImageView, articleListingData[position])
-
                 }
             }
         }

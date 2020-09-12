@@ -222,6 +222,15 @@ public class CategoryVideosListingActivity extends BaseActivity implements View.
             @Override
             public void onTabSelected(TabLayout.Tab tab) {
                 viewPager.setCurrentItem(tab.getPosition());
+                try {
+                    if (tab.getTag().toString().equals(AppConstants.VIDEO_CHALLENGE_ID)) {
+                        Utils.shareEventTracking(CategoryVideosListingActivity.this, "Vlog listing",
+                                "Vlog_Challenges_Android", "VS_Show_VCListing_Challenge");
+                    }
+                } catch (Exception e) {
+
+                }
+
                 Utils.momVlogEvent(CategoryVideosListingActivity.this, "Video Listing", "Vlogs_Tab", "", "android",
                         SharedPrefUtils.getAppLocale(BaseApplication.getAppContext()),
                         SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId(),

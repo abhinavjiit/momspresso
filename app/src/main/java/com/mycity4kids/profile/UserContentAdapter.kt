@@ -1,5 +1,7 @@
 package com.mycity4kids.profile
 
+import android.animation.ObjectAnimator
+import android.animation.ValueAnimator
 import android.content.Intent
 import android.graphics.PorterDuff
 import android.graphics.drawable.GradientDrawable
@@ -7,16 +9,21 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.animation.Animation
+import android.webkit.WebView
 import android.widget.HorizontalScrollView
 import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.RelativeLayout
 import android.widget.TextView
+import androidx.cardview.widget.CardView
 import androidx.core.content.ContextCompat
 import androidx.core.graphics.drawable.DrawableCompat
+import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.facebook.shimmer.ShimmerFrameLayout
 import com.google.firebase.crashlytics.FirebaseCrashlytics
+import com.mycity4kids.BuildConfig
 import com.mycity4kids.R
 import com.mycity4kids.application.BaseApplication
 import com.mycity4kids.constants.AppConstants
@@ -30,23 +37,27 @@ import com.mycity4kids.models.response.FollowUnfollowUserResponse
 import com.mycity4kids.models.response.MixFeedResult
 import com.mycity4kids.retrofitAPIsInterfaces.ContributorListAPI
 import com.mycity4kids.retrofitAPIsInterfaces.FollowAPI
+import com.mycity4kids.ui.livestreaming.RecentOrUpcomingLiveStreamsHorizontalAdapter
 import com.mycity4kids.utils.AppUtils
+import com.mycity4kids.utils.DateTimeUtils
 import com.mycity4kids.utils.ImageKitUtils
 import com.mycity4kids.utils.StringUtils
+import com.mycity4kids.widget.MomspressoButtonWidget
 import com.mycity4kids.widget.StoryShareCardWidget
 import com.squareup.picasso.Picasso
+import java.util.Locale
 import kotlinx.android.synthetic.main.mom_vlog_follow_following_carousal.view.*
 import kotlinx.android.synthetic.main.short_story_listing_item.view.*
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
-import java.util.Locale
 
 /**
  * Created by hemant on 19/7/17.
  */
 class UserContentAdapter(
     private val mListener: RecyclerViewClickListener,
+    private val horizontalListener: RecentOrUpcomingLiveStreamsHorizontalAdapter.HorizontalRecyclerViewClickListener,
     private val isPrivate: Boolean
 ) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
@@ -62,6 +73,9 @@ class UserContentAdapter(
             AppConstants.CONTENT_TYPE_SHORT_STORY == mixFeedList?.get(position)?.contentType -> CONTENT_TYPE_SHORT_STORY
             AppConstants.CONTENT_TYPE_VIDEO == mixFeedList?.get(position)?.contentType -> CONTENT_TYPE_VIDEO
             AppConstants.CONTENT_TYPE_SUGGESTED_BLOGGERS == mixFeedList?.get(position)?.contentType -> CONTENT_TYPE_SUGGESTED_BLOGGERS
+            AppConstants.CONTENT_TYPE_RECENT_LIVE_STREAM == mixFeedList?.get(position)?.contentType -> CONTENT_TYPE_RECENT_LIVE_STREAM
+            AppConstants.CONTENT_TYPE_UPCOMING_LIVE_STREAM == mixFeedList?.get(position)?.contentType -> CONTENT_TYPE_UPCOMING_LIVE_STREAM
+            AppConstants.CONTENT_TYPE_TORCAI_ADS == mixFeedList?.get(position)?.contentType -> CONTENT_TYPE_TORCAI_ADS
             else -> CONTENT_TYPE_ARTICLE
         }
     }
@@ -87,6 +101,21 @@ class UserContentAdapter(
                 val v0 = LayoutInflater.from(parent.context)
                     .inflate(R.layout.mom_vlog_follow_following_carousal, parent, false)
                 FollowFollowingCarousel(v0, mListener)
+            }
+            CONTENT_TYPE_RECENT_LIVE_STREAM -> {
+                val v0 = LayoutInflater.from(parent.context)
+                    .inflate(R.layout.live_stream_list_item, parent, false)
+                RecentLiveStreamViewHolder(v0, mListener)
+            }
+            CONTENT_TYPE_UPCOMING_LIVE_STREAM -> {
+                val v0 = LayoutInflater.from(parent.context)
+                    .inflate(R.layout.upcoming_live_streams_item, parent, false)
+                UpcomingLiveStreamViewHolder(v0, mListener)
+            }
+            CONTENT_TYPE_TORCAI_ADS -> {
+                val v0 = LayoutInflater.from(parent.context)
+                    .inflate(R.layout.torcai_ads_item, parent, false)
+                TorcaiAdsViewHolder(v0)
             }
             else -> {
                 val v0 = LayoutInflater.from(parent.context)
@@ -142,6 +171,33 @@ class UserContentAdapter(
                 holder,
                 isPrivate,
                 holder.trophyImageView
+            )
+            is RecentLiveStreamViewHolder -> {
+                if (BuildConfig.DEBUG) {
+                    holder.eventId.visibility = View.VISIBLE
+                    holder.eventId.text =
+                        "" + mixFeedList?.get(position)?.recentLiveStreamsList?.get(0)?.id
+                } else {
+                    holder.eventId.visibility = View.GONE
+                }
+
+                addRecentLiveStreamItem(
+                    holder.liveStreamImageView,
+                    holder.upcomingLiveTimeWidget,
+                    holder.liveOngoingLabel,
+                    holder.liveEndedLabel,
+                    holder.liveStartsLabel,
+                    holder.remainingTimeTextView,
+                    mixFeedList?.get(position)
+                )
+            }
+            is UpcomingLiveStreamViewHolder -> addUpcomingLiveStreamItem(
+                holder.upcomingLivesRecyclerView,
+                mixFeedList?.get(position)
+            )
+            is TorcaiAdsViewHolder -> loadTorcaiAdData(
+                holder.webView,
+                mixFeedList?.get(position)
             )
             is FollowFollowingCarousel -> {
                 try {
@@ -628,6 +684,76 @@ class UserContentAdapter(
         }
     }
 
+    inner class RecentLiveStreamViewHolder(
+        itemView: View,
+        val listener: RecyclerViewClickListener
+    ) :
+        RecyclerView.ViewHolder(itemView), View.OnClickListener {
+        internal var liveStartsLabel: TextView = itemView.findViewById(R.id.liveStartsLabel)
+        internal var liveOngoingLabel: CardView =
+            itemView.findViewById(R.id.liveOngoingLabel)
+        internal var liveEndedLabel: MomspressoButtonWidget =
+            itemView.findViewById(R.id.liveEndedLabel)
+        internal var liveStreamImageView: ImageView =
+            itemView.findViewById(R.id.liveStreamImageView)
+        internal var upcomingLiveTimeWidget: CardView =
+            itemView.findViewById(R.id.upcomingLiveTimeWidget)
+        internal var remainingTimeTextView: TextView =
+            itemView.findViewById(R.id.remainingTimeTextView)
+        internal var liveIndicatorImageView: ImageView =
+            itemView.findViewById(R.id.liveIndicatorImageView)
+        internal var eventId: TextView =
+            itemView.findViewById(R.id.eventId)
+        internal val anim = ObjectAnimator.ofFloat(liveIndicatorImageView, "alpha", 0.0f, 1f)
+
+        init {
+            itemView.setOnClickListener(this)
+            anim.repeatMode = ValueAnimator.REVERSE
+            anim.repeatCount = Animation.INFINITE
+            anim.duration = 900
+            anim.start()
+        }
+
+        override fun onClick(v: View) {
+            if (adapterPosition != RecyclerView.NO_POSITION) {
+                listener.onClick(v, adapterPosition)
+            }
+        }
+    }
+
+    inner class UpcomingLiveStreamViewHolder(
+        itemView: View,
+        val listener: RecyclerViewClickListener
+    ) : RecyclerView.ViewHolder(itemView), View.OnClickListener {
+        internal var viewAllLivesTextView: TextView =
+            itemView.findViewById(R.id.viewAllLivesTextView)
+        internal var upcomingLivesRecyclerView: RecyclerView =
+            itemView.findViewById(R.id.upcomingLivesRecyclerView)
+
+        init {
+            viewAllLivesTextView.setOnClickListener(this)
+            itemView.setOnClickListener(this)
+        }
+
+        override fun onClick(v: View) {
+            if (adapterPosition != RecyclerView.NO_POSITION) {
+                listener.onClick(v, adapterPosition)
+            }
+        }
+    }
+
+    inner class TorcaiAdsViewHolder(
+        itemView: View
+    ) : RecyclerView.ViewHolder(itemView) {
+        internal var webView: WebView =
+            itemView.findViewById(R.id.webView)
+
+        init {
+            webView.settings.layoutAlgorithm =
+                android.webkit.WebSettings.LayoutAlgorithm.SINGLE_COLUMN
+        }
+    }
+
     private fun addArticleItem(
         articleTitleTV: TextView,
         forYouInfoLL: LinearLayout,
@@ -887,6 +1013,86 @@ class UserContentAdapter(
             FirebaseCrashlytics.getInstance().recordException(e)
             Log.d("MC4kException", Log.getStackTraceString(e))
         }
+    }
+
+    private fun addRecentLiveStreamItem(
+        liveStreamImageView: ImageView,
+        upcomingLiveTimeWidget: CardView,
+        liveOngoingLabel: CardView,
+        liveEndedLabel: MomspressoButtonWidget,
+        liveStartsLabel: TextView,
+        remainingTimeTextView: TextView,
+        data: MixFeedResult?
+    ) {
+        try {
+            try {
+                Picasso.get().load(data?.recentLiveStreamsList?.get(0)?.image_url).placeholder(R.drawable.default_article).error(
+                    R.drawable.default_article
+                ).into(liveStreamImageView)
+            } catch (e: Exception) {
+                liveStreamImageView.setImageResource(R.drawable.default_article)
+            }
+
+            when (data?.recentLiveStreamsList?.get(0)?.status) {
+                AppConstants.LIVE_STREAM_STATUS_UPCOMING -> {
+                    upcomingLiveTimeWidget.visibility = View.VISIBLE
+                    remainingTimeTextView.text =
+                        DateTimeUtils.timeDiffInMinuteAndSeconds(data.recentLiveStreamsList?.get(0)?.live_datetime!!)
+                    liveOngoingLabel.visibility = View.GONE
+                    liveEndedLabel.visibility = View.GONE
+                    liveStartsLabel.visibility = View.GONE
+                }
+                AppConstants.LIVE_STREAM_STATUS_ONGOING -> {
+                    upcomingLiveTimeWidget.visibility = View.GONE
+                    liveOngoingLabel.visibility = View.VISIBLE
+                    liveEndedLabel.visibility = View.GONE
+                    liveStartsLabel.visibility = View.VISIBLE
+                    liveStartsLabel.text =
+                        "Started " + DateTimeUtils.timeSince(data.recentLiveStreamsList?.get(0)?.live_datetime!!) + " ago"
+                }
+                else -> {
+                    upcomingLiveTimeWidget.visibility = View.GONE
+                    liveOngoingLabel.visibility = View.GONE
+                    liveEndedLabel.visibility = View.VISIBLE
+                    liveEndedLabel.setText(
+                        DateTimeUtils.timeSince(
+                            data?.recentLiveStreamsList?.get(
+                                0
+                            )?.live_datetime!!
+                        )
+                    )
+                    liveStartsLabel.visibility = View.GONE
+                }
+            }
+        } catch (e: Exception) {
+            FirebaseCrashlytics.getInstance().recordException(e)
+            Log.d("MC4kException", Log.getStackTraceString(e))
+        }
+    }
+
+    private fun addUpcomingLiveStreamItem(
+        recyclerView: RecyclerView,
+        data: MixFeedResult?
+    ) {
+        try {
+            recyclerView.adapter = RecentOrUpcomingLiveStreamsHorizontalAdapter(
+                data?.recentLiveStreamsList,
+                horizontalListener
+            )
+            recyclerView.layoutManager = LinearLayoutManager(
+                recyclerView.context,
+                LinearLayoutManager.HORIZONTAL,
+                false
+            )
+            recyclerView.setHasFixedSize(true)
+        } catch (e: Exception) {
+            FirebaseCrashlytics.getInstance().recordException(e)
+            Log.d("MC4kException", Log.getStackTraceString(e))
+        }
+    }
+
+    private fun loadTorcaiAdData(webView: WebView, mixFeedResult: MixFeedResult?) {
+        webView.loadDataWithBaseURL("", mixFeedResult?.torcaiAdsData, "text/html", "utf-8", "")
     }
 
     private fun showWinnerOrGoldMark(
@@ -1150,5 +1356,8 @@ class UserContentAdapter(
         private val CONTENT_TYPE_ARTICLE = 2
         private val CONTENT_TYPE_VIDEO = 3
         private val CONTENT_TYPE_SUGGESTED_BLOGGERS = 4
+        private val CONTENT_TYPE_RECENT_LIVE_STREAM = 5
+        private val CONTENT_TYPE_UPCOMING_LIVE_STREAM = 6
+        private val CONTENT_TYPE_TORCAI_ADS = 7
     }
 }

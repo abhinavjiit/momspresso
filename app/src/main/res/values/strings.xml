@@ -536,7 +536,7 @@ Thank you! We will be reviewing your story. You can expect to hear from us withi
   <string name="explore.events.upcoming_lbl">UPCOMING EVENTS</string>
   <string name="all_videos.toolbar.title">VIDEOS</string>
   <string name="all_videos.toolbar.title.homepage">Videos</string>
-  <string name="all_videos.tabbar.momspresso_label">MOMSPRESSO TV</string>
+  <string name="all_videos.tabbar.momspresso_label">MOMSPRESSO LIVE</string>
   <string name="all_videos.tabbar.funny_label">MOM VLOGS</string>
   <string name="all_videos.funny_videos.no_videos">No mom vlogs added.</string>
   <string name="notification.read_all">Read All</string>
@@ -1567,5 +1567,6 @@ Thank you! We will be reviewing your story. You can expect to hear from us withi
   <string name="original_content">Kindly publish only original content at Momspresso. Plagiarised content i.e. content copied even partially from any source, will not be accepted</string>
   <string name="ok_got_it">Ok, got It</string>
   <string name="please_enter_a_valid_code">Please enter a valid verification code.</string>
+  <string name="all_momspresso_live">MOMSPRESSO LIVE</string>
 </resources>
 

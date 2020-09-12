@@ -50,10 +50,17 @@ public class LiveChatRecyclerAdapter extends
                         commentList.get(position).getUserName(), commentList.get(position).getMessage(),
                         commentList.get(position).getMentions(), ContextCompat
                                 .getColor(commentsViewHolder.commentDataTextView.getContext(),
-                                        R.color.app_dark_black)));
+                                        R.color.app_dark_black), ContextCompat
+                                .getColor(commentsViewHolder.commentDataTextView.getContext(),
+                                        R.color.user_tag)));
         commentsViewHolder.commentDataTextView.setMovementMethod(LinkMovementMethod.getInstance());
-        commentsViewHolder.dateTextView.setText(DateTimeUtils
-                .getDateFromNanoMilliTimestamp(commentList.get(position).getCreatedTime()));
+        try {
+            commentsViewHolder.dateTextView.setText(DateTimeUtils
+                    .getDateFromNanoMilliTimestamp(commentList.get(position).getCreatedTime()));
+        } catch (Exception e) {
+            commentsViewHolder.dateTextView.setText("--");
+        }
+
         try {
             Picasso.get().load(commentList.get(position).getUserPic())
                     .placeholder(R.drawable.default_commentor_img).into((commentsViewHolder.commentorImageView));

@@ -1,2 +1,7 @@
 package com.mycity4kids.ui.livestreaming
-class ItemMeta()
+
+import android.os.Parcelable
+import kotlinx.android.parcel.Parcelize
+
+@Parcelize
+class ItemMeta() : Parcelable

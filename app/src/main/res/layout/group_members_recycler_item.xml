@@ -1,71 +1,69 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:layout_width="match_parent"
+  xmlns:app="http://schemas.android.com/apk/res-auto"
+  android:layout_width="match_parent"
+  android:layout_height="wrap_content"
+  android:orientation="vertical"
+  android:paddingLeft="10dp"
+  android:paddingTop="16dp"
+  android:paddingRight="10dp"
+  android:paddingBottom="16dp">
+
+  <com.mikhaellopez.circularimageview.CircularImageView
+    android:id="@+id/memberImageView"
+    android:layout_width="54dp"
+    android:layout_height="54dp"
+    android:layout_alignParentStart="true"
+    android:layout_alignParentLeft="true"
+    android:layout_alignParentTop="true"
+    android:contentDescription="@string/author_img"
+    android:src="@drawable/default_commentor_img"
+    android:visibility="visible"
+    app:civ_border="true"
+    app:civ_border_color="@color/white_color"
+    app:civ_border_width="0dp"
+    app:civ_shadow="false" />
+
+  <com.mycity4kids.widget.CustomFontTextView
+    android:id="@+id/memberNameTextView"
+    android:layout_width="wrap_content"
     android:layout_height="wrap_content"
-    android:orientation="vertical"
-    android:paddingBottom="16dp"
-    android:paddingLeft="10dp"
-    android:paddingRight="10dp"
-    android:paddingTop="16dp">
+    android:layout_centerVertical="true"
+    android:layout_marginLeft="10dp"
+    android:layout_marginRight="4dp"
+    android:layout_toLeftOf="@+id/memberOptionImageView"
+    android:layout_toRightOf="@+id/memberImageView"
+    android:ellipsize="end"
+    android:lines="1"
+    android:text="Guneer Kaur dwa wad dawdawd "
+    android:textColor="@color/groups.light_black_color"
+    android:textSize="14sp"
+    app:fontName="oswald_regular.ttf" />
 
-    <com.mikhaellopez.circularimageview.CircularImageView
-        android:id="@+id/memberImageView"
-        android:layout_width="54dp"
-        android:layout_height="54dp"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:layout_alignParentTop="true"
-        android:contentDescription="@string/author_img"
-        android:src="@drawable/default_commentor_img"
-        android:visibility="visible"
-        app:civ_border="true"
-        app:civ_border_color="@color/white_color"
-        app:civ_border_width="0dp"
-        app:civ_shadow="true"
-        app:civ_shadow_color="@color/grey"
-        app:civ_shadow_radius="4" />
+  <!--<com.mycity4kids.widget.CustomFontTextView-->
+  <!--android:id="@+id/dateTextView"-->
+  <!--android:layout_width="wrap_content"-->
+  <!--android:layout_height="wrap_content"-->
+  <!--android:layout_below="@+id/memberNameTextView"-->
+  <!--android:layout_marginLeft="10dp"-->
+  <!--android:layout_marginRight="4dp"-->
+  <!--android:layout_marginTop="5dp"-->
+  <!--android:layout_toLeftOf="@+id/acceptTextView"-->
+  <!--android:layout_toRightOf="@+id/memberImageView"-->
+  <!--android:lines="1"-->
+  <!--android:text="21:20 | 21 Apr 2019"-->
+  <!--android:textColor="@color/groups.grey"-->
+  <!--android:textSize="14sp"-->
+  <!--app:fontName="oswald.ttf" />-->
 
-    <com.mycity4kids.widget.CustomFontTextView
-        android:id="@+id/memberNameTextView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_centerVertical="true"
-        android:layout_marginLeft="10dp"
-        android:layout_marginRight="4dp"
-        android:layout_toLeftOf="@+id/memberOptionImageView"
-        android:layout_toRightOf="@+id/memberImageView"
-        android:ellipsize="end"
-        android:lines="1"
-        android:text="Guneer Kaur dwa wad dawdawd "
-        android:textColor="@color/groups.light_black_color"
-        android:textSize="14sp"
-        app:fontName="oswald_regular.ttf" />
-
-    <!--<com.mycity4kids.widget.CustomFontTextView-->
-    <!--android:id="@+id/dateTextView"-->
-    <!--android:layout_width="wrap_content"-->
-    <!--android:layout_height="wrap_content"-->
-    <!--android:layout_below="@+id/memberNameTextView"-->
-    <!--android:layout_marginLeft="10dp"-->
-    <!--android:layout_marginRight="4dp"-->
-    <!--android:layout_marginTop="5dp"-->
-    <!--android:layout_toLeftOf="@+id/acceptTextView"-->
-    <!--android:layout_toRightOf="@+id/memberImageView"-->
-    <!--android:lines="1"-->
-    <!--android:text="21:20 | 21 Apr 2019"-->
-    <!--android:textColor="@color/groups.grey"-->
-    <!--android:textSize="14sp"-->
-    <!--app:fontName="oswald.ttf" />-->
-
-    <androidx.appcompat.widget.AppCompatImageView
-        android:id="@+id/memberOptionImageView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentRight="true"
-        android:layout_centerVertical="true"
-        android:padding="10dp"
-        android:src="@drawable/ic_more_vert_black_24dp"
-        android:tint="@color/groups.blue_color" />
+  <androidx.appcompat.widget.AppCompatImageView
+    android:id="@+id/memberOptionImageView"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_alignParentRight="true"
+    android:layout_centerVertical="true"
+    android:padding="10dp"
+    android:src="@drawable/ic_more_vert_black_24dp"
+    android:tint="@color/groups.blue_color" />
 
 </RelativeLayout>

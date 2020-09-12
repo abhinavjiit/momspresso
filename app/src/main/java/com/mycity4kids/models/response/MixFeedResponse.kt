@@ -4,6 +4,7 @@ import com.google.gson.annotations.SerializedName
 import com.mycity4kids.models.collectionsModels.UserCollectionsModel
 import com.mycity4kids.models.parentingdetails.DetailsBody
 import com.mycity4kids.profile.Author
+import com.mycity4kids.ui.livestreaming.LiveStreamResult
 
 data class MixFeedResponse(
     @SerializedName("code")
@@ -170,5 +171,7 @@ data class MixFeedResult(
     var bookmarkId: String? = null,
     var isCarouselRequestRunning: Boolean = false,
     var responseReceived: Boolean = false,
-    var carouselBloggerList: ArrayList<ContributorListResult>? = null
+    var carouselBloggerList: ArrayList<ContributorListResult>? = null,
+    var recentLiveStreamsList: List<LiveStreamResult>? = null,
+    var torcaiAdsData: String? = ""
 )

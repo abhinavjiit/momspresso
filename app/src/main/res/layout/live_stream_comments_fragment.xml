@@ -11,46 +11,34 @@
     android:layout_height="match_parent"
     android:layout_above="@+id/commentContainer" />
 
-  <LinearLayout
+
+  <RelativeLayout
     android:id="@+id/commentContainer"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_alignParentStart="true"
     android:layout_alignParentBottom="true"
     android:background="#ECECEC"
+    android:elevation="@dimen/space_5"
     android:orientation="horizontal"
     android:paddingStart="10dp"
     android:paddingTop="8dp"
     android:paddingEnd="8dp"
     android:paddingBottom="8dp">
 
-    <com.mikhaellopez.circularimageview.CircularImageView
-      android:id="@+id/commentorImageView"
-      android:layout_width="@dimen/ad_comments_profile_pic_width"
-      android:layout_height="@dimen/ad_comments_profile_pic_width"
-      android:contentDescription="@string/author_img"
-      android:src="@drawable/default_commentor_img"
-      app:civ_border="false"
-      app:civ_shadow="false" />
-
     <RelativeLayout
       android:layout_width="match_parent"
-      android:layout_height="wrap_content"
-      android:layout_gravity="center_vertical"
-      android:layout_marginStart="5dp"
-      android:background="@drawable/chat_input_bg">
-      <EditText
-        android:id="@+id/inputEditText"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_centerVertical="true"
-        android:layout_toStartOf="@+id/addCommentImageView"
-        android:background="@null"
-        android:hint="Leave your question here..."
-        android:maxLines="4"
-        android:paddingStart="8dp"
-        android:scrollbars="vertical"
-        android:textColor="@color/app_dark_black" />
+      android:layout_height="50dp"
+      android:background="#ECECEC">
+
+      <com.mikhaellopez.circularimageview.CircularImageView
+        android:id="@+id/userImageView"
+        android:layout_width="@dimen/ad_comments_profile_pic_width"
+        android:layout_height="@dimen/ad_comments_profile_pic_width"
+        android:contentDescription="@string/author_img"
+        android:src="@drawable/default_commentor_img"
+        app:civ_border="false"
+        app:civ_shadow="false" />
 
       <ImageView
         android:id="@+id/addCommentImageView"
@@ -62,5 +50,95 @@
         android:src="@drawable/ic_chat_arrow" />
 
     </RelativeLayout>
-  </LinearLayout>
+
+    <RelativeLayout
+      android:id="@+id/r"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:layout_marginStart="50dp"
+      android:layout_marginEnd="50dp"
+      android:background="@color/white">
+
+      <com.mycity4kids.tagging.ui.RichEditorView
+        android:id="@+id/inputEditText"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
+        android:layout_marginStart="@dimen/space_10"
+        android:background="@color/transparent"
+        android:gravity="center_vertical"
+        android:hint="Write a comment"
+        android:maxLines="4"
+        android:textColor="#a1a4a8"
+        android:textSize="18sp"
+        android:visibility="visible"
+        app:fontName="oswald.ttf" />
+
+    </RelativeLayout>
+  </RelativeLayout>
+
+
+  <!--  <LinearLayout-->
+  <!--    android:id="@+id/commentContainer"-->
+  <!--    android:layout_width="match_parent"-->
+  <!--    android:layout_height="wrap_content"-->
+  <!--    android:layout_alignParentStart="true"-->
+  <!--    android:layout_alignParentBottom="true"-->
+  <!--    android:background="#ECECEC"-->
+  <!--    android:orientation="horizontal"-->
+  <!--    android:paddingStart="10dp"-->
+  <!--    android:paddingTop="8dp"-->
+  <!--    android:paddingEnd="8dp"-->
+  <!--    android:paddingBottom="8dp">-->
+
+  <!--    <com.mikhaellopez.circularimageview.CircularImageView-->
+  <!--      android:id="@+id/commentorImageView"-->
+  <!--      android:layout_width="@dimen/ad_comments_profile_pic_width"-->
+  <!--      android:layout_height="@dimen/ad_comments_profile_pic_width"-->
+  <!--      android:contentDescription="@string/author_img"-->
+  <!--      android:src="@drawable/default_commentor_img"-->
+  <!--      app:civ_border="false"-->
+  <!--      app:civ_shadow="false" />-->
+
+  <!--    <RelativeLayout-->
+  <!--      android:layout_width="match_parent"-->
+  <!--      android:layout_height="wrap_content"-->
+  <!--      android:layout_gravity="center_vertical"-->
+  <!--      android:layout_marginStart="5dp"-->
+  <!--      android:background="@drawable/chat_input_bg">-->
+  <!--      <EditText-->
+  <!--        android:id="@+id/inputEditText"-->
+  <!--        android:layout_width="match_parent"-->
+  <!--        android:layout_height="wrap_content"-->
+  <!--        android:layout_centerVertical="true"-->
+  <!--        android:layout_toStartOf="@+id/addCommentImageView"-->
+  <!--        android:background="@null"-->
+  <!--        android:hint="Leave your question here..."-->
+  <!--        android:maxLines="4"-->
+  <!--        android:paddingStart="8dp"-->
+  <!--        android:scrollbars="vertical"-->
+  <!--        android:textColor="@color/app_dark_black" />-->
+
+  <!--      <ImageView-->
+  <!--        android:id="@+id/addCommentImageView"-->
+  <!--        android:layout_width="wrap_content"-->
+  <!--        android:layout_height="wrap_content"-->
+  <!--        android:layout_alignParentEnd="true"-->
+  <!--        android:layout_centerVertical="true"-->
+  <!--        android:padding="8dp"-->
+  <!--        android:src="@drawable/ic_chat_arrow" />-->
+
+  <!--    </RelativeLayout>-->
+  <!--  </LinearLayout>-->
+
+  <TextView
+    android:id="@+id/emptyStateTextView"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_centerVertical="true"
+    android:layout_marginStart="60dp"
+    android:layout_marginEnd="60dp"
+    android:gravity="center"
+    android:text="No questions have been posted for this live session."
+    android:visibility="gone" />
 </RelativeLayout>

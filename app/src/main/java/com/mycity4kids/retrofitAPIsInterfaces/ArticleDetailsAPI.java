@@ -23,7 +23,6 @@ import com.mycity4kids.models.response.FBCommentResponse;
 import com.mycity4kids.models.response.LikeReactionModel;
 import com.mycity4kids.models.response.RecommendUnrecommendArticleResponse;
 import com.mycity4kids.models.response.ViewCountResponse;
-import com.mycity4kids.ui.livestreaming.LiveStreamResponse;
 import io.reactivex.Observable;
 import okhttp3.ResponseBody;
 import retrofit2.Call;
@@ -166,7 +165,4 @@ public interface ArticleDetailsAPI {
 
     @POST("/v1/blocked-user/")
     Call<ResponseBody> unBlockUserApi(@Body UnBlockUserModel blockUserModel);
-
-    @GET("https://www.momspresso.com/advertise/livestream.json")
-    Call<LiveStreamResponse> getVideoId();
 }

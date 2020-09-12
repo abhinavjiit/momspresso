@@ -19,6 +19,7 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.mycity4kids.R;
 import com.mycity4kids.application.BaseApplication;
+import com.mycity4kids.base.BaseActivity;
 import com.mycity4kids.base.BaseFragment;
 import com.mycity4kids.constants.AppConstants;
 import com.mycity4kids.constants.Constants;
@@ -26,14 +27,14 @@ import com.mycity4kids.gtmutils.Utils;
 import com.mycity4kids.models.ExploreTopicsModel;
 import com.mycity4kids.models.ExploreTopicsResponse;
 import com.mycity4kids.preference.SharedPrefUtils;
-import com.mycity4kids.retrofitAPIsInterfaces.ArticleDetailsAPI;
+import com.mycity4kids.retrofitAPIsInterfaces.LiveStreamApi;
 import com.mycity4kids.retrofitAPIsInterfaces.TopicsCategoryAPI;
 import com.mycity4kids.ui.adapter.ParentTopicsGridAdapter;
 import com.mycity4kids.ui.adapter.TopicsRecyclerGridAdapter;
 import com.mycity4kids.ui.campaign.activity.CampaignContainerActivity;
 import com.mycity4kids.ui.fragment.GroupsViewFragment;
-import com.mycity4kids.ui.livestreaming.LiveStreamResponse;
-import com.mycity4kids.ui.livestreaming.NewLiveStreamingActivity;
+import com.mycity4kids.ui.livestreaming.RecentLiveStreamResponse;
+import com.mycity4kids.ui.momspressotv.MomspressoTelevisionActivity;
 import com.mycity4kids.utils.AppUtils;
 import com.mycity4kids.utils.ArrayAdapterFactory;
 import com.mycity4kids.widget.HeaderGridView;
@@ -78,7 +79,7 @@ public class ExploreArticleListingTypeFragment extends BaseFragment implements V
     private FrameLayout container;
     private LinearLayout coachmarkMymoneyLinearLayout;
     private RelativeLayout videosContainer, storyContainer, groupsContainer, momsTVContainer, rewardsContainer;
-    private LiveStreamResponse liveStreamResponse;
+    private RecentLiveStreamResponse liveStreamResponse;
     private MomspressoButtonWidget liveStreamIndicator;
     private LinearLayout sectionContainer;
 
@@ -130,9 +131,8 @@ public class ExploreArticleListingTypeFragment extends BaseFragment implements V
         storyContainer.setOnClickListener(this);
         groupsContainer.setOnClickListener(this);
         momsTVContainer.setOnClickListener(view -> {
-            Intent intent = new Intent(getActivity(), FilteredTopicsArticleListingActivity.class);
-            intent.putExtra("selectedTopics", AppConstants.MOMSPRESSO_CATEGORYID);
-            intent.putExtra("displayName", getString(R.string.all_videos_tabbar_momspresso_label));
+            Utils.shareEventTracking(getActivity(), "Discover", "Live_Android", "Discover_Live");
+            Intent intent = new Intent(getActivity(), MomspressoTelevisionActivity.class);
             startActivity(intent);
         });
         rewardsContainer.setOnClickListener(this);
@@ -225,20 +225,24 @@ public class ExploreArticleListingTypeFragment extends BaseFragment implements V
 
     private void getLiveStream() {
         Retrofit retrofit = BaseApplication.getInstance().getRetrofit();
-        ArticleDetailsAPI articleDetailsApi = retrofit.create(ArticleDetailsAPI.class);
-        Call<LiveStreamResponse> call = articleDetailsApi.getVideoId();
-        call.enqueue(new Callback<LiveStreamResponse>() {
+        LiveStreamApi articleDetailsApi = retrofit.create(LiveStreamApi.class);
+        Call<RecentLiveStreamResponse> call = articleDetailsApi.getRecentLiveStreams(null, null);
+        call.enqueue(new Callback<RecentLiveStreamResponse>() {
             @Override
-            public void onResponse(Call<LiveStreamResponse> call, Response<LiveStreamResponse> response) {
+            public void onResponse(Call<RecentLiveStreamResponse> call, Response<RecentLiveStreamResponse> response) {
                 try {
                     liveStreamResponse = response.body();
-                    if (liveStreamResponse.getData().getStatus() == 2) {
+                    if (liveStreamResponse != null && !liveStreamResponse.getData().getResult().getEvents().isEmpty() &&
+                            liveStreamResponse.getData().getResult().getEvents().get(0).getStatus()
+                                    == AppConstants.LIVE_STREAM_STATUS_ONGOING) {
                         sectionContainer.removeViewAt(2);
                         sectionContainer.addView(momsTVContainer, 0);
                         liveStreamIndicator.setVisibility(View.VISIBLE);
                         momsTVContainer.setOnClickListener(view -> {
-                            Intent intent = new Intent(getActivity(), NewLiveStreamingActivity.class);
-                            startActivity(intent);
+                            if (getActivity() != null) {
+                                ((BaseActivity) getActivity()).getLiveStreamInfoFromId(
+                                        liveStreamResponse.getData().getResult().getEvents().get(0).getId());
+                            }
                         });
                     }
                 } catch (Exception e) {
@@ -248,7 +252,7 @@ public class ExploreArticleListingTypeFragment extends BaseFragment implements V
             }
 
             @Override
-            public void onFailure(Call<LiveStreamResponse> call, Throwable t) {
+            public void onFailure(Call<RecentLiveStreamResponse> call, Throwable t) {
                 FirebaseCrashlytics.getInstance().recordException(t);
                 Log.d("MC4KException", Log.getStackTraceString(t));
             }

@@ -13,6 +13,7 @@ import com.mycity4kids.R;
 import com.mycity4kids.application.BaseApplication;
 import com.mycity4kids.base.BaseFragment;
 import com.mycity4kids.constants.Constants;
+import com.mycity4kids.gtmutils.Utils;
 import com.mycity4kids.models.response.NotificationCenterListResponse;
 import com.mycity4kids.preference.SharedPrefUtils;
 import com.mycity4kids.retrofitAPIsInterfaces.NotificationsAPI;
@@ -90,6 +91,18 @@ public class FragmentMC4KHomeNew extends BaseFragment implements View.OnClickLis
         tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
             @Override
             public void onTabSelected(TabLayout.Tab tab) {
+                try {
+                    if (tab.getText().equals(getString(R.string.video_challenge_text))) {
+                        Utils.shareEventTracking(
+                                getActivity(),
+                                "Home screen",
+                                "Challenges_Android",
+                                "Challenges_Home"
+                        );
+                    }
+                } catch (Exception e) {
+                }
+
                 viewPager.setCurrentItem(tab.getPosition());
             }
 

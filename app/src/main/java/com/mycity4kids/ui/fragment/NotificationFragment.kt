@@ -783,34 +783,38 @@ class NotificationFragment : BaseFragment(), IMembershipStatus,
                 AppConstants.NOTIFICATION_CENTER_CONTENT_LIKE -> {
                     val contentType =
                         notificationCenterResultArrayList!![position].contentType
-                    if (AppConstants.CONTENT_TYPE_ARTICLE == contentType) {
-                        val intent = Intent(
-                            activity,
-                            ArticleDetailsContainerActivity::class.java
-                        )
-                        intent.putExtra(
-                            Constants.ARTICLE_ID,
-                            notificationCenterResultArrayList!![position].contentId
-                        )
-                        startActivity(intent)
-                    } else if (AppConstants.CONTENT_TYPE_SHORT_STORY == contentType) {
-                        val intent = Intent(
-                            activity,
-                            ShortStoryContainerActivity::class.java
-                        )
-                        intent.putExtra(
-                            Constants.ARTICLE_ID,
-                            notificationCenterResultArrayList!![position].contentId
-                        )
-                        startActivity(intent)
-                    } else if (AppConstants.CONTENT_TYPE_VIDEO == contentType) {
-                        val intent =
-                            Intent(activity, ParallelFeedActivity::class.java)
-                        intent.putExtra(
-                            Constants.VIDEO_ID,
-                            notificationCenterResultArrayList!![position].contentId
-                        )
-                        startActivity(intent)
+                    when {
+                        AppConstants.CONTENT_TYPE_ARTICLE == contentType -> {
+                            val intent = Intent(
+                                activity,
+                                ArticleDetailsContainerActivity::class.java
+                            )
+                            intent.putExtra(
+                                Constants.ARTICLE_ID,
+                                notificationCenterResultArrayList!![position].contentId
+                            )
+                            startActivity(intent)
+                        }
+                        AppConstants.CONTENT_TYPE_SHORT_STORY == contentType -> {
+                            val intent = Intent(
+                                activity,
+                                ShortStoryContainerActivity::class.java
+                            )
+                            intent.putExtra(
+                                Constants.ARTICLE_ID,
+                                notificationCenterResultArrayList!![position].contentId
+                            )
+                            startActivity(intent)
+                        }
+                        AppConstants.CONTENT_TYPE_VIDEO == contentType -> {
+                            val intent =
+                                Intent(activity, ParallelFeedActivity::class.java)
+                            intent.putExtra(
+                                Constants.VIDEO_ID,
+                                notificationCenterResultArrayList!![position].contentId
+                            )
+                            startActivity(intent)
+                        }
                     }
                     pushEvent("NOTIFICATION_CENTER_CONTENT_LIKE")
                 }
@@ -839,6 +843,12 @@ class NotificationFragment : BaseFragment(), IMembershipStatus,
                     val intent = Intent(activity, MyTotalEarningActivity::class.java)
                     startActivity(intent)
                     pushEvent("NOTIFICATION_CENTER_MY_MONEY_EARNINGS")
+                }
+                AppConstants.NOTIFICATION_CENTER_LIVE_STREAM -> {
+                    activity?.let {
+                        (it as BaseActivity).getLiveStreamInfoFromId(notificationCenterResultArrayList!![position].eventId)
+                    }
+                    pushEvent("NOTIFICATION_CENTER_LIVE_STREAM")
                 }
                 else -> {
                 }

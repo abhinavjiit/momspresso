@@ -104,7 +104,6 @@ interface CollectionsAPI {
     @POST("/v1/collectionItem/addItems/")
     fun addMultipleCollectionItem(@Body multipleCollectionItems: ArrayList<UpdateCollectionRequestModel>): Call<BaseResponseGeneric<AddCollectionRequestModel>>
 
-
     @GET("/winner/content/")
     suspend fun getWinnerArticleChallenge(
         @Query("start") start: Int,

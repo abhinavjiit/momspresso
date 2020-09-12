@@ -128,10 +128,8 @@ class VerifySMSFragment : BaseFragment(), View.OnClickListener {
          }
          startPhoneNumberVerification("+$smsToken$phoneNumber")*/
 
-
         return view
     }
-
 
     /*fun startPhoneNumberVerification(phoneNumber: String) {
         PhoneAuthProvider.getInstance().verifyPhoneNumber(
@@ -143,7 +141,6 @@ class VerifySMSFragment : BaseFragment(), View.OnClickListener {
         )
         //        startCounter()
     }*/
-
 
     /* private fun startCounter() {
          countdownTimerTextView?.visibility = View.VISIBLE
@@ -193,7 +190,6 @@ class VerifySMSFragment : BaseFragment(), View.OnClickListener {
     /*private fun signOut() {
         mAuth!!.signOut()
     }*/
-
 
     /*private fun validate(): Boolean {
         if (TextUtils.isEmpty(otpEditText1?.getText().toString().trim({ it <= ' ' }))) {
@@ -430,8 +426,6 @@ class VerifySMSFragment : BaseFragment(), View.OnClickListener {
                     val resData = String(response.errorBody()!!.bytes())
                     val jObject = JSONObject(resData)
                     activity?.let {
-                        //                        (activity as ActivityLogin).showToast(jObject.getString("reason"))
-
                         if (activity?.javaClass?.simpleName.equals("ActivityLogin")) {
                             (activity as ActivityLogin).showToast(jObject.getString("reason"))
                         } else if (activity?.javaClass?.simpleName.equals("OTPActivity")) {
@@ -440,10 +434,8 @@ class VerifySMSFragment : BaseFragment(), View.OnClickListener {
                     }
                     return
                 }
-                if (response.raw() != null) {
-                    val nee = NetworkErrorException(response.raw().toString())
-                    FirebaseCrashlytics.getInstance().recordException(nee)
-                }
+                val nee = NetworkErrorException(response.raw().toString())
+                FirebaseCrashlytics.getInstance().recordException(nee)
                 return
             }
             try {
@@ -452,7 +444,6 @@ class VerifySMSFragment : BaseFragment(), View.OnClickListener {
                     val jObject = JSONObject(resData)
                     smsToken =
                         jObject.getJSONObject("data").getJSONObject("result").getString("sms_token")
-                } else {
                 }
             } catch (e: Exception) {
                 FirebaseCrashlytics.getInstance().recordException(e)
@@ -494,10 +485,8 @@ class VerifySMSFragment : BaseFragment(), View.OnClickListener {
                         }
                         return
                     }
-                    if (response.raw() != null) {
-                        val nee = NetworkErrorException(response.raw().toString())
-                        FirebaseCrashlytics.getInstance().recordException(nee)
-                    }
+                    val nee = NetworkErrorException(response.raw().toString())
+                    FirebaseCrashlytics.getInstance().recordException(nee)
                     return
                 }
                 try {

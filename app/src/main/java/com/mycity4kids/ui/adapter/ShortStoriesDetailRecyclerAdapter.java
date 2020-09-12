@@ -147,7 +147,9 @@ public class ShortStoriesDetailRecyclerAdapter extends RecyclerView.Adapter<Recy
                                 datalist.get(position).getSsComment().getMessage(),
                                 datalist.get(position).getSsComment().getMentions(), ContextCompat
                                         .getColor(ssCommentViewHolder.commentDataTextView.getContext(),
-                                                R.color.app_red)));
+                                                R.color.app_red), ContextCompat
+                                        .getColor(ssCommentViewHolder.commentDataTextView.getContext(),
+                                                R.color.user_tag)));
                 ssCommentViewHolder.commentDataTextView.setMovementMethod(LinkMovementMethod.getInstance());
                 ssCommentViewHolder.dateTextView.setText(DateTimeUtils.getDateFromNanoMilliTimestamp(
                         Long.parseLong(datalist.get(position).getSsComment().getCreatedTime())));

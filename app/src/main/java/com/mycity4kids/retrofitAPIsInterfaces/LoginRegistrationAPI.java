@@ -75,4 +75,7 @@ public interface LoginRegistrationAPI {
     @PUT("/v2/users/{userId}")
     Call<RewardsPersonalResponse> updateUserDetails(@Path("userId") String userId,
             @Body UserDetailResult userDetailResult);
+
+    @GET("https://api.ipify.org")
+    Call<ResponseBody> getPublicIpAddress();
 }

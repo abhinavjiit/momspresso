@@ -41,13 +41,12 @@ import com.google.firebase.crashlytics.FirebaseCrashlytics
 import com.mixpanel.android.mpmetrics.MixpanelAPI
 import com.mycity4kids.R
 import com.mycity4kids.application.BaseApplication
+import com.mycity4kids.base.BaseActivity
 import com.mycity4kids.base.BaseFragment
 import com.mycity4kids.constants.AppConstants
 import com.mycity4kids.constants.Constants
 import com.mycity4kids.gtmutils.Utils
 import com.mycity4kids.models.Topics
-import com.mycity4kids.models.campaignmodels.AllCampaignDataResponse
-import com.mycity4kids.models.campaignmodels.CampaignDataListResult
 import com.mycity4kids.models.request.ArticleDetailRequest
 import com.mycity4kids.models.request.DeleteBookmarkRequest
 import com.mycity4kids.models.request.FollowUnfollowUserRequest
@@ -60,10 +59,11 @@ import com.mycity4kids.preference.SharedPrefUtils
 import com.mycity4kids.profile.UserContentAdapter
 import com.mycity4kids.profile.UserProfileActivity
 import com.mycity4kids.retrofitAPIsInterfaces.ArticleDetailsAPI
-import com.mycity4kids.retrofitAPIsInterfaces.CampaignAPI
 import com.mycity4kids.retrofitAPIsInterfaces.FollowAPI
+import com.mycity4kids.retrofitAPIsInterfaces.LiveStreamApi
 import com.mycity4kids.retrofitAPIsInterfaces.RecommendationAPI
 import com.mycity4kids.retrofitAPIsInterfaces.TopicsCategoryAPI
+import com.mycity4kids.retrofitAPIsInterfaces.TorcaiAdsAPI
 import com.mycity4kids.retrofitAPIsInterfaces.VlogsListingAndDetailsAPI
 import com.mycity4kids.ui.activity.ArticleChallengeDetailActivity
 import com.mycity4kids.ui.activity.ArticleDetailsContainerActivity
@@ -73,6 +73,10 @@ import com.mycity4kids.ui.activity.ShortStoryChallengeDetailActivity
 import com.mycity4kids.ui.activity.ShortStoryContainerActivity
 import com.mycity4kids.ui.adapter.BlogChallengeAdapter
 import com.mycity4kids.ui.adapter.ShortStoryChallengesRecyclerAdapter
+import com.mycity4kids.ui.livestreaming.LiveStreamResult
+import com.mycity4kids.ui.livestreaming.RecentLiveStreamResponse
+import com.mycity4kids.ui.livestreaming.RecentOrUpcomingLiveStreamsHorizontalAdapter
+import com.mycity4kids.ui.momspressotv.MomspressoTelevisionActivity
 import com.mycity4kids.ui.videochallengenewui.activity.NewVideoChallengeActivity
 import com.mycity4kids.utils.AppUtils
 import com.mycity4kids.utils.ConnectivityUtils
@@ -86,20 +90,21 @@ import com.mycity4kids.vlogs.VideoChallengeSelectionVerticalAdapter
 import com.mycity4kids.vlogs.VlogsCategoryWiseChallengesResponse
 import com.mycity4kids.widget.MomspressoButtonWidget
 import com.mycity4kids.widget.StoryShareCardWidget
+import java.io.File
 import okhttp3.ResponseBody
 import org.apache.commons.lang3.text.WordUtils
+import org.json.JSONObject
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
-import java.io.File
 
 class ArticleListingFragment : BaseFragment(), View.OnClickListener,
     OnRefreshListener, UserContentAdapter.RecyclerViewClickListener,
     ContentChallengeSelectionHorizontalAdapter.RecyclerViewClickListener,
     ShortStoryChallengesRecyclerAdapter.RecyclerViewClickListener,
-    BlogChallengeAdapter.BlogsPriviousWeekChallengesClickListener {
+    BlogChallengeAdapter.BlogsChallengesClickListener,
+    RecentOrUpcomingLiveStreamsHorizontalAdapter.HorizontalRecyclerViewClickListener {
     private var mixfeedList: ArrayList<MixFeedResult>? = null
-    private var campaignListDataModels: ArrayList<CampaignDataListResult>? = null
     private var sortType: String? = null
     private var nextPageNumber = 1
     private var isLastPageReached = false
@@ -139,7 +144,7 @@ class ArticleListingFragment : BaseFragment(), View.OnClickListener,
     private var categoryWiseChallengeList = ArrayList<Topics>()
 
     private val blogChallengeAdapter: BlogChallengeAdapter by lazy {
-        BlogChallengeAdapter(articleChallengesList, this, this, context)
+        BlogChallengeAdapter(articleChallengesList, this)
     }
     private val shortStoryChallengeAdapter: ShortStoryChallengesRecyclerAdapter by lazy {
         ShortStoryChallengesRecyclerAdapter(this)
@@ -224,9 +229,8 @@ class ArticleListingFragment : BaseFragment(), View.OnClickListener,
             blogChallengeAdapter.notifyDataSetChanged()
             loadingView.visibility = View.GONE
         } else {
-            mixfeedAdapter = UserContentAdapter(this, false)
+            mixfeedAdapter = UserContentAdapter(this, this, false)
             mixfeedList = ArrayList()
-            campaignListDataModels = ArrayList()
             mixfeedList = ArrayList()
             nextPageNumber = 1
             mixfeedAdapter.setListData(mixfeedList)
@@ -306,20 +310,17 @@ class ArticleListingFragment : BaseFragment(), View.OnClickListener,
             progressBar.visibility = View.VISIBLE
             call.enqueue(followingFeedResponseCallback)
         } else if (Constants.KEY_TODAYS_BEST == sortKey) {
-            filterContentContainer.visibility = View.VISIBLE
-            val retrofit = BaseApplication.getInstance().retrofit
-            val topicsApi = retrofit.create(
-                TopicsCategoryAPI::class.java
-            )
-            val campaignApi = retrofit.create(CampaignAPI::class.java)
-            val from = (nextPageNumber - 1) * LIMIT + 1
-            val filterCall = topicsApi.getTodaysBestMixedFeed(
-                DateTimeUtils.getKidsDOBNanoMilliTimestamp("" + System.currentTimeMillis()),
-                from, from + LIMIT - 1,
-                SharedPrefUtils.getLanguageFilters(BaseApplication.getAppContext()),
-                getContentFilters()
-            )
-            filterCall.enqueue(articleListingResponseCallback)
+            if (nextPageNumber == 1) {
+                filterContentContainer.visibility = View.VISIBLE
+                val retrofit = BaseApplication.getInstance().retrofit
+                val liveStreamApi = retrofit.create(
+                    LiveStreamApi::class.java
+                )
+                val livesCall = liveStreamApi.getRecentLiveStreams(null, null)
+                livesCall.enqueue(recentLivesResponseCallback)
+            } else {
+                loadTodaysBest()
+            }
         } else if (Constants.KEY_TRENDING == sortKey) {
             filterContentContainer.visibility = View.VISIBLE
             val retrofit = BaseApplication.getInstance().retrofit
@@ -649,35 +650,64 @@ class ArticleListingFragment : BaseFragment(), View.OnClickListener,
         }
     }
 
-    private val getCampaignList: Callback<AllCampaignDataResponse?> =
-        object : Callback<AllCampaignDataResponse?> {
+    private val recentLivesResponseCallback: Callback<RecentLiveStreamResponse> =
+        object : Callback<RecentLiveStreamResponse> {
             override fun onResponse(
-                call: Call<AllCampaignDataResponse?>,
-                response: Response<AllCampaignDataResponse?>
+                call: Call<RecentLiveStreamResponse>,
+                response: Response<RecentLiveStreamResponse>
             ) {
+                isRequestRunning = false
+                progressBar.visibility = View.GONE
+                loadingView.visibility = View.GONE
                 if (response.body() == null) {
                     return
                 }
                 try {
-                    val allCampaignDataResponse = response.body()
-                    if (allCampaignDataResponse!!.code == 200 && (Constants.SUCCESS
-                            == allCampaignDataResponse.status)) {
-                        processCampaignListingResponse(allCampaignDataResponse)
+                    val responseData = response.body()
+                    if (responseData!!.code == 200 && Constants.SUCCESS == responseData.status) {
+                        if (responseData.data.result.events.isNotEmpty()) {
+                            val recentLiveList = MixFeedResult(
+                                contentType = AppConstants.CONTENT_TYPE_RECENT_LIVE_STREAM,
+                                recentLiveStreamsList = responseData.data.result.events
+                            )
+                            mixfeedList?.add(recentLiveList)
+                        }
+                        loadTodaysBest()
                     }
                 } catch (e: Exception) {
                     FirebaseCrashlytics.getInstance().recordException(e)
                     Log.d("MC4KException", Log.getStackTraceString(e))
+                    loadTodaysBest()
                 }
             }
 
             override fun onFailure(
-                call: Call<AllCampaignDataResponse?>,
-                e: Throwable
+                call: Call<RecentLiveStreamResponse>,
+                t: Throwable
             ) {
-                FirebaseCrashlytics.getInstance().recordException(e)
-                Log.d("MC4KException", Log.getStackTraceString(e))
+                loadingView.visibility = View.GONE
+                isRequestRunning = false
+                progressBar.visibility = View.GONE
+                FirebaseCrashlytics.getInstance().recordException(t)
+                Log.d("MC4KException", Log.getStackTraceString(t))
+                loadTodaysBest()
             }
         }
+
+    private fun loadTodaysBest() {
+        val from = (nextPageNumber - 1) * LIMIT + 1
+        val retrofit = BaseApplication.getInstance().retrofit
+        val topicsApi = retrofit.create(
+            TopicsCategoryAPI::class.java
+        )
+        val filterCall = topicsApi.getTodaysBestMixedFeed(
+            DateTimeUtils.getKidsDOBNanoMilliTimestamp("" + System.currentTimeMillis()),
+            from, from + LIMIT - 1,
+            SharedPrefUtils.getLanguageFilters(BaseApplication.getAppContext()),
+            getContentFilters()
+        )
+        filterCall.enqueue(articleListingResponseCallback)
+    }
 
     private val articleListingResponseCallback: Callback<MixFeedResponse?> =
         object : Callback<MixFeedResponse?> {
@@ -721,7 +751,8 @@ class ArticleListingFragment : BaseFragment(), View.OnClickListener,
             responseData!!.data!!.result as ArrayList<MixFeedResult>?
         if (dataList!!.size == 0) {
             isLastPageReached = false
-            if (null != mixfeedList && mixfeedList!!.isNotEmpty()) { // No more next results for search from pagination
+            if (null != mixfeedList && mixfeedList!!.isNotEmpty()) {
+                // No more next results for search from pagination
                 isLastPageReached = true
             } else { // No results for search
                 noBlogsTextView.visibility = View.VISIBLE
@@ -734,23 +765,154 @@ class ArticleListingFragment : BaseFragment(), View.OnClickListener,
         } else {
             noBlogsTextView.visibility = View.GONE
             recyclerView.visibility = View.VISIBLE
-            if (nextPageNumber == 1) {
-                mixfeedList = dataList
-            } else {
-                mixfeedList!!.addAll(dataList)
-            }
+            mixfeedList!!.addAll(dataList)
             mixfeedAdapter.setListData(mixfeedList)
             nextPageNumber += 1
             mixfeedAdapter.notifyDataSetChanged()
+            if (nextPageNumber == 2) {
+                loadTorcaiAds()
+            }
         }
     }
 
-    private fun processCampaignListingResponse(responseData: AllCampaignDataResponse?) {
-        val dataList = responseData!!.data!!.result
-        campaignListDataModels!!.addAll(dataList!!)
-        mixfeedAdapter.setCampaignOrAdSlotData("campaign", campaignListDataModels!!, "")
-        mixfeedAdapter.notifyDataSetChanged()
+    private fun loadTorcaiAds() {
+        val retro = BaseApplication.getInstance().retrofit
+        val torcaiAdsApi: TorcaiAdsAPI = retro.create(
+            TorcaiAdsAPI::class.java
+        )
+        val topAdsCall = torcaiAdsApi.getTorcaiAd(
+            AppUtils.getAdSlotId("CAT", ""),
+            "www.momspresso.com",
+            SharedPrefUtils.getPublicIpAddress(BaseApplication.getAppContext()),
+            "1",
+            "Momspresso",
+            AppUtils.getAppVersion(BaseApplication.getAppContext()),
+            "https://play.google.com/store/apps/details?id=com.mycity4kids&hl=en_IN", "mobile",
+            SharedPrefUtils.getAdvertisementId(BaseApplication.getAppContext()),
+            "" + System.getProperty("http.agent")
+        )
+        topAdsCall.enqueue(torcaiAdResponseCallback)
     }
+
+    private val torcaiAdResponseCallback: Callback<ResponseBody> =
+        object : Callback<ResponseBody> {
+            override fun onResponse(
+                call: Call<ResponseBody?>,
+                response: Response<ResponseBody?>
+            ) {
+                var resData: String? = null
+                try {
+                    if (response.body() != null) {
+                        resData = String(response.body()!!.bytes())
+                        val jsonObject = JSONObject(resData)
+                        val jsonArray = jsonObject.getJSONArray("response")
+                        val html =
+                            jsonArray.getJSONObject(0).getJSONObject("response").getString("adm")
+                                .replace("\"//".toRegex(), "\"https://")
+                        Log.e("HTML CONTENT", "html == $html")
+                        if (mixfeedList?.get(0)?.contentType == AppConstants.CONTENT_TYPE_RECENT_LIVE_STREAM) {
+                            mixfeedList?.add(
+                                4,
+                                MixFeedResult(
+                                    contentType = AppConstants.CONTENT_TYPE_TORCAI_ADS,
+                                    torcaiAdsData = html
+                                )
+                            )
+                        } else {
+                            mixfeedList?.add(
+                                3,
+                                MixFeedResult(
+                                    contentType = AppConstants.CONTENT_TYPE_TORCAI_ADS,
+                                    torcaiAdsData = html
+                                )
+                            )
+                        }
+                        mixfeedAdapter.notifyDataSetChanged()
+                        if (nextPageNumber == 2 && Constants.KEY_TODAYS_BEST == sortType) {
+                            loadUpcomingLiveStreams()
+                        }
+                    }
+                } catch (e: Exception) {
+                    if (nextPageNumber == 2 && Constants.KEY_TODAYS_BEST == sortType) {
+                        loadUpcomingLiveStreams()
+                    }
+                    FirebaseCrashlytics.getInstance().recordException(e)
+                    Log.d(
+                        "FileNotFoundException",
+                        Log.getStackTraceString(e)
+                    )
+                }
+            }
+
+            override fun onFailure(
+                call: Call<ResponseBody?>,
+                t: Throwable
+            ) {
+                if (nextPageNumber == 2 && Constants.KEY_TODAYS_BEST == sortType) {
+                    loadUpcomingLiveStreams()
+                }
+                FirebaseCrashlytics.getInstance().recordException(t)
+                Log.d("FileNotFoundException", Log.getStackTraceString(t))
+            }
+        }
+
+    private fun loadUpcomingLiveStreams() {
+        val retrofit = BaseApplication.getInstance().retrofit
+        val liveStreamApi = retrofit.create(
+            LiveStreamApi::class.java
+        )
+        val livesCall =
+            liveStreamApi.getUpcomingLiveStreams(
+                1,
+                "[" + AppConstants.LIVE_STREAM_STATUS_UPCOMING + "]",
+                System.currentTimeMillis(),
+                null,
+                1
+            )
+        livesCall.enqueue(upcomingLivesResponseCallback)
+    }
+
+    private val upcomingLivesResponseCallback: Callback<RecentLiveStreamResponse> =
+        object : Callback<RecentLiveStreamResponse> {
+            override fun onResponse(
+                call: Call<RecentLiveStreamResponse>,
+                response: Response<RecentLiveStreamResponse>
+            ) {
+                if (response.body() == null) {
+                    return
+                }
+                try {
+                    val responseData = response.body()
+                    if (responseData!!.code == 200 && Constants.SUCCESS == responseData.status) {
+                        if (responseData.data.result.events.isNotEmpty()) {
+                            val recentLiveList = MixFeedResult(
+                                contentType = AppConstants.CONTENT_TYPE_UPCOMING_LIVE_STREAM,
+                                recentLiveStreamsList = responseData.data.result.events
+                            )
+                            if (mixfeedList?.get(3)?.contentType == AppConstants.CONTENT_TYPE_TORCAI_ADS) {
+                                mixfeedList?.add(8, recentLiveList)
+                            } else if (mixfeedList?.get(4)?.contentType == AppConstants.CONTENT_TYPE_TORCAI_ADS) {
+                                mixfeedList?.add(9, recentLiveList)
+                            } else {
+                                mixfeedList?.add(7, recentLiveList)
+                            }
+                            mixfeedAdapter.notifyDataSetChanged()
+                        }
+                    }
+                } catch (e: Exception) {
+                    FirebaseCrashlytics.getInstance().recordException(e)
+                    Log.d("MC4KException", Log.getStackTraceString(e))
+                }
+            }
+
+            override fun onFailure(
+                call: Call<RecentLiveStreamResponse>,
+                t: Throwable
+            ) {
+                FirebaseCrashlytics.getInstance().recordException(t)
+                Log.d("MC4KException", Log.getStackTraceString(t))
+            }
+        }
 
     override fun onRefresh() {
         activity?.let {
@@ -933,13 +1095,31 @@ class ArticleListingFragment : BaseFragment(), View.OnClickListener,
         if (Constants.KEY_CHALLENGE == sortType) {
             when (getContentFilters()) {
                 "0" -> {
+                    Utils.shareEventTracking(
+                        activity,
+                        "Home screen",
+                        "Blog_Challenges_Android",
+                        "H_Show_BCListing_Challenge"
+                    )
                     articleChallengesList.clear()
                     recyclerView.adapter = blogChallengeAdapter
                 }
                 "1" -> {
+                    Utils.shareEventTracking(
+                        activity,
+                        "Home screen",
+                        "Story_Challenges_Android",
+                        "H_Show_SCListing_Challenge"
+                    )
                     recyclerView.adapter = shortStoryChallengeAdapter
                 }
                 "2" -> {
+                    Utils.shareEventTracking(
+                        activity,
+                        "Home screen",
+                        "Vlog_Challenges_Android",
+                        "H_Show_VCListing_Challenge"
+                    )
                     recyclerView.adapter = videoChallengeSelectionVerticalAdapter
                 }
                 else
@@ -1022,42 +1202,52 @@ class ArticleListingFragment : BaseFragment(), View.OnClickListener,
         shimmerFrameLayout.startShimmerAnimation()
         try {
             if (!StringUtils.isNullOrEmpty(sortType)) {
-                if (Constants.KEY_RECENT.equals(
+                when {
+                    Constants.KEY_RECENT.equals(
                         sortType,
                         ignoreCase = true
-                    )) {
-                    tracker!!.setScreenName("RecentScreen")
-                    Utils.pushOpenScreenEvent(
-                        activity, "RecentScreen",
-                        SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).dynamoId + ""
-                    )
-                } else if (Constants.KEY_TODAYS_BEST.equals(
+                    ) -> {
+                        tracker!!.setScreenName("RecentScreen")
+                        Utils.pushOpenScreenEvent(
+                            activity, "RecentScreen",
+                            SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).dynamoId + ""
+                        )
+                    }
+                    Constants.KEY_TODAYS_BEST.equals(
                         sortType,
                         ignoreCase = true
-                    )) {
-                    tracker!!.setScreenName("TodaysBestScreen")
-                    Utils.pushOpenScreenEvent(
-                        activity, "TodaysBestScreen",
-                        SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).dynamoId + ""
-                    )
-                } else if (Constants.KEY_TRENDING.equals(
+                    ) -> {
+                        tracker!!.setScreenName("TodaysBestScreen")
+                        Utils.pushOpenScreenEvent(
+                            activity, "TodaysBestScreen",
+                            SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).dynamoId + ""
+                        )
+                    }
+                    Constants.KEY_TRENDING.equals(
                         sortType,
                         ignoreCase = true
-                    )) {
-                    tracker!!.setScreenName("TrendingScreen")
-                    Utils.pushOpenScreenEvent(
-                        activity, "TrendingScreen",
-                        SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).dynamoId + ""
-                    )
-                } else if (Constants.KEY_FOLLOWING.equals(
+                    ) -> {
+                        tracker!!.setScreenName("TrendingScreen")
+                        Utils.pushOpenScreenEvent(
+                            activity, "TrendingScreen",
+                            SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).dynamoId + ""
+                        )
+                    }
+                    Constants.KEY_FOLLOWING.equals(
                         sortType,
                         ignoreCase = true
-                    )) {
-                    tracker!!.setScreenName("FollowingContentScreen")
-                    Utils.pushOpenScreenEvent(
-                        activity, "FollowingContentScreen",
-                        SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).dynamoId + ""
-                    )
+                    ) -> {
+                        tracker!!.setScreenName("FollowingContentScreen")
+                        Utils.pushOpenScreenEvent(
+                            activity, "FollowingContentScreen",
+                            SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).dynamoId + ""
+                        )
+                    }
+                    Constants.KEY_CHALLENGE.equals(
+                        sortType,
+                        ignoreCase = true
+                    ) -> {
+                    }
                 }
                 tracker!!.send(ScreenViewBuilder().build())
             }
@@ -1432,20 +1622,48 @@ class ArticleListingFragment : BaseFragment(), View.OnClickListener,
     }
 
     override fun onClick(view: View, position: Int) {
-        when {
-            view.id == R.id.articleItemView || view.id == R.id.videoItemView || view.id == R.id.rootView -> {
+        when (view.id) {
+            R.id.liveStreamItemView -> {
+                mixfeedList?.get(position)?.recentLiveStreamsList?.get(
+                    0
+                )?.id?.let {
+                    Utils.shareEventTracking(
+                        activity,
+                        "Home screen",
+                        "Live_Android",
+                        "TB_LC_Live"
+                    )
+                    (activity as BaseActivity).getLiveStreamInfoFromId(
+                        it
+                    )
+                }
+            }
+            R.id.viewAllLivesTextView -> {
+                Utils.shareEventTracking(
+                    activity,
+                    "Home screen",
+                    "Live_Android",
+                    "TB_UC_ViewAll_Live"
+                )
+                val intent = Intent(
+                    activity,
+                    MomspressoTelevisionActivity::class.java
+                )
+                startActivity(intent)
+            }
+            R.id.articleItemView, R.id.videoItemView, R.id.rootView -> {
                 launchContentDetail(mixfeedList?.get(position))
             }
-            view.id == R.id.shareArticleImageView -> {
+            R.id.shareArticleImageView -> {
                 //                shareContent(mixfeedList?.get(position))
             }
-            view.id == R.id.facebookShareImageView -> {
+            R.id.facebookShareImageView -> {
                 getSharableViewForPosition(position, AppConstants.MEDIUM_FACEBOOK)
             }
-            view.id == R.id.whatsappShareImageView -> {
+            R.id.whatsappShareImageView -> {
                 getSharableViewForPosition(position, AppConstants.MEDIUM_WHATSAPP)
             }
-            view.id == R.id.instagramShareImageView -> {
+            R.id.instagramShareImageView -> {
                 try {
                     filterTags(mixfeedList?.get(position)?.tags!!)
                 } catch (e: Exception) {
@@ -1454,10 +1672,10 @@ class ArticleListingFragment : BaseFragment(), View.OnClickListener,
                 }
                 getSharableViewForPosition(position, AppConstants.MEDIUM_INSTAGRAM)
             }
-            view.id == R.id.genericShareImageView -> {
+            R.id.genericShareImageView -> {
                 getSharableViewForPosition(position, AppConstants.MEDIUM_GENERIC)
             }
-            view.id == R.id.storyImageView1 -> {
+            R.id.storyImageView1 -> {
                 val intent = Intent(activity, ShortStoryContainerActivity::class.java)
                 intent.putExtra(Constants.ARTICLE_ID, mixfeedList?.get(position)?.id)
                 intent.putExtra(Constants.AUTHOR_ID, mixfeedList?.get(position)?.userId)
@@ -1472,14 +1690,14 @@ class ArticleListingFragment : BaseFragment(), View.OnClickListener,
                 )
                 startActivity(intent)
             }
-            view.id == R.id.bookmarkArticleImageView -> {
+            R.id.bookmarkArticleImageView -> {
                 if (mixfeedList?.get(position)?.isbookmark == 0) {
                     bookmarkItem(position)
                 } else {
                     deleteBookmark(position)
                 }
             }
-            view.id == R.id.authorNameTextView -> {
+            R.id.authorNameTextView -> {
                 val intent = Intent(activity, UserProfileActivity::class.java)
                 intent.putExtra(
                     Constants.USER_ID,
@@ -1487,15 +1705,15 @@ class ArticleListingFragment : BaseFragment(), View.OnClickListener,
                 )
                 startActivity(intent)
             }
-            view.id == R.id.followAuthorTextView -> {
+            R.id.followAuthorTextView -> {
                 followApiCall(
                     mixfeedList!![position].userId, position
                 )
             }
-            view.id == R.id.menuItem -> {
+            R.id.menuItem -> {
                 chooseMenuOptionsItem(view, position)
             }
-            view.id == R.id.storyRecommendationContainer -> {
+            R.id.storyRecommendationContainer -> {
                 if (!isRecommendRequestRunning) {
                     mixfeedList?.get(position)?.isLiked?.let {
                         if (it) {
@@ -1521,7 +1739,7 @@ class ArticleListingFragment : BaseFragment(), View.OnClickListener,
                     }
                 }
             }
-            view.id == R.id.menuItemImageView -> {
+            R.id.menuItemImageView -> {
             }
         }
     }
@@ -1754,17 +1972,16 @@ class ArticleListingFragment : BaseFragment(), View.OnClickListener,
     override fun onChallengeItemClick(view: View, topics: Topics) {
         when (view.id) {
             R.id.tagImageView -> {
-                if (getContentFilters() == "2") {
-                    val intent = Intent(activity, NewVideoChallengeActivity::class.java)
-                    intent.putExtra("challenge", topics.id)
-                    intent.putExtra("comingFrom", "vlog_listing")
-                    startActivity(intent)
-                } else {
-                    val intent = Intent(activity, ArticleChallengeDetailActivity::class.java)
-                    intent.putExtra("articleChallengeId", topics.id)
-                    intent.putExtra("challengeName", topics.display_name)
-                    startActivity(intent)
-                }
+                Utils.shareEventTracking(
+                    activity,
+                    "Home screen",
+                    "Vlog_Challenges_Android",
+                    "H_VCL_Live_Challenge"
+                )
+                val intent = Intent(activity, NewVideoChallengeActivity::class.java)
+                intent.putExtra("challenge", topics.id)
+                intent.putExtra("comingFrom", "vlog_listing")
+                startActivity(intent)
             }
             R.id.info -> {
                 topics.extraData[0].challenge.rules?.let {
@@ -1799,6 +2016,21 @@ class ArticleListingFragment : BaseFragment(), View.OnClickListener,
     ) {
         when (view?.id) {
             R.id.mainView, R.id.getStartedTextView -> {
+                if (position == 0) {
+                    Utils.shareEventTracking(
+                        activity,
+                        "Home screen",
+                        "Story_Challenges_Android",
+                        "H_SCL_ThisWeek_Challenge"
+                    )
+                } else {
+                    Utils.shareEventTracking(
+                        activity,
+                        "Home screen",
+                        "Story_Challenges_Android",
+                        "H_SCL_PreviousWeeks_Challenge"
+                    )
+                }
                 val intent = Intent(activity, ShortStoryChallengeDetailActivity::class.java)
                 intent.putExtra("challenge", challengeId)
                 startActivity(intent)
@@ -1806,15 +2038,37 @@ class ArticleListingFragment : BaseFragment(), View.OnClickListener,
         }
     }
 
-    override fun onPriviousWeekChallengeClick(v: View?, topics: Topics) {
+    override fun onBlogChallengeItemClick(position: Int, v: View?, topics: Topics) {
         when (v?.id) {
             R.id.tagImageView -> {
+                if (position == 0) {
+                    Utils.shareEventTracking(
+                        activity,
+                        "Home screen",
+                        "Blog_Challenges_Android",
+                        "H_BCL_ThisWeek_Challenge"
+                    )
+                } else {
+                    Utils.shareEventTracking(
+                        activity,
+                        "Home screen",
+                        "Blog_Challenges_Android",
+                        "H_BCL_PreviousWeeks_Challenge"
+                    )
+                }
+
                 val intent = Intent(activity, ArticleChallengeDetailActivity::class.java)
                 intent.putExtra("articleChallengeId", topics.id)
                 intent.putExtra("challengeName", topics.display_name)
                 startActivity(intent)
             }
             R.id.info -> {
+                Utils.shareEventTracking(
+                    activity,
+                    "Home screen",
+                    "Blog_Challenges_Android",
+                    "H_BCL_InfoIcon_Challenge"
+                )
                 topics.extraData[0].challenge.rules?.let {
                     val dialog = Dialog(context!!)
                     dialog.setContentView(R.layout.challenge_rules_dialog)
@@ -1830,10 +2084,24 @@ class ArticleListingFragment : BaseFragment(), View.OnClickListener,
                         "UTF-8",
                         ""
                     )
-                    imageView.setOnClickListener { view2: View? -> dialog.dismiss() }
+                    imageView.setOnClickListener { dialog.dismiss() }
                     dialog.show()
                 }
             }
+        }
+    }
+
+    override fun onLiveStreamItemClick(view: View, liveStreamResult: LiveStreamResult?) {
+        liveStreamResult?.id?.let {
+            Utils.shareEventTracking(
+                activity,
+                "Home screen",
+                "Live_Android",
+                "TB_UC_Card_Live"
+            )
+            (activity as BaseActivity).getLiveStreamInfoFromId(
+                it
+            )
         }
     }
 }

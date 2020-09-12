@@ -85,6 +85,7 @@ import com.mycity4kids.ui.fragment.InviteFriendsDialogFragment;
 import com.mycity4kids.ui.fragment.RateAppDialogFragment;
 import com.mycity4kids.ui.fragment.ShareAppDialogFragment;
 import com.mycity4kids.ui.fragment.UploadVideoInfoFragment;
+import com.mycity4kids.ui.momspressotv.MomspressoTelevisionActivity;
 import com.mycity4kids.ui.rewards.activity.RewardsContainerActivity;
 import com.mycity4kids.ui.rewards.activity.RewardsShareReferralCodeActivity;
 import com.mycity4kids.ui.videochallengenewui.activity.NewVideoChallengeActivity;
@@ -460,6 +461,7 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
                     switch (item.getItemId()) {
                         case R.id.action_profile:
                             hideCreateContentView();
+                            Utils.shareEventTracking(this, "Home screen", "Home_Android", "Discover_BN_Home");
                             if (topFragment instanceof ExploreArticleListingTypeFragment) {
                                 return true;
                             }
@@ -469,16 +471,7 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
                             addFragment(fragment0, bundle);
                             break;
                         case R.id.action_momVlog:
-                            MixPanelUtils.pushMomVlogsDrawerClickEvent(mixpanel);
-                            Utils.momVlogEvent(DashboardActivity.this, "Home Screen",
-                                    "Bottom_nav_videos",
-                                    "", "android",
-                                    SharedPrefUtils.getAppLocale(BaseApplication.getAppContext()),
-                                    SharedPrefUtils
-                                            .getUserDetailModel(BaseApplication.getAppContext())
-                                            .getDynamoId(),
-                                    String.valueOf(System.currentTimeMillis()),
-                                    "Show_Video_Listing", "", "");
+                            Utils.shareEventTracking(this, "Home screen", "Home_Android", "Vlogs_BN_Home");
                             Intent cityIntent = new Intent(DashboardActivity.this,
                                     CategoryVideosListingActivity.class);
                             cityIntent
@@ -496,6 +489,7 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
                             addFragment(fragment1, bundle1);
                             break;
                         case R.id.action_write:
+                            Utils.shareEventTracking(this, "Home screen", "Home_Android", "Create_BN_Home");
                             userAllDraftsRecyclerAdapter.notifyDataSetChanged();
                             if (createContentContainer.getVisibility() != View.VISIBLE) {
                                 allDraftsList.clear();
@@ -512,14 +506,7 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
                             if (topFragment instanceof GroupsViewFragment) {
                                 return true;
                             }
-                            Utils.groupsEvent(DashboardActivity.this, "Home Screen",
-                                    "Group_bottom_nav", "android",
-                                    SharedPrefUtils.getAppLocale(BaseApplication.getAppContext()),
-                                    SharedPrefUtils
-                                            .getUserDetailModel(BaseApplication.getAppContext())
-                                            .getDynamoId(),
-                                    String.valueOf(System.currentTimeMillis()), "Group_listing", "",
-                                    "");
+                            Utils.shareEventTracking(this, "Home screen", "Home_Android", "Groups_BN_Home");
                             GroupsViewFragment groupsFragment = new GroupsViewFragment();
                             Bundle bundle2 = new Bundle();
                             groupsFragment.setArguments(bundle2);
@@ -1153,6 +1140,9 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
             Intent intent = new Intent(this, ArticleChallengeDetailActivity.class);
             intent.putExtra("articleChallengeId", notificationExtras.getString("articleChallengeId"));
             startActivity(intent);
+        } else if (AppConstants.NOTIFICATION_TYPE_LIVE_STREAM.equalsIgnoreCase(notificationType)) {
+            pushEvent("event_detail");
+            getLiveStreamInfoFromId(notificationExtras.getInt("eventId"));
         }
     }
 
@@ -1218,6 +1208,7 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case android.R.id.home: {
+                Utils.shareEventTracking(this, "Home screen", "Home_Android", "Sidebar_Home");
                 drawerLayout.openDrawer(GravityCompat.START);
                 return true;
             }
@@ -1345,6 +1336,7 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
                 changePreferredLanguageDialogFragment.show(fm, "Choose video option");
                 break;
             case R.id.searchAllImageView:
+                Utils.shareEventTracking(this, "Home screen", "Home_Android", "Search_TN_Home");
                 if (topFragment instanceof GroupsViewFragment) {
                     Intent searchIntent = new Intent(this, GroupsSearchActivity.class);
                     startActivity(searchIntent);
@@ -1356,6 +1348,7 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
                 }
                 break;
             case R.id.notification:
+                Utils.shareEventTracking(this, "Home screen", "Home_Android", "Notification_Home");
                 hideCreateContentView();
                 Intent notificationIntent = new Intent(this, NotificationActivity.class);
                 startActivity(notificationIntent);
@@ -1384,10 +1377,8 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
             break;
             case R.id.momspressoTextView: {
                 drawerLayout.closeDrawers();
-                Intent intent = new Intent(this, FilteredTopicsArticleListingActivity.class);
-                intent.putExtra("selectedTopics", AppConstants.MOMSPRESSO_CATEGORYID);
-                intent.putExtra("displayName",
-                        getString(R.string.all_videos_tabbar_momspresso_label));
+                Utils.shareEventTracking(this, "Home screen", "Live_Android", "Sidebar_Live");
+                Intent intent = new Intent(this, MomspressoTelevisionActivity.class);
                 startActivity(intent);
             }
             break;

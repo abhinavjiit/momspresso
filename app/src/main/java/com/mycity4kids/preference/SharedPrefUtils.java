@@ -98,6 +98,7 @@ public class SharedPrefUtils {
 
     private static final String HOME_AD_SLOT_URL = "homeAdSlotUrl";
     private static final String ADVERTISEMENT_ID = "advertisementId";
+    private static final String IP_ADDRESS = "ipAddress";
 
     public static void clearPrefrence(Context context) {
         SharedPreferences sharedPref = context.getSharedPreferences(COMMON_PREF_FILE, Context.MODE_PRIVATE);
@@ -758,5 +759,17 @@ public class SharedPrefUtils {
         Editor editor = sharedPref.edit();
         editor.putBoolean("isVideoClickDone", isFiveClickDone);
         editor.commit();
+    }
+
+    public static void setPublicIpAddress(Context context, String ipAddress) {
+        SharedPreferences sharedPref = context.getSharedPreferences(COMMON_PREF_FILE, Context.MODE_PRIVATE);
+        Editor editor = sharedPref.edit();
+        editor.putString(IP_ADDRESS, ipAddress);
+        editor.commit();
+    }
+
+    public static String getPublicIpAddress(Context context) {
+        SharedPreferences sharedPref = context.getSharedPreferences(COMMON_PREF_FILE, Context.MODE_PRIVATE);
+        return (sharedPref.getString(IP_ADDRESS, ""));
     }
 }
