@@ -1,5 +1,4 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-  xmlns:app="http://schemas.android.com/apk/res-auto"
   android:id="@+id/rootLayout"
   android:layout_width="match_parent"
   android:layout_height="match_parent"
@@ -11,9 +10,10 @@
     android:id="@+id/shortStoryRecyclerView"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:layout_marginTop="@dimen/space_10"
     android:background="@color/white_color"
     android:clipToPadding="false"
-    android:paddingBottom="80dp" />
+    android:paddingBottom="70dp" />
 
   <com.mycity4kids.widget.CustomFontTextView
     android:id="@+id/viewAllTextView"
@@ -27,5 +27,53 @@
     android:textColor="@color/white"
     android:textSize="@dimen/space_16"
     android:visibility="gone" />
+
+  <RelativeLayout
+    android:layout_width="match_parent"
+    android:layout_height="50dp"
+    android:layout_alignParentBottom="true"
+    android:background="@color/color_ECECEC">
+
+    <com.mikhaellopez.circularimageview.CircularImageView
+      android:id="@+id/userImageView"
+      android:layout_width="34dp"
+      android:layout_height="34dp"
+      android:layout_centerVertical="true"
+      android:layout_marginStart="@dimen/space_10"
+      android:src="@drawable/default_commentor_img" />
+
+
+    <com.mycity4kids.widget.CustomFontTextView
+      android:id="@+id/typeHere"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:layout_centerVertical="true"
+      android:layout_marginStart="@dimen/space_10"
+      android:layout_toRightOf="@id/userImageView"
+      android:background="@color/white"
+      android:drawableRight="@drawable/ic_post_arrow"
+      android:gravity="center_vertical"
+      android:hint="@string/write_a_comment"
+      android:maxLines="4"
+      android:paddingLeft="@dimen/space_17"
+      android:paddingTop="@dimen/space_10"
+      android:paddingRight="@dimen/space_10"
+      android:paddingBottom="@dimen/space_10"
+      android:textColor="#a1a4a8"
+      android:textColorHint="@color/color_A7A7A7"
+      android:textSize="18sp"
+      android:visibility="visible" />
+
+    <com.mycity4kids.widget.CustomFontTextView
+      android:id="@+id/post_arrow"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:layout_alignParentRight="true"
+      android:layout_margin="@dimen/space_10"
+      android:background="@drawable/ic_post_arrow"
+      android:padding="@dimen/space_10"
+      android:visibility="gone" />
+
+  </RelativeLayout>
 
 </RelativeLayout>

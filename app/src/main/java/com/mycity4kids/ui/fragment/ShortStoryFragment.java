@@ -73,6 +73,7 @@ import com.mycity4kids.utils.SharingUtils;
 import com.mycity4kids.utils.StringUtils;
 import com.mycity4kids.utils.ToastUtils;
 import com.mycity4kids.widget.StoryShareCardWidget;
+import com.squareup.picasso.Picasso;
 import io.github.douglasjunior.androidSimpleTooltip.SimpleTooltip;
 import io.reactivex.Observer;
 import io.reactivex.android.schedulers.AndroidSchedulers;
@@ -123,6 +124,7 @@ public class ShortStoryFragment extends BaseFragment implements View.OnClickList
     private TextView followAuthorTextView;
     private View fragmentView;
     private RecyclerView shortStoryRecyclerView;
+    private ImageView userImageView;
 
     private ShortStoryDetailAndCommentModel headerModel;
     private ArrayList<ShortStoryDetailAndCommentModel> consolidatedList;
@@ -140,6 +142,8 @@ public class ShortStoryFragment extends BaseFragment implements View.OnClickList
     private ImageView shareStoryImageView;
     private ShortStoryDetailResult sharedStoryItem;
     private TextView viewAllTextView;
+    private TextView typeHere;
+
     private int pos;
 
     @Nullable
@@ -150,6 +154,8 @@ public class ShortStoryFragment extends BaseFragment implements View.OnClickList
         rootLayout = (RelativeLayout) fragmentView.findViewById(R.id.rootLayout);
         shortStoryRecyclerView = (RecyclerView) fragmentView.findViewById(R.id.shortStoryRecyclerView);
         viewAllTextView = fragmentView.findViewById(R.id.viewAllTextView);
+        typeHere = fragmentView.findViewById(R.id.typeHere);
+        userImageView = fragmentView.findViewById(R.id.userImageView);
 
         userDynamoId = SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId();
         try {
@@ -184,6 +190,13 @@ public class ShortStoryFragment extends BaseFragment implements View.OnClickList
             Log.d("MC4kException", Log.getStackTraceString(e));
         }
         viewAllTextView.setOnClickListener(this);
+        typeHere.setOnClickListener(this);
+        try {
+            Picasso.get().load(SharedPrefUtils.getProfileImgUrl(BaseApplication.getAppContext()))
+                    .error(R.drawable.default_commentor_img).into(userImageView);
+        } catch (Exception e) {
+            Picasso.get().load(R.drawable.default_commentor_img).into(userImageView);
+        }
         return fragmentView;
     }
 
@@ -353,12 +366,10 @@ public class ShortStoryFragment extends BaseFragment implements View.OnClickList
             }
             try {
                 CommentListResponse shortStoryCommentListResponse = response.body();
-                if (shortStoryCommentListResponse.getCount() != 0) {
-                    viewAllTextView.setText(getString(R.string.view_comments));
-                } else {
-                    viewAllTextView.setText(getString(R.string.group_add_comment_text));
+                if (shortStoryCommentListResponse.getCount() == 0) {
+//                    viewAllTextView.setText(getString(R.string.group_add_comment_text));
+//                    viewAllTextView.setVisibility(View.VISIBLE);
                 }
-                viewAllTextView.setVisibility(View.VISIBLE);
                 showComments(shortStoryCommentListResponse.getData());
             } catch (Exception e) {
                 FirebaseCrashlytics.getInstance().recordException(e);
@@ -376,9 +387,11 @@ public class ShortStoryFragment extends BaseFragment implements View.OnClickList
     private void showComments(List<CommentListData> commentList) {
         if (commentList.size() != 0) {
             for (int i = 0; i < commentList.size(); i++) {
-                ShortStoryDetailAndCommentModel commentModel = new ShortStoryDetailAndCommentModel();
-                commentModel.setSsComment(commentList.get(i));
-                consolidatedList.add(commentModel);
+                if (i < 2) {
+                    ShortStoryDetailAndCommentModel commentModel = new ShortStoryDetailAndCommentModel();
+                    commentModel.setSsComment(commentList.get(i));
+                    consolidatedList.add(commentModel);
+                }
             }
             adapter.setListData(consolidatedList);
             paginationCommentId = commentList.get(commentList.size() - 1).getId();
@@ -547,6 +560,7 @@ public class ShortStoryFragment extends BaseFragment implements View.OnClickList
     public void onClick(View v) {
         try {
             switch (v.getId()) {
+                case R.id.typeHere:
                 case R.id.viewAllTextView:
                     try {
                         Utils.shareEventTracking(getActivity(), "100WS Detail", "Comment_Android",
@@ -601,6 +615,31 @@ public class ShortStoryFragment extends BaseFragment implements View.OnClickList
                     }
                 }
                 adapter.notifyDataSetChanged();
+                break;
+            case R.id.viewMoreTextView:
+                try {
+                    Utils.shareEventTracking(getActivity(), "100WS Detail", "Comment_Android",
+                            "StoryDetail_Viewmore_Comment");
+                    Bundle bundle = new Bundle();
+                    bundle.putString(Constants.ARTICLE_ID, articleId);
+                    bundle.putString(Constants.BLOG_SLUG, blogSlug);
+                    bundle.putString(Constants.TITLE_SLUG, titleSlug);
+                    bundle.putString(Constants.AUTHOR_ID, authorId);
+                    bundle.putString("contentType", AppConstants.CONTENT_TYPE_SHORT_STORY);
+                    ViewAllCommentsFragment viewAllCommentsFragment = new ViewAllCommentsFragment();
+                    viewAllCommentsFragment.setArguments(bundle);
+                    if (isAdded()) {
+                        ((ShortStoryContainerActivity) getActivity()).addFragment(viewAllCommentsFragment, bundle);
+                        ((ShortStoryContainerActivity) getActivity()).setToolbarTitle("Comments");
+                    }
+                } catch (Exception e) {
+                    FirebaseCrashlytics.getInstance().recordException(e);
+                    Log.d("MC4kException", Log.getStackTraceString(e));
+                    if (isAdded() && getActivity() != null) {
+                        ((ShortStoryContainerActivity) getActivity())
+                                .showToast(getString(R.string.unable_to_load_comment));
+                    }
+                }
                 break;
             case R.id.commentorImageView:
                 Intent intent = new Intent(getActivity(), UserProfileActivity.class);

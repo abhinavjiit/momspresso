@@ -115,10 +115,18 @@ public class ShortStoriesDetailRecyclerAdapter extends RecyclerView.Adapter<Recy
                 }
                 if (null == datalist.get(position).getSsResult().getCommentCount()) {
                     ssViewHolder.storyCommentCountTextView.setText("0");
+                    ssViewHolder.commentCount.setVisibility(View.VISIBLE);
+                    ssViewHolder.beTheFirstOne.setVisibility(View.VISIBLE);
                 } else {
                     ssViewHolder.storyCommentCountTextView.setVisibility(View.VISIBLE);
                     ssViewHolder.storyCommentCountTextView
                             .setText(datalist.get(position).getSsResult().getCommentCount());
+                    ssViewHolder.commentCount.setVisibility(View.VISIBLE);
+                    ssViewHolder.commentCount
+                            .setText("Comments (" + datalist.get(position).getSsResult().getCommentCount() + ")");
+                    if (datalist.get(position).getSsResult().getCommentCount().equals("0")) {
+                        ssViewHolder.beTheFirstOne.setVisibility(View.VISIBLE);
+                    }
                 }
 
                 if (null == datalist.get(position).getSsResult().getLikeCount()) {
@@ -139,6 +147,9 @@ public class ShortStoriesDetailRecyclerAdapter extends RecyclerView.Adapter<Recy
                 setWinnerOrGoldFlag(ssViewHolder.trophyImageView, datalist.get(position).getSsResult());
             } else {
                 SSCommentViewHolder ssCommentViewHolder = (SSCommentViewHolder) holder;
+                if (position == datalist.size() - 1) {
+                    ssCommentViewHolder.viewMoreTextView.setVisibility(View.VISIBLE);
+                }
                 ssCommentViewHolder.commentorUsernameTextView
                         .setText(datalist.get(position).getSsComment().getUserName());
                 ssCommentViewHolder.commentDataTextView.setText(
@@ -271,6 +282,8 @@ public class ShortStoriesDetailRecyclerAdapter extends RecyclerView.Adapter<Recy
         TextView storyAuthorTextView;
         ImageView logoImageView;
         ImageView trophyImageView;
+        TextView commentCount;
+        TextView beTheFirstOne;
 
         ShortStoriesViewHolder(View itemView, RecyclerViewClickListener listener) {
             super(itemView);
@@ -292,6 +305,8 @@ public class ShortStoriesDetailRecyclerAdapter extends RecyclerView.Adapter<Recy
             shareStoryImageView = (ImageView) storyShareCardWidget.findViewById(R.id.storyImageView);
             storyAuthorTextView = (TextView) storyShareCardWidget.findViewById(R.id.storyAuthorTextView);
             logoImageView = (ImageView) storyShareCardWidget.findViewById(R.id.logoImageView);
+            commentCount = itemView.findViewById(R.id.comment_count);
+            beTheFirstOne = itemView.findViewById(R.id.beTheFirstOne);
 
             facebookShareImageView.setOnClickListener(this);
             whatsappShareImageView.setOnClickListener(this);
@@ -325,6 +340,7 @@ public class ShortStoriesDetailRecyclerAdapter extends RecyclerView.Adapter<Recy
         ImageView moreOptionImageView;
         TextView topCommentTextView;
         TextView topCommentMarkedTextView;
+        TextView viewMoreTextView;
 
         SSCommentViewHolder(View view, RecyclerViewClickListener listener) {
             super(view);
@@ -338,6 +354,7 @@ public class ShortStoriesDetailRecyclerAdapter extends RecyclerView.Adapter<Recy
             moreOptionImageView = (ImageView) view.findViewById(R.id.moreOptionImageView);
             topCommentTextView = view.findViewById(R.id.topCommentTextView);
             topCommentMarkedTextView = view.findViewById(R.id.topCommentMarkedTextView);
+            viewMoreTextView = view.findViewById(R.id.viewMoreTextView);
 
             view.setOnLongClickListener(this);
             moreOptionImageView.setOnClickListener(this);
@@ -346,6 +363,7 @@ public class ShortStoriesDetailRecyclerAdapter extends RecyclerView.Adapter<Recy
             underlineView = view.findViewById(R.id.underlineView);
             commentorImageView.setOnClickListener(this);
             topCommentMarkedTextView.setOnClickListener(this);
+            viewMoreTextView.setOnClickListener(this);
         }
 
         @Override

@@ -90,13 +90,13 @@ import com.mycity4kids.vlogs.VideoChallengeSelectionVerticalAdapter
 import com.mycity4kids.vlogs.VlogsCategoryWiseChallengesResponse
 import com.mycity4kids.widget.MomspressoButtonWidget
 import com.mycity4kids.widget.StoryShareCardWidget
-import java.io.File
 import okhttp3.ResponseBody
 import org.apache.commons.lang3.text.WordUtils
 import org.json.JSONObject
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
+import java.io.File
 
 class ArticleListingFragment : BaseFragment(), View.OnClickListener,
     OnRefreshListener, UserContentAdapter.RecyclerViewClickListener,
