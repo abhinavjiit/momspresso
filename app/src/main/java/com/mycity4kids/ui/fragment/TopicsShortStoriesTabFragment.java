@@ -45,6 +45,7 @@ import com.google.gson.Gson;
 import com.mycity4kids.BuildConfig;
 import com.mycity4kids.R;
 import com.mycity4kids.application.BaseApplication;
+import com.mycity4kids.base.BaseActivity;
 import com.mycity4kids.base.BaseFragment;
 import com.mycity4kids.constants.AppConstants;
 import com.mycity4kids.constants.Constants;
@@ -355,6 +356,7 @@ public class TopicsShortStoriesTabFragment extends BaseFragment implements View.
             }
         } else {
             noBlogsTextView.setVisibility(View.GONE);
+            AppUtils.updateFollowingStatus(dataList);
             if (start == 0) {
                 articleListingResults = dataList;
             } else {
@@ -544,7 +546,6 @@ public class TopicsShortStoriesTabFragment extends BaseFragment implements View.
                 break;
 
         }
-
     }
 
     private void filterTags(ArrayList<Map<String, String>> tagObjectList) {
@@ -598,6 +599,9 @@ public class TopicsShortStoriesTabFragment extends BaseFragment implements View.
                 String status = jsonObject.getString("status");
                 String reason = jsonObject.getString("reason");
                 if (code == 200 && Constants.SUCCESS.equals(status)) {
+                    if (getActivity() != null) {
+                        ((BaseActivity) getActivity()).syncFollowingList();
+                    }
                     articleListingResults.get(position).setIsfollowing("0");
                     recyclerAdapter.notifyDataSetChanged();
                 } else {
@@ -638,6 +642,11 @@ public class TopicsShortStoriesTabFragment extends BaseFragment implements View.
                 String status = jsonObject.getString("status");
                 String reason = jsonObject.getString("reason");
                 if (code == 200 && Constants.SUCCESS.equals(status)) {
+                    if (getActivity() != null) {
+                        if (getActivity() != null) {
+                            ((BaseActivity) getActivity()).syncFollowingList();
+                        }
+                    }
                     articleListingResults.get(position).setIsfollowing("1");
                     recyclerAdapter.notifyDataSetChanged();
                 } else if (code == 200 && "failure".equals(status) && "Already following!".equals(reason)) {

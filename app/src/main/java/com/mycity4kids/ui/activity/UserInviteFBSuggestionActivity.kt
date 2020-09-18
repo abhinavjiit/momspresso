@@ -99,6 +99,13 @@ class UserInviteFBSuggestionActivity : BaseActivity(),
                         } else {
                             progressBar.visibility = View.GONE
                             response.data[0].friendList?.let {
+                                val map =
+                                    SharedPrefUtils.getFollowingJson(BaseApplication.getAppContext())
+                                for (i in it.indices) {
+                                    if (map.containsKey(it[i].id)) {
+                                        it[i].isFollowing = "1"
+                                    }
+                                }
                                 facebookFriendList.addAll(it)
                                 if (facebookFriendList.isNotEmpty()) {
                                     recyclerView?.visibility = View.VISIBLE

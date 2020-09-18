@@ -126,6 +126,7 @@ public class VideoTrimmerActivity extends BaseActivity implements OnTrimVideoLis
 
     @Override
     public void onError(String message) {
+        Utils.shareEventTracking(this, "Video Trimmer", message, "trim_error");
         Toast.makeText(this, getString(R.string.upload_larger_video), Toast.LENGTH_SHORT).show();
     }
 

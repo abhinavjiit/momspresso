@@ -249,8 +249,7 @@ public class AddArticleTopicsActivityNew extends BaseActivity implements View.On
                 }
 
                 if ("1".equals(responseData.getData().get(i).getPublicVisibility())
-                        && !AppConstants.SHORT_STORY_CATEGORYID.equals(responseData.getData().get(i).getId())
-                        && !AppConstants.ARTICLE_CHALLENGE_CATEGORY_ID.equals(responseData.getData().get(i).getId())) {
+                        && !AppConstants.SHORT_STORY_CATEGORYID.equals(responseData.getData().get(i).getId())) {
                     responseData.getData().get(i).setChild(secondLevelLeafNodeList);
                     if (!secondLevelLeafNodeList.isEmpty()) {
                         topicList.add(responseData.getData().get(i));

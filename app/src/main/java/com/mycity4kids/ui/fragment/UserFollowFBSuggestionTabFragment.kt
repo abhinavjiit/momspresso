@@ -15,6 +15,7 @@ import com.facebook.CallbackManager
 import com.google.firebase.crashlytics.FirebaseCrashlytics
 import com.mycity4kids.R
 import com.mycity4kids.application.BaseApplication
+import com.mycity4kids.base.BaseActivity
 import com.mycity4kids.base.BaseFragment
 import com.mycity4kids.constants.Constants
 import com.mycity4kids.facebook.FacebookUtils
@@ -102,6 +103,13 @@ class UserFollowFBSuggestionTabFragment : BaseFragment(), View.OnClickListener,
                         } else {
                             progressBar?.visibility = View.GONE
                             response.data[0].friendList?.let {
+                                val map =
+                                    SharedPrefUtils.getFollowingJson(BaseApplication.getAppContext())
+                                for (i in it.indices) {
+                                    if (map.containsKey(it[i].id)) {
+                                        it[i].isFollowing = "1"
+                                    }
+                                }
                                 facebookFriendList.addAll(it)
                                 if (facebookFriendList.isNotEmpty()) {
                                     recyclerView?.visibility = View.VISIBLE
@@ -200,14 +208,23 @@ class UserFollowFBSuggestionTabFragment : BaseFragment(), View.OnClickListener,
         }
     }
 
-    object followUnfollowUserResponseCallback : Callback<FollowUnfollowUserResponse> {
-        override fun onFailure(call: Call<FollowUnfollowUserResponse>, t: Throwable) {
-        }
+    private val followUnfollowUserResponseCallback: Callback<FollowUnfollowUserResponse> =
+        object : Callback<FollowUnfollowUserResponse> {
+            override fun onResponse(
+                call: Call<FollowUnfollowUserResponse>,
+                response: Response<FollowUnfollowUserResponse>
+            ) {
+                activity?.let {
+                    (it as BaseActivity).syncFollowingList()
+                }
+            }
 
-        override fun onResponse(
-            call: Call<FollowUnfollowUserResponse>,
-            response: Response<FollowUnfollowUserResponse>
-        ) {
+            override fun onFailure(
+                call: Call<FollowUnfollowUserResponse>,
+                t: Throwable
+            ) {
+                FirebaseCrashlytics.getInstance().recordException(t)
+                Log.d("MC4kException", Log.getStackTraceString(t))
+            }
         }
-    }
 }

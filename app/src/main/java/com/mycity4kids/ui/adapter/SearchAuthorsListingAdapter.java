@@ -1,6 +1,7 @@
 package com.mycity4kids.ui.adapter;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.text.Html;
 import android.util.Log;
@@ -19,6 +20,7 @@ import com.mycity4kids.models.request.FollowUnfollowUserRequest;
 import com.mycity4kids.models.response.FollowUnfollowUserResponse;
 import com.mycity4kids.models.response.SearchAuthorResult;
 import com.mycity4kids.preference.SharedPrefUtils;
+import com.mycity4kids.sync.SyncUserFollowingList;
 import com.mycity4kids.utils.StringUtils;
 import com.squareup.picasso.Picasso;
 import java.io.BufferedReader;
@@ -218,6 +220,9 @@ public class SearchAuthorsListingAdapter extends BaseAdapter {
             try {
                 FollowUnfollowUserResponse responseData = new Gson().fromJson(result, FollowUnfollowUserResponse.class);
                 if (responseData.getCode() == 200 & Constants.SUCCESS.equals(responseData.getStatus())) {
+                    Intent followIntent = new Intent(viewHolder.relativeLoadingView.getContext(),
+                            SyncUserFollowingList.class);
+                    viewHolder.relativeLoadingView.getContext().startService(followIntent);
                     for (int i = 0; i < datalist.size(); i++) {
                         if (datalist.get(i).getUserId().equals(responseData.getData().getResult())) {
                             if ("follow".equals(type)) {

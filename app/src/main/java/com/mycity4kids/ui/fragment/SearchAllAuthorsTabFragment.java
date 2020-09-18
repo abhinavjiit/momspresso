@@ -30,6 +30,7 @@ import com.mycity4kids.ui.adapter.SearchAuthorsListingAdapter;
 import com.mycity4kids.utils.ConnectivityUtils;
 import com.mycity4kids.utils.StringUtils;
 import java.util.ArrayList;
+import java.util.Map;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Retrofit;
@@ -74,17 +75,17 @@ public class SearchAllAuthorsTabFragment extends BaseFragment {
         view.findViewById(R.id.imgLoader)
                 .startAnimation(AnimationUtils.loadAnimation(getActivity(), R.anim.rotate_indefinitely));
 
-        listingData = new ArrayList<SearchAuthorResult>();
+        listingData = new ArrayList<>();
         authorsListingAdapter = new SearchAuthorsListingAdapter(getActivity());
         listView.setAdapter(authorsListingAdapter);
         if (getArguments() != null) {
             searchName = getArguments().getString(Constants.SEARCH_PARAM);
         }
-        if (StringUtils.isNullOrEmpty(searchName)) {
-
-        } else if (!fragmentResume && fragmentVisible) {   //only when first time fragment is created
-            nextPageNumber = 1;
-            hitBloggerAPIrequest(nextPageNumber);
+        if (!StringUtils.isNullOrEmpty(searchName)) {
+            if (!fragmentResume && fragmentVisible) {
+                nextPageNumber = 1;
+                hitBloggerAPIrequest(nextPageNumber);
+            }
         }
 
         listView.setOnScrollListener(new AbsListView.OnScrollListener() {
@@ -104,92 +105,34 @@ public class SearchAllAuthorsTabFragment extends BaseFragment {
             }
         });
 
-        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
-                SearchAuthorResult itemSelected = (SearchAuthorResult) adapterView.getItemAtPosition(position);
-                Intent profileIntent = new Intent(getActivity(), UserProfileActivity.class);
-                profileIntent.putExtra(Constants.USER_ID, itemSelected.getUserId());
-                startActivity(profileIntent);
-            }
+        listView.setOnItemClickListener((adapterView, view1, position, l) -> {
+            SearchAuthorResult itemSelected = (SearchAuthorResult) adapterView.getItemAtPosition(position);
+            Intent profileIntent = new Intent(getActivity(), UserProfileActivity.class);
+            profileIntent.putExtra(Constants.USER_ID, itemSelected.getUserId());
+            startActivity(profileIntent);
         });
-
         return view;
     }
 
-    private void updateBloggerResponse(SearchResponse responseData) {
-
-        ArrayList<SearchAuthorResult> dataList = responseData.getData().getResult().getAuthor();
-
-        if (dataList.size() == 0) {
-            loadMore = false;
-            if (null != listingData && !listingData.isEmpty()) {
-                //No more next results for search from pagination
-
-            } else {
-                // No results for search
-                listingData = dataList;
-                authorsListingAdapter.setNewListData(dataList);
-                authorsListingAdapter.notifyDataSetChanged();
-                noAuthorsTextView.setVisibility(View.VISIBLE);
-            }
-
-            //((SearchAllActivity) getActivity()).showToast(responseData.getResult().getMessage());
-        } else {
-            noAuthorsTextView.setVisibility(View.GONE);
-            if (nextPageNumber == 1) {
-                listingData = dataList;
-            } else {
-                listingData.addAll(dataList);
-            }
-            authorsListingAdapter.setNewListData(listingData);
-            nextPageNumber = nextPageNumber + 1;
-            authorsListingAdapter.notifyDataSetChanged();
-        }
-    }
-
-    public void hitBloggerAPIrequest(int page) {
-
+    private void hitBloggerAPIrequest(int page) {
         if (nextPageNumber == 1 && null != progressBar) {
             progressBar.setVisibility(View.VISIBLE);
         }
-
         if (!ConnectivityUtils.isNetworkEnabled(getActivity())) {
             if (isAdded()) {
                 ((SearchAllActivity) getActivity()).showToast(getString(R.string.connectivity_unavailable));
             }
             return;
         }
-
         Retrofit retro = BaseApplication.getInstance().getRetrofit();
         SearchArticlesAuthorsAPI searchArticlesAuthorsAPI = retro.create(SearchArticlesAuthorsAPI.class);
         int from = (nextPageNumber - 1) * 15 + 1;
         Call<SearchResponse> call = searchArticlesAuthorsAPI.getSearchAuthorsResult(searchName,
                 "author", from, from + 15);
-
         call.enqueue(searchAuthorsResponseCallback);
     }
 
-    public void refreshAllAuthors(String searchTxt) {
-        if (null != listingData) {
-            listingData.clear();
-        }
-        nextPageNumber = 1;
-        loadMore = true;
-        searchName = searchTxt;
-        hitBloggerAPIrequest(nextPageNumber);
-    }
-
-    public void resetOnceLoadedFlag(String searchTxt) {
-        if (null != listingData) {
-            listingData.clear();
-        }
-        loadMore = true;
-        searchName = searchTxt;
-    }
-
-
-    Callback<SearchResponse> searchAuthorsResponseCallback = new Callback<SearchResponse>() {
+    private Callback<SearchResponse> searchAuthorsResponseCallback = new Callback<SearchResponse>() {
         @Override
         public void onResponse(Call<SearchResponse> call, retrofit2.Response<SearchResponse> response) {
             isReuqestRunning = false;
@@ -197,7 +140,7 @@ public class SearchAllAuthorsTabFragment extends BaseFragment {
             if (mLodingView.getVisibility() == View.VISIBLE) {
                 mLodingView.setVisibility(View.GONE);
             }
-            if (response == null || response.body() == null) {
+            if (response.body() == null) {
                 ((SearchAllActivity) getActivity()).showToast(getString(R.string.server_went_wrong));
                 return;
             }
@@ -229,4 +172,48 @@ public class SearchAllAuthorsTabFragment extends BaseFragment {
             Log.d("MC4kException", Log.getStackTraceString(t));
         }
     };
+
+    private void updateBloggerResponse(SearchResponse responseData) {
+        ArrayList<SearchAuthorResult> dataList = responseData.getData().getResult().getAuthor();
+        if (dataList.size() == 0) {
+            loadMore = false;
+            if (null == listingData || listingData.isEmpty()) {
+                listingData = dataList;
+                authorsListingAdapter.setNewListData(dataList);
+                authorsListingAdapter.notifyDataSetChanged();
+                noAuthorsTextView.setVisibility(View.VISIBLE);
+            }
+        } else {
+            noAuthorsTextView.setVisibility(View.GONE);
+            Map map = SharedPrefUtils.getFollowingJson(BaseApplication.getAppContext());
+            for (int i = 0; i < dataList.size(); i++) {
+                if (map.containsKey(dataList.get(i).getUserId())) {
+                    dataList.get(i).setIsFollowed(1);
+                }
+                listingData.add(dataList.get(i));
+            }
+            authorsListingAdapter.setNewListData(listingData);
+            nextPageNumber = nextPageNumber + 1;
+            authorsListingAdapter.notifyDataSetChanged();
+        }
+    }
+
+    public void refreshAllAuthors(String searchTxt) {
+        if (null != listingData) {
+            listingData.clear();
+        }
+        nextPageNumber = 1;
+        loadMore = true;
+        searchName = searchTxt;
+        hitBloggerAPIrequest(nextPageNumber);
+    }
+
+    public void resetOnceLoadedFlag(String searchTxt) {
+        if (null != listingData) {
+            listingData.clear();
+        }
+        loadMore = true;
+        searchName = searchTxt;
+    }
+
 }

@@ -56,6 +56,7 @@ import com.mycity4kids.constants.AppConstants;
 import com.mycity4kids.constants.Constants;
 import com.mycity4kids.gtmutils.Utils;
 import com.mycity4kids.models.response.ArticleListingResult;
+import com.mycity4kids.models.response.ContributorListResult;
 import com.mycity4kids.models.response.MixFeedResult;
 import com.mycity4kids.preference.SharedPrefUtils;
 import com.mycity4kids.tagging.Mentions;
@@ -1198,6 +1199,39 @@ public class AppUtils {
             FirebaseCrashlytics.getInstance().recordException(e);
             Log.d("MC4kException", Log.getStackTraceString(e));
             return "";
+        }
+    }
+
+    public static void updateFollowingStatus(ArrayList<ArticleListingResult> dataList) {
+        if (dataList != null) {
+            Map map = SharedPrefUtils.getFollowingJson(BaseApplication.getAppContext());
+            for (int i = 0; i < dataList.size(); i++) {
+                if (map.containsKey(dataList.get(i).getUserId())) {
+                    dataList.get(i).setIsfollowing("1");
+                }
+            }
+        }
+    }
+
+    public static void updateFollowingStatusMixFeed(ArrayList<MixFeedResult> dataList) {
+        if (dataList != null) {
+            Map map = SharedPrefUtils.getFollowingJson(BaseApplication.getAppContext());
+            for (int i = 0; i < dataList.size(); i++) {
+                if (map.containsKey(dataList.get(i).getUserId())) {
+                    dataList.get(i).setIsfollowing("1");
+                }
+            }
+        }
+    }
+
+    public static void updateFollowingStatusContributorList(ArrayList<ContributorListResult> dataList) {
+        if (dataList != null) {
+            Map map = SharedPrefUtils.getFollowingJson(BaseApplication.getAppContext());
+            for (int i = 0; i < dataList.size(); i++) {
+                if (map.containsKey(dataList.get(i).getId())) {
+                    dataList.get(i).setIsFollowed(1);
+                }
+            }
         }
     }
 

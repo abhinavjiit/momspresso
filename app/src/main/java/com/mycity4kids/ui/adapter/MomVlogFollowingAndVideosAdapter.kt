@@ -29,6 +29,7 @@ import com.mycity4kids.preference.SharedPrefUtils
 import com.mycity4kids.profile.UserProfileActivity
 import com.mycity4kids.retrofitAPIsInterfaces.FollowAPI
 import com.mycity4kids.retrofitAPIsInterfaces.VlogsListingAndDetailsAPI
+import com.mycity4kids.sync.SyncUserFollowingList
 import com.mycity4kids.ui.activity.ParallelFeedActivity
 import com.mycity4kids.utils.AppUtils
 import com.squareup.picasso.Picasso
@@ -134,22 +135,7 @@ class MomVlogFollowingAndVideosAdapter(val context: Context) :
             } else if (momVlogVideosOrFollowingList?.get(position)?.isCarouselRequestRunning!! && !momVlogVideosOrFollowingList?.get(
                     position
                 )?.isResponseReceived!!) {
-                Log.d(
-                    "Tag",
-                    momVlogVideosOrFollowingList?.get(position)?.isCarouselRequestRunning.toString() + momVlogVideosOrFollowingList?.get(
-                        position
-                    )?.isResponseReceived.toString()
-                )
             } else {
-                Log.d(
-                    "runningRequest",
-                    momVlogVideosOrFollowingList?.get(position)?.isCarouselRequestRunning.toString()
-                )
-                Log.d(
-                    "runningRequest",
-                    momVlogVideosOrFollowingList?.get(position)?.isResponseReceived.toString()
-                )
-
                 momVlogVideosOrFollowingList?.get(position)?.carouselVideoList?.let {
                     populateCarouselFollowFollowing(
                         holder,
@@ -395,7 +381,6 @@ class MomVlogFollowingAndVideosAdapter(val context: Context) :
         return if (momVlogVideosOrFollowingList?.get(position)?.itemType == 0) {
             VIDEOS
         } else {
-
             FOLLOWING_CAROUSAL
         }
     }
@@ -406,7 +391,13 @@ class MomVlogFollowingAndVideosAdapter(val context: Context) :
         position: Int
     ) {
         try {
-            if (!responseVlogersData.isEmpty()) {
+            if (responseVlogersData.isNotEmpty()) {
+                val map = SharedPrefUtils.getFollowingJson(BaseApplication.getAppContext())
+                for (i in 0 until responseVlogersData.size) {
+                    if (map.containsKey(responseVlogersData[i].id)) {
+                        responseVlogersData[i].following = true
+                    }
+                }
                 momVlogVideosOrFollowingList?.get(position)?.carouselVideoList = responseVlogersData
                 momVlogVideosOrFollowingList?.get(position)?.carouselVideoList?.let {
                     populateCarouselFollowFollowing(
@@ -558,6 +549,16 @@ class MomVlogFollowingAndVideosAdapter(val context: Context) :
                 call: Call<FollowUnfollowUserResponse>,
                 response: Response<FollowUnfollowUserResponse>
             ) {
+                try {
+                    val followIntent = Intent(
+                        followFollowingTextView.context,
+                        SyncUserFollowingList::class.java
+                    )
+                    followFollowingTextView.context.startService(followIntent)
+                } catch (e: Exception) {
+                    FirebaseCrashlytics.getInstance().recordException(e)
+                    Log.d("MC4kException", Log.getStackTraceString(e))
+                }
             }
         })
     }
@@ -589,6 +590,16 @@ class MomVlogFollowingAndVideosAdapter(val context: Context) :
                 call: Call<FollowUnfollowUserResponse>,
                 response: Response<FollowUnfollowUserResponse>
             ) {
+                try {
+                    val followIntent = Intent(
+                        followFollowingTextView.context,
+                        SyncUserFollowingList::class.java
+                    )
+                    followFollowingTextView.context.startService(followIntent)
+                } catch (e: Exception) {
+                    FirebaseCrashlytics.getInstance().recordException(e)
+                    Log.d("MC4kException", Log.getStackTraceString(e))
+                }
             }
         })
     }

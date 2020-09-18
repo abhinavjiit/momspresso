@@ -90,13 +90,13 @@ import com.mycity4kids.vlogs.VideoChallengeSelectionVerticalAdapter
 import com.mycity4kids.vlogs.VlogsCategoryWiseChallengesResponse
 import com.mycity4kids.widget.MomspressoButtonWidget
 import com.mycity4kids.widget.StoryShareCardWidget
+import java.io.File
 import okhttp3.ResponseBody
 import org.apache.commons.lang3.text.WordUtils
 import org.json.JSONObject
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
-import java.io.File
 
 class ArticleListingFragment : BaseFragment(), View.OnClickListener,
     OnRefreshListener, UserContentAdapter.RecyclerViewClickListener,
@@ -625,6 +625,7 @@ class ArticleListingFragment : BaseFragment(), View.OnClickListener,
                 if (responseData.data.chunks.isNullOrBlank()) {
                     isLastPageReached = true
                 } else {
+                    AppUtils.updateFollowingStatusMixFeed(dataList)
                     mixfeedList!!.addAll(dataList)
                     chunks = responseData.data.chunks!!
                 }
@@ -765,12 +766,16 @@ class ArticleListingFragment : BaseFragment(), View.OnClickListener,
         } else {
             noBlogsTextView.visibility = View.GONE
             recyclerView.visibility = View.VISIBLE
+            AppUtils.updateFollowingStatusMixFeed(dataList)
             mixfeedList!!.addAll(dataList)
             mixfeedAdapter.setListData(mixfeedList)
             nextPageNumber += 1
             mixfeedAdapter.notifyDataSetChanged()
             if (nextPageNumber == 2) {
                 loadTorcaiAds()
+                if (Constants.KEY_TODAYS_BEST == sortType) {
+                    loadUpcomingLiveStreams()
+                }
             }
         }
     }
@@ -828,14 +833,8 @@ class ArticleListingFragment : BaseFragment(), View.OnClickListener,
                             )
                         }
                         mixfeedAdapter.notifyDataSetChanged()
-                        if (nextPageNumber == 2 && Constants.KEY_TODAYS_BEST == sortType) {
-                            loadUpcomingLiveStreams()
-                        }
                     }
                 } catch (e: Exception) {
-                    if (nextPageNumber == 2 && Constants.KEY_TODAYS_BEST == sortType) {
-                        loadUpcomingLiveStreams()
-                    }
                     FirebaseCrashlytics.getInstance().recordException(e)
                     Log.d(
                         "FileNotFoundException",
@@ -848,9 +847,6 @@ class ArticleListingFragment : BaseFragment(), View.OnClickListener,
                 call: Call<ResponseBody?>,
                 t: Throwable
             ) {
-                if (nextPageNumber == 2 && Constants.KEY_TODAYS_BEST == sortType) {
-                    loadUpcomingLiveStreams()
-                }
                 FirebaseCrashlytics.getInstance().recordException(t)
                 Log.d("FileNotFoundException", Log.getStackTraceString(t))
             }
@@ -1396,6 +1392,9 @@ class ArticleListingFragment : BaseFragment(), View.OnClickListener,
                 call: Call<ResponseBody?>,
                 response: Response<ResponseBody?>
             ) {
+                activity?.let {
+                    (it as BaseActivity).syncFollowingList()
+                }
             }
 
             override fun onFailure(
@@ -1741,6 +1740,12 @@ class ArticleListingFragment : BaseFragment(), View.OnClickListener,
             }
             R.id.menuItemImageView -> {
             }
+        }
+    }
+
+    override fun onFollowSuccess() {
+        activity?.let {
+            (it as BaseActivity).syncFollowingList()
         }
     }
 

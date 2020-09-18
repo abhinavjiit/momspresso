@@ -30,6 +30,7 @@ import com.mycity4kids.ui.adapter.FollowerFollowingListAdapter;
 import com.mycity4kids.utils.EndlessScrollListener;
 import com.mycity4kids.utils.StringUtils;
 import java.util.ArrayList;
+import java.util.Map;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Retrofit;
@@ -258,7 +259,13 @@ public class FollowersAndFollowingListActivity extends BaseActivity {
             } else {
                 noResultTextView.setVisibility(View.GONE);
                 followerFollowingListView.setVisibility(View.VISIBLE);
-                this.datalist.addAll(datalist);
+                Map map = SharedPrefUtils.getFollowingJson(BaseApplication.getAppContext());
+                for (int i = 0; i < datalist.size(); i++) {
+                    if (map.containsKey(datalist.get(i).getUserId())) {
+                        datalist.get(i).setIsFollowed(true);
+                    }
+                    this.datalist.add(datalist.get(i));
+                }
                 followerFollowingListAdapter.setData(this.datalist);
                 offset = offset + LIMIT;
                 followerFollowingListAdapter.notifyDataSetChanged();

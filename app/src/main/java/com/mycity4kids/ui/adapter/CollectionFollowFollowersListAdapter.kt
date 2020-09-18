@@ -1,6 +1,7 @@
 package com.mycity4kids.ui.adapter
 
 import android.content.Context
+import android.content.Intent
 import android.os.AsyncTask
 import android.util.Log
 import android.view.LayoutInflater
@@ -21,6 +22,7 @@ import com.mycity4kids.models.request.FollowUnfollowUserRequest
 import com.mycity4kids.models.response.FollowUnfollowUserResponse
 import com.mycity4kids.models.response.FollowersFollowingResult
 import com.mycity4kids.preference.SharedPrefUtils
+import com.mycity4kids.sync.SyncUserFollowingList
 import com.mycity4kids.utils.StringUtils
 import com.squareup.picasso.Picasso
 import java.io.BufferedReader
@@ -105,12 +107,6 @@ class CollectionFollowFollowersListAdapter(val mContext: Context, val listType: 
     private fun followUserAPI(position: Int, holder: ViewHolder) {
         val followUnfollowUserRequest = FollowUnfollowUserRequest()
         followUnfollowUserRequest.followee_id = mDataList?.get(position)?.userId
-        var screenName = ""
-        if (AppConstants.FOLLOWER_LIST == listType) {
-            screenName = "FollowersListingScreen"
-        } else {
-            screenName = "FollowingListingScreen"
-        }
         if (!mDataList?.get(position)?.isFollowed!!) {
             holder.relativeLoadingView.visibility = View.VISIBLE
             holder.followingTextView.visibility = View.INVISIBLE
@@ -228,6 +224,11 @@ class CollectionFollowFollowersListAdapter(val mContext: Context, val listType: 
             try {
                 val responseData = Gson().fromJson(result, FollowUnfollowUserResponse::class.java)
                 if ((responseData.code == 200) and (Constants.SUCCESS == responseData.status)) {
+                    val followIntent = Intent(
+                        viewHolder.relativeLoadingView.context,
+                        SyncUserFollowingList::class.java
+                    )
+                    viewHolder.relativeLoadingView.context.startService(followIntent)
                     for (i in mDataList?.indices!!) {
                         if (mDataList?.get(i)?.userId == responseData.data.result) {
                             if ("follow" == type) {

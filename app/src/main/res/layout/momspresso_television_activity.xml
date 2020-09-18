@@ -25,7 +25,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerVertical="true"
-        android:text="@string/all_momspresso_live"
+        android:text="@string/all_videos.tabbar.momspresso_label"
         android:textColor="@color/user_articles.toolbar.title"
         android:textSize="20sp"
         app:fontName="oswald_regular.ttf" />

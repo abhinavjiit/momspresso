@@ -71,6 +71,7 @@ import com.mycity4kids.vlogs.VlogsCategoryWiseChallengesResponse;
 import java.net.SocketTimeoutException;
 import java.net.UnknownHostException;
 import java.util.ArrayList;
+import java.util.Map;
 import okhttp3.ResponseBody;
 import org.json.JSONObject;
 import retrofit2.Call;
@@ -259,10 +260,19 @@ public class ParallelFeedActivity extends BaseActivity implements View.OnClickLi
                     if (dataList == null) {
                         return;
                     }
+                    Map map = SharedPrefUtils.getFollowingJson(BaseApplication.getAppContext());
                     for (int i = 0; i < dataList.size(); i++) {
                         if (dataList.get(i).getId().equals(videoId)) {
                             dataList.remove(i);
                             break;
+                        }
+                        try {
+                            if (map.containsKey(dataList.get(i).getAuthor().getId())) {
+                                dataList.get(i).setFollowed(true);
+                            }
+                        } catch (Exception e) {
+                            FirebaseCrashlytics.getInstance().recordException(e);
+                            Log.d("MC4kException", Log.getStackTraceString(e));
                         }
                     }
 
@@ -279,7 +289,6 @@ public class ParallelFeedActivity extends BaseActivity implements View.OnClickLi
                         recyclerViewFeed.setVideoInfoList(ParallelFeedActivity.this, finalList);
                         videoRecyclerViewAdapter.updateList(finalList);
                     }
-
                 } else {
                     showToast(getString(R.string.server_went_wrong));
                 }
@@ -310,7 +319,6 @@ public class ParallelFeedActivity extends BaseActivity implements View.OnClickLi
                                 isLastPageReached = true;
                             }
                             dataList = vlogList;
-
                             if (dataList == null) {
                                 return;
                             }
@@ -393,6 +401,10 @@ public class ParallelFeedActivity extends BaseActivity implements View.OnClickLi
     }
 
     private void updateUIfromResponse(VlogsListingAndDetailResult responseData) {
+        Map map = SharedPrefUtils.getFollowingJson(BaseApplication.getAppContext());
+        if (map.containsKey(responseData.getAuthor().getId())) {
+            responseData.setFollowed(true);
+        }
         detailData = responseData;
         dataListHeader.add(detailData);
         if (StringUtils.isNullOrEmpty(streamUrl)) {
@@ -444,6 +456,7 @@ public class ParallelFeedActivity extends BaseActivity implements View.OnClickLi
             try {
                 FollowUnfollowUserResponse responseData = response.body();
                 if (responseData.getCode() == 200 && Constants.SUCCESS.equals(responseData.getStatus())) {
+                    syncFollowingList();
                     finalList.get(updateFollowPos).setFollowed(true);
                     videoRecyclerViewAdapter.setListUpdate(updateFollowPos, finalList);
                     ToastUtils.showToast(ParallelFeedActivity.this, responseData.getData().getMsg());
@@ -484,6 +497,7 @@ public class ParallelFeedActivity extends BaseActivity implements View.OnClickLi
             try {
                 FollowUnfollowUserResponse responseData = response.body();
                 if (responseData.getCode() != 200 || !Constants.SUCCESS.equals(responseData.getStatus())) {
+                    syncFollowingList();
                     finalList.get(updateFollowPos).setFollowed(true);
                 }
             } catch (Exception e) {
