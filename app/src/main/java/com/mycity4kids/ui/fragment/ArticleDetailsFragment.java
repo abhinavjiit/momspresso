@@ -250,10 +250,11 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
     private TextView postsCountTextView;
     private TextView likeCountTextView;
     private ImageView dot;
-    private ShareButtonWidget writeCommentTextView;
+    private TextView writeCommentTextView;
     private TextView viewMoreTextView;
     private TextView commentsHeaderTextView;
     private RelativeLayout commentContainer;
+    private TextView writeCommentTopTextView;
     private RelativeLayout beTheFirstOneCommentContainer;
     private RelativeLayout commentContainer1;
     private RelativeLayout commentContainer2;
@@ -542,6 +543,7 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
             replyCount2 = fragmentView.findViewById(R.id.replyCount2);
 
             beTheFirstOneCommentContainer = fragmentView.findViewById(R.id.beTheFirstOneCommentContainer);
+            writeCommentTopTextView = fragmentView.findViewById(R.id.writeCommentTopTextView);
             commentContainer = fragmentView.findViewById(R.id.commentContainer);
             commentsHeaderTextView = fragmentView.findViewById(R.id.commentsHeaderTextView);
             viewMoreTextView = fragmentView.findViewById(R.id.viewMoreTextView);
@@ -616,6 +618,7 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
             authorName.setOnClickListener(this);
             writeCommentTextView.setOnClickListener(this);
             viewMoreTextView.setOnClickListener(this);
+            writeCommentTopTextView.setOnClickListener(this);
             beTheFirstOneCommentContainer.setOnClickListener(this);
             replyCount1.setOnClickListener(this);
             replyCount2.setOnClickListener(this);
@@ -1042,6 +1045,7 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
                     reportCommentContent1.setVisibility(View.VISIBLE);
                     reportCommentContent2.setVisibility(View.VISIBLE);
                     commentContainer.setVisibility(View.VISIBLE);
+                    writeCommentTopTextView.setVisibility(View.VISIBLE);
                 } else {
                     reportCommentContent1.setVisibility(View.GONE);
                     reportCommentContent2.setVisibility(View.GONE);
@@ -1085,8 +1089,10 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
                         fbCommentsList = responseData.getData().getResult();
                         showFbComments(fbCommentsList);
                         commentContainer.setVisibility(View.VISIBLE);
+                        writeCommentTopTextView.setVisibility(View.VISIBLE);
                     } else {
                         commentContainer.setVisibility(View.GONE);
+                        writeCommentTopTextView.setVisibility(View.GONE);
                         viewMoreTextView.setVisibility(View.GONE);
                         beTheFirstOneCommentContainer.setVisibility(View.VISIBLE);
                     }
@@ -1115,6 +1121,7 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
     private void showComments(List<CommentListData> commentsList) {
         if (commentsList.size() == 1) {
             commentContainer2.setVisibility(View.GONE);
+            writeCommentTopTextView.setVisibility(View.VISIBLE);
             viewMoreTextView.setVisibility(View.VISIBLE);
             try {
                 Picasso.get().load(commentsList.get(0).getUserPic().getClientApp())
@@ -1389,6 +1396,7 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
         markedTopComment2.setVisibility(View.GONE);
         if (fbCommentsList.size() == 1) {
             commentContainer2.setVisibility(View.GONE);
+            writeCommentTopTextView.setVisibility(View.VISIBLE);
             viewMoreTextView.setVisibility(View.VISIBLE);
             try {
                 Picasso.get().load(fbCommentsList.get(0).getProfile_image().getClientApp())
@@ -1413,6 +1421,7 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
 
         } else if (fbCommentsList.size() == 2) {
             viewMoreTextView.setVisibility(View.VISIBLE);
+            writeCommentTopTextView.setVisibility(View.VISIBLE);
             try {
                 Picasso.get().load(fbCommentsList.get(0).getProfile_image().getClientApp())
                         .error(R.drawable.default_commentor_img).into(commentatorImageView1);
@@ -1455,6 +1464,7 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
             }
         } else {
             viewMoreTextView.setVisibility(View.VISIBLE);
+            writeCommentTopTextView.setVisibility(View.VISIBLE);
             try {
                 Picasso.get().load(fbCommentsList.get(0).getProfile_image().getClientApp())
                         .error(R.drawable.default_commentor_img).into(commentatorImageView1);
@@ -2165,7 +2175,8 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
                     startActivity(intent);
                     break;
                 }
-                case R.id.writeCommentTextView: {
+                case R.id.writeCommentTextView:
+                case R.id.writeCommentTopTextView: {
                     openViewCommentDialog("ArticleDetail_Comment");
                     ((ArticleDetailsContainerActivity) getActivity()).checkAudioPlaying();
                 }

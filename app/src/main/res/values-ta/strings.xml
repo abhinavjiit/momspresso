@@ -1403,4 +1403,6 @@ Thank you! We will be reviewing your story. You can expect to hear from us withi
   <string name="ok_got_it">Ok, got It</string>
   <string name="please_enter_a_valid_code">Please enter a valid verification code.</string>
   <string name="all_momspresso_live">MOMSPRESSO LIVE</string>
+  <string name="write_a_comment">Write a comment</string>
+  <string name="comment">Comment</string>
 </resources>
