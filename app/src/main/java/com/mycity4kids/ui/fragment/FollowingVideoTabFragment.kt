@@ -18,6 +18,7 @@ import com.facebook.shimmer.ShimmerFrameLayout
 import com.google.firebase.crashlytics.FirebaseCrashlytics
 import com.mycity4kids.R
 import com.mycity4kids.application.BaseApplication
+import com.mycity4kids.base.BaseActivity
 import com.mycity4kids.base.BaseFragment
 import com.mycity4kids.constants.Constants
 import com.mycity4kids.gtmutils.Utils
@@ -288,7 +289,13 @@ class FollowingVideoTabFragment : BaseFragment(),
 
     private fun processVlogersData(responseVlogersData: ArrayList<UserDetailResult>?) {
         if (!responseVlogersData.isNullOrEmpty()) {
-            vlogersListData?.addAll(responseVlogersData)
+            val map = SharedPrefUtils.getFollowingJson(BaseApplication.getAppContext())
+            for (i in 0 until responseVlogersData.size) {
+                if (map.containsKey(responseVlogersData[i].id)) {
+                    responseVlogersData[i].following = true
+                }
+                vlogersListData!!.add(responseVlogersData[i])
+            }
         }
         vlogersListData?.let {
             momVLogFollowFollowingAdapter.setVlogersData(it)
@@ -342,6 +349,9 @@ class FollowingVideoTabFragment : BaseFragment(),
                 call: Call<FollowUnfollowUserResponse>,
                 response: Response<FollowUnfollowUserResponse>
             ) {
+                activity?.let {
+                    (it as BaseActivity).syncFollowingList()
+                }
             }
         })
     }
@@ -366,6 +376,9 @@ class FollowingVideoTabFragment : BaseFragment(),
                 call: Call<FollowUnfollowUserResponse>,
                 response: Response<FollowUnfollowUserResponse>
             ) {
+                activity?.let {
+                    (it as BaseActivity).syncFollowingList()
+                }
             }
         })
     }

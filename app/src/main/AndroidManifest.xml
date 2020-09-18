@@ -549,6 +549,7 @@
     <service android:name=".sync.FetchAdvertisementInfoService" />
     <service android:name=".sync.FetchPublicIpAddressService" />
     <service android:name=".sync.SyncUserInfoService" />
+    <service android:name=".sync.SyncUserFollowingList" />
     <service android:name=".tts.ReadArticleService" />
 
     <receiver

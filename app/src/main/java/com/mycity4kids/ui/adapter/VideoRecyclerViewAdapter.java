@@ -50,6 +50,7 @@ import com.mycity4kids.preference.SharedPrefUtils;
 import com.mycity4kids.profile.UserProfileActivity;
 import com.mycity4kids.retrofitAPIsInterfaces.FollowAPI;
 import com.mycity4kids.retrofitAPIsInterfaces.VlogsListingAndDetailsAPI;
+import com.mycity4kids.sync.SyncUserFollowingList;
 import com.mycity4kids.ui.BaseViewHolder;
 import com.mycity4kids.ui.activity.CategoryVideosListingActivity;
 import com.mycity4kids.ui.activity.ParallelFeedActivity;
@@ -334,9 +335,9 @@ public class VideoRecyclerViewAdapter extends RecyclerView.Adapter<BaseViewHolde
             }
 
             if (responseData.isFollowed()) {
-                followText.setText("Following");
+                followText.setText(followText.getContext().getResources().getString(R.string.all_following));
             } else {
-                followText.setText("Follow");
+                followText.setText(followText.getContext().getResources().getString(R.string.all_follow));
             }
 
             textViewTitle.setText(responseData.getTitle());
@@ -801,7 +802,6 @@ public class VideoRecyclerViewAdapter extends RecyclerView.Adapter<BaseViewHolde
 
         }
 
-
         @Override
         public void onClick(View view) {
             switch (view.getId()) {
@@ -985,12 +985,10 @@ public class VideoRecyclerViewAdapter extends RecyclerView.Adapter<BaseViewHolde
         }
     }
 
-
     private void unFollowApiCall(String authorId,
             int position,
             int index,
             TextView followFollowingTextView) {
-
         Retrofit retrofit = BaseApplication.getInstance().getRetrofit();
         FollowAPI vlogsListingAndDetailsApi = retrofit.create(FollowAPI.class);
         FollowUnfollowUserRequest followUnfollowUserRequest = new FollowUnfollowUserRequest();
@@ -1006,6 +1004,9 @@ public class VideoRecyclerViewAdapter extends RecyclerView.Adapter<BaseViewHolde
                 try {
                     FollowUnfollowUserResponse responseData = response.body();
                     if (responseData.getCode() == 200 && "success".equals(responseData.getStatus())) {
+                        Intent followIntent = new Intent(followFollowingTextView.getContext(),
+                                SyncUserFollowingList.class);
+                        followFollowingTextView.getContext().startService(followIntent);
                         vlogsListingAndDetailResults.get(position).getCarouselVideoList().get(index)
                                 .setFollowing(false);
                         GradientDrawable myGrad = (GradientDrawable) followFollowingTextView.getBackground();
@@ -1055,6 +1056,9 @@ public class VideoRecyclerViewAdapter extends RecyclerView.Adapter<BaseViewHolde
                 try {
                     FollowUnfollowUserResponse responseData = response.body();
                     if (responseData.getCode() == 200 && "success".equals(responseData.getStatus())) {
+                        Intent followIntent = new Intent(followFollowingTextView.getContext(),
+                                SyncUserFollowingList.class);
+                        followFollowingTextView.getContext().startService(followIntent);
                         vlogsListingAndDetailResults.get(position).getCarouselVideoList().get(index)
                                 .setFollowing(true);
                         GradientDrawable myGrad = (GradientDrawable) followFollowingTextView.getBackground();
@@ -1067,9 +1071,7 @@ public class VideoRecyclerViewAdapter extends RecyclerView.Adapter<BaseViewHolde
                         ToastUtils.showToast(context, responseData.getData().getMsg());
                     } else {
                         ToastUtils.showToast(context, responseData.getData().getMsg());
-
                     }
-
                 } catch (Exception e) {
                     FirebaseCrashlytics.getInstance().recordException(e);
                     Log.d("MC4kException", Log.getStackTraceString(e));

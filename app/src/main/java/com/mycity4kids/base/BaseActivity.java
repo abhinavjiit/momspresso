@@ -47,6 +47,7 @@ import com.mycity4kids.retrofitAPIsInterfaces.BloggerDashboardAPI;
 import com.mycity4kids.retrofitAPIsInterfaces.DeepLinkingAPI;
 import com.mycity4kids.retrofitAPIsInterfaces.LiveStreamApi;
 import com.mycity4kids.retrofitAPIsInterfaces.ShortStoryAPI;
+import com.mycity4kids.sync.SyncUserFollowingList;
 import com.mycity4kids.sync.SyncUserInfoService;
 import com.mycity4kids.ui.GroupMembershipStatus;
 import com.mycity4kids.ui.activity.AddShortStoryActivity;
@@ -1252,4 +1253,13 @@ public abstract class BaseActivity extends AppCompatActivity implements GroupMem
             Log.d("MC4KException", Log.getStackTraceString(t));
         }
     };
+
+    public void syncFollowingList(){
+        Intent intent = new Intent(this, SyncUserFollowingList.class);
+        if (VERSION.SDK_INT >= VERSION_CODES.O) {
+            startForegroundService(intent);
+        } else {
+            startService(intent);
+        }
+    }
 }

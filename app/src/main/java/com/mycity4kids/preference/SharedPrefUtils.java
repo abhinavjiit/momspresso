@@ -3,11 +3,15 @@ package com.mycity4kids.preference;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 import com.mycity4kids.constants.AppConstants;
 import com.mycity4kids.models.city.MetroCity;
 import com.mycity4kids.models.user.UserInfo;
 import com.mycity4kids.models.version.RateVersion;
+import java.util.HashMap;
 import java.util.Locale;
+import java.util.Map;
 
 public class SharedPrefUtils {
 
@@ -99,6 +103,7 @@ public class SharedPrefUtils {
     private static final String HOME_AD_SLOT_URL = "homeAdSlotUrl";
     private static final String ADVERTISEMENT_ID = "advertisementId";
     private static final String IP_ADDRESS = "ipAddress";
+    private static final String FOLLOWING_JSON = "followingJson";
 
     public static void clearPrefrence(Context context) {
         SharedPreferences sharedPref = context.getSharedPreferences(COMMON_PREF_FILE, Context.MODE_PRIVATE);
@@ -771,5 +776,21 @@ public class SharedPrefUtils {
     public static String getPublicIpAddress(Context context) {
         SharedPreferences sharedPref = context.getSharedPreferences(COMMON_PREF_FILE, Context.MODE_PRIVATE);
         return (sharedPref.getString(IP_ADDRESS, ""));
+    }
+
+    public static void setFollowingJson(Context context, String followingJson) {
+        SharedPreferences sharedPref = context.getSharedPreferences(COMMON_PREF_FILE, Context.MODE_PRIVATE);
+        Editor editor = sharedPref.edit();
+        editor.putString(FOLLOWING_JSON, followingJson);
+        editor.commit();
+    }
+
+    public static Map<String, String> getFollowingJson(Context context) {
+        SharedPreferences sharedPref = context.getSharedPreferences(COMMON_PREF_FILE, Context.MODE_PRIVATE);
+        Map<String, String> retMap = new Gson().fromJson(
+                sharedPref.getString(FOLLOWING_JSON, "{}"), new TypeToken<HashMap<String, String>>() {
+                }.getType()
+        );
+        return retMap;
     }
 }

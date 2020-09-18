@@ -2,7 +2,6 @@ package com.mycity4kids.ui.activity;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.Handler;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -301,10 +300,8 @@ public class ContributorListActivity extends BaseActivity implements View.OnClic
             noBlogsTextView.setVisibility(View.GONE);
             if (StringUtils.isNullOrEmpty(paginationValue)) {
                 contributorArrayList.clear();
-                contributorArrayList.addAll(dataList);
-            } else {
-                contributorArrayList.addAll(dataList);
             }
+            AppUtils.updateFollowingStatusContributorList(dataList);
             paginationValue = responseModel.getData().getPagination();
             if (AppConstants.PAGINATION_END_VALUE.equals(paginationValue)) {
                 isLastPageReached = true;

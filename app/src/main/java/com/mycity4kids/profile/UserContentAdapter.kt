@@ -29,7 +29,6 @@ import com.mycity4kids.application.BaseApplication
 import com.mycity4kids.constants.AppConstants
 import com.mycity4kids.constants.Constants
 import com.mycity4kids.gtmutils.Utils
-import com.mycity4kids.models.campaignmodels.CampaignDataListResult
 import com.mycity4kids.models.request.FollowUnfollowUserRequest
 import com.mycity4kids.models.response.ContributorListResponse
 import com.mycity4kids.models.response.ContributorListResult
@@ -37,6 +36,7 @@ import com.mycity4kids.models.response.FollowUnfollowUserResponse
 import com.mycity4kids.models.response.MixFeedResult
 import com.mycity4kids.retrofitAPIsInterfaces.ContributorListAPI
 import com.mycity4kids.retrofitAPIsInterfaces.FollowAPI
+import com.mycity4kids.sync.SyncUserFollowingList
 import com.mycity4kids.ui.livestreaming.RecentOrUpcomingLiveStreamsHorizontalAdapter
 import com.mycity4kids.utils.AppUtils
 import com.mycity4kids.utils.DateTimeUtils
@@ -239,6 +239,7 @@ class UserContentAdapter(
                                     holder.scroll.visibility = View.VISIBLE
                                     if (response.isSuccessful && response.body() != null) {
                                         val bloggersList = response.body()?.data?.result
+                                        AppUtils.updateFollowingStatusContributorList(bloggersList)
                                         processBloggersData(
                                             holder,
                                             bloggersList as ArrayList<ContributorListResult>,
@@ -1120,23 +1121,9 @@ class UserContentAdapter(
         }
     }
 
-    fun setTorcaiAdSlotData(showAds: Boolean, adSlotHtml: String) {
-        //        this.showAds = showAds
-        //        this.htmlContent = adSlotHtml
-    }
-
-    fun setCampaignOrAdSlotData(
-        dataType: String,
-        campaignList: ArrayList<CampaignDataListResult>,
-        adSlotHtml: String
-    ) {
-        //        this.dataType = dataType
-        //        campaignListDataModels = campaignList
-        //        this.htmlContent = adSlotHtml
-    }
-
     interface RecyclerViewClickListener {
         fun onClick(view: View, position: Int)
+        fun onFollowSuccess()
     }
 
     private fun processBloggersData(
@@ -1315,6 +1302,7 @@ class UserContentAdapter(
                 call: Call<FollowUnfollowUserResponse>,
                 response: Response<FollowUnfollowUserResponse>
             ) {
+                mListener.onFollowSuccess()
             }
         })
     }
@@ -1346,6 +1334,11 @@ class UserContentAdapter(
                 call: Call<FollowUnfollowUserResponse>,
                 response: Response<FollowUnfollowUserResponse>
             ) {
+                val followIntent = Intent(
+                    followFollowingTextView.context,
+                    SyncUserFollowingList::class.java
+                )
+                followFollowingTextView.context?.startService(followIntent)
             }
         })
     }

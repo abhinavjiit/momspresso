@@ -19,7 +19,6 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.mycity4kids.R;
 import com.mycity4kids.application.BaseApplication;
-import com.mycity4kids.base.BaseActivity;
 import com.mycity4kids.base.BaseFragment;
 import com.mycity4kids.constants.AppConstants;
 import com.mycity4kids.constants.Constants;
@@ -238,12 +237,6 @@ public class ExploreArticleListingTypeFragment extends BaseFragment implements V
                         sectionContainer.removeViewAt(2);
                         sectionContainer.addView(momsTVContainer, 0);
                         liveStreamIndicator.setVisibility(View.VISIBLE);
-                        momsTVContainer.setOnClickListener(view -> {
-                            if (getActivity() != null) {
-                                ((BaseActivity) getActivity()).getLiveStreamInfoFromId(
-                                        liveStreamResponse.getData().getResult().getEvents().get(0).getId());
-                            }
-                        });
                     }
                 } catch (Exception e) {
                     FirebaseCrashlytics.getInstance().recordException(e);

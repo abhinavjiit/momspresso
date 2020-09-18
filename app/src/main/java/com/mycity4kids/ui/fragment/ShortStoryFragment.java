@@ -36,6 +36,7 @@ import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.mycity4kids.R;
 import com.mycity4kids.application.BaseApplication;
+import com.mycity4kids.base.BaseActivity;
 import com.mycity4kids.base.BaseFragment;
 import com.mycity4kids.constants.AppConstants;
 import com.mycity4kids.constants.Constants;
@@ -62,6 +63,7 @@ import com.mycity4kids.profile.UserProfileActivity;
 import com.mycity4kids.retrofitAPIsInterfaces.ArticleDetailsAPI;
 import com.mycity4kids.retrofitAPIsInterfaces.FollowAPI;
 import com.mycity4kids.retrofitAPIsInterfaces.ShortStoryAPI;
+import com.mycity4kids.sync.SyncUserFollowingList;
 import com.mycity4kids.tagging.Mentions;
 import com.mycity4kids.ui.activity.ArticleDetailsContainerActivity;
 import com.mycity4kids.ui.activity.ShortStoryContainerActivity;
@@ -1586,11 +1588,13 @@ public class ShortStoryFragment extends BaseFragment implements View.OnClickList
                     try {
                         FollowUnfollowUserResponse responseData = response.body();
                         if (responseData.getCode() == 200 || Constants.SUCCESS.equals(responseData.getStatus())) {
+                            if (getActivity() != null) {
+                                ((BaseActivity) getActivity()).syncFollowingList();
+                                ToastUtils.showToast(getActivity(), responseData.getData().getMsg());
+                            }
                             isFollowing = false;
                             adapter.setAuthorFollowingStatus(AppConstants.STATUS_NOT_FOLLOWING);
                             adapter.notifyItemChanged(0);
-                            ToastUtils.showToast(getActivity(), responseData.getData().getMsg());
-
                         }
                         if (responseData.getCode() != 200 || !Constants.SUCCESS.equals(responseData.getStatus())) {
                             adapter.setAuthorFollowingStatus(AppConstants.STATUS_FOLLOWING);
@@ -1632,11 +1636,13 @@ public class ShortStoryFragment extends BaseFragment implements View.OnClickList
                     try {
                         FollowUnfollowUserResponse responseData = response.body();
                         if (responseData.getCode() == 200 || Constants.SUCCESS.equals(responseData.getStatus())) {
+                            if (getActivity() != null) {
+                                ((BaseActivity) getActivity()).syncFollowingList();
+                                ToastUtils.showToast(getActivity(), responseData.getData().getMsg());
+                            }
                             isFollowing = true;
                             adapter.setAuthorFollowingStatus(AppConstants.STATUS_FOLLOWING);
                             adapter.notifyItemChanged(0);
-                            ToastUtils.showToast(getActivity(), responseData.getData().getMsg());
-
                         }
 
                         if (responseData.getCode() != 200 || !Constants.SUCCESS.equals(responseData.getStatus())) {

@@ -561,6 +561,7 @@ class UserProfileActivity : BaseActivity(),
                 try {
                     val responseData = response.body()
                     if (responseData!!.code == 200 && Constants.SUCCESS == responseData.status) {
+                        syncFollowingList()
                         updateFollowingStatusInList("1")
                         isFollowing = true
                         followAuthorTextView.setText(R.string.ad_following_author)
@@ -599,6 +600,7 @@ class UserProfileActivity : BaseActivity(),
                 try {
                     val responseData = response.body()
                     if (responseData!!.code == 200 && Constants.SUCCESS == responseData.status) {
+                        syncFollowingList()
                         updateFollowingStatusInList("0")
                         isFollowing = false
                         followAuthorTextView.setText(R.string.ad_follow_author)
@@ -1433,6 +1435,10 @@ class UserProfileActivity : BaseActivity(),
                 hitFollowUnfollowAPI("PublicProfile_Listing_Follow")
             }
         }
+    }
+
+    override fun onFollowSuccess() {
+        syncFollowingList()
     }
 
     private fun showArticleMenuOptions(view: View, position: Int) {

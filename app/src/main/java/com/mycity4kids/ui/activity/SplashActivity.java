@@ -26,6 +26,7 @@ import com.mycity4kids.sync.CategorySyncService;
 import com.mycity4kids.sync.FetchAdvertisementInfoService;
 import com.mycity4kids.sync.FetchPublicIpAddressService;
 import com.mycity4kids.sync.PushTokenService;
+import com.mycity4kids.sync.SyncUserFollowingList;
 import com.mycity4kids.utils.AppUtils;
 import com.mycity4kids.utils.ConnectivityUtils;
 import com.mycity4kids.utils.StringUtils;
@@ -164,7 +165,9 @@ public class SplashActivity extends BaseActivity {
                 Intent adIntent = new Intent(this, FetchAdvertisementInfoService.class);
                 startForegroundService(adIntent);
                 Intent ipIntent = new Intent(this, FetchPublicIpAddressService.class);
-                startService(ipIntent);
+                startForegroundService(ipIntent);
+                Intent followIntent = new Intent(this, SyncUserFollowingList.class);
+                startForegroundService(followIntent);
             } else {
                 Intent intent = new Intent(this, PushTokenService.class);
                 startService(intent);
@@ -172,6 +175,8 @@ public class SplashActivity extends BaseActivity {
                 startService(adIntent);
                 Intent ipIntent = new Intent(this, FetchPublicIpAddressService.class);
                 startService(ipIntent);
+                Intent followIntent = new Intent(this, SyncUserFollowingList.class);
+                startService(followIntent);
             }
             startSyncingUserInfo();
             try {

@@ -1,6 +1,7 @@
 package com.mycity4kids.ui.adapter;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -25,6 +26,7 @@ import com.mycity4kids.models.response.FollowUnfollowUserResponse;
 import com.mycity4kids.models.response.FollowersFollowingResult;
 import com.mycity4kids.preference.SharedPrefUtils;
 import com.mycity4kids.retrofitAPIsInterfaces.ArticleDetailsAPI;
+import com.mycity4kids.sync.SyncUserFollowingList;
 import com.mycity4kids.utils.StringUtils;
 import com.mycity4kids.utils.ToastUtils;
 import com.squareup.picasso.Picasso;
@@ -317,6 +319,9 @@ public class FollowerFollowingListAdapter extends BaseAdapter {
             try {
                 FollowUnfollowUserResponse responseData = new Gson().fromJson(result, FollowUnfollowUserResponse.class);
                 if (responseData.getCode() == 200 & Constants.SUCCESS.equals(responseData.getStatus())) {
+                    Intent followIntent = new Intent(viewHolder.relativeLoadingView.getContext(),
+                            SyncUserFollowingList.class);
+                    viewHolder.relativeLoadingView.getContext().startService(followIntent);
                     for (int i = 0; i < dataList.size(); i++) {
                         if (dataList.get(i).getUserId().equals(responseData.getData().getResult())) {
                             if ("follow".equals(type)) {

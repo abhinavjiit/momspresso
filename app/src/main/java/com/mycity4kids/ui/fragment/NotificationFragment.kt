@@ -846,7 +846,9 @@ class NotificationFragment : BaseFragment(), IMembershipStatus,
                 }
                 AppConstants.NOTIFICATION_CENTER_LIVE_STREAM -> {
                     activity?.let {
-                        (it as BaseActivity).getLiveStreamInfoFromId(notificationCenterResultArrayList!![position].eventId)
+                        (it as BaseActivity).getLiveStreamInfoFromId(
+                            notificationCenterResultArrayList!![position].eventId
+                        )
                     }
                     pushEvent("NOTIFICATION_CENTER_LIVE_STREAM")
                 }
@@ -905,6 +907,9 @@ class NotificationFragment : BaseFragment(), IMembershipStatus,
                 call: Call<ResponseBody?>,
                 response: Response<ResponseBody?>
             ) {
+                activity?.let {
+                    (it as BaseActivity).syncFollowingList()
+                }
             }
 
             override fun onFailure(

@@ -30,6 +30,7 @@ import com.mycity4kids.preference.SharedPrefUtils
 import com.mycity4kids.profile.UserProfileActivity
 import com.mycity4kids.retrofitAPIsInterfaces.FollowAPI
 import com.mycity4kids.retrofitAPIsInterfaces.VlogsListingAndDetailsAPI
+import com.mycity4kids.sync.SyncUserFollowingList
 import com.mycity4kids.ui.activity.ParallelFeedActivity
 import com.mycity4kids.ui.videochallengenewui.activity.NewVideoChallengeActivity
 import com.mycity4kids.utils.AppUtils
@@ -164,10 +165,6 @@ class MomVlogListingAdapter(val mContext: Context) :
                 )
             }
         } else if (holder is FollowFollowingCarousal) {
-            Log.e(
-                "TTTTT",
-                "position = " + position + " careouselRunning --- " + momVlogVideosOrCarousalList[position].isCarouselRequestRunning + "  ----  list[position].isResponseReceived = " + momVlogVideosOrCarousalList[position].isResponseReceived
-            )
             holder.scroll.fullScroll(HorizontalScrollView.FOCUS_LEFT)
             if (!momVlogVideosOrCarousalList[position].isCarouselRequestRunning && !momVlogVideosOrCarousalList[position].isResponseReceived) {
                 holder.shimmerLayout.startShimmerAnimation()
@@ -177,7 +174,6 @@ class MomVlogListingAdapter(val mContext: Context) :
                 val retrofit = BaseApplication.getInstance().retrofit
                 val vlogsListingAndDetailsAPI =
                     retrofit.create(VlogsListingAndDetailsAPI::class.java)
-                // if (alternateCarousal % 2 == 0) {
                 end = start + 6
                 val call = vlogsListingAndDetailsAPI.getVlogersData(
                     SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).dynamoId,
@@ -198,7 +194,6 @@ class MomVlogListingAdapter(val mContext: Context) :
                             holder.shimmerLayout.stopShimmerAnimation()
                             holder.shimmerLayout.visibility = View.GONE
                             holder.scroll.visibility = View.VISIBLE
-                            //  alternateCarousal++
                             if (response.isSuccessful && response.body() != null) {
                                 val responseVlogersData = response.body()?.data?.result
                                 processVlogersData(
@@ -221,41 +216,6 @@ class MomVlogListingAdapter(val mContext: Context) :
                         }
                     }
                 })
-                // }
-                /*  else if (alternateCarousal % 2 == 1) {
-                      holder.shimmerLayout.startShimmerAnimation()
-                      holder.shimmerLayout.visibility = View.VISIBLE
-                      end_gold = start_gold + 5
-                      val call = vlogsListingAndDetailsAPI.getGoldVlogersData(start_gold, end_gold, 1)
-                      start_gold += end_gold
-                      call.enqueue(object : Callback<MomVlogersDetailResponse> {
-                          override fun onFailure(call: Call<MomVlogersDetailResponse>, t: Throwable) {
-                          }
-
-                          override fun onResponse(
-                              call: Call<MomVlogersDetailResponse>,
-                              response: Response<MomVlogersDetailResponse>
-                          ) {
-                              holder.shimmerLayout.stopShimmerAnimation()
-                              holder.shimmerLayout.visibility = View.GONE
-                              holder.scroll.visibility = View.VISIBLE
-                              alternateCarousal++
-                              if (response.isSuccessful && response.body() != null) {
-                                  val responseVlogersData = response.body()?.data?.result
-                                  processVlogersData(
-                                      holder,
-                                      responseVlogersData as ArrayList<UserDetailResult>?,
-                                      pos
-                                  )
-                                  momVlogVideosOrCarousalList[pos].isCarouselRequestRunning = false
-                                  momVlogVideosOrCarousalList[pos].isResponseReceived = true
-                              } else {
-                                  momVlogVideosOrCarousalList[pos].isCarouselRequestRunning = false
-                                  momVlogVideosOrCarousalList[pos].isResponseReceived = true
-                              }
-                          }
-                      })
-                  }*/
             } else if (momVlogVideosOrCarousalList[position].isCarouselRequestRunning && !momVlogVideosOrCarousalList[position].isResponseReceived) {
             } else {
                 Log.d(
@@ -463,6 +423,12 @@ class MomVlogListingAdapter(val mContext: Context) :
         position: Int
     ) {
         if (!responseVlogersData.isNullOrEmpty()) {
+            val map = SharedPrefUtils.getFollowingJson(BaseApplication.getAppContext())
+            for (i in 0 until responseVlogersData.size) {
+                if (map.containsKey(responseVlogersData[i].id)) {
+                    responseVlogersData[i].following = true
+                }
+            }
             momVlogVideosOrCarousalList[position].carouselVideoList = responseVlogersData
             populateCarouselFollowFollowing(holder, responseVlogersData)
         }
@@ -608,8 +574,15 @@ class MomVlogListingAdapter(val mContext: Context) :
                 call: Call<FollowUnfollowUserResponse>,
                 response: Response<FollowUnfollowUserResponse>
             ) {
-
-                if (response.isSuccessful) {
+                try {
+                    val followIntent = Intent(
+                        followFollowingTextView.context,
+                        SyncUserFollowingList::class.java
+                    )
+                    followFollowingTextView.context.startService(followIntent)
+                } catch (e: Exception) {
+                    FirebaseCrashlytics.getInstance().recordException(e)
+                    Log.d("MC4kException", Log.getStackTraceString(e))
                 }
             }
         })
@@ -648,7 +621,15 @@ class MomVlogListingAdapter(val mContext: Context) :
                 call: Call<FollowUnfollowUserResponse>,
                 response: Response<FollowUnfollowUserResponse>
             ) {
-                if (response.isSuccessful) {
+                try {
+                    val followIntent = Intent(
+                        followFollowingTextView.context,
+                        SyncUserFollowingList::class.java
+                    )
+                    followFollowingTextView.context.startService(followIntent)
+                } catch (e: Exception) {
+                    FirebaseCrashlytics.getInstance().recordException(e)
+                    Log.d("MC4kException", Log.getStackTraceString(e))
                 }
             }
         })

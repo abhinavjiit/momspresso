@@ -1672,7 +1672,7 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
             if (!StringUtils.isNullOrEmpty(detailData.getUserType())) {
                 if (AppConstants.USER_TYPE_BLOGGER.equals(detailData.getUserType())) {
                     if (StringUtils.isNullOrEmpty(deepLinkUrl)) {
-                        shareUrl = AppConstants.ARTICLE_SHARE_URL + detailData.getBlogTitleSlug()
+                        shareUrl = getLanguageSpecificBaseUrl() + detailData.getBlogTitleSlug()
                                 .trim() + "/article/" + detailData.getTitleSlug();
                         webViewUrl =
                                 AppConstants.ARTICLE_WEBVIEW_URL + detailData.getBlogTitleSlug()
@@ -1682,7 +1682,7 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
                     }
                 } else if (AppConstants.USER_TYPE_EXPERT.equals(detailData.getUserType())) {
                     if (StringUtils.isNullOrEmpty(deepLinkUrl)) {
-                        shareUrl = AppConstants.ARTICLE_SHARE_URL + "article/" + detailData
+                        shareUrl = getLanguageSpecificBaseUrl() + "article/" + detailData
                                 .getTitleSlug();
                         webViewUrl = AppConstants.ARTICLE_WEBVIEW_URL + "article/" + detailData
                                 .getTitleSlug();
@@ -1691,7 +1691,7 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
                     }
                 } else if (AppConstants.USER_TYPE_EDITOR.equals(detailData.getUserType())) {
                     if (StringUtils.isNullOrEmpty(deepLinkUrl)) {
-                        shareUrl = AppConstants.ARTICLE_SHARE_URL + "article/" + detailData
+                        shareUrl = getLanguageSpecificBaseUrl() + "article/" + detailData
                                 .getTitleSlug();
                         webViewUrl = AppConstants.ARTICLE_WEBVIEW_URL + "article/" + detailData
                                 .getTitleSlug();
@@ -1701,7 +1701,7 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
                 } else if (AppConstants.USER_TYPE_EDITORIAL.equals(detailData.getUserType())) {
                     userTypeBadgeTextView.setVisibility(View.VISIBLE);
                     if (StringUtils.isNullOrEmpty(deepLinkUrl)) {
-                        shareUrl = AppConstants.ARTICLE_SHARE_URL + "article/" + detailData
+                        shareUrl = getLanguageSpecificBaseUrl() + "article/" + detailData
                                 .getTitleSlug();
                         webViewUrl = AppConstants.ARTICLE_WEBVIEW_URL + "article/" + detailData
                                 .getTitleSlug();
@@ -1710,7 +1710,7 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
                     }
                 } else if (AppConstants.USER_TYPE_FEATURED.equals(detailData.getUserType())) {
                     if (StringUtils.isNullOrEmpty(deepLinkUrl)) {
-                        shareUrl = AppConstants.ARTICLE_SHARE_URL + "article/" + detailData
+                        shareUrl = getLanguageSpecificBaseUrl() + "article/" + detailData
                                 .getTitleSlug();
                         webViewUrl = AppConstants.ARTICLE_WEBVIEW_URL + "article/" + detailData
                                 .getTitleSlug();
@@ -1719,7 +1719,7 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
                     }
                 } else if (AppConstants.USER_TYPE_COLLABORATION.equals(detailData.getUserType())) {
                     if (StringUtils.isNullOrEmpty(deepLinkUrl)) {
-                        shareUrl = AppConstants.ARTICLE_SHARE_URL + "article/" + detailData
+                        shareUrl = getLanguageSpecificBaseUrl() + "article/" + detailData
                                 .getTitleSlug();
                         webViewUrl = AppConstants.ARTICLE_WEBVIEW_URL + "article/" + detailData
                                 .getTitleSlug();
@@ -1728,7 +1728,7 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
                     }
                 } else {
                     if (StringUtils.isNullOrEmpty(deepLinkUrl)) {
-                        shareUrl = AppConstants.ARTICLE_SHARE_URL + detailData.getBlogTitleSlug()
+                        shareUrl = getLanguageSpecificBaseUrl() + detailData.getBlogTitleSlug()
                                 .trim() + "/article/" + detailData.getTitleSlug();
                         webViewUrl =
                                 AppConstants.ARTICLE_WEBVIEW_URL + detailData.getBlogTitleSlug()
@@ -1739,7 +1739,7 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
                 }
             } else {
                 if (StringUtils.isNullOrEmpty(deepLinkUrl)) {
-                    shareUrl = AppConstants.ARTICLE_SHARE_URL + detailData.getBlogTitleSlug().trim()
+                    shareUrl = getLanguageSpecificBaseUrl() + detailData.getBlogTitleSlug().trim()
                             + "/article/" + detailData.getTitleSlug();
                     webViewUrl =
                             AppConstants.ARTICLE_WEBVIEW_URL + detailData.getBlogTitleSlug().trim()
@@ -1910,6 +1910,30 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
         }
         createSelectedTagsView();
         setArticleLanguageCategoryId();
+    }
+
+    private String getLanguageSpecificBaseUrl() {
+        if ("1".equals(detailData.getLang())) {
+            return "https://hindi.momspresso.com/parenting/";
+        } else if ("2".equals(detailData.getLang())) {
+            return "https://marathi.momspresso.com/parenting/";
+        } else if ("3".equals(detailData.getLang())) {
+            return "https://bengali.momspresso.com/parenting/";
+        } else if ("4".equals(detailData.getLang())) {
+            return "https://tamil.momspresso.com/parenting/";
+        } else if ("5".equals(detailData.getLang())) {
+            return "https://telugu.momspresso.com/parenting/";
+        } else if ("6".equals(detailData.getLang())) {
+            return "https://kannada.momspresso.com/parenting/";
+        } else if ("7".equals(detailData.getLang())) {
+            return "https://malayalam.momspresso.com/parenting/";
+        } else if ("8".equals(detailData.getLang())) {
+            return "https://gujarati.momspresso.com/parenting/";
+        } else if ("9".equals(detailData.getLang())) {
+            return "https://punjabi.momspresso.com/parenting/";
+        } else {
+            return "https://www.momspresso.com/parenting/";
+        }
     }
 
     private void setArticleLanguageCategoryId() {
@@ -4119,11 +4143,9 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
     private void handleExceptions(Throwable t) {
         if (isAdded()) {
             if (t instanceof UnknownHostException) {
-                ((ArticleDetailsContainerActivity) getActivity())
-                        .showToast(getString(R.string.error_network));
+                ((ArticleDetailsContainerActivity) getActivity()).showToast(getString(R.string.error_network));
             } else if (t instanceof SocketTimeoutException) {
-                ((ArticleDetailsContainerActivity) getActivity())
-                        .showToast(getString(R.string.connection_timeout));
+                ((ArticleDetailsContainerActivity) getActivity()).showToast(getString(R.string.connection_timeout));
             }
         }
         FirebaseCrashlytics.getInstance().recordException(t);
@@ -4137,8 +4159,7 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
                         retrofit2.Response<FollowUnfollowUserResponse> response) {
                     if (response.body() == null) {
                         if (isAdded()) {
-                            ((ArticleDetailsContainerActivity) getActivity())
-                                    .showToast(getString(R.string.went_wrong));
+                            ((ArticleDetailsContainerActivity) getActivity()).showToast(getString(R.string.went_wrong));
                         }
                         return;
                     }
@@ -4146,13 +4167,19 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
                         FollowUnfollowUserResponse responseData = response.body();
                         if (responseData.getCode() == 200 || Constants.SUCCESS
                                 .equals(responseData.getStatus())) {
+                            if (getActivity() != null) {
+                                ((BaseActivity) getActivity()).syncFollowingList();
+                                ToastUtils.showToast(getActivity(), responseData.getData().getMsg());
+                            }
                             isFollowing = true;
-                            followTextViewFollowContainer.setText(getString(R.string.ad_following_author));
-                            ToastUtils.showToast(getActivity(), responseData.getData().getMsg());
+                            followTextViewFollowContainer.setText(
+                                    followTextViewFollowContainer.getContext().getResources()
+                                            .getString(R.string.ad_following_author));
                         } else {
-                            ToastUtils.showToast(getActivity(), responseData.getData().getMsg());
+                            if (getActivity() != null) {
+                                ToastUtils.showToast(getActivity(), responseData.getData().getMsg());
+                            }
                         }
-
                     } catch (Exception e) {
                         if (isAdded()) {
                             ((ArticleDetailsContainerActivity) getActivity())
@@ -4181,19 +4208,25 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
                         retrofit2.Response<FollowUnfollowUserResponse> response) {
                     if (response.body() == null) {
                         if (isAdded()) {
-                            ((ArticleDetailsContainerActivity) getActivity())
-                                    .showToast(getString(R.string.went_wrong));
+                            ((ArticleDetailsContainerActivity) getActivity()).showToast(getString(R.string.went_wrong));
                         }
                         return;
                     }
                     try {
                         FollowUnfollowUserResponse responseData = response.body();
                         if (responseData.getCode() == 200 || Constants.SUCCESS.equals(responseData.getStatus())) {
-                            followTextViewFollowContainer.setText(getString(R.string.ad_follow_author));
+                            if (getActivity() != null) {
+                                ((BaseActivity) getActivity()).syncFollowingList();
+                                ToastUtils.showToast(getActivity(), responseData.getData().getMsg());
+                            }
+                            followTextViewFollowContainer.setText(
+                                    followTextViewFollowContainer.getContext().getResources()
+                                            .getString(R.string.ad_follow_author));
                             isFollowing = false;
-                            ToastUtils.showToast(getActivity(), responseData.getData().getMsg());
                         } else {
-                            ToastUtils.showToast(getActivity(), responseData.getData().getMsg());
+                            if (getActivity() != null) {
+                                ToastUtils.showToast(getActivity(), responseData.getData().getMsg());
+                            }
                         }
                     } catch (Exception e) {
                         if (isAdded()) {

@@ -62,6 +62,8 @@ public class ArticleDetailResult {
     private String sponsoredImage;
     @SerializedName("sponsoredBadge")
     private String sponsoredBadge;
+    @SerializedName("lang")
+    private String lang;
 
     public String getSponsoredImage() {
         return sponsoredImage;
@@ -277,5 +279,13 @@ public class ArticleDetailResult {
 
     public void setUserAgent(String userAgent) {
         this.userAgent = userAgent;
+    }
+
+    public String getLang() {
+        return lang;
+    }
+
+    public void setLang(String lang) {
+        this.lang = lang;
     }
 }
