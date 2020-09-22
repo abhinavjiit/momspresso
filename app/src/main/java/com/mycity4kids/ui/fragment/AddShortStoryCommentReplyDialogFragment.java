@@ -24,6 +24,7 @@ import com.google.firebase.crashlytics.FirebaseCrashlytics;
 import com.mycity4kids.R;
 import com.mycity4kids.application.BaseApplication;
 import com.mycity4kids.gtmutils.Utils;
+import com.mycity4kids.interfaces.CommentPostButtonColorChangeInterface;
 import com.mycity4kids.models.response.CommentListData;
 import com.mycity4kids.retrofitAPIsInterfaces.SearchArticlesAuthorsAPI;
 import com.mycity4kids.tagging.Mentions;
@@ -45,6 +46,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import org.jetbrains.annotations.NotNull;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -55,7 +57,7 @@ import retrofit2.Retrofit;
  */
 
 public class AddShortStoryCommentReplyDialogFragment extends DialogFragment implements OnClickListener,
-        QueryTokenReceiver {
+        QueryTokenReceiver, CommentPostButtonColorChangeInterface {
 
     private CommentListData commentOrReplyData;
     private ProgressDialog progressDialog;
@@ -93,6 +95,7 @@ public class AddShortStoryCommentReplyDialogFragment extends DialogFragment impl
         actionType = (String) extras.get("action");
         position = extras.getInt("position");
         commentReplyEditText.setQueryTokenReceiver(this);
+        commentReplyEditText.changeButtonColorOnTextChanged(this);
         if (commentOrReplyData == null) {
             headingTextView.setText(BaseApplication.getAppContext().getString(R.string.short_s_add_comment));
             relativeMainContainer.setVisibility(View.GONE);
@@ -335,5 +338,10 @@ public class AddShortStoryCommentReplyDialogFragment extends DialogFragment impl
         });
 
         return Arrays.asList("dddd");
+    }
+
+    @Override
+    public void onTextChanged(@NotNull String text) {
+
     }
 }

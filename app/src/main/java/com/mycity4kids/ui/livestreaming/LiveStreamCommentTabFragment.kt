@@ -15,6 +15,7 @@ import com.mycity4kids.R
 import com.mycity4kids.application.BaseApplication
 import com.mycity4kids.base.BaseFragment
 import com.mycity4kids.gtmutils.Utils
+import com.mycity4kids.interfaces.CommentPostButtonColorChangeInterface
 import com.mycity4kids.models.request.AddEditCommentOrReplyRequest
 import com.mycity4kids.models.response.CommentListResponse
 import com.mycity4kids.preference.SharedPrefUtils
@@ -30,14 +31,14 @@ import com.mycity4kids.tagging.tokenization.interfaces.QueryTokenReceiver
 import com.mycity4kids.tagging.ui.RichEditorView
 import com.mycity4kids.utils.ToastUtils
 import com.squareup.picasso.Picasso
-import java.util.Arrays
 import org.apache.commons.lang3.StringUtils
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
+import java.util.Arrays
 
 class LiveStreamCommentTabFragment : BaseFragment(),
-    LiveChatRecyclerAdapter.RecyclerViewClickListener, QueryTokenReceiver {
+    LiveChatRecyclerAdapter.RecyclerViewClickListener, QueryTokenReceiver,CommentPostButtonColorChangeInterface {
 
     private var liveStreamResult: LiveStreamResult? = null
     val commentsList = ArrayList<ChatListData>()
@@ -82,6 +83,7 @@ class LiveStreamCommentTabFragment : BaseFragment(),
         inputEditText.displayTextCounter(false)
         inputEditText.requestFocus()
         inputEditText.setQueryTokenReceiver(this)
+        inputEditText.changeButtonColorOnTextChanged(this)
 
         addCommentImageView.setOnClickListener {
             if (inputEditText.text.toString().isBlank()) {
@@ -265,5 +267,9 @@ class LiveStreamCommentTabFragment : BaseFragment(),
         })
 
         return Arrays.asList("dddd")
+    }
+
+    override fun onTextChanged(text: String) {
+        TODO("Not yet implemented")
     }
 }

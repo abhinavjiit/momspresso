@@ -165,4 +165,8 @@ public interface ArticleDetailsAPI {
 
     @POST("/v1/blocked-user/")
     Call<ResponseBody> unBlockUserApi(@Body UnBlockUserModel blockUserModel);
+
+    @GET("v2/categories/suggestions")
+    Call<ResponseBody> getCommentSuggestions(@Query("id") String id);
+
 }

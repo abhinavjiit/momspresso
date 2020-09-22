@@ -26,6 +26,7 @@ import com.mycity4kids.R;
 import com.mycity4kids.application.BaseApplication;
 import com.mycity4kids.constants.Constants;
 import com.mycity4kids.gtmutils.Utils;
+import com.mycity4kids.interfaces.CommentPostButtonColorChangeInterface;
 import com.mycity4kids.models.response.CommentListData;
 import com.mycity4kids.profile.UserProfileActivity;
 import com.mycity4kids.retrofitAPIsInterfaces.SearchArticlesAuthorsAPI;
@@ -54,6 +55,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import org.jetbrains.annotations.NotNull;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -64,6 +66,7 @@ import retrofit2.Retrofit;
  */
 
 public class AddArticleCommentReplyDialogFragment extends DialogFragment implements OnClickListener,
+        CommentPostButtonColorChangeInterface,
         QueryTokenReceiver {
 
     private CommentListData commentOrReplyData;
@@ -103,6 +106,7 @@ public class AddArticleCommentReplyDialogFragment extends DialogFragment impleme
         actionType = (String) extras.get("action");
         position = extras.getInt("position");
         commentReplyEditText.setQueryTokenReceiver(this);
+        commentReplyEditText.changeButtonColorOnTextChanged(this);
         commentReplyEditText.addMentionWatcher(new MentionWatcher() {
             @Override
             public void onMentionAdded(@NonNull Mentionable mention, @NonNull String text, int start, int end) {
@@ -473,6 +477,11 @@ public class AddArticleCommentReplyDialogFragment extends DialogFragment impleme
             FirebaseCrashlytics.getInstance().recordException(e);
             Log.d("MC4kException", Log.getStackTraceString(e));
         }
+    }
+
+    @Override
+    public void onTextChanged(@NotNull String text) {
+
     }
 
     public interface AddComments {

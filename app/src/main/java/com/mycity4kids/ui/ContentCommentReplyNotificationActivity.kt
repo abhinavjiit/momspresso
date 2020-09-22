@@ -3,13 +3,19 @@ package com.mycity4kids.ui
 import android.accounts.NetworkErrorException
 import android.content.Context
 import android.content.Intent
+import android.graphics.Typeface
 import android.os.Bundle
+import android.text.Selection
 import android.util.Log
 import android.view.View
+import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
+import android.widget.ImageView
+import android.widget.LinearLayout
 import android.widget.RelativeLayout
 import android.widget.TextView
 import android.widget.Toast
+import androidx.core.content.ContextCompat
 import androidx.fragment.app.FragmentManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -21,6 +27,7 @@ import com.mycity4kids.base.BaseActivity
 import com.mycity4kids.constants.AppConstants
 import com.mycity4kids.constants.Constants
 import com.mycity4kids.gtmutils.Utils
+import com.mycity4kids.interfaces.CommentPostButtonColorChangeInterface
 import com.mycity4kids.models.BlockUserModel
 import com.mycity4kids.models.TopCommentData
 import com.mycity4kids.models.request.AddEditCommentOrReplyRequest
@@ -48,22 +55,25 @@ import com.mycity4kids.ui.fragment.ReportContentDialogFragment
 import com.mycity4kids.utils.EndlessScrollListener
 import com.mycity4kids.utils.StringUtils
 import com.mycity4kids.utils.ToastUtils
-import com.mycity4kids.widget.MomspressoButtonWidget
+import com.mycity4kids.widget.CustomFontTextView
 import io.reactivex.Observer
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable
 import io.reactivex.schedulers.Schedulers
-import java.util.ArrayList
-import java.util.HashMap
 import okhttp3.ResponseBody
+import org.json.JSONArray
+import org.json.JSONException
 import org.json.JSONObject
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
+import java.util.ArrayList
+import java.util.HashMap
 
 class ContentCommentReplyNotificationActivity : BaseActivity(),
     ArticleCommentsRecyclerAdapter.RecyclerViewClickListener,
-    CommentOptionsDialogFragment.ICommentOptionAction, View.OnClickListener, QueryTokenReceiver {
+    CommentOptionsDialogFragment.ICommentOptionAction, View.OnClickListener, QueryTokenReceiver,
+    CommentPostButtonColorChangeInterface {
 
     private lateinit var commentToolbarTextView: TextView
     private lateinit var commentRecyclerView: RecyclerView
@@ -80,7 +90,8 @@ class ContentCommentReplyNotificationActivity : BaseActivity(),
     private lateinit var taggingCoachmark: RelativeLayout
     private lateinit var topCommentCoachMark: View
     private lateinit var typeHere: RichEditorView
-    private lateinit var disableStatePostTextView: MomspressoButtonWidget
+    private lateinit var disableStatePostTextView: ImageView
+    private lateinit var suggestionContainer: LinearLayout
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -93,6 +104,7 @@ class ContentCommentReplyNotificationActivity : BaseActivity(),
         topCommentCoachMark = findViewById(R.id.topCommentCoachMark)
         typeHere = findViewById(R.id.typeHere)
         disableStatePostTextView = findViewById(R.id.disableStatePostTextView)
+        suggestionContainer = findViewById(R.id.suggestionContainer)
         contentType = intent?.getStringExtra("contentType")
         articleId = intent?.getStringExtra("articleId")
         replyId = intent?.getStringExtra("replyId")
@@ -101,6 +113,7 @@ class ContentCommentReplyNotificationActivity : BaseActivity(),
         blogWriterId = intent?.getStringExtra("authorId")
         commentList = ArrayList()
         getComments(null)
+        getCommentSuggestions()
         if ("comment" == show || replyId.isNullOrBlank()) {
             showCommentFragment(commentId)
         } else if ("reply" == show) {
@@ -145,12 +158,86 @@ class ContentCommentReplyNotificationActivity : BaseActivity(),
         typeHere.displayTextCounter(false)
         typeHere.requestFocus()
         typeHere.setQueryTokenReceiver(this)
+        typeHere.changeButtonColorOnTextChanged(this)
         commentToolbarTextView.setOnClickListener(this)
         rLayout.setOnClickListener(this)
         typeHere.setOnClickListener(this)
         disableStatePostTextView.setOnClickListener(this)
         taggingCoachmark.setOnClickListener(this)
         topCommentCoachMark.setOnClickListener(this)
+    }
+
+    private fun getCommentSuggestions() {
+        val rest = BaseApplication.getInstance().retrofit;
+        val articleDetailsAPI = rest.create(ArticleDetailsAPI::class.java)
+        val call =
+            articleDetailsAPI.getCommentSuggestions("category-721b83f863064a73b1b63b1205cd1959")
+        call.enqueue(object : Callback<ResponseBody> {
+            override fun onFailure(call: Call<ResponseBody>, t: Throwable) {
+                FirebaseCrashlytics.getInstance().recordException(t)
+                Log.d("MC4kException", Log.getStackTraceString(t))
+            }
+
+            override fun onResponse(call: Call<ResponseBody>, response: Response<ResponseBody>) {
+                if (null == response.body()) {
+                    return
+                }
+                try {
+                    val res = String(response.body()?.bytes()!!)
+                    val jsonObject = JSONObject(res)
+                    val code = jsonObject.getInt("code")
+                    val status = jsonObject.getString("status")
+                    if (code == 200 && status == Constants.SUCCESS) {
+
+                        val data = jsonObject.getJSONObject("data")
+                        val result = data.getJSONArray("result")
+                        setHorizontalCommentSuggestions(result)
+                    }
+
+
+                } catch (e: Exception) {
+                    FirebaseCrashlytics.getInstance().recordException(e)
+                    Log.d("MC4kException", Log.getStackTraceString(e))
+                }
+            }
+
+        })
+    }
+
+
+    private fun setHorizontalCommentSuggestions(result: JSONArray) { //suggestionContainer
+        for (i in 0 until result.length()) {
+            try {
+                val textView = CustomFontTextView(this)
+                val params =
+                    ViewGroup.MarginLayoutParams(
+                        ViewGroup.MarginLayoutParams.WRAP_CONTENT,
+                        ViewGroup.MarginLayoutParams.WRAP_CONTENT
+                    )
+                params.leftMargin = 25
+                textView.layoutParams = params
+                textView.text = result.getString(i)
+                textView.tag = result.getString(i)
+                textView.setOnClickListener { view ->
+                    val commentText = typeHere.text
+                    commentText.append(view.tag.toString())
+                    Selection.setSelection(commentText, commentText.length)
+                }
+                val face = Typeface.createFromAsset(
+                    resources.assets,
+                    "fonts/Roboto-Regular.ttf"
+                )
+                textView.typeface = face
+                textView.textSize = 14f
+                textView.setTextColor(ContextCompat.getColor(this, R.color.campaign_4A4A4A))
+                textView.setPadding(10, 10, 10, 10)
+                textView.background =
+                    resources.getDrawable(R.drawable.comment_suggestions_background_layout, null)
+                suggestionContainer.addView(textView)
+            } catch (e: JSONException) {
+                e.printStackTrace()
+            }
+        }
     }
 
     private fun getComments(type: String?) {
@@ -1103,6 +1190,24 @@ class ContentCommentReplyNotificationActivity : BaseActivity(),
 
         override operator fun compareTo(other: MentionIndex): Int {
             return index - other.index
+        }
+    }
+
+    override fun onTextChanged(text: String) {
+        if (text.isBlank()) {
+            disableStatePostTextView.setImageDrawable(
+                resources.getDrawable(
+                    R.drawable.ic_post_comment_disabled_state,
+                    null
+                )
+            )
+        } else {
+            disableStatePostTextView.setImageDrawable(
+                resources.getDrawable(
+                    R.drawable.ic_post_comment_enabled_state,
+                    null
+                )
+            )
         }
     }
 }
