@@ -48,6 +48,7 @@
     android:layout_width="match_parent"
     android:layout_height="0dp"
     android:background="@color/white"
+    android:visibility="visible"
     app:layout_constraintBottom_toBottomOf="parent"
     app:layout_constraintEnd_toEndOf="parent"
     app:layout_constraintStart_toEndOf="parent"
@@ -64,142 +65,116 @@
     </LinearLayout>
   </com.facebook.shimmer.ShimmerFrameLayout>
 
+  <HorizontalScrollView
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/white"
+    android:elevation="3dp"
+    android:paddingStart="14dp"
+    android:paddingTop="@dimen/space_7"
+    android:paddingEnd="14dp"
+    android:paddingBottom="7dp"
+    android:visibility="visible"
+    app:layout_constraintBottom_toTopOf="@id/rLayout">
+    <LinearLayout
+      android:id="@+id/suggestionContainer"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:orientation="horizontal">
+
+    </LinearLayout>
+
+  </HorizontalScrollView>
+
+
   <RelativeLayout
     android:id="@+id/rLayout"
     android:layout_width="match_parent"
-    android:layout_height="70dp"
-    android:layout_alignParentBottom="true"
+    android:layout_height="wrap_content"
     android:background="#f0f0f0"
-    android:elevation="5dp"
+    android:elevation="@dimen/space_5"
     app:layout_constraintBottom_toBottomOf="parent">
 
-    <com.mikhaellopez.circularimageview.CircularImageView
-      android:id="@+id/userImageView"
-      android:layout_width="34dp"
-      android:layout_height="34dp"
-      android:layout_centerVertical="true"
-      android:layout_marginStart="@dimen/space_10"
-      android:src="@drawable/default_commentor_img"
-      android:visibility="gone" />
+    <RelativeLayout
+      android:layout_width="match_parent"
+      android:layout_height="50dp"
+      android:layout_alignBottom="@id/line"
+      android:background="#f0f0f0">
+
+      <com.mikhaellopez.circularimageview.CircularImageView
+        android:id="@+id/userImageView"
+        android:layout_width="34dp"
+        android:layout_height="34dp"
+        android:layout_alignParentBottom="true"
+        android:layout_marginStart="@dimen/space_10"
+        android:layout_marginBottom="@dimen/space_5"
+        android:src="@drawable/default_commentor_img" />
+
+
+    </RelativeLayout>
 
     <RelativeLayout
-      android:id="@+id/addCommentFAB"
+      android:id="@+id/r"
       android:layout_width="match_parent"
       android:layout_height="wrap_content"
-      android:layout_centerVertical="true"
-      android:layout_marginLeft="10dp"
-      android:layout_marginRight="10dp"
-      android:layout_toEndOf="@id/userImageView"
-      android:background="@drawable/rectangular_border"
-      android:gravity="center_vertical"
-      android:visibility="visible">
+      android:layout_marginStart="50dp"
+      android:layout_marginTop="@dimen/space_5"
+      android:layout_marginEnd="@dimen/space_8"
+      android:layout_marginBottom="@dimen/space_5"
+      android:background="@drawable/rootlayout_with_rounded_corner">
 
-
-      <com.mycity4kids.widget.CustomFontTextView
+      <com.mycity4kids.tagging.ui.RichEditorView
         android:id="@+id/typeHere"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_centerVertical="true"
-        android:layout_marginLeft="@dimen/space_10"
+        android:layout_marginStart="@dimen/space_10"
+        android:layout_toStartOf="@+id/disableStatePostTextView"
+        android:background="@color/transparent"
         android:gravity="center_vertical"
-        android:padding="12dp"
-        android:text="Write a comment"
+        android:hint="Write a comment"
+        android:maxLines="4"
         android:textColor="#a1a4a8"
         android:textSize="18sp"
         android:visibility="visible"
         app:fontName="oswald.ttf" />
-
-      <com.mycity4kids.widget.CustomFontTextView
-        android:id="@+id/beTheFirstOne"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_centerVertical="true"
-        android:layout_marginLeft="@dimen/space_10"
-        android:text="Be the first one"
-        android:textColor="@color/groups.grey"
-        android:textSize="12sp"
-        android:visibility="gone" />
-
-      <!-- <ImageView
-           android:id="@+id/audio"
-           android:layout_width="30dp"
-           android:layout_height="30dp"
-           android:layout_alignParentRight="true"
-           android:layout_centerVertical="true"
-           android:layout_marginRight="10dp"
-           android:padding="4dp"
-           app:srcCompat="@drawable/ic_audio_record" />-->
-
-
-      <!-- <ImageView
-           android:layout_width="30dp"
-           android:layout_height="30dp"
-           android:layout_alignParentRight="true"
-           android:layout_centerVertical="true"
-           android:layout_marginRight="40dp"
-           android:paddingTop="5dp"
-           android:paddingBottom="5dp"
-           android:src="@drawable/ic_add_image" />-->
-
-      <com.mycity4kids.widget.MomspressoButtonWidget
+      <androidx.appcompat.widget.AppCompatImageView
         android:id="@+id/disableStatePostTextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentEnd="true"
         android:layout_centerVertical="true"
-        android:layout_marginEnd="@dimen/space_10"
-        android:paddingStart="@dimen/space_20"
-        android:paddingTop="@dimen/space_10"
-        android:paddingEnd="@dimen/space_20"
-        android:paddingBottom="@dimen/space_10"
-        android:text="Post"
-        android:textStyle="bold"
-        app:fb_borderColor="#D8D8D8"
-        app:fb_borderWidth="1dp"
-        app:fb_defaultColor="@color/white_color"
-        app:fb_radius="@dimen/space_30"
-        app:fb_textColor="#D8D8D8"
-        app:fb_textSize="14sp" />
-      <com.mycity4kids.widget.MomspressoButtonWidget
-        android:id="@+id/enableStatePostTextView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentEnd="true"
-        android:layout_centerVertical="true"
-        android:layout_marginEnd="@dimen/space_10"
-        android:paddingStart="@dimen/space_20"
-        android:paddingTop="@dimen/space_10"
-        android:paddingEnd="@dimen/space_20"
-        android:paddingBottom="@dimen/space_10"
-        android:text="Post"
-        android:textStyle="bold"
-        android:visibility="gone"
-        app:fb_borderColor="@color/app_red"
-        app:fb_borderWidth="1dp"
-        app:fb_defaultColor="@color/app_red"
-        app:fb_radius="@dimen/space_30"
-        app:fb_textColor="@color/white"
-        app:fb_textSize="14sp" />
+        android:paddingStart="10dp"
+        android:paddingEnd="@dimen/space_10"
+        android:src="@drawable/ic_post_comment_disabled_state" />
+
 
     </RelativeLayout>
 
-
     <View
-
+      android:id="@+id/line"
       android:layout_width="match_parent"
-      android:layout_height=".5dp"
-      android:layout_marginBottom="81dp"
-      android:background="#99cecece" />
+      android:layout_height="1dp"
+      android:layout_below="@id/r"
+      android:background="#f0f0f0" />
+    <!-- <View
+
+       android:layout_width="match_parent"
+       android:layout_height=".5dp"
+       android:background="#99cecece" />-->
   </RelativeLayout>
+
 
   <FrameLayout
     android:id="@+id/content_frame"
     android:layout_width="match_parent"
     android:layout_height="0dp"
+    android:elevation="@dimen/space_5"
     app:layout_constraintBottom_toBottomOf="parent"
     app:layout_constraintEnd_toEndOf="parent"
     app:layout_constraintStart_toEndOf="parent"
     app:layout_constraintTop_toBottomOf="@id/toolbar" />
+
 
   <RelativeLayout
     android:id="@+id/taggingCoachmark"

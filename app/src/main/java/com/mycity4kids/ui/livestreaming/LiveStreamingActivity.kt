@@ -21,6 +21,7 @@ import com.mycity4kids.base.BaseActivity
 import com.mycity4kids.constants.AppConstants
 import com.mycity4kids.constants.Constants
 import com.mycity4kids.gtmutils.Utils
+import com.mycity4kids.interfaces.CommentPostButtonColorChangeInterface
 import com.mycity4kids.models.request.AddEditCommentOrReplyRequest
 import com.mycity4kids.models.request.RecommendUnrecommendArticleRequest
 import com.mycity4kids.models.response.CommentListResponse
@@ -53,7 +54,7 @@ import retrofit2.Callback
 import retrofit2.Response
 
 class LiveStreamingActivity : BaseActivity(), LiveChatRecyclerAdapter.RecyclerViewClickListener,
-    View.OnClickListener, QueryTokenReceiver, ResizableTextView.SeeMore {
+    View.OnClickListener, QueryTokenReceiver, ResizableTextView.SeeMore,CommentPostButtonColorChangeInterface {
 
     private var liveStreamResponse: LiveStreamResult? = null
     private var root: DatabaseReference? = null
@@ -76,6 +77,7 @@ class LiveStreamingActivity : BaseActivity(), LiveChatRecyclerAdapter.RecyclerVi
         inputEditText.displayTextCounter(false)
         inputEditText.requestFocus()
         inputEditText.setQueryTokenReceiver(this)
+        inputEditText.changeButtonColorOnTextChanged(this)
         inputEditText.setHint("Leave your question here...")
 
         Picasso.get().load(SharedPrefUtils.getProfileImgUrl(this)).error(R.drawable.default_commentor_img).placeholder(
@@ -505,5 +507,9 @@ class LiveStreamingActivity : BaseActivity(), LiveChatRecyclerAdapter.RecyclerVi
         bundle.putString("content", userBio)
         bottomSheet.arguments = bundle
         bottomSheet.show(supportFragmentManager, "")
+    }
+
+    override fun onTextChanged(text: String) {
+        TODO("Not yet implemented")
     }
 }

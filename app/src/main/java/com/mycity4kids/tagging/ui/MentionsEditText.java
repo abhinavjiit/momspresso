@@ -988,7 +988,7 @@ public class MentionsEditText extends AppCompatEditText implements TokenSource {
      * Inserts a mention. This will not take any token into consideration. This method is useful when you want to insert
      * a mention which doesn't have a token.
      *
-     * @param mention {@link Mentionable} to insert a span for
+     //@param mention {@link Mentionable} to insert a span for
      */
     public void insertMentionWithoutToken(@NonNull Mentionable mention) {
         // Setup variables and ensure they are valid
@@ -996,7 +996,7 @@ public class MentionsEditText extends AppCompatEditText implements TokenSource {
         int index = getSelectionStart();
         index = index > 0 ? index : 0;
 
-        insertMentionInternal(mention, text, index, index);
+     //   insertMentionInternal(mention, text, index, index);
     }
 
     private void insertMentionInternal(@NonNull Mentionable mention, @NonNull Editable text, int start, int end) {

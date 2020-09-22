@@ -4,15 +4,19 @@ import android.accounts.NetworkErrorException;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Typeface;
 import android.os.Bundle;
+import android.text.Selection;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
+import android.view.ViewGroup.MarginLayoutParams;
 import android.view.Window;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 import androidx.annotation.NonNull;
@@ -27,6 +31,7 @@ import com.mycity4kids.base.BaseFragment;
 import com.mycity4kids.constants.AppConstants;
 import com.mycity4kids.constants.Constants;
 import com.mycity4kids.gtmutils.Utils;
+import com.mycity4kids.interfaces.CommentPostButtonColorChangeInterface;
 import com.mycity4kids.models.BlockUserModel;
 import com.mycity4kids.models.TopCommentData;
 import com.mycity4kids.models.request.AddEditCommentOrReplyRequest;
@@ -53,7 +58,7 @@ import com.mycity4kids.ui.fragment.AddArticleCommentReplyDialogFragment.MentionI
 import com.mycity4kids.utils.AppUtils;
 import com.mycity4kids.utils.StringUtils;
 import com.mycity4kids.utils.ToastUtils;
-import com.mycity4kids.widget.MomspressoButtonWidget;
+import com.mycity4kids.widget.CustomFontTextView;
 import com.squareup.picasso.Picasso;
 import io.reactivex.Observer;
 import io.reactivex.android.schedulers.AndroidSchedulers;
@@ -66,6 +71,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import okhttp3.ResponseBody;
+import org.jetbrains.annotations.NotNull;
+import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -78,7 +86,7 @@ import retrofit2.Retrofit;
 public class ArticleCommentsFragment extends BaseFragment implements OnClickListener,
         ArticleCommentsRecyclerAdapter.RecyclerViewClickListener,
         CommentOptionsDialogFragment.ICommentOptionAction, AddArticleCommentReplyDialogFragment.AddComments,
-        QueryTokenReceiver {
+        QueryTokenReceiver, CommentPostButtonColorChangeInterface {
 
     private int pastVisiblesItems;
     private int visibleItemCount;
@@ -113,7 +121,8 @@ public class ArticleCommentsFragment extends BaseFragment implements OnClickList
     private String authorId;
     private int pos;
     private RichEditorView typeHere;
-    private MomspressoButtonWidget disableStatePostTextView;
+    private ImageView disableStatePostTextView;
+    private LinearLayout suggestionContainer;
 
 
     @Override
@@ -128,6 +137,7 @@ public class ArticleCommentsFragment extends BaseFragment implements OnClickList
         noCommentsTextView = (TextView) rootView.findViewById(R.id.noCommentsTextView);
         disableStatePostTextView = rootView.findViewById(R.id.disableStatePostTextView);
         typeHere = rootView.findViewById(R.id.typeHere);
+        suggestionContainer = rootView.findViewById(R.id.suggestionContainer);
         typeHere.setMaxLines();
         typeHere.displayTextCounter(false);
         typeHere.setOnClickListener(this);
@@ -135,6 +145,7 @@ public class ArticleCommentsFragment extends BaseFragment implements OnClickList
         disableStatePostTextView.setOnClickListener(this);
         typeHere.requestFocus();
         typeHere.setQueryTokenReceiver(this);
+        typeHere.changeButtonColorOnTextChanged(this);
         if (getContext() != null) {
             InputMethodManager inputMethodManager = (InputMethodManager) getContext()
                     .getSystemService(Context.INPUT_METHOD_SERVICE);
@@ -166,6 +177,8 @@ public class ArticleCommentsFragment extends BaseFragment implements OnClickList
 
         getArticleComments(articleId, null);
 
+        getCommentSuggestions();
+
         commentsRecyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
             public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
@@ -191,6 +204,87 @@ public class ArticleCommentsFragment extends BaseFragment implements OnClickList
         }
         return rootView;
     }
+
+    private void getCommentSuggestions() {
+        Call<ResponseBody> call = articleDetailsApi.getCommentSuggestions("category-721b83f863064a73b1b63b1205cd1959");
+        call.enqueue(commentSuggestinsListCallback);
+    }
+
+    private Callback<ResponseBody> commentSuggestinsListCallback = new Callback<ResponseBody>() {
+        @Override
+        public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+            if (response.body() == null) {
+                NetworkErrorException nee = new NetworkErrorException("New comments API failure");
+                FirebaseCrashlytics.getInstance().recordException(nee);
+                return;
+            }
+
+            try {
+                String resData = new String(response.body().bytes());
+                JSONObject jsonObject = new JSONObject((resData));
+                int code = jsonObject.getInt("code");
+                String status = jsonObject.getString("status");
+                if (code == 200 && Constants.SUCCESS.equals(status)) {
+
+                    JSONObject data = jsonObject.getJSONObject("data");
+                    JSONArray result = data.getJSONArray("result");
+                    setHorizontalCommentSuggestions(result);
+                }
+
+
+            } catch (Exception e) {
+                FirebaseCrashlytics.getInstance().recordException(e);
+                Log.d("MC4kException", Log.getStackTraceString(e));
+            }
+        }
+
+        @Override
+        public void onFailure(Call<ResponseBody> call, Throwable t) {
+            if (isAdded()) {
+                ((BaseActivity) getActivity()).apiExceptions(t);
+            }
+            FirebaseCrashlytics.getInstance().recordException(t);
+            Log.d("MC4kException", Log.getStackTraceString(t));
+        }
+    };
+
+
+    private void setHorizontalCommentSuggestions(JSONArray result) {//suggestionContainer
+        for (int i = 0; i < result.length(); i++) {
+            try {
+                CustomFontTextView textView = new CustomFontTextView(getActivity());
+                MarginLayoutParams params = new MarginLayoutParams(MarginLayoutParams.WRAP_CONTENT,
+                        MarginLayoutParams.WRAP_CONTENT);
+                params.leftMargin = 25;
+                textView.setLayoutParams(params);
+                textView.setText(result.getString(i));
+                textView.setTag(result.getString(i));
+                textView.setOnClickListener(new OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+
+                        MentionsEditable commentText = typeHere.getText();
+                        commentText.append(view.getTag().toString());
+                        Selection.setSelection(commentText, commentText.length());
+
+                    }
+                });
+                Typeface face = Typeface.createFromAsset(getResources().getAssets(), "fonts/Roboto-Regular.ttf");
+                textView.setTypeface(face);
+                textView.setTextSize(14f);
+                textView.setTextColor(getResources().getColor(R.color.campaign_4A4A4A));
+                textView.setPadding(10, 10, 10, 10);
+                textView.setBackground(getResources().getDrawable(R.drawable.comment_suggestions_background_layout));
+
+                suggestionContainer.addView(textView);
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        }
+
+    }
+
+
 
     private void getArticleComments(String id, String commentType) {
         Call<CommentListResponse> call = articleDetailsApi.getArticleComments(id, commentType, paginationCommentId);
@@ -1133,13 +1227,24 @@ public class ArticleCommentsFragment extends BaseFragment implements OnClickList
     @Override
     public void onStop() {
         super.onStop();
-        try{
+        try {
             InputMethodManager imm = (InputMethodManager) getContext()
                     .getSystemService(Context.INPUT_METHOD_SERVICE);
             imm.hideSoftInputFromWindow(typeHere.getWindowToken(), 0);
-        }catch (Exception e){
+        } catch (Exception e) {
             FirebaseCrashlytics.getInstance().recordException(e);
             Log.d("MC4kException", Log.getStackTraceString(e));
+        }
+    }
+
+    @Override
+    public void onTextChanged(@NotNull String text) {
+        if (text.isEmpty()) {
+            disableStatePostTextView
+                    .setImageDrawable(getResources().getDrawable(R.drawable.ic_post_comment_disabled_state));
+        } else {
+            disableStatePostTextView
+                    .setImageDrawable(getResources().getDrawable(R.drawable.ic_post_comment_enabled_state));
         }
     }
 }

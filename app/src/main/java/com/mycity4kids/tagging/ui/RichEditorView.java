@@ -27,15 +27,14 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
-import android.widget.FrameLayout;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
-import android.widget.Spinner;
 import android.widget.TextView;
 import androidx.annotation.ColorInt;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import com.mycity4kids.R;
+import com.mycity4kids.interfaces.CommentPostButtonColorChangeInterface;
 import com.mycity4kids.tagging.mentions.MentionSpan;
 import com.mycity4kids.tagging.mentions.MentionSpanConfig;
 import com.mycity4kids.tagging.mentions.Mentionable;
@@ -93,6 +92,7 @@ public class RichEditorView extends RelativeLayout implements TextWatcher, Query
 
     private boolean waitingForFirstResult = false;
     private boolean displayTextCount = true;
+    private CommentPostButtonColorChangeInterface colorChangeInterface;
 
     // --------------------------------------------------
     // Constructors & Initialization
@@ -203,6 +203,8 @@ public class RichEditorView extends RelativeLayout implements TextWatcher, Query
 
     }
 
+
+
     /*
      * @return a list of {@link MentionSpan} objects currently in the editor.
      */
@@ -298,6 +300,7 @@ public class RichEditorView extends RelativeLayout implements TextWatcher, Query
      */
     @Override
     public void afterTextChanged(Editable s) {
+        colorChangeInterface.onTextChanged(s.toString());
         updateEditorTextCount();
     }
 
@@ -662,6 +665,11 @@ public class RichEditorView extends RelativeLayout implements TextWatcher, Query
      */
     public void setQueryTokenReceiver(final @Nullable QueryTokenReceiver client) {
         hostQueryTokenReceiver = client;
+    }
+
+    public void changeButtonColorOnTextChanged(
+            CommentPostButtonColorChangeInterface commentPostButtonColorChangeInterface) {
+        colorChangeInterface = commentPostButtonColorChangeInterface;
     }
 
     /**
