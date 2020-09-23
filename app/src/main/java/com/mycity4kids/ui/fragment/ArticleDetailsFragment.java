@@ -121,7 +121,6 @@ import com.mycity4kids.utils.ToastUtils;
 import com.mycity4kids.widget.CustomFontTextView;
 import com.mycity4kids.widget.MomspressoButtonWidget;
 import com.mycity4kids.widget.RelatedArticlesView;
-import com.mycity4kids.widget.ShareButtonWidget;
 import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.utils.YouTubePlayerUtils;
 import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.views.YouTubePlayerView;
 import com.squareup.picasso.Picasso;
@@ -387,7 +386,9 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
     private boolean markedFirstTopComment = false;
     private boolean markedSecondTopComment = false;
     private int likedDislikedCommentIndex;
-
+    private RelativeLayout userFollowPlusIconContainer;
+    private ImageView followPlusIcon;
+    private ImageView userImageView;
 
     static {
         AppCompatDelegate.setCompatVectorFromResourcesEnabled(true);
@@ -406,7 +407,9 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
         try {
             mixpanel = MixpanelAPI
                     .getInstance(BaseApplication.getAppContext(), AppConstants.MIX_PANEL_TOKEN);
-
+            userImageView = fragmentView.findViewById(R.id.userImageView);
+            followPlusIcon = fragmentView.findViewById(R.id.followPlusIcon);
+            userFollowPlusIconContainer = fragmentView.findViewById(R.id.userFollowPlusIconContainer);
             moreArticlesTextView = fragmentView.findViewById(R.id.moreArticlesTextView);
             publishedDateTextView = fragmentView.findViewById(R.id.publishedDateTextView);
             reportCommentContent1 = fragmentView.findViewById(R.id.reportCommentContent1);
@@ -655,6 +658,8 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
             commentatorImageView2.setOnClickListener(this);
             markedTopComment1.setOnClickListener(this);
             markedTopComment2.setOnClickListener(this);
+            followPlusIcon.setOnClickListener(this);
+            userImageView.setOnClickListener(this);
 
             mainWebChromeClient = new MyWebChromeClient();
             mainWebView.setWebChromeClient(mainWebChromeClient);
@@ -1898,6 +1903,8 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
 
         if (!StringUtils.isNullOrEmpty(detailData.getProfilePic().getClientApp())) {
             Picasso.get().load(detailData.getProfilePic().getClientApp()).into(authorImageViewFollowContainer);
+            Picasso.get().load(detailData.getProfilePic().getClientApp()).into(userImageView);
+
         }
 
         if (!StringUtils.isNullOrEmpty(detailData.getImageUrl().getThumbMax())) {
@@ -2018,6 +2025,20 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
     public void onClick(View v) {
         try {
             switch (v.getId()) {
+                case R.id.followPlusIcon:
+                    if (!isFollowing) {
+                        followApiCall("ArticleDetail_PC_Follow");
+                    } else {
+                        Intent userProfileIntent = new Intent(getActivity(), UserProfileActivity.class);
+                        userProfileIntent.putExtra(Constants.USER_ID, authorId);
+                        startActivity(userProfileIntent);
+                    }
+                    break;
+                case R.id.userImageView:
+                    Intent userProfileIntent = new Intent(getActivity(), UserProfileActivity.class);
+                    userProfileIntent.putExtra(Constants.USER_ID, authorId);
+                    startActivity(userProfileIntent);
+                    break;
                 case R.id.markedTopComment1:
                     if (markedFirstTopComment) {
                         markedFirstTopComment = false;
@@ -3972,11 +3993,14 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
                                 followTextViewFollowContainer.setText(
                                         AppUtils.getString(getActivity(), R.string.ad_follow_author));
                                 isFollowing = false;
+                                userFollowPlusIconContainer.setVisibility(View.VISIBLE);
                             } else {
                                 followTextViewFollowContainer.setEnabled(true);
                                 followTextViewFollowContainer.setText(
                                         AppUtils.getString(getActivity(), R.string.ad_following_author));
                                 isFollowing = true;
+                                userFollowPlusIconContainer.setVisibility(View.GONE);
+
                             }
                         }
                     } else {
@@ -4175,6 +4199,9 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
                             followTextViewFollowContainer.setText(
                                     followTextViewFollowContainer.getContext().getResources()
                                             .getString(R.string.ad_following_author));
+                            followPlusIcon.setImageDrawable(
+                                    getResources().getDrawable(R.drawable.ic_article_detail_tick_icon, null));
+
                         } else {
                             if (getActivity() != null) {
                                 ToastUtils.showToast(getActivity(), responseData.getData().getMsg());

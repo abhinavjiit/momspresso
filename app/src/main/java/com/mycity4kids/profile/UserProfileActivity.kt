@@ -108,12 +108,12 @@ import io.reactivex.Observer
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable
 import io.reactivex.schedulers.Schedulers
-import java.io.File
-import java.net.SocketTimeoutException
-import java.net.UnknownHostException
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
+import java.io.File
+import java.net.SocketTimeoutException
+import java.net.UnknownHostException
 
 class UserProfileActivity : BaseActivity(),
     UserContentAdapter.RecyclerViewClickListener, View.OnClickListener,
@@ -1305,6 +1305,20 @@ class UserProfileActivity : BaseActivity(),
 
     override fun onClick(view: View, position: Int) {
         when {
+            view.id == R.id.icSsComment -> {
+                val intent = Intent(this, ShortStoryContainerActivity::class.java)
+                intent.putExtra(Constants.ARTICLE_ID, userContentList?.get(position)?.id)
+                intent.putExtra(Constants.AUTHOR_ID, userContentList?.get(position)?.userId)
+                intent.putExtra(Constants.BLOG_SLUG, userContentList?.get(position)?.blogTitleSlug)
+                intent.putExtra(Constants.TITLE_SLUG, userContentList?.get(position)?.titleSlug)
+                intent.putExtra(Constants.FROM_SCREEN, "TopicsShortStoryTabFragment_commentImage")
+                intent.putExtra(
+                    Constants.AUTHOR,
+                    userContentList?.get(position)?.userId + "~" + userContentList?.get(position)?.userName
+                )
+                startActivity(intent)
+            }
+
             view.id == R.id.articleItemView || view.id == R.id.videoItemView || view.id == R.id.rootView -> {
                 launchContentDetail(userContentList?.get(position))
             }

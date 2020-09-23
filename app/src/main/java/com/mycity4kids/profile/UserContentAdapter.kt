@@ -45,12 +45,12 @@ import com.mycity4kids.utils.StringUtils
 import com.mycity4kids.widget.MomspressoButtonWidget
 import com.mycity4kids.widget.StoryShareCardWidget
 import com.squareup.picasso.Picasso
-import java.util.Locale
 import kotlinx.android.synthetic.main.mom_vlog_follow_following_carousal.view.*
 import kotlinx.android.synthetic.main.short_story_listing_item.view.*
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
+import java.util.Locale
 
 /**
  * Created by hemant on 19/7/17.
@@ -542,6 +542,7 @@ class UserContentAdapter(
         internal var logoImageView: ImageView
         internal var editStoryTextView: TextView
         internal var trophyImageView: ImageView
+        internal var icSsComment: ImageView
 
         init {
             trophyImageView = itemView.trophyImageView
@@ -575,7 +576,9 @@ class UserContentAdapter(
             storyAuthorTextView =
                 storyShareCardWidget.findViewById(R.id.storyAuthorTextView) as TextView
             menuItem = itemView.findViewById<View>(R.id.menuItem) as ImageView
+            icSsComment = itemView.findViewById(R.id.icSsComment) as ImageView
             whatsappShareImageView.tag = itemView
+
 
             storyRecommendationContainer.setOnClickListener(this)
             facebookShareImageView.setOnClickListener(this)
@@ -588,6 +591,7 @@ class UserContentAdapter(
             editStoryTextView.setOnClickListener(this)
             menuItem.setOnClickListener(this)
             itemView.setOnClickListener(this)
+            icSsComment.setOnClickListener(this)
         }
 
         override fun onClick(v: View) {

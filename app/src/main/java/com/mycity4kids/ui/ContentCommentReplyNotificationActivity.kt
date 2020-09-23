@@ -10,6 +10,7 @@ import android.util.Log
 import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
+import android.widget.HorizontalScrollView
 import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.RelativeLayout
@@ -92,6 +93,7 @@ class ContentCommentReplyNotificationActivity : BaseActivity(),
     private lateinit var typeHere: RichEditorView
     private lateinit var disableStatePostTextView: ImageView
     private lateinit var suggestionContainer: LinearLayout
+    private lateinit var horizontalCommentSuggestionsContainer: HorizontalScrollView
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -105,6 +107,8 @@ class ContentCommentReplyNotificationActivity : BaseActivity(),
         typeHere = findViewById(R.id.typeHere)
         disableStatePostTextView = findViewById(R.id.disableStatePostTextView)
         suggestionContainer = findViewById(R.id.suggestionContainer)
+        horizontalCommentSuggestionsContainer =
+            findViewById(R.id.horizontalCommentSuggestionsContainer)
         contentType = intent?.getStringExtra("contentType")
         articleId = intent?.getStringExtra("articleId")
         replyId = intent?.getStringExtra("replyId")
@@ -113,7 +117,10 @@ class ContentCommentReplyNotificationActivity : BaseActivity(),
         blogWriterId = intent?.getStringExtra("authorId")
         commentList = ArrayList()
         getComments(null)
-        getCommentSuggestions()
+        if (SharedPrefUtils.getCommentSuggestionsVisibilityFlag(BaseApplication.getAppContext()))
+            getCommentSuggestions()
+        else
+            horizontalCommentSuggestionsContainer.visibility = View.GONE
         if ("comment" == show || replyId.isNullOrBlank()) {
             showCommentFragment(commentId)
         } else if ("reply" == show) {
@@ -171,7 +178,7 @@ class ContentCommentReplyNotificationActivity : BaseActivity(),
         val rest = BaseApplication.getInstance().retrofit;
         val articleDetailsAPI = rest.create(ArticleDetailsAPI::class.java)
         val call =
-            articleDetailsAPI.getCommentSuggestions("category-721b83f863064a73b1b63b1205cd1959")
+            articleDetailsAPI.getCommentSuggestions(articleId)
         call.enqueue(object : Callback<ResponseBody> {
             override fun onFailure(call: Call<ResponseBody>, t: Throwable) {
                 FirebaseCrashlytics.getInstance().recordException(t)
@@ -222,6 +229,10 @@ class ContentCommentReplyNotificationActivity : BaseActivity(),
                     val commentText = typeHere.text
                     commentText.append(view.tag.toString())
                     Selection.setSelection(commentText, commentText.length)
+                    SharedPrefUtils.setCommentSuggestionsVisibilityFlag(
+                        BaseApplication.getAppContext(),
+                        false
+                    )
                 }
                 val face = Typeface.createFromAsset(
                     resources.assets,
@@ -1202,6 +1213,11 @@ class ContentCommentReplyNotificationActivity : BaseActivity(),
                 )
             )
         } else {
+            horizontalCommentSuggestionsContainer.visibility = View.GONE
+            SharedPrefUtils.setCommentSuggestionsVisibilityFlag(
+                BaseApplication.getAppContext(),
+                false
+            )
             disableStatePostTextView.setImageDrawable(
                 resources.getDrawable(
                     R.drawable.ic_post_comment_enabled_state,

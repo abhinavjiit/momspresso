@@ -15,6 +15,7 @@ import android.view.ViewGroup;
 import android.view.ViewGroup.MarginLayoutParams;
 import android.view.Window;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.HorizontalScrollView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -123,6 +124,7 @@ public class ArticleCommentsFragment extends BaseFragment implements OnClickList
     private RichEditorView typeHere;
     private ImageView disableStatePostTextView;
     private LinearLayout suggestionContainer;
+    private HorizontalScrollView horizontalCommentSuggestionsContainer;
 
 
     @Override
@@ -138,6 +140,7 @@ public class ArticleCommentsFragment extends BaseFragment implements OnClickList
         disableStatePostTextView = rootView.findViewById(R.id.disableStatePostTextView);
         typeHere = rootView.findViewById(R.id.typeHere);
         suggestionContainer = rootView.findViewById(R.id.suggestionContainer);
+        horizontalCommentSuggestionsContainer = rootView.findViewById(R.id.horizontalCommentSuggestionsContainer);
         typeHere.setMaxLines();
         typeHere.displayTextCounter(false);
         typeHere.setOnClickListener(this);
@@ -177,7 +180,11 @@ public class ArticleCommentsFragment extends BaseFragment implements OnClickList
 
         getArticleComments(articleId, null);
 
-        getCommentSuggestions();
+        if (SharedPrefUtils.getCommentSuggestionsVisibilityFlag(BaseApplication.getAppContext())) {
+            getCommentSuggestions();
+        } else {
+            horizontalCommentSuggestionsContainer.setVisibility(View.GONE);
+        }
 
         commentsRecyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
@@ -206,7 +213,7 @@ public class ArticleCommentsFragment extends BaseFragment implements OnClickList
     }
 
     private void getCommentSuggestions() {
-        Call<ResponseBody> call = articleDetailsApi.getCommentSuggestions("category-721b83f863064a73b1b63b1205cd1959");
+        Call<ResponseBody> call = articleDetailsApi.getCommentSuggestions(articleId);
         call.enqueue(commentSuggestinsListCallback);
     }
 
@@ -266,6 +273,8 @@ public class ArticleCommentsFragment extends BaseFragment implements OnClickList
                         MentionsEditable commentText = typeHere.getText();
                         commentText.append(view.getTag().toString());
                         Selection.setSelection(commentText, commentText.length());
+                        SharedPrefUtils.setCommentSuggestionsVisibilityFlag(BaseApplication.getAppContext(), false);
+
 
                     }
                 });
@@ -283,7 +292,6 @@ public class ArticleCommentsFragment extends BaseFragment implements OnClickList
         }
 
     }
-
 
 
     private void getArticleComments(String id, String commentType) {
@@ -1243,6 +1251,8 @@ public class ArticleCommentsFragment extends BaseFragment implements OnClickList
             disableStatePostTextView
                     .setImageDrawable(getResources().getDrawable(R.drawable.ic_post_comment_disabled_state));
         } else {
+            horizontalCommentSuggestionsContainer.setVisibility(View.GONE);
+            SharedPrefUtils.setCommentSuggestionsVisibilityFlag(BaseApplication.getAppContext(), false);
             disableStatePostTextView
                     .setImageDrawable(getResources().getDrawable(R.drawable.ic_post_comment_enabled_state));
         }

@@ -63,7 +63,6 @@ import com.mycity4kids.profile.UserProfileActivity;
 import com.mycity4kids.retrofitAPIsInterfaces.ArticleDetailsAPI;
 import com.mycity4kids.retrofitAPIsInterfaces.FollowAPI;
 import com.mycity4kids.retrofitAPIsInterfaces.ShortStoryAPI;
-import com.mycity4kids.sync.SyncUserFollowingList;
 import com.mycity4kids.tagging.Mentions;
 import com.mycity4kids.ui.activity.ArticleDetailsContainerActivity;
 import com.mycity4kids.ui.activity.ShortStoryContainerActivity;
@@ -145,6 +144,7 @@ public class ShortStoryFragment extends BaseFragment implements View.OnClickList
     private ShortStoryDetailResult sharedStoryItem;
     private TextView viewAllTextView;
     private TextView typeHere;
+    private String comingFrom;
 
     private int pos;
 
@@ -158,7 +158,7 @@ public class ShortStoryFragment extends BaseFragment implements View.OnClickList
         viewAllTextView = fragmentView.findViewById(R.id.viewAllTextView);
         typeHere = fragmentView.findViewById(R.id.typeHere);
         userImageView = fragmentView.findViewById(R.id.userImageView);
-
+//TopicsShortStoryTabFragment_commentImage
         userDynamoId = SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId();
         try {
             Bundle bundle = getArguments();
@@ -175,6 +175,7 @@ public class ShortStoryFragment extends BaseFragment implements View.OnClickList
                 authorId = bundle.getString(Constants.AUTHOR_ID, "");
                 blogSlug = bundle.getString(Constants.BLOG_SLUG);
                 titleSlug = bundle.getString(Constants.TITLE_SLUG);
+                comingFrom = bundle.getString(Constants.FROM_SCREEN);
                 if (!ConnectivityUtils.isNetworkEnabled(getActivity())) {
                     ((ShortStoryContainerActivity) getActivity()).showToast(getString(R.string.error_network));
                 }
@@ -354,6 +355,7 @@ public class ShortStoryFragment extends BaseFragment implements View.OnClickList
     }
 
     private void getStoryComments(String id, String commentType) {
+        showProgressDialog("please wait");
         Call<CommentListResponse> call = shortStoryApi.getStoryComments(id, commentType, paginationCommentId);
         call.enqueue(ssCommentsResponseCallback);
     }
@@ -361,6 +363,7 @@ public class ShortStoryFragment extends BaseFragment implements View.OnClickList
     private Callback<CommentListResponse> ssCommentsResponseCallback = new Callback<CommentListResponse>() {
         @Override
         public void onResponse(Call<CommentListResponse> call, retrofit2.Response<CommentListResponse> response) {
+            removeProgressDialog();
             if (response.body() == null) {
                 NetworkErrorException nee = new NetworkErrorException("Trending Article API failure");
                 FirebaseCrashlytics.getInstance().recordException(nee);
@@ -371,8 +374,28 @@ public class ShortStoryFragment extends BaseFragment implements View.OnClickList
                 if (shortStoryCommentListResponse.getCount() == 0) {
 //                    viewAllTextView.setText(getString(R.string.group_add_comment_text));
 //                    viewAllTextView.setVisibility(View.VISIBLE);
+                } else {
+                    if ("TopicsShortStoryTabFragment_commentImage".equals(comingFrom)) {
+                        showComments(shortStoryCommentListResponse.getData());
+                        Utils.shareEventTracking(getActivity(), "100WS Detail", "Comment_Android",
+                                "StoryDetail_Viewmore_Comment");
+                        Bundle bundle = new Bundle();
+                        bundle.putString(Constants.ARTICLE_ID, articleId);
+                        bundle.putString(Constants.BLOG_SLUG, blogSlug);
+                        bundle.putString(Constants.TITLE_SLUG, titleSlug);
+                        bundle.putString(Constants.AUTHOR_ID, authorId);
+                        bundle.putString("contentType", AppConstants.CONTENT_TYPE_SHORT_STORY);
+                        ViewAllCommentsFragment viewAllCommentsFragment = new ViewAllCommentsFragment();
+                        viewAllCommentsFragment.setArguments(bundle);
+                        if (isAdded()) {
+                            ((ShortStoryContainerActivity) getActivity()).addFragment(viewAllCommentsFragment, bundle);
+                            ((ShortStoryContainerActivity) getActivity()).setToolbarTitle("Comments");
+                        }
+                    } else {
+                        showComments(shortStoryCommentListResponse.getData());
+
+                    }
                 }
-                showComments(shortStoryCommentListResponse.getData());
             } catch (Exception e) {
                 FirebaseCrashlytics.getInstance().recordException(e);
                 Log.d("MC4kException", Log.getStackTraceString(e));
