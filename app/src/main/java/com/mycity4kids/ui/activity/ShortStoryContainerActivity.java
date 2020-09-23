@@ -40,6 +40,8 @@ public class ShortStoryContainerActivity extends BaseActivity implements View.On
     private int currPos;
     private RelativeLayout root;
     private TextView toolbarTitle;
+    private String fromScreen = "dw";
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -62,7 +64,7 @@ public class ShortStoryContainerActivity extends BaseActivity implements View.On
 
         Bundle bundle = getIntent().getExtras();
         articleList = bundle.getParcelableArrayList("pagerListData");
-        String fromScreen = bundle.getString(Constants.FROM_SCREEN);
+        fromScreen = bundle.getString(Constants.FROM_SCREEN);
         final String author = bundle.getString(Constants.AUTHOR);
 
         if (bundle.getBoolean("fromNotification")) {
@@ -74,6 +76,7 @@ public class ShortStoryContainerActivity extends BaseActivity implements View.On
             String index = bundle.getString(Constants.ARTICLE_INDEX);
             String screen = bundle.getString(Constants.FROM_SCREEN);
             Utils.pushViewShortStoryEvent(this, screen, userDynamoId + "", articleId, listingType, index + "", author);
+
         }
 
         viewPager = (ViewPager) findViewById(R.id.pager);
@@ -149,7 +152,7 @@ public class ShortStoryContainerActivity extends BaseActivity implements View.On
     private void initializeViewPager() {
         shortStoryPagerAdapter = new ShortStoryPagerAdapter(getSupportFragmentManager(), articleList.size(),
                 articleList,
-                "dw");
+                fromScreen);
         viewPager.setAdapter(shortStoryPagerAdapter);
 
         viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {

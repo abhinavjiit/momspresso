@@ -90,13 +90,13 @@ import com.mycity4kids.vlogs.VideoChallengeSelectionVerticalAdapter
 import com.mycity4kids.vlogs.VlogsCategoryWiseChallengesResponse
 import com.mycity4kids.widget.MomspressoButtonWidget
 import com.mycity4kids.widget.StoryShareCardWidget
-import java.io.File
 import okhttp3.ResponseBody
 import org.apache.commons.lang3.text.WordUtils
 import org.json.JSONObject
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
+import java.io.File
 
 class ArticleListingFragment : BaseFragment(), View.OnClickListener,
     OnRefreshListener, UserContentAdapter.RecyclerViewClickListener,
@@ -1652,6 +1652,19 @@ class ArticleListingFragment : BaseFragment(), View.OnClickListener,
             }
             R.id.articleItemView, R.id.videoItemView, R.id.rootView -> {
                 launchContentDetail(mixfeedList?.get(position))
+            }
+            R.id.icSsComment -> {
+                val intent = Intent(activity, ShortStoryContainerActivity::class.java)
+                intent.putExtra(Constants.ARTICLE_ID, mixfeedList?.get(position)?.id)
+                intent.putExtra(Constants.AUTHOR_ID, mixfeedList?.get(position)?.userId)
+                intent.putExtra(Constants.BLOG_SLUG, mixfeedList?.get(position)?.blogTitleSlug)
+                intent.putExtra(Constants.TITLE_SLUG, mixfeedList?.get(position)?.titleSlug)
+                intent.putExtra(Constants.FROM_SCREEN, "TopicsShortStoryTabFragment_commentImage")
+                intent.putExtra(
+                    Constants.AUTHOR,
+                    mixfeedList?.get(position)?.userId + "~" + mixfeedList?.get(position)?.userName
+                )
+                startActivity(intent)
             }
             R.id.shareArticleImageView -> {
                 //                shareContent(mixfeedList?.get(position))

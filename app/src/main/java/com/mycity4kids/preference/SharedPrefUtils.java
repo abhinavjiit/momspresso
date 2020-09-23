@@ -793,4 +793,18 @@ public class SharedPrefUtils {
         );
         return retMap;
     }
+
+    public static void setCommentSuggestionsVisibilityFlag(Context context, Boolean flag) {
+        SharedPreferences sharedPreferences = context.getSharedPreferences(COMMON_PREF_FILE, Context.MODE_PRIVATE);
+        Editor editor = sharedPreferences.edit();
+        editor.putBoolean("flg", flag);
+        editor.commit();
+
+    }
+
+    public static Boolean getCommentSuggestionsVisibilityFlag(Context context) {
+        SharedPreferences sharedPreferences = context.getSharedPreferences(COMMON_PREF_FILE, Context.MODE_PRIVATE);
+        return sharedPreferences.getBoolean("flag", true);
+
+    }
 }

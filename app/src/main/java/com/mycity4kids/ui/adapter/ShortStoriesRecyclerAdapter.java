@@ -138,9 +138,11 @@ public class ShortStoriesRecyclerAdapter extends
         TextView storyAuthorTextView;
         ImageView logoImageView;
         ImageView trophyImageView;
+        ImageView icSsComment;
 
         ShortStoriesViewHolder(View itemView) {
             super(itemView);
+            icSsComment = itemView.findViewById(R.id.icSsComment);
             authorNameTextView = itemView.findViewById(R.id.authorNameTextView);
             followAuthorTextView = itemView.findViewById(R.id.followAuthorTextView);
             storyRecommendationContainer = itemView.findViewById(R.id.storyRecommendationContainer);
@@ -172,6 +174,7 @@ public class ShortStoriesRecyclerAdapter extends
             itemView.setOnClickListener(this);
             menuItem.setOnClickListener(this);
             followAuthorTextView.setOnClickListener(this);
+            icSsComment.setOnClickListener(this);
         }
 
         @Override
