@@ -27,7 +27,7 @@ public class VideoAnalytics {
     private static final String baseUrl = "https://tc.mogiapp.com/events/";
     static long lastUpdate = System.currentTimeMillis();
 
-    static int level = 0;
+    static int level = 1;
 
     public VideoAnalytics(String appId, String userId) {
         this.appId = appId;
@@ -239,7 +239,7 @@ public class VideoAnalytics {
             try {
                 URL url = new URL(baseUrl + appId + "?source=android");
                 if (level > 0) {
-                    Log.i("post data", baseUrl + appId + "  " + data);
+                    Log.e("post data", baseUrl + appId + "  " + data);
                 }
                 HttpURLConnection conn = (HttpURLConnection) url.openConnection();
                 conn.setRequestMethod("POST");
@@ -254,10 +254,10 @@ public class VideoAnalytics {
                 OutputStream os = conn.getOutputStream();
                 os.write(out);
                 if (level > 0) {
-                    Log.i("STATUS", String.valueOf(conn.getResponseCode()));
+                    Log.e("STATUS", String.valueOf(conn.getResponseCode()));
                 }
                 if (level > 0) {
-                    Log.i("MSG", conn.getResponseMessage());
+                    Log.e("MSG", conn.getResponseMessage());
                 }
                 conn.disconnect();
             } catch (Exception e) {

@@ -143,8 +143,10 @@ public class AddArticleTopicsActivityNew extends BaseActivity implements View.On
         if ("publishedList".equals(userNavigatingFrom)) {
             imageUrl = getIntent().getStringExtra("imageUrl");
             articleId = getIntent().getStringExtra("articleId");
-            tags = getIntent().getStringExtra("tag");
             cities = getIntent().getStringExtra("cities");
+        }
+        if (getIntent().hasExtra("tag")) {
+            tags = getIntent().getStringExtra("tag");
             if (null != tags && !tags.isEmpty()) {
                 try {
                     JSONArray jsonArray = new JSONArray(tags);
@@ -397,7 +399,6 @@ public class AddArticleTopicsActivityNew extends BaseActivity implements View.On
                             .put(selectTopic.get(i).getChild().get(j).getId(), selectTopic.get(i).getChild().get(j));
                 }
             }
-
         }
     }
 
@@ -444,7 +445,6 @@ public class AddArticleTopicsActivityNew extends BaseActivity implements View.On
             FirebaseCrashlytics.getInstance().recordException(e);
             Log.d("MC4kException", Log.getStackTraceString(e));
         }
-
     }
 
     @Override
@@ -484,36 +484,11 @@ public class AddArticleTopicsActivityNew extends BaseActivity implements View.On
                 jsonObject.put("" + chosenTopicsList.get(i).getId(), chosenTopicsList.get(i).getTitle());
                 jsonArray.put(jsonObject);
             }
-            if ("publishedList".equals(userNavigatingFrom)) {
-                reAddChallengeTagForPublishedArticle(jsonArray);
-            }
-            if (!"publishedList".equals(userNavigatingFrom) && getIntent().hasExtra("tag")) {
-                if (!StringUtils.isNullOrEmpty(getIntent().getStringExtra("tag"))) {
-                    JSONArray jsonArray1 = new JSONArray(getIntent().getStringExtra("tag"));
-                    for (int i = 0; i < jsonArray1.length(); i++) {
-                        jsonArray.put(jsonArray1.getJSONObject(i));
-                    }
-                }
-            }
         } catch (Exception e) {
             FirebaseCrashlytics.getInstance().recordException(e);
             Log.d("MC4kException", Log.getStackTraceString(e));
         }
         tags = jsonArray.toString();
-    }
-
-    private void reAddChallengeTagForPublishedArticle(JSONArray jsonArray) {
-        try {
-            for (int i = 0; i < publishedArticleChallengeTag.size(); i++) {
-                JSONObject jsonObject = new JSONObject();
-                jsonObject.put("" + publishedArticleChallengeTag.get(i).getId(),
-                        publishedArticleChallengeTag.get(i).getDisplay_name());
-                jsonArray.put(jsonObject);
-            }
-        } catch (Exception e) {
-            FirebaseCrashlytics.getInstance().recordException(e);
-            Log.d("MC4kException", Log.getStackTraceString(e));
-        }
     }
 
     @Override

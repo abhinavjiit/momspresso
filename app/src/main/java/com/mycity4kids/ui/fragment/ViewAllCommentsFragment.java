@@ -15,6 +15,7 @@ import com.mycity4kids.application.BaseApplication;
 import com.mycity4kids.base.BaseFragment;
 import com.mycity4kids.constants.Constants;
 import com.mycity4kids.preference.SharedPrefUtils;
+import com.mycity4kids.ui.activity.ViewAllCommentsActivity;
 import com.mycity4kids.ui.adapter.AllCommentsPagerAdapter;
 import com.mycity4kids.utils.AppUtils;
 
@@ -114,8 +115,12 @@ public class ViewAllCommentsFragment extends BaseFragment implements View.OnClic
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.closeImageView:
-                FragmentManager fm = getActivity().getSupportFragmentManager();
-                fm.popBackStack();
+                if (getActivity() instanceof ViewAllCommentsActivity) {
+                    getActivity().onBackPressed();
+                } else {
+                    FragmentManager fm = getActivity().getSupportFragmentManager();
+                    fm.popBackStack();
+                }
                 break;
             case R.id.topCommentCoachMark:
                 topCommentCoachMark.setVisibility(View.GONE);

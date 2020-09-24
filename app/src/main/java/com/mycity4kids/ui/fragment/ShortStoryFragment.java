@@ -43,6 +43,7 @@ import com.mycity4kids.constants.Constants;
 import com.mycity4kids.gtmutils.Utils;
 import com.mycity4kids.models.BlockUserModel;
 import com.mycity4kids.models.TopCommentData;
+import com.mycity4kids.models.parentingdetails.CommentsData;
 import com.mycity4kids.models.request.AddEditCommentOrReplyRequest;
 import com.mycity4kids.models.request.ArticleDetailRequest;
 import com.mycity4kids.models.request.FollowUnfollowUserRequest;
@@ -51,6 +52,7 @@ import com.mycity4kids.models.request.UpdateViewCountRequest;
 import com.mycity4kids.models.response.ArticleDetailResponse;
 import com.mycity4kids.models.response.CommentListData;
 import com.mycity4kids.models.response.CommentListResponse;
+import com.mycity4kids.models.response.FBCommentResponse;
 import com.mycity4kids.models.response.FollowUnfollowUserResponse;
 import com.mycity4kids.models.response.LanguageConfigModel;
 import com.mycity4kids.models.response.LikeReactionModel;
@@ -109,7 +111,6 @@ public class ShortStoryFragment extends BaseFragment implements View.OnClickList
             Manifest.permission.WRITE_EXTERNAL_STORAGE};
     private ShortStoryCommentRepliesDialogFragment shortStoryCommentRepliesDialogFragment;
     private String paginationCommentId = null;
-    private int downloadedComment = 0;
     private boolean isRecommendRequestRunning;
     private String likeStatus;
     private Handler handler;
@@ -372,29 +373,9 @@ public class ShortStoryFragment extends BaseFragment implements View.OnClickList
             try {
                 CommentListResponse shortStoryCommentListResponse = response.body();
                 if (shortStoryCommentListResponse.getCount() == 0) {
-//                    viewAllTextView.setText(getString(R.string.group_add_comment_text));
-//                    viewAllTextView.setVisibility(View.VISIBLE);
+                    getFacebookComments();
                 } else {
-                    if ("TopicsShortStoryTabFragment_commentImage".equals(comingFrom)) {
-                        showComments(shortStoryCommentListResponse.getData());
-                        Utils.shareEventTracking(getActivity(), "100WS Detail", "Comment_Android",
-                                "StoryDetail_Viewmore_Comment");
-                        Bundle bundle = new Bundle();
-                        bundle.putString(Constants.ARTICLE_ID, articleId);
-                        bundle.putString(Constants.BLOG_SLUG, blogSlug);
-                        bundle.putString(Constants.TITLE_SLUG, titleSlug);
-                        bundle.putString(Constants.AUTHOR_ID, authorId);
-                        bundle.putString("contentType", AppConstants.CONTENT_TYPE_SHORT_STORY);
-                        ViewAllCommentsFragment viewAllCommentsFragment = new ViewAllCommentsFragment();
-                        viewAllCommentsFragment.setArguments(bundle);
-                        if (isAdded()) {
-                            ((ShortStoryContainerActivity) getActivity()).addFragment(viewAllCommentsFragment, bundle);
-                            ((ShortStoryContainerActivity) getActivity()).setToolbarTitle("Comments");
-                        }
-                    } else {
-                        showComments(shortStoryCommentListResponse.getData());
-
-                    }
+                    showComments(shortStoryCommentListResponse.getData());
                 }
             } catch (Exception e) {
                 FirebaseCrashlytics.getInstance().recordException(e);
@@ -409,6 +390,66 @@ public class ShortStoryFragment extends BaseFragment implements View.OnClickList
         }
     };
 
+    private void getFacebookComments() {
+        Retrofit retro = BaseApplication.getInstance().getRetrofit();
+        ArticleDetailsAPI articleDetailsApi = retro.create(ArticleDetailsAPI.class);
+        Call<FBCommentResponse> call = articleDetailsApi.getFBComments(articleId, "");
+        call.enqueue(fbCommentsCallback);
+    }
+
+    private Callback<FBCommentResponse> fbCommentsCallback = new Callback<FBCommentResponse>() {
+        @Override
+        public void onResponse(Call<FBCommentResponse> call, Response<FBCommentResponse> response) {
+            removeProgressDialog();
+            if (null == response.body()) {
+                if (isAdded()) {
+                    ToastUtils.showToast(getActivity(), getString(R.string.server_went_wrong));
+                }
+                return;
+            }
+            try {
+                FBCommentResponse responseData = response.body();
+                if (responseData.getCode() == 200 && Constants.SUCCESS.equals(responseData.getStatus())) {
+                    ArrayList<CommentsData> dataList = responseData.getData().getResult();
+                    if (dataList.size() != 0) {
+                        showFbComments(dataList);
+                    }
+                } else {
+                    if (isAdded()) {
+                        ToastUtils.showToast(getActivity(), getString(R.string.server_went_wrong));
+                    }
+                }
+            } catch (Exception e) {
+                FirebaseCrashlytics.getInstance().recordException(e);
+                Log.d("MC4kException", Log.getStackTraceString(e));
+                if (isAdded()) {
+                    ToastUtils.showToast(getActivity(), getString(R.string.went_wrong));
+                }
+            }
+        }
+
+        @Override
+        public void onFailure(Call<FBCommentResponse> call, Throwable t) {
+            FirebaseCrashlytics.getInstance().recordException(t);
+            Log.d("MC4kException", Log.getStackTraceString(t));
+        }
+    };
+
+    private void showFbComments(ArrayList<CommentsData> commentList) {
+        if (commentList.size() != 0) {
+            for (int i = 0; i < commentList.size(); i++) {
+                if (consolidatedList.size() < 3) {
+                    ShortStoryDetailAndCommentModel commentModel = new ShortStoryDetailAndCommentModel();
+                    commentModel.setFbComment(commentList.get(i));
+                    consolidatedList.add(commentModel);
+                }
+            }
+            adapter.setListData(consolidatedList);
+            paginationCommentId = commentList.get(commentList.size() - 1).getId();
+        }
+        adapter.notifyDataSetChanged();
+    }
+
     private void showComments(List<CommentListData> commentList) {
         if (commentList.size() != 0) {
             for (int i = 0; i < commentList.size(); i++) {
@@ -420,7 +461,9 @@ public class ShortStoryFragment extends BaseFragment implements View.OnClickList
             }
             adapter.setListData(consolidatedList);
             paginationCommentId = commentList.get(commentList.size() - 1).getId();
-            downloadedComment = downloadedComment + commentList.size();
+        }
+        if (consolidatedList.size() < 3) {
+            getFacebookComments();
         }
         adapter.notifyDataSetChanged();
     }
@@ -1501,6 +1544,7 @@ public class ShortStoryFragment extends BaseFragment implements View.OnClickList
         private int type;
         private ShortStoryDetailResult ssResult;
         private CommentListData ssComment;
+        private CommentsData fbComment;
 
         public int getType() {
             return type;
@@ -1524,6 +1568,14 @@ public class ShortStoryFragment extends BaseFragment implements View.OnClickList
 
         public void setSsComment(CommentListData ssComment) {
             this.ssComment = ssComment;
+        }
+
+        public CommentsData getFbComment() {
+            return fbComment;
+        }
+
+        public void setFbComment(CommentsData fbComment) {
+            this.fbComment = fbComment;
         }
     }
 

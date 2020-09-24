@@ -484,7 +484,6 @@ public class GroupsGenericPostRecyclerAdapter extends RecyclerView.Adapter<Recyc
                 }
             }
             if (postList.get(position).getMarkedHelpful() == 1) {
-
                 textPollPostViewHolder.upvoteImageVIew.setImageResource(R.drawable.ic_recommended);
             } else {
                 textPollPostViewHolder.upvoteImageVIew.setImageResource(R.drawable.ic_recommend);

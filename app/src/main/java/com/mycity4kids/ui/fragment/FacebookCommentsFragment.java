@@ -51,7 +51,7 @@ import retrofit2.Retrofit;
 /**
  * Created by user on 08-06-2015.
  */
-public class MyCityCommentsFragment extends BaseFragment implements OnClickListener, ObservableScrollViewCallbacks,
+public class FacebookCommentsFragment extends BaseFragment implements OnClickListener, ObservableScrollViewCallbacks,
         AddEditCommentReplyFragment.IAddCommentReply, AddEditCommentReplyDialogFragment.IAddCommentReply {
 
     private static final int REPLY_LEVEL_PARENT = 1;

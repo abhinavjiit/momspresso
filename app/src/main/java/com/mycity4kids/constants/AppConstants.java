@@ -409,4 +409,5 @@ public class AppConstants {
     public static final int LIVE_STREAM_STATUS_ONGOING = 1;
     public static final int LIVE_STREAM_STATUS_UPCOMING = 2;
     public static final int LIVE_STREAM_STATUS_ENDED = 3;
+    public static final String VIDEO_TEAM_USER_ID = "71acf1433617424cbbbece853b9b769d";
 }

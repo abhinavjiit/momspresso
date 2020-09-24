@@ -71,6 +71,7 @@ import com.mycity4kids.ui.activity.ExploreArticleListingTypeActivity
 import com.mycity4kids.ui.activity.ParallelFeedActivity
 import com.mycity4kids.ui.activity.ShortStoryChallengeDetailActivity
 import com.mycity4kids.ui.activity.ShortStoryContainerActivity
+import com.mycity4kids.ui.activity.ViewAllCommentsActivity
 import com.mycity4kids.ui.adapter.BlogChallengeAdapter
 import com.mycity4kids.ui.adapter.ShortStoryChallengesRecyclerAdapter
 import com.mycity4kids.ui.livestreaming.LiveStreamResult
@@ -1654,20 +1655,15 @@ class ArticleListingFragment : BaseFragment(), View.OnClickListener,
                 launchContentDetail(mixfeedList?.get(position))
             }
             R.id.icSsComment -> {
-                val intent = Intent(activity, ShortStoryContainerActivity::class.java)
+                val intent = Intent(activity, ViewAllCommentsActivity::class.java)
                 intent.putExtra(Constants.ARTICLE_ID, mixfeedList?.get(position)?.id)
                 intent.putExtra(Constants.AUTHOR_ID, mixfeedList?.get(position)?.userId)
                 intent.putExtra(Constants.BLOG_SLUG, mixfeedList?.get(position)?.blogTitleSlug)
                 intent.putExtra(Constants.TITLE_SLUG, mixfeedList?.get(position)?.titleSlug)
-                intent.putExtra(Constants.FROM_SCREEN, "TopicsShortStoryTabFragment_commentImage")
-                intent.putExtra(
-                    Constants.AUTHOR,
-                    mixfeedList?.get(position)?.userId + "~" + mixfeedList?.get(position)?.userName
-                )
                 startActivity(intent)
             }
             R.id.shareArticleImageView -> {
-                //                shareContent(mixfeedList?.get(position))
+                // shareContent(mixfeedList?.get(position))
             }
             R.id.facebookShareImageView -> {
                 getSharableViewForPosition(position, AppConstants.MEDIUM_FACEBOOK)

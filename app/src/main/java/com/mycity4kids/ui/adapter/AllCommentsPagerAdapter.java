@@ -6,7 +6,7 @@ import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentStatePagerAdapter;
 import com.mycity4kids.constants.Constants;
 import com.mycity4kids.ui.fragment.ArticleCommentsFragment;
-import com.mycity4kids.ui.fragment.MyCityCommentsFragment;
+import com.mycity4kids.ui.fragment.FacebookCommentsFragment;
 
 /**
  * Created by hemant on 24/5/17.
@@ -57,7 +57,7 @@ public class AllCommentsPagerAdapter extends FragmentStatePagerAdapter {
             tab1.setArguments(bundle);
             return tab1;
         } else {
-            MyCityCommentsFragment tab1 = new MyCityCommentsFragment();
+            FacebookCommentsFragment tab1 = new FacebookCommentsFragment();
             bundle.putString("commentURL", mycityCommentUrl);
             tab1.setArguments(bundle);
             return tab1;

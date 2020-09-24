@@ -68,6 +68,7 @@ import com.mycity4kids.ui.activity.ShortStoriesListingContainerActivity;
 import com.mycity4kids.ui.activity.ShortStoryContainerActivity;
 import com.mycity4kids.ui.activity.ShortStoryModerationOrShareActivity;
 import com.mycity4kids.ui.activity.TopicsListingFragment;
+import com.mycity4kids.ui.activity.ViewAllCommentsActivity;
 import com.mycity4kids.ui.adapter.ShortStoriesRecyclerAdapter;
 import com.mycity4kids.utils.AppUtils;
 import com.mycity4kids.utils.ConnectivityUtils;
@@ -462,25 +463,12 @@ public class TopicsShortStoriesTabFragment extends BaseFragment implements View.
     public void onClick(View view, final int position, View shareImageView) {
         switch (view.getId()) {
             case R.id.icSsComment:
-                Intent commentImageViewIntent = new Intent(getActivity(), ShortStoryContainerActivity.class);
-                commentImageViewIntent.putExtra(Constants.ARTICLE_ID, articleListingResults.get(position).getId());
-                commentImageViewIntent.putExtra(Constants.AUTHOR_ID, articleListingResults.get(position).getUserId());
-                commentImageViewIntent
-                        .putExtra(Constants.BLOG_SLUG, articleListingResults.get(position).getBlogPageSlug());
-                commentImageViewIntent
-                        .putExtra(Constants.TITLE_SLUG, articleListingResults.get(position).getTitleSlug());
-                if (currentSubTopic != null) {
-                    commentImageViewIntent.putExtra(Constants.ARTICLE_OPENED_FROM,
-                            "" + currentSubTopic.getParentName());
-                } else {
-                    commentImageViewIntent.putExtra(Constants.ARTICLE_OPENED_FROM,
-                            "" + "ShortStoryChallengeCommentImage");
-                }
-                commentImageViewIntent.putExtra(Constants.FROM_SCREEN, "TopicsShortStoryTabFragment_commentImage");
-                commentImageViewIntent.putExtra(Constants.AUTHOR,
-                        articleListingResults.get(position).getUserId() + "~" + articleListingResults.get(position)
-                                .getUserName());
-                startActivity(commentImageViewIntent);
+                Intent commentIntent = new Intent(getActivity(), ViewAllCommentsActivity.class);
+                commentIntent.putExtra(Constants.ARTICLE_ID, articleListingResults.get(position).getId());
+                commentIntent.putExtra(Constants.AUTHOR_ID, articleListingResults.get(position).getUserId());
+                commentIntent.putExtra(Constants.BLOG_SLUG, articleListingResults.get(position).getBlogPageSlug());
+                commentIntent.putExtra(Constants.TITLE_SLUG, articleListingResults.get(position).getTitleSlug());
+                startActivity(commentIntent);
                 break;
             case R.id.menuItem: {
                 chooseMenuOptionsItem(view, position);

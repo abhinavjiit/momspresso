@@ -33,6 +33,7 @@ public class ShortStoriesDetailRecyclerAdapter extends RecyclerView.Adapter<Recy
 
     private static final int HEADER = 0;
     private static final int COMMENT_LEVEL_ROOT = 1;
+    private static final int FB_COMMENT_LEVEL_ROOT = 2;
     private Context context;
     private LayoutInflater layoutInflater;
     ArrayList<ShortStoryFragment.ShortStoryDetailAndCommentModel> datalist;
@@ -62,8 +63,10 @@ public class ShortStoriesDetailRecyclerAdapter extends RecyclerView.Adapter<Recy
     public int getItemViewType(int position) {
         if (position == 0) {
             return HEADER;
-        } else {
+        } else if (datalist.get(position).getSsComment() != null) {
             return COMMENT_LEVEL_ROOT;
+        } else {
+            return FB_COMMENT_LEVEL_ROOT;
         }
     }
 
@@ -71,12 +74,16 @@ public class ShortStoriesDetailRecyclerAdapter extends RecyclerView.Adapter<Recy
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         if (viewType == HEADER) {
             View v0 = layoutInflater.inflate(R.layout.short_story_listing_item, parent, false);
-            ShortStoriesViewHolder viewHolder = new ShortStoriesViewHolder(v0, recyclerViewClickListener);
+            ShortStoriesViewHolder viewHolder = new ShortStoriesViewHolder(v0);
             return viewHolder;
-        } else {
+        } else if (viewType == COMMENT_LEVEL_ROOT) {
             View v0 = layoutInflater.inflate(R.layout.ss_comment_item, parent, false);
-            SSCommentViewHolder ssCommentViewHolder = new SSCommentViewHolder(v0, recyclerViewClickListener);
+            SSCommentViewHolder ssCommentViewHolder = new SSCommentViewHolder(v0);
             return ssCommentViewHolder;
+        } else {
+            View v0 = layoutInflater.inflate(R.layout.custom_comment_cell, parent, false);
+            FbCommentViewHolder fbCommentViewHolder = new FbCommentViewHolder(v0);
+            return fbCommentViewHolder;
         }
     }
 
@@ -145,9 +152,9 @@ public class ShortStoriesDetailRecyclerAdapter extends RecyclerView.Adapter<Recy
                             .setImageDrawable(ContextCompat.getDrawable(context, R.drawable.ic_ss_like));
                 }
                 setWinnerOrGoldFlag(ssViewHolder.trophyImageView, datalist.get(position).getSsResult());
-            } else {
+            } else if (holder instanceof SSCommentViewHolder) {
                 SSCommentViewHolder ssCommentViewHolder = (SSCommentViewHolder) holder;
-                if (position == datalist.size() - 1) {
+                if (position == 2) {
                     ssCommentViewHolder.viewMoreTextView.setVisibility(View.VISIBLE);
                 }
                 ssCommentViewHolder.commentorUsernameTextView
@@ -224,12 +231,34 @@ public class ShortStoriesDetailRecyclerAdapter extends RecyclerView.Adapter<Recy
                                             R.drawable.ic_top_comment_raw_color);
                             ssCommentViewHolder.topCommentMarkedTextView
                                     .setCompoundDrawablesWithIntrinsicBounds(myDrawable, null, null, null);
-
                         }
-
                     }
                 } else {
                     ssCommentViewHolder.topCommentMarkedTextView.setVisibility(View.GONE);
+                }
+            } else {
+                FbCommentViewHolder fbCommentViewHolder = (FbCommentViewHolder) holder;
+                if (position == 2) {
+                    fbCommentViewHolder.viewMoreTextView.setVisibility(View.VISIBLE);
+                }
+                fbCommentViewHolder.commentName.setText("" + datalist.get(position).getFbComment().getName());
+                if (!StringUtils.isNullOrEmpty(datalist.get(position).getFbComment().getBody())) {
+                    fbCommentViewHolder.commentDescription.setText(datalist.get(position).getFbComment().getBody());
+                }
+                if (!StringUtils.isNullOrEmpty(datalist.get(position).getFbComment().getCreate())) {
+                    fbCommentViewHolder.dateTxt
+                            .setText(DateTimeUtils.getDateFromNanoMilliTimestamp(
+                                    Long.parseLong(datalist.get(position).getFbComment().getCreate())));
+                } else {
+                    fbCommentViewHolder.dateTxt.setText("NA");
+                }
+                try {
+                    Picasso.get().load(datalist.get(position).getFbComment().getProfile_image().getClientAppMin())
+                            .placeholder(R.drawable.default_commentor_img).into(fbCommentViewHolder.commentorsImage);
+                } catch (Exception e) {
+                    FirebaseCrashlytics.getInstance().recordException(e);
+                    Log.d("MC4kException", Log.getStackTraceString(e));
+                    Picasso.get().load(R.drawable.default_commentor_img).into(fbCommentViewHolder.commentorsImage);
                 }
             }
         } catch (Exception e) {
@@ -285,26 +314,26 @@ public class ShortStoriesDetailRecyclerAdapter extends RecyclerView.Adapter<Recy
         TextView commentCount;
         TextView beTheFirstOne;
 
-        ShortStoriesViewHolder(View itemView, RecyclerViewClickListener listener) {
+        ShortStoriesViewHolder(View itemView) {
             super(itemView);
-            authorNameTextView = (TextView) itemView.findViewById(R.id.authorNameTextView);
-            followAuthorTextView = (TextView) itemView.findViewById(R.id.followAuthorTextView);
-            storyRecommendationContainer = (LinearLayout) itemView.findViewById(R.id.storyRecommendationContainer);
-            storyCommentContainer = (LinearLayout) itemView.findViewById(R.id.storyCommentContainer);
-            storyCommentCountTextView = (TextView) itemView.findViewById(R.id.storyCommentCountTextView);
-            storyRecommendationCountTextView = (TextView) itemView.findViewById(R.id.storyRecommendationCountTextView);
-            storyImage = (ImageView) itemView.findViewById(R.id.storyImageView1);
-            likeImageView = (ImageView) itemView.findViewById(R.id.likeImageView);
-            facebookShareImageView = (ImageView) itemView.findViewById(R.id.facebookShareImageView);
-            whatsappShareImageView = (ImageView) itemView.findViewById(R.id.whatsappShareImageView);
-            instagramShareImageView = (ImageView) itemView.findViewById(R.id.instagramShareImageView);
-            genericShareImageView = (ImageView) itemView.findViewById(R.id.genericShareImageView);
-            menuItem = (ImageView) itemView.findViewById(R.id.menuItem);
+            authorNameTextView = itemView.findViewById(R.id.authorNameTextView);
+            followAuthorTextView = itemView.findViewById(R.id.followAuthorTextView);
+            storyRecommendationContainer = itemView.findViewById(R.id.storyRecommendationContainer);
+            storyCommentContainer = itemView.findViewById(R.id.storyCommentContainer);
+            storyCommentCountTextView = itemView.findViewById(R.id.storyCommentCountTextView);
+            storyRecommendationCountTextView = itemView.findViewById(R.id.storyRecommendationCountTextView);
+            storyImage = itemView.findViewById(R.id.storyImageView1);
+            likeImageView = itemView.findViewById(R.id.likeImageView);
+            facebookShareImageView = itemView.findViewById(R.id.facebookShareImageView);
+            whatsappShareImageView = itemView.findViewById(R.id.whatsappShareImageView);
+            instagramShareImageView = itemView.findViewById(R.id.instagramShareImageView);
+            genericShareImageView = itemView.findViewById(R.id.genericShareImageView);
+            menuItem = itemView.findViewById(R.id.menuItem);
             trophyImageView = itemView.findViewById(R.id.trophyImageView);
-            storyShareCardWidget = (StoryShareCardWidget) itemView.findViewById(R.id.storyShareCardWidget);
-            shareStoryImageView = (ImageView) storyShareCardWidget.findViewById(R.id.storyImageView);
-            storyAuthorTextView = (TextView) storyShareCardWidget.findViewById(R.id.storyAuthorTextView);
-            logoImageView = (ImageView) storyShareCardWidget.findViewById(R.id.logoImageView);
+            storyShareCardWidget = itemView.findViewById(R.id.storyShareCardWidget);
+            shareStoryImageView = storyShareCardWidget.findViewById(R.id.storyImageView);
+            storyAuthorTextView = storyShareCardWidget.findViewById(R.id.storyAuthorTextView);
+            logoImageView = storyShareCardWidget.findViewById(R.id.logoImageView);
             commentCount = itemView.findViewById(R.id.comment_count);
             beTheFirstOne = itemView.findViewById(R.id.beTheFirstOne);
 
@@ -342,16 +371,16 @@ public class ShortStoriesDetailRecyclerAdapter extends RecyclerView.Adapter<Recy
         TextView topCommentMarkedTextView;
         TextView viewMoreTextView;
 
-        SSCommentViewHolder(View view, RecyclerViewClickListener listener) {
+        SSCommentViewHolder(View view) {
             super(view);
-            commentorImageView = (ImageView) view.findViewById(R.id.commentorImageView);
-            commentorUsernameTextView = (TextView) view.findViewById(R.id.commentorUsernameTextView);
-            commentDataTextView = (TextView) view.findViewById(R.id.commentDataTextView);
-            replyCommentTextView = (TextView) view.findViewById(R.id.replyCommentTextView);
-            commentDateTextView = (TextView) view.findViewById(R.id.commentDateTextView);
-            dateTextView = (TextView) view.findViewById(R.id.DateTextView);
-            likeTextView = (TextView) view.findViewById(R.id.likeTextView);
-            moreOptionImageView = (ImageView) view.findViewById(R.id.moreOptionImageView);
+            commentorImageView = view.findViewById(R.id.commentorImageView);
+            commentorUsernameTextView = view.findViewById(R.id.commentorUsernameTextView);
+            commentDataTextView = view.findViewById(R.id.commentDataTextView);
+            replyCommentTextView = view.findViewById(R.id.replyCommentTextView);
+            commentDateTextView = view.findViewById(R.id.commentDateTextView);
+            dateTextView = view.findViewById(R.id.DateTextView);
+            likeTextView = view.findViewById(R.id.likeTextView);
+            moreOptionImageView = view.findViewById(R.id.moreOptionImageView);
             topCommentTextView = view.findViewById(R.id.topCommentTextView);
             topCommentMarkedTextView = view.findViewById(R.id.topCommentMarkedTextView);
             viewMoreTextView = view.findViewById(R.id.viewMoreTextView);
@@ -376,6 +405,38 @@ public class ShortStoriesDetailRecyclerAdapter extends RecyclerView.Adapter<Recy
         public boolean onLongClick(View v) {
             recyclerViewClickListener.onClick(v, getAdapterPosition(), v);
             return true;
+        }
+    }
+
+    public class FbCommentViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
+
+        ImageView commentorsImage;
+        TextView commentName;
+        TextView commentDescription;
+        TextView dateTxt;
+        TextView replyCellEditTxt;
+        LinearLayout replyCommentView;
+        TextView commentCellEditTxt;
+        TextView viewMoreTextView;
+
+        FbCommentViewHolder(View view) {
+            super(view);
+            commentorsImage = view.findViewById(R.id.commentorImageView);
+            commentName = view.findViewById(R.id.txvCommentTitle);
+            commentDescription = view.findViewById(R.id.txvCommentDescription);
+            dateTxt = view.findViewById(R.id.txvDate);
+            replyCellEditTxt = view.findViewById(R.id.txvCommentCellEdit);
+            replyCommentView = view.findViewById(R.id.replyRelativeLayout);
+            commentCellEditTxt = view.findViewById(R.id.txvCommentCellEdit);
+            viewMoreTextView = view.findViewById(R.id.viewMoreTextView);
+            commentCellEditTxt.setVisibility(View.GONE);
+            replyCommentView.setVisibility(View.GONE);
+            viewMoreTextView.setOnClickListener(this);
+        }
+
+        @Override
+        public void onClick(View v) {
+            recyclerViewClickListener.onClick(v, getAdapterPosition(), v);
         }
     }
 

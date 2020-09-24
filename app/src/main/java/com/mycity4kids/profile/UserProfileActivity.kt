@@ -82,6 +82,7 @@ import com.mycity4kids.ui.activity.RankingActivity
 import com.mycity4kids.ui.activity.ShortStoryContainerActivity
 import com.mycity4kids.ui.activity.UserDraftsContentActivity
 import com.mycity4kids.ui.activity.UserPublishedContentActivity
+import com.mycity4kids.ui.activity.ViewAllCommentsActivity
 import com.mycity4kids.ui.activity.collection.CollectionsActivity
 import com.mycity4kids.ui.activity.collection.UserCollectionItemListActivity
 import com.mycity4kids.ui.adapter.UserProfileCreatedCollectionsAdapter
@@ -1306,19 +1307,13 @@ class UserProfileActivity : BaseActivity(),
     override fun onClick(view: View, position: Int) {
         when {
             view.id == R.id.icSsComment -> {
-                val intent = Intent(this, ShortStoryContainerActivity::class.java)
+                val intent = Intent(this, ViewAllCommentsActivity::class.java)
                 intent.putExtra(Constants.ARTICLE_ID, userContentList?.get(position)?.id)
                 intent.putExtra(Constants.AUTHOR_ID, userContentList?.get(position)?.userId)
                 intent.putExtra(Constants.BLOG_SLUG, userContentList?.get(position)?.blogTitleSlug)
                 intent.putExtra(Constants.TITLE_SLUG, userContentList?.get(position)?.titleSlug)
-                intent.putExtra(Constants.FROM_SCREEN, "TopicsShortStoryTabFragment_commentImage")
-                intent.putExtra(
-                    Constants.AUTHOR,
-                    userContentList?.get(position)?.userId + "~" + userContentList?.get(position)?.userName
-                )
                 startActivity(intent)
             }
-
             view.id == R.id.articleItemView || view.id == R.id.videoItemView || view.id == R.id.rootView -> {
                 launchContentDetail(userContentList?.get(position))
             }

@@ -24,6 +24,7 @@ import com.mycity4kids.gtmutils.Utils
 import com.mycity4kids.interfaces.CommentPostButtonColorChangeInterface
 import com.mycity4kids.models.request.AddEditCommentOrReplyRequest
 import com.mycity4kids.models.request.RecommendUnrecommendArticleRequest
+import com.mycity4kids.models.request.UpdateViewCountRequest
 import com.mycity4kids.models.response.CommentListResponse
 import com.mycity4kids.models.response.RecommendUnrecommendArticleResponse
 import com.mycity4kids.preference.SharedPrefUtils
@@ -44,17 +45,19 @@ import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.YouTubePlayer
 import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.listeners.AbstractYouTubePlayerListener
 import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.listeners.YouTubePlayerFullScreenListener
 import com.squareup.picasso.Picasso
-import java.net.SocketTimeoutException
-import java.net.UnknownHostException
-import java.util.Arrays
 import kotlinx.android.synthetic.main.live_streaming_activity.*
+import okhttp3.ResponseBody
 import org.apache.commons.lang3.StringUtils
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
+import java.net.SocketTimeoutException
+import java.net.UnknownHostException
+import java.util.Arrays
 
 class LiveStreamingActivity : BaseActivity(), LiveChatRecyclerAdapter.RecyclerViewClickListener,
-    View.OnClickListener, QueryTokenReceiver, ResizableTextView.SeeMore,CommentPostButtonColorChangeInterface {
+    View.OnClickListener, QueryTokenReceiver, ResizableTextView.SeeMore,
+    CommentPostButtonColorChangeInterface {
 
     private var liveStreamResponse: LiveStreamResult? = null
     private var root: DatabaseReference? = null
@@ -94,6 +97,7 @@ class LiveStreamingActivity : BaseActivity(), LiveChatRecyclerAdapter.RecyclerVi
         likeImageView.setOnClickListener(this)
         backNavigationImageView.setOnClickListener(this)
         whatsappShareImageView.setOnClickListener(this)
+        hitUpdateViewCountApi()
     }
 
     private fun initializeYoutubePlayer() {
@@ -510,6 +514,34 @@ class LiveStreamingActivity : BaseActivity(), LiveChatRecyclerAdapter.RecyclerVi
     }
 
     override fun onTextChanged(text: String) {
-        TODO("Not yet implemented")
     }
+
+    private fun hitUpdateViewCountApi() {
+        val updateViewCountRequest = UpdateViewCountRequest()
+        updateViewCountRequest.userId = AppConstants.VIDEO_TEAM_USER_ID
+        updateViewCountRequest.tags = ArrayList<MutableMap<String, String>>()
+        updateViewCountRequest.cities = ArrayList<MutableMap<String, String>>()
+        val retrofit = BaseApplication.getInstance().retrofit
+        val articleDetailsApi = retrofit.create(ArticleDetailsAPI::class.java)
+        val callUpdateViewCount: Call<ResponseBody> =
+            articleDetailsApi.updateViewCount(liveStreamResponse?.item_id, updateViewCountRequest)
+        callUpdateViewCount.enqueue(updateViewCountResponseCallback)
+    }
+
+    private val updateViewCountResponseCallback: Callback<ResponseBody> =
+        object : Callback<ResponseBody> {
+            override fun onResponse(
+                call: Call<ResponseBody>,
+                response: Response<ResponseBody>
+            ) {
+            }
+
+            override fun onFailure(
+                call: Call<ResponseBody>,
+                t: Throwable
+            ) {
+                FirebaseCrashlytics.getInstance().recordException(t)
+                Log.d("MC4kException", Log.getStackTraceString(t))
+            }
+        }
 }

@@ -1,21 +1,30 @@
 package com.mycity4kids.ui.livestreaming
 
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import com.google.android.material.tabs.TabLayout
+import com.google.firebase.crashlytics.FirebaseCrashlytics
 import com.google.firebase.database.ChildEventListener
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.FirebaseDatabase
 import com.mycity4kids.R
+import com.mycity4kids.application.BaseApplication
 import com.mycity4kids.base.BaseActivity
 import com.mycity4kids.constants.AppConstants
 import com.mycity4kids.gtmutils.Utils
+import com.mycity4kids.models.request.UpdateViewCountRequest
+import com.mycity4kids.retrofitAPIsInterfaces.ArticleDetailsAPI
 import com.mycity4kids.utils.AppUtils
 import com.mycity4kids.utils.DateTimeUtils
 import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.upcoming_lives_activity.*
+import okhttp3.ResponseBody
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
 
 class UpcomingLivesActivity : BaseActivity(), View.OnClickListener {
 
@@ -48,6 +57,7 @@ class UpcomingLivesActivity : BaseActivity(), View.OnClickListener {
         Picasso.get().load(liveStreamResponse?.image_url).into(headerImageView)
         initializeViewPager(liveStreamResponse)
         initializeFirebase()
+        hitUpdateViewCountApi()
     }
 
     private fun initializeFirebase() {
@@ -135,4 +145,33 @@ class UpcomingLivesActivity : BaseActivity(), View.OnClickListener {
             )
         }
     }
+
+    private fun hitUpdateViewCountApi() {
+        val updateViewCountRequest = UpdateViewCountRequest()
+        updateViewCountRequest.userId = AppConstants.VIDEO_TEAM_USER_ID
+        updateViewCountRequest.tags = ArrayList<MutableMap<String, String>>()
+        updateViewCountRequest.cities = ArrayList<MutableMap<String, String>>()
+        val retrofit = BaseApplication.getInstance().retrofit
+        val articleDetailsApi = retrofit.create(ArticleDetailsAPI::class.java)
+        val callUpdateViewCount: Call<ResponseBody> =
+            articleDetailsApi.updateViewCount(liveStreamResponse?.item_id, updateViewCountRequest)
+        callUpdateViewCount.enqueue(updateViewCountResponseCallback)
+    }
+
+    private val updateViewCountResponseCallback: Callback<ResponseBody> =
+        object : Callback<ResponseBody> {
+            override fun onResponse(
+                call: Call<ResponseBody>,
+                response: Response<ResponseBody>
+            ) {
+            }
+
+            override fun onFailure(
+                call: Call<ResponseBody>,
+                t: Throwable
+            ) {
+                FirebaseCrashlytics.getInstance().recordException(t)
+                Log.d("MC4kException", Log.getStackTraceString(t))
+            }
+        }
 }

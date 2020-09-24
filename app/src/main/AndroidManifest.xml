@@ -532,6 +532,9 @@
       android:name=".ui.activity.BlockUnBlockUserActivity"
       android:screenOrientation="portrait" />
     <activity
+      android:name=".ui.activity.ViewAllCommentsActivity"
+      android:screenOrientation="portrait" />
+    <activity
       android:name=".ui.activity.SecuritySettingActivity"
       android:screenOrientation="portrait" />
     <activity

@@ -44,6 +44,9 @@ public interface FollowAPI {
             @Query("limit") int limit,
             @Query("offset") int offset);
 
+    @GET("/follow/v2/users/followingList/{userId}")
+    Call<ResponseBody> getAllFollowingList(@Path("userId") String userId);
+
     @POST("/follow/v2/users/follow/")
     Call<ResponseBody> followUserInShortStoryListingV2(@Body FollowUnfollowUserRequest body);
 

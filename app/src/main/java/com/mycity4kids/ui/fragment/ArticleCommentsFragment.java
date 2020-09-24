@@ -111,7 +111,6 @@ public class ArticleCommentsFragment extends BaseFragment implements OnClickList
     private String titleSlug;
     private String blogSlug;
     private String userType;
-    //   private RelativeLayout addCommentFab;
     private RecyclerView commentsRecyclerView;
     private ArticleCommentsRecyclerAdapter articleCommentsRecyclerAdapter;
     private ArticleDetailsAPI articleDetailsApi;
@@ -134,9 +133,8 @@ public class ArticleCommentsFragment extends BaseFragment implements OnClickList
         final View rootView = inflater.inflate(R.layout.article_comment_replies_dialog, container,
                 false);
         userImageView = rootView.findViewById(R.id.userImageView);
-        //    addCommentFab = (RelativeLayout) rootView.findViewById(R.id.addCommentFAB);
-        commentsRecyclerView = (RecyclerView) rootView.findViewById(R.id.commentsRecyclerView);
-        noCommentsTextView = (TextView) rootView.findViewById(R.id.noCommentsTextView);
+        commentsRecyclerView = rootView.findViewById(R.id.commentsRecyclerView);
+        noCommentsTextView = rootView.findViewById(R.id.noCommentsTextView);
         disableStatePostTextView = rootView.findViewById(R.id.disableStatePostTextView);
         typeHere = rootView.findViewById(R.id.typeHere);
         suggestionContainer = rootView.findViewById(R.id.suggestionContainer);
@@ -144,7 +142,6 @@ public class ArticleCommentsFragment extends BaseFragment implements OnClickList
         typeHere.setMaxLines();
         typeHere.displayTextCounter(false);
         typeHere.setOnClickListener(this);
-        //   addCommentFab.setOnClickListener(this);
         disableStatePostTextView.setOnClickListener(this);
         typeHere.requestFocus();
         typeHere.setQueryTokenReceiver(this);
@@ -189,16 +186,14 @@ public class ArticleCommentsFragment extends BaseFragment implements OnClickList
         commentsRecyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
             public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
-                if (dy > 0) {
-                    visibleItemCount = llm.getChildCount();
-                    totalItemCount = llm.getItemCount();
-                    pastVisiblesItems = llm.findFirstVisibleItemPosition();
-
-                    if (!isReuqestRunning && !isLastPageReached) {
-                        if ((visibleItemCount + pastVisiblesItems) >= totalItemCount) {
-                            isReuqestRunning = true;
-                            getArticleComments(articleId, "comment");
-                        }
+                visibleItemCount = llm.getChildCount();
+                totalItemCount = llm.getItemCount();
+                pastVisiblesItems = llm.findFirstVisibleItemPosition();
+                if ((totalItemCount == visibleItemCount) || (((dy > 0)) && !isReuqestRunning
+                        && !isLastPageReached)) {
+                    if ((visibleItemCount + pastVisiblesItems) >= totalItemCount) {
+                        isReuqestRunning = true;
+                        getArticleComments(articleId, "comment");
                     }
                 }
             }

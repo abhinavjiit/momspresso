@@ -1079,7 +1079,6 @@ class NewEditor : BaseActivity(),
             if (!StringUtils.isNullOrEmpty(draftId)) {
                 publishObject.id = draftId
             }
-            //   intent_3.putExtra("articleChallengeId", articleChallengeId)
             intent_3.putExtra("draftItem", publishObject)
             intent_3.putExtra("from", "editor")
             if (draftChallengeTagList != null) {

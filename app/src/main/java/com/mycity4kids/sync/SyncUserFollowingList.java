@@ -25,6 +25,9 @@ import com.mycity4kids.utils.ConnectivityUtils;
 import com.mycity4kids.utils.StringUtils;
 import java.util.ArrayList;
 import java.util.HashMap;
+import okhttp3.ResponseBody;
+import org.json.JSONArray;
+import org.json.JSONObject;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -75,19 +78,18 @@ public class SyncUserFollowingList extends IntentService {
     private void hitApiRequest() {
         Retrofit retrofit = BaseApplication.getInstance().getRetrofit();
         FollowAPI followListApi = retrofit.create(FollowAPI.class);
-        Call<FollowersFollowingResponse> callFollowingList = followListApi
-                .getFollowingListV2(SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId(),
-                        20, 0);
-        callFollowingList.enqueue(new Callback<FollowersFollowingResponse>() {
+        Call<ResponseBody> callFollowingList = followListApi
+                .getAllFollowingList(SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId());
+        callFollowingList.enqueue(new Callback<ResponseBody>() {
             @Override
-            public void onResponse(Call<FollowersFollowingResponse> call,
-                    Response<FollowersFollowingResponse> response) {
+            public void onResponse(Call<ResponseBody> call,
+                    Response<ResponseBody> response) {
                 if (response.body() == null) {
                     return;
                 }
                 try {
-                    FollowersFollowingResponse responseData = response.body();
-                    processFollowersListResponse(responseData);
+                    String resData = new String(response.body().bytes());
+                    processFollowersListResponse(resData);
                 } catch (Exception e) {
                     FirebaseCrashlytics.getInstance().recordException(e);
                     Log.d("MC4kException", Log.getStackTraceString(e));
@@ -95,30 +97,34 @@ public class SyncUserFollowingList extends IntentService {
             }
 
             @Override
-            public void onFailure(Call<FollowersFollowingResponse> call, Throwable t) {
+            public void onFailure(Call<ResponseBody> call, Throwable t) {
                 FirebaseCrashlytics.getInstance().recordException(t);
                 Log.d("MC4kException", Log.getStackTraceString(t));
             }
         });
     }
 
-    private void processFollowersListResponse(FollowersFollowingResponse responseData) {
+    private void processFollowersListResponse(String responseData) {
         HashMap<String, String> map = new HashMap<>();
-        if (responseData.getCode() == 200 && Constants.SUCCESS.equals(responseData.getStatus())) {
-            ArrayList<FollowersFollowingResult> datalist = responseData.getData().getResult();
-            if (datalist == null) {
-                Gson gsonObj = new Gson();
-                String followingJson = gsonObj.toJson(map);
-                SharedPrefUtils.setFollowingJson(this, followingJson);
-            } else {
-                for (int i = 0; i < datalist.size(); i++) {
-                    map.put(datalist.get(i).getUserId(), "");
+        try {
+            JSONObject jsonObject = new JSONObject(responseData);
+            int code = jsonObject.getInt("code");
+            String status = jsonObject.getString("status");
+
+            if (code == 200 && Constants.SUCCESS.equals(status)) {
+                JSONArray datalist = jsonObject.getJSONObject("data").getJSONObject("result").getJSONArray("following");
+                for (int i = 0; i < datalist.length(); i++) {
+                    map.put(datalist.getString(i), "");
                 }
                 Gson gsonObj = new Gson();
                 String followingJson = gsonObj.toJson(map);
                 SharedPrefUtils.setFollowingJson(this, followingJson);
+            } else {
+                Gson gsonObj = new Gson();
+                String followingJson = gsonObj.toJson(map);
+                SharedPrefUtils.setFollowingJson(this, followingJson);
             }
-        } else {
+        } catch (Exception e) {
             Gson gsonObj = new Gson();
             String followingJson = gsonObj.toJson(map);
             SharedPrefUtils.setFollowingJson(this, followingJson);
