@@ -7,6 +7,7 @@ import androidx.fragment.app.FragmentStatePagerAdapter;
 import com.mycity4kids.constants.Constants;
 import com.mycity4kids.ui.fragment.ArticleCommentsFragment;
 import com.mycity4kids.ui.fragment.FacebookCommentsFragment;
+import java.util.ArrayList;
 
 /**
  * Created by hemant on 24/5/17.
@@ -23,10 +24,11 @@ public class AllCommentsPagerAdapter extends FragmentStatePagerAdapter {
     private String blogSlug;
     private String userType;
     private String authorId;
+    private ArrayList<String> tags;
 
     public AllCommentsPagerAdapter(FragmentManager fm, int numOfTabs, String mycityCommentUrl, String fbCommentUrl,
             String articleId, String author, String contentType,
-            String titleSlug, String blogSlug, String userType, String authorId) {
+            String titleSlug, String blogSlug, String userType, String authorId, ArrayList<String> tags) {
         super(fm);
         this.numOfTabs = numOfTabs;
         this.mycityCommentUrl = mycityCommentUrl;
@@ -38,6 +40,7 @@ public class AllCommentsPagerAdapter extends FragmentStatePagerAdapter {
         this.titleSlug = titleSlug;
         this.blogSlug = blogSlug;
         this.authorId = authorId;
+        this.tags = tags;
     }
 
     @Override
@@ -50,6 +53,7 @@ public class AllCommentsPagerAdapter extends FragmentStatePagerAdapter {
         bundle.putString(Constants.BLOG_SLUG, blogSlug);
         bundle.putString("userType", userType);
         bundle.putString(Constants.AUTHOR_ID, authorId);
+        bundle.putStringArrayList("tags", tags);
 
         if (position == 0) {
             ArticleCommentsFragment tab1 = new ArticleCommentsFragment();

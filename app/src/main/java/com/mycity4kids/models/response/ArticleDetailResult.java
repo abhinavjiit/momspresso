@@ -2,13 +2,14 @@ package com.mycity4kids.models.response;
 
 import com.google.gson.annotations.SerializedName;
 import com.mycity4kids.models.parentingdetails.DetailsBody;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Map;
 
 /**
  * Created by hemant on 29/7/16.
  */
-public class ArticleDetailResult {
+public class ArticleDetailResult implements Serializable {
 
     @SerializedName("id")
     private String id;

@@ -122,6 +122,7 @@ public class ParallelFeedActivity extends BaseActivity implements View.OnClickLi
     private String collectionId;
     private boolean isLastPageReached = false;
     private int position;
+    private VlogsDetailResponse responseData;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -183,7 +184,7 @@ public class ParallelFeedActivity extends BaseActivity implements View.OnClickLi
                 return;
             }
             try {
-                VlogsDetailResponse responseData = response.body();
+                responseData = response.body();
                 updateUIfromResponse(responseData.getData().getResult());
                 authorId = responseData.getData().getResult().getAuthor().getId();
                 hitRelatedArticleApi(0);
@@ -698,6 +699,7 @@ public class ParallelFeedActivity extends BaseActivity implements View.OnClickLi
             args.putString(Constants.AUTHOR_ID, authorId);
             args.putString(Constants.TITLE_SLUG, titleSlug);
             args.putString("contentType", AppConstants.CONTENT_TYPE_VIDEO);
+            args.putStringArrayList("tags", responseData.getData().getResult().getCategory_id());
             ViewAllCommentsFragment commentFrag = new ViewAllCommentsFragment();
             this.addFragment(commentFrag, args);
         } catch (Exception e) {

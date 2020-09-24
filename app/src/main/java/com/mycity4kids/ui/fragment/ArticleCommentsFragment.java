@@ -124,6 +124,7 @@ public class ArticleCommentsFragment extends BaseFragment implements OnClickList
     private ImageView disableStatePostTextView;
     private LinearLayout suggestionContainer;
     private HorizontalScrollView horizontalCommentSuggestionsContainer;
+    private ArrayList<String> tagsList;
 
 
     @Override
@@ -165,7 +166,9 @@ public class ArticleCommentsFragment extends BaseFragment implements OnClickList
             userType = extras.getString("userType");
             contentType = extras.getString("contentType");
             authorId = extras.getString(Constants.AUTHOR_ID);
+            tagsList = extras.getStringArrayList("tags");
         }
+        //     formateTagsJsonToGetSuggestions(tags)
 
         commentsList = new ArrayList<>();
         articleCommentsRecyclerAdapter = new ArticleCommentsRecyclerAdapter(this, authorId);
@@ -208,7 +211,7 @@ public class ArticleCommentsFragment extends BaseFragment implements OnClickList
     }
 
     private void getCommentSuggestions() {
-        Call<ResponseBody> call = articleDetailsApi.getCommentSuggestions(articleId);
+        Call<ResponseBody> call = articleDetailsApi.getCommentSuggestions(tagsList);
         call.enqueue(commentSuggestinsListCallback);
     }
 

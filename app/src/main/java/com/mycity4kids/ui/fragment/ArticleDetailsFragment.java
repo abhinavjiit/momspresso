@@ -2859,6 +2859,15 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
             args.putString(Constants.TITLE_SLUG, detailData.getTitleSlug());
             args.putString("userType", detailData.getUserType());
             args.putString("contentType", AppConstants.CONTENT_TYPE_ARTICLE);
+            ArrayList<String> tagList = new ArrayList<>();
+            for (int i = 0; i < detailData.getTags().size(); i++) {
+                for (Map.Entry<String, String> mapEntry : detailData.getTags().get(i).entrySet()) {
+                    if (mapEntry.getKey().startsWith("category-")) {
+                        tagList.add(mapEntry.getKey());
+                    }
+                }
+            }
+            args.putStringArrayList("tags", tagList);
             commentFrag.setArguments(args);
             ((ArticleDetailsContainerActivity) getActivity()).hideToolbarPerm();
             ((ArticleDetailsContainerActivity) getActivity())
