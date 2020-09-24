@@ -35,7 +35,7 @@
       android:layout_marginTop="20dp"
       android:paddingStart="16dp"
       android:paddingEnd="16dp"
-      android:text="GUEST"
+      android:text="@string/all_guests"
       android:textColor="@color/app_dark_black" />
   </LinearLayout>
 </ScrollView>

@@ -1400,11 +1400,23 @@ Thank you! We will be reviewing your story. You can expect to hear from us withi
   <string name="expected_mom_popup_msg">Let us know your expected date of delivery and we will show you just what you need to know!</string>
   <string name="new_mom_popup_msg">Let us know your child\'s birth date and we will show you just what you need to know for that age!</string>
   <string name="profile_emailid_optional">Email Id (optional)</string>
-  <string name="all_questions">Questions</string>
+  <string name="all_questions">प्रश्न</string>
   <string name="original_content">कृपया फक्त तुम्ही स्वतः लिहिलेले लेख प्रकाशित करा, कुठूनही कॉपी केलेले किंवा कोणत्या लेखातील थोडा कॉपी केलेला भाग असल्यासही लेख स्वीकारले जाणार नाहीत.</string>
   <string name="ok_got_it">Ok, got It</string>
   <string name="please_enter_a_valid_code">Please enter a valid verification code.</string>
   <string name="all_momspresso_live">MOMSPRESSO LIVE</string>
   <string name="write_a_comment">Write a comment</string>
   <string name="comment">Comment</string>
+  <string name="live_and_upcoming">लाईव्ह आणि येणारे प्रोग्राम</string>
+  <string name="all_library">लायब्ररी </string>
+  <string name="no_upcoming_lives">कोणतेही आगामी कार्यक्रम नाही</string>
+  <string name="all_guests">अतिथी</string>
+  <string name="all_live">लाईव्ह</string>
+  <string name="live_starts">लाईव्ह सुरु आहे</string>
+  <string name="all_upcoming_live_sessions">पुढील काळात येणारे लाईव्ह सेशन</string>
+  <string name="all_leave_questions_here">तुमचे प्रश्न इथे लिहा</string>
+  <string name="no_live_questions">या लाईव्ह सेशनला अजुन प्रश्न विचारले गेले नाहीत</string>
+  <string name="live_ended_ago">%1$s मिनिटापूर्वी लाईव्ह सेशन संपले आहे</string>
+  <string name="live_started_ago">%1$s मिनिटापूर्वी सुरु झाले</string>
+  <string name="live_watching_count">%1$d लोक बघत आहेत.</string>
 </resources>

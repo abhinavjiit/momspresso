@@ -1402,11 +1402,23 @@ Thank you! We will be reviewing your story. You can expect to hear from us withi
   <string name="expected_mom_popup_msg">Let us know your expected date of delivery and we will show you just what you need to know!</string>
   <string name="new_mom_popup_msg">Let us know your child\'s birth date and we will show you just what you need to know for that age!</string>
   <string name="profile_emailid_optional">Email Id (optional)</string>
-  <string name="all_questions">Questions</string>
+  <string name="all_questions">ప్రశ్నలు </string>
   <string name="original_content">దయచేసి మామ్స్ ప్రెస్సోలో మీ స్వంత  కంటెంట్‌ను మాత్రమే ప్రచురించండి. కాపీ చేయబడిన కంటెంట్ లేదా  పాక్షికంగా కూడా కాపీ చేయబడిన కంటెంట్ అంగీకరించబడదు</string>
   <string name="ok_got_it">Ok, got It</string>
   <string name="please_enter_a_valid_code">Please enter a valid verification code.</string>
   <string name="all_momspresso_live">MOMSPRESSO LIVE</string>
   <string name="write_a_comment">Write a comment</string>
   <string name="comment">Comment</string>
+  <string name="live_and_upcoming"> త్వరలో ప్రత్యక్ష ప్రసారం </string>
+  <string name="all_library">లైబ్రరీ </string>
+  <string name="no_upcoming_lives">లైవ్ సెషన్స్ త్వరలో లేవు </string>
+  <string name="all_guests">అతిథులు </string>
+  <string name="all_live">లైవ్ </string>
+  <string name="live_starts">లైవ్ మొదలైంది</string>
+  <string name="all_upcoming_live_sessions">రాబోయే లైవ్ సెషన్స్ </string>
+  <string name="all_leave_questions_here">మీ ప్రశ్న ఇక్కడ రాయండి </string>
+  <string name="no_live_questions">ఈ లైవ్ లో ఒక ప్రశ్న కూడా లేదు  </string>
+  <string name="live_ended_ago">%1$s నిముషాల ముందే లైవ్ ముగిసింది </string>
+  <string name="live_started_ago">ఈ లైవ్ %1$s నిముషాల ముందే మొదలైంది</string>
+  <string name="live_watching_count">%1$d మంది ఈ లైవ్ చూస్తున్నారు </string>
 </resources>

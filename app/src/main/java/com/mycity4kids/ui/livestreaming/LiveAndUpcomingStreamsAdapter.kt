@@ -115,7 +115,8 @@ class LiveAndUpcomingStreamsAdapter(
         internal var sectionHeaderTextView: TextView = itemView as TextView
 
         init {
-            sectionHeaderTextView.text = "Upcoming Live Sessions"
+            sectionHeaderTextView.text =
+                sectionHeaderTextView.context.resources.getString(R.string.all_upcoming_live_sessions)
         }
     }
 

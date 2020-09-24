@@ -1514,11 +1514,23 @@ Thank you! We will be reviewing your story. You can expect to hear from us withi
   <string name="expected_mom_popup_msg">Let us know your expected date of delivery and we will show you just what you need to know!</string>
   <string name="new_mom_popup_msg">Let us know your child\'s birth date and we will show you just what you need to know for that age!</string>
   <string name="profile_emailid_optional">Email Id (optional)</string>
-  <string name="all_questions">Questions</string>
+  <string name="all_questions">સવાલ</string>
   <string name="original_content">કૃપા કરી મોમ્સપ્રેસો ના મંચ પર ફક્ત મૌલિક સ્વ રચિત રચનાઓ જ પ્રકાશિત કરશો. કોઈ પણ સ્તોત્ર થી આંશિક રીતે કોપી કરેલ રચના પણ અહીં માન્ય ગણાશે નહીં.</string>
   <string name="ok_got_it">Ok, got It</string>
   <string name="please_enter_a_valid_code">Please enter a valid verification code.</string>
   <string name="all_momspresso_live">MOMSPRESSO LIVE</string>
   <string name="write_a_comment">Write a comment</string>
   <string name="comment">Comment</string>
+  <string name="live_and_upcoming">લાઈવ અને આગામી </string>
+  <string name="all_library">પુસ્તકાલય </string>
+  <string name="no_upcoming_lives">કોઈ આગામી લાઈવ નહીં. </string>
+  <string name="all_guests">મહેમાન </string>
+  <string name="all_live">લાઈવ </string>
+  <string name="live_starts">લાઈવ શરૂ થયો છે.</string>
+  <string name="all_upcoming_live_sessions">આગામી આવનાર  લાઈવ </string>
+  <string name="all_leave_questions_here">તમારા સવાલ અહીં લખો </string>
+  <string name="no_live_questions">આ લાઈવ માટે કોઈ સવાલ નથી પુછાયો. </string>
+  <string name="live_ended_ago">%1$s મિનિટ પહેલા સમાપ્ત થયું છે.</string>
+  <string name="live_started_ago">%1$s મિનિટ પહેલા શરૂ થયું છે.</string>
+  <string name="live_watching_count">%1$d લોકો લાઈવ જોઈ રહ્યા છે. </string>
 </resources>

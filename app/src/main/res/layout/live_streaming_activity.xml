@@ -202,7 +202,7 @@
         android:layout_marginStart="@dimen/space_10"
         android:background="@color/transparent"
         android:gravity="center_vertical"
-        android:hint="Write a comment"
+        android:hint="@string/all_leave_questions_here"
         android:maxLines="4"
         android:textColor="#a1a4a8"
         android:textSize="18sp"

@@ -1423,11 +1423,23 @@ Thank you! We will be reviewing your story. You can expect to hear from us withi
   <string name="expected_mom_popup_msg">Let us know your expected date of delivery and we will show you just what you need to know!</string>
   <string name="new_mom_popup_msg">Let us know your child\'s birth date and we will show you just what you need to know for that age!</string>
   <string name="profile_emailid_optional">Email Id (optional)</string>
-  <string name="all_questions">Questions</string>
+  <string name="all_questions">सवाल</string>
   <string name="original_content">मॉम्सप्रेस्सो पर कृपया केवल खुद का लिखा मौलिक कंटेंट प्रकाशित करें. किसी भी अन्य स्रोत से आंशिक रूप से कॉपी किया गया कंटेंट भी स्वीकार नहीं किया  जाएगा .</string>
   <string name="ok_got_it">Ok, got It</string>
   <string name="please_enter_a_valid_code">Please enter a valid verification code.</string>
   <string name="all_momspresso_live">MOMSPRESSO LIVE</string>
   <string name="write_a_comment">Write a comment</string>
   <string name="comment">Comment</string>
+  <string name="live_and_upcoming">लाइव व आगामी लाइव</string>
+  <string name="all_library">लाइब्रेरी</string>
+  <string name="no_upcoming_lives">कोई आगामी लाइव नहीं</string>
+  <string name="all_guests">गेस्ट्स</string>
+  <string name="all_live">लाइव </string>
+  <string name="live_starts">लाइव शुरू हो गया है</string>
+  <string name="all_upcoming_live_sessions">आगामी लाइव सेशन </string>
+  <string name="all_leave_questions_here">अपने सवाल यहां लिखें</string>
+  <string name="no_live_questions">इस लाइव सेशन के लिए कोई सवाल पोस्ट नहीं किया गया है.</string>
+  <string name="live_ended_ago">लाइव %1$s मिनट पहले समाप्त हुआ है</string>
+  <string name="live_started_ago">लाइव %1$s मिनट पहले शुरू हुआ है</string>
+  <string name="live_watching_count">%1$d लोग देख रहे हैं</string>
 </resources>

@@ -264,9 +264,6 @@ public class AddArticleTopicsActivityNew extends BaseActivity implements View.On
                 retainItemsFromRemainingList(selectedTopicsIdList);
             }
             createTopicsFilterOptions();
-            if ("publishedList".equals(userNavigatingFrom)) {
-                extractChallengeTagFromTagLists(responseData);
-            }
         } catch (Exception e) {
             progressBar.setVisibility(View.GONE);
             FirebaseCrashlytics.getInstance().recordException(e);
@@ -286,6 +283,7 @@ public class AddArticleTopicsActivityNew extends BaseActivity implements View.On
                     for (int i = 0; i < list.size(); i++) {
                         if (list.get(i).equals(tempList.get(j).getId())) {
                             tempList.get(j).setIsSelected(true);
+                            selectedTopicsMap.put(tempList.get(j).getId(), tempList.get(j));
                             modifySelectedTopicContainer("add", tempList.get(j));
                         }
                     }
@@ -299,6 +297,8 @@ public class AddArticleTopicsActivityNew extends BaseActivity implements View.On
                     for (int i = 0; i < list.size(); i++) {
                         if (list.get(i).equals(tempList.get(j).getChild().get(k).getId())) {
                             tempList.get(j).getChild().get(k).setIsSelected(true);
+                            selectedTopicsMap
+                                    .put(tempList.get(j).getChild().get(k).getId(), tempList.get(j).getChild().get(k));
                             modifySelectedTopicContainer("add", tempList.get(j).getChild().get(k));
                         }
                     }
@@ -334,33 +334,6 @@ public class AddArticleTopicsActivityNew extends BaseActivity implements View.On
             momspressoButtonWidget.setOnClickListener(view -> filterTopicTopicWise(view, topicList.get(finalI)));
         }
         filterContentContainer.getChildAt(0).callOnClick();
-    }
-
-    private void extractChallengeTagFromTagLists(TopicsResponse responseData) {
-        try {
-            for (int i = 0; i < responseData.getData().size(); i++) {
-                if (AppConstants.ARTICLE_CHALLENGE_CATEGORY_ID.equals(responseData.getData().get(i).getId())) {
-                    for (int j = 0; j < responseData.getData().get(i).getChild().size(); j++) {
-                        for (int k = 0; k < selectedTopicsIdList.size(); k++) {
-                            if (selectedTopicsIdList.get(k)
-                                    .equals(responseData.getData().get(i).getChild().get(j).getId())) {
-                                publishedArticleChallengeTag.add(responseData.getData().get(i).getChild().get(j));
-                                break;
-                            }
-                        }
-                        if (publishedArticleChallengeTag.size() > 0) {
-                            break;
-                        }
-                    }
-                    if (publishedArticleChallengeTag.size() > 0) {
-                        break;
-                    }
-                }
-            }
-        } catch (Exception e) {
-            FirebaseCrashlytics.getInstance().recordException(e);
-            Log.d("MC4kException", Log.getStackTraceString(e));
-        }
     }
 
     private void filterTopicTopicWise(View view, Topics topics) {

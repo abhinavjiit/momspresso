@@ -68,7 +68,7 @@
           android:paddingTop="4dp"
           android:paddingEnd="8dp"
           android:paddingBottom="4dp"
-          android:text="LIVE"
+          android:text="@string/all_live"
           android:textColor="@color/white_color" />
       </androidx.cardview.widget.CardView>
 

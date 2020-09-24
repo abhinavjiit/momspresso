@@ -14,7 +14,7 @@
     android:drawablePadding="16dp"
     android:drawableTint="@color/app_red"
     android:padding="16dp"
-    android:text="Upcoming Live Sessions"
+    android:text="@string/all_upcoming_live_sessions"
     android:textColor="@color/app_light_black"
     android:textSize="16sp"
     app:fontName="Roboto-Medium.ttf" />

@@ -1463,11 +1463,23 @@ Thank you! We will be reviewing your story. You can expect to hear from us withi
   <string name="expected_mom_popup_msg">Let us know your expected date of delivery and we will show you just what you need to know!</string>
   <string name="new_mom_popup_msg">Let us know your child\'s birth date and we will show you just what you need to know for that age!</string>
   <string name="profile_emailid_optional">Email Id (optional)</string>
-  <string name="all_questions">Questions</string>
+  <string name="all_questions">ਪ੍ਰਸ਼ਨ</string>
   <string name="original_content">ਕਿਰਪਾ ਕਰਕੇ ਮੌਮਸਪ੍ਰੈਸੋ \'ਤੇ ਸਿਰਫ ਖੁਦ ਦੀ ਲਿਖੀ ਰਚਨਾ ਹੀ ਪ੍ਰਕਾਸ਼ਤ ਕਰੋ। ਚੋਰੀ ਕੀਤਾ ਕੰਟੇਂਟ ਯਾਨੀ ਕਿਸੇ ਵੀ ਸਰੋਤ ਤੋਂ ਅੰਸ਼ਕ ਤੌਰ ਤੇ ਨਕਲ ਕੀਤੇ ਗਏ ਕੰਟੇਂਟ ਨੂੰ ਵੀ ਸਵੀਕਾਰ ਨਹੀਂ ਕੀਤਾ ਜਾਵੇਗਾ</string>
   <string name="ok_got_it">Ok, got It</string>
   <string name="please_enter_a_valid_code">Please enter a valid verification code.</string>
   <string name="all_momspresso_live">MOMSPRESSO LIVE</string>
   <string name="write_a_comment">Write a comment</string>
   <string name="comment">Comment</string>
+  <string name="live_and_upcoming">ਲਾਈਵ ਅਤੇ ਆਗਾਮੀ ਲਾਈਵ</string>
+  <string name="all_library">ਲਾਇਬ੍ਰੇਰੀ</string>
+  <string name="no_upcoming_lives">ਕੋਈ ਆਗਾਮੀ ਲਾਈਵ ਨਹੀਂ</string>
+  <string name="all_guests">ਮਹਿਮਾਨ</string>
+  <string name="all_live">ਲਾਈਵ</string>
+  <string name="live_starts">ਲਾਈਵ ਸ਼ੁਰੂ ਹੋ ਗਿਆ ਹੈ</string>
+  <string name="all_upcoming_live_sessions">ਆਗਾਮੀ ਲਾਈਵ ਸੈਸ਼ਨ</string>
+  <string name="all_leave_questions_here">ਆਪਣੇ ਪ੍ਰਸ਼ਨ ਇੱਥੇ ਲਿਖੋ</string>
+  <string name="no_live_questions">ਇਸ ਲਾਈਵ ਸੈਸ਼ਨ ਲਈ ਕੋਈ ਪ੍ਰਸ਼ਨ ਪੋਸਟ ਨਹੀਂ ਕੀਤਾ ਗਿਆ ਹੈ</string>
+  <string name="live_ended_ago">ਲਾਈਵ %1$s ਮਿੰਟ ਪਹਿਲਾਂ ਸਮਾਪਤ ਹੋਇਆ</string>
+  <string name="live_started_ago">ਲਾਈਵ %1$s ਮਿੰਟ ਪਹਿਲਾਂ ਸ਼ੁਰੂ ਹੋਇਆ</string>
+  <string name="live_watching_count">%1$d ਲੋਕ ਦੇਖ ਰਹੇ ਹਨ</string>
 </resources>

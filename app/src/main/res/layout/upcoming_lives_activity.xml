@@ -51,7 +51,7 @@
         android:layout_marginStart="28dp"
         android:gravity="center_vertical"
         android:paddingEnd="6dp"
-        android:text="24:05"
+        android:text=""
         android:textColor="@color/app_light_black"
         app:drawableTint="@color/app_light_black" />
     </androidx.cardview.widget.CardView>
@@ -81,7 +81,7 @@
       android:layout_width="wrap_content"
       android:layout_height="wrap_content"
       android:layout_toEndOf="@+id/liveStreamIndicator"
-      android:text="LIVE Starts"
+      android:text="@string/live_starts"
       android:textSize="16sp"
       app:fontName="Roboto-Medium.ttf" />
 

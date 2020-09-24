@@ -1442,11 +1442,23 @@ Thank you! We will be reviewing your story. You can expect to hear from us withi
   <string name="expected_mom_popup_msg">Let us know your expected date of delivery and we will show you just what you need to know!</string>
   <string name="new_mom_popup_msg">Let us know your child\'s birth date and we will show you just what you need to know for that age!</string>
   <string name="profile_emailid_optional">Email Id (optional)</string>
-  <string name="all_questions">Questions</string>
+  <string name="all_questions">ಪ್ರಶ್ನೆಗಳು</string>
   <string name="original_content">ದಯವಿಟ್ಟು ಸ್ವರಚಿತ ಬರಹಗಳನ್ನು ಪ್ರಕಟಿಸಿ. ಕೃತಿಚೌರ್ಯಮಾಡಿದ ಬರಹಗಳು, ಅದು ಬೇರೆ ಮೂಲಗಳಿಂದ ಸಂಪೂರ್ಣ ನಕಲು ಮಾಡಿದ್ದೇ ಇರಬಹುದು ಅಥವಾ ಭಾಗಶಃ ನಕಲು ಮಾಡಿದ ಕೃತಿಗಳೇ ಆಗಿರಬಹುದು, ಅವುಗಳನ್ನು ಇಲ್ಲಿ ಪ್ರಕಟಿಸುವಂತಿಲ್ಲ.</string>
   <string name="ok_got_it">Ok, got It</string>
   <string name="please_enter_a_valid_code">Please enter a valid verification code.</string>
   <string name="all_momspresso_live">MOMSPRESSO LIVE</string>
   <string name="write_a_comment">Write a comment</string>
   <string name="comment">Comment</string>
+  <string name="live_and_upcoming">ಲೈವ್ ಅಪ್ ಕಮಿಂಗ್</string>
+  <string name="all_library">ಗ್ರಂಥಾಲಯ</string>
+  <string name="no_upcoming_lives">ನೋ ಅಪ್ ಕಮಿಂಗ್ ಲೈವ್</string>
+  <string name="all_guests">ಅತಿಥಿಗಳು</string>
+  <string name="all_live">ಲೈವ್</string>
+  <string name="live_starts">ನೇರ ಪ್ರಸಾರ</string>
+  <string name="all_upcoming_live_sessions">ಅಪ್ ಕಮಿಂಗ್ ನೇರ ಪ್ರಸಾರ</string>
+  <string name="all_leave_questions_here">ನಿಮ್ಮ ಪ್ರಶ್ನೆಗಳನ್ನು ಕೇಳಿ</string>
+  <string name="no_live_questions">ಹೊಸ ಪ್ರಶ್ನೆಗಳನ್ನು ನೇರಪ್ರಸಾರದಲ್ಲಿ ಸೇರಿಸಲಾಗಿದೆ</string>
+  <string name="live_ended_ago">Live ended %1$s ago</string>
+  <string name="live_started_ago">Started %1$s ago</string>
+  <string name="live_watching_count">%1$d watching</string>
 </resources>

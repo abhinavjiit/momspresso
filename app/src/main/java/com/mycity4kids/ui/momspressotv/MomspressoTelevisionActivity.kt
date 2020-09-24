@@ -27,8 +27,8 @@ class MomspressoTelevisionActivity : BaseActivity() {
         supportActionBar!!.setDisplayHomeAsUpEnabled(true)
         supportActionBar!!.setDisplayShowHomeEnabled(true)
 
-        tabLayout.addTab(tabLayout.newTab().setText("Live & Upcoming"))
-        tabLayout.addTab(tabLayout.newTab().setText("Library"))
+        tabLayout.addTab(tabLayout.newTab().setText(getString(R.string.live_and_upcoming)))
+        tabLayout.addTab(tabLayout.newTab().setText(getString(R.string.all_library)))
         val mtvPagerAdapter = MomspressoTelevisionPagerAdapter(supportFragmentManager)
         viewPager.adapter = mtvPagerAdapter
         viewPager.addOnPageChangeListener(

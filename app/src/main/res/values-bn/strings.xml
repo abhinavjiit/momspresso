@@ -1407,11 +1407,23 @@ Thank you! We will be reviewing your story. You can expect to hear from us withi
   <string name="expected_mom_popup_msg">Let us know your expected date of delivery and we will show you just what you need to know!</string>
   <string name="new_mom_popup_msg">Let us know your child\'s birth date and we will show you just what you need to know for that age!</string>
   <string name="profile_emailid_optional">Email Id (optional)</string>
-  <string name="all_questions">Questions</string>
+  <string name="all_questions">প্রশ্ন</string>
   <string name="original_content">অনুগ্রহ করে একমাত্র নিজস্ব রচনাশৈলী মমস্প্রেসোর মঞ্চে পাবলিশ করবেন। অন্যের রচনা,যদি তা স্বল্পাংশও কপি করা হয় তাহলেও আমাদের মঞ্চে গ্রাহ্য করা হবেনা।</string>
   <string name="ok_got_it">Ok, got It</string>
   <string name="please_enter_a_valid_code">Please enter a valid verification code.</string>
   <string name="all_momspresso_live">MOMSPRESSO LIVE</string>
   <string name="write_a_comment">Write a comment</string>
   <string name="comment">Comment</string>
+  <string name="live_and_upcoming">লাইভ এবং আগামী লাইভ </string>
+  <string name="all_library">লাইব্রেরি </string>
+  <string name="no_upcoming_lives">আগামী কোনো লাইভ নেই </string>
+  <string name="all_guests">অতিথি </string>
+  <string name="all_live">লাইভ </string>
+  <string name="live_starts">লাইভ শুরু হয়ে গেছে </string>
+  <string name="all_upcoming_live_sessions">আগামী লাইভ সেশন </string>
+  <string name="all_leave_questions_here">আপনার প্রশ্ন এখানে লিখুন </string>
+  <string name="no_live_questions">এই লাইভ সেশনের জন্য কোনো প্রশ্ন পোস্ট করা হয়নি,</string>
+  <string name="live_ended_ago">লাইভ %1$s মিনিট আগে শেষ হয়েছে </string>
+  <string name="live_started_ago">লাইভ %1$s মিনিট আগে শুরু  হয়েছে</string>
+  <string name="live_watching_count">%1$d জন লাইভ সেশন দেখছেন </string>
 </resources>

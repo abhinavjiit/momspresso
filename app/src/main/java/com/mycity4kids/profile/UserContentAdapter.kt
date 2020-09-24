@@ -1052,8 +1052,10 @@ class UserContentAdapter(
                     liveOngoingLabel.visibility = View.VISIBLE
                     liveEndedLabel.visibility = View.GONE
                     liveStartsLabel.visibility = View.VISIBLE
-                    liveStartsLabel.text =
-                        "Started " + DateTimeUtils.timeSince(data.recentLiveStreamsList?.get(0)?.live_datetime!!) + " ago"
+                    liveStartsLabel.text = liveStartsLabel.context.resources.getString(
+                        R.string.live_started_ago,
+                        DateTimeUtils.timeSince(data.recentLiveStreamsList?.get(0)?.live_datetime!!)
+                    )
                 }
                 else -> {
                     upcomingLiveTimeWidget.visibility = View.GONE

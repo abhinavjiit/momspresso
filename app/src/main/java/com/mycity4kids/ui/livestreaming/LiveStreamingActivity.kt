@@ -176,7 +176,7 @@ class LiveStreamingActivity : BaseActivity(), LiveChatRecyclerAdapter.RecyclerVi
                 for (i in snapshot.children) {
                     counter++
                 }
-                userCountTextView.text = "" + counter + " watching"
+                userCountTextView.text =  getString(R.string.live_watching_count, counter)
             }
         })
 

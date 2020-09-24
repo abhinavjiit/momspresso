@@ -78,9 +78,11 @@ class RecentOrUpcomingLiveStreamsHorizontalAdapter(
                 holder.liveOngoingLabel.visibility = View.GONE
                 holder.liveEndedLabel.visibility = View.VISIBLE
                 holder.liveEndedLabel.setText(
-                    "Live ended " + DateTimeUtils.timeSince(
+                    holder.liveEndedLabel.context.resources.getString(
+                        R.string.live_ended_ago, DateTimeUtils.timeSince(
                         upcomingLiveStreamList?.get(position)?.updated_at!!
-                    ) + " ago"
+                    )
+                    )
                 )
             }
         }
