@@ -468,6 +468,16 @@ public class TopicsShortStoriesTabFragment extends BaseFragment implements View.
                 commentIntent.putExtra(Constants.AUTHOR_ID, articleListingResults.get(position).getUserId());
                 commentIntent.putExtra(Constants.BLOG_SLUG, articleListingResults.get(position).getBlogPageSlug());
                 commentIntent.putExtra(Constants.TITLE_SLUG, articleListingResults.get(position).getTitleSlug());
+                ArrayList<String> tagList = new ArrayList<>();
+                for (int i = 0; i < articleListingResults.get(position).getTags().size(); i++) {
+                    for (Map.Entry<String, String> mapEntry : articleListingResults.get(position).getTags().get(i)
+                            .entrySet()) {
+                        if (mapEntry.getKey().startsWith("category-")) {
+                            tagList.add(mapEntry.getKey());
+                        }
+                    }
+                }
+                commentIntent.putExtra("tags", tagList);
                 startActivity(commentIntent);
                 break;
             case R.id.menuItem: {

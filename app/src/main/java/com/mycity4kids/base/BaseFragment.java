@@ -6,16 +6,13 @@ import android.content.DialogInterface;
 import android.net.Uri;
 import android.view.KeyEvent;
 import android.view.Window;
-
 import androidx.fragment.app.Fragment;
-
 import com.facebook.share.model.ShareLinkContent;
 import com.facebook.share.widget.ShareDialog;
 import com.google.android.gms.analytics.HitBuilders;
 import com.google.android.gms.analytics.Tracker;
 import com.mycity4kids.R;
 import com.mycity4kids.application.BaseApplication;
-import com.mycity4kids.models.response.CommentListResponse;
 import com.mycity4kids.tagging.Mentions;
 import com.mycity4kids.utils.AppUtils;
 import java.util.Map;

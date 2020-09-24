@@ -146,6 +146,7 @@ public class ShortStoryFragment extends BaseFragment implements View.OnClickList
     private TextView viewAllTextView;
     private TextView typeHere;
     private String comingFrom;
+    private ShortStoryDetailResult responseData;
 
     private int pos;
 
@@ -263,7 +264,7 @@ public class ShortStoryFragment extends BaseFragment implements View.OnClickList
                 return;
             }
             try {
-                ShortStoryDetailResult responseData = response.body();
+                responseData = response.body();
                 headerModel.setSsResult(responseData);
                 headerModel.setType(0);
                 author = responseData.getUserName();
@@ -639,6 +640,16 @@ public class ShortStoryFragment extends BaseFragment implements View.OnClickList
                         bundle.putString(Constants.TITLE_SLUG, titleSlug);
                         bundle.putString(Constants.AUTHOR_ID, authorId);
                         bundle.putString("contentType", AppConstants.CONTENT_TYPE_SHORT_STORY);
+                        ArrayList<String> tagList = new ArrayList<>();
+                        for (int i = 0; i < responseData.getTags().size(); i++) {
+                            for (Map.Entry<String, String> mapEntry : responseData.getTags().get(i)
+                                    .entrySet()) {
+                                if (mapEntry.getKey().startsWith("category-")) {
+                                    tagList.add(mapEntry.getKey());
+                                }
+                            }
+                        }
+                        bundle.putStringArrayList("tags", tagList);
                         ViewAllCommentsFragment viewAllCommentsFragment = new ViewAllCommentsFragment();
                         viewAllCommentsFragment.setArguments(bundle);
                         if (isAdded()) {
@@ -694,6 +705,16 @@ public class ShortStoryFragment extends BaseFragment implements View.OnClickList
                     bundle.putString(Constants.TITLE_SLUG, titleSlug);
                     bundle.putString(Constants.AUTHOR_ID, authorId);
                     bundle.putString("contentType", AppConstants.CONTENT_TYPE_SHORT_STORY);
+                    ArrayList<String> tagList = new ArrayList<>();
+                    for (int i = 0; i < responseData.getTags().size(); i++) {
+                        for (Map.Entry<String, String> mapEntry : responseData.getTags().get(i)
+                                .entrySet()) {
+                            if (mapEntry.getKey().startsWith("category-")) {
+                                tagList.add(mapEntry.getKey());
+                            }
+                        }
+                    }
+                    bundle.putStringArrayList("tags", tagList);
                     ViewAllCommentsFragment viewAllCommentsFragment = new ViewAllCommentsFragment();
                     viewAllCommentsFragment.setArguments(bundle);
                     if (isAdded()) {

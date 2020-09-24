@@ -21,6 +21,7 @@ class ViewAllCommentsActivity : BaseActivity() {
             bundle.putString(Constants.BLOG_SLUG, intent.getStringExtra(Constants.BLOG_SLUG))
             bundle.putString(Constants.TITLE_SLUG, intent.getStringExtra(Constants.TITLE_SLUG))
             bundle.putString(Constants.AUTHOR_ID, intent.getStringExtra(Constants.AUTHOR_ID))
+            bundle.putStringArrayList("tags", intent.getStringArrayListExtra("tags"))
             bundle.putString("contentType", AppConstants.CONTENT_TYPE_SHORT_STORY)
             val viewAllCommentsFragment = ViewAllCommentsFragment()
             viewAllCommentsFragment.arguments = bundle

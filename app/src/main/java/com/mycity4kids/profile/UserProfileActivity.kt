@@ -1312,6 +1312,15 @@ class UserProfileActivity : BaseActivity(),
                 intent.putExtra(Constants.AUTHOR_ID, userContentList?.get(position)?.userId)
                 intent.putExtra(Constants.BLOG_SLUG, userContentList?.get(position)?.blogTitleSlug)
                 intent.putExtra(Constants.TITLE_SLUG, userContentList?.get(position)?.titleSlug)
+                val tagList = ArrayList<String>()
+                for (i in userContentList?.get(position)?.tags?.indices!!) {
+                    for ((key, value) in userContentList?.get(position)?.tags?.get(i)!!) {
+                        if (key.startsWith("category-")) {
+                            tagList.add(key)
+                        }
+                    }
+                }
+                intent.putExtra("tags", tagList)
                 startActivity(intent)
             }
             view.id == R.id.articleItemView || view.id == R.id.videoItemView || view.id == R.id.rootView -> {

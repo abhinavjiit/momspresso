@@ -24,6 +24,7 @@ import com.mycity4kids.models.response.LikeReactionModel;
 import com.mycity4kids.models.response.RecommendUnrecommendArticleResponse;
 import com.mycity4kids.models.response.ViewCountResponse;
 import io.reactivex.Observable;
+import java.util.ArrayList;
 import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.http.Body;
@@ -167,6 +168,6 @@ public interface ArticleDetailsAPI {
     Call<ResponseBody> unBlockUserApi(@Body UnBlockUserModel blockUserModel);
 
     @GET("v2/categories/suggestions")
-    Call<ResponseBody> getCommentSuggestions(@Query("id") String id);
+    Call<ResponseBody> getCommentSuggestions(@Query("id") ArrayList<String> id);
 
 }

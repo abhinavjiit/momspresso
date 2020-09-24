@@ -117,10 +117,11 @@ class ContentCommentReplyNotificationActivity : BaseActivity(),
         blogWriterId = intent?.getStringExtra("authorId")
         commentList = ArrayList()
         getComments(null)
-        if (SharedPrefUtils.getCommentSuggestionsVisibilityFlag(BaseApplication.getAppContext()))
-            getCommentSuggestions()
+        horizontalCommentSuggestionsContainer.visibility = View.GONE
+     /*   if (SharedPrefUtils.getCommentSuggestionsVisibilityFlag(BaseApplication.getAppContext()))
+           // getCommentSuggestions()
         else
-            horizontalCommentSuggestionsContainer.visibility = View.GONE
+            horizontalCommentSuggestionsContainer.visibility = View.GONE*/
         if ("comment" == show || replyId.isNullOrBlank()) {
             showCommentFragment(commentId)
         } else if ("reply" == show) {
@@ -178,7 +179,7 @@ class ContentCommentReplyNotificationActivity : BaseActivity(),
         val rest = BaseApplication.getInstance().retrofit;
         val articleDetailsAPI = rest.create(ArticleDetailsAPI::class.java)
         val call =
-            articleDetailsAPI.getCommentSuggestions(articleId)
+            articleDetailsAPI.getCommentSuggestions(null)
         call.enqueue(object : Callback<ResponseBody> {
             override fun onFailure(call: Call<ResponseBody>, t: Throwable) {
                 FirebaseCrashlytics.getInstance().recordException(t)

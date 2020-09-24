@@ -18,6 +18,7 @@ import com.mycity4kids.preference.SharedPrefUtils;
 import com.mycity4kids.ui.activity.ViewAllCommentsActivity;
 import com.mycity4kids.ui.adapter.AllCommentsPagerAdapter;
 import com.mycity4kids.utils.AppUtils;
+import java.util.ArrayList;
 
 /**
  * Created by hemant on 13/10/17.
@@ -40,6 +41,8 @@ public class ViewAllCommentsFragment extends BaseFragment implements View.OnClic
     private String authorId;
     private RelativeLayout taggingCoachmark;
     private View topCommentCoachMark;
+    private ArrayList<String> tags;
+
 
     @Nullable
     @Override
@@ -61,6 +64,7 @@ public class ViewAllCommentsFragment extends BaseFragment implements View.OnClic
         userType = getArguments().getString("userType");
         contentType = getArguments().getString("contentType");
         authorId = getArguments().getString(Constants.AUTHOR_ID);
+        tags = getArguments().getStringArrayList("tags");
 
         if (!SharedPrefUtils.isCoachmarksShownFlag(BaseApplication.getAppContext(), "taggingCoachmark")) {
             taggingCoachmark.setVisibility(View.VISIBLE);
@@ -89,7 +93,7 @@ public class ViewAllCommentsFragment extends BaseFragment implements View.OnClic
         final ViewPager viewPager = view.findViewById(R.id.pager);
         final AllCommentsPagerAdapter adapter = new AllCommentsPagerAdapter(getChildFragmentManager(),
                 tabLayout.getTabCount(), mycityCommentUrl, fbCommentUrl, articleId, author, contentType, titleSlug,
-                blogSlug, userType, authorId);
+                blogSlug, userType, authorId, tags);
         viewPager.setAdapter(adapter);
         viewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabLayout));
         tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
