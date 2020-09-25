@@ -698,7 +698,7 @@ public class ShortStoryFragment extends BaseFragment implements View.OnClickList
             case R.id.viewMoreTextView:
                 try {
                     Utils.shareEventTracking(getActivity(), "100WS Detail", "Comment_Android",
-                            "StoryDetail_Viewmore_Comment");
+                            "StoryDetail_Viewall_Comment");
                     Bundle bundle = new Bundle();
                     bundle.putString(Constants.ARTICLE_ID, articleId);
                     bundle.putString(Constants.BLOG_SLUG, blogSlug);

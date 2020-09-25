@@ -81,7 +81,7 @@ class LiveStreamingActivity : BaseActivity(), LiveChatRecyclerAdapter.RecyclerVi
         inputEditText.requestFocus()
         inputEditText.setQueryTokenReceiver(this)
         inputEditText.changeButtonColorOnTextChanged(this)
-        inputEditText.setHint("Leave your question here...")
+        inputEditText.setHint(getString(R.string.all_leave_questions_here))
 
         Picasso.get().load(SharedPrefUtils.getProfileImgUrl(this)).error(R.drawable.default_commentor_img).placeholder(
             R.drawable.default_commentor_img

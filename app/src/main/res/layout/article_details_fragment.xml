@@ -528,17 +528,20 @@
                 android:textSize="16sp"
                 app:fontName="oswald_regular.ttf" />
 
-              <com.mycity4kids.widget.ShareButtonWidget
+              <com.mycity4kids.widget.CustomFontTextView
+                android:id="@+id/writeCommentTextView1"
                 android:layout_width="180dp"
                 android:layout_height="wrap_content"
                 android:layout_alignParentEnd="true"
                 android:layout_marginEnd="30dp"
-                android:elevation="0dp"
-                android:textSize="14sp"
-                app:radius="4dp"
-                app:shareBgColor="#F7F7F7"
-                app:shareText="Write a Comment…"
-                app:shareTextColor="#C1C1C1" />
+                android:background="@drawable/write_comment_textbox_bg"
+                android:drawableLeft="@drawable/ic_write_a_comment"
+                android:drawablePadding="@dimen/space_10"
+                android:padding="@dimen/space_10"
+                android:text="@string/write_a_comment"
+                android:textColor="@color/grey_faded"
+                android:textSize="16sp" />
+
             </RelativeLayout>
             <com.mycity4kids.widget.CustomFontTextView
               android:layout_width="match_parent"

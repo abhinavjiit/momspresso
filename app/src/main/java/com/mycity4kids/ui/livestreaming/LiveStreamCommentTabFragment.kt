@@ -38,7 +38,8 @@ import retrofit2.Response
 import java.util.Arrays
 
 class LiveStreamCommentTabFragment : BaseFragment(),
-    LiveChatRecyclerAdapter.RecyclerViewClickListener, QueryTokenReceiver,CommentPostButtonColorChangeInterface {
+    LiveChatRecyclerAdapter.RecyclerViewClickListener, QueryTokenReceiver,
+    CommentPostButtonColorChangeInterface {
 
     private var liveStreamResult: LiveStreamResult? = null
     val commentsList = ArrayList<ChatListData>()
@@ -64,8 +65,8 @@ class LiveStreamCommentTabFragment : BaseFragment(),
         emptyStateTextView = fragView.findViewById(R.id.emptyStateTextView)
         userImageView = fragView.findViewById(R.id.userImageView)
 
-        liveStreamResult = arguments?.getParcelable<LiveStreamResult>("item")
-        inputEditText.setHint("Leave your question here...")
+        liveStreamResult = arguments?.getParcelable("item")
+        inputEditText.setHint(getString(R.string.all_leave_questions_here))
         val llm = LinearLayoutManager(activity)
         llm.orientation = LinearLayoutManager.VERTICAL
         llm.stackFromEnd = true

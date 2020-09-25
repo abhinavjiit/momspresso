@@ -254,7 +254,8 @@ public class ArticleCommentsFragment extends BaseFragment implements OnClickList
     };
 
 
-    private void setHorizontalCommentSuggestions(JSONArray result) {//suggestionContainer
+    private void setHorizontalCommentSuggestions(JSONArray result) {
+        //suggestionContainer
         for (int i = 0; i < result.length(); i++) {
             try {
                 CustomFontTextView textView = new CustomFontTextView(getActivity());
@@ -264,17 +265,12 @@ public class ArticleCommentsFragment extends BaseFragment implements OnClickList
                 textView.setLayoutParams(params);
                 textView.setText(result.getString(i));
                 textView.setTag(result.getString(i));
-                textView.setOnClickListener(new OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-
-                        MentionsEditable commentText = typeHere.getText();
-                        commentText.append(view.getTag().toString());
-                        Selection.setSelection(commentText, commentText.length());
-                        SharedPrefUtils.setCommentSuggestionsVisibilityFlag(BaseApplication.getAppContext(), false);
-
-
-                    }
+                textView.setOnClickListener(view -> {
+                    pushEvent("Suggestion_Comment");
+                    MentionsEditable commentText = typeHere.getText();
+                    commentText.append(view.getTag().toString());
+                    Selection.setSelection(commentText, commentText.length());
+                    SharedPrefUtils.setCommentSuggestionsVisibilityFlag(BaseApplication.getAppContext(), false);
                 });
                 Typeface face = Typeface.createFromAsset(getResources().getAssets(), "fonts/Roboto-Regular.ttf");
                 textView.setTypeface(face);
@@ -288,9 +284,7 @@ public class ArticleCommentsFragment extends BaseFragment implements OnClickList
                 e.printStackTrace();
             }
         }
-
     }
-
 
     private void getArticleComments(String id, String commentType) {
         Call<CommentListResponse> call = articleDetailsApi.getArticleComments(id, commentType, paginationCommentId);

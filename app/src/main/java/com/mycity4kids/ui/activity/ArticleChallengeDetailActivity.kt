@@ -13,6 +13,7 @@ import com.mycity4kids.R
 import com.mycity4kids.application.BaseApplication
 import com.mycity4kids.base.BaseActivity
 import com.mycity4kids.editor.NewEditor
+import com.mycity4kids.gtmutils.Utils
 import com.mycity4kids.models.Topics
 import com.mycity4kids.retrofitAPIsInterfaces.VlogsListingAndDetailsAPI
 import com.mycity4kids.ui.adapter.ArticleChallengePagerAdapter
@@ -156,6 +157,12 @@ class ArticleChallengeDetailActivity : BaseActivity() {
             }
         })
         startWritingTextView.setOnClickListener {
+            Utils.shareEventTracking(
+                this,
+                "Blog Challenge",
+                "Blog_Challenges_Android",
+                "H_BCD_StartWriting_Challenge"
+            )
             val intent = Intent(this, NewEditor::class.java)
             intent.putExtra("articleChallengeId", articleChallengeId)
             intent.putExtra("challengeName", challengeName)

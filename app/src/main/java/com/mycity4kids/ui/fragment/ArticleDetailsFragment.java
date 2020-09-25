@@ -1036,12 +1036,11 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
     private Callback<CommentListResponse> ssCommentsResponseCallback = new Callback<CommentListResponse>() {
         @Override
         public void onResponse(Call<CommentListResponse> call, retrofit2.Response<CommentListResponse> response) {
-            if (response == null || response.body() == null) {
+            if (response.body() == null) {
                 NetworkErrorException nee = new NetworkErrorException("New comments API failure");
                 FirebaseCrashlytics.getInstance().recordException(nee);
                 return;
             }
-
             try {
                 CommentListResponse commentListResponse = response.body();
                 commentsList = new ArrayList<>(commentListResponse.getData());
@@ -2027,7 +2026,7 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
             switch (v.getId()) {
                 case R.id.followPlusIcon:
                     if (!isFollowing) {
-                        followApiCall("ArticleDetail_PC_Follow");
+                        followApiCall("ArticleDetail_FAB_Follow");
                     } else {
                         Intent userProfileIntent = new Intent(getActivity(), UserProfileActivity.class);
                         userProfileIntent.putExtra(Constants.USER_ID, authorId);
@@ -2238,26 +2237,9 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
                 break;
                 case R.id.likeTextView: {
                     if (recommendStatus == 0) {
-                      /*  recommendStatus = 1;
-                        if (!isFollowing && !userDynamoId.equals(articleId)) {
-                            setValuesInFollowPopUp();
-                        }
-                        Drawable drawable = ContextCompat
-                                .getDrawable(likeArticleTextView.getContext(), R.drawable.ic_recommended);
-                        drawable.setColorFilter(
-                                ContextCompat.getColor(likeArticleTextView.getContext(), R.color.app_red),
-                                PorterDuff.Mode.SRC_IN);
-                        likeArticleTextView.setImageDrawable(drawable);*/
                         recommendUnrecommendArticleApi("1");
                         Utils.shareEventTracking(getActivity(), "Article Detail", "Like_Android", "ArticleDetail_Like");
                     } else {
-                      /*  Drawable drawable = ContextCompat
-                                .getDrawable(likeArticleTextView.getContext(), R.drawable.ic_recommend);
-                        drawable.setColorFilter(
-                                ContextCompat.getColor(likeArticleTextView.getContext(), R.color.app_red),
-                                PorterDuff.Mode.SRC_IN);
-                        likeArticleTextView.setImageDrawable(drawable);
-                        recommendStatus = 0;*/
                         recommendUnrecommendArticleApi("0");
                         Utils.pushUnlikeArticleEvent(getActivity(), "DetailArticleScreen",
                                 userDynamoId + "", articleId, authorId + "~" + author);
@@ -4115,9 +4097,6 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
                             }
                             if (recommendStatus == 0) {
                                 recommendStatus = 1;
-                                if (!isFollowing && !userDynamoId.equals(articleId)) {
-                                    setValuesInFollowPopUp();
-                                }
                                 Drawable drawable = ContextCompat
                                         .getDrawable(likeArticleTextView.getContext(), R.drawable.ic_recommended);
                                 drawable.setColorFilter(
@@ -4133,7 +4112,6 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
                                 likeArticleTextView.setImageDrawable(drawable);
                                 recommendStatus = 0;
                             }
-
                             ((ArticleDetailsContainerActivity) getActivity()).showToast(responseData.getReason());
                         } else {
                             if (responseData.getCode() == 401) {
@@ -4553,17 +4531,6 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
     public interface ISwipeRelated {
 
         void onRelatedSwipe(ArrayList<ArticleListingResult> articleList);
-    }
-
-    private void setValuesInFollowPopUp() {
-        try {
-            Picasso.get().load(detailData.getProfilePic().getClientApp()).into(authorImageViewFollowPopUp);
-        } catch (Exception e) {
-            FirebaseCrashlytics.getInstance().recordException(e);
-            Log.d("FileNotFoundException", Log.getStackTraceString(e));
-        }
-        authorNameFollowPopUp.setText(detailData.getUserName());
-        followPopUpBottomContainer.setVisibility(View.VISIBLE);
     }
 
     void deleteReply(int commentPos, int replyPos) {
