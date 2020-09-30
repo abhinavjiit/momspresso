@@ -249,14 +249,6 @@ public class UserInfo implements Parcelable {
         this.isNewUser = isNewUser;
     }
 
-    public String getIsUserHandleUpdated() {
-        return isUserHandleUpdated;
-    }
-
-    public void setIsUserHandleUpdated(String isUserHandleUpdated) {
-        this.isUserHandleUpdated = isUserHandleUpdated;
-    }
-
     public String getRequestMedium() {
         return requestMedium;
     }

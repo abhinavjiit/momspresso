@@ -1,0 +1,242 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+  xmlns:app="http://schemas.android.com/apk/res-auto"
+  android:id="@+id/journeyLayout"
+  android:layout_width="match_parent"
+  android:layout_height="match_parent"
+  android:background="@color/trans_gray"
+  android:clickable="true"
+  android:elevation="10dp"
+  android:focusable="true">
+
+  <TextView
+    android:id="@+id/welcomeUserTextView"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_above="@+id/startWithLabel"
+    android:layout_marginBottom="4dp"
+    android:gravity="center"
+    android:paddingStart="20dp"
+    android:paddingEnd="20dp"
+    android:text=""
+    android:textColor="@color/white_color"
+    android:textSize="20sp"
+    android:textStyle="bold" />
+
+  <TextView
+    android:id="@+id/startWithLabel"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_above="@+id/bottomContainer"
+    android:layout_marginBottom="20dp"
+    android:gravity="center"
+    android:text="What do you want to start with ?"
+    android:textColor="@color/white_color"
+    android:textSize="16sp" />
+
+  <androidx.cardview.widget.CardView
+    android:layout_width="match_parent"
+    android:layout_height="16dp"
+    android:layout_above="@+id/bottomContainer"
+    android:layout_marginBottom="-10dp"
+    app:cardCornerRadius="6dp"
+    app:cardElevation="0dp" />
+
+  <LinearLayout
+    android:id="@+id/bottomContainer"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_alignParentBottom="true"
+    android:background="@color/white_color"
+    android:gravity="bottom"
+    android:orientation="vertical">
+
+    <androidx.cardview.widget.CardView
+      android:id="@+id/createJourneyCardView"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:layout_marginStart="16dp"
+      android:layout_marginTop="16dp"
+      android:layout_marginEnd="16dp">
+
+      <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="10dp">
+        <ImageView
+          android:id="@+id/createJourneyImageView"
+          android:layout_width="72dp"
+          android:layout_height="72dp"
+          android:adjustViewBounds="true"
+          android:src="@drawable/img_create_journey" />
+
+        <TextView
+          android:id="@+id/createJourneyTitle"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:layout_marginStart="16dp"
+          android:layout_toEndOf="@+id/createJourneyImageView"
+          android:text="Express yourself through stories, blogs or videos" />
+
+        <com.mycity4kids.widget.CustomFontTextView
+          android:id="@+id/createTextView"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:layout_alignBottom="@+id/createJourneyImageView"
+          android:layout_marginStart="16dp"
+          android:layout_toEndOf="@+id/createJourneyImageView"
+          android:drawableEnd="@drawable/ic_circular_arrow"
+          android:drawablePadding="10dp"
+          android:text="Create"
+          android:textColor="@color/app_red"
+          android:textSize="16sp"
+          app:fontName="Roboto-Medium.ttf" />
+
+      </RelativeLayout>
+    </androidx.cardview.widget.CardView>
+
+    <androidx.cardview.widget.CardView
+      android:id="@+id/consumptionJourneyCardView"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:layout_marginStart="16dp"
+      android:layout_marginTop="16dp"
+      android:layout_marginEnd="16dp">
+
+      <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="10dp">
+        <ImageView
+          android:id="@+id/consumptionJourneyImageView"
+          android:layout_width="72dp"
+          android:layout_height="72dp"
+          android:adjustViewBounds="true"
+          android:src="@drawable/img_consumption_journey" />
+
+        <TextView
+          android:id="@+id/consumptionJourneyTitle"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:layout_marginStart="16dp"
+          android:layout_toEndOf="@+id/consumptionJourneyImageView"
+          android:text="Read from 5 Lacs stories, blogs or watch videos" />
+
+        <com.mycity4kids.widget.CustomFontTextView
+          android:id="@+id/consumptionTextView"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:layout_alignBottom="@+id/consumptionJourneyImageView"
+          android:layout_marginStart="16dp"
+          android:layout_toEndOf="@+id/consumptionJourneyImageView"
+          android:drawableEnd="@drawable/ic_circular_arrow"
+          android:drawablePadding="10dp"
+          android:text="View Now"
+          android:textColor="@color/app_red"
+          android:textSize="16sp"
+          app:fontName="Roboto-Medium.ttf" />
+
+      </RelativeLayout>
+    </androidx.cardview.widget.CardView>
+
+    <androidx.cardview.widget.CardView
+      android:id="@+id/mymoneyJourneyCardView"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:layout_marginStart="16dp"
+      android:layout_marginTop="16dp"
+      android:layout_marginEnd="16dp">
+
+      <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="10dp">
+        <ImageView
+          android:id="@+id/mymoneyJourneyImageView"
+          android:layout_width="72dp"
+          android:layout_height="72dp"
+          android:adjustViewBounds="true"
+          android:src="@drawable/img_mymoney_journey" />
+
+        <TextView
+          android:id="@+id/mymoneyJourneyTitle"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:layout_marginStart="16dp"
+          android:layout_toEndOf="@+id/mymoneyJourneyImageView"
+          android:text="Participate &amp; Earn through MyMoney Campaigns" />
+
+        <com.mycity4kids.widget.CustomFontTextView
+          android:id="@+id/mymoneyTextView"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:layout_alignBottom="@+id/mymoneyJourneyImageView"
+          android:layout_marginStart="16dp"
+          android:layout_toEndOf="@+id/mymoneyJourneyImageView"
+          android:drawableEnd="@drawable/ic_circular_arrow"
+          android:drawablePadding="10dp"
+          android:text="Earn"
+          android:textColor="@color/app_red"
+          android:textSize="16sp"
+          app:fontName="Roboto-Medium.ttf" />
+
+      </RelativeLayout>
+    </androidx.cardview.widget.CardView>
+
+    <androidx.cardview.widget.CardView
+      android:id="@+id/groupsJourneyCardView"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:layout_marginStart="16dp"
+      android:layout_marginTop="16dp"
+      android:layout_marginEnd="16dp">
+
+      <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="10dp">
+        <ImageView
+          android:id="@+id/groupsJourneyImageView"
+          android:layout_width="72dp"
+          android:layout_height="72dp"
+          android:adjustViewBounds="true"
+          android:src="@drawable/img_groups_journey" />
+
+        <TextView
+          android:id="@+id/groupsJourneyTitle"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:layout_marginStart="16dp"
+          android:layout_toEndOf="@+id/groupsJourneyImageView"
+          android:text="Give and seek support from support groups" />
+
+        <com.mycity4kids.widget.CustomFontTextView
+          android:id="@+id/joinGroupsTextView"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:layout_alignBottom="@+id/groupsJourneyImageView"
+          android:layout_marginStart="16dp"
+          android:layout_toEndOf="@+id/groupsJourneyImageView"
+          android:drawableEnd="@drawable/ic_circular_arrow"
+          android:drawablePadding="10dp"
+          android:text="Join"
+          android:textColor="@color/app_red"
+          android:textSize="16sp"
+          app:fontName="Roboto-Medium.ttf" />
+
+      </RelativeLayout>
+    </androidx.cardview.widget.CardView>
+
+    <com.mycity4kids.widget.CustomFontTextView
+      android:id="@+id/exploreOwnTextView"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:gravity="center"
+      android:padding="20dp"
+      android:text="Explore Myself"
+      android:textColor="@color/app_red"
+      android:textSize="18sp"
+      app:fontName="Roboto-Medium.ttf" />
+  </LinearLayout>
+
+</RelativeLayout>

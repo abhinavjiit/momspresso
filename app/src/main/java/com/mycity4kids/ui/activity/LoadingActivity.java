@@ -16,7 +16,6 @@ import com.mycity4kids.gtmutils.Utils;
 import com.mycity4kids.models.response.FollowUnfollowCategoriesResponse;
 import com.mycity4kids.preference.SharedPrefUtils;
 import com.mycity4kids.retrofitAPIsInterfaces.TopicsCategoryAPI;
-import com.mycity4kids.utils.ConnectivityUtils;
 import com.mycity4kids.utils.StringUtils;
 import java.util.ArrayList;
 import retrofit2.Call;
@@ -30,9 +29,6 @@ public class LoadingActivity extends BaseActivity {
 
     private RelativeLayout root;
     private String type = "";
-    private static final int UPDATE_USER_HANDLE = 1001;
-    private String loginMode = "";
-    private String isUserHandleUpdated = "";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,25 +44,9 @@ public class LoadingActivity extends BaseActivity {
         FirebaseCrashlytics.getInstance()
                 .setCustomKey("email", "" + SharedPrefUtils.getUserDetailModel(this).getEmail());
 
-        isUserHandleUpdated = SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext())
-                .getIsUserHandleUpdated();
-
-        if (getIntent().hasExtra("loginMode")) {
-            loginMode = getIntent().getStringExtra("loginMode");
-        }
-
-        if ((StringUtils.isNullOrEmpty(isUserHandleUpdated) || isUserHandleUpdated.equals("0"))) {
-            Intent intent = new Intent(LoadingActivity.this, UpdateUserHandleActivity.class);
-            intent.putExtra("loginMode", loginMode);
-            startActivityForResult(intent, UPDATE_USER_HANDLE);
-        } else {
-            if (!ConnectivityUtils.isNetworkEnabled(LoadingActivity.this)) {
-                navigateToDashboard();
-                return;
-            }
-            type = BaseApplication.getInstance().getBranchLink();
-            navigateToDashboard();
-        }
+        navigateToDashboard();
+        type = BaseApplication.getInstance().getBranchLink();
+        navigateToDashboard();
     }
 
     @Override

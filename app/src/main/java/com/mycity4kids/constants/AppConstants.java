@@ -51,7 +51,6 @@ public class AppConstants {
 
     public static final String FROM_ACTIVITY = "fromActivity";
     public static final String ACTIVITY_LOGIN = "ActivityLogin";
-    public static final String ACTIVITY_TUTORIAL = "TutorialActivity";
 
     public static final String CATEGORIES_JSON_FILE = "categories.json";
     public static final String FOLLOW_UNFOLLOW_TOPICS_JSON_FILE = "follow_unfollow_topics.json";

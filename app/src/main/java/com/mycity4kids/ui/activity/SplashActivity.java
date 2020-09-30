@@ -27,6 +27,7 @@ import com.mycity4kids.sync.FetchAdvertisementInfoService;
 import com.mycity4kids.sync.FetchPublicIpAddressService;
 import com.mycity4kids.sync.PushTokenService;
 import com.mycity4kids.sync.SyncUserFollowingList;
+import com.mycity4kids.ui.login.LoginActivity;
 import com.mycity4kids.utils.AppUtils;
 import com.mycity4kids.utils.ConnectivityUtils;
 import com.mycity4kids.utils.StringUtils;
@@ -192,7 +193,7 @@ public class SplashActivity extends BaseActivity {
         } else {
             Log.e("MYCITY4KIDS", "USER logged Out");
             if (SharedPrefUtils.getLogoutFlag(BaseApplication.getAppContext())) {
-                Intent intent = new Intent(SplashActivity.this, ActivityLogin.class);
+                Intent intent = new Intent(SplashActivity.this, LoginActivity.class);
                 intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                 startActivity(intent);
                 finish();
