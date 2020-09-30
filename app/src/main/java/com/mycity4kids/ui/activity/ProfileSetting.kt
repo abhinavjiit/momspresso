@@ -28,6 +28,7 @@ import com.mycity4kids.models.campaignmodels.TotalPayoutResponse
 import com.mycity4kids.preference.SharedPrefUtils
 import com.mycity4kids.retrofitAPIsInterfaces.CampaignAPI
 import com.mycity4kids.retrofitAPIsInterfaces.LoginRegistrationAPI
+import com.mycity4kids.ui.login.LoginActivity
 import com.mycity4kids.ui.rewards.activity.RewardsContainerActivity
 import com.mycity4kids.utils.AppUtils
 import com.mycity4kids.utils.ConnectivityUtils
@@ -313,8 +314,6 @@ class ProfileSetting : BaseActivity(), GoogleApiClient.OnConnectionFailedListene
         gPlusSignOut()
 
         val pushToken = SharedPrefUtils.getDeviceToken(BaseApplication.getAppContext())
-        val homeCoach =
-            SharedPrefUtils.isCoachmarksShownFlag(BaseApplication.getAppContext(), "home")
         val topicsCoach =
             SharedPrefUtils.isCoachmarksShownFlag(BaseApplication.getAppContext(), "topics")
         val topicsArticleCoach =
@@ -323,13 +322,10 @@ class ProfileSetting : BaseActivity(), GoogleApiClient.OnConnectionFailedListene
             BaseApplication.getAppContext(),
             "article_details"
         )
-        val groupsCoach =
-            SharedPrefUtils.isCoachmarksShownFlag(BaseApplication.getAppContext(), "groups")
         val appLocale = SharedPrefUtils.getAppLocale(BaseApplication.getAppContext())
 
         SharedPrefUtils.clearPrefrence(BaseApplication.getAppContext())
         SharedPrefUtils.setDeviceToken(BaseApplication.getAppContext(), pushToken)
-        SharedPrefUtils.setCoachmarksShownFlag(BaseApplication.getAppContext(), "home", homeCoach)
         SharedPrefUtils.setCoachmarksShownFlag(
             BaseApplication.getAppContext(),
             "topics",
@@ -345,11 +341,6 @@ class ProfileSetting : BaseActivity(), GoogleApiClient.OnConnectionFailedListene
             "article_details",
             articleCoach
         )
-        SharedPrefUtils.setCoachmarksShownFlag(
-            BaseApplication.getAppContext(),
-            "groups",
-            groupsCoach
-        )
         SharedPrefUtils.setAppLocale(BaseApplication.getAppContext(), appLocale)
 
         BaseApplication.getInstance().branchData = null
@@ -357,7 +348,7 @@ class ProfileSetting : BaseActivity(), GoogleApiClient.OnConnectionFailedListene
 
         // set logout flag
         SharedPrefUtils.setLogoutFlag(BaseApplication.getAppContext(), true)
-        val intent = Intent(this, ActivityLogin::class.java)
+        val intent = Intent(this, LoginActivity::class.java)
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_NEW_TASK)
         startActivity(intent)
         this.finish()

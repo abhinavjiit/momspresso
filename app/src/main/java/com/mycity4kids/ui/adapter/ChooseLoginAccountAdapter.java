@@ -1,7 +1,5 @@
 package com.mycity4kids.ui.adapter;
 
-import android.content.Context;
-import android.graphics.Typeface;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -20,17 +18,10 @@ import java.util.ArrayList;
  */
 public class ChooseLoginAccountAdapter extends BaseAdapter {
 
-    private Context mContext;
-    private LayoutInflater mInflator;
     private ArrayList<UserDetailResult> userDetailList;
-    private int currentCityId;
-    private Typeface font;
 
-    public ChooseLoginAccountAdapter(Context pContext, ArrayList<UserDetailResult> userDetailList) {
-        mInflator = (LayoutInflater) pContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        mContext = pContext;
+    public ChooseLoginAccountAdapter(ArrayList<UserDetailResult> userDetailList) {
         this.userDetailList = userDetailList;
-        font = Typeface.createFromAsset(pContext.getAssets(), "fonts/" + "oswald.ttf");
     }
 
     @Override
@@ -50,14 +41,13 @@ public class ChooseLoginAccountAdapter extends BaseAdapter {
 
     @Override
     public View getView(final int position, View view, ViewGroup parent) {
-
         try {
             final ViewHolder holder;
             if (view == null) {
-                view = mInflator.inflate(R.layout.choose_login_account_list_item, null);
+                view = LayoutInflater.from(parent.getContext()).inflate(R.layout.choose_login_account_list_item, null);
                 holder = new ViewHolder();
-                holder.userNameTextView = (TextView) view.findViewById(R.id.userNameTextView);
-                holder.userImageView = (ImageView) view.findViewById(R.id.userImageView);
+                holder.userNameTextView = view.findViewById(R.id.userNameTextView);
+                holder.userImageView = view.findViewById(R.id.userImageView);
                 view.setTag(holder);
             } else {
                 holder = (ViewHolder) view.getTag();
@@ -69,14 +59,11 @@ public class ChooseLoginAccountAdapter extends BaseAdapter {
             } catch (Exception e) {
                 Picasso.get().load(R.drawable.default_commentor_img).into(holder.userImageView);
             }
-
             holder.userNameTextView.setText(userDetailList.get(position).getFirstName());
-
         } catch (Exception ex) {
             FirebaseCrashlytics.getInstance().recordException(ex);
             Log.d("MC4kException", Log.getStackTraceString(ex));
         }
-
         return view;
     }
 
@@ -84,10 +71,5 @@ public class ChooseLoginAccountAdapter extends BaseAdapter {
 
         ImageView userImageView;
         TextView userNameTextView;
-    }
-
-    public interface IOtherCity {
-
-        void onOtherCityAdd(String cityName);
     }
 }

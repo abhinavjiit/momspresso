@@ -1,6 +1,5 @@
 package com.mycity4kids.ui.fragment;
 
-import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.Editable;
@@ -11,15 +10,14 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.EditorInfo;
 import android.widget.TextView;
-
-import com.mycity4kids.base.BaseFragment;
-import com.mycity4kids.utils.StringUtils;
 import com.mycity4kids.BuildConfig;
 import com.mycity4kids.R;
+import com.mycity4kids.application.BaseApplication;
+import com.mycity4kids.base.BaseFragment;
 import com.mycity4kids.gtmutils.Utils;
 import com.mycity4kids.preference.SharedPrefUtils;
-import com.mycity4kids.ui.activity.ActivityLogin;
 import com.mycity4kids.ui.activity.ForgotPasswordActivity;
+import com.mycity4kids.utils.StringUtils;
 import com.mycity4kids.widget.CustomFontEditText;
 import com.mycity4kids.widget.CustomFontTextView;
 
@@ -29,7 +27,6 @@ import com.mycity4kids.widget.CustomFontTextView;
 public class EmailLoginFragment extends BaseFragment implements View.OnClickListener {
 
     private View view;
-    private LayoutInflater mInflator;
     private CustomFontEditText mEmailId, mPassword;
     private CustomFontTextView loginEmailTextView;
     private CustomFontTextView forgotPasswordTextView;
@@ -38,9 +35,8 @@ public class EmailLoginFragment extends BaseFragment implements View.OnClickList
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.email_login_fragment, container, false);
-        Utils.pushOpenScreenEvent(getActivity(), "EmailLoginScreen", SharedPrefUtils.getUserDetailModel(getActivity()).getDynamoId() + "");
-        mInflator = (LayoutInflater) getActivity().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-
+        Utils.pushOpenScreenEvent(getActivity(), "EmailLoginScreen",
+                SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId() + "");
         mEmailId = (CustomFontEditText) view.findViewById(R.id.emailEditText);
         mPassword = (CustomFontEditText) view.findViewById(R.id.passwordEditText);
         forgotPasswordTextView = (CustomFontTextView) view.findViewById(R.id.forgotPasswordTextView);
@@ -55,7 +51,8 @@ public class EmailLoginFragment extends BaseFragment implements View.OnClickList
         mPassword.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
             public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
-                if ((event != null && (event.getKeyCode() == KeyEvent.KEYCODE_ENTER)) || (actionId == EditorInfo.IME_ACTION_DONE)) {
+                if ((event != null && (event.getKeyCode() == KeyEvent.KEYCODE_ENTER)) || (actionId
+                        == EditorInfo.IME_ACTION_DONE)) {
                     loginWithEmail();
                 }
                 return false;
@@ -81,13 +78,6 @@ public class EmailLoginFragment extends BaseFragment implements View.OnClickList
                 Intent intent = new Intent(getActivity(), ForgotPasswordActivity.class);
                 startActivity(intent);
                 break;
-            case R.id.signupTextView:
-                Utils.pushGenericEvent(getActivity(), "Launch_sign_up_from_email_sign_in_event", "NA", "EmailLoginFragment");
-                SignUpFragment signUpFragment = new SignUpFragment();
-                Bundle bundle = new Bundle();
-                signUpFragment.setArguments(bundle);
-                ((ActivityLogin) getActivity()).replaceFragmentWithAnimation(signUpFragment, bundle);
-                break;
             default:
                 break;
 
@@ -101,7 +91,7 @@ public class EmailLoginFragment extends BaseFragment implements View.OnClickList
             if (BuildConfig.DEBUG && emailId.equals("nananaa@gmail.com")) {
                 password = "rikkichu";
             }
-            ((ActivityLogin) getActivity()).loginRequest(emailId, password);
+//            ((LoginActivity) getActivity()).loginRequest(emailId, password);
         }
     }
 
@@ -137,7 +127,8 @@ public class EmailLoginFragment extends BaseFragment implements View.OnClickList
         boolean isLoginOk = true;
         String email_id = mEmailId.getText().toString().trim();
 
-        if (email_id.trim().length() == 0 || ((!StringUtils.isValidEmail(email_id)) && (!StringUtils.checkMobileNumber(email_id)))) {
+        if (email_id.trim().length() == 0 || ((!StringUtils.isValidEmail(email_id)) && (!StringUtils
+                .checkMobileNumber(email_id)))) {
             mEmailId.setFocusableInTouchMode(true);
             mEmailId.setError(getString(R.string.enter_valid_email));
             mEmailId.requestFocus();

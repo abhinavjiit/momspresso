@@ -27,6 +27,7 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatDelegate;
 import androidx.appcompat.widget.Toolbar;
+import androidx.cardview.widget.CardView;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.core.view.GravityCompat;
@@ -143,10 +144,6 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
     private TextView langTextView;
     private FrameLayout transparentLayerToolbar;
     private FrameLayout transparentLayerNavigation;
-    private RelativeLayout groupCoachmark;
-    private RelativeLayout firstCoachmark;
-    private RelativeLayout secondCoachmark;
-    private TextView selectedlangGuideTextView;
     private MixpanelAPI mixpanel;
     private ImageView profileImageView;
     private Animation slideAnim;
@@ -169,25 +166,22 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
     private LinearLayout drawerTopContainer;
     private LinearLayout drawerContainer;
     private LinearLayout rewardsTextView;
-    private RelativeLayout drawerSettingsContainer;
     private TextView homeTextView;
-    private RelativeLayout homeCoachmark;
-    private RelativeLayout exploreCoachmark;
-    private RelativeLayout createCoachmark;
-    private RelativeLayout vlogsCoachmark;
     private RelativeLayout drawerProfileCoachmark;
-    private RelativeLayout drawerSettingsCoachmark;
-    private RelativeLayout menuCoachmark;
+    private RelativeLayout journeyLayout;
     private RelativeLayout languageLayout;
-    private RelativeLayout drawerMyMoneyCoachmark;
-    private RelativeLayout drawerMyMoneyContainer;
     private RecyclerView draftsRecyclerView;
     private ShimmerFrameLayout draftsShimmerLayout;
     private TextView createLabelTextView;
     private ImageView createTextImageVIew;
     private ArrayList<AllDraftsResponse.AllDraftsData.AllDraftsResult> allDraftsList = new ArrayList<>();
     private UserAllDraftsRecyclerAdapter userAllDraftsRecyclerAdapter;
-
+    private CardView createJourneyCardView;
+    private CardView consumptionJourneyCardView;
+    private CardView mymoneyJourneyCardView;
+    private CardView groupsJourneyCardView;
+    private TextView exploreOwnTextView;
+    private TextView welcomeUserTextView;
     private TextView selectedLangTextView;
     private String currentVersion;
     private String onlineVersionCode;
@@ -282,10 +276,6 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
         selectOptToolbarTitle = findViewById(R.id.selectOptToolbarTitle);
         langTextView = findViewById(R.id.langTextView);
         selectedLangTextView = findViewById(R.id.selectedLangtext);
-        selectedlangGuideTextView = findViewById(R.id.selectedlangGuideTextView);
-        groupCoachmark = findViewById(R.id.groupCoachmark);
-        firstCoachmark = findViewById(R.id.firstCoachmark);
-        secondCoachmark = findViewById(R.id.secondCoachmark);
         transparentLayerToolbar = findViewById(R.id.transparentLayerToolbar);
         transparentLayerNavigation = findViewById(R.id.transparentLayerNavigation);
         drawerLayout = findViewById(R.id.drawer_layout);
@@ -308,16 +298,8 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
         homeTextView = findViewById(R.id.homeTextView);
         drawerTopContainer = findViewById(R.id.topContainer);
         drawerContainer = findViewById(R.id.drawerProfileContainer);
-        drawerMyMoneyContainer = findViewById(R.id.drawerMyMoneyContainer);
-        drawerSettingsContainer = findViewById(R.id.drawerSettingsContainer);
-        homeCoachmark = findViewById(R.id.homeCoachmark);
-        exploreCoachmark = findViewById(R.id.exploreCoachmark);
-        createCoachmark = findViewById(R.id.createCoachmark);
-        vlogsCoachmark = findViewById(R.id.vlogsCoachmark);
-        menuCoachmark = findViewById(R.id.menuCoachmark);
         drawerProfileCoachmark = findViewById(R.id.drawerProfileCoachmark);
-        drawerSettingsCoachmark = findViewById(R.id.drawerSettingsCoachmark);
-        drawerMyMoneyCoachmark = findViewById(R.id.drawerMyMoneyCoachmark);
+        journeyLayout = findViewById(R.id.journeyLayout);
         draftsRecyclerView = findViewById(R.id.draftsRecyclerView);
         draftsShimmerLayout = findViewById(R.id.draftsShimmerLayout);
         createLabelTextView = findViewById(R.id.createLabelTextView);
@@ -325,16 +307,15 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
         languageLayout = findViewById(R.id.languageLayout);
         referral = findViewById(R.id.referral);
         langView = findViewById(R.id.langView);
-        homeCoachmark.setOnClickListener(this);
+        createJourneyCardView = findViewById(R.id.createJourneyCardView);
+        consumptionJourneyCardView = findViewById(R.id.consumptionJourneyCardView);
+        mymoneyJourneyCardView = findViewById(R.id.mymoneyJourneyCardView);
+        groupsJourneyCardView = findViewById(R.id.groupsJourneyCardView);
+        exploreOwnTextView = findViewById(R.id.exploreOwnTextView);
+        welcomeUserTextView = findViewById(R.id.welcomeUserTextView);
         langView.setOnClickListener(this);
         languageLayout.setOnClickListener(this);
-        exploreCoachmark.setOnClickListener(this);
-        createCoachmark.setOnClickListener(this);
-        vlogsCoachmark.setOnClickListener(this);
-        menuCoachmark.setOnClickListener(this);
         drawerProfileCoachmark.setOnClickListener(this);
-        drawerSettingsCoachmark.setOnClickListener(this);
-        drawerMyMoneyCoachmark.setOnClickListener(this);
 
         referral.setOnClickListener(this);
         settingTextView.setCompoundDrawablesWithIntrinsicBounds(
@@ -384,11 +365,14 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
         settingTextView.setOnClickListener(this);
         homeTextView.setOnClickListener(this);
         langTextView.setOnClickListener(this);
-        groupCoachmark.setOnClickListener(this);
-        firstCoachmark.setOnClickListener(this);
-        secondCoachmark.setOnClickListener(this);
         profileImageView.setOnClickListener(this);
         drawerTopContainer.setOnClickListener(this);
+        createJourneyCardView.setOnClickListener(this);
+        consumptionJourneyCardView.setOnClickListener(this);
+        mymoneyJourneyCardView.setOnClickListener(this);
+        groupsJourneyCardView.setOnClickListener(this);
+        exploreOwnTextView.setOnClickListener(this);
+
         slideAnim = AnimationUtils.loadAnimation(this, R.anim.appear_from_bottom);
         fadeAnim = AnimationUtils.loadAnimation(this, R.anim.alpha_anim);
 
@@ -405,7 +389,6 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
             public void onDrawerSlide(View drawerView, float slideOffset) {
                 if (slideOffset < 1) {
                     drawerProfileCoachmark.setVisibility(View.GONE);
-                    drawerMyMoneyCoachmark.setVisibility(View.GONE);
                 }
             }
 
@@ -414,11 +397,7 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
                 if (!SharedPrefUtils
                         .isCoachmarksShownFlag(BaseApplication.getAppContext(), "Drawer")) {
                     drawerContainer.getLayoutParams().width = drawerView.getWidth();
-                    drawerMyMoneyContainer.getLayoutParams().width = drawerView.getWidth();
-                    drawerSettingsContainer.getLayoutParams().width = drawerView.getWidth();
                     drawerContainer.requestLayout();
-                    drawerMyMoneyContainer.requestLayout();
-                    drawerSettingsContainer.requestLayout();
                     drawerProfileCoachmark.setVisibility(View.VISIBLE);
                     changeDrawerLanguageText();
                 }
@@ -490,16 +469,7 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
                             break;
                         case R.id.action_write:
                             Utils.shareEventTracking(this, "Home screen", "Home_Android", "Create_BN_Home");
-                            userAllDraftsRecyclerAdapter.notifyDataSetChanged();
-                            if (createContentContainer.getVisibility() != View.VISIBLE) {
-                                allDraftsList.clear();
-                                loadAllDrafts();
-                                createContentContainer.setVisibility(View.VISIBLE);
-                                actionItemContainer.setVisibility(View.VISIBLE);
-                                overlayView.setVisibility(View.VISIBLE);
-                                actionItemContainer.startAnimation(slideAnim);
-                                overlayView.startAnimation(fadeAnim);
-                            }
+                            createContentAction();
                             break;
                         case R.id.action_location:
                             hideCreateContentView();
@@ -517,6 +487,7 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
                     }
                     return true;
                 });
+
         if (Constants.PROFILE_FRAGMENT.equals(fragmentToLoad)) {
             Intent profileIntent = new Intent(this, UserProfileActivity.class);
             Bundle notificationExtras = getIntent().getParcelableExtra("notificationExtras");
@@ -550,7 +521,14 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
                 bottomNavigationView.setSelectedItemId(R.id.action_location);
             }
         }
-
+        if (!SharedPrefUtils.isUserJourneyCompleted(this)) {
+            journeyLayout.setVisibility(View.VISIBLE);
+            welcomeUserTextView.setText(
+                    "Welcome " + SharedPrefUtils.getUserDetailModel(this).getFirst_name() + " " + SharedPrefUtils
+                            .getUserDetailModel(this).getLast_name());
+        } else {
+            journeyLayout.setVisibility(View.GONE);
+        }
         RateVersion reteVersionModel = SharedPrefUtils
                 .getRateVersion(BaseApplication.getAppContext());
         int currentRateVersion = reteVersionModel.getAppRateVersion();
@@ -573,10 +551,21 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
         getUsersData();
     }
 
+    private void createContentAction() {
+        userAllDraftsRecyclerAdapter.notifyDataSetChanged();
+        if (createContentContainer.getVisibility() != View.VISIBLE) {
+            allDraftsList.clear();
+            loadAllDrafts();
+            createContentContainer.setVisibility(View.VISIBLE);
+            actionItemContainer.setVisibility(View.VISIBLE);
+            overlayView.setVisibility(View.VISIBLE);
+            actionItemContainer.startAnimation(slideAnim);
+            overlayView.startAnimation(fadeAnim);
+        }
+    }
+
     private void changeDrawerLanguageText() {
         langTextView.setText(AppUtils.getLanguageFromLocale(langTextView.getContext(),
-                SharedPrefUtils.getAppLocale(BaseApplication.getAppContext())));
-        selectedlangGuideTextView.setText(AppUtils.getLanguageFromLocale(langTextView.getContext(),
                 SharedPrefUtils.getAppLocale(BaseApplication.getAppContext())));
     }
 
@@ -1231,37 +1220,8 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
         switch (v.getId()) {
             case R.id.drawerProfileCoachmark: {
                 drawerProfileCoachmark.setVisibility(View.GONE);
-                drawerMyMoneyCoachmark.setVisibility(View.GONE);
                 SharedPrefUtils
                         .setCoachmarksShownFlag(BaseApplication.getAppContext(), "Drawer", true);
-            }
-            break;
-            case R.id.homeCoachmark: {
-                homeCoachmark.setVisibility(View.GONE);
-                createCoachmark.setVisibility(View.VISIBLE);
-            }
-            break;
-            case R.id.createCoachmark: {
-                createCoachmark.setVisibility(View.GONE);
-                vlogsCoachmark.setVisibility(View.VISIBLE);
-            }
-            break;
-            case R.id.vlogsCoachmark: {
-                vlogsCoachmark.setVisibility(View.GONE);
-                groupCoachmark.setVisibility(View.VISIBLE);
-            }
-            break;
-            case R.id.groupCoachmark: {
-                groupCoachmark.setVisibility(View.GONE);
-                menuCoachmark.setVisibility(View.VISIBLE);
-            }
-            break;
-            case R.id.menuCoachmark: {
-                menuCoachmark.setVisibility(View.GONE);
-                SharedPrefUtils
-                        .setCoachmarksShownFlag(BaseApplication.getAppContext(), "HomeScreen",
-                                true);
-                showMyMoneyRegistrationPrompt(getIntent());
             }
             break;
             case R.id.homeTextView:
@@ -1353,15 +1313,6 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
                 Intent notificationIntent = new Intent(this, NotificationActivity.class);
                 startActivity(notificationIntent);
                 break;
-            case R.id.firstCoachmark:
-                firstCoachmark.setVisibility(View.GONE);
-                secondCoachmark.setVisibility(View.VISIBLE);
-                break;
-            case R.id.secondCoachmark:
-                secondCoachmark.setVisibility(View.GONE);
-                SharedPrefUtils
-                        .setCoachmarksShownFlag(BaseApplication.getAppContext(), "home", true);
-                break;
             case R.id.videosTextView: {
                 drawerLayout.closeDrawers();
                 MixPanelUtils.pushMomVlogsDrawerClickEvent(mixpanel);
@@ -1427,6 +1378,42 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
                 drawerLayout.closeDrawers();
                 Intent cityIntent = new Intent(this, AppSettingsActivity.class);
                 startActivity(cityIntent);
+            }
+            break;
+            case R.id.createJourneyCardView: {
+                journeyLayout.setVisibility(View.GONE);
+                SharedPrefUtils.setUserJourneyCompletedFlag(this, true);
+                createContentAction();
+            }
+            break;
+            case R.id.consumptionJourneyCardView: {
+                journeyLayout.setVisibility(View.GONE);
+                SharedPrefUtils.setUserJourneyCompletedFlag(this, true);
+                ExploreArticleListingTypeFragment fragment0 = new ExploreArticleListingTypeFragment();
+                Bundle bundle1 = new Bundle();
+                fragment0.setArguments(bundle1);
+                addFragment(fragment0, bundle1);
+            }
+            break;
+            case R.id.mymoneyJourneyCardView: {
+                journeyLayout.setVisibility(View.GONE);
+                SharedPrefUtils.setUserJourneyCompletedFlag(this, true);
+                Intent cityIntent = new Intent(this, CampaignContainerActivity.class);
+                startActivity(cityIntent);
+            }
+            break;
+            case R.id.groupsJourneyCardView: {
+                journeyLayout.setVisibility(View.GONE);
+                SharedPrefUtils.setUserJourneyCompletedFlag(this, true);
+                GroupsViewFragment groupsFragment = new GroupsViewFragment();
+                Bundle bundle1 = new Bundle();
+                groupsFragment.setArguments(bundle1);
+                addFragment(groupsFragment, bundle1);
+            }
+            break;
+            case R.id.exploreOwnTextView: {
+                journeyLayout.setVisibility(View.GONE);
+                SharedPrefUtils.setUserJourneyCompletedFlag(this, true);
             }
             break;
             default:
@@ -1495,6 +1482,11 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
             }
             if (createContentContainer.getVisibility() == View.VISIBLE) {
                 hideCreateContentView();
+                return;
+            }
+            if (journeyLayout.getVisibility() == View.VISIBLE) {
+                journeyLayout.setVisibility(View.GONE);
+                SharedPrefUtils.setUserJourneyCompletedFlag(this, true);
                 return;
             }
             if (getSupportFragmentManager().getBackStackEntryCount() == 1) {
@@ -1651,11 +1643,6 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
             } else if (topFragment instanceof FragmentMC4KHomeNew) {
                 Utils.pushOpenScreenEvent(this, "HomeScreen",
                         SharedPrefUtils.getUserDetailModel(this).getDynamoId() + "");
-                if (!SharedPrefUtils
-                        .isCoachmarksShownFlag(BaseApplication.getAppContext(), "HomeScreen")
-                        && !BuildConfig.DEBUG) {
-                    homeCoachmark.setVisibility(View.VISIBLE);
-                }
                 langTextView.setVisibility(View.VISIBLE);
                 toolbarTitleTextView.setText(getString(R.string.navigation_bar_home));
                 toolbarTitleTextView.setTextColor(
@@ -1665,10 +1652,6 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
             } else if (topFragment instanceof TopicsListingFragment) {
                 Utils.pushOpenScreenEvent(this, "TopicArticlesListingScreen",
                         SharedPrefUtils.getUserDetailModel(this).getDynamoId() + "");
-                if (!SharedPrefUtils
-                        .isCoachmarksShownFlag(BaseApplication.getAppContext(), "topics_article")) {
-                    ((TopicsListingFragment) topFragment).showGuideView();
-                }
                 toolbarTitleTextView.setOnClickListener(this);
                 toolbarTitleTextView.setText(mainToolbarTitle);
                 toolbarTitleTextView.setTextColor(
@@ -1721,15 +1704,6 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
         if (number.equals("0")) {
             badge.hide(false);
         }
-/*
-        new QBadgeView(this)
-                .setBadgeText(" " + getString(R.string.new_label) + " ")
-                .setBadgeTextSize(7, true)
-                .setBadgePadding(3, true)
-                .setBadgeGravity(Gravity.TOP | Gravity.CENTER_HORIZONTAL)
-                .setGravityOffset(0, 0, true)
-                .bindTarget(bottomNavigationView.getBottomNavigationItemView(1));*/
-
         return badge;
     }
 

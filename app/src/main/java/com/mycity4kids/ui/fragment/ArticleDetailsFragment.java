@@ -603,6 +603,9 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
             authorName = fragmentView.findViewById(R.id.authorName);
             userTypeBadgeTextView = fragmentView.findViewById(R.id.userTypeBadgeTextView);
 
+            topAdSlotWebView.getSettings().setJavaScriptEnabled(true);
+            bottomAdSlotWebView.getSettings().setJavaScriptEnabled(true);
+
             relatedArticles1.setOnClickListener(this);
             relatedArticles2.setOnClickListener(this);
             relatedArticles3.setOnClickListener(this);

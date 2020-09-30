@@ -22,9 +22,8 @@ import com.mycity4kids.application.BaseApplication
 import com.mycity4kids.base.BaseFragment
 import com.mycity4kids.models.request.PhoneLoginRequest
 import com.mycity4kids.retrofitAPIsInterfaces.LoginRegistrationAPI
-import com.mycity4kids.ui.activity.ActivityLogin
 import com.mycity4kids.ui.activity.OTPActivity
-import com.mycity4kids.ui.activity.UpdateUserHandleActivity
+import com.mycity4kids.ui.login.LoginActivity
 import okhttp3.ResponseBody
 import org.json.JSONObject
 import retrofit2.Call
@@ -86,47 +85,10 @@ class SendSMSFragment : BaseFragment(), View.OnClickListener {
             v?.id == R.id.useSmsTextView -> {
                 val phoneLoginRequest = PhoneLoginRequest()
                 phoneLoginRequest.phone = phoneEditText?.text?.toString()
-
                 val retrofit = BaseApplication.getInstance().retrofit
                 val loginRegistrationAPI = retrofit.create(LoginRegistrationAPI::class.java)
                 val call = loginRegistrationAPI.triggerSMS(phoneLoginRequest)
-                //                launchVerifySMSFragment("dwdwdw")
                 call.enqueue(triggerSMSResponseCallback)
-
-                /*val verifySMSFragment = VerifySMSFragment()
-                val bundle = Bundle()
-                bundle.putString("smsToken", "91")
-                bundle.putString("phoneNumber", phoneEditText?.text?.toString())
-                verifySMSFragment.arguments = bundle
-                //        (activity as ActivityLogin).addFragment(verifySMSFragment, bundle, true, null)
-
-                if (activity?.javaClass?.simpleName.equals("ActivityLogin")) {
-                    (activity as ActivityLogin).addFragment(verifySMSFragment, bundle, null)
-                } else if (activity?.javaClass?.simpleName.equals("OTPActivity")) {
-                    (activity as OTPActivity).supportFragmentManager.popBackStack()
-                    activity!!.supportFragmentManager.beginTransaction().replace(
-                        R.id.container, verifySMSFragment,
-                        VerifySMSFragment::class.java.simpleName
-                    ).addToBackStack(null)
-                        .commit()
-                } else if (activity?.javaClass?.simpleName.equals("UpdateUserHandleActivity")) {
-                    (activity as UpdateUserHandleActivity).addFragment(verifySMSFragment, bundle, null)
-                }*/
-
-                /*val verificationIntent = Intent(
-                    activity,
-                    VerificationCodeActivity::class.java
-                )
-                verificationIntent.putExtra(
-                    AppConstants.PhoneNumber,
-                    phoneEditText?.text?.toString()
-                )
-                verificationIntent.putExtra(
-                    AppConstants.PhoneCode,
-                    "91"
-                )
-                verificationIntent.flags = Intent.FLAG_ACTIVITY_FORWARD_RESULT
-                startActivity(verificationIntent)*/
             }
         }
     }
@@ -137,10 +99,8 @@ class SendSMSFragment : BaseFragment(), View.OnClickListener {
             response: retrofit2.Response<ResponseBody>
         ) {
             if (response.body() == null) {
-                if (response.raw() != null) {
-                    val nee = NetworkErrorException(response.raw().toString())
-                    FirebaseCrashlytics.getInstance().recordException(nee)
-                }
+                val nee = NetworkErrorException(response.raw().toString())
+                FirebaseCrashlytics.getInstance().recordException(nee)
                 return
             }
             try {
@@ -153,7 +113,6 @@ class SendSMSFragment : BaseFragment(), View.OnClickListener {
                         val task = SmsRetriever.getClient(it).startSmsUserConsent(null)
                     }
                     launchVerifySMSFragment(sms_token)
-                } else {
                 }
             } catch (e: Exception) {
                 FirebaseCrashlytics.getInstance().recordException(e)
@@ -173,19 +132,15 @@ class SendSMSFragment : BaseFragment(), View.OnClickListener {
         bundle.putString("smsToken", sms_token)
         bundle.putString("phoneNumber", phoneEditText?.text?.toString())
         verifySMSFragment.arguments = bundle
-        //        (activity as ActivityLogin).addFragment(verifySMSFragment, bundle, true, null)
-
-        if (activity?.javaClass?.simpleName.equals("ActivityLogin")) {
-            (activity as ActivityLogin).addFragment(verifySMSFragment, bundle, null)
-        } else if (activity?.javaClass?.simpleName.equals("OTPActivity")) {
+        if (activity is LoginActivity) {
+            (activity as LoginActivity).addFragment(verifySMSFragment, bundle, null)
+        } else if (activity is OTPActivity) {
             (activity as OTPActivity).supportFragmentManager.popBackStack()
             activity!!.supportFragmentManager.beginTransaction().replace(
                 R.id.container, verifySMSFragment,
                 VerifySMSFragment::class.java.simpleName
             ).addToBackStack(null)
                 .commit()
-        } else if (activity?.javaClass?.simpleName.equals("UpdateUserHandleActivity")) {
-            (activity as UpdateUserHandleActivity).addFragment(verifySMSFragment, bundle, null)
         }
     }
 

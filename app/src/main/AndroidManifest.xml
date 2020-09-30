@@ -541,6 +541,9 @@
       android:name=".ui.momspressotv.MomspressoTelevisionActivity"
       android:screenOrientation="portrait" />
     <activity
+      android:name=".ui.login.LoginActivity"
+      android:screenOrientation="portrait" />
+    <activity
       android:name=".ui.livestreaming.UpcomingLivesActivity"
       android:configChanges="orientation|screenSize|keyboardHidden|smallestScreenSize|screenLayout"
       android:windowSoftInputMode="adjustPan" />

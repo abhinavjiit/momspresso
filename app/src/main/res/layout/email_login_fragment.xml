@@ -1,130 +1,129 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:id="@+id/rootLayout"
+  xmlns:app="http://schemas.android.com/apk/res-auto"
+  android:id="@+id/rootLayout"
+  android:layout_width="match_parent"
+  android:layout_height="match_parent">
+
+  <View
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/signin_signup">
+    android:background="@color/trans_gray" />
 
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:background="@color/trans_gray" />
+  <LinearLayout
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_centerInParent="true"
+    android:orientation="vertical">
+
+    <com.mycity4kids.widget.CustomFontTextView
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:gravity="center"
+      android:text="@string/login_email.login"
+      android:textColor="@color/login_email.login"
+      android:textSize="34sp"
+      app:fontName="oswald.ttf" />
+
+    <com.mycity4kids.widget.CustomFontEditText
+      android:id="@+id/emailEditText"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:layout_gravity="center"
+      android:layout_marginLeft="45dp"
+      android:layout_marginTop="25dp"
+      android:layout_marginRight="45dp"
+      android:drawableLeft="@drawable/ic_username"
+      android:drawablePadding="12dp"
+      android:hint="@string/login_email.username_hint"
+      android:inputType="textEmailAddress"
+      android:paddingLeft="10dp"
+      android:paddingTop="8dp"
+      android:paddingBottom="10dp"
+      android:singleLine="true"
+      android:textColor="@color/white_color"
+      android:textColorHint="@color/login_email.email_hint"
+      android:textSize="14sp"
+      app:fontName="open_sans.ttf" />
+
+    <com.mycity4kids.widget.CustomFontEditText
+      android:id="@+id/passwordEditText"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:layout_gravity="center"
+      android:layout_marginLeft="45dp"
+      android:layout_marginTop="10dp"
+      android:layout_marginRight="45dp"
+      android:drawableLeft="@drawable/ic_password"
+      android:drawablePadding="10dp"
+      android:hint="@string/login_email.password_hint"
+      android:paddingLeft="10dp"
+      android:paddingTop="8dp"
+      android:paddingBottom="12dp"
+      android:password="true"
+      android:singleLine="true"
+      android:textColor="@color/white_color"
+      android:textColorHint="@color/login_email.password_hint"
+      android:textSize="14sp"
+      app:fontName="open_sans.ttf" />
+
+    <com.mycity4kids.widget.CustomFontTextView
+      android:id="@+id/forgotPasswordTextView"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:layout_gravity="end"
+      android:layout_marginTop="10dp"
+      android:layout_marginRight="45dp"
+      android:gravity="center"
+      android:text="@string/login_email.forgot_password"
+      android:textColor="@color/sign_in.welcome_back"
+      android:textSize="13sp"
+      app:fontName="open_sans.ttf" />
+
+    <com.mycity4kids.widget.CustomFontTextView
+      android:id="@+id/loginEmailTextView"
+      android:layout_width="match_parent"
+      android:layout_height="40dp"
+      android:layout_gravity="center"
+      android:layout_marginLeft="45dp"
+      android:layout_marginTop="25dp"
+      android:layout_marginRight="45dp"
+      android:background="@drawable/unfollow_topic_author_bg"
+      android:drawablePadding="-30dp"
+      android:gravity="center"
+      android:paddingLeft="10dp"
+      android:paddingTop="8dp"
+      android:paddingBottom="8dp"
+      android:text="@string/login_email.login"
+      android:textColor="@color/white_color"
+      android:textSize="14sp"
+      app:fontName="open_sans.ttf" />
 
     <LinearLayout
-        android:layout_width="match_parent"
+      android:layout_width="match_parent"
+      android:layout_height="40dp"
+      android:layout_marginTop="20dp"
+      android:gravity="center"
+      android:orientation="horizontal">
+
+      <com.mycity4kids.widget.CustomFontTextView
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_centerInParent="true"
-        android:orientation="vertical">
+        android:gravity="center"
+        android:text="@string/sign_in.no_account"
+        android:textColor="@color/sign_in.welcome_back"
+        android:textSize="13sp"
+        app:fontName="open_sans.ttf" />
 
-        <com.mycity4kids.widget.CustomFontTextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:gravity="center"
-            android:text="@string/login_email.login"
-            android:textColor="@color/login_email.login"
-            android:textSize="34sp"
-            app:fontName="oswald.ttf" />
-
-        <com.mycity4kids.widget.CustomFontEditText
-            android:id="@+id/emailEditText"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:layout_marginLeft="45dp"
-            android:layout_marginRight="45dp"
-            android:layout_marginTop="25dp"
-            android:drawableLeft="@drawable/ic_username"
-            android:drawablePadding="12dp"
-            android:hint="@string/login_email.username_hint"
-            android:inputType="textEmailAddress"
-            android:paddingBottom="10dp"
-            android:paddingLeft="10dp"
-            android:paddingTop="8dp"
-            android:singleLine="true"
-            android:textColor="@color/white_color"
-            android:textColorHint="@color/login_email.email_hint"
-            android:textSize="14sp"
-            app:fontName="open_sans.ttf" />
-
-        <com.mycity4kids.widget.CustomFontEditText
-            android:id="@+id/passwordEditText"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:layout_marginLeft="45dp"
-            android:layout_marginRight="45dp"
-            android:layout_marginTop="10dp"
-            android:drawableLeft="@drawable/ic_password"
-            android:drawablePadding="10dp"
-            android:hint="@string/login_email.password_hint"
-            android:paddingBottom="12dp"
-            android:paddingLeft="10dp"
-            android:paddingTop="8dp"
-            android:password="true"
-            android:singleLine="true"
-            android:textColor="@color/white_color"
-            android:textColorHint="@color/login_email.password_hint"
-            android:textSize="14sp"
-            app:fontName="open_sans.ttf" />
-
-        <com.mycity4kids.widget.CustomFontTextView
-            android:id="@+id/forgotPasswordTextView"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="end"
-            android:layout_marginRight="45dp"
-            android:layout_marginTop="10dp"
-            android:gravity="center"
-            android:text="@string/login_email.forgot_password"
-            android:textColor="@color/sign_in.welcome_back"
-            android:textSize="13sp"
-            app:fontName="open_sans.ttf" />
-
-        <com.mycity4kids.widget.CustomFontTextView
-            android:id="@+id/loginEmailTextView"
-            android:layout_width="match_parent"
-            android:layout_height="40dp"
-            android:layout_gravity="center"
-            android:layout_marginLeft="45dp"
-            android:layout_marginRight="45dp"
-            android:layout_marginTop="25dp"
-            android:background="@drawable/unfollow_topic_author_bg"
-            android:drawablePadding="-30dp"
-            android:gravity="center"
-            android:paddingBottom="8dp"
-            android:paddingLeft="10dp"
-            android:paddingTop="8dp"
-            android:text="@string/login_email.login"
-            android:textColor="@color/white_color"
-            android:textSize="14sp"
-            app:fontName="open_sans.ttf" />
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="40dp"
-            android:layout_marginTop="20dp"
-            android:gravity="center"
-            android:orientation="horizontal">
-
-            <com.mycity4kids.widget.CustomFontTextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:gravity="center"
-                android:text="@string/sign_in.no_account"
-                android:textColor="@color/sign_in.welcome_back"
-                android:textSize="13sp"
-                app:fontName="open_sans.ttf" />
-
-            <com.mycity4kids.widget.CustomFontTextView
-                android:id="@+id/signupTextView"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:gravity="center"
-                android:text="@string/sign_in.sign_up_btn"
-                android:textColor="@color/sign_in_out_text_red_color"
-                android:textSize="13sp"
-                app:fontName="open_sans.ttf" />
-        </LinearLayout>
+      <com.mycity4kids.widget.CustomFontTextView
+        android:id="@+id/signupTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:text="@string/sign_in.sign_up_btn"
+        android:textColor="@color/sign_in_out_text_red_color"
+        android:textSize="13sp"
+        app:fontName="open_sans.ttf" />
     </LinearLayout>
+  </LinearLayout>
 </RelativeLayout>

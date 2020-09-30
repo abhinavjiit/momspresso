@@ -754,6 +754,7 @@ class UserContentAdapter(
             itemView.findViewById(R.id.webView)
 
         init {
+            webView.settings.javaScriptEnabled = true
             webView.settings.layoutAlgorithm =
                 android.webkit.WebSettings.LayoutAlgorithm.SINGLE_COLUMN
         }

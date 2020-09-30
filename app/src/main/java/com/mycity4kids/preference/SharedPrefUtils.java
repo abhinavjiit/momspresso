@@ -9,6 +9,7 @@ import com.mycity4kids.constants.AppConstants;
 import com.mycity4kids.models.city.MetroCity;
 import com.mycity4kids.models.user.UserInfo;
 import com.mycity4kids.models.version.RateVersion;
+import com.mycity4kids.ui.activity.DashboardActivity;
 import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
@@ -55,7 +56,6 @@ public class SharedPrefUtils {
     private static final String GENDER = "gender";
     private static final String NEW_USER_FLAG = "newUserFlag";
     private static final String LOGIN_MODE = "loginMode";
-    private static final String IS_USER_HANDLE_UPDATED = "isUserHandleUpdated";
     private static final String USER_HANDLE = "userHandle";
     private static final String REQUEST_MEDIUM = "requestMedium";
     private static final String EMAIL_VALIDATED = "emailValidated";
@@ -63,15 +63,10 @@ public class SharedPrefUtils {
     private static final String DEVICE_TOKEN = "device_token";
     private static final String LOGOUT_FLAG = "logout_flag";
 
-    private static final String COACHMARK_HOME = "coachmarkHome";
     private static final String COACHMARK_TOPICS = "coachmarkTopics";
     private static final String COACHMARK_TOPICS_ARTICLE = "coachmarkTopicsArticle";
     private static final String COACHMARK_ARTICLE_DETAILS = "coachmarkArticleDetails";
-    private static final String COACHMARK_GROUP = "coachmarkGroups";
     private static final String COACHMARK_DRAWER = "coachmarkDrawer";
-    private static final String COACHMARK_HOME_SCREEN = "coachmarkHomeScreen";
-    private static final String COACHMARK_PROFILE = "coachmarkProfile";
-    private static final String COACHMARK_MOMVLOG = "coachmarkMomVlog";
     private static final String COACHMARK_STORY = "coachmarkStory";
     private static final String COACHMARK_TAGGING = "coachmarkTagging";
     private static final String COACHMARK_TOPCOMMENT = "coachmarkTopComment";
@@ -104,6 +99,7 @@ public class SharedPrefUtils {
     private static final String ADVERTISEMENT_ID = "advertisementId";
     private static final String IP_ADDRESS = "ipAddress";
     private static final String FOLLOWING_JSON = "followingJson";
+    private static final String USER_JOURNEY_COMPLETED_FLAG = "userJourneyCompletedFlag";
 
     public static void clearPrefrence(Context context) {
         SharedPreferences sharedPref = context.getSharedPreferences(COMMON_PREF_FILE, Context.MODE_PRIVATE);
@@ -180,7 +176,6 @@ public class SharedPrefUtils {
         editor.putString(GENDER, model.getGender());
         editor.putString(NEW_USER_FLAG, model.getIsNewUser());
         editor.putString(LOGIN_MODE, model.getLoginMode());
-        editor.putString(IS_USER_HANDLE_UPDATED, model.getIsUserHandleUpdated());
         editor.putString(USER_HANDLE, model.getUserHandle());
         editor.putString(REQUEST_MEDIUM, model.getRequestMedium());
         editor.putString(EMAIL_VALIDATED, model.getEmailValidated());
@@ -214,7 +209,6 @@ public class SharedPrefUtils {
         user.setGender(sharedPref.getString(GENDER, "0"));
         user.setIsNewUser(sharedPref.getString(NEW_USER_FLAG, "0"));
         user.setLoginMode(sharedPref.getString(LOGIN_MODE, ""));
-        user.setIsUserHandleUpdated(sharedPref.getString(IS_USER_HANDLE_UPDATED, "0"));
         user.setUserHandle(sharedPref.getString(USER_HANDLE, ""));
         user.setRequestMedium(sharedPref.getString(REQUEST_MEDIUM, ""));
         user.setEmailValidated(sharedPref.getString(EMAIL_VALIDATED, "0"));
@@ -317,24 +311,14 @@ public class SharedPrefUtils {
     public static void setCoachmarksShownFlag(Context context, String screenName, boolean flag) {
         SharedPreferences sharedPref = context.getSharedPreferences(COMMON_PREF_FILE, Context.MODE_PRIVATE);
         Editor editor = sharedPref.edit();
-        if ("home".equals(screenName)) {
-            editor.putBoolean(COACHMARK_HOME, flag);
-        } else if ("topics".equals(screenName)) {
+        if ("topics".equals(screenName)) {
             editor.putBoolean(COACHMARK_TOPICS, flag);
         } else if ("topics_article".equals(screenName)) {
             editor.putBoolean(COACHMARK_TOPICS_ARTICLE, flag);
         } else if ("article_details".equals(screenName)) {
             editor.putBoolean(COACHMARK_ARTICLE_DETAILS, flag);
-        } else if ("groups".equals(screenName)) {
-            editor.putBoolean(COACHMARK_GROUP, flag);
         } else if ("Drawer".equals(screenName)) {
             editor.putBoolean(COACHMARK_DRAWER, flag);
-        } else if ("HomeScreen".equals(screenName)) {
-            editor.putBoolean(COACHMARK_HOME_SCREEN, flag);
-        } else if ("Profile".equals(screenName)) {
-            editor.putBoolean(COACHMARK_PROFILE, flag);
-        } else if ("Mom_vlog".equals(screenName)) {
-            editor.putBoolean(COACHMARK_MOMVLOG, flag);
         } else if ("storyCoachmark".equals(screenName)) {
             editor.putBoolean(COACHMARK_STORY, flag);
         } else if ("taggingCoachmark".equals(screenName)) {
@@ -347,24 +331,14 @@ public class SharedPrefUtils {
 
     public static boolean isCoachmarksShownFlag(Context context, String screenName) {
         SharedPreferences sharedPref = context.getSharedPreferences(COMMON_PREF_FILE, Context.MODE_PRIVATE);
-        if ("home".equals(screenName)) {
-            return sharedPref.getBoolean(COACHMARK_HOME, false);
-        } else if ("topics".equals(screenName)) {
+        if ("topics".equals(screenName)) {
             return sharedPref.getBoolean(COACHMARK_TOPICS, false);
         } else if ("topics_article".equals(screenName)) {
             return sharedPref.getBoolean(COACHMARK_TOPICS_ARTICLE, false);
         } else if ("article_details".equals(screenName)) {
             return sharedPref.getBoolean(COACHMARK_ARTICLE_DETAILS, false);
-        } else if ("groups".equals(screenName)) {
-            return sharedPref.getBoolean(COACHMARK_GROUP, false);
         } else if ("Drawer".equals(screenName)) {
             return sharedPref.getBoolean(COACHMARK_DRAWER, false);
-        } else if ("HomeScreen".equals(screenName)) {
-            return sharedPref.getBoolean(COACHMARK_HOME_SCREEN, false);
-        } else if ("Profile".equals(screenName)) {
-            return sharedPref.getBoolean(COACHMARK_PROFILE, false);
-        } else if ("Mom_vlog".equals(screenName)) {
-            return sharedPref.getBoolean(COACHMARK_MOMVLOG, false);
         } else if ("storyCoachmark".equals(screenName)) {
             return sharedPref.getBoolean(COACHMARK_STORY, false);
         } else if ("taggingCoachmark".equals(screenName)) {
@@ -806,5 +780,17 @@ public class SharedPrefUtils {
         SharedPreferences sharedPreferences = context.getSharedPreferences(COMMON_PREF_FILE, Context.MODE_PRIVATE);
         return sharedPreferences.getBoolean("flag", true);
 
+    }
+
+    public static void setUserJourneyCompletedFlag(Context context, Boolean flag) {
+        SharedPreferences sharedPreferences = context.getSharedPreferences(COMMON_PREF_FILE, Context.MODE_PRIVATE);
+        Editor editor = sharedPreferences.edit();
+        editor.putBoolean(USER_JOURNEY_COMPLETED_FLAG, flag);
+        editor.commit();
+    }
+
+    public static boolean isUserJourneyCompleted(Context context) {
+        SharedPreferences sharedPreferences = context.getSharedPreferences(COMMON_PREF_FILE, Context.MODE_PRIVATE);
+        return sharedPreferences.getBoolean(USER_JOURNEY_COMPLETED_FLAG, false);
     }
 }
