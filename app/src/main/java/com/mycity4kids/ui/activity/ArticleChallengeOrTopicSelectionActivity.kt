@@ -12,6 +12,7 @@ import android.view.Window
 import android.webkit.WebView
 import android.widget.ImageView
 import android.widget.RelativeLayout
+import android.widget.TextView
 import androidx.appcompat.widget.Toolbar
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -33,13 +34,14 @@ import com.mycity4kids.ui.adapter.SuggestedTopicsRecyclerAdapter
 import com.mycity4kids.utils.AppUtils
 import com.mycity4kids.vlogs.ContentChallengeSelectionHorizontalAdapter
 import com.mycity4kids.widget.SpacesItemDecoration
+import com.squareup.picasso.Picasso
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 
 class ArticleChallengeOrTopicSelectionActivity : BaseActivity(),
     ContentChallengeSelectionHorizontalAdapter.RecyclerViewClickListener,
-    SuggestedTopicsRecyclerAdapter.RecyclerViewClickListener {
+    SuggestedTopicsRecyclerAdapter.RecyclerViewClickListener, View.OnClickListener {
     private lateinit var articleChallengesList: ArrayList<Topics>
     private lateinit var suggestedTopicsList: ArrayList<String>
     private lateinit var articleChallengesRecyclerView: RecyclerView
@@ -49,10 +51,16 @@ class ArticleChallengeOrTopicSelectionActivity : BaseActivity(),
     private lateinit var suggestedTopicsRecyclerAdapter: SuggestedTopicsRecyclerAdapter
     private lateinit var bottomLayout: RelativeLayout
     private lateinit var challengesShimmerLayout: ShimmerFrameLayout
+    private lateinit var tagImageViewCoachMark: ImageView
+    private lateinit var coachMark: RelativeLayout
+    private lateinit var secondTextView: TextView
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.article_challenges_activity)
+        coachMark = findViewById(R.id.coachMark)
+        tagImageViewCoachMark = findViewById(R.id.tagImageViewCoachMark)
+        secondTextView = findViewById(R.id.secondTextView)
         articleChallengesRecyclerView =
             findViewById(R.id.articleChallengesRecyclerView)
         suggestedTopicsRecyclerView =
@@ -97,6 +105,15 @@ class ArticleChallengeOrTopicSelectionActivity : BaseActivity(),
         if (!SharedPrefUtils.getOriginalContentChallengeClick(this)) {
             showOriginalContentDialog()
         }
+        coachMark.setOnClickListener {
+            SharedPrefUtils.setCoachmarksShownFlag(
+                BaseApplication.getAppContext(),
+                "articleChallengeSelectionScreenCoachMark",
+                true
+            )
+            coachMark.visibility = View.GONE
+        }
+        secondTextView.setOnClickListener(this)
     }
 
     private val challenges: Unit
@@ -130,7 +147,9 @@ class ArticleChallengeOrTopicSelectionActivity : BaseActivity(),
                         challengesShimmerLayout.visibility = View.GONE
                         val responseData = response.body()
                         responseData?.child?.let {
-                            processChallengesData(it)
+                            if (it.size > 0)
+                                processChallengesData(it)
+                            else coachMark.visibility = View.GONE
                         }
                     } catch (e: Exception) {
                         FirebaseCrashlytics.getInstance().recordException(e)
@@ -150,6 +169,19 @@ class ArticleChallengeOrTopicSelectionActivity : BaseActivity(),
         for (i in 0 until catWiseChallengeList.size) {
             if ("1" == catWiseChallengeList[i].publicVisibility) {
                 articleChallengesList.add(catWiseChallengeList[i])
+                if (!SharedPrefUtils.isCoachmarksShownFlag(
+                        BaseApplication.getAppContext(),
+                        "articleChallengeSelectionScreenCoachMark"
+                    )) {
+                    coachMark.visibility = View.VISIBLE
+                    if (i == 0) {
+                        Picasso.get().load(catWiseChallengeList[i].extraData[0].challenge.imageUrl).error(
+                            R.drawable.default_article
+                        ).into(
+                            tagImageViewCoachMark
+                        )
+                    }
+                }
             }
         }
         articleChallengesRecyclerAdapter.notifyDataSetChanged()
@@ -222,7 +254,7 @@ class ArticleChallengeOrTopicSelectionActivity : BaseActivity(),
                     "UTF-8",
                     ""
                 )
-                imageView.setOnClickListener { view2: View? -> dialog.dismiss() }
+                imageView.setOnClickListener { dialog.dismiss() }
                 dialog.show()
             }
         } else {
@@ -238,7 +270,7 @@ class ArticleChallengeOrTopicSelectionActivity : BaseActivity(),
         startActivity(intent)
     }
 
-    fun showOriginalContentDialog() {
+    private fun showOriginalContentDialog() {
         val dialog = Dialog(this)
         dialog.window!!.requestFeature(Window.FEATURE_NO_TITLE)
         dialog.setContentView(R.layout.dialog_original_content)
@@ -249,5 +281,29 @@ class ArticleChallengeOrTopicSelectionActivity : BaseActivity(),
         }
         dialog.window!!.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
         dialog.show()
+    }
+
+    override fun onClick(view: View?) {
+        when (view?.id) {
+            R.id.secondTextView -> {
+                SharedPrefUtils.setCoachmarksShownFlag(
+                    BaseApplication.getAppContext(),
+                    "articleChallengeSelectionScreenCoachMark",
+                    true
+                )
+                coachMark.visibility = View.GONE
+                SharedPrefUtils.setCoachmarksShownFlag(
+                    BaseApplication.getAppContext(),
+                    "newEditor_controllerView",
+                    true
+                )
+                SharedPrefUtils.setCoachmarksShownFlag(
+                    BaseApplication.getAppContext(),
+                    "newEditor",
+                    true
+                )
+
+            }
+        }
     }
 }

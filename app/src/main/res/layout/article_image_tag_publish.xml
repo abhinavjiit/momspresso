@@ -162,18 +162,20 @@
     </RelativeLayout>
 
     <com.mycity4kids.widget.CustomFontTextView
-        android:id="@+id/publishTextView"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_marginTop="10dp"
-        android:background="@color/white_color"
-        android:elevation="20dp"
-        android:gravity="center"
-        android:padding="15dp"
-        android:text="@string/choose_article_image.publish"
-        android:textColor="@color/app_red"
-        android:textSize="17sp"
-        app:fontName="oswald_regular.ttf" />
+      android:id="@+id/publishTextView"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:layout_alignParentStart="true"
+      android:layout_alignParentBottom="true"
+      android:layout_marginTop="10dp"
+      android:layout_marginBottom="0dp"
+      android:background="@color/white_color"
+      android:elevation="20dp"
+      android:gravity="center"
+      android:padding="15dp"
+      android:text="@string/choose_article_image.publish"
+      android:textColor="@color/app_red"
+      android:textSize="17sp"
+      app:fontName="oswald_regular.ttf" />
 
 </RelativeLayout>

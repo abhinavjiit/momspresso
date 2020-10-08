@@ -304,6 +304,7 @@
       android:screenOrientation="portrait" />
     <activity
       android:name=".ui.activity.GroupsSummaryActivity"
+      android:parentActivityName=".ui.activity.DashboardActivity"
       android:screenOrientation="portrait" />
     <activity
       android:name=".ui.activity.GroupsQuestionnaireActivity"

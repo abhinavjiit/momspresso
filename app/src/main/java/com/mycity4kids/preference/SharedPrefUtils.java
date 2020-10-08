@@ -9,7 +9,6 @@ import com.mycity4kids.constants.AppConstants;
 import com.mycity4kids.models.city.MetroCity;
 import com.mycity4kids.models.user.UserInfo;
 import com.mycity4kids.models.version.RateVersion;
-import com.mycity4kids.ui.activity.DashboardActivity;
 import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
@@ -68,6 +67,12 @@ public class SharedPrefUtils {
     private static final String COACHMARK_ARTICLE_DETAILS = "coachmarkArticleDetails";
     private static final String COACHMARK_DRAWER = "coachmarkDrawer";
     private static final String COACHMARK_STORY = "coachmarkStory";
+    private static final String COACHMARK_STORY_BACKGROUND = "addShortStory";
+    private static final String COACH_MARK_CHOOSE_STORY_CHALLENGE = "chooseStoryOrChallenge";
+    private static final String COACH_MARK_CHOOSE_ARTICLE_CHALLENGE = "articleChallengeSelectionScreenCoachMark";
+    private static final String COACH_MARK_CHOOSE_VIDEO_CHALLENGE = "videoOrChallengeSelectionScreen";
+    private static final String COACH_MARK_EDITOR_BOTTOM = "newEditor_bottom";
+    private static final String COACH_MARK_EDITOR_CONTROLLER_VIEW = "newEditor_controllerView";
     private static final String COACHMARK_TAGGING = "coachmarkTagging";
     private static final String COACHMARK_TOPCOMMENT = "coachmarkTopComment";
     private static final String LOCATION_LATITUDE = "latitude";
@@ -325,6 +330,18 @@ public class SharedPrefUtils {
             editor.putBoolean(COACHMARK_TAGGING, flag);
         } else if ("topCommentCoachMark".equals(screenName)) {
             editor.putBoolean(COACHMARK_TOPCOMMENT, flag);
+        } else if ("addShortStory".equals(screenName)) {
+            editor.putBoolean(COACHMARK_STORY_BACKGROUND, flag);
+        } else if ("chooseStoryOrChallenge".equals(screenName)) {
+            editor.putBoolean(COACH_MARK_CHOOSE_STORY_CHALLENGE, flag);
+        } else if ("articleChallengeSelectionScreenCoachMark".equals(screenName)) {
+            editor.putBoolean(COACH_MARK_CHOOSE_ARTICLE_CHALLENGE, flag);
+        } else if ("videoOrChallengeSelectionScreen".equals(screenName)) {
+            editor.putBoolean(COACH_MARK_CHOOSE_VIDEO_CHALLENGE, flag);
+        } else if ("newEditor_bottom".equals(screenName)) {
+            editor.putBoolean(COACH_MARK_EDITOR_BOTTOM, flag);
+        } else if ("newEditor_controllerView".equals(screenName)) {
+            editor.putBoolean(COACH_MARK_EDITOR_CONTROLLER_VIEW, flag);
         }
         editor.commit();
     }
@@ -345,6 +362,18 @@ public class SharedPrefUtils {
             return sharedPref.getBoolean(COACHMARK_TAGGING, false);
         } else if ("topCommentCoachMark".equals(screenName)) {
             return sharedPref.getBoolean(COACHMARK_TOPCOMMENT, false);
+        } else if ("addShortStory".equals(screenName)) {
+            return sharedPref.getBoolean(COACHMARK_STORY_BACKGROUND, false);
+        } else if ("chooseStoryOrChallenge".equals(screenName)) {
+            return sharedPref.getBoolean(COACH_MARK_CHOOSE_STORY_CHALLENGE, false);
+        } else if ("articleChallengeSelectionScreenCoachMark".equals(screenName)) {
+            return sharedPref.getBoolean(COACH_MARK_CHOOSE_ARTICLE_CHALLENGE, false);
+        } else if ("videoOrChallengeSelectionScreen".equals(screenName)) {
+            return sharedPref.getBoolean(COACH_MARK_CHOOSE_VIDEO_CHALLENGE, false);
+        } else if ("newEditor_bottom".equals(screenName)) {
+            return sharedPref.getBoolean(COACH_MARK_EDITOR_BOTTOM, false);
+        } else if ("newEditor_controllerView".equals(screenName)) {
+            return sharedPref.getBoolean(COACH_MARK_EDITOR_CONTROLLER_VIEW, false);
         }
         return true;
     }

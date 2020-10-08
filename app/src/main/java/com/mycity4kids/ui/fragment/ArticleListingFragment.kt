@@ -34,7 +34,7 @@ import androidx.recyclerview.widget.RecyclerView
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout.OnRefreshListener
 import com.facebook.shimmer.ShimmerFrameLayout
-import com.google.android.gms.analytics.HitBuilders.ScreenViewBuilder
+import com.google.android.gms.analytics.HitBuilders
 import com.google.android.gms.analytics.Tracker
 import com.google.android.material.snackbar.Snackbar
 import com.google.firebase.crashlytics.FirebaseCrashlytics
@@ -1246,7 +1246,7 @@ class ArticleListingFragment : BaseFragment(), View.OnClickListener,
                     ) -> {
                     }
                 }
-                tracker!!.send(ScreenViewBuilder().build())
+                tracker!!.send(HitBuilders.ScreenViewBuilder().build())
             }
         } catch (e: Exception) {
             FirebaseCrashlytics.getInstance().recordException(e)
@@ -1662,469 +1662,469 @@ class ArticleListingFragment : BaseFragment(), View.OnClickListener,
                 intent.putExtra(Constants.TITLE_SLUG, mixfeedList?.get(position)?.titleSlug)
                 val tagList = ArrayList<String>()
                 for (i in mixfeedList?.get(position)?.tags?.indices!!) {
-                    for ((key, value) in mixfeedList?.get(position)?.tags?.get(i)!!){
+                    for ((key, value) in mixfeedList?.get(position)?.tags?.get(i)!!) {
                         if (key.startsWith("category-")) {
                             tagList.add(key)
                         }
-                }
-            }
-            intent.putExtra("tags", tagList)
-                startActivity (intent)
-        }
-        R.id.shareArticleImageView -> {
-            // shareContent(mixfeedList?.get(position))
-        }
-        R.id.facebookShareImageView -> {
-            getSharableViewForPosition(position, AppConstants.MEDIUM_FACEBOOK)
-        }
-        R.id.whatsappShareImageView -> {
-            getSharableViewForPosition(position, AppConstants.MEDIUM_WHATSAPP)
-        }
-        R.id.instagramShareImageView -> {
-            try {
-                filterTags(mixfeedList?.get(position)?.tags!!)
-            } catch (e: Exception) {
-                FirebaseCrashlytics.getInstance().recordException(e)
-                Log.d("MC4kException", Log.getStackTraceString(e))
-            }
-            getSharableViewForPosition(position, AppConstants.MEDIUM_INSTAGRAM)
-        }
-        R.id.genericShareImageView -> {
-            getSharableViewForPosition(position, AppConstants.MEDIUM_GENERIC)
-        }
-        R.id.storyImageView1 -> {
-            val intent = Intent(activity, ShortStoryContainerActivity::class.java)
-            intent.putExtra(Constants.ARTICLE_ID, mixfeedList?.get(position)?.id)
-            intent.putExtra(Constants.AUTHOR_ID, mixfeedList?.get(position)?.userId)
-            intent.putExtra(Constants.BLOG_SLUG, mixfeedList?.get(position)?.blogTitleSlug)
-            intent.putExtra(Constants.TITLE_SLUG, mixfeedList?.get(position)?.titleSlug)
-            intent.putExtra(Constants.ARTICLE_OPENED_FROM, "" + "ArticleListingActivity")
-            intent.putExtra(Constants.FROM_SCREEN, "ArticleListingActivity")
-            intent.putExtra(Constants.ARTICLE_INDEX, "" + position)
-            intent.putExtra(
-                Constants.AUTHOR,
-                mixfeedList?.get(position)?.userId + "~" + mixfeedList?.get(position)?.userName
-            )
-            startActivity(intent)
-        }
-        R.id.bookmarkArticleImageView -> {
-            if (mixfeedList?.get(position)?.isbookmark == 0) {
-                bookmarkItem(position)
-            } else {
-                deleteBookmark(position)
-            }
-        }
-        R.id.authorNameTextView -> {
-            val intent = Intent(activity, UserProfileActivity::class.java)
-            intent.putExtra(
-                Constants.USER_ID,
-                mixfeedList?.get(position)?.userId
-            )
-            startActivity(intent)
-        }
-        R.id.followAuthorTextView -> {
-            followApiCall(
-                mixfeedList!![position].userId, position
-            )
-        }
-        R.id.menuItem -> {
-            chooseMenuOptionsItem(view, position)
-        }
-        R.id.storyRecommendationContainer -> {
-            if (!isRecommendRequestRunning) {
-                mixfeedList?.get(position)?.isLiked?.let {
-                    if (it) {
-                        likeStatus = "0"
-                        currentShortStoryPosition = position
-                        recommendUnrecommendArticleApi(
-                            "0",
-                            mixfeedList?.get(position)?.id!!,
-                            mixfeedList?.get(position)?.userId!!,
-                            mixfeedList?.get(position)?.userName!!
-                        )
-                    } else {
-                        trackEventsWithScreenName("Like_Android", "MixedFeedStory_Like")
-                        likeStatus = "1"
-                        currentShortStoryPosition = position
-                        recommendUnrecommendArticleApi(
-                            "1",
-                            mixfeedList?.get(position)?.id!!,
-                            mixfeedList?.get(position)?.userId!!,
-                            mixfeedList?.get(position)?.userName!!
-                        )
                     }
                 }
+                intent.putExtra("tags", tagList)
+                startActivity(intent)
             }
-        }
-        R.id.menuItemImageView -> {
-        }
-    }
-}
-
-override fun onFollowSuccess() {
-    activity?.let {
-        (it as BaseActivity).syncFollowingList()
-    }
-}
-
-private fun launchContentDetail(item: MixFeedResult?) {
-    when {
-        item?.itemType == AppConstants.CONTENT_TYPE_ARTICLE ||
-            item?.contentType == AppConstants.CONTENT_TYPE_ARTICLE -> {
-            val intent = Intent(activity, ArticleDetailsContainerActivity::class.java)
-            intent.putExtra(Constants.ARTICLE_ID, item.id)
-            intent.putExtra(Constants.AUTHOR_ID, item.userId)
-            intent.putExtra(Constants.BLOG_SLUG, item.blogTitleSlug)
-            intent.putExtra(Constants.TITLE_SLUG, item.titleSlug)
-            intent.putExtra(Constants.FROM_SCREEN, "Profile")
-            intent.putExtra(Constants.AUTHOR, item.userId + "~" + item.userName)
-            startActivity(intent)
-        }
-        item?.itemType == AppConstants.CONTENT_TYPE_SHORT_STORY ||
-            item?.contentType == AppConstants.CONTENT_TYPE_SHORT_STORY -> {
-            val intent = Intent(activity, ShortStoryContainerActivity::class.java)
-            intent.putExtra(Constants.ARTICLE_ID, item.id)
-            intent.putExtra(Constants.AUTHOR_ID, item.userId)
-            intent.putExtra(Constants.BLOG_SLUG, item.blogTitleSlug)
-            intent.putExtra(Constants.TITLE_SLUG, item.titleSlug)
-            intent.putExtra(Constants.FROM_SCREEN, "Profile")
-            intent.putExtra(Constants.AUTHOR, item.userId + "~" + item.userName)
-            startActivity(intent)
-        }
-        item?.itemType == AppConstants.CONTENT_TYPE_VIDEO ||
-            item?.contentType == AppConstants.CONTENT_TYPE_VIDEO -> {
-            val intent = Intent(activity, ParallelFeedActivity::class.java)
-            intent.putExtra(Constants.VIDEO_ID, item.id)
-            intent.putExtra(Constants.FROM_SCREEN, "Profile")
-            startActivity(intent)
-        }
-    }
-}
-
-private fun bookmarkItem(position: Int) {
-    val retro = BaseApplication.getInstance().retrofit
-    val articleDetailsAPI = retro.create(ArticleDetailsAPI::class.java)
-    val articleDetailRequest = ArticleDetailRequest()
-    articleDetailRequest.articleId = mixfeedList?.get(position)?.id
-
-    if ("1" == mixfeedList?.get(position)?.isMomspresso) {
-        val call = articleDetailsAPI.addVideoWatchLater(articleDetailRequest)
-        call.enqueue(object : Callback<AddBookmarkResponse> {
-            override fun onResponse(
-                call: Call<AddBookmarkResponse>,
-                response: Response<AddBookmarkResponse>
-            ) {
-                if (null == response.body()) {
-                    activity?.let {
-                        ToastUtils.showToast(it, getString(R.string.server_went_wrong))
-                    }
-                    return
-                }
-                val responseData = response.body()
-                if (responseData?.code == 200) {
-                    mixfeedList?.get(position)?.isbookmark = 1
-                    mixfeedList?.get(position)?.bookmarkId = responseData.data.result.bookmarkId
-                    mixfeedAdapter.notifyDataSetChanged()
-                    activity?.let {
-                        Utils.pushWatchLaterArticleEvent(
-                            it,
-                            "ArticleListingFragment",
-                            SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).dynamoId + "",
-                            mixfeedList?.get(position)?.id,
-                            mixfeedList?.get(position)?.author?.id + "~" + mixfeedList?.get(
-                                position
-                            )?.userName
-                        )
-                    }
-                }
+            R.id.shareArticleImageView -> {
+                // shareContent(mixfeedList?.get(position))
             }
-
-            override fun onFailure(call: Call<AddBookmarkResponse>, e: Throwable) {
-                activity?.let {
-                    ToastUtils.showToast(it, getString(R.string.server_went_wrong))
-                }
-                FirebaseCrashlytics.getInstance().recordException(e)
-                Log.d("MC4kException", Log.getStackTraceString(e))
+            R.id.facebookShareImageView -> {
+                getSharableViewForPosition(position, AppConstants.MEDIUM_FACEBOOK)
             }
-        })
-    } else {
-        val call = articleDetailsAPI.addBookmark(articleDetailRequest)
-        call.enqueue(object : Callback<AddBookmarkResponse> {
-            override fun onResponse(
-                call: Call<AddBookmarkResponse>,
-                response: Response<AddBookmarkResponse>
-            ) {
-                if (null == response.body()) {
-                    activity?.let {
-                        ToastUtils.showToast(it, getString(R.string.server_went_wrong))
-                    }
-                    return
-                }
-                val responseData = response.body()
-                if (responseData?.code == 200) {
-                    mixfeedList?.get(position)?.isbookmark = 1
-                    mixfeedList?.get(position)?.bookmarkId = responseData.data.result.bookmarkId
-                    mixfeedAdapter.notifyDataSetChanged()
-                    activity?.let {
-                        Utils.pushBookmarkArticleEvent(
-                            it,
-                            "ArticleListingFragment",
-                            SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).dynamoId + "",
-                            mixfeedList?.get(position)?.id,
-                            mixfeedList?.get(position)?.author?.id + "~" + mixfeedList?.get(
-                                position
-                            )?.userName
-                        )
-                    }
-                }
+            R.id.whatsappShareImageView -> {
+                getSharableViewForPosition(position, AppConstants.MEDIUM_WHATSAPP)
             }
-
-            override fun onFailure(call: Call<AddBookmarkResponse>, e: Throwable) {
-                activity?.let {
-                    ToastUtils.showToast(it, getString(R.string.server_went_wrong))
+            R.id.instagramShareImageView -> {
+                try {
+                    filterTags(mixfeedList?.get(position)?.tags!!)
+                } catch (e: Exception) {
+                    FirebaseCrashlytics.getInstance().recordException(e)
+                    Log.d("MC4kException", Log.getStackTraceString(e))
                 }
-                FirebaseCrashlytics.getInstance().recordException(e)
-                Log.d("MC4kException", Log.getStackTraceString(e))
+                getSharableViewForPosition(position, AppConstants.MEDIUM_INSTAGRAM)
             }
-        })
-    }
-}
-
-private fun deleteBookmark(position: Int) {
-    val retro = BaseApplication.getInstance().retrofit
-    val deleteBookmarkRequest = DeleteBookmarkRequest()
-    deleteBookmarkRequest.id = mixfeedList?.get(position)?.bookmarkId
-    val articleDetailsAPI = retro.create(
-        ArticleDetailsAPI::class.java
-    )
-    if ("1" == mixfeedList?.get(position)?.isMomspresso) {
-        val call =
-            articleDetailsAPI.deleteVideoWatchLater(deleteBookmarkRequest)
-        call.enqueue(object : Callback<AddBookmarkResponse> {
-            override fun onFailure(call: Call<AddBookmarkResponse>, t: Throwable) {
-                activity?.let {
-                    ToastUtils.showToast(it, getString(R.string.server_went_wrong))
-                }
-                FirebaseCrashlytics.getInstance().recordException(t)
-                Log.d("MC4kException", Log.getStackTraceString(t))
+            R.id.genericShareImageView -> {
+                getSharableViewForPosition(position, AppConstants.MEDIUM_GENERIC)
             }
-
-            override fun onResponse(
-                call: Call<AddBookmarkResponse>,
-                response: Response<AddBookmarkResponse>
-            ) {
-                if (null == response.body()) {
-                    activity?.let {
-                        ToastUtils.showToast(it, getString(R.string.server_went_wrong))
-                    }
-                    return
-                }
-                val responseData = response.body()
-                if (responseData?.code == 200) {
-                    mixfeedList?.get(position)?.isbookmark = 0
-                    mixfeedList?.get(position)?.bookmarkId = ""
-                    mixfeedAdapter.notifyDataSetChanged()
-                    activity?.let {
-                        Utils.pushUnbookmarkArticleEvent(
-                            it,
-                            "ArticleListingFragment",
-                            SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).dynamoId + "",
-                            mixfeedList?.get(position)?.id,
-                            mixfeedList?.get(position)?.author?.id + "~" + mixfeedList?.get(
-                                position
-                            )?.userName
-                        )
-                    }
-                }
-            }
-        })
-    } else {
-        val call =
-            articleDetailsAPI.deleteBookmark(deleteBookmarkRequest)
-        call.enqueue(object : Callback<AddBookmarkResponse> {
-            override fun onFailure(call: Call<AddBookmarkResponse>, t: Throwable) {
-                activity?.let {
-                    ToastUtils.showToast(it, getString(R.string.server_went_wrong))
-                }
-                FirebaseCrashlytics.getInstance().recordException(t)
-                Log.d("MC4kException", Log.getStackTraceString(t))
-            }
-
-            override fun onResponse(
-                call: Call<AddBookmarkResponse>,
-                response: Response<AddBookmarkResponse>
-            ) {
-                if (null == response.body()) {
-                    activity?.let {
-                        ToastUtils.showToast(it, getString(R.string.server_went_wrong))
-                    }
-                    return
-                }
-                val responseData = response.body()
-                if (responseData?.code == 200) {
-                    mixfeedList?.get(position)?.isbookmark = 0
-                    mixfeedList?.get(position)?.bookmarkId = ""
-                    mixfeedAdapter.notifyDataSetChanged()
-                    activity?.let {
-                        Utils.pushUnbookmarkArticleEvent(
-                            it,
-                            "ArticleListingFragment",
-                            SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).dynamoId + "",
-                            mixfeedList?.get(position)?.id,
-                            mixfeedList?.get(position)?.author?.id + "~" + mixfeedList?.get(
-                                position
-                            )?.userName
-                        )
-                    }
-                }
-            }
-        })
-    }
-}
-
-companion object {
-    private const val LIMIT = 15
-    private const val FORYOU_LIMIT = 10
-    private const val REQUEST_INIT_PERMISSION = 2
-    private val PERMISSIONS_INIT = arrayOf(
-        Manifest.permission.READ_EXTERNAL_STORAGE,
-        Manifest.permission.WRITE_EXTERNAL_STORAGE
-    )
-}
-
-override fun onChallengeItemClick(view: View, topics: Topics) {
-    when (view.id) {
-        R.id.tagImageView -> {
-            Utils.shareEventTracking(
-                activity,
-                "Home screen",
-                "Vlog_Challenges_Android",
-                "H_VCL_Live_Challenge"
-            )
-            val intent = Intent(activity, NewVideoChallengeActivity::class.java)
-            intent.putExtra("challenge", topics.id)
-            intent.putExtra("comingFrom", "vlog_listing")
-            startActivity(intent)
-        }
-        R.id.info -> {
-            topics.extraData[0].challenge.rules?.let {
-                val dialog = Dialog(context!!)
-                dialog.setContentView(R.layout.challenge_rules_dialog)
-                dialog.setTitle("Title...")
-                val imageView =
-                    dialog.findViewById<View>(R.id.closeEditorImageView) as ImageView
-                val webView =
-                    dialog.findViewById<View>(R.id.videoChallengeRulesWebView) as WebView
-                webView.loadDataWithBaseURL(
-                    "",
-                    it,
-                    "text/html",
-                    "UTF-8",
-                    ""
+            R.id.storyImageView1 -> {
+                val intent = Intent(activity, ShortStoryContainerActivity::class.java)
+                intent.putExtra(Constants.ARTICLE_ID, mixfeedList?.get(position)?.id)
+                intent.putExtra(Constants.AUTHOR_ID, mixfeedList?.get(position)?.userId)
+                intent.putExtra(Constants.BLOG_SLUG, mixfeedList?.get(position)?.blogTitleSlug)
+                intent.putExtra(Constants.TITLE_SLUG, mixfeedList?.get(position)?.titleSlug)
+                intent.putExtra(Constants.ARTICLE_OPENED_FROM, "" + "ArticleListingActivity")
+                intent.putExtra(Constants.FROM_SCREEN, "ArticleListingActivity")
+                intent.putExtra(Constants.ARTICLE_INDEX, "" + position)
+                intent.putExtra(
+                    Constants.AUTHOR,
+                    mixfeedList?.get(position)?.userId + "~" + mixfeedList?.get(position)?.userName
                 )
-                imageView.setOnClickListener { view2: View? -> dialog.dismiss() }
-                dialog.show()
+                startActivity(intent)
+            }
+            R.id.bookmarkArticleImageView -> {
+                if (mixfeedList?.get(position)?.isbookmark == 0) {
+                    bookmarkItem(position)
+                } else {
+                    deleteBookmark(position)
+                }
+            }
+            R.id.authorNameTextView -> {
+                val intent = Intent(activity, UserProfileActivity::class.java)
+                intent.putExtra(
+                    Constants.USER_ID,
+                    mixfeedList?.get(position)?.userId
+                )
+                startActivity(intent)
+            }
+            R.id.followAuthorTextView -> {
+                followApiCall(
+                    mixfeedList!![position].userId, position
+                )
+            }
+            R.id.menuItem -> {
+                chooseMenuOptionsItem(view, position)
+            }
+            R.id.storyRecommendationContainer -> {
+                if (!isRecommendRequestRunning) {
+                    mixfeedList?.get(position)?.isLiked?.let {
+                        if (it) {
+                            likeStatus = "0"
+                            currentShortStoryPosition = position
+                            recommendUnrecommendArticleApi(
+                                "0",
+                                mixfeedList?.get(position)?.id!!,
+                                mixfeedList?.get(position)?.userId!!,
+                                mixfeedList?.get(position)?.userName!!
+                            )
+                        } else {
+                            trackEventsWithScreenName("Like_Android", "MixedFeedStory_Like")
+                            likeStatus = "1"
+                            currentShortStoryPosition = position
+                            recommendUnrecommendArticleApi(
+                                "1",
+                                mixfeedList?.get(position)?.id!!,
+                                mixfeedList?.get(position)?.userId!!,
+                                mixfeedList?.get(position)?.userName!!
+                            )
+                        }
+                    }
+                }
+            }
+            R.id.menuItemImageView -> {
             }
         }
     }
-}
 
-override fun onClick(
-    view: View?,
-    position: Int,
-    challengeId: String?,
-    Display_Name: String?,
-    articledatamodelsnew: Topics?,
-    activeImageUrl: String?
-) {
-    when (view?.id) {
-        R.id.mainView, R.id.getStartedTextView -> {
-            if (position == 0) {
+    override fun onFollowSuccess() {
+        activity?.let {
+            (it as BaseActivity).syncFollowingList()
+        }
+    }
+
+    private fun launchContentDetail(item: MixFeedResult?) {
+        when {
+            item?.itemType == AppConstants.CONTENT_TYPE_ARTICLE ||
+                item?.contentType == AppConstants.CONTENT_TYPE_ARTICLE -> {
+                val intent = Intent(activity, ArticleDetailsContainerActivity::class.java)
+                intent.putExtra(Constants.ARTICLE_ID, item.id)
+                intent.putExtra(Constants.AUTHOR_ID, item.userId)
+                intent.putExtra(Constants.BLOG_SLUG, item.blogTitleSlug)
+                intent.putExtra(Constants.TITLE_SLUG, item.titleSlug)
+                intent.putExtra(Constants.FROM_SCREEN, "Profile")
+                intent.putExtra(Constants.AUTHOR, item.userId + "~" + item.userName)
+                startActivity(intent)
+            }
+            item?.itemType == AppConstants.CONTENT_TYPE_SHORT_STORY ||
+                item?.contentType == AppConstants.CONTENT_TYPE_SHORT_STORY -> {
+                val intent = Intent(activity, ShortStoryContainerActivity::class.java)
+                intent.putExtra(Constants.ARTICLE_ID, item.id)
+                intent.putExtra(Constants.AUTHOR_ID, item.userId)
+                intent.putExtra(Constants.BLOG_SLUG, item.blogTitleSlug)
+                intent.putExtra(Constants.TITLE_SLUG, item.titleSlug)
+                intent.putExtra(Constants.FROM_SCREEN, "Profile")
+                intent.putExtra(Constants.AUTHOR, item.userId + "~" + item.userName)
+                startActivity(intent)
+            }
+            item?.itemType == AppConstants.CONTENT_TYPE_VIDEO ||
+                item?.contentType == AppConstants.CONTENT_TYPE_VIDEO -> {
+                val intent = Intent(activity, ParallelFeedActivity::class.java)
+                intent.putExtra(Constants.VIDEO_ID, item.id)
+                intent.putExtra(Constants.FROM_SCREEN, "Profile")
+                startActivity(intent)
+            }
+        }
+    }
+
+    private fun bookmarkItem(position: Int) {
+        val retro = BaseApplication.getInstance().retrofit
+        val articleDetailsAPI = retro.create(ArticleDetailsAPI::class.java)
+        val articleDetailRequest = ArticleDetailRequest()
+        articleDetailRequest.articleId = mixfeedList?.get(position)?.id
+
+        if ("1" == mixfeedList?.get(position)?.isMomspresso) {
+            val call = articleDetailsAPI.addVideoWatchLater(articleDetailRequest)
+            call.enqueue(object : Callback<AddBookmarkResponse> {
+                override fun onResponse(
+                    call: Call<AddBookmarkResponse>,
+                    response: Response<AddBookmarkResponse>
+                ) {
+                    if (null == response.body()) {
+                        activity?.let {
+                            ToastUtils.showToast(it, getString(R.string.server_went_wrong))
+                        }
+                        return
+                    }
+                    val responseData = response.body()
+                    if (responseData?.code == 200) {
+                        mixfeedList?.get(position)?.isbookmark = 1
+                        mixfeedList?.get(position)?.bookmarkId = responseData.data.result.bookmarkId
+                        mixfeedAdapter.notifyDataSetChanged()
+                        activity?.let {
+                            Utils.pushWatchLaterArticleEvent(
+                                it,
+                                "ArticleListingFragment",
+                                SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).dynamoId + "",
+                                mixfeedList?.get(position)?.id,
+                                mixfeedList?.get(position)?.author?.id + "~" + mixfeedList?.get(
+                                    position
+                                )?.userName
+                            )
+                        }
+                    }
+                }
+
+                override fun onFailure(call: Call<AddBookmarkResponse>, e: Throwable) {
+                    activity?.let {
+                        ToastUtils.showToast(it, getString(R.string.server_went_wrong))
+                    }
+                    FirebaseCrashlytics.getInstance().recordException(e)
+                    Log.d("MC4kException", Log.getStackTraceString(e))
+                }
+            })
+        } else {
+            val call = articleDetailsAPI.addBookmark(articleDetailRequest)
+            call.enqueue(object : Callback<AddBookmarkResponse> {
+                override fun onResponse(
+                    call: Call<AddBookmarkResponse>,
+                    response: Response<AddBookmarkResponse>
+                ) {
+                    if (null == response.body()) {
+                        activity?.let {
+                            ToastUtils.showToast(it, getString(R.string.server_went_wrong))
+                        }
+                        return
+                    }
+                    val responseData = response.body()
+                    if (responseData?.code == 200) {
+                        mixfeedList?.get(position)?.isbookmark = 1
+                        mixfeedList?.get(position)?.bookmarkId = responseData.data.result.bookmarkId
+                        mixfeedAdapter.notifyDataSetChanged()
+                        activity?.let {
+                            Utils.pushBookmarkArticleEvent(
+                                it,
+                                "ArticleListingFragment",
+                                SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).dynamoId + "",
+                                mixfeedList?.get(position)?.id,
+                                mixfeedList?.get(position)?.author?.id + "~" + mixfeedList?.get(
+                                    position
+                                )?.userName
+                            )
+                        }
+                    }
+                }
+
+                override fun onFailure(call: Call<AddBookmarkResponse>, e: Throwable) {
+                    activity?.let {
+                        ToastUtils.showToast(it, getString(R.string.server_went_wrong))
+                    }
+                    FirebaseCrashlytics.getInstance().recordException(e)
+                    Log.d("MC4kException", Log.getStackTraceString(e))
+                }
+            })
+        }
+    }
+
+    private fun deleteBookmark(position: Int) {
+        val retro = BaseApplication.getInstance().retrofit
+        val deleteBookmarkRequest = DeleteBookmarkRequest()
+        deleteBookmarkRequest.id = mixfeedList?.get(position)?.bookmarkId
+        val articleDetailsAPI = retro.create(
+            ArticleDetailsAPI::class.java
+        )
+        if ("1" == mixfeedList?.get(position)?.isMomspresso) {
+            val call =
+                articleDetailsAPI.deleteVideoWatchLater(deleteBookmarkRequest)
+            call.enqueue(object : Callback<AddBookmarkResponse> {
+                override fun onFailure(call: Call<AddBookmarkResponse>, t: Throwable) {
+                    activity?.let {
+                        ToastUtils.showToast(it, getString(R.string.server_went_wrong))
+                    }
+                    FirebaseCrashlytics.getInstance().recordException(t)
+                    Log.d("MC4kException", Log.getStackTraceString(t))
+                }
+
+                override fun onResponse(
+                    call: Call<AddBookmarkResponse>,
+                    response: Response<AddBookmarkResponse>
+                ) {
+                    if (null == response.body()) {
+                        activity?.let {
+                            ToastUtils.showToast(it, getString(R.string.server_went_wrong))
+                        }
+                        return
+                    }
+                    val responseData = response.body()
+                    if (responseData?.code == 200) {
+                        mixfeedList?.get(position)?.isbookmark = 0
+                        mixfeedList?.get(position)?.bookmarkId = ""
+                        mixfeedAdapter.notifyDataSetChanged()
+                        activity?.let {
+                            Utils.pushUnbookmarkArticleEvent(
+                                it,
+                                "ArticleListingFragment",
+                                SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).dynamoId + "",
+                                mixfeedList?.get(position)?.id,
+                                mixfeedList?.get(position)?.author?.id + "~" + mixfeedList?.get(
+                                    position
+                                )?.userName
+                            )
+                        }
+                    }
+                }
+            })
+        } else {
+            val call =
+                articleDetailsAPI.deleteBookmark(deleteBookmarkRequest)
+            call.enqueue(object : Callback<AddBookmarkResponse> {
+                override fun onFailure(call: Call<AddBookmarkResponse>, t: Throwable) {
+                    activity?.let {
+                        ToastUtils.showToast(it, getString(R.string.server_went_wrong))
+                    }
+                    FirebaseCrashlytics.getInstance().recordException(t)
+                    Log.d("MC4kException", Log.getStackTraceString(t))
+                }
+
+                override fun onResponse(
+                    call: Call<AddBookmarkResponse>,
+                    response: Response<AddBookmarkResponse>
+                ) {
+                    if (null == response.body()) {
+                        activity?.let {
+                            ToastUtils.showToast(it, getString(R.string.server_went_wrong))
+                        }
+                        return
+                    }
+                    val responseData = response.body()
+                    if (responseData?.code == 200) {
+                        mixfeedList?.get(position)?.isbookmark = 0
+                        mixfeedList?.get(position)?.bookmarkId = ""
+                        mixfeedAdapter.notifyDataSetChanged()
+                        activity?.let {
+                            Utils.pushUnbookmarkArticleEvent(
+                                it,
+                                "ArticleListingFragment",
+                                SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).dynamoId + "",
+                                mixfeedList?.get(position)?.id,
+                                mixfeedList?.get(position)?.author?.id + "~" + mixfeedList?.get(
+                                    position
+                                )?.userName
+                            )
+                        }
+                    }
+                }
+            })
+        }
+    }
+
+    companion object {
+        private const val LIMIT = 15
+        private const val FORYOU_LIMIT = 10
+        private const val REQUEST_INIT_PERMISSION = 2
+        private val PERMISSIONS_INIT = arrayOf(
+            Manifest.permission.READ_EXTERNAL_STORAGE,
+            Manifest.permission.WRITE_EXTERNAL_STORAGE
+        )
+    }
+
+    override fun onChallengeItemClick(view: View, topics: Topics) {
+        when (view.id) {
+            R.id.tagImageView -> {
                 Utils.shareEventTracking(
                     activity,
                     "Home screen",
-                    "Story_Challenges_Android",
-                    "H_SCL_ThisWeek_Challenge"
+                    "Vlog_Challenges_Android",
+                    "H_VCL_Live_Challenge"
                 )
-            } else {
-                Utils.shareEventTracking(
-                    activity,
-                    "Home screen",
-                    "Story_Challenges_Android",
-                    "H_SCL_PreviousWeeks_Challenge"
-                )
+                val intent = Intent(activity, NewVideoChallengeActivity::class.java)
+                intent.putExtra("challenge", topics.id)
+                intent.putExtra("comingFrom", "vlog_listing")
+                startActivity(intent)
             }
-            val intent = Intent(activity, ShortStoryChallengeDetailActivity::class.java)
-            intent.putExtra("challenge", challengeId)
-            startActivity(intent)
+            R.id.info -> {
+                topics.extraData[0].challenge.rules?.let {
+                    val dialog = Dialog(context!!)
+                    dialog.setContentView(R.layout.challenge_rules_dialog)
+                    dialog.setTitle("Title...")
+                    val imageView =
+                        dialog.findViewById<View>(R.id.closeEditorImageView) as ImageView
+                    val webView =
+                        dialog.findViewById<View>(R.id.videoChallengeRulesWebView) as WebView
+                    webView.loadDataWithBaseURL(
+                        "",
+                        it,
+                        "text/html",
+                        "UTF-8",
+                        ""
+                    )
+                    imageView.setOnClickListener { view2: View? -> dialog.dismiss() }
+                    dialog.show()
+                }
+            }
         }
     }
-}
 
-override fun onBlogChallengeItemClick(position: Int, v: View?, topics: Topics) {
-    when (v?.id) {
-        R.id.tagImageView -> {
-            if (position == 0) {
+    override fun onClick(
+        view: View?,
+        position: Int,
+        challengeId: String?,
+        Display_Name: String?,
+        articledatamodelsnew: Topics?,
+        activeImageUrl: String?
+    ) {
+        when (view?.id) {
+            R.id.mainView, R.id.getStartedTextView -> {
+                if (position == 0) {
+                    Utils.shareEventTracking(
+                        activity,
+                        "Home screen",
+                        "Story_Challenges_Android",
+                        "H_SCL_ThisWeek_Challenge"
+                    )
+                } else {
+                    Utils.shareEventTracking(
+                        activity,
+                        "Home screen",
+                        "Story_Challenges_Android",
+                        "H_SCL_PreviousWeeks_Challenge"
+                    )
+                }
+                val intent = Intent(activity, ShortStoryChallengeDetailActivity::class.java)
+                intent.putExtra("challenge", challengeId)
+                startActivity(intent)
+            }
+        }
+    }
+
+    override fun onBlogChallengeItemClick(position: Int, v: View?, topics: Topics) {
+        when (v?.id) {
+            R.id.tagImageView -> {
+                if (position == 0) {
+                    Utils.shareEventTracking(
+                        activity,
+                        "Home screen",
+                        "Blog_Challenges_Android",
+                        "H_BCL_ThisWeek_Challenge"
+                    )
+                } else {
+                    Utils.shareEventTracking(
+                        activity,
+                        "Home screen",
+                        "Blog_Challenges_Android",
+                        "H_BCL_PreviousWeeks_Challenge"
+                    )
+                }
+
+                val intent = Intent(activity, ArticleChallengeDetailActivity::class.java)
+                intent.putExtra("articleChallengeId", topics.id)
+                intent.putExtra("challengeName", topics.display_name)
+                startActivity(intent)
+            }
+            R.id.info -> {
                 Utils.shareEventTracking(
                     activity,
                     "Home screen",
                     "Blog_Challenges_Android",
-                    "H_BCL_ThisWeek_Challenge"
+                    "H_BCL_InfoIcon_Challenge"
                 )
-            } else {
-                Utils.shareEventTracking(
-                    activity,
-                    "Home screen",
-                    "Blog_Challenges_Android",
-                    "H_BCL_PreviousWeeks_Challenge"
-                )
+                topics.extraData[0].challenge.rules?.let {
+                    val dialog = Dialog(context!!)
+                    dialog.setContentView(R.layout.challenge_rules_dialog)
+                    dialog.setTitle("Title...")
+                    val imageView =
+                        dialog.findViewById<View>(R.id.closeEditorImageView) as ImageView
+                    val webView =
+                        dialog.findViewById<View>(R.id.videoChallengeRulesWebView) as WebView
+                    webView.loadDataWithBaseURL(
+                        "",
+                        it,
+                        "text/html",
+                        "UTF-8",
+                        ""
+                    )
+                    imageView.setOnClickListener { dialog.dismiss() }
+                    dialog.show()
+                }
             }
-
-            val intent = Intent(activity, ArticleChallengeDetailActivity::class.java)
-            intent.putExtra("articleChallengeId", topics.id)
-            intent.putExtra("challengeName", topics.display_name)
-            startActivity(intent)
         }
-        R.id.info -> {
+    }
+
+    override fun onLiveStreamItemClick(view: View, liveStreamResult: LiveStreamResult?) {
+        liveStreamResult?.id?.let {
             Utils.shareEventTracking(
                 activity,
                 "Home screen",
-                "Blog_Challenges_Android",
-                "H_BCL_InfoIcon_Challenge"
+                "Live_Android",
+                "TB_UC_Card_Live"
             )
-            topics.extraData[0].challenge.rules?.let {
-                val dialog = Dialog(context!!)
-                dialog.setContentView(R.layout.challenge_rules_dialog)
-                dialog.setTitle("Title...")
-                val imageView =
-                    dialog.findViewById<View>(R.id.closeEditorImageView) as ImageView
-                val webView =
-                    dialog.findViewById<View>(R.id.videoChallengeRulesWebView) as WebView
-                webView.loadDataWithBaseURL(
-                    "",
-                    it,
-                    "text/html",
-                    "UTF-8",
-                    ""
-                )
-                imageView.setOnClickListener { dialog.dismiss() }
-                dialog.show()
-            }
+            (activity as BaseActivity).getLiveStreamInfoFromId(
+                it
+            )
         }
     }
-}
-
-override fun onLiveStreamItemClick(view: View, liveStreamResult: LiveStreamResult?) {
-    liveStreamResult?.id?.let {
-        Utils.shareEventTracking(
-            activity,
-            "Home screen",
-            "Live_Android",
-            "TB_UC_Card_Live"
-        )
-        (activity as BaseActivity).getLiveStreamInfoFromId(
-            it
-        )
-    }
-}
 }

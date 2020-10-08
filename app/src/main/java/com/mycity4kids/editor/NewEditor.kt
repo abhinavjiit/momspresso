@@ -41,6 +41,7 @@ import android.widget.Toast
 import android.widget.ToggleButton
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.widget.Toolbar
+import androidx.cardview.widget.CardView
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import com.google.android.material.snackbar.Snackbar
@@ -73,19 +74,7 @@ import com.mycity4kids.utils.DateTimeUtils
 import com.mycity4kids.utils.GenericFileProvider
 import com.mycity4kids.utils.PermissionUtil
 import com.mycity4kids.utils.StringUtils
-import java.io.ByteArrayOutputStream
-import java.io.File
-import java.io.FileOutputStream
-import java.io.IOException
-import java.lang.ref.WeakReference
-import java.text.SimpleDateFormat
-import java.util.ArrayList
-import java.util.Calendar
-import java.util.Date
-import java.util.HashMap
-import java.util.Locale
-import java.util.Random
-import java.util.regex.Pattern
+import io.github.douglasjunior.androidSimpleTooltip.SimpleTooltip
 import kotlinx.android.synthetic.main.activity_new_editor.*
 import okhttp3.MediaType
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
@@ -116,6 +105,19 @@ import org.xml.sax.Attributes
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
+import java.io.ByteArrayOutputStream
+import java.io.File
+import java.io.FileOutputStream
+import java.io.IOException
+import java.lang.ref.WeakReference
+import java.text.SimpleDateFormat
+import java.util.ArrayList
+import java.util.Calendar
+import java.util.Date
+import java.util.HashMap
+import java.util.Locale
+import java.util.Random
+import java.util.regex.Pattern
 
 const val MAX_WORDS = 300
 
@@ -207,9 +209,11 @@ class NewEditor : BaseActivity(),
     private var taggedChallengeName: String? = null
     var draftChallengeTagList: ArrayList<Map<String, String>>? = null
     var taggedChallengeMap: HashMap<String, String>? = null
-
+    private lateinit var aztecCoachMark: View //view
+    private lateinit var view: View
     val HTML_PATTERN = "(?i)<p.*?>.*?</p>"
     var pattern: Pattern = Pattern.compile(HTML_PATTERN)
+    private lateinit var bottomCoachMark: CardView
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -219,12 +223,14 @@ class NewEditor : BaseActivity(),
             "CreateArticleScreen",
             SharedPrefUtils.getUserDetailModel(this).dynamoId + ""
         )
-
+        bottomCoachMark = findViewById(R.id.bottomCoachMark)
         mToolbar = findViewById<View>(R.id.toolbar) as Toolbar
         closeEditorImageView =
             findViewById<View>(R.id.closeEditorImageView) as ImageView
         lastSavedTextView = findViewById<View>(R.id.lastSavedTextView) as TextView
         publishTextView = findViewById<View>(R.id.publishTextView) as TextView
+        aztecCoachMark = findViewById(R.id.aztecCoachMark)
+        view = findViewById(R.id.view)
         val sourceEditor = findViewById<SourceViewEditText>(R.id.source)
         titleTxt = findViewById<View>(R.id.title) as EditText
         editorGetHelp = findViewById(R.id.editor_get_help)
@@ -232,8 +238,25 @@ class NewEditor : BaseActivity(),
         editor_get_help.setOnClickListener(this)
         closeEditorImageView!!.setOnClickListener(this)
         publishTextView!!.setOnClickListener(this)
+        view.setOnClickListener(this)
+        aztecCoachMark.setOnClickListener(this)
         taggedChallengeId = intent.getStringExtra("articleChallengeId")
         taggedChallengeName = intent.getStringExtra("challengeName")
+
+        if (!SharedPrefUtils.isCoachmarksShownFlag(
+                BaseApplication.getAppContext(),
+                "newEditor_bottom"
+            )) {
+            bottomCoachMark.visibility = View.VISIBLE
+        } else if (!SharedPrefUtils.isCoachmarksShownFlag(
+                BaseApplication.getAppContext(),
+                "newEditor_controllerView"
+            )) {
+            view.visibility = View.VISIBLE
+            aztecCoachMark.visibility = View.VISIBLE
+        }
+
+
         if (!taggedChallengeId.isNullOrBlank() && !taggedChallengeName.isNullOrBlank()) {
             draftChallengeTagList = ArrayList()
             taggedChallengeMap = HashMap()
@@ -402,6 +425,9 @@ class NewEditor : BaseActivity(),
             override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
             }
         })
+        bottomCoachMark.setOnClickListener(this)
+        view.setOnClickListener(this)
+        aztecCoachMark.setOnClickListener(this)
     }
 
     private fun generateAttributesForMedia(
@@ -1330,6 +1356,26 @@ class NewEditor : BaseActivity(),
     override fun onClick(v: View) {
         when (v.id) {
             R.id.closeEditorImageView -> onBackPressed()
+            R.id.bottomCoachMark -> {
+                bottomCoachMark.visibility = View.GONE
+                view.visibility = View.VISIBLE
+                aztecCoachMark.visibility = View.VISIBLE
+                SharedPrefUtils.setCoachmarksShownFlag(
+                    BaseApplication.getAppContext(),
+                    "newEditor_bottom",
+                    true
+                )
+            }
+            R.id.aztecCoachMark, R.id.view -> {
+                SharedPrefUtils.setCoachmarksShownFlag(
+                    BaseApplication.getAppContext(),
+                    "newEditor_controllerView",
+                    true
+                )
+                view.visibility = View.GONE
+                aztecCoachMark.visibility = View.GONE
+                showToolTip()
+            }
             R.id.editor_get_help -> {
                 editorGetHelpDialog()
                 closeEditorImageView?.setEnabled(false)
@@ -1658,5 +1704,18 @@ class NewEditor : BaseActivity(),
         init {
             mActivity = WeakReference(activity)
         }
+    }
+
+    private fun showToolTip() {
+        SimpleTooltip.Builder(this)
+            .anchorView(publishTextView)
+            .contentView(R.layout.article_publish_tooltip_layout)
+            .arrowColor(ContextCompat.getColor(this, R.color.tooltip_border))
+            .gravity(Gravity.BOTTOM)
+            .arrowWidth(40f)
+            .animated(true)
+            .transparentOverlay(true)
+            .build()
+            .show()
     }
 }

@@ -13,6 +13,7 @@ import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
+import androidx.cardview.widget.CardView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.crashlytics.FirebaseCrashlytics;
@@ -26,9 +27,13 @@ import com.mycity4kids.constants.AppConstants;
 import com.mycity4kids.gtmutils.Utils;
 import com.mycity4kids.listener.OnButtonClicked;
 import com.mycity4kids.models.request.UploadVideoRequest;
+import com.mycity4kids.models.response.GroupsMembershipResponse;
 import com.mycity4kids.preference.SharedPrefUtils;
 import com.mycity4kids.retrofitAPIsInterfaces.VlogsListingAndDetailsAPI;
+import com.mycity4kids.ui.GroupMembershipStatus;
+import com.mycity4kids.ui.GroupMembershipStatus.IMembershipStatus;
 import com.mycity4kids.utils.MixPanelUtils;
+import com.mycity4kids.widget.MomspressoButtonWidget;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import okhttp3.ResponseBody;
@@ -39,7 +44,7 @@ import retrofit2.Retrofit;
 /**
  * Created by hemant on 11/1/17.
  */
-public class VideoUploadProgressActivity extends BaseActivity implements View.OnClickListener {
+public class VideoUploadProgressActivity extends BaseActivity implements View.OnClickListener, IMembershipStatus {
 
     private RelativeLayout uploadFinishContainer;
     private RelativeLayout uploadingContainer;
@@ -63,6 +68,11 @@ public class VideoUploadProgressActivity extends BaseActivity implements View.On
     private com.google.firebase.storage.UploadTask uploadTask;
     private RelativeLayout root;
     private String uploadStatus = AppConstants.VIDEO_UPLOAD_NOT_STARTED;
+    private ImageView cancelImage;
+    private MomspressoButtonWidget joinVloggersGroup;
+    private TextView needOpinionTextView;
+    private CardView youAreDoneView;
+    private int groupId;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -71,23 +81,24 @@ public class VideoUploadProgressActivity extends BaseActivity implements View.On
         root = findViewById(R.id.root);
         ((BaseApplication) getApplication()).setView(root);
         ((BaseApplication) getApplication()).setActivity(this);
-
+        checkCreatorGroupStatus();
         Utils.pushOpenScreenEvent(this, "VideoUploadScreen",
                 SharedPrefUtils.getUserDetailModel(this).getDynamoId() + "");
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
         firebaseAuth = FirebaseAuth.getInstance();
-
         contentUri = getIntent().getParcelableExtra("uri");
         title = getIntent().getStringExtra("title");
         categoryId = getIntent().getStringExtra("categoryId");
         thumbnailTime = getIntent().getStringExtra("thumbnailTime");
         extension = getIntent().getStringExtra("extension");
-
         comingFrom = getIntent().getStringExtra("comingFrom");
         if ("Challenge".equals(comingFrom)) {
             challengeId = getIntent().getStringExtra("ChallengeId");
         }
-
+        needOpinionTextView = findViewById(R.id.needOpinionTextView);
+        youAreDoneView = findViewById(R.id.youAreDoneView);
+        joinVloggersGroup = findViewById(R.id.joinVloggersGroup);
+        cancelImage = findViewById(R.id.cancelImage);
         uploadingContainer = findViewById(R.id.uploadingContainer);
         uploadFinishContainer = findViewById(R.id.uploadFinishContainer);
         okayTextView = findViewById(R.id.okayTextView);
@@ -104,6 +115,37 @@ public class VideoUploadProgressActivity extends BaseActivity implements View.On
         uploadFinishContainer.setVisibility(View.GONE);
 
         mixpanel = MixpanelAPI.getInstance(BaseApplication.getAppContext(), AppConstants.MIX_PANEL_TOKEN);
+        cancelImage.setOnClickListener(view -> {
+            youAreDoneView.setVisibility(View.GONE);
+        });
+        joinVloggersGroup.setOnClickListener(view -> {
+
+        });
+
+    }
+
+    private void checkCreatorGroupStatus() {
+        GroupMembershipStatus groupMembershipStatus = new GroupMembershipStatus(this);
+        switch (SharedPrefUtils.getAppLocale(BaseApplication.getAppContext())) {
+            case "en": {
+                groupId = AppConstants.ENGLISH_JOIN_CREATOR_GROUP_ID;
+                break;
+            }
+            case "ta": {
+                groupId = AppConstants.TAMIL_JOIN_CREATOR_GROUP_ID;
+                break;
+            }
+            case "bn": {
+                groupId = AppConstants.BANGLA_JOIN_CREATOR_GROUP_ID;
+                break;
+            }
+            case "hi": {
+                groupId = AppConstants.HINDI_JOIN_CREATOR_GROUP_ID;
+                break;
+            }
+        }
+        groupMembershipStatus.checkMembershipStatus(groupId,
+                SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId());
     }
 
     @Override
@@ -282,6 +324,30 @@ public class VideoUploadProgressActivity extends BaseActivity implements View.On
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
+            case R.id.cancelImage: {
+                youAreDoneView.setVisibility(View.GONE);
+                break;
+            }
+            case R.id.joinVloggersGroup: {
+                if (joinVloggersGroup.getTag() == "already_join") {
+                    Intent chooseShortStory = new Intent(
+                            this,
+                            ChooseShortStoryCategoryActivity.class
+                    );
+                    chooseShortStory.setFlags(
+                            (Intent.FLAG_ACTIVITY_SINGLE_TOP | Intent.FLAG_ACTIVITY_CLEAR_TOP));
+                    chooseShortStory.putExtra("source", "dashboard");
+                    startActivity(chooseShortStory);
+                } else {
+                    Intent intent = new Intent(this, GroupsSummaryActivity.class);
+                    intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                    intent.putExtra("groupId", groupId);
+                    intent.putExtra("comingFrom", "story");
+                    startActivity(intent);
+                }
+                break;
+            }
+
             case R.id.okayTextView:
                 Intent intent = new Intent(VideoUploadProgressActivity.this, DashboardActivity.class);
                 intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
@@ -305,5 +371,28 @@ public class VideoUploadProgressActivity extends BaseActivity implements View.On
             default:
                 break;
         }
+    }
+
+
+    @Override
+    public void onMembershipStatusFetchSuccess(GroupsMembershipResponse body, int groupId) {
+        joinVloggersGroup.setVisibility(View.VISIBLE);
+        needOpinionTextView.setVisibility(View.VISIBLE);
+        if (body.getData().getResult() == null || body.getData().getResult().isEmpty() || body.getData().getResult()
+                .get(0).getStatus().equals("2")) {
+            joinVloggersGroup.setText("Join Creator's Hangout");
+            needOpinionTextView.setText("Get tips or ideas from other creators");
+            joinVloggersGroup.setTag("please_join");
+        } else {
+            joinVloggersGroup.setText("Create More");
+            needOpinionTextView.setText(
+                    "Don't stop all the magic you were creating");
+            joinVloggersGroup.setTag("already_join");
+        }
+    }
+
+
+    @Override
+    public void onMembershipStatusFetchFail() {
     }
 }

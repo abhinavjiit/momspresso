@@ -9,6 +9,9 @@ import android.os.Bundle
 import android.util.Log
 import android.view.View
 import android.view.Window
+import android.widget.ImageView
+import android.widget.RelativeLayout
+import android.widget.TextView
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.firebase.crashlytics.FirebaseCrashlytics
@@ -21,13 +24,14 @@ import com.mycity4kids.preference.SharedPrefUtils
 import com.mycity4kids.retrofitAPIsInterfaces.VlogsListingAndDetailsAPI
 import com.mycity4kids.ui.adapter.ShortStoryChallengeTopicsAdapter
 import com.mycity4kids.ui.adapter.ShortStoryTopicsGridAdapter
+import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.choose_short_story_category_activity.*
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 
 class ChooseShortStoryCategoryActivity : BaseActivity(),
-    ShortStoryChallengeTopicsAdapter.RecyclerViewClickListener {
+    ShortStoryChallengeTopicsAdapter.RecyclerViewClickListener, View.OnClickListener {
     private val shortStoryChallengeAdapter: ShortStoryChallengeTopicsAdapter by lazy {
         ShortStoryChallengeTopicsAdapter(
             this
@@ -37,11 +41,28 @@ class ChooseShortStoryCategoryActivity : BaseActivity(),
     private lateinit var shortShortTopicsData: ArrayList<Topics>
     private lateinit var shortStoryChallengesData: ArrayList<Topics>
     private var source: String? = null
+    private lateinit var tagImageViewCoachMark: ImageView
+    private lateinit var coachMark: RelativeLayout
+    private lateinit var challengeNameText: TextView
+    private lateinit var secondTextView: TextView
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.choose_short_story_category_activity)
+        tagImageViewCoachMark = findViewById(R.id.tagImageViewCoachMark)
+        challengeNameText = findViewById(R.id.challengeNameText)
+        coachMark = findViewById(R.id.coachMark)
+        secondTextView = findViewById(R.id.secondTextView)
         source = intent.getStringExtra("source")
+
+        if (!SharedPrefUtils.isCoachmarksShownFlag(
+                BaseApplication.getAppContext(),
+                "chooseStoryOrChallenge"
+            )) {
+
+            coachMark.visibility = View.VISIBLE
+        }
+
 
         shortShortTopicsData = ArrayList()
         shortStoryChallengesData = ArrayList()
@@ -73,6 +94,9 @@ class ChooseShortStoryCategoryActivity : BaseActivity(),
         if (!SharedPrefUtils.getOriginalContentStoryClick(this)) {
             showOriginalContentDialog()
         }
+        coachMark.setOnClickListener(this)
+        tagImageViewCoachMark.setOnClickListener(this)
+        secondTextView.setOnClickListener(this)
     }
 
     private fun getCategoriesData() {
@@ -169,6 +193,18 @@ class ChooseShortStoryCategoryActivity : BaseActivity(),
                 }
             }
             shortStoryChallengesData.reverse()
+            try {
+                Picasso.get().load(shortStoryChallengesData[0].extraData[0].challenge.imageUrl.trim()).error(
+                    R.drawable.default_article
+                ).into(
+                    tagImageViewCoachMark
+                )
+                challengeNameText.text = shortStoryChallengesData[0].display_name
+              if(!SharedPrefUtils.isCoachmarksShownFlag(BaseApplication.getAppContext(),"chooseStoryOrChallenge"))
+                coachMark.visibility = View.VISIBLE
+            } catch (e: Exception) {
+                coachMark.visibility = View.GONE
+            }
             shortStoryChallengeAdapter.setShortStoryChallengesData(shortStoryChallengesData)
             shortStoryChallengeAdapter.notifyDataSetChanged()
         }
@@ -190,7 +226,7 @@ class ChooseShortStoryCategoryActivity : BaseActivity(),
         startActivity(intent)
     }
 
-    fun showOriginalContentDialog() {
+    private fun showOriginalContentDialog() {
         val dialog = Dialog(this)
         dialog.window!!.requestFeature(Window.FEATURE_NO_TITLE)
         dialog.setContentView(R.layout.dialog_original_content)
@@ -201,5 +237,35 @@ class ChooseShortStoryCategoryActivity : BaseActivity(),
         }
         dialog.window!!.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
         dialog.show()
+    }
+
+    override fun onClick(v: View?) {
+        if (v?.id == R.id.coachMark || v?.id == R.id.tagImageViewCoachMark) {
+            coachMark.visibility = View.GONE
+            SharedPrefUtils.setCoachmarksShownFlag(
+                BaseApplication.getAppContext(),
+                "chooseStoryOrChallenge",
+                true
+            )
+        }
+        if (v?.id == R.id.secondTextView) {
+            coachMark.visibility = View.GONE
+            SharedPrefUtils.setCoachmarksShownFlag(
+                BaseApplication.getAppContext(),
+                "chooseStoryOrChallenge",
+                true
+            )
+            SharedPrefUtils.setCoachmarksShownFlag(
+                BaseApplication.getAppContext(),
+                "addShortStory",
+                true
+            )
+
+            SharedPrefUtils.setCoachmarksShownFlag(
+                BaseApplication.getAppContext(),
+                "storyCoachmark",
+                true
+            )
+        }
     }
 }

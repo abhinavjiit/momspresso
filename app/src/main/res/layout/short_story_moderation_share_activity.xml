@@ -22,10 +22,45 @@
     android:layout_height="wrap_content"
     android:layout_centerInParent="true">
 
+    <androidx.constraintlayout.widget.ConstraintLayout
+      android:id="@+id/youAreDoneView"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:layout_centerHorizontal="true"
+      android:layout_marginBottom="@dimen/space_12">
+
+      <com.mycity4kids.widget.CustomFontTextView
+        android:id="@+id/secondTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/space_12"
+        android:layout_marginTop="12dp"
+        android:layout_marginEnd="@dimen/space_12"
+        android:background="@drawable/tooltip_shape_layout"
+        android:padding="@dimen/space_16"
+        android:text="Yay! You are all done!"
+        android:textColor="@color/campaign_515151"
+        android:textSize="14sp"
+        app:fontName="Roboto-Regular.ttf"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+      <androidx.appcompat.widget.AppCompatImageView
+        android:id="@+id/cancelImageModeration"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/ic_cross" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
     <ImageView
       android:id="@+id/headerImageView"
       android:layout_width="wrap_content"
       android:layout_height="wrap_content"
+      android:layout_below="@+id/youAreDoneView"
       android:layout_centerHorizontal="true"
       android:src="@drawable/ic_moderation" />
 
@@ -51,6 +86,7 @@
       android:background="@color/app_blue" />
 
     <LinearLayout
+      android:id="@+id/moderationView"
       android:layout_width="match_parent"
       android:layout_height="wrap_content"
       android:layout_below="@+id/underline1"
@@ -87,7 +123,38 @@
         android:textSize="18sp"
         app:fontName="oswald.ttf" />
     </LinearLayout>
+
+    <com.mycity4kids.widget.CustomFontTextView
+      android:id="@+id/createMoreHeaderTextViewModeration"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:layout_below="@+id/moderationView"
+      android:layout_centerHorizontal="true"
+      android:layout_marginTop="40dp"
+      android:text="Don't stop all the magic you were creating"
+      android:textColor="@color/campaign_515151"
+      android:textSize="16sp"
+      android:visibility="gone"
+      app:fontName="Roboto-Regular.ttf"
+
+      />
+
+    <com.mycity4kids.widget.MomspressoButtonWidget
+      android:id="@+id/createMoreButtonModeration"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:layout_below="@id/createMoreHeaderTextViewModeration"
+      android:layout_centerHorizontal="true"
+      android:layout_marginTop="12dp"
+      android:padding="@dimen/space_16"
+      android:visibility="gone"
+      app:fb_defaultColor="@color/app_red"
+      app:fb_radius="4dp"
+      app:fb_text="Create More"
+
+      />
   </RelativeLayout>
+
 
   <ScrollView
     android:id="@+id/publishedContainer"
@@ -219,6 +286,37 @@
           app:shareImage="@drawable/ic_ss_generic"
           app:shareText="@string/ad.bottom_bar.generic_share"
           app:textStyle="bold" />
+
+
+        <com.mycity4kids.widget.CustomFontTextView
+          android:id="@+id/createMoreHeaderTextView"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:layout_marginTop="40dp"
+          android:text="Don't stop all the magic you were creating"
+          android:textColor="@color/campaign_515151"
+          android:textSize="16sp"
+          android:visibility="gone"
+          app:fontName="Roboto-Regular.ttf"
+          app:layout_constraintEnd_toEndOf="parent"
+          app:layout_constraintStart_toStartOf="parent"
+          app:layout_constraintTop_toBottomOf="@id/instagramShareWidget" />
+
+        <com.mycity4kids.widget.MomspressoButtonWidget
+          android:id="@+id/createMoreButton"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:layout_marginTop="12dp"
+          android:padding="@dimen/space_16"
+          android:visibility="gone"
+          app:fb_defaultColor="@color/app_red"
+          app:fb_radius="4dp"
+          app:fb_text="Create More"
+          app:layout_constraintEnd_toEndOf="parent"
+          app:layout_constraintStart_toStartOf="parent"
+          app:layout_constraintTop_toBottomOf="@+id/createMoreHeaderTextView" />
+
+
       </androidx.constraintlayout.widget.ConstraintLayout>
     </androidx.constraintlayout.widget.ConstraintLayout>
   </ScrollView>

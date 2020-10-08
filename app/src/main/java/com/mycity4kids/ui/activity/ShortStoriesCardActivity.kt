@@ -27,7 +27,9 @@ import androidx.viewpager.widget.ViewPager
 import com.google.android.material.snackbar.Snackbar
 import com.google.android.material.tabs.TabLayout
 import com.google.firebase.crashlytics.FirebaseCrashlytics
+import com.mycity4kids.ArrowDrawable
 import com.mycity4kids.R
+import com.mycity4kids.SimpleTooltip
 import com.mycity4kids.application.BaseApplication
 import com.mycity4kids.base.BaseActivity
 import com.mycity4kids.constants.AppConstants
@@ -50,7 +52,6 @@ import com.mycity4kids.utils.OnDragTouchListener
 import com.mycity4kids.utils.StringUtils
 import com.mycity4kids.utils.ToastUtils
 import com.squareup.picasso.Picasso
-import java.io.File
 import okhttp3.MediaType
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.RequestBody
@@ -59,8 +60,9 @@ import okhttp3.RequestBody.Companion.toRequestBody
 import okhttp3.ResponseBody
 import retrofit2.Call
 import retrofit2.Callback
+import java.io.File
 
-class ShortStoriesCardActivity : BaseActivity() {
+class ShortStoriesCardActivity : BaseActivity(), View.OnClickListener {
     private val REQUEST_INIT_PERMISSION = 1
     private val PERMISSIONS_INIT = arrayOf(
         Manifest.permission.READ_EXTERNAL_STORAGE,
@@ -74,6 +76,7 @@ class ShortStoriesCardActivity : BaseActivity() {
     private lateinit var gotItTextView: TextView
 
     private lateinit var tabs: TabLayout
+    private lateinit var collectionTabLayoutCoachMark: TabLayout
     private lateinit var collectionsViewPager: ViewPager
     private lateinit var adapter: ShortStoriesThumbnailAdapter
     private lateinit var cardBg: ImageView
@@ -115,14 +118,19 @@ class ShortStoriesCardActivity : BaseActivity() {
     private var x: Int = 0
     private var y: Int = 0
     private var isImageLoaded: Boolean = false
+    private lateinit var CoachMarkTransparentView: View
+    private lateinit var tab_layoutCoachMark: LinearLayout
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.short_story_card_activity)
+        CoachMarkTransparentView = findViewById(R.id.CoachMarkTransparentView)
+        tab_layoutCoachMark = findViewById(R.id.tab_layoutCoachMark)
         mLayout = findViewById(R.id.rootLayout)
         shortLayout = findViewById(R.id.short_layout)
         toolbar = findViewById(R.id.toolbar)
         tabs = findViewById(R.id.collectionTabLayout)
+        collectionTabLayoutCoachMark = findViewById<TabLayout>(R.id.collectionTabLayoutCoachMark)
         cardBg = findViewById(R.id.card_bg)
         titleTv = findViewById(R.id.short_title)
         rlLayout = findViewById(R.id.rl_layout)
@@ -144,7 +152,6 @@ class ShortStoriesCardActivity : BaseActivity() {
         setSupportActionBar(toolbar)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
         supportActionBar?.setDisplayShowHomeEnabled(true)
-
         if (!SharedPrefUtils.isCoachmarksShownFlag(
                 BaseApplication.getAppContext(),
                 "storyCoachmark"
@@ -189,6 +196,10 @@ class ShortStoriesCardActivity : BaseActivity() {
         tabs.apply {
             addTab(tabs.newTab().setText(resources.getString(R.string.background)))
             addTab(tabs.newTab().setText(resources.getString(R.string.text)))
+        }
+        collectionTabLayoutCoachMark.apply {
+            addTab(collectionTabLayoutCoachMark.newTab().setText(resources.getString(R.string.background)))
+            addTab(collectionTabLayoutCoachMark.newTab())
         }
 
         setEnabledDisabled(false)
@@ -253,18 +264,38 @@ class ShortStoriesCardActivity : BaseActivity() {
         gotItTextView.setOnClickListener {
             if (moveTextCoachmark.visibility == View.VISIBLE) {
                 moveTextCoachmark.visibility = View.GONE
-                storyBgEditCoachmark.visibility = View.VISIBLE
-            } else if (storyBgEditCoachmark.visibility == View.VISIBLE) {
-                storyBgEditCoachmark.visibility = View.GONE
+                tab_layoutCoachMark.visibility = View.VISIBLE
+                showToolTip
+            } else if (tab_layoutCoachMark.visibility == View.VISIBLE) {
+                tab_layoutCoachMark.visibility = View.GONE
                 textStylingCoachmark.visibility = View.VISIBLE
+                gotItTextView.text = resources.getString(R.string.story_got_it)
             } else {
                 textStylingCoachmark.visibility = View.GONE
                 moveTextCoachmark.visibility = View.VISIBLE
                 storyCoachmark.visibility = View.GONE
                 SharedPrefUtils.setCoachmarksShownFlag(this, "storyCoachmark", true)
+                showPublishToolTip()
             }
         }
     }
+
+    private val showToolTip: Unit
+        get() =
+            SimpleTooltip.Builder(this)
+                .anchorView(collectionTabLayoutCoachMark)
+                .contentView(R.layout.short_story_choose_background_tooltip_layout)
+                .arrowColor(ContextCompat.getColor(this, R.color.tooltip_border))
+                .arrowWidth(40f)
+                .animated(true)
+                .gravity(Gravity.TOP)
+                .arrowDirection(ArrowDrawable.BOTTOM)
+                .transparentOverlay(true)
+                .setMargin(180)
+                .padding(16f)
+                .build()
+                .show()
+
 
     fun setCategoryId(id: String) {
         imagesCategoryId = id
@@ -896,5 +927,23 @@ class ShortStoriesCardActivity : BaseActivity() {
             titleTv.gravity = Gravity.RIGHT
             storyTv.gravity = Gravity.RIGHT
         }
+    }
+
+    override fun onClick(view: View?) {
+
+    }
+
+    private fun showPublishToolTip() {
+        io.github.douglasjunior.androidSimpleTooltip.SimpleTooltip.Builder(this)
+            .anchorView(publishTextView)
+            .contentView(R.layout.story_publish_tooltip_layout)
+            .arrowColor(ContextCompat.getColor(this, R.color.tooltip_border))
+            .gravity(Gravity.BOTTOM)
+            .showArrow(true)
+            .arrowWidth(40f)
+            .animated(false)
+            .transparentOverlay(true)
+            .build()
+            .show()
     }
 }

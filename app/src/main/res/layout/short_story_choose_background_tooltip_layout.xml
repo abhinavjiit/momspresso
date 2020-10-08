@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+  xmlns:app="http://schemas.android.com/apk/res-auto"
+  android:id="@+id/root"
+  android:layout_width="match_parent"
+  android:layout_height="wrap_content"
+  android:layout_margin="16dp"
+  android:background="@drawable/tooltip_shape_layout"
+  android:padding="@dimen/space_20">
+
+
+  <com.mycity4kids.widget.CustomFontTextView
+    android:id="@+id/secondTextView"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:text="Choose a background of your choice"
+    android:textColor="@color/campaign_515151"
+    android:textSize="14sp"
+    app:fontName="Roboto-Regular.ttf"
+    app:layout_constraintEnd_toStartOf="@+id/okgot"
+    app:layout_constraintStart_toStartOf="parent"
+    app:layout_constraintTop_toTopOf="parent" />
+
+  <com.mycity4kids.widget.CustomFontTextView
+    android:id="@+id/okgot"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_marginStart="10dp"
+    android:text="Next"
+    android:visibility="gone"
+    android:textColor="@color/app_red"
+    android:textSize="16sp"
+    app:fontName="Roboto-Medium.ttf"
+    app:layout_constraintBottom_toBottomOf="@id/secondTextView"
+    app:layout_constraintEnd_toEndOf="parent"
+    app:layout_constraintStart_toEndOf="@id/secondTextView" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>
