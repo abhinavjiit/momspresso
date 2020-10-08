@@ -1,0 +1,94 @@
+package com.mycity4kids.ui.adapter;
+
+import android.content.Context;
+import android.util.Log;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.ImageView;
+import android.widget.RelativeLayout;
+import android.widget.TextView;
+import androidx.core.content.ContextCompat;
+import androidx.recyclerview.widget.RecyclerView;
+import com.google.firebase.crashlytics.FirebaseCrashlytics;
+import com.mycity4kids.R;
+import com.mycity4kids.models.response.AllLeaderboardDataResponse.AllLeaderboardData.AllLeaderboardRankHolder;
+import com.mycity4kids.preference.SharedPrefUtils;
+import com.squareup.picasso.Picasso;
+import java.util.ArrayList;
+
+/**
+ * Created by hemant on 30/5/18.
+ */
+
+public class AllVlogLeaderboardRecyclerAdapter extends
+        RecyclerView.Adapter<AllVlogLeaderboardRecyclerAdapter.LeaderboardViewHolder> {
+
+    private Context mContext;
+    private LayoutInflater mInflator;
+    private ArrayList<AllLeaderboardRankHolder> articleDataModelsNew;
+
+    public AllVlogLeaderboardRecyclerAdapter(Context pContext) {
+        mInflator = (LayoutInflater) pContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        mContext = pContext;
+    }
+
+    @Override
+    public long getItemId(int position) {
+        return position;
+    }
+
+    public void setListData(ArrayList<AllLeaderboardRankHolder> mParentingLists) {
+        articleDataModelsNew = mParentingLists;
+    }
+
+    @Override
+    public LeaderboardViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+        LeaderboardViewHolder viewHolder = null;
+        View v0 = mInflator.inflate(R.layout.leaderboard_listing_item, parent, false);
+        viewHolder = new LeaderboardViewHolder(v0);
+        return viewHolder;
+    }
+
+    @Override
+    public void onBindViewHolder(LeaderboardViewHolder holder, int position) {
+        try {
+            Picasso.get().load(articleDataModelsNew.get(position).getProfilePic().getClientAppMin()).
+                    placeholder(R.drawable.ic_launcher).error(R.drawable.ic_launcher)
+                    .into(holder.profilePic);
+        } catch (Exception e) {
+            FirebaseCrashlytics.getInstance().recordException(e);
+            Log.d("MC4kException", Log.getStackTraceString(e));
+        }
+        holder.userName.setText(articleDataModelsNew.get(position).getName());
+        holder.userHandle.setText(articleDataModelsNew.get(position).getUser_handle());
+        holder.userRank.setText("" + articleDataModelsNew.get(position).getRank());
+        holder.viewCount.setText("" + (articleDataModelsNew.get(position).getScore() / 1000) + "K");
+        if (articleDataModelsNew.get(position).getUser_id()
+                .equals(SharedPrefUtils.getUserDetailModel(mContext).getDynamoId())) {
+            holder.rl.setBackgroundColor(ContextCompat.getColor(mContext, R.color.color_FFF7F8));
+        }
+    }
+
+    @Override
+    public int getItemCount() {
+        return articleDataModelsNew == null ? 0 : articleDataModelsNew.size();
+    }
+
+    public class LeaderboardViewHolder extends RecyclerView.ViewHolder {
+
+        TextView userName, userHandle, userRank, viewCount;
+        ImageView profilePic;
+        RelativeLayout rl;
+
+        LeaderboardViewHolder(View itemView) {
+            super(itemView);
+            profilePic = itemView.findViewById(R.id.profilePicImageView);
+            userName = itemView.findViewById(R.id.user_name);
+            userHandle = itemView.findViewById(R.id.user_handle);
+            userRank = itemView.findViewById(R.id.user_rank);
+            viewCount = itemView.findViewById(R.id.view_count);
+            rl = itemView.findViewById(R.id.rl);
+        }
+    }
+}

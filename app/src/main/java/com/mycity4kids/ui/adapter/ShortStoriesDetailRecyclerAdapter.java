@@ -126,6 +126,7 @@ public class ShortStoriesDetailRecyclerAdapter extends RecyclerView.Adapter<Recy
                     ssViewHolder.beTheFirstOne.setVisibility(View.VISIBLE);
                 } else {
                     ssViewHolder.storyCommentCountTextView.setVisibility(View.VISIBLE);
+                    ssViewHolder.beTheFirstOne.setVisibility(View.GONE);
                     ssViewHolder.storyCommentCountTextView
                             .setText(datalist.get(position).getSsResult().getCommentCount());
                     ssViewHolder.commentCount.setVisibility(View.VISIBLE);

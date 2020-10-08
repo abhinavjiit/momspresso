@@ -26,6 +26,7 @@ import com.mycity4kids.R
 import com.mycity4kids.application.BaseApplication
 import com.mycity4kids.base.BaseFragment
 import com.mycity4kids.constants.AppConstants
+import com.mycity4kids.gtmutils.Utils
 import com.mycity4kids.models.request.PhoneLoginRequest
 import com.mycity4kids.retrofitAPIsInterfaces.LoginRegistrationAPI
 import com.mycity4kids.ui.activity.OTPActivity
@@ -69,8 +70,6 @@ class VerifySMSFragment : BaseFragment(), View.OnClickListener {
 
         smsToken = arguments?.getString("smsToken")
         phoneNumber = arguments?.getString("phoneNumber")
-
-        //        mAuth = FirebaseAuth.getInstance()
 
         activity?.let {
             verifySmsTextView?.text =
@@ -241,6 +240,7 @@ class VerifySMSFragment : BaseFragment(), View.OnClickListener {
     }
 
     fun verifySMS(sms_token: String?) {
+        Utils.shareEventTracking(activity, "Login screen", "Login_Android", "Login_OTP")
         val phoneLoginRequest = PhoneLoginRequest()
         phoneLoginRequest.verification_code =
             otpEditText1?.text?.toString() + otpEditText2?.text?.toString() + otpEditText3?.text?.toString() +

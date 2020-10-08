@@ -25,6 +25,7 @@ import com.mycity4kids.base.BaseActivity
 import com.mycity4kids.constants.AppConstants
 import com.mycity4kids.constants.Constants
 import com.mycity4kids.editor.NewEditor
+import com.mycity4kids.gtmutils.Utils
 import com.mycity4kids.models.Topics
 import com.mycity4kids.models.response.SuggestedTopicsResponse
 import com.mycity4kids.preference.SharedPrefUtils
@@ -78,7 +79,7 @@ class ArticleChallengeOrTopicSelectionActivity : BaseActivity(),
         llm.orientation = RecyclerView.HORIZONTAL
         articleChallengesRecyclerView.layoutManager = llm
         articleChallengesRecyclerAdapter =
-            ContentChallengeSelectionHorizontalAdapter(this, articleChallengesList, "")
+            ContentChallengeSelectionHorizontalAdapter(this, "", articleChallengesList, "")
         articleChallengesRecyclerView.adapter = articleChallengesRecyclerAdapter
         challenges
 
@@ -92,6 +93,7 @@ class ArticleChallengeOrTopicSelectionActivity : BaseActivity(),
         suggestedTopics
 
         bottomLayout.setOnClickListener {
+            Utils.shareEventTracking(this, "Create section", "Create_Android", "B_SW_CTA")
             val intent = Intent(
                 this,
                 NewEditor::class.java
@@ -237,8 +239,9 @@ class ArticleChallengeOrTopicSelectionActivity : BaseActivity(),
         suggestedTopicsRecyclerAdapter.notifyDataSetChanged()
     }
 
-    override fun onChallengeItemClick(view: View, topics: Topics) {
+    override fun onChallengeItemClick(view: View, topics: Topics, parentCategoryId: String?) {
         if (view.id == R.id.info) {
+            Utils.shareEventTracking(this, "Create section", "Create_Android", "B_Show_Challenge_Rules")
             topics.extraData[0].challenge.rules?.let {
                 val dialog = Dialog(this)
                 dialog.setContentView(R.layout.challenge_rules_dialog)
@@ -266,6 +269,7 @@ class ArticleChallengeOrTopicSelectionActivity : BaseActivity(),
     }
 
     override fun onSuggestedTopicClick() {
+        Utils.shareEventTracking(this, "Create section", "Create_Android", "B_Topic")
         val intent = Intent(this, NewEditor::class.java)
         startActivity(intent)
     }

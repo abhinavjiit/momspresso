@@ -146,8 +146,8 @@ public class PhoneLoginUserDetailActivity extends BaseActivity implements View.O
     }
 
     private void saveUserDetails() {
+        Utils.shareEventTracking(this, "Login screen", "Login_Android", "Login_FName_LName");
         UpdateUserDetailsRequest updateUserDetail = new UpdateUserDetailsRequest();
-
         String[] nameArr = fullNameEditText.getText().toString().trim().split("\\s+");
         updateUserDetail.setFirstName(nameArr[0]);
         if (nameArr.length < 2 || StringUtils.isNullOrEmpty(nameArr[1].trim())) {

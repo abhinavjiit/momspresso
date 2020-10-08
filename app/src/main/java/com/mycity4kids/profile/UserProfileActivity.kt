@@ -15,6 +15,7 @@ import android.os.Handler
 import android.util.Log
 import android.view.MenuItem
 import android.view.View
+import android.webkit.WebResourceRequest
 import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.RelativeLayout
@@ -72,6 +73,7 @@ import com.mycity4kids.retrofitAPIsInterfaces.ShortStoryAPI
 import com.mycity4kids.ui.activity.AddShortStoryActivity
 import com.mycity4kids.ui.activity.ArticleDetailsContainerActivity
 import com.mycity4kids.ui.activity.BadgeActivity
+import com.mycity4kids.ui.activity.BloggerGoldActivity
 import com.mycity4kids.ui.activity.FeaturedOnActivity
 import com.mycity4kids.ui.activity.FollowersAndFollowingListActivity
 import com.mycity4kids.ui.activity.FollowingListFBSuggestionActivity
@@ -186,10 +188,11 @@ class UserProfileActivity : BaseActivity(),
     private lateinit var featuredTab: ImageView
     private lateinit var bookmarksTab: ImageView
     private lateinit var divider2: View
-    private lateinit var sharePrivateTextView: TextView
+    private lateinit var inviteTextView: TextView
     private lateinit var sharePublicTextView: TextView
     private lateinit var analyticsTextView: TextView
     private lateinit var followAuthorTextView: TextView
+    private lateinit var bloggerGoldTextView: ImageView
     private lateinit var emptyListTextView: TextView
     private lateinit var bottomLoadingView: RelativeLayout
 
@@ -277,9 +280,10 @@ class UserProfileActivity : BaseActivity(),
         featuredTab = findViewById(R.id.featuredTab)
         bookmarksTab = findViewById(R.id.bookmarksTab)
         divider2 = findViewById(R.id.divider2)
-        sharePrivateTextView = findViewById(R.id.sharePrivateTextView)
+        inviteTextView = findViewById(R.id.inviteTextView)
         analyticsTextView = findViewById(R.id.analyticsTextView)
         followAuthorTextView = findViewById(R.id.followAuthorTextView)
+        bloggerGoldTextView = findViewById(R.id.bloggerGoldTextView)
         sharePublicTextView = findViewById(R.id.sharePublicTextView)
         bottomLoadingView = findViewById(R.id.bottomLoadingView)
         emptyListTextView = findViewById(R.id.emptyListTextView)
@@ -326,13 +330,15 @@ class UserProfileActivity : BaseActivity(),
             authorId = SharedPrefUtils.getUserDetailModel(this).dynamoId
             followerContainer.setOnClickListener(this)
             followingContainer.setOnClickListener(this)
-            sharePrivateTextView.setOnClickListener(this)
+            inviteTextView.setOnClickListener(this)
             analyticsTextView.setOnClickListener(this)
+            bloggerGoldTextView.setOnClickListener(this)
             followAuthorTextView.visibility = View.GONE
             sharePublicTextView.visibility = View.GONE
-            sharePrivateTextView.visibility = View.VISIBLE
+            inviteTextView.visibility = View.VISIBLE
             analyticsTextView.visibility = View.VISIBLE
             appSettingsImageView.visibility = View.VISIBLE
+            bloggerGoldTextView.visibility = View.VISIBLE
             myCollectionsWidget.getCollections(authorId, true)
             Utils.pushGenericEvent(this, "Show_Private_Profile", authorId, "UserProfileActivity")
         } else {
@@ -340,9 +346,10 @@ class UserProfileActivity : BaseActivity(),
             divider2.visibility = View.GONE
             followAuthorTextView.visibility = View.VISIBLE
             sharePublicTextView.visibility = View.VISIBLE
-            sharePrivateTextView.visibility = View.GONE
+            inviteTextView.visibility = View.GONE
             analyticsTextView.visibility = View.GONE
             appSettingsImageView.visibility = View.GONE
+            bloggerGoldTextView.visibility = View.GONE
             followAuthorTextView.setOnClickListener(this)
             sharePublicTextView.setOnClickListener(this)
             checkFollowingStatusAPI()
@@ -1190,8 +1197,15 @@ class UserProfileActivity : BaseActivity(),
             view?.id == R.id.sharePublicTextView -> {
                 shareProfile()
             }
-            view?.id == R.id.sharePrivateTextView -> {
+            view?.id == R.id.inviteTextView -> {
                 launchInviteFriendsDialog("profile")
+            }
+            view?.id == R.id.bloggerGoldTextView -> {
+                val intent = Intent(
+                    this,
+                    BloggerGoldActivity::class.java
+                )
+                startActivity(intent)
             }
             view?.id == R.id.analyticsTextView -> {
                 if (AppConstants.DEBUGGING_USER_ID.contains("" + authorId)) {
@@ -1457,6 +1471,10 @@ class UserProfileActivity : BaseActivity(),
 
     override fun onFollowSuccess() {
         syncFollowingList()
+    }
+
+    override fun onTorcaiAdClick(request: WebResourceRequest) {
+
     }
 
     private fun showArticleMenuOptions(view: View, position: Int) {

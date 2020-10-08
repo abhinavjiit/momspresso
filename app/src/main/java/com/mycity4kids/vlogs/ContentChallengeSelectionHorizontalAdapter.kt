@@ -15,6 +15,7 @@ import java.util.ArrayList
 
 class ContentChallengeSelectionHorizontalAdapter(
     private val listener: RecyclerViewClickListener,
+    private val parentCategoryId: String?,
     private val challengeList: ArrayList<Topics>,
     private val source: String
 ) : RecyclerView.Adapter<CustomViewHolder>() {
@@ -81,11 +82,15 @@ class ContentChallengeSelectionHorizontalAdapter(
         }
 
         override fun onClick(view: View) {
-            recyclerViewClickListener.onChallengeItemClick(view, challengeList[adapterPosition])
+            recyclerViewClickListener.onChallengeItemClick(
+                view,
+                challengeList[adapterPosition],
+                parentCategoryId
+            )
         }
     }
 
     interface RecyclerViewClickListener {
-        fun onChallengeItemClick(view: View, topics: Topics)
+        fun onChallengeItemClick(view: View, topics: Topics, parentCategoryId: String?)
     }
 }

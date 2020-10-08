@@ -28,6 +28,7 @@ import com.mycity4kids.ShortStoryDetailPagerAdapter;
 import com.mycity4kids.application.BaseApplication;
 import com.mycity4kids.base.BaseActivity;
 import com.mycity4kids.constants.AppConstants;
+import com.mycity4kids.gtmutils.Utils;
 import com.mycity4kids.models.ExploreTopicsModel;
 import com.mycity4kids.models.ExploreTopicsResponse;
 import com.mycity4kids.models.Topics;
@@ -280,9 +281,11 @@ public class ShortStoryChallengeDetailActivity extends BaseActivity implements V
         switch (view.getId()) {
             case R.id.writeArticleCell:
             case R.id.submit_story_text:
+                Utils.shareEventTracking(this, "Story Challenge", "Story_Challenges_Android", "H_SCD_CTA1_Challenge");
                 chooseLayout.setVisibility(View.VISIBLE);
                 break;
             case R.id.start_writing:
+                Utils.shareEventTracking(this, "Story Challenge", "Story_Challenges_Android", "H_SCD_CTA2_Challenge");
                 if (ssTopicsText != null
                         && challengeCategory != null
                         && !StringUtils.isNullOrEmpty(challengeCategory.getDisplay_name())

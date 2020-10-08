@@ -93,12 +93,15 @@ public class FragmentMC4KHomeNew extends BaseFragment implements View.OnClickLis
             public void onTabSelected(TabLayout.Tab tab) {
                 try {
                     if (tab.getText().equals(getString(R.string.video_challenge_text))) {
-                        Utils.shareEventTracking(
-                                getActivity(),
-                                "Home screen",
-                                "Challenges_Android",
-                                "Challenges_Home"
-                        );
+                        Utils.shareEventTracking(getActivity(), "Home screen", "Challenges_Android", "Challenges_Home");
+                    } else if (tab.getText().equals(getString(R.string.article_listing_toolbar_title_todays_best))) {
+                        Utils.shareEventTracking(getActivity(), "Home screen", "Home_Android", "TB_Home");
+                    } else if (tab.getText().equals(getString(R.string.article_listing_toolbar_title_trending))) {
+                        Utils.shareEventTracking(getActivity(), "Home screen", "Home_Android", "Trending_Home");
+                    } else if (tab.getText().equals(getString(R.string.ad_following_author))) {
+                        Utils.shareEventTracking(getActivity(), "Home screen", "Home_Android", "Following_Home");
+                    } else if (tab.getText().equals(getString(R.string.article_listing_toolbar_title_recent))) {
+                        Utils.shareEventTracking(getActivity(), "Home screen", "Home_Android", "Recent_Home");
                     }
                 } catch (Exception e) {
                 }

@@ -14,7 +14,7 @@
     android:layout_centerHorizontal="true"
     android:layout_marginTop="40dp"
     android:gravity="center"
-    android:text="Momspresso is available in 10 languages"
+    android:text="@string/lang_sel_express_yourself"
     android:textColor="@color/app_light_black"
     android:textSize="16sp"
     android:textStyle="bold" />
@@ -26,7 +26,7 @@
     android:layout_below="@+id/welcomeTextView"
     android:layout_centerHorizontal="true"
     android:gravity="center"
-    android:text="Select Language"
+    android:text="@string/select_language"
     android:textColor="@color/app_light_black"
     android:textSize="16sp" />
 

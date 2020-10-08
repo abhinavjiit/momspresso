@@ -302,6 +302,7 @@ public class ContributorListActivity extends BaseActivity implements View.OnClic
                 contributorArrayList.clear();
             }
             AppUtils.updateFollowingStatusContributorList(dataList);
+            contributorArrayList.addAll(dataList);
             paginationValue = responseModel.getData().getPagination();
             if (AppConstants.PAGINATION_END_VALUE.equals(paginationValue)) {
                 isLastPageReached = true;

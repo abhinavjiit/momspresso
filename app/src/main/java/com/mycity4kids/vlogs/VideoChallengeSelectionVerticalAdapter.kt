@@ -41,6 +41,7 @@ class VideoChallengeSelectionVerticalAdapter(
     ) {
         holder.challengeRecyclerView.adapter = ContentChallengeSelectionHorizontalAdapter(
             listener,
+            categoryWiseChallengeList?.get(position)?.id,
             categoryWiseChallengeList?.get(position)?.child!!,
             source
         )

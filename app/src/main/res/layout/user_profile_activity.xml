@@ -322,7 +322,7 @@
               </LinearLayout>
 
               <com.mycity4kids.widget.CustomFontTextView
-                android:id="@+id/sharePrivateTextView"
+                android:id="@+id/inviteTextView"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="20dp"
@@ -331,6 +331,7 @@
                 android:background="@drawable/update_profile_bg"
                 android:elevation="6dp"
                 android:gravity="center"
+                android:minWidth="120dp"
                 android:paddingStart="30dp"
                 android:paddingTop="14dp"
                 android:paddingEnd="30dp"
@@ -339,7 +340,6 @@
                 android:textAllCaps="true"
                 android:textColor="@color/white_color"
                 app:fontName="Roboto-Medium.ttf"
-                app:layout_constraintEnd_toStartOf="@+id/followerContainer"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/rankContainer" />
 
@@ -352,10 +352,10 @@
                 android:layout_marginEnd="20dp"
                 android:background="@drawable/profile_analytics_btn_bg"
                 android:drawableStart="@drawable/ic_analytics"
-                android:drawablePadding="-16dp"
                 android:elevation="6dp"
                 android:gravity="center"
-                android:paddingStart="30dp"
+                android:minWidth="120dp"
+                android:paddingStart="10dp"
                 android:paddingTop="12dp"
                 android:paddingEnd="10dp"
                 android:paddingBottom="12dp"
@@ -363,8 +363,7 @@
                 android:textAllCaps="true"
                 android:textColor="@color/app_red"
                 app:fontName="Roboto-Medium.ttf"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="@+id/followerContainer"
+                app:layout_constraintEnd_toStartOf="@+id/bloggerGoldTextView"
                 app:layout_constraintTop_toBottomOf="@+id/rankContainer" />
 
               <com.mycity4kids.widget.CustomFontTextView
@@ -407,6 +406,21 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="@+id/followerContainer"
                 app:layout_constraintTop_toBottomOf="@+id/rankContainer" />
+
+              <ImageView
+                android:id="@+id/bloggerGoldTextView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="20dp"
+                android:background="@drawable/circular_gradient_bg"
+                android:elevation="20dp"
+                android:padding="12dp"
+                android:src="@drawable/ic_gift"
+                android:tint="@color/white_color"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/rankContainer" />
+
             </androidx.constraintlayout.widget.ConstraintLayout>
           </RelativeLayout>
         </androidx.cardview.widget.CardView>

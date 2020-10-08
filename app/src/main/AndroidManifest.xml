@@ -426,6 +426,15 @@
       android:name=".ui.activity.MyTotalEarningActivity"
       android:screenOrientation="portrait" />
     <activity
+      android:name=".ui.activity.BloggerGoldActivity"
+      android:screenOrientation="portrait" />
+    <activity
+      android:name=".ui.activity.ViewLeaderboardActivity"
+      android:screenOrientation="portrait" />
+    <activity
+      android:name=".ui.activity.ViewAllLeaderboardActivity"
+      android:screenOrientation="portrait" />
+    <activity
       android:name=".ui.activity.ParallelFeedActivity"
       android:screenOrientation="portrait"
       android:theme="@style/Theme.rankingTheme" />

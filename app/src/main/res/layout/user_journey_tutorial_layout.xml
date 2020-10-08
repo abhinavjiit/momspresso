@@ -30,7 +30,7 @@
     android:layout_above="@+id/bottomContainer"
     android:layout_marginBottom="20dp"
     android:gravity="center"
-    android:text="What do you want to start with ?"
+    android:text="@string/home_onboarding_title"
     android:textColor="@color/white_color"
     android:textSize="16sp" />
 
@@ -76,7 +76,7 @@
           android:layout_height="wrap_content"
           android:layout_marginStart="16dp"
           android:layout_toEndOf="@+id/createJourneyImageView"
-          android:text="Express yourself through stories, blogs or videos" />
+          android:text="@string/home_onboarding_create" />
 
         <com.mycity4kids.widget.CustomFontTextView
           android:id="@+id/createTextView"
@@ -87,7 +87,7 @@
           android:layout_toEndOf="@+id/createJourneyImageView"
           android:drawableEnd="@drawable/ic_circular_arrow"
           android:drawablePadding="10dp"
-          android:text="Create"
+          android:text="@string/all_create"
           android:textColor="@color/app_red"
           android:textSize="16sp"
           app:fontName="Roboto-Medium.ttf" />
@@ -120,7 +120,7 @@
           android:layout_height="wrap_content"
           android:layout_marginStart="16dp"
           android:layout_toEndOf="@+id/consumptionJourneyImageView"
-          android:text="Read from 5 Lacs stories, blogs or watch videos" />
+          android:text="@string/home_onboarding_consume" />
 
         <com.mycity4kids.widget.CustomFontTextView
           android:id="@+id/consumptionTextView"
@@ -131,7 +131,7 @@
           android:layout_toEndOf="@+id/consumptionJourneyImageView"
           android:drawableEnd="@drawable/ic_circular_arrow"
           android:drawablePadding="10dp"
-          android:text="View Now"
+          android:text="@string/all_read"
           android:textColor="@color/app_red"
           android:textSize="16sp"
           app:fontName="Roboto-Medium.ttf" />
@@ -164,7 +164,7 @@
           android:layout_height="wrap_content"
           android:layout_marginStart="16dp"
           android:layout_toEndOf="@+id/mymoneyJourneyImageView"
-          android:text="Participate &amp; Earn through MyMoney Campaigns" />
+          android:text="@string/home_onboarding_mymoney" />
 
         <com.mycity4kids.widget.CustomFontTextView
           android:id="@+id/mymoneyTextView"
@@ -175,7 +175,7 @@
           android:layout_toEndOf="@+id/mymoneyJourneyImageView"
           android:drawableEnd="@drawable/ic_circular_arrow"
           android:drawablePadding="10dp"
-          android:text="Earn"
+          android:text="@string/all_earn"
           android:textColor="@color/app_red"
           android:textSize="16sp"
           app:fontName="Roboto-Medium.ttf" />
@@ -208,7 +208,7 @@
           android:layout_height="wrap_content"
           android:layout_marginStart="16dp"
           android:layout_toEndOf="@+id/groupsJourneyImageView"
-          android:text="Give and seek support from support groups" />
+          android:text="@string/home_onboarding_groups" />
 
         <com.mycity4kids.widget.CustomFontTextView
           android:id="@+id/joinGroupsTextView"
@@ -219,7 +219,7 @@
           android:layout_toEndOf="@+id/groupsJourneyImageView"
           android:drawableEnd="@drawable/ic_circular_arrow"
           android:drawablePadding="10dp"
-          android:text="Join"
+          android:text="@string/all_join"
           android:textColor="@color/app_red"
           android:textSize="16sp"
           app:fontName="Roboto-Medium.ttf" />
@@ -233,7 +233,7 @@
       android:layout_height="wrap_content"
       android:gravity="center"
       android:padding="20dp"
-      android:text="Explore Myself"
+      android:text="@string/explore_self"
       android:textColor="@color/app_red"
       android:textSize="18sp"
       app:fontName="Roboto-Medium.ttf" />

@@ -114,6 +114,7 @@ public class AppConstants {
     public static final String DEEPLINK_GROUPS = "momspresso.com/groups/";
     public static final String BRANCH_DEEPLINK = "https://momspr.app.link";
     public static final String BRANCH_DEEPLINK_URL = "https://www.momspresso.com://open?link_click_id=";
+    public static final String DEEPLINK_BLOGGER_GOLD = "https://www.momspresso.com/birthdaybonanza";
 
 
     public static final String IGNORE_TAG = "ignore";
@@ -373,6 +374,7 @@ public class AppConstants {
     public static final String STORY_CHALLENGE_DETAIL_REGEX =
             ".+?(parenting\\/topic\\/short-stories\\/challenges\\/)([a-zA-Z0-9-]+$)";
     public static final String LIVE_STREAM_DETAIL_REGEX = ".+?(live\\/)([a-zA-Z0-9-]+$)";
+    public static final String BLOGGER_GOLD_REGEX = ".+?(mymoney).*";
 
     public static final String BADGE_ID = "badgeId";
     public static final String MILESTONE_ID = "milestoneId";
