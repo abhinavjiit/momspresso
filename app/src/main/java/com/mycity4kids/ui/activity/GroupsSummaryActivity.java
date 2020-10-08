@@ -552,6 +552,29 @@ public class GroupsSummaryActivity extends BaseActivity implements View.OnClickL
                 return super.onOptionsItemSelected(item);
         }
     }
+
+    @Override
+    public void onBackPressed() {
+
+        try {
+            if (getIntent().hasExtra("comingFrom") && (getIntent().getStringExtra("comingFrom").equals("story")
+                    || getIntent().getStringExtra("comingFrom").equals("article") || getIntent()
+                    .getStringExtra("comingFrom").equals("vlog"))) {
+                Intent intent = new Intent(this, DashboardActivity.class);
+                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                startActivity(intent);
+            } else {
+                super.onBackPressed();
+            }
+        } catch (Exception e) {
+            FirebaseCrashlytics.getInstance().recordException(e);
+            Log.d("MC4kException", Log.getStackTraceString(e));
+            Intent intent = new Intent(this, DashboardActivity.class);
+            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+            startActivity(intent);
+        }
+
+    }
 }
 
 

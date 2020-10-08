@@ -15,33 +15,37 @@ import android.widget.ScrollView
 import android.widget.TextView
 import androidx.appcompat.widget.Toolbar
 import androidx.cardview.widget.CardView
+import androidx.constraintlayout.widget.ConstraintLayout
 import com.google.firebase.crashlytics.FirebaseCrashlytics
-import com.mycity4kids.BuildConfig
 import com.mycity4kids.R
 import com.mycity4kids.application.BaseApplication
 import com.mycity4kids.base.BaseActivity
 import com.mycity4kids.constants.AppConstants
 import com.mycity4kids.constants.Constants
 import com.mycity4kids.gtmutils.Utils
+import com.mycity4kids.models.response.GroupsMembershipResponse
 import com.mycity4kids.models.response.ShortStoryDetailResult
 import com.mycity4kids.preference.SharedPrefUtils
 import com.mycity4kids.retrofitAPIsInterfaces.ShortStoryAPI
+import com.mycity4kids.ui.GroupMembershipStatus
 import com.mycity4kids.utils.AppUtils
 import com.mycity4kids.utils.SharingUtils
 import com.mycity4kids.utils.ToastUtils
+import com.mycity4kids.widget.MomspressoButtonWidget
 import com.mycity4kids.widget.ShareButtonWidget
 import com.mycity4kids.widget.StoryShareCardWidget
 import com.squareup.picasso.Picasso
-import java.io.File
-import java.net.SocketTimeoutException
-import java.net.UnknownHostException
 import org.apache.commons.lang3.text.WordUtils
 import pub.devrel.easypermissions.AppSettingsDialog
 import pub.devrel.easypermissions.EasyPermissions
 import retrofit2.Call
 import retrofit2.Callback
+import java.io.File
+import java.net.SocketTimeoutException
+import java.net.UnknownHostException
 
-class ShortStoryModerationOrShareActivity : BaseActivity(), View.OnClickListener,
+class ShortStoryModerationOrShareActivity : BaseActivity(), GroupMembershipStatus.IMembershipStatus,
+    View.OnClickListener,
     EasyPermissions.PermissionCallbacks {
 
     private val RC_STORAGE_PERMISSION = 123
@@ -57,6 +61,17 @@ class ShortStoryModerationOrShareActivity : BaseActivity(), View.OnClickListener
     private var authorName: String? = null
     private val storyCategoriesList = ArrayList<String>()
     private var tempName: String? = null
+    private var secondTextView: TextView? = null
+    private var cancelImage: ImageView? = null
+    private var storyIsLiveContainer: ConstraintLayout? = null
+    private lateinit var createMoreButton: MomspressoButtonWidget
+    private lateinit var createMoreHeaderTextView: TextView
+    private lateinit var createMoreHeaderTextViewModeration: TextView
+    private lateinit var createMoreButtonModeration: MomspressoButtonWidget
+    private var groupId: Int? = null
+    private lateinit var cancelImageModeration: ImageView
+    private lateinit var youAreDoneView: ConstraintLayout
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -71,18 +86,26 @@ class ShortStoryModerationOrShareActivity : BaseActivity(), View.OnClickListener
         val genericShareWidget: ShareButtonWidget? = findViewById(R.id.genericShareWidget)
         val includeShareLayout: CardView? = findViewById(R.id.includeShareLayout)
         storyImageView = includeShareLayout?.findViewById(R.id.storyImageView)
+        storyIsLiveContainer = includeShareLayout?.findViewById(R.id.storyIsLiveContainer)
         storyAuthorTextView = includeShareLayout?.findViewById(R.id.storyAuthorTextView)
         storyShareCardWidget = findViewById(R.id.storyShareCardWidget)
+        createMoreButton = findViewById(R.id.createMoreButton)
+        createMoreHeaderTextView = findViewById(R.id.createMoreHeaderTextView)
         shareStoryImageView = storyShareCardWidget?.findViewById(R.id.storyImageView)
         shareStoryAuthorTextView = storyShareCardWidget?.findViewById(R.id.storyAuthorTextView)
-
+        createMoreButtonModeration = findViewById(R.id.createMoreButtonModeration)
+        createMoreHeaderTextViewModeration = findViewById(R.id.createMoreHeaderTextViewModeration)
+        cancelImageModeration = findViewById(R.id.cancelImageModeration)
+        youAreDoneView = findViewById(R.id.youAreDoneView)
+        cancelImage = includeShareLayout?.findViewById(R.id.cancelImage)
+        secondTextView = includeShareLayout?.findViewById(R.id.secondTextView)
         userId = SharedPrefUtils.getUserDetailModel(this).dynamoId
         authorName = SharedPrefUtils.getUserDetailModel(this).first_name + " " +
             SharedPrefUtils.getUserDetailModel(this).last_name
         shareUrl = intent.getStringExtra("shareUrl")
         source = intent.getStringExtra("source")
         val storyId: String? = intent.getStringExtra(Constants.ARTICLE_ID)
-
+        checkCreatorGroupMemberShip()
         setSupportActionBar(toolbar)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
         supportActionBar?.setDisplayShowHomeEnabled(true)
@@ -93,11 +116,19 @@ class ShortStoryModerationOrShareActivity : BaseActivity(), View.OnClickListener
         instagramShareWidget?.setOnClickListener(this)
         genericShareWidget?.setOnClickListener(this)
         okayTextView?.setOnClickListener(this)
+        cancelImage?.setOnClickListener(this)
+        createMoreButton.setOnClickListener(this)
+        createMoreButtonModeration.setOnClickListener(this)
+        cancelImageModeration.setOnClickListener(this)
 
         if (shareUrl == "https://www.momspresso.com/parenting/topic/short-stories") {
             moderationContainer?.visibility = View.VISIBLE
             publishContainer?.visibility = View.GONE
         } else {
+            secondTextView?.text =
+                SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).first_name.plus(
+                    ", " + "your 100 word story is live"
+                )
             moderationContainer?.visibility = View.GONE
             publishContainer?.visibility = View.VISIBLE
         }
@@ -105,6 +136,39 @@ class ShortStoryModerationOrShareActivity : BaseActivity(), View.OnClickListener
         showProgressDialog(getString(R.string.please_wait))
         Handler().postDelayed(Runnable { getShortStoryDetails(storyId) }, 4000)
     }
+
+    private fun checkCreatorGroupMemberShip() {
+        val groupMembershipStatus = GroupMembershipStatus(this)
+        when (SharedPrefUtils.getAppLocale(BaseApplication.getAppContext())) {
+            "en" -> {
+                groupId = AppConstants.ENGLISH_JOIN_CREATOR_GROUP_ID
+            }
+            "ta" -> {
+                groupId = AppConstants.TAMIL_JOIN_CREATOR_GROUP_ID
+
+            }
+            "bn" -> {
+                groupId = AppConstants.BANGLA_JOIN_CREATOR_GROUP_ID
+
+            }
+            "hi" -> {
+                groupId = AppConstants.HINDI_JOIN_CREATOR_GROUP_ID
+
+            }
+
+
+        }
+        groupId?.let {
+            groupMembershipStatus
+                .checkMembershipStatus(
+                    it,
+                    SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).dynamoId
+                )
+        }
+
+
+    }
+
 
     private fun getShortStoryDetails(storyId: String?) {
         val retro = BaseApplication.getInstance().retrofit
@@ -165,6 +229,50 @@ class ShortStoryModerationOrShareActivity : BaseActivity(), View.OnClickListener
 
     override fun onClick(v: View?) {
         when (v?.id) {
+            R.id.cancelImageModeration -> {
+                youAreDoneView.visibility = View.GONE
+            }
+            R.id.createMoreButton -> {
+                if (createMoreButton.tag == "already_join") {
+                    val chooseShortStory = Intent(
+                        this,
+                        ChooseShortStoryCategoryActivity::class.java
+                    )
+                    chooseShortStory.flags =
+                        (Intent.FLAG_ACTIVITY_SINGLE_TOP or Intent.FLAG_ACTIVITY_CLEAR_TOP)
+                    chooseShortStory.putExtra("source", "dashboard")
+                    startActivity(chooseShortStory)
+                } else {
+                    val intent = Intent(this, GroupsSummaryActivity::class.java)
+                    intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+                    intent.putExtra("groupId", groupId)
+                    intent.putExtra("comingFrom", "story")
+                    startActivity(intent)
+                }
+            }
+            R.id.createMoreButtonModeration -> {
+                if (createMoreButtonModeration.tag == "already_join") {
+                    val chooseShortStory = Intent(
+                        this,
+                        ChooseShortStoryCategoryActivity::class.java
+                    )
+                    chooseShortStory.flags =
+                        (Intent.FLAG_ACTIVITY_SINGLE_TOP or Intent.FLAG_ACTIVITY_CLEAR_TOP)
+                    chooseShortStory.putExtra("source", "dashboard")
+                    startActivity(chooseShortStory)
+
+                } else {
+                    val intent = Intent(this, GroupsSummaryActivity::class.java)
+                    intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+                    intent.putExtra("groupId", groupId)
+                    intent.putExtra("comingFrom", "story")
+                    startActivity(intent)
+
+                }
+            }
+            R.id.cancelImage -> {
+                storyIsLiveContainer?.visibility = View.GONE
+            }
             R.id.facebookShareWidget -> {
                 shareMedium = AppConstants.MEDIUM_FACEBOOK
                 if (!createSharableImageWhileCheckingPermissions()) {
@@ -366,8 +474,44 @@ class ShortStoryModerationOrShareActivity : BaseActivity(), View.OnClickListener
     }
 
     override fun onBackPressed() {
-        if (BuildConfig.DEBUG) {
+        if (com.mycity4kids.BuildConfig.DEBUG) {
             super.onBackPressed()
         }
+    }
+
+    override fun onMembershipStatusFetchSuccess(body: GroupsMembershipResponse?, groupId: Int) {
+        if (shareUrl == "https://www.momspresso.com/parenting/topic/short-stories") {
+            createMoreButtonModeration.visibility = View.VISIBLE
+            createMoreHeaderTextViewModeration.visibility = View.VISIBLE
+            if (body?.data?.result == null || body.data.result.isEmpty() || body.data.result[0].status == "2") {
+
+                createMoreButtonModeration.setText("Join Creator's Hangout")
+                createMoreHeaderTextViewModeration.text = "Get tips or ideas from other creators"
+                createMoreButtonModeration.tag = "please_join"
+
+            } else {
+                createMoreButtonModeration.setText("Create More")
+                createMoreHeaderTextViewModeration.text =
+                    "Don't stop all the magic you were creating"
+                createMoreButtonModeration.tag = "already_join"
+
+
+            }
+        } else {
+            createMoreButton.visibility = View.VISIBLE
+            createMoreHeaderTextView.visibility = View.VISIBLE
+            if (body?.data?.result == null || body.data.result.isEmpty() || body.data.result[0].status == "2") {
+                createMoreButton.setText("Join Creator's Hangout")
+                createMoreHeaderTextView.text = "Get tips or ideas from other creators"
+                createMoreButton.tag = "please_join"
+            } else {
+                createMoreButton.setText("Create More")
+                createMoreHeaderTextView.text =
+                    "Don't stop all the magic you were creating"
+                createMoreButton.tag = "already_join"
+
+            }
+        }
+
     }
 }

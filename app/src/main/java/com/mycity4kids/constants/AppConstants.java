@@ -409,4 +409,10 @@ public class AppConstants {
     public static final int LIVE_STREAM_STATUS_UPCOMING = 2;
     public static final int LIVE_STREAM_STATUS_ENDED = 3;
     public static final String VIDEO_TEAM_USER_ID = "71acf1433617424cbbbece853b9b769d";
+
+    public static final int ENGLISH_JOIN_CREATOR_GROUP_ID = 103;
+    public static final int HINDI_JOIN_CREATOR_GROUP_ID = 101;
+    public static final int BANGLA_JOIN_CREATOR_GROUP_ID = 104;
+    public static final int TAMIL_JOIN_CREATOR_GROUP_ID = 105;
+
 }

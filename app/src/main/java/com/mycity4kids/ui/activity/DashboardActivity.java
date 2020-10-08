@@ -203,7 +203,7 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
         FirebaseRemoteConfigSettings configSettings = new FirebaseRemoteConfigSettings.Builder()
                 .setMinimumFetchIntervalInSeconds(720).build();
         firebaseRemoteConfig.setConfigSettingsAsync(configSettings);
-        firebaseRemoteConfig.setDefaults(R.xml.remote_config_defaults);
+        firebaseRemoteConfig.setDefaultsAsync(R.xml.remote_config_defaults);
         if (SharedPrefUtils.getFirebaseRemoteConfigUpdateFlag(BaseApplication.getAppContext())) {
             showProgressDialog(getString(R.string.please_wait));
             firebaseRemoteConfig.fetch(0).addOnCompleteListener(this, task -> {

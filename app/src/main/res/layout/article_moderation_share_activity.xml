@@ -1,156 +1,269 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:id="@+id/root"
+  xmlns:app="http://schemas.android.com/apk/res-auto"
+  android:id="@+id/root"
+  android:layout_width="match_parent"
+  android:layout_height="match_parent"
+  android:orientation="vertical">
+
+  <RelativeLayout
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical">
+    android:layout_height="wrap_content"
+    android:layout_centerInParent="true">
+    <androidx.constraintlayout.widget.ConstraintLayout
+      android:id="@+id/youAreDoneView"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:layout_centerHorizontal="true"
+      android:layout_marginBottom="@dimen/space_12">
 
-    <RelativeLayout
-        android:layout_width="match_parent"
+      <com.mycity4kids.widget.CustomFontTextView
+        android:id="@+id/secondTextView"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_centerInParent="true">
+        android:layout_marginStart="@dimen/space_12"
+        android:layout_marginTop="12dp"
+        android:layout_marginEnd="@dimen/space_12"
+        android:background="@drawable/tooltip_shape_layout"
+        android:padding="@dimen/space_16"
+        android:text="Yay! You are all done!"
+        android:textColor="@color/campaign_515151"
+        android:textSize="14sp"
+        app:fontName="Roboto-Regular.ttf"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
-        <ImageView
-            android:id="@+id/headerImageView"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerHorizontal="true"
-            android:src="@drawable/ic_moderation" />
+      <androidx.appcompat.widget.AppCompatImageView
+        android:id="@+id/cancelImageModeration"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/ic_cross" />
 
-        <com.mycity4kids.widget.CustomFontTextView
-            android:id="@+id/wayToGoTextView"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/headerImageView"
-            android:layout_centerHorizontal="true"
-            android:layout_marginTop="30dp"
-            android:text="@string/moderation_or_share.way_to_go"
-            android:textColor="@color/app_light_black"
-            android:textSize="18sp"
-            app:fontName="oswald_regular.ttf" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
-        <View
-            android:id="@+id/underline1"
-            android:layout_width="40dp"
-            android:layout_height="1dp"
-            android:layout_below="@+id/wayToGoTextView"
-            android:layout_centerHorizontal="true"
-            android:layout_marginTop="5dp"
-            android:background="#507cbe" />
+    <ImageView
+      android:id="@+id/headerImageView"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:layout_below="@id/youAreDoneView"
+      android:layout_centerHorizontal="true"
+      android:src="@drawable/ic_moderation" />
 
-        <LinearLayout
-            android:id="@+id/moderationContainer"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/underline1"
-            android:layout_centerHorizontal="true"
-            android:layout_marginTop="18dp"
-            android:gravity="center"
-            android:orientation="vertical"
-            android:visibility="gone">
+    <com.mycity4kids.widget.CustomFontTextView
+      android:id="@+id/wayToGoTextView"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:layout_below="@+id/headerImageView"
+      android:layout_centerHorizontal="true"
+      android:layout_marginTop="30dp"
+      android:text="Congratulation! Your Article is live now"
+      android:textColor="@color/app_light_black"
+      android:textSize="20sp"
+      app:fontName="Roboto-Medium.ttf" />
 
-            <com.mycity4kids.widget.CustomFontTextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:gravity="center"
-                android:paddingLeft="60dp"
-                android:paddingRight="60dp"
-                android:text="@string/moderation_or_share.moderation_message"
-                android:textColor="@color/app_grey"
-                android:textSize="18sp"
-                app:fontName="oswald.ttf" />
+    <View
+      android:id="@+id/underline1"
+      android:layout_width="40dp"
+      android:layout_height="1dp"
+      android:layout_below="@+id/wayToGoTextView"
+      android:layout_centerHorizontal="true"
+      android:layout_marginTop="5dp"
+      android:background="#507cbe" />
 
-            <com.mycity4kids.widget.CustomFontTextView
-                android:id="@+id/okayTextView"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="18dp"
-                android:background="@drawable/unfollow_topic_author_bg"
-                android:gravity="center"
-                android:paddingLeft="60dp"
-                android:paddingTop="14dp"
-                android:paddingRight="60dp"
-                android:paddingBottom="14dp"
-                android:text="@string/moderation_or_share.okay"
-                android:textColor="@color/white_color"
-                android:textSize="18sp"
-                app:fontName="oswald.ttf" />
-        </LinearLayout>
+    <LinearLayout
+      android:id="@+id/moderationContainer"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:layout_below="@+id/underline1"
+      android:layout_centerHorizontal="true"
+      android:layout_marginTop="18dp"
+      android:gravity="center"
+      android:orientation="vertical"
+      android:visibility="gone">
 
-        <LinearLayout
-            android:id="@+id/publishContainer"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/underline1"
-            android:layout_centerHorizontal="true"
-            android:layout_marginTop="18dp"
-            android:gravity="center"
-            android:orientation="vertical">
+      <com.mycity4kids.widget.CustomFontTextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:paddingLeft="60dp"
+        android:paddingRight="60dp"
+        android:text="@string/moderation_or_share.moderation_message"
+        android:textColor="@color/app_grey"
+        android:textSize="18sp"
+        app:fontName="oswald.ttf" />
 
-            <com.mycity4kids.widget.CustomFontTextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:gravity="center"
-                android:paddingLeft="40dp"
-                android:paddingRight="40dp"
-                android:text="@string/moderation_or_share.publish_message"
-                android:textColor="@color/moderation_or_share.publish_message"
-                android:textSize="18sp"
-                app:fontName="oswald.ttf" />
+      <com.mycity4kids.widget.CustomFontTextView
+        android:id="@+id/okayTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="18dp"
+        android:background="@drawable/unfollow_topic_author_bg"
+        android:gravity="center"
+        android:paddingLeft="60dp"
+        android:paddingTop="14dp"
+        android:paddingRight="60dp"
+        android:paddingBottom="14dp"
+        android:text="@string/moderation_or_share.okay"
+        android:textColor="@color/white_color"
+        android:textSize="18sp"
+        app:fontName="oswald.ttf" />
 
-            <RelativeLayout
-                android:id="@+id/shareContainerLayout"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="15dp"
-                android:layout_marginBottom="20dp"
-                android:paddingLeft="20dp"
-                android:paddingRight="20dp">
 
-                <ImageView
-                    android:id="@+id/facebookImageView"
-                    android:layout_width="40dp"
-                    android:layout_height="40dp"
-                    android:layout_margin="5dp"
-                    android:background="@drawable/unfollow_topic_author_bg"
-                    android:padding="10dp"
-                    android:src="@drawable/ic_share_fb" />
+      <com.mycity4kids.widget.CustomFontTextView
+        android:id="@+id/createMoreHeaderTextViewModeration"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="40dp"
+        android:text="Don't stop all the magic you were creating"
+        android:textColor="@color/campaign_515151"
+        android:textSize="16sp"
+        android:visibility="gone"
+        app:fontName="Roboto-Regular.ttf"
 
-                <ImageView
-                    android:id="@+id/whatsappImageView"
-                    android:layout_width="40dp"
-                    android:layout_height="40dp"
-                    android:layout_margin="5dp"
-                    android:layout_toEndOf="@+id/facebookImageView"
-                    android:background="@drawable/unfollow_topic_author_bg"
-                    android:padding="10dp"
-                    android:src="@drawable/ic_share_whats_up" />
+        />
 
-                <ImageView
-                  android:id="@+id/genericImageView"
-                  android:layout_width="40dp"
-                  android:layout_height="40dp"
-                  android:layout_margin="5dp"
-                  android:layout_toEndOf="@+id/whatsappImageView"
-                  android:background="@drawable/unfollow_topic_author_bg"
-                  android:padding="10dp"
-                  android:src="@drawable/ic_ss_generic" />
+      <com.mycity4kids.widget.MomspressoButtonWidget
+        android:id="@+id/createMoreButtonModeration"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="12dp"
+        android:padding="@dimen/space_16"
+        android:visibility="gone"
+        app:fb_defaultColor="@color/app_red"
+        app:fb_radius="4dp"
+        app:fb_text="Create More"
 
-            </RelativeLayout>
+        />
+    </LinearLayout>
 
-            <com.mycity4kids.widget.CustomFontTextView
-                android:id="@+id/laterTextView"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="5dp"
-                android:gravity="center"
-                android:padding="10dp"
-                android:text="@string/moderation_or_share.later"
-                android:textColor="@color/moderation_or_share.later"
-                android:textSize="18sp"
-                app:fontName="oswald.ttf" />
+    <LinearLayout
+      android:id="@+id/publishContainer"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:layout_below="@+id/underline1"
+      android:layout_centerHorizontal="true"
+      android:layout_marginTop="18dp"
+      android:gravity="center"
+      android:orientation="vertical"
+      android:visibility="visible">
 
-        </LinearLayout>
-    </RelativeLayout>
+      <com.mycity4kids.widget.MomspressoButtonWidget
+        android:id="@+id/gotoYourBlog"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:paddingStart="25dp"
+        android:paddingLeft="40dp"
+        android:paddingTop="12dp"
+        android:paddingEnd="25dp"
+        android:paddingRight="40dp"
+        android:paddingBottom="12dp"
+        android:textColor="@color/moderation_or_share.publish_message"
+        android:textSize="18sp"
+        app:fb_borderColor="@color/app_red"
+        app:fb_borderWidth="1dp"
+        app:fb_defaultColor="@color/white"
+        app:fb_radius="4dp"
+        app:fb_text="Go to your Blog"
+        app:fb_textColor="@color/app_red"
+        app:fontName="Roboto-Regular.ttf" />
+
+      <RelativeLayout
+        android:id="@+id/shareContainerLayout"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="25dp"
+        android:layout_marginBottom="20dp"
+        android:paddingLeft="20dp"
+        android:paddingRight="20dp">
+
+        <com.mycity4kids.widget.ShareButtonWidget
+          android:id="@+id/facebookImageView"
+          android:layout_width="40dp"
+          android:layout_height="40dp"
+          android:layout_margin="5dp"
+          app:radius="@dimen/space_6"
+          app:shareBgColor="#3B5998"
+          app:shareImage="@drawable/ic_share_fb" />
+        <com.mycity4kids.widget.ShareButtonWidget
+          android:id="@+id/instagramImageView"
+          android:layout_width="40dp"
+          android:layout_height="40dp"
+          android:layout_margin="5dp"
+          android:layout_toEndOf="@+id/facebookImageView"
+          app:radius="@dimen/space_6"
+          app:shareBgDrawable="@drawable/instagram_gradient_bg"
+          app:shareImage="@drawable/ic_instagram"
+          app:shareImageTint="@color/white" />
+
+        <com.mycity4kids.widget.ShareButtonWidget
+          android:id="@+id/whatsappImageView"
+          android:layout_width="40dp"
+          android:layout_height="40dp"
+          android:layout_margin="5dp"
+          android:layout_toEndOf="@+id/facebookImageView"
+          android:padding="10dp"
+          app:radius="@dimen/space_6"
+          app:shareBgColor="#4CAF50"
+          app:shareImage="@drawable/ic_share_whats_up"
+          app:shareImageTint="@color/white" />
+
+        <com.mycity4kids.widget.ShareButtonWidget
+          android:id="@+id/genericImageView"
+          android:layout_width="40dp"
+          android:layout_height="40dp"
+          android:layout_margin="5dp"
+          android:layout_toEndOf="@+id/whatsappImageView"
+          android:padding="10dp"
+          app:radius="@dimen/space_6"
+          app:shareBgColor="#38C5A5"
+          app:shareImage="@drawable/ic_ss_generic"
+          app:shareImageTint="@color/white" />
+
+      </RelativeLayout>
+
+      <com.mycity4kids.widget.CustomFontTextView
+        android:id="@+id/laterTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="5dp"
+        android:gravity="center"
+        android:padding="10dp"
+        android:text="@string/moderation_or_share.later"
+        android:textColor="@color/moderation_or_share.later"
+        android:textSize="18sp"
+        app:fontName="oswald.ttf" />
+
+      <com.mycity4kids.widget.CustomFontTextView
+        android:id="@+id/createMoreHeaderTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="40dp"
+        android:text="Don't stop all the magic you were creating"
+        android:textColor="@color/campaign_515151"
+        android:textSize="16sp"
+        android:visibility="gone"
+        app:fontName="Roboto-Regular.ttf"
+
+        />
+
+      <com.mycity4kids.widget.MomspressoButtonWidget
+        android:id="@+id/createMoreButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="12dp"
+        android:padding="@dimen/space_16"
+        android:visibility="gone"
+        app:fb_defaultColor="@color/app_red"
+        app:fb_radius="4dp"
+        app:fb_text="Create More"
+
+        />
+
+    </LinearLayout>
+
+  </RelativeLayout>
 </RelativeLayout>

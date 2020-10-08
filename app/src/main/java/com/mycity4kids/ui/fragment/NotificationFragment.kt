@@ -1039,5 +1039,9 @@ class NotificationFragment : BaseFragment(), IMembershipStatus,
         }
     }
 
-    override fun onMembershipStatusFetchFail() {}
+    override fun onMembershipStatusFetchFail() {
+
+    }
+
+
 }

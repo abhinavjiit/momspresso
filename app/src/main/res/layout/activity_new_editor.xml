@@ -193,4 +193,61 @@
         aztec:codeTextColor="@android:color/black" />
     </RelativeLayout>
   </FrameLayout>
+
+  <View
+    android:id="@+id/aztecCoachMark"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_marginBottom="@dimen/aztec_format_bar_height"
+    android:background="@color/transparent_black_90"
+    android:visibility="gone" />
+  <View
+    android:id="@+id/view"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:clickable="true"
+    android:focusable="true"
+    android:visibility="gone" />
+
+  <androidx.cardview.widget.CardView
+    android:id="@+id/bottomCoachMark"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_alignParentBottom="true"
+    android:layout_margin="16dp"
+    android:visibility="gone"
+    app:cardCornerRadius="4dp">
+    <androidx.constraintlayout.widget.ConstraintLayout
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:background="@drawable/tooltip_shape_layout"
+      android:padding="@dimen/space_20">
+
+      <com.mycity4kids.widget.CustomFontTextView
+        android:id="@+id/secondTextView"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:text="You can add images and format the content as per your need"
+        android:textColor="@color/campaign_515151"
+        android:textSize="14sp"
+        app:fontName="Roboto-Regular.ttf"
+        app:layout_constraintEnd_toStartOf="@+id/okgot"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+      <com.mycity4kids.widget.CustomFontTextView
+        android:id="@+id/okgot"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:paddingStart="@dimen/space_10"
+        android:text="Ok, Got it"
+        android:textColor="@color/app_red"
+        android:textSize="16sp"
+        app:fontName="Roboto-Medium.ttf"
+        app:layout_constraintBottom_toBottomOf="@id/secondTextView"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@id/secondTextView" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+  </androidx.cardview.widget.CardView>
 </RelativeLayout>

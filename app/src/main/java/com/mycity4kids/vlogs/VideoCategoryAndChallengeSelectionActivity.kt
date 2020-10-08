@@ -16,6 +16,7 @@ import android.view.MenuItem
 import android.view.View
 import android.view.Window
 import android.webkit.WebView
+import android.widget.FrameLayout
 import android.widget.ImageView
 import android.widget.Toast
 import androidx.core.app.ActivityCompat
@@ -37,6 +38,7 @@ import com.mycity4kids.ui.videochallengenewui.activity.NewVideoChallengeActivity
 import com.mycity4kids.utils.PermissionUtil
 import com.mycity4kids.utils.StringUtils
 import com.mycity4kids.videotrimmer.utils.FileUtils
+import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.video_category_challenge_selection_activity.*
 import retrofit2.Call
 import retrofit2.Callback
@@ -59,13 +61,19 @@ class VideoCategoryAndChallengeSelectionActivity : BaseActivity(),
     private lateinit var videoChallengesVerticalAdapter: VideoChallengeSelectionVerticalAdapter
     private val categoryList: ArrayList<Topics> by lazy { ArrayList<Topics>() }
     private val categoryWiseChallengeList: ArrayList<Topics> by lazy { ArrayList<Topics>() }
+    private lateinit var coachMark: FrameLayout
+    private lateinit var transViewCoachMark: View
+    private lateinit var tagImageViewCoachMark: ImageView
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.video_category_challenge_selection_activity)
+        transViewCoachMark = findViewById(R.id.transViewCoachMark)
+        coachMark = findViewById(R.id.coachMark)
+        tagImageViewCoachMark = findViewById(R.id.tagImageViewCoachMark)
+
 
         vlogTutorialImageView.setOnClickListener(this)
-
         setSupportActionBar(toolbar)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
         supportActionBar?.setDisplayShowHomeEnabled(true)
@@ -101,6 +109,8 @@ class VideoCategoryAndChallengeSelectionActivity : BaseActivity(),
         if (!SharedPrefUtils.getOriginalContentVideoClick(this)) {
             showOriginalContentDialog()
         }
+        coachMark.setOnClickListener(this)
+        transViewCoachMark.setOnClickListener(this)
     }
 
     private fun getCategoriesData() {
@@ -200,6 +210,21 @@ class VideoCategoryAndChallengeSelectionActivity : BaseActivity(),
             for (j in 0 until originalChallengeList.size) {
                 if (originalChallengeList[j].publicVisibility == "1") {
                     categoryWiseChallengeList[i].child.add(originalChallengeList[j])
+                    if (i == 0 && !SharedPrefUtils.isCoachmarksShownFlag(
+                            BaseApplication.getAppContext(),
+                            "videoOrChallengeSelectionScreen"
+                        )) {
+                        try {
+                            transViewCoachMark.visibility = View.VISIBLE
+                            coachMark.visibility = View.VISIBLE
+                            Picasso.get().load(catWiseChallengeList[0].child[0].extraData[0].challenge.imageUrl).into(
+                                tagImageViewCoachMark
+                            )
+                        } catch (e: Exception) {
+                            Log.d("TAG", e.message!!)
+                        }
+
+                    }
                 }
             }
         }
@@ -492,6 +517,14 @@ class VideoCategoryAndChallengeSelectionActivity : BaseActivity(),
             val intent = Intent(this, ContentCreationTutorialListingActivity::class.java)
             intent.putExtra(AppConstants.COLLECTION_ID, AppConstants.MOM_VLOG_TUTORIAL_COLLECTION)
             startActivity(intent)
+        } else if (view?.id == R.id.transViewCoachMark || view?.id == R.id.coachMark) {
+            SharedPrefUtils.setCoachmarksShownFlag(
+                BaseApplication.getAppContext(),
+                "videoOrChallengeSelectionScreen",
+                true
+            )
+            coachMark.visibility = View.GONE
+            transViewCoachMark.visibility = View.GONE
         }
     }
 

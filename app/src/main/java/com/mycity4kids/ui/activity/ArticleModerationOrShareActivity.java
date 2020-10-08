@@ -10,6 +10,7 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
+import androidx.constraintlayout.widget.ConstraintLayout;
 import com.facebook.share.model.ShareLinkContent;
 import com.facebook.share.widget.ShareDialog;
 import com.google.firebase.crashlytics.FirebaseCrashlytics;
@@ -19,11 +20,15 @@ import com.mycity4kids.base.BaseActivity;
 import com.mycity4kids.constants.AppConstants;
 import com.mycity4kids.constants.Constants;
 import com.mycity4kids.gtmutils.Utils;
+import com.mycity4kids.models.response.GroupsMembershipResponse;
 import com.mycity4kids.models.response.UserDetailResponse;
 import com.mycity4kids.preference.SharedPrefUtils;
 import com.mycity4kids.retrofitAPIsInterfaces.BloggerDashboardAPI;
+import com.mycity4kids.ui.GroupMembershipStatus;
+import com.mycity4kids.ui.GroupMembershipStatus.IMembershipStatus;
 import com.mycity4kids.utils.AppUtils;
 import com.mycity4kids.utils.StringUtils;
+import com.mycity4kids.widget.MomspressoButtonWidget;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Retrofit;
@@ -31,10 +36,18 @@ import retrofit2.Retrofit;
 /**
  * Created by hemant on 2/8/17.
  */
-public class ArticleModerationOrShareActivity extends BaseActivity implements View.OnClickListener {
+public class ArticleModerationOrShareActivity extends BaseActivity implements View.OnClickListener, IMembershipStatus {
 
     private String shareUrl;
     private RelativeLayout root;
+    private TextView createMoreHeaderTextViewModeration;
+    private MomspressoButtonWidget createMoreButtonModeration;
+    private TextView createMoreHeaderTextView;
+    private MomspressoButtonWidget createMoreButton;
+    private int groupId;
+    private ConstraintLayout youAreDoneView;
+    private ImageView cancelImageModeration;
+    private MomspressoButtonWidget gotoYourBlog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,9 +55,14 @@ public class ArticleModerationOrShareActivity extends BaseActivity implements Vi
         setContentView(R.layout.article_moderation_share_activity);
         root = findViewById(R.id.root);
         ((BaseApplication) getApplication()).setActivity(this);
-
         shareUrl = getIntent().getStringExtra("shareUrl");
-
+        createMoreHeaderTextViewModeration = findViewById(R.id.createMoreHeaderTextViewModeration);
+        createMoreButtonModeration = findViewById(R.id.createMoreButtonModeration);
+        createMoreHeaderTextView = findViewById(R.id.createMoreHeaderTextView);
+        createMoreButton = findViewById(R.id.createMoreButton);
+        youAreDoneView = findViewById(R.id.youAreDoneView);
+        cancelImageModeration = findViewById(R.id.cancelImageModeration);
+        gotoYourBlog = findViewById(R.id.gotoYourBlog);
         LinearLayout moderationContainer = findViewById(R.id.moderationContainer);
         LinearLayout publishContainer = findViewById(R.id.publishContainer);
         ImageView facebookImageView = findViewById(R.id.facebookImageView);
@@ -57,7 +75,7 @@ public class ArticleModerationOrShareActivity extends BaseActivity implements Vi
         laterTextView.setOnClickListener(this);
         TextView okayTextView = findViewById(R.id.okayTextView);
         okayTextView.setOnClickListener(this);
-
+        checkCreatorGroupStatus();
         if (StringUtils.isNullOrEmpty(shareUrl)) {
             moderationContainer.setVisibility(View.VISIBLE);
             publishContainer.setVisibility(View.GONE);
@@ -65,6 +83,9 @@ public class ArticleModerationOrShareActivity extends BaseActivity implements Vi
             moderationContainer.setVisibility(View.GONE);
             publishContainer.setVisibility(View.VISIBLE);
         }
+        createMoreButton.setOnClickListener(this);
+        createMoreButtonModeration.setOnClickListener(this);
+        cancelImageModeration.setOnClickListener(this);
     }
 
     @Override
@@ -80,6 +101,45 @@ public class ArticleModerationOrShareActivity extends BaseActivity implements Vi
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
+            case R.id.cancelImageModeration: {
+                youAreDoneView.setVisibility(View.GONE);
+                break;
+            }
+            case R.id.createMoreButton: {
+                if (createMoreButton.getTag() == "already_join") {
+                    Intent chooseShortStory = new Intent(
+                            this,
+                            ChooseShortStoryCategoryActivity.class
+                    );
+                    chooseShortStory.setFlags(
+                            (Intent.FLAG_ACTIVITY_SINGLE_TOP | Intent.FLAG_ACTIVITY_CLEAR_TOP));
+                    chooseShortStory.putExtra("source", "dashboard");
+                    startActivity(chooseShortStory);
+                } else {
+                    Intent intent = new Intent(this, GroupsSummaryActivity.class);
+                    intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                    intent.putExtra("groupId", groupId);
+                    intent.putExtra("comingFrom", "story");
+                    startActivity(intent);
+                }
+                break;
+            }
+            case R.id.createMoreButtonModeration: {
+                if (createMoreButtonModeration.getTag() == "already_join") {
+                    Intent chooseShortStory = new Intent(this, ChooseShortStoryCategoryActivity.class);
+                    chooseShortStory.setFlags(
+                            (Intent.FLAG_ACTIVITY_SINGLE_TOP | Intent.FLAG_ACTIVITY_CLEAR_TOP));
+                    chooseShortStory.putExtra("source", "dashboard");
+                    startActivity(chooseShortStory);
+                } else {
+                    Intent intent = new Intent(this, GroupsSummaryActivity.class);
+                    intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                    intent.putExtra("groupId", groupId);
+                    intent.putExtra("comingFrom", "story");
+                    startActivity(intent);
+                }
+                break;
+            }
             case R.id.facebookImageView:
                 if (ShareDialog.canShow(ShareLinkContent.class)) {
                     Utils.shareEventTracking(this, "Post creation",
@@ -159,4 +219,68 @@ public class ArticleModerationOrShareActivity extends BaseActivity implements Vi
             Log.d("MC4kException", Log.getStackTraceString(t));
         }
     };
+
+
+    private void checkCreatorGroupStatus() {
+        GroupMembershipStatus groupMembershipStatus = new GroupMembershipStatus(this);
+        switch (SharedPrefUtils.getAppLocale(BaseApplication.getAppContext())) {
+            case "en": {
+                groupId = AppConstants.ENGLISH_JOIN_CREATOR_GROUP_ID;
+                break;
+            }
+            case "ta": {
+                groupId = AppConstants.TAMIL_JOIN_CREATOR_GROUP_ID;
+                break;
+            }
+            case "bn": {
+                groupId = AppConstants.BANGLA_JOIN_CREATOR_GROUP_ID;
+                break;
+            }
+            case "hi": {
+                groupId = AppConstants.HINDI_JOIN_CREATOR_GROUP_ID;
+                break;
+            }
+        }
+        groupMembershipStatus.checkMembershipStatus(groupId,
+                SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId());
+    }
+
+
+    @Override
+    public void onMembershipStatusFetchSuccess(GroupsMembershipResponse body, int groupId) {
+        if (StringUtils.isNullOrEmpty(shareUrl)) {
+            createMoreButtonModeration.setVisibility(View.VISIBLE);
+            createMoreHeaderTextViewModeration.setVisibility(View.VISIBLE);
+            if (body.getData().getResult() == null || body.getData().getResult().isEmpty() || body.getData().getResult()
+                    .get(0).getStatus().equals("2")) {
+
+                createMoreButtonModeration.setText("Join Creator's Hangout");
+                createMoreHeaderTextViewModeration.setText("Get tips or ideas from other creators");
+                createMoreButtonModeration.setTag("please_join");
+            } else {
+                createMoreButtonModeration.setText("Create More");
+                createMoreHeaderTextViewModeration.setText(
+                        "Don't stop all the magic you were creating");
+                createMoreButtonModeration.setTag("already_join");
+            }
+        } else {
+            createMoreButton.setVisibility(View.VISIBLE);
+            createMoreHeaderTextView.setVisibility(View.VISIBLE);
+            if (body.getData().getResult() == null || body.getData().getResult().isEmpty() || body.getData().getResult()
+                    .get(0).getStatus().equals("2")) {
+                createMoreButton.setText("Join Creator's Hangout");
+                createMoreHeaderTextView.setText("Get tips or ideas from other creators");
+                createMoreButton.setTag("please_join");
+            } else {
+                createMoreButton.setText("Create More");
+                createMoreHeaderTextView.setText(
+                        "Don't stop all the magic you were creating");
+                createMoreButton.setTag("already_join");
+            }
+        }
+    }
+
+    @Override
+    public void onMembershipStatusFetchFail() {
+    }
 }
