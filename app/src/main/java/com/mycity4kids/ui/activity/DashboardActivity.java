@@ -85,7 +85,6 @@ import com.mycity4kids.ui.fragment.GroupsViewFragment;
 import com.mycity4kids.ui.fragment.InviteFriendsDialogFragment;
 import com.mycity4kids.ui.fragment.RateAppDialogFragment;
 import com.mycity4kids.ui.fragment.ShareAppDialogFragment;
-import com.mycity4kids.ui.fragment.UploadVideoInfoFragment;
 import com.mycity4kids.ui.momspressotv.MomspressoTelevisionActivity;
 import com.mycity4kids.ui.rewards.activity.RewardsContainerActivity;
 import com.mycity4kids.ui.rewards.activity.RewardsShareReferralCodeActivity;
@@ -161,6 +160,7 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
     private TextView momspressoTextView;
     private TextView groupsTextView;
     private TextView shareAppTextView;
+    private TextView bloggerGoldTextView;
     private TextView settingTextView;
     private TextView referral;
     private LinearLayout drawerTopContainer;
@@ -172,8 +172,7 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
     private RelativeLayout languageLayout;
     private RecyclerView draftsRecyclerView;
     private ShimmerFrameLayout draftsShimmerLayout;
-    private TextView createLabelTextView;
-    private ImageView createTextImageVIew;
+    private ImageView createTextImageView;
     private ArrayList<AllDraftsResponse.AllDraftsData.AllDraftsResult> allDraftsList = new ArrayList<>();
     private UserAllDraftsRecyclerAdapter userAllDraftsRecyclerAdapter;
     private CardView createJourneyCardView;
@@ -292,6 +291,7 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
         groupsTextView = findViewById(R.id.groupsTextView);
         rewardsTextView = findViewById(R.id.rewardsTextView);
         shareAppTextView = findViewById(R.id.shareAppTextView);
+        bloggerGoldTextView = findViewById(R.id.bloggerGoldTextView);
         settingTextView = findViewById(R.id.settingTextView);
         usernameTextView = findViewById(R.id.usernameTextView);
         coachUsernameTextView = findViewById(R.id.coachUsernameTextView);
@@ -302,8 +302,7 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
         journeyLayout = findViewById(R.id.journeyLayout);
         draftsRecyclerView = findViewById(R.id.draftsRecyclerView);
         draftsShimmerLayout = findViewById(R.id.draftsShimmerLayout);
-        createLabelTextView = findViewById(R.id.createLabelTextView);
-        createTextImageVIew = findViewById(R.id.createTextImageVIew);
+        createTextImageView = findViewById(R.id.createTextImageVIew);
         languageLayout = findViewById(R.id.languageLayout);
         referral = findViewById(R.id.referral);
         langView = findViewById(R.id.langView);
@@ -361,6 +360,7 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
         groupsTextView.setOnClickListener(this);
         rewardsTextView.setOnClickListener(this);
         shareAppTextView.setOnClickListener(this);
+        bloggerGoldTextView.setOnClickListener(this);
         videosTextView.setOnClickListener(this);
         settingTextView.setOnClickListener(this);
         homeTextView.setOnClickListener(this);
@@ -372,6 +372,7 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
         mymoneyJourneyCardView.setOnClickListener(this);
         groupsJourneyCardView.setOnClickListener(this);
         exploreOwnTextView.setOnClickListener(this);
+        createTextImageView.setOnClickListener(this);
 
         slideAnim = AnimationUtils.loadAnimation(this, R.anim.appear_from_bottom);
         fadeAnim = AnimationUtils.loadAnimation(this, R.anim.alpha_anim);
@@ -419,6 +420,8 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
                     .placeholder(R.drawable.family_xxhdpi)
                     .error(R.drawable.family_xxhdpi).into(profileImageView);
         }
+
+        Picasso.get().load("https://static.momspresso.com/assets/anniversary-bonnanza.png").into(createTextImageView);
         usernameTextView.setText(
                 SharedPrefUtils.getUserDetailModel(this).getFirst_name() + " " + SharedPrefUtils
                         .getUserDetailModel(this).getLast_name());
@@ -523,9 +526,10 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
         }
         if (!SharedPrefUtils.isUserJourneyCompleted(this)) {
             journeyLayout.setVisibility(View.VISIBLE);
-            welcomeUserTextView.setText(
-                    "Welcome " + SharedPrefUtils.getUserDetailModel(this).getFirst_name() + " " + SharedPrefUtils
-                            .getUserDetailModel(this).getLast_name());
+            Utils.shareEventTracking(this, "Home screen", "Onboarding_Android", "Home_Onboarding_Options");
+            welcomeUserTextView.setText(getString(R.string.welcome_user,
+                    SharedPrefUtils.getUserDetailModel(this).getFirst_name() + " " + SharedPrefUtils
+                            .getUserDetailModel(this).getLast_name()));
         } else {
             journeyLayout.setVisibility(View.GONE);
         }
@@ -559,6 +563,7 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
             createContentContainer.setVisibility(View.VISIBLE);
             actionItemContainer.setVisibility(View.VISIBLE);
             overlayView.setVisibility(View.VISIBLE);
+            createTextImageView.setVisibility(View.VISIBLE);
             actionItemContainer.startAnimation(slideAnim);
             overlayView.startAnimation(fadeAnim);
         }
@@ -654,8 +659,7 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
                 NetworkErrorException nee = new NetworkErrorException(
                         response.raw().toString());
                 FirebaseCrashlytics.getInstance().recordException(nee);
-                createLabelTextView.setVisibility(View.VISIBLE);
-                createTextImageVIew.setVisibility(View.VISIBLE);
+                createTextImageView.setVisibility(View.VISIBLE);
                 return;
             }
             try {
@@ -748,18 +752,15 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
             Log.d("MC4kException", Log.getStackTraceString(t));
             apiExceptions(t);
             draftsShimmerLayout.setVisibility(View.GONE);
-            createLabelTextView.setVisibility(View.VISIBLE);
-            createTextImageVIew.setVisibility(View.VISIBLE);
+            createTextImageView.setVisibility(View.VISIBLE);
         }
     };
 
     private void processDraftsResponse() {
         if (allDraftsList.size() == 0) {
-            createLabelTextView.setVisibility(View.VISIBLE);
-            createTextImageVIew.setVisibility(View.VISIBLE);
+            createTextImageView.setVisibility(View.VISIBLE);
         } else {
-            createLabelTextView.setVisibility(View.INVISIBLE);
-            createTextImageVIew.setVisibility(View.INVISIBLE);
+            createTextImageView.setVisibility(View.VISIBLE);
             userAllDraftsRecyclerAdapter.setListData(allDraftsList);
             draftsRecyclerView.setAdapter(userAllDraftsRecyclerAdapter);
         }
@@ -1218,6 +1219,11 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
     public void onClick(View v) {
         Fragment topFragment = getSupportFragmentManager().findFragmentById(R.id.content_frame);
         switch (v.getId()) {
+            case R.id.createTextImageVIew: {
+                Intent intent = new Intent(this, BloggerGoldActivity.class);
+                startActivity(intent);
+            }
+            break;
             case R.id.drawerProfileCoachmark: {
                 drawerProfileCoachmark.setVisibility(View.GONE);
                 SharedPrefUtils
@@ -1237,6 +1243,7 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
                 break;
             case R.id.articleContainer:
                 hideCreateContentView();
+                Utils.shareEventTracking(this, "Create section", "Create_Android", "CS_Blog");
                 if ("0".equals(SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext())
                         .getUserType()) && !SharedPrefUtils
                         .getBecomeBloggerFlag(BaseApplication.getAppContext())) {
@@ -1251,19 +1258,14 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
                 break;
             case R.id.storyContainer:
                 hideCreateContentView();
+                Utils.shareEventTracking(this, "Create section", "Create_Android", "CS_100WS");
                 Intent chooseShortStory = new Intent(this, ChooseShortStoryCategoryActivity.class);
                 chooseShortStory.putExtra("source", "dashboard");
                 startActivity(chooseShortStory);
                 break;
             case R.id.videoContainer: {
                 hideCreateContentView();
-                drawerLayout.closeDrawers();
-                Utils.momVlogEvent(DashboardActivity.this, "Home Screen", "Create_video", "",
-                        "android", SharedPrefUtils.getAppLocale(BaseApplication.getAppContext()),
-                        SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext())
-                                .getDynamoId(), String.valueOf(System.currentTimeMillis()),
-                        "Show_video_creation_categories", "", "");
-                MixPanelUtils.pushMomVlogsDrawerClickEvent(mixpanel);
+                Utils.shareEventTracking(this, "Create section", "Create_Android", "CS_Vlog");
                 Intent vlogsIntent = new Intent(this, VideoCategoryAndChallengeSelectionActivity.class);
                 vlogsIntent.putExtra("comingFrom", "createDashboardIcon");
                 startActivity(vlogsIntent);
@@ -1367,6 +1369,12 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
                 launchShareAppDialog();
             }
             break;
+            case R.id.bloggerGoldTextView: {
+                drawerLayout.closeDrawers();
+                Intent intent = new Intent(this, BloggerGoldActivity.class);
+                startActivity(intent);
+            }
+            break;
             case R.id.referral:
                 Utils.pushGenericEvent(this, "CTA_MyMoney_Sidebar_Refer",
                         SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext())
@@ -1381,12 +1389,14 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
             }
             break;
             case R.id.createJourneyCardView: {
+                Utils.shareEventTracking(this, "Home screen", "Onboarding_Android", "Home_Create");
                 journeyLayout.setVisibility(View.GONE);
                 SharedPrefUtils.setUserJourneyCompletedFlag(this, true);
                 createContentAction();
             }
             break;
             case R.id.consumptionJourneyCardView: {
+                Utils.shareEventTracking(this, "Home screen", "Onboarding_Android", "Home_Read");
                 journeyLayout.setVisibility(View.GONE);
                 SharedPrefUtils.setUserJourneyCompletedFlag(this, true);
                 ExploreArticleListingTypeFragment fragment0 = new ExploreArticleListingTypeFragment();
@@ -1396,6 +1406,7 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
             }
             break;
             case R.id.mymoneyJourneyCardView: {
+                Utils.shareEventTracking(this, "Home screen", "Onboarding_Android", "Home_MyMoney");
                 journeyLayout.setVisibility(View.GONE);
                 SharedPrefUtils.setUserJourneyCompletedFlag(this, true);
                 Intent cityIntent = new Intent(this, CampaignContainerActivity.class);
@@ -1403,6 +1414,7 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
             }
             break;
             case R.id.groupsJourneyCardView: {
+                Utils.shareEventTracking(this, "Home screen", "Onboarding_Android", "Home_Groups");
                 journeyLayout.setVisibility(View.GONE);
                 SharedPrefUtils.setUserJourneyCompletedFlag(this, true);
                 GroupsViewFragment groupsFragment = new GroupsViewFragment();
@@ -1412,6 +1424,7 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
             }
             break;
             case R.id.exploreOwnTextView: {
+                Utils.shareEventTracking(this, "Home screen", "Onboarding_Android", "Home_Skip");
                 journeyLayout.setVisibility(View.GONE);
                 SharedPrefUtils.setUserJourneyCompletedFlag(this, true);
             }
@@ -1460,6 +1473,7 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
         createContentContainer.setVisibility(View.INVISIBLE);
         overlayView.setVisibility(View.INVISIBLE);
         actionItemContainer.setVisibility(View.INVISIBLE);
+        createTextImageView.setVisibility(View.INVISIBLE);
     }
 
     public void launchAddVideoOptions() {
@@ -1619,12 +1633,6 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
         if (topFragment instanceof BecomeBloggerFragment) {
             toolbarUnderline.setVisibility(View.VISIBLE);
             toolbarTitleTextView.setText(getString(R.string.home_screen_trending_become_blogger));
-            menu.findItem(R.id.action_write).setChecked(true);
-            toolbarRelativeLayout.setVisibility(View.VISIBLE);
-        } else if (topFragment instanceof UploadVideoInfoFragment) {
-            toolbarUnderline.setVisibility(View.VISIBLE);
-            toolbarTitleTextView
-                    .setText(getString(R.string.home_screen_trending_first_video_upload));
             menu.findItem(R.id.action_write).setChecked(true);
             toolbarRelativeLayout.setVisibility(View.VISIBLE);
         } else {

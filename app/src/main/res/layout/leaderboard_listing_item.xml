@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+  xmlns:app="http://schemas.android.com/apk/res-auto"
+  android:layout_width="match_parent"
+  android:layout_height="wrap_content"
+  android:background="@color/white"
+  android:orientation="vertical">
+
+  <androidx.cardview.widget.CardView
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginLeft="@dimen/space_16"
+    android:layout_marginTop="@dimen/space_10"
+    android:layout_marginRight="@dimen/space_16"
+    android:layout_marginBottom="@dimen/space_13"
+    android:elevation="@dimen/space_5">
+
+    <RelativeLayout
+      android:id="@+id/rl"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:paddingTop="@dimen/space_10"
+      android:paddingBottom="@dimen/space_10">
+
+      <com.mikhaellopez.circularimageview.CircularImageView
+        android:id="@+id/profilePicImageView"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:layout_marginStart="10dp"
+        android:layout_marginTop="5dp"
+        android:layout_marginBottom="5dp"
+        android:src="@drawable/ic_launcher"
+        app:civ_border="true"
+        app:civ_border_color="@color/app_red"
+        app:civ_border_width="0.5dp"
+        app:civ_shadow="false" />
+
+
+      <com.mycity4kids.widget.CustomFontTextView
+        android:id="@+id/user_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignTop="@+id/profilePicImageView"
+        android:layout_marginLeft="10dp"
+        android:layout_toRightOf="@+id/profilePicImageView"
+        android:textColor="@color/campaign_515151"
+        app:fontName="oswald.ttf" />
+
+
+      <com.mycity4kids.widget.CustomFontTextView
+        android:id="@+id/user_handle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBottom="@+id/profilePicImageView"
+        android:layout_marginLeft="10dp"
+        android:layout_marginTop="@dimen/space_10"
+        android:layout_toRightOf="@+id/profilePicImageView"
+        android:textColor="@color/grey_faded"
+        app:fontName="oswald.ttf" />
+
+      <com.mycity4kids.widget.CustomFontTextView
+        android:id="@+id/view_img"
+        android:layout_width="@dimen/space_20"
+        android:layout_height="@dimen/space_20"
+        android:layout_marginTop="5dp"
+        android:layout_toLeftOf="@id/view_count"
+        android:background="@drawable/leaderboard_view"
+        app:fontName="oswald.ttf" />
+
+      <com.mycity4kids.widget.CustomFontTextView
+        android:id="@+id/view_count"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_marginLeft="10dp"
+        android:layout_marginTop="5dp"
+        android:layout_marginRight="@dimen/space_13"
+        android:textColor="@color/app_red"
+        app:fontName="oswald.ttf" />
+
+      <com.mycity4kids.widget.CustomFontTextView
+        android:id="@+id/user_rank"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/view_count"
+        android:layout_alignStart="@+id/view_count"
+        android:layout_alignParentRight="true"
+        android:layout_marginTop="@dimen/space_10"
+        android:textColor="@color/campaign_515151"
+        app:fontName="oswald.ttf" />
+
+    </RelativeLayout>
+  </androidx.cardview.widget.CardView>
+
+</RelativeLayout>

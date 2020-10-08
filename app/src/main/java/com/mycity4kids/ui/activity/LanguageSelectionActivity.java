@@ -96,6 +96,7 @@ public class LanguageSelectionActivity extends BaseActivity implements View.OnCl
                     showToast(getString(R.string.lang_sel_choose_lang_toast));
                     return;
                 }
+                Utils.shareEventTracking(this, "Splash screen", "Onboarding_Android", "Onboarding_Android");
                 setNewLocale(selectedLang);
                 break;
             default:

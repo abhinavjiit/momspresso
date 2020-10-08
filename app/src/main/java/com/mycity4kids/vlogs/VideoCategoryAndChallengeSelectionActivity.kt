@@ -74,6 +74,7 @@ class VideoCategoryAndChallengeSelectionActivity : BaseActivity(),
 
 
         vlogTutorialImageView.setOnClickListener(this)
+
         setSupportActionBar(toolbar)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
         supportActionBar?.setDisplayShowHomeEnabled(true)
@@ -293,9 +294,15 @@ class VideoCategoryAndChallengeSelectionActivity : BaseActivity(),
         chooseVideoUploadOptionDialogFragment.show(fm, "Choose video option")
     }
 
-    override fun onChallengeItemClick(view: View, topics: Topics) {
+    override fun onChallengeItemClick(view: View, topics: Topics, parentCategoryId: String?) {
         when (view.id) {
             R.id.info -> {
+                Utils.shareEventTracking(
+                    this,
+                    "Create section",
+                    "Vlog_Challenges_Android",
+                    "CS_Show_VCListing_Challenge"
+                )
                 if (!StringUtils.isNullOrEmpty(topics.extraData[0].challenge.rules)) {
                     val dialog = Dialog(this)
                     dialog.setContentView(R.layout.challenge_rules_dialog)
@@ -313,22 +320,43 @@ class VideoCategoryAndChallengeSelectionActivity : BaseActivity(),
                     )
                     imageView.setOnClickListener { view2: View? -> dialog.dismiss() }
                     dialog.show()
-                    Utils.momVlogEvent(
-                        this,
-                        "Creation listing",
-                        "Challenge_info",
-                        "",
-                        "android",
-                        SharedPrefUtils.getAppLocale(BaseApplication.getAppContext()),
-                        SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).dynamoId,
-                        System.currentTimeMillis().toString(),
-                        "Show_challenge_detail",
-                        "",
-                        topics.id
-                    )
                 }
             }
             R.id.tagImageView -> {
+                when (parentCategoryId) {
+                    "category-eed5fd2777a24bd48ba9a7e1e4dd4b47" -> {
+                        Utils.shareEventTracking(
+                            this,
+                            "Create section",
+                            "Vlog_Challenges_Android",
+                            "CS_VCL_MP_Challenge"
+                        )
+                    }
+                    "category-958b29175e174f578c2d92a925451d4f" -> {
+                        Utils.shareEventTracking(
+                            this,
+                            "Create section",
+                            "Vlog_Challenges_Android",
+                            "CS_VCL_CT_Challenge"
+                        )
+                    }
+                    "category-2ce9257cbf4c4794acacacb173feda13" -> {
+                        Utils.shareEventTracking(
+                            this,
+                            "Create section",
+                            "Vlog_Challenges_Android",
+                            "CS_VCL_Aww_Challenge"
+                        )
+                    }
+                    else -> {
+                        Utils.shareEventTracking(
+                            this,
+                            "Create section",
+                            "Vlog_Challenges_Android",
+                            "CS_VCL_Live_Challenge"
+                        )
+                    }
+                }
                 val intent = Intent(
                     this,
                     NewVideoChallengeActivity::class.java
@@ -336,19 +364,6 @@ class VideoCategoryAndChallengeSelectionActivity : BaseActivity(),
                 intent.putExtra("challenge", topics.id)
                 intent.putExtra("comingFrom", "chooseVideoCategory")
                 startActivity(intent)
-                Utils.momVlogEvent(
-                    this,
-                    "Creation listing",
-                    "Listing_challenge_container",
-                    "",
-                    "android",
-                    SharedPrefUtils.getAppLocale(BaseApplication.getAppContext()),
-                    SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).dynamoId,
-                    System.currentTimeMillis().toString(),
-                    "Show_challenge_detail",
-                    "",
-                    topics.id
-                )
             }
         }
     }

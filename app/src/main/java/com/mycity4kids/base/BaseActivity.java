@@ -57,6 +57,7 @@ import com.mycity4kids.ui.activity.ArticleChallengeOrTopicSelectionActivity;
 import com.mycity4kids.ui.activity.ArticleDetailsContainerActivity;
 import com.mycity4kids.ui.activity.BadgeActivity;
 import com.mycity4kids.ui.activity.BlogSetupActivity;
+import com.mycity4kids.ui.activity.BloggerGoldActivity;
 import com.mycity4kids.ui.activity.CategoryVideosListingActivity;
 import com.mycity4kids.ui.activity.DashboardActivity;
 import com.mycity4kids.ui.activity.GroupDetailsActivity;
@@ -800,6 +801,9 @@ public abstract class BaseActivity extends AppCompatActivity implements GroupMem
                     || tempDeepLinkUrl.contains(AppConstants.DEEPLINK_ADD_SHORT_STORY_URL_1)) {
                 Intent ssIntent = new Intent(this, AddShortStoryActivity.class);
                 startActivity(ssIntent);
+            } else if (tempDeepLinkUrl.contains(AppConstants.DEEPLINK_BLOGGER_GOLD)) {
+                Intent intent = new Intent(this, BloggerGoldActivity.class);
+                startActivity(intent);
             } else {
                 getDeepLinkData(tempDeepLinkUrl);
             }
@@ -981,6 +985,14 @@ public abstract class BaseActivity extends AppCompatActivity implements GroupMem
             if (matcher16.matches()) {
                 String[] separated = urlWithNoParams.split("/");
                 getLiveStreamInfoFromSlug(separated[separated.length - 1]);
+                return true;
+            }
+
+            Pattern pattern17 = Pattern.compile(AppConstants.BLOGGER_GOLD_REGEX);
+            Matcher matcher17 = pattern17.matcher(urlWithNoParams);
+            if (matcher17.matches()) {
+                Intent intent = new Intent(this, BloggerGoldActivity.class);
+                startActivity(intent);
                 return true;
             }
         } catch (Exception e) {

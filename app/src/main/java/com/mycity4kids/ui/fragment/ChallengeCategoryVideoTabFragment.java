@@ -133,10 +133,23 @@ public class ChallengeCategoryVideoTabFragment extends BaseFragment implements O
     }
 
     @Override
-    public void onChallengeItemClick(@NotNull View view, @NotNull Topics topics) {
+    public void onChallengeItemClick(@NotNull View view, @NotNull Topics topics, String parentCategoryId) {
         try {
             switch (view.getId()) {
                 case R.id.tagImageView:
+                    if ("category-eed5fd2777a24bd48ba9a7e1e4dd4b47".equals(parentCategoryId)) {
+                        Utils.shareEventTracking(getActivity(), "Vlog listing", "Vlog_Challenges_Android",
+                                "VS_VCL_MP_Challenge");
+                    } else if ("category-958b29175e174f578c2d92a925451d4f".equals(parentCategoryId)) {
+                        Utils.shareEventTracking(getActivity(), "Vlog listing", "Vlog_Challenges_Android",
+                                "VS_VCL_CT_Challenge");
+                    } else if ("category-2ce9257cbf4c4794acacacb173feda13".equals(parentCategoryId)) {
+                        Utils.shareEventTracking(getActivity(), "Vlog listing", "Vlog_Challenges_Android",
+                                "VS_VCL_Aww_Challenge");
+                    } else {
+                        Utils.shareEventTracking(getActivity(), "Vlog listing", "Vlog_Challenges_Android",
+                                "VS_VCL_Live_Challenge");
+                    }
                     Intent intent = new Intent(
                             getActivity(),
                             NewVideoChallengeActivity.class
@@ -144,11 +157,6 @@ public class ChallengeCategoryVideoTabFragment extends BaseFragment implements O
                     intent.putExtra("challenge", topics.getId());
                     intent.putExtra("comingFrom", "vlog_listing");
                     startActivity(intent);
-                    Utils.momVlogEvent(getActivity(), "Video Listing", "Challenge container", "", "android",
-                            SharedPrefUtils.getAppLocale(BaseApplication.getAppContext()),
-                            SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId(),
-                            String.valueOf(System.currentTimeMillis()), "Show_video_creation_categories", "",
-                            topics.getId());
                     break;
                 default:
                     break;

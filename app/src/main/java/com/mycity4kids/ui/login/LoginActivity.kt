@@ -26,6 +26,7 @@ import com.mycity4kids.base.BaseActivity
 import com.mycity4kids.constants.AppConstants
 import com.mycity4kids.constants.Constants
 import com.mycity4kids.facebook.FacebookUtils
+import com.mycity4kids.gtmutils.Utils
 import com.mycity4kids.interfaces.IFacebookUser
 import com.mycity4kids.models.request.LoginRegistrationRequest
 import com.mycity4kids.models.request.PhoneLoginRequest
@@ -90,12 +91,15 @@ class LoginActivity : BaseActivity(), IFacebookUser, View.OnClickListener {
     override fun onClick(v: View?) {
         when {
             v?.id == R.id.facebookTextView -> {
+                Utils.shareEventTracking(this, "Login screen", "Login_Android", "Login_Fb")
                 loginWithFacebook()
             }
             v?.id == R.id.googleTextView -> {
+                Utils.shareEventTracking(this, "Login screen", "Login_Android", "Login_Google")
                 loginWithGoogle()
             }
             v?.id == R.id.phoneTextView -> {
+                Utils.shareEventTracking(this, "Login screen", "Login_Android", "Login_Phone")
                 val fragment = SendSMSFragment()
                 val mBundle = Bundle()
                 fragment.arguments = mBundle
@@ -104,7 +108,7 @@ class LoginActivity : BaseActivity(), IFacebookUser, View.OnClickListener {
         }
     }
 
-    fun loginWithFacebook() {
+    private fun loginWithFacebook() {
         if (ConnectivityUtils.isNetworkEnabled(this)) {
             showProgressDialog(getString(R.string.please_wait))
             FacebookUtils.facebookLogin(this, this)
@@ -113,7 +117,7 @@ class LoginActivity : BaseActivity(), IFacebookUser, View.OnClickListener {
         }
     }
 
-    fun loginWithGoogle() {
+    private fun loginWithGoogle() {
         val intent = mSignInClient.signInIntent
         startActivityForResult(intent, RC_SIGN_IN)
     }
@@ -487,6 +491,12 @@ class LoginActivity : BaseActivity(), IFacebookUser, View.OnClickListener {
     }
 
     fun addEmail(email: String) {
+        Utils.shareEventTracking(
+            this,
+            "Login screen",
+            "Login_Android",
+            "Login_Fb_Email"
+        )
         showProgressDialog(getString(R.string.please_wait))
         val lr = LoginRegistrationRequest()
         lr.email = email

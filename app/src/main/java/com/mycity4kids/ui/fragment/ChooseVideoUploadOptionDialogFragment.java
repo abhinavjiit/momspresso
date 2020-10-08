@@ -112,6 +112,8 @@ public class ChooseVideoUploadOptionDialogFragment extends DialogFragment implem
                         } else if ("video_category_activity".equals(activity)) {
                             ((VideoCategoryAndChallengeSelectionActivity) getActivity()).requestPermissions("camera");
                         } else if ("challengeDetailFragment".equals(activity)) {
+                            Utils.shareEventTracking(getActivity(), "Video Challenge", "Vlog_Challenges_Android",
+                                    "H_VCD_FinalCTA_Challenge");
                             ((NewVideoChallengeActivity) getActivity()).requestPermissions("camera");
                         }
                     } else {
@@ -143,6 +145,8 @@ public class ChooseVideoUploadOptionDialogFragment extends DialogFragment implem
                         } else if ("video_category_activity".equals(activity)) {
                             ((VideoCategoryAndChallengeSelectionActivity) getActivity()).requestPermissions("gallery");
                         } else if ("challengeDetailFragment".equals(activity)) {
+                            Utils.shareEventTracking(getActivity(), "Video Challenge", "Vlog_Challenges_Android",
+                                    "H_VCD_FinalCTA_Challenge");
                             ((NewVideoChallengeActivity) getActivity()).requestPermissions("gallery");
                         }
                     } else {

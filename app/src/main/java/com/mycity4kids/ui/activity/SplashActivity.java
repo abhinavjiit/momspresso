@@ -68,6 +68,7 @@ public class SplashActivity extends BaseActivity {
             return;
         }
         Utils.pushAppOpenEvent(this, SharedPrefUtils.getUserDetailModel(this).getDynamoId() + "");
+        Utils.shareEventTracking(this, "Splash screen", "Onboarding_Android", "Splash_Screen");
         //AppUtils.printHashKey(this);
         extras = getIntent().getExtras();
         mixpanel = MixpanelAPI.getInstance(BaseApplication.getAppContext(), AppConstants.MIX_PANEL_TOKEN);

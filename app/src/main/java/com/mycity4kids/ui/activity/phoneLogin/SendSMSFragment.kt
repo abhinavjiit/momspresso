@@ -20,6 +20,7 @@ import com.google.firebase.crashlytics.FirebaseCrashlytics
 import com.mycity4kids.R
 import com.mycity4kids.application.BaseApplication
 import com.mycity4kids.base.BaseFragment
+import com.mycity4kids.gtmutils.Utils
 import com.mycity4kids.models.request.PhoneLoginRequest
 import com.mycity4kids.retrofitAPIsInterfaces.LoginRegistrationAPI
 import com.mycity4kids.ui.activity.OTPActivity
@@ -83,6 +84,7 @@ class SendSMSFragment : BaseFragment(), View.OnClickListener {
     override fun onClick(v: View?) {
         when {
             v?.id == R.id.useSmsTextView -> {
+                Utils.shareEventTracking(activity, "Login screen", "Login_Android", "Login_Mobile_Submit")
                 val phoneLoginRequest = PhoneLoginRequest()
                 phoneLoginRequest.phone = phoneEditText?.text?.toString()
                 val retrofit = BaseApplication.getInstance().retrofit

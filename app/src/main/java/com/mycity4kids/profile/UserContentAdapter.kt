@@ -10,7 +10,9 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.animation.Animation
+import android.webkit.WebResourceRequest
 import android.webkit.WebView
+import android.webkit.WebViewClient
 import android.widget.HorizontalScrollView
 import android.widget.ImageView
 import android.widget.LinearLayout
@@ -115,7 +117,7 @@ class UserContentAdapter(
             CONTENT_TYPE_TORCAI_ADS -> {
                 val v0 = LayoutInflater.from(parent.context)
                     .inflate(R.layout.torcai_ads_item, parent, false)
-                TorcaiAdsViewHolder(v0)
+                TorcaiAdsViewHolder(v0, mListener)
             }
             else -> {
                 val v0 = LayoutInflater.from(parent.context)
@@ -748,7 +750,8 @@ class UserContentAdapter(
     }
 
     inner class TorcaiAdsViewHolder(
-        itemView: View
+        itemView: View,
+        val listener: RecyclerViewClickListener
     ) : RecyclerView.ViewHolder(itemView) {
         internal var webView: WebView =
             itemView.findViewById(R.id.webView)
@@ -757,6 +760,36 @@ class UserContentAdapter(
             webView.settings.javaScriptEnabled = true
             webView.settings.layoutAlgorithm =
                 android.webkit.WebSettings.LayoutAlgorithm.SINGLE_COLUMN
+            webView.webViewClient = object : WebViewClient() {
+                override fun shouldOverrideUrlLoading(
+                    view: WebView,
+                    request: WebResourceRequest
+                ): Boolean {
+                    try {
+                        if (request.url == null || request.url.toString().isEmpty()) {
+                            return true
+                        }
+                        if (adapterPosition != RecyclerView.NO_POSITION) {
+                            listener.onTorcaiAdClick(request)
+                        }
+                        //                        if (AppUtils.isMomspressoDomain(request.url.toString())) {
+                        //                            if (getActivity() != null) {
+                        //                                (getActivity() as BaseActivity).handleDeeplinks(request.url.toString())
+                        //                            }
+                        //                        } else {
+                        //                            if (getActivity() != null) {
+                        //                                val builder = CustomTabsIntent.Builder()
+                        //                                val customTabsIntent = builder.build()
+                        //                                customTabsIntent.launchUrl(getActivity(), request.url)
+                        //                            }
+                        //                        }
+                    } catch (e: Exception) {
+                        FirebaseCrashlytics.getInstance().recordException(e)
+                        Log.d("MC4KException", Log.getStackTraceString(e))
+                    }
+                    return true
+                }
+            }
         }
     }
 
@@ -1131,6 +1164,7 @@ class UserContentAdapter(
     interface RecyclerViewClickListener {
         fun onClick(view: View, position: Int)
         fun onFollowSuccess()
+        fun onTorcaiAdClick(request: WebResourceRequest)
     }
 
     private fun processBloggersData(

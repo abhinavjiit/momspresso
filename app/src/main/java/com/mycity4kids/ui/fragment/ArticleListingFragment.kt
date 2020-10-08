@@ -17,6 +17,7 @@ import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
 import android.view.animation.AnimationUtils
+import android.webkit.WebResourceRequest
 import android.webkit.WebView
 import android.widget.FrameLayout
 import android.widget.ImageView
@@ -28,13 +29,14 @@ import android.widget.Toast
 import androidx.appcompat.view.menu.MenuBuilder
 import androidx.appcompat.view.menu.MenuPopupHelper
 import androidx.appcompat.widget.PopupMenu
+import androidx.browser.customtabs.CustomTabsIntent
 import androidx.core.app.ActivityCompat
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout.OnRefreshListener
 import com.facebook.shimmer.ShimmerFrameLayout
-import com.google.android.gms.analytics.HitBuilders
+import com.google.android.gms.analytics.HitBuilders.ScreenViewBuilder
 import com.google.android.gms.analytics.Tracker
 import com.google.android.material.snackbar.Snackbar
 import com.google.firebase.crashlytics.FirebaseCrashlytics
@@ -1147,49 +1149,34 @@ class ArticleListingFragment : BaseFragment(), View.OnClickListener,
     private fun logFilterEvent(screenName: String) {
         when {
             getContentFilters() == "0" -> {
-                Utils.momVlogEvent(
-                    activity,
-                    screenName,
-                    "Blogs",
-                    "",
-                    "android",
-                    SharedPrefUtils.getAppLocale(BaseApplication.getAppContext()),
-                    SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).dynamoId,
-                    "" + System.currentTimeMillis(),
-                    "FilterFeed",
-                    "",
-                    ""
-                )
+                if (screenName == "TodaysBestScreen") {
+                    Utils.shareEventTracking(
+                        activity,
+                        "Home screen",
+                        "Home_Android",
+                        "TB_Blog_TN_Home"
+                    )
+                }
             }
             getContentFilters() == "1" -> {
-                Utils.momVlogEvent(
-                    activity,
-                    screenName,
-                    "100 Word Story",
-                    "",
-                    "android",
-                    SharedPrefUtils.getAppLocale(BaseApplication.getAppContext()),
-                    SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).dynamoId,
-                    "" + System.currentTimeMillis(),
-                    "FilterFeed",
-                    "",
-                    ""
-                )
+                if (screenName == "TodaysBestScreen") {
+                    Utils.shareEventTracking(
+                        activity,
+                        "Home screen",
+                        "Home_Android",
+                        "TB_100WS_TN_Home"
+                    )
+                }
             }
             getContentFilters() == "2" -> {
-                Utils.momVlogEvent(
-                    activity,
-                    screenName,
-                    "Mom Vlogs",
-                    "",
-                    "android",
-                    SharedPrefUtils.getAppLocale(BaseApplication.getAppContext()),
-                    SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).dynamoId,
-                    "" + System.currentTimeMillis(),
-                    "FilterFeed",
-                    "",
-                    ""
-                )
+                if (screenName == "TodaysBestScreen") {
+                    Utils.shareEventTracking(
+                        activity,
+                        "Home screen",
+                        "Home_Android",
+                        "TB_Vlog_TN_Home"
+                    )
+                }
             }
         }
     }
@@ -1246,7 +1233,7 @@ class ArticleListingFragment : BaseFragment(), View.OnClickListener,
                     ) -> {
                     }
                 }
-                tracker!!.send(HitBuilders.ScreenViewBuilder().build())
+                tracker!!.send(ScreenViewBuilder().build())
             }
         } catch (e: Exception) {
             FirebaseCrashlytics.getInstance().recordException(e)
@@ -1767,6 +1754,20 @@ class ArticleListingFragment : BaseFragment(), View.OnClickListener,
         }
     }
 
+    override fun onTorcaiAdClick(request: WebResourceRequest) {
+        if (AppUtils.isMomspressoDomain(request.url.toString())) {
+            if (activity != null) {
+                (activity as BaseActivity).handleDeeplinks(request.url.toString())
+            }
+        } else {
+            if (activity != null) {
+                val builder = CustomTabsIntent.Builder()
+                val customTabsIntent = builder.build()
+                customTabsIntent.launchUrl(activity, request.url)
+            }
+        }
+    }
+
     private fun launchContentDetail(item: MixFeedResult?) {
         when {
             item?.itemType == AppConstants.CONTENT_TYPE_ARTICLE ||
@@ -1992,15 +1993,45 @@ class ArticleListingFragment : BaseFragment(), View.OnClickListener,
         )
     }
 
-    override fun onChallengeItemClick(view: View, topics: Topics) {
+    override fun onChallengeItemClick(view: View, topics: Topics, parentCategoryId: String?) {
         when (view.id) {
             R.id.tagImageView -> {
-                Utils.shareEventTracking(
-                    activity,
-                    "Home screen",
-                    "Vlog_Challenges_Android",
-                    "H_VCL_Live_Challenge"
-                )
+                parentCategoryId?.let {
+                    when (it) {
+                        "category-eed5fd2777a24bd48ba9a7e1e4dd4b47" -> {
+                            Utils.shareEventTracking(
+                                activity,
+                                "Home screen",
+                                "Vlog_Challenges_Android",
+                                "H_VCL_MP_Challenge"
+                            )
+                        }
+                        "category-958b29175e174f578c2d92a925451d4f" -> {
+                            Utils.shareEventTracking(
+                                activity,
+                                "Home screen",
+                                "Vlog_Challenges_Android",
+                                "H_VCL_CT_Challenge"
+                            )
+                        }
+                        "category-2ce9257cbf4c4794acacacb173feda13" -> {
+                            Utils.shareEventTracking(
+                                activity,
+                                "Home screen",
+                                "Vlog_Challenges_Android",
+                                "H_VCL_Aww_Challenge"
+                            )
+                        }
+                        else -> {
+                            Utils.shareEventTracking(
+                                activity,
+                                "Home screen",
+                                "Vlog_Challenges_Android",
+                                "H_VCL_Live_Challenge"
+                            )
+                        }
+                    }
+                }
                 val intent = Intent(activity, NewVideoChallengeActivity::class.java)
                 intent.putExtra("challenge", topics.id)
                 intent.putExtra("comingFrom", "vlog_listing")

@@ -23,6 +23,7 @@ import com.mycity4kids.R;
 import com.mycity4kids.application.BaseApplication;
 import com.mycity4kids.base.BaseActivity;
 import com.mycity4kids.constants.AppConstants;
+import com.mycity4kids.gtmutils.Utils;
 import com.mycity4kids.models.Topics;
 import com.mycity4kids.retrofitAPIsInterfaces.VlogsListingAndDetailsAPI;
 import com.mycity4kids.ui.fragment.ChallengeDetailFragment;
@@ -255,6 +256,7 @@ public class NewVideoChallengeActivity extends BaseActivity implements View.OnCl
     }
 
     public void chooseAndpermissionDialog(int maxDuration) {
+        Utils.shareEventTracking(this, "Video Challenge", "Vlog_Challenges_Android", "H_VCD_FAB_Challenge");
         Bundle args = new Bundle();
         args.putString("activity", "challengeDetailFragment");
         args.putString("duration", String.valueOf(maxDuration));

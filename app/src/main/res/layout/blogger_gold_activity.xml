@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+  xmlns:app="http://schemas.android.com/apk/res-auto"
+  android:id="@+id/mainprofile_parent_layout"
+  android:layout_width="match_parent"
+  android:layout_height="match_parent">
+
+
+  <com.google.android.material.appbar.AppBarLayout
+    android:id="@+id/id_appbar"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="#fff"
+    android:fitsSystemWindows="true">
+
+    <RelativeLayout
+      android:id="@+id/challengeHeaderRelative"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:background="@drawable/short_story_border_bg"
+      android:visibility="visible"
+      app:layout_scrollFlags="scroll|enterAlwaysCollapsed">
+
+      <androidx.appcompat.widget.Toolbar
+        android:id="@+id/id_toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="?attr/colorPrimary"
+        android:minHeight="?attr/actionBarSize"
+        android:visibility="visible"
+        app:contentInsetEnd="0dp"
+        app:contentInsetLeft="0dp"
+        app:contentInsetRight="0dp"
+        app:contentInsetStart="0dp"
+        app:layout_scrollFlags="scroll|enterAlwaysCollapsed"
+        app:theme="@style/ToolbarTheme"
+        app:titleTextAppearance="@style/ToolbarTheme.Title">
+
+        <RelativeLayout
+          android:id="@+id/toolbarRelativeLayout"
+          android:layout_width="match_parent"
+          android:layout_height="200dp"
+          android:visibility="visible">
+
+
+          <ImageView
+            android:id="@+id/thumbNail"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:scaleType="centerCrop"
+            android:adjustViewBounds="true"
+            android:src="@drawable/default_article" />
+
+          <ImageView
+            android:id="@+id/back"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/space_20"
+            android:layout_marginTop="@dimen/space_20"
+            android:src="@drawable/back_arroow"
+            android:tint="@color/white" />
+
+
+        </RelativeLayout>
+
+      </androidx.appcompat.widget.Toolbar>
+    </RelativeLayout>
+
+    <com.google.android.material.tabs.TabLayout
+      android:id="@+id/tabs"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:elevation="4dp"
+      app:layout_scrollFlags="scroll|exitUntilCollapsed"
+      app:tabIndicatorColor="@color/app_red"
+      app:tabSelectedTextColor="@color/app_red"
+      app:tabTextColor="@color/grey" />
+
+  </com.google.android.material.appbar.AppBarLayout>
+
+  <androidx.viewpager.widget.ViewPager
+    android:id="@+id/viewpager"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_below="@+id/id_appbar" />
+
+</RelativeLayout>
