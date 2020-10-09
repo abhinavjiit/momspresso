@@ -14,6 +14,7 @@ import android.widget.ProgressBar
 import android.widget.RelativeLayout
 import android.widget.TextView
 import androidx.constraintlayout.widget.ConstraintLayout
+import androidx.core.widget.NestedScrollView
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
@@ -345,8 +346,6 @@ class CampaignListFragment : BaseFragment(), View.OnClickListener {
                                 BaseApplication.getAppContext(),
                                 "campaignList"
                             )) {
-                            toolbarCoachMark.visibility = View.VISIBLE
-                            coachMarkContainer.visibility = View.VISIBLE
                             showCoachMark(campaignList[0])
                         }
                     }
@@ -367,6 +366,8 @@ class CampaignListFragment : BaseFragment(), View.OnClickListener {
 
 
     private fun showCoachMark(campaignList: CampaignDataListResult) {
+        toolbarCoachMark.visibility = View.VISIBLE
+        coachMarkContainer.visibility = View.VISIBLE
         Picasso.get().load(campaignList.imageUrl).placeholder(R.drawable.default_article)
             .error(R.drawable.default_article).into(campaign_header)
 

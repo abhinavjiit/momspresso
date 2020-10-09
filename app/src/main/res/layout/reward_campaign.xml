@@ -355,10 +355,7 @@
     android:background="@color/transparent_black_90"
     android:visibility="gone">
 
-    <androidx.core.widget.NestedScrollView
-      android:layout_width="match_parent"
-      android:layout_height="match_parent"
-      android:clipToPadding="false">
+
 
       <LinearLayout
         android:layout_width="match_parent"
@@ -738,7 +735,6 @@
 
         </RelativeLayout>
       </LinearLayout>
-    </androidx.core.widget.NestedScrollView>
 
     <com.facebook.shimmer.ShimmerFrameLayout
       android:id="@+id/shimmer1CoachMark"
@@ -768,7 +764,7 @@
       android:layout_alignParentBottom="true"
       android:layout_marginStart="@dimen/space_16"
       android:layout_marginEnd="@dimen/space_16"
-      android:layout_marginBottom="@dimen/space_50"
+      android:layout_marginBottom="@dimen/space_16"
       android:background="@drawable/tooltip_shape_layout"
       android:padding="@dimen/space_18"
       android:text="Apply for campaigns, complete the requirements, and earn money!"
