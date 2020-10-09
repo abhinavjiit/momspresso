@@ -4,6 +4,8 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.MenuItem;
@@ -77,6 +79,8 @@ public class AddVideoDetailsActivity extends BaseActivity implements View.OnClic
     private FlowLayout subCategoriesContainer;
     private Topics selectedCategory;
     MixpanelAPI mixpanel;
+    private RelativeLayout toolTipContainer;
+    private View tooltip;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -96,20 +100,21 @@ public class AddVideoDetailsActivity extends BaseActivity implements View.OnClic
         player = (EasyVideoPlayer) findViewById(R.id.player);
         saveUploadTextView = (TextView) findViewById(R.id.saveUploadTextView);
         subCategoriesContainer = (FlowLayout) findViewById(R.id.subCategoriesContainer);
-
+        toolTipContainer = findViewById(R.id.toolTipContainer);
+        tooltip = findViewById(R.id.tooltip);
+        TextView next = tooltip.findViewById(R.id.okgot);
         auth = FirebaseAuth.getInstance();
         workManager = WorkManager.getInstance(this);
-
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setTitle("Upload Video");
-
         mappedCategoryId = getIntent().getStringExtra("categoryId");
         duration = getIntent().getStringExtra("duration");
         thumbnailTime = getIntent().getStringExtra("thumbnailTime");
         comingFrom = getIntent().getStringExtra("comingFrom");
         selectedCategory = getIntent().getParcelableExtra("selectedCategory");
         saveUploadTextView.setOnClickListener(this);
+        next.setOnClickListener(this);
         if ("Challenge".equals(comingFrom)) {
             challengeId = getIntent().getStringExtra("ChallengeId");
             saveUploadTextView.setEnabled(false);
@@ -118,19 +123,32 @@ public class AddVideoDetailsActivity extends BaseActivity implements View.OnClic
             populateSubcategories();
             saveUploadTextView.setEnabled(true);
         }
-
         if (getIntent().hasExtra("uriPath")) {
             originalPath = getIntent().getStringExtra("uriPath");
         } else if (getIntent().hasExtra("originalPath")) {
             originalPath = getIntent().getStringExtra("originalPath");
         }
-
         player.setCallback(this);
         player.setAutoPlay(true);
         player.setSource(Uri.fromFile(new File(originalPath)));
         originalUri = Uri.parse(originalPath);
         player.start();
         okay.setOnClickListener(this);
+        toolTipContainer.setOnClickListener(this);
+        tooltip.setOnClickListener(this);
+        showToolTip();
+    }
+
+    private void showToolTip() {
+        final Handler handler = new Handler(Looper.getMainLooper());
+        handler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                if (toolTipContainer.getVisibility() == View.VISIBLE) {
+                    toolTipContainer.setVisibility(View.GONE);
+                }
+            }
+        }, 3000);
     }
 
     private void getSubcategorySiblings() {
@@ -260,6 +278,15 @@ public class AddVideoDetailsActivity extends BaseActivity implements View.OnClic
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
+            case R.id.tooltip:
+            case R.id.toolTipContainer:
+            case R.id.okgot: {
+                if (toolTipContainer.getVisibility() == View.VISIBLE) {
+                    toolTipContainer.setVisibility(View.GONE);
+                }
+                break;
+            }
+
             case R.id.saveUploadTextView:
                 if (StringUtils.isNullOrEmpty(videoTitleEditText.getText().toString())) {
                     videoTitleEditText.setFocusableInTouchMode(true);

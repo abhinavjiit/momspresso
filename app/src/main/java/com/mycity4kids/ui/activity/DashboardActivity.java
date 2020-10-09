@@ -187,6 +187,8 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
     private FrameLayout root;
     private Boolean rateNowDialog = false;
     private int frequency;
+    private RelativeLayout dashBoardContentFilterCoachMark;
+    private RelativeLayout groupCoachMark;
 
     static {
         AppCompatDelegate.setCompatVectorFromResourcesEnabled(true);
@@ -262,6 +264,8 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
 
         final FragmentManager fragmentManager = getSupportFragmentManager();
         fragmentManager.addOnBackStackChangedListener(this);
+        groupCoachMark=findViewById(R.id.groupCoachMark);
+        dashBoardContentFilterCoachMark = findViewById(R.id.dashBoardContentFilterCoachMark);
         rootLayout = findViewById(R.id.rootLayout);
         langTextView = findViewById(R.id.langTextView);
         mainToolbar = findViewById(R.id.toolbar);
@@ -302,7 +306,7 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
         journeyLayout = findViewById(R.id.journeyLayout);
         draftsRecyclerView = findViewById(R.id.draftsRecyclerView);
         draftsShimmerLayout = findViewById(R.id.draftsShimmerLayout);
-        createTextImageView = findViewById(R.id.createTextImageVIew);
+        createTextImageView = findViewById(R.id.createTextImageView);
         languageLayout = findViewById(R.id.languageLayout);
         referral = findViewById(R.id.referral);
         langView = findViewById(R.id.langView);
@@ -373,6 +377,7 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
         groupsJourneyCardView.setOnClickListener(this);
         exploreOwnTextView.setOnClickListener(this);
         createTextImageView.setOnClickListener(this);
+        dashBoardContentFilterCoachMark.setOnClickListener(this);
 
         slideAnim = AnimationUtils.loadAnimation(this, R.anim.appear_from_bottom);
         fadeAnim = AnimationUtils.loadAnimation(this, R.anim.alpha_anim);
@@ -553,6 +558,7 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
             launchInviteFriendsDialog(getIntent().getStringExtra("source"));
         }
         getUsersData();
+        showContentFilterCoachmark();
     }
 
     private void createContentAction() {
@@ -1219,7 +1225,11 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
     public void onClick(View v) {
         Fragment topFragment = getSupportFragmentManager().findFragmentById(R.id.content_frame);
         switch (v.getId()) {
-            case R.id.createTextImageVIew: {
+            case R.id.dashBoardContentFilterCoachMark: {
+                removeContentFilterCoachmark();
+                break;
+            }
+            case R.id.createTextImageView: {
                 Intent intent = new Intent(this, BloggerGoldActivity.class);
                 startActivity(intent);
             }
@@ -1862,5 +1872,16 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
                 }
             }
         }
+    }
+
+    private void showContentFilterCoachmark() {
+        if (!SharedPrefUtils.isCoachmarksShownFlag(BaseApplication.getAppContext(), "dashBoardContentFilterScreen")) {
+            dashBoardContentFilterCoachMark.setVisibility(View.VISIBLE);
+        }
+    }
+
+    private void removeContentFilterCoachmark() {
+        dashBoardContentFilterCoachMark.setVisibility(View.GONE);
+        SharedPrefUtils.setCoachmarksShownFlag(BaseApplication.getAppContext(), "dashBoardContentFilterScreen", true);
     }
 }

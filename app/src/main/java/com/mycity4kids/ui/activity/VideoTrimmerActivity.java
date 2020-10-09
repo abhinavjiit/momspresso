@@ -4,7 +4,12 @@ import android.app.ProgressDialog;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
+import android.view.Gravity;
+import android.widget.LinearLayout;
 import android.widget.Toast;
+import androidx.core.content.ContextCompat;
 import com.mycity4kids.R;
 import com.mycity4kids.application.BaseApplication;
 import com.mycity4kids.base.BaseActivity;
@@ -15,6 +20,7 @@ import com.mycity4kids.utils.AppUtils;
 import com.mycity4kids.utils.StringUtils;
 import com.mycity4kids.videotrimmer.K4LVideoTrimmer;
 import com.mycity4kids.videotrimmer.interfaces.OnTrimVideoListener;
+import io.github.douglasjunior.androidSimpleTooltip.SimpleTooltip;
 import java.io.File;
 import java.io.IOException;
 import org.apache.commons.io.FileUtils;
@@ -33,6 +39,7 @@ public class VideoTrimmerActivity extends BaseActivity implements OnTrimVideoLis
     private String challengeName;
     private String comingFrom;
     private Topics selectedCategory;
+    private LinearLayout bottomLayout;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -63,6 +70,7 @@ public class VideoTrimmerActivity extends BaseActivity implements OnTrimVideoLis
         progressDialog.setMessage(getString(R.string.trimming_progress));
 
         videoTrimmer = ((K4LVideoTrimmer) findViewById(R.id.timeLine));
+        bottomLayout = videoTrimmer.findViewById(R.id.bottomLayout);
         ((BaseApplication) getApplication()).setView(videoTrimmer);
 
         if (videoTrimmer != null && !StringUtils.isNullOrEmpty(duration)) {
@@ -75,6 +83,31 @@ public class VideoTrimmerActivity extends BaseActivity implements OnTrimVideoLis
                 e.printStackTrace();
             }
         }
+        showToolTip();
+    }
+
+    private void showToolTip() {
+        SimpleTooltip tooltip = new SimpleTooltip.Builder(this)
+                .anchorView(bottomLayout)
+                .contentView(R.layout.thumbnail_video_tooltip)
+                .arrowColor(ContextCompat.getColor(this, R.color.tooltip_solid))
+                .gravity(Gravity.TOP)
+                .arrowWidth(40f)
+                .animated(false)
+                .showArrow(false)
+                .transparentOverlay(true)
+                .build();
+        tooltip.show();
+
+        final Handler handler = new Handler(Looper.getMainLooper());
+        handler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                if (tooltip.isShowing()) {
+                    tooltip.dismiss();
+                }
+            }
+        }, 3000);
     }
 
     @Override

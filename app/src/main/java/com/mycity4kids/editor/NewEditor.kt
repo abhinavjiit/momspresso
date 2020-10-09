@@ -21,6 +21,7 @@ import android.os.Build
 import android.os.Bundle
 import android.os.Environment
 import android.os.Handler
+import android.os.Looper
 import android.os.Message
 import android.provider.MediaStore
 import android.text.Editable
@@ -36,6 +37,7 @@ import android.widget.EditText
 import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.PopupMenu
+import android.widget.RelativeLayout
 import android.widget.TextView
 import android.widget.Toast
 import android.widget.ToggleButton
@@ -209,8 +211,7 @@ class NewEditor : BaseActivity(),
     private var taggedChallengeName: String? = null
     var draftChallengeTagList: ArrayList<Map<String, String>>? = null
     var taggedChallengeMap: HashMap<String, String>? = null
-    private lateinit var aztecCoachMark: View //view
-    private lateinit var view: View
+    private lateinit var aztecCoachMark: RelativeLayout
     val HTML_PATTERN = "(?i)<p.*?>.*?</p>"
     var pattern: Pattern = Pattern.compile(HTML_PATTERN)
     private lateinit var bottomCoachMark: CardView
@@ -230,7 +231,6 @@ class NewEditor : BaseActivity(),
         lastSavedTextView = findViewById<View>(R.id.lastSavedTextView) as TextView
         publishTextView = findViewById<View>(R.id.publishTextView) as TextView
         aztecCoachMark = findViewById(R.id.aztecCoachMark)
-        view = findViewById(R.id.view)
         val sourceEditor = findViewById<SourceViewEditText>(R.id.source)
         titleTxt = findViewById<View>(R.id.title) as EditText
         editorGetHelp = findViewById(R.id.editor_get_help)
@@ -238,7 +238,6 @@ class NewEditor : BaseActivity(),
         editor_get_help.setOnClickListener(this)
         closeEditorImageView!!.setOnClickListener(this)
         publishTextView!!.setOnClickListener(this)
-        view.setOnClickListener(this)
         aztecCoachMark.setOnClickListener(this)
         taggedChallengeId = intent.getStringExtra("articleChallengeId")
         taggedChallengeName = intent.getStringExtra("challengeName")
@@ -247,12 +246,6 @@ class NewEditor : BaseActivity(),
                 BaseApplication.getAppContext(),
                 "newEditor_bottom"
             )) {
-            bottomCoachMark.visibility = View.VISIBLE
-        } else if (!SharedPrefUtils.isCoachmarksShownFlag(
-                BaseApplication.getAppContext(),
-                "newEditor_controllerView"
-            )) {
-            view.visibility = View.VISIBLE
             aztecCoachMark.visibility = View.VISIBLE
         }
 
@@ -426,7 +419,6 @@ class NewEditor : BaseActivity(),
             }
         })
         bottomCoachMark.setOnClickListener(this)
-        view.setOnClickListener(this)
         aztecCoachMark.setOnClickListener(this)
     }
 
@@ -1356,26 +1348,20 @@ class NewEditor : BaseActivity(),
     override fun onClick(v: View) {
         when (v.id) {
             R.id.closeEditorImageView -> onBackPressed()
-            R.id.bottomCoachMark -> {
+            R.id.bottomCoachMark, R.id.aztecCoachMark -> {
                 bottomCoachMark.visibility = View.GONE
-                view.visibility = View.VISIBLE
-                aztecCoachMark.visibility = View.VISIBLE
+                aztecCoachMark.visibility = View.GONE
                 SharedPrefUtils.setCoachmarksShownFlag(
                     BaseApplication.getAppContext(),
                     "newEditor_bottom",
                     true
                 )
+                Handler(Looper.getMainLooper()).postDelayed({
+                    showToolTip()
+                }, 2000)
+
             }
-            R.id.aztecCoachMark, R.id.view -> {
-                SharedPrefUtils.setCoachmarksShownFlag(
-                    BaseApplication.getAppContext(),
-                    "newEditor_controllerView",
-                    true
-                )
-                view.visibility = View.GONE
-                aztecCoachMark.visibility = View.GONE
-                showToolTip()
-            }
+
             R.id.editor_get_help -> {
                 editorGetHelpDialog()
                 closeEditorImageView?.setEnabled(false)
@@ -1707,7 +1693,7 @@ class NewEditor : BaseActivity(),
     }
 
     private fun showToolTip() {
-        SimpleTooltip.Builder(this)
+        val tooltip = SimpleTooltip.Builder(this)
             .anchorView(publishTextView)
             .contentView(R.layout.article_publish_tooltip_layout)
             .arrowColor(ContextCompat.getColor(this, R.color.tooltip_border))
@@ -1716,6 +1702,7 @@ class NewEditor : BaseActivity(),
             .animated(true)
             .transparentOverlay(true)
             .build()
-            .show()
+        tooltip.show()
+        Handler(Looper.getMainLooper()).postDelayed({ tooltip.dismiss() }, 3000)
     }
 }

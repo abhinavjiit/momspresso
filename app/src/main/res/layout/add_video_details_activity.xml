@@ -146,6 +146,22 @@
       </RelativeLayout>
     </RelativeLayout>
   </ScrollView>
+  <RelativeLayout
+    android:id="@+id/toolTipContainer"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_above="@id/saveUploadTextView"
+    android:clickable="true"
+    android:focusable="true">
+    <include
+      android:id="@+id/tooltip"
+      layout="@layout/add_video_detail_tooltip"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:layout_alignParentBottom="true"
+      android:layout_marginStart="16dp"
+      android:layout_marginEnd="16dp" />
+  </RelativeLayout>
   <com.mycity4kids.widget.CustomFontTextView
     android:id="@+id/saveUploadTextView"
     android:layout_width="match_parent"

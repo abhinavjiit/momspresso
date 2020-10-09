@@ -64,6 +64,8 @@ class VideoCategoryAndChallengeSelectionActivity : BaseActivity(),
     private lateinit var coachMark: FrameLayout
     private lateinit var transViewCoachMark: View
     private lateinit var tagImageViewCoachMark: ImageView
+    private lateinit var categoryImageViewCoachMark: ImageView
+    private lateinit var categoryCoachMarkContainer: FrameLayout
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -71,7 +73,8 @@ class VideoCategoryAndChallengeSelectionActivity : BaseActivity(),
         transViewCoachMark = findViewById(R.id.transViewCoachMark)
         coachMark = findViewById(R.id.coachMark)
         tagImageViewCoachMark = findViewById(R.id.tagImageViewCoachMark)
-
+        categoryImageViewCoachMark = findViewById(R.id.categoryImageViewCoachMark)
+        categoryCoachMarkContainer = findViewById(R.id.categoryCoachMarkContainer)
 
         vlogTutorialImageView.setOnClickListener(this)
 
@@ -112,6 +115,8 @@ class VideoCategoryAndChallengeSelectionActivity : BaseActivity(),
         }
         coachMark.setOnClickListener(this)
         transViewCoachMark.setOnClickListener(this)
+        categoryImageViewCoachMark.setOnClickListener(this)
+
     }
 
     private fun getCategoriesData() {
@@ -245,7 +250,20 @@ class VideoCategoryAndChallengeSelectionActivity : BaseActivity(),
                         ("category-ee7ea82543bd4bc0a8dad288561f2beb" == it[i].id)) {
                         categoryList.add(it[i])
                     }
+
                 }
+            }
+            try {
+                if (categoryList.size > 0) {
+                    categoryCoachMarkContainer.visibility = View.VISIBLE
+                    categoryImageViewCoachMark.visibility = View.VISIBLE
+                    Picasso.get().load(categoryList[0].extraData[0].categoryBackImage.app).into(
+                        categoryImageViewCoachMark
+                    )
+                }
+            } catch (e: Exception) {
+                categoryCoachMarkContainer.visibility = View.GONE
+                categoryImageViewCoachMark.visibility = View.GONE
             }
             videoCategoriesSelectionAdapter.notifyDataSetChanged()
         }
@@ -532,7 +550,7 @@ class VideoCategoryAndChallengeSelectionActivity : BaseActivity(),
             val intent = Intent(this, ContentCreationTutorialListingActivity::class.java)
             intent.putExtra(AppConstants.COLLECTION_ID, AppConstants.MOM_VLOG_TUTORIAL_COLLECTION)
             startActivity(intent)
-        } else if (view?.id == R.id.transViewCoachMark || view?.id == R.id.coachMark) {
+        } else if (view?.id == R.id.transViewCoachMark || view?.id == R.id.coachMark|| view?.id == R.id.categoryImageViewCoachMark) {
             SharedPrefUtils.setCoachmarksShownFlag(
                 BaseApplication.getAppContext(),
                 "videoOrChallengeSelectionScreen",
@@ -540,6 +558,8 @@ class VideoCategoryAndChallengeSelectionActivity : BaseActivity(),
             )
             coachMark.visibility = View.GONE
             transViewCoachMark.visibility = View.GONE
+            categoryImageViewCoachMark.visibility = View.GONE
+            categoryCoachMarkContainer.visibility = View.GONE
         }
     }
 

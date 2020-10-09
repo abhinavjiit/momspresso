@@ -19,7 +19,6 @@ import com.mycity4kids.R
 import com.mycity4kids.application.BaseApplication
 import com.mycity4kids.base.BaseActivity
 import com.mycity4kids.constants.AppConstants
-import com.mycity4kids.gtmutils.Utils
 import com.mycity4kids.models.Topics
 import com.mycity4kids.preference.SharedPrefUtils
 import com.mycity4kids.retrofitAPIsInterfaces.VlogsListingAndDetailsAPI
@@ -201,8 +200,11 @@ class ChooseShortStoryCategoryActivity : BaseActivity(),
                     tagImageViewCoachMark
                 )
                 challengeNameText.text = shortStoryChallengesData[0].display_name
-              if(!SharedPrefUtils.isCoachmarksShownFlag(BaseApplication.getAppContext(),"chooseStoryOrChallenge"))
-                coachMark.visibility = View.VISIBLE
+                if (!SharedPrefUtils.isCoachmarksShownFlag(
+                        BaseApplication.getAppContext(),
+                        "chooseStoryOrChallenge"
+                    ))
+                    coachMark.visibility = View.VISIBLE
             } catch (e: Exception) {
                 coachMark.visibility = View.GONE
             }
@@ -222,12 +224,6 @@ class ChooseShortStoryCategoryActivity : BaseActivity(),
     }
 
     override fun onClick(v: View, position: Int) {
-        Utils.shareEventTracking(
-            this,
-            "Create section",
-            "Story_Challenges_Android",
-            "CS_SCL_Any_Challenge"
-        )
         val intent = Intent(this, ShortStoryChallengeDetailActivity::class.java)
         intent.putExtra("challenge", shortStoryChallengesData.get(position).id)
         startActivity(intent)

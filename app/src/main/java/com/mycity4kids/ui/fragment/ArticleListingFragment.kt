@@ -69,6 +69,7 @@ import com.mycity4kids.retrofitAPIsInterfaces.TorcaiAdsAPI
 import com.mycity4kids.retrofitAPIsInterfaces.VlogsListingAndDetailsAPI
 import com.mycity4kids.ui.activity.ArticleChallengeDetailActivity
 import com.mycity4kids.ui.activity.ArticleDetailsContainerActivity
+import com.mycity4kids.ui.activity.DashboardActivity
 import com.mycity4kids.ui.activity.ExploreArticleListingTypeActivity
 import com.mycity4kids.ui.activity.ParallelFeedActivity
 import com.mycity4kids.ui.activity.ShortStoryChallengeDetailActivity
@@ -187,6 +188,7 @@ class ArticleListingFragment : BaseFragment(), View.OnClickListener,
         articleFilterTextView.setOnClickListener(this)
         storyFilterTextView.setOnClickListener(this)
         vlogsFilterTextView.setOnClickListener(this)
+
         articleFilterTextView.setText(
             WordUtils.capitalizeFully(articleFilterTextView.context.getString(R.string.groups_sections_blogs))
         )

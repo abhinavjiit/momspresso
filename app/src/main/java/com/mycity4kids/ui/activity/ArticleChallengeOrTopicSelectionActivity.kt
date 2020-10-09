@@ -241,7 +241,12 @@ class ArticleChallengeOrTopicSelectionActivity : BaseActivity(),
 
     override fun onChallengeItemClick(view: View, topics: Topics, parentCategoryId: String?) {
         if (view.id == R.id.info) {
-            Utils.shareEventTracking(this, "Create section", "Create_Android", "B_Show_Challenge_Rules")
+            Utils.shareEventTracking(
+                this,
+                "Create section",
+                "Create_Android",
+                "B_Show_Challenge_Rules"
+            )
             topics.extraData[0].challenge.rules?.let {
                 val dialog = Dialog(this)
                 dialog.setContentView(R.layout.challenge_rules_dialog)
@@ -261,6 +266,7 @@ class ArticleChallengeOrTopicSelectionActivity : BaseActivity(),
                 dialog.show()
             }
         } else {
+            Utils.shareEventTracking(this, "Create section", "Create_Android", "B_Topic")
             val intent = Intent(this, ArticleChallengeDetailActivity::class.java)
             intent.putExtra("articleChallengeId", topics.id)
             intent.putExtra("challengeName", topics.display_name)
@@ -268,8 +274,8 @@ class ArticleChallengeOrTopicSelectionActivity : BaseActivity(),
         }
     }
 
+
     override fun onSuggestedTopicClick() {
-        Utils.shareEventTracking(this, "Create section", "Create_Android", "B_Topic")
         val intent = Intent(this, NewEditor::class.java)
         startActivity(intent)
     }
@@ -298,12 +304,23 @@ class ArticleChallengeOrTopicSelectionActivity : BaseActivity(),
                 coachMark.visibility = View.GONE
                 SharedPrefUtils.setCoachmarksShownFlag(
                     BaseApplication.getAppContext(),
-                    "newEditor_controllerView",
+                    "newEditor_bottom",
                     true
                 )
                 SharedPrefUtils.setCoachmarksShownFlag(
                     BaseApplication.getAppContext(),
                     "newEditor",
+                    true
+                )
+
+                SharedPrefUtils.setCoachmarksShownFlag(
+                    BaseApplication.getAppContext(),
+                    "addArticleTagImageScreen",
+                    true
+                )
+                SharedPrefUtils.setCoachmarksShownFlag(
+                    BaseApplication.getAppContext(),
+                    "addArticleTopicScreen",
                     true
                 )
 
