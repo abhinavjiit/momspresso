@@ -1411,7 +1411,7 @@ Thank you! We will be reviewing your story. You can expect to hear from us withi
   <string name="all_copy_link">COPY LINK</string>
   <string name="ss_story_link_copied">Story link copied</string>
   <string name="ss_image_loading_msg">Please wait for story background to be loaded</string>
-  <string name="story_coachmark_text">Position or move your story around as per your preference.</string>
+  <string name="story_coachmark_text">તમારી વાર્તા ને ઈચ્છા મુજબ સ્થિત કરવા ખસેડો </string>
   <string name="story_got_it">Got it</string>
   <string name="ss_coachmark_story_bg">Select background of your choice</string>
   <string name="ss_coachmarks_text_style">Change font size or text alignment</string>
@@ -1516,7 +1516,7 @@ Thank you! We will be reviewing your story. You can expect to hear from us withi
   <string name="profile_emailid_optional">Email Id (optional)</string>
   <string name="all_questions">સવાલ</string>
   <string name="original_content">કૃપા કરી મોમ્સપ્રેસો ના મંચ પર ફક્ત મૌલિક સ્વ રચિત રચનાઓ જ પ્રકાશિત કરશો. કોઈ પણ સ્તોત્ર થી આંશિક રીતે કોપી કરેલ રચના પણ અહીં માન્ય ગણાશે નહીં.</string>
-  <string name="ok_got_it">Ok, got It</string>
+  <string name="ok_got_it">ભલે, સમજણ પડી</string>
   <string name="please_enter_a_valid_code">Please enter a valid verification code.</string>
   <string name="all_momspresso_live">MOMSPRESSO LIVE</string>
   <string name="write_a_comment">Write a comment</string>
@@ -1581,19 +1581,25 @@ Thank you! We will be reviewing your story. You can expect to hear from us withi
   <string name="home_onboarding_title">તમે તમારી સફર કેવી રીતે શરૂ કરવા ઈચ્છો છો?</string>
   <string name="empty_leaderboard_text">લીડરબોર્ડ હજી જનરેટ થયું નથી. કૃપા કરીને કાલે પાછા આવો.</string>
   <string name="yesterday">ગઈકાલે </string>
-=======
->>>>>>> Stashed changes
   <string name="take_tour">TAKE THE TOUR</string>
-  <string name="coachmark_article_1">Let us help you create your first blog! Select a challenge to start with or simply click on start writing</string>
-  <string name="coachmark_article_2">You can add images and format the content as per your need</string>
-  <string name="coachmark_article_3">Once done publish your story</string>
-  <string name="coachmark_article_4">Tags help Moms discover your blog.</string>
-  <string name="coachmark_article_5">Blogs with an interesting image get more readership.</string>
-  <string name="yay_all_done">Yay! You are all done!</string>
-  <string name="view_moderation_guidelines">View Moderation Guidelines</string>
-  <string name="get_tips_ideas">Get tips or ideas from other creators</string>
-  <string name="dont_stop_magic">Don\'t stop all the magic you were creating</string>
-  <string name="join_creator_group">Join Creator\'s Hangout</string>
-  <string name="create_more">Create More</string>
-  <string name="go_to_blog">Go to your Blog</string>
+  <string name="coachmark_article_1">આવો તમને તમારા પ્રથમ બ્લોગ નું સર્જન કરવામાં મદદ કરીએ! શરૂઆત કરવા કોઈ પણ પડકાર પસંદ કરો અથવા \'રચો\' પર ક્લિક કરો </string>
+  <string name="coachmark_article_2">તમારી ઈચ્છા મુજબ ઇમેજ ની પસંદગી કરો અને લખાણ સ્થિત કરવા ખસેડો</string>
+  <string name="coachmark_article_3">આ થયા પછી, તમારી પ્રથમ વાર્તા પ્રકાશિત કરો </string>
+  <string name="coachmark_article_4">ટેગ કરવાથી તમારો બ્લોગ વાંચનાર ને શોધવામાં સરળતા રહે છે  </string>
+  <string name="coachmark_article_5">અમુક ખાસ ઇમેજ સાથે પ્રકાશિત કરેલ બ્લોગ ને વધુ પસંદ કરાય છે </string>
+  <string name="yay_all_done">વાહ! તમારું કામ પૂર્ણ થયું</string>
+  <string name="view_moderation_guidelines">મોડેરેશન ની માર્ગદર્શિકા ચકાસો</string>
+  <string name="get_tips_ideas">બીજા સર્જકો પાસે થી ટિપ્સ મેળવો</string>
+  <string name="dont_stop_magic">તમારી સર્જનાત્મકતા નો જાદુ અટકે નહીં એ ધ્યાન રાખશો </string>
+  <string name="join_creator_group">ક્રિએટર્સ હેંગાઉટ માં જોડાઓ</string>
+  <string name="create_more">વધુ જોડો </string>
+  <string name="go_to_blog">તમારા બ્લોગ પર જાઓ </string>
+  <string name="skip_the_tour">પ્રવાસ અવગણો  </string>
+  <string name="coachmark_story_1">આવો તમને તમારી પ્રથમ ૧૦૦ શબ્દોની વાર્તા નું સર્જન કરવામાં મદદ કરીએ! શરૂઆત કરવા કોઈ પણ પડકાર અથવા શ્રેણી પસંદ કરો </string>
+  <string name="coachmark_story_2">તમારી પસંદગી ની પૃષ્ઠભૂમિ પસંદ કરો </string>
+  <string name="coachmark_next">આગામી </string>
+  <string name="user_story_live">તમારી ૧૦૦ શબ્દોની વાર્તા લાઈવ છે </string>
+  <string name="click_to_upload_the_video">વિડીયો અપલોડ કરવા ક્લિક કરો </string>
+  <string name="choose_interesting_title">જોનારનું ધ્યાન આકર્ષિત કરવા રસપ્રદ શીર્ષક વાપરો </string>
+  <string name="coachmark_story_3">આ થયા પછી, તમારી પ્રથમ ૧૦૦ શબ્દોની વાર્તા પ્રકાશિત કરો </string>
 </resources>

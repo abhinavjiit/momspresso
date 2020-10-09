@@ -392,13 +392,12 @@ public class VideoUploadProgressActivity extends BaseActivity implements View.On
         needOpinionTextView.setVisibility(View.VISIBLE);
         if (body.getData().getResult() == null || body.getData().getResult().isEmpty() || body.getData().getResult()
                 .get(0).getStatus().equals("2")) {
-            joinVloggersGroup.setText("Join Creator's Hangout");
-            needOpinionTextView.setText("Get tips or ideas from other creators");
+            joinVloggersGroup.setText(getString(R.string.join_creator_group));
+            needOpinionTextView.setText(getString(R.string.get_tips_ideas));
             joinVloggersGroup.setTag("please_join");
         } else {
-            joinVloggersGroup.setText("Create More");
-            needOpinionTextView.setText(
-                    "Don't stop all the magic you were creating");
+            joinVloggersGroup.setText(getString(R.string.create_more));
+            needOpinionTextView.setText(getString(R.string.dont_stop_magic));
             joinVloggersGroup.setTag("already_join");
         }
     }

@@ -62,7 +62,7 @@
       android:paddingTop="@dimen/space_10"
       android:paddingEnd="38dp"
       android:paddingBottom="@dimen/space_10"
-      android:text="Ok, Got it"
+      android:text="@string/ok_got_it"
       android:textSize="18sp"
       app:fb_defaultColor="@color/white"
       app:fb_radius="21dp"

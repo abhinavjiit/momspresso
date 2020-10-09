@@ -130,7 +130,7 @@
       android:layout_width="wrap_content"
       android:layout_height="wrap_content"
       android:layout_marginTop="60dp"
-      android:text="Don't stop all the magic you were creating"
+      android:text="@string/dont_stop_magic"
       android:textColor="@color/campaign_515151"
       android:textSize="16sp"
       android:visibility="gone"
@@ -145,7 +145,7 @@
       android:visibility="gone"
       app:fb_defaultColor="@color/app_red"
       app:fb_radius="4dp"
-      app:fb_text="Create More" />
+      app:fb_text="@string/create_more" />
   </LinearLayout>
 
   <LinearLayout
@@ -290,7 +290,7 @@
       android:layout_width="wrap_content"
       android:layout_height="wrap_content"
       android:layout_marginTop="40dp"
-      android:text="Don't stop all the magic you were creating"
+      android:text="@string/dont_stop_magic"
       android:textColor="@color/campaign_515151"
       android:textSize="16sp"
       android:visibility="gone"
@@ -305,7 +305,7 @@
       android:visibility="gone"
       app:fb_defaultColor="@color/app_red"
       app:fb_radius="4dp"
-      app:fb_text="Create More" />
+      app:fb_text="@string/create_more" />
 
   </LinearLayout>
 

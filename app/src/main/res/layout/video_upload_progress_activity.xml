@@ -229,7 +229,7 @@
       android:layout_marginTop="@dimen/space_18"
       android:gravity="center"
       android:padding="20dp"
-      android:text="Moderation Guidelines"
+      android:text="@string/view_moderation_guidelines"
       android:textColor="@color/app_red"
       android:textSize="@dimen/space_16"
       app:fontName="oswald.ttf" />

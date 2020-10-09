@@ -137,7 +137,7 @@
         android:paddingTop="14dp"
         android:paddingRight="60dp"
         android:paddingBottom="14dp"
-        android:text="Moderation Guidelines"
+        android:text="@string/view_moderation_guidelines"
         android:textColor="@color/app_red"
         android:textSize="16sp"
         app:fontName="Roboto-Regular.ttf" />
@@ -150,7 +150,7 @@
       android:layout_below="@+id/moderationView"
       android:layout_centerHorizontal="true"
       android:layout_marginTop="40dp"
-      android:text="Don't stop all the magic you were creating"
+      android:text="@string/dont_stop_magic"
       android:textColor="@color/campaign_515151"
       android:textSize="16sp"
       android:visibility="gone"
@@ -167,7 +167,7 @@
       android:visibility="gone"
       app:fb_defaultColor="@color/app_red"
       app:fb_radius="4dp"
-      app:fb_text="Create More"
+      app:fb_text="@string/create_more"
 
       />
   </RelativeLayout>
@@ -309,7 +309,7 @@
           android:layout_width="wrap_content"
           android:layout_height="wrap_content"
           android:layout_marginTop="40dp"
-          android:text="Don't stop all the magic you were creating"
+          android:text="@string/dont_stop_magic"
           android:textColor="@color/campaign_515151"
           android:textSize="16sp"
           android:visibility="gone"
@@ -327,7 +327,7 @@
           android:visibility="gone"
           app:fb_defaultColor="@color/app_red"
           app:fb_radius="4dp"
-          app:fb_text="Create More"
+          app:fb_text="@string/create_more"
           app:layout_constraintEnd_toEndOf="parent"
           app:layout_constraintStart_toStartOf="parent"
           app:layout_constraintTop_toBottomOf="@+id/createMoreHeaderTextView" />

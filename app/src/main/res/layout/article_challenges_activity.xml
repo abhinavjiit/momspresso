@@ -371,7 +371,7 @@
           android:layout_width="wrap_content"
           android:layout_height="wrap_content"
           android:padding="15dp"
-          android:text="Ok, Got it"
+          android:text="@string/ok_got_it"
           android:textColor="@color/app_red"
           android:textSize="16sp"
           app:fontName="Roboto-Medium.ttf"

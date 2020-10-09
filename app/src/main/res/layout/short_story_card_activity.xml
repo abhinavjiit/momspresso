@@ -434,7 +434,7 @@
       android:paddingTop="@dimen/space_10"
       android:paddingRight="@dimen/space_25"
       android:paddingBottom="@dimen/space_10"
-      android:text="Next"
+      android:text="@string/coachmark_next"
       android:textColor="#FFFFFF"
       android:textSize="17sp" />
   </RelativeLayout>

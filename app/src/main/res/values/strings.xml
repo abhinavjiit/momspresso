@@ -1643,5 +1643,13 @@ Thank you! We will be reviewing your story. You can expect to hear from us withi
   <string name="join_creator_group">Join Creator\'s Hangout</string>
   <string name="create_more">Create More</string>
   <string name="go_to_blog">Go to your Blog</string>
+  <string name="skip_the_tour">Skip the tour</string>
+  <string name="coachmark_story_1">Let us help you create your first 100 word story! Select a challenge or a category to start with</string>
+  <string name="coachmark_story_2">Choose a background of your choice</string>
+  <string name="coachmark_next">Next</string>
+  <string name="user_story_live">your 100 word story is live</string>
+  <string name="click_to_upload_the_video">Click to upload the video</string>
+  <string name="choose_interesting_title">Use an interesting title to grab the viewer\'s attention</string>
+  <string name="coachmark_story_3">Once done, publish your first 100 word story!</string>
 </resources>
 

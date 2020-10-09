@@ -127,7 +127,7 @@ class ShortStoryModerationOrShareActivity : BaseActivity(), GroupMembershipStatu
         } else {
             secondTextView?.text =
                 SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).first_name.plus(
-                    ", " + "your 100 word story is live"
+                    ", " + getString(R.string.user_story_live)
                 )
             moderationContainer?.visibility = View.GONE
             publishContainer?.visibility = View.VISIBLE
@@ -494,14 +494,13 @@ class ShortStoryModerationOrShareActivity : BaseActivity(), GroupMembershipStatu
             createMoreHeaderTextViewModeration.visibility = View.VISIBLE
             if (body?.data?.result == null || body.data.result.isEmpty() || body.data.result[0].status == "2") {
 
-                createMoreButtonModeration.setText("Join Creator's Hangout")
-                createMoreHeaderTextViewModeration.text = "Get tips or ideas from other creators"
+                createMoreButtonModeration.setText(getString(R.string.join_creator_group))
+                createMoreHeaderTextViewModeration.text = getString(R.string.get_tips_ideas)
                 createMoreButtonModeration.tag = "please_join"
 
             } else {
-                createMoreButtonModeration.setText("Create More")
-                createMoreHeaderTextViewModeration.text =
-                    "Don't stop all the magic you were creating"
+                createMoreButtonModeration.setText(getString(R.string.create_more))
+                createMoreHeaderTextViewModeration.text = getString(R.string.dont_stop_magic)
                 createMoreButtonModeration.tag = "already_join"
 
 
@@ -510,13 +509,12 @@ class ShortStoryModerationOrShareActivity : BaseActivity(), GroupMembershipStatu
             createMoreButton.visibility = View.VISIBLE
             createMoreHeaderTextView.visibility = View.VISIBLE
             if (body?.data?.result == null || body.data.result.isEmpty() || body.data.result[0].status == "2") {
-                createMoreButton.setText("Join Creator's Hangout")
-                createMoreHeaderTextView.text = "Get tips or ideas from other creators"
+                createMoreButton.setText(getString(R.string.join_creator_group))
+                createMoreHeaderTextView.text = getString(R.string.dont_stop_magic)
                 createMoreButton.tag = "please_join"
             } else {
-                createMoreButton.setText("Create More")
-                createMoreHeaderTextView.text =
-                    "Don't stop all the magic you were creating"
+                createMoreButton.setText(getString(R.string.create_more))
+                createMoreHeaderTextView.text = getString(R.string.dont_stop_magic)
                 createMoreButton.tag = "already_join"
 
             }
