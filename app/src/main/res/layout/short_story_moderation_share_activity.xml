@@ -62,7 +62,9 @@
       android:layout_height="wrap_content"
       android:layout_below="@+id/youAreDoneView"
       android:layout_centerHorizontal="true"
-      android:src="@drawable/ic_moderation" />
+      android:layout_marginTop="@dimen/space_30"
+      android:layout_marginBottom="@dimen/space_30"
+      android:src="@drawable/ic_moderation_content" />
 
     <com.mycity4kids.widget.CustomFontTextView
       android:id="@+id/wayToGoTextView"
@@ -72,8 +74,9 @@
       android:layout_centerHorizontal="true"
       android:layout_marginTop="30dp"
       android:text="@string/moderation_or_share.way_to_go"
-      android:textColor="@color/app_light_black"
+      android:textColor="@color/campaign_515151"
       android:textSize="18sp"
+      android:visibility="gone"
       app:fontName="oswald_regular.ttf" />
 
     <View
@@ -102,10 +105,10 @@
         android:gravity="center"
         android:paddingLeft="60dp"
         android:paddingRight="60dp"
-        android:text="@string/moderation_or_share_story_moderation_message"
-        android:textColor="@color/app_grey"
-        android:textSize="18sp"
-        app:fontName="oswald.ttf" />
+        android:text="Congratulation! Your post has been sent for the approval"
+        android:textColor="@color/campaign_515151"
+        android:textSize="20sp"
+        app:fontName="Roboto-Medium.ttf" />
 
       <com.mycity4kids.widget.CustomFontTextView
         android:id="@+id/okayTextView"
@@ -121,7 +124,23 @@
         android:text="@string/moderation_or_share.okay"
         android:textColor="@color/white_color"
         android:textSize="18sp"
+        android:visibility="gone"
         app:fontName="oswald.ttf" />
+
+      <com.mycity4kids.widget.CustomFontTextView
+        android:id="@+id/moderationGuidLines"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="18dp"
+        android:gravity="center"
+        android:paddingLeft="60dp"
+        android:paddingTop="14dp"
+        android:paddingRight="60dp"
+        android:paddingBottom="14dp"
+        android:text="Moderation Guidelines"
+        android:textColor="@color/app_red"
+        android:textSize="16sp"
+        app:fontName="Roboto-Regular.ttf" />
     </LinearLayout>
 
     <com.mycity4kids.widget.CustomFontTextView
@@ -135,9 +154,7 @@
       android:textColor="@color/campaign_515151"
       android:textSize="16sp"
       android:visibility="gone"
-      app:fontName="Roboto-Regular.ttf"
-
-      />
+      app:fontName="Roboto-Regular.ttf" />
 
     <com.mycity4kids.widget.MomspressoButtonWidget
       android:id="@+id/createMoreButtonModeration"
@@ -154,7 +171,6 @@
 
       />
   </RelativeLayout>
-
 
   <ScrollView
     android:id="@+id/publishedContainer"

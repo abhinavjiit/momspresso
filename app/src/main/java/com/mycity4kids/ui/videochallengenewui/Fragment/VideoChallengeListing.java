@@ -218,11 +218,11 @@ public class VideoChallengeListing extends BaseFragment implements View.OnClickL
         @Override
         public void onResponse(Call<VlogsListingResponse> call, retrofit2.Response<VlogsListingResponse> response) {
             removeProgressDialog();
+            loadingView.setVisibility(View.GONE);
+            isReuqestRunning = false;
             if (nextPageNumber == 1) {
                 EventBus.getDefault().post("showDialogBox");
             }
-            loadingView.setVisibility(View.GONE);
-            isReuqestRunning = false;
             if (null == response.body()) {
                 NetworkErrorException nee = new NetworkErrorException(response.raw().toString());
                 FirebaseCrashlytics.getInstance().recordException(nee);

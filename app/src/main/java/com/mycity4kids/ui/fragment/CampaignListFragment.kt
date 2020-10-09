@@ -11,6 +11,7 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.ProgressBar
+import android.widget.RelativeLayout
 import android.widget.TextView
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -46,13 +47,16 @@ import io.reactivex.Observer
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable
 import io.reactivex.schedulers.Schedulers
-import java.util.ArrayList
 import retrofit2.Call
 import retrofit2.Callback
+import java.text.SimpleDateFormat
+import java.util.ArrayList
+import java.util.Calendar
+import java.util.Date
 
 const val REWARDS_FILL_FORM = 1000
 
-class CampaignListFragment : BaseFragment() {
+class CampaignListFragment : BaseFragment(), View.OnClickListener {
 
     private var campaignList = mutableListOf<CampaignDataListResult>()
     private lateinit var linearLayoutManager: LinearLayoutManager
@@ -92,6 +96,17 @@ class CampaignListFragment : BaseFragment() {
     private lateinit var dashboardLayout: ConstraintLayout
     private lateinit var campaignNos: TextView
     private lateinit var referText: TextView
+    private lateinit var coachMarkContainer: RelativeLayout
+    private lateinit var toolbarCoachMark: androidx.appcompat.widget.Toolbar
+    private lateinit var campaign_header: ImageView
+    private lateinit var brand_img: ImageView
+    private lateinit var brand_name: TextView
+    private lateinit var campaign_name: TextView
+    private lateinit var submission_status: TextView
+    private lateinit var end_date: TextView
+    private lateinit var end_date_text: TextView
+    private lateinit var earn_upto: TextView
+    private lateinit var amount: TextView
 
     companion object {
         @JvmStatic
@@ -137,6 +152,19 @@ class CampaignListFragment : BaseFragment() {
         referText = containerView.findViewById(R.id.refer_text)
         campaignNos = containerView.findViewById(R.id.campaign_nos)
         dashboardLayout = containerView.findViewById(R.id.dashboard_layout)
+
+        coachMarkContainer = containerView.findViewById(R.id.coachMarkContainer)
+        campaign_header = containerView.findViewById(R.id.campaign_header)
+        brand_img = containerView.findViewById(R.id.brand_img)
+        brand_name = containerView.findViewById(R.id.brand_name)
+        campaign_name = containerView.findViewById(R.id.campaign_name)
+        submission_status = containerView.findViewById(R.id.submission_status)
+        end_date = containerView.findViewById(R.id.end_date)
+        end_date_text = containerView.findViewById(R.id.end_date_text)
+        earn_upto = containerView.findViewById(R.id.earn_upto)
+        amount = containerView.findViewById(R.id.amount)
+        toolbarCoachMark = containerView.findViewById(R.id.toolbarCoachMark)
+
         recyclerView.adapter = adapter
         campaignList.clear()
         userName.text =
@@ -203,6 +231,9 @@ class CampaignListFragment : BaseFragment() {
         cancel.setOnClickListener {
             defaultCampaignPopUp.visibility = View.GONE
         }
+        coachMarkContainer.setOnClickListener(this)
+        toolbarCoachMark.setOnClickListener(this)
+
         return containerView
     }
 
@@ -310,6 +341,14 @@ class CampaignListFragment : BaseFragment() {
                     if (responseData.data!!.result!!.size > 0) {
                         campaignList.addAll(responseData.data!!.result as ArrayList<CampaignDataListResult>)
                         adapter.notifyDataSetChanged()
+                        if (!SharedPrefUtils.isCoachmarksShownFlag(
+                                BaseApplication.getAppContext(),
+                                "campaignList"
+                            )) {
+                            toolbarCoachMark.visibility = View.VISIBLE
+                            coachMarkContainer.visibility = View.VISIBLE
+                            showCoachMark(campaignList[0])
+                        }
                     }
                 } else {
                 }
@@ -324,6 +363,54 @@ class CampaignListFragment : BaseFragment() {
             FirebaseCrashlytics.getInstance().recordException(t)
             Log.d("MC4kException", Log.getStackTraceString(t))
         }
+    }
+
+
+    private fun showCoachMark(campaignList: CampaignDataListResult) {
+        Picasso.get().load(campaignList.imageUrl).placeholder(R.drawable.default_article)
+            .error(R.drawable.default_article).into(campaign_header)
+
+        Picasso.get().load(campaignList.brandDetails.imageUrl)
+            .placeholder(R.drawable.default_article).error(R.drawable.default_article)
+            .into(brand_img)
+
+        (brand_name).text = campaignList.brandDetails.name
+        (campaign_name).text = campaignList.name
+        (amount).text = "" + campaignList.slotAvailable
+        compareDate(campaignList.campaignStatus, campaignList)
+
+    }
+
+    private fun compareDate(campaignStatus: Int, campaignList: CampaignDataListResult) {
+        if ((getCurrentDateTime().toString()) > getDate(
+                campaignList.startTime,
+                "yyyy-MM-dd"
+            )
+        ) {
+            when (campaignStatus) {
+                0, 1, 5, 4, 6, 8 -> (end_date).text =
+                    context!!.resources.getString(R.string.application_end_date)
+                else -> {
+                    (end_date).text = context!!.resources.getString(R.string.submission_end_date)
+                }
+            }
+            (end_date_text).text = getDate(campaignList.endTime, "dd MMM yyyy")
+        } else {
+            (end_date).text = context!!.resources.getString(R.string.start_date)
+            (end_date_text).text = getDate(campaignList.startTime, "dd MMM yyyy")
+        }
+    }
+
+    private fun getCurrentDateTime(): Date {
+        return Calendar.getInstance().time
+    }
+
+    private fun getDate(milliSeconds: Long, dateFormat: String): String {
+        val formatter = SimpleDateFormat(dateFormat)
+
+        val calendar = Calendar.getInstance()
+        calendar.timeInMillis = milliSeconds * 1000
+        return formatter.format(calendar.time)
     }
 
     override fun onStart() {
@@ -488,4 +575,20 @@ class CampaignListFragment : BaseFragment() {
                 Log.d("MC4kException", Log.getStackTraceString(t))
             }
         }
+
+    override fun onClick(view: View?) {
+        when (view?.id) {
+            R.id.coachMarkContainer, R.id.toolbarCoachMark -> {
+                coachMarkContainer.visibility = View.GONE
+                toolbarCoachMark.visibility = View.GONE
+                SharedPrefUtils.setCoachmarksShownFlag(
+                    BaseApplication.getAppContext(),
+                    "campaignList",
+                    true
+                )
+            }
+
+
+        }
+    }
 }

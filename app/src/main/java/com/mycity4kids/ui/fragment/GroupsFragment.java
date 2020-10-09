@@ -35,7 +35,6 @@ import com.mycity4kids.ui.adapter.GroupsRecyclerGridAdapter;
 import com.mycity4kids.widget.NoScrollGridLayoutManager;
 import com.mycity4kids.widget.SpacesItemDecoration;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import org.json.JSONObject;
 import retrofit2.Call;

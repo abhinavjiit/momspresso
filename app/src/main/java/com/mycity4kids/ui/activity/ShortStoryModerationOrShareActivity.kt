@@ -135,6 +135,17 @@ class ShortStoryModerationOrShareActivity : BaseActivity(), GroupMembershipStatu
 
         showProgressDialog(getString(R.string.please_wait))
         Handler().postDelayed(Runnable { getShortStoryDetails(storyId) }, 4000)
+        Handler().postDelayed({
+            if (youAreDoneView.visibility == View.VISIBLE) {
+                youAreDoneView.visibility = View.GONE
+            }
+        }, 3000)
+
+        Handler().postDelayed({
+            if (storyIsLiveContainer?.visibility == View.VISIBLE) {
+                storyIsLiveContainer?.visibility = View.GONE
+            }
+        }, 3000)
     }
 
     private fun checkCreatorGroupMemberShip() {
@@ -165,8 +176,6 @@ class ShortStoryModerationOrShareActivity : BaseActivity(), GroupMembershipStatu
                     SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).dynamoId
                 )
         }
-
-
     }
 
 

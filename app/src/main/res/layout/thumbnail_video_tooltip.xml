@@ -5,16 +5,15 @@
   android:layout_width="wrap_content"
   android:layout_height="wrap_content"
   android:layout_margin="16dp"
-  android:layout_marginEnd="@dimen/space_20"
   android:background="@drawable/tooltip_shape_layout"
-  android:padding="@dimen/space_16">
+  android:padding="@dimen/space_20">
 
 
   <com.mycity4kids.widget.CustomFontTextView
     android:id="@+id/secondTextView"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
-    android:text="Once done, publish your first 100 word story!"
+    android:text="A good thumbnail brings more views"
     android:textColor="@color/campaign_515151"
     android:textSize="14sp"
     app:fontName="Roboto-Regular.ttf"
@@ -24,15 +23,15 @@
 
   <com.mycity4kids.widget.CustomFontTextView
     android:id="@+id/okgot"
-    android:layout_width="wrap_content"
+    android:layout_width="0dp"
     android:layout_height="wrap_content"
-    android:layout_marginStart="5dp"
-    android:layout_marginTop="@dimen/space_5"
-    android:text="Ok, Got it"
+    android:layout_marginStart="10dp"
+    android:text="Next"
     android:textColor="@color/app_red"
     android:textSize="16sp"
+    android:visibility="gone"
     app:fontName="Roboto-Medium.ttf"
-    app:layout_constraintEnd_toEndOf="@id/secondTextView"
-    app:layout_constraintTop_toBottomOf="@id/secondTextView" />
+    app:layout_constraintBottom_toBottomOf="@id/secondTextView"
+    app:layout_constraintEnd_toEndOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

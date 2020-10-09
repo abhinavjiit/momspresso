@@ -4,7 +4,10 @@ import android.content.Intent;
 import android.graphics.drawable.GradientDrawable;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,6 +16,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.viewpager.widget.ViewPager;
 import com.getbase.floatingactionbutton.FloatingActionButton;
@@ -33,6 +37,7 @@ import com.mycity4kids.utils.StringUtils;
 import com.mycity4kids.utils.ToastUtils;
 import com.mycity4kids.videotrimmer.utils.FileUtils;
 import com.squareup.picasso.Picasso;
+import io.github.douglasjunior.androidSimpleTooltip.SimpleTooltip;
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
@@ -57,6 +62,7 @@ public class ChallengeDetailFragment extends Fragment implements View.OnClickLis
     private ImageView back;
     private String comingFrom = "";
     private ImageView videoIndicatorImageView;
+    private SimpleTooltip tooltip;
 
     @Nullable
     @Override
@@ -123,7 +129,6 @@ public class ChallengeDetailFragment extends Fragment implements View.OnClickLis
 
                 @Override
                 public void onTabUnselected(TabLayout.Tab tab) {
-
                 }
 
                 @Override
@@ -143,6 +148,31 @@ public class ChallengeDetailFragment extends Fragment implements View.OnClickLis
         });
         return view;
     }
+
+    private void showToolTip() {
+        if (saveTextView.getVisibility() == View.VISIBLE) {
+            tooltip = new SimpleTooltip.Builder(getActivity())
+                    .anchorView(saveTextView)
+                    .arrowColor(ContextCompat.getColor(getActivity(), R.color.tooltip_solid))
+                    .contentView(R.layout.challenge_detail_fab_icon_tooltip)
+                    .gravity(Gravity.TOP)
+                    .arrowWidth(40f)
+                    .animated(true)
+                    .transparentOverlay(true)
+                    .build();
+            tooltip.show();
+        }
+        final Handler handler = new Handler(Looper.getMainLooper());
+        handler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                if (tooltip.isShowing()) {
+                    tooltip.dismiss();
+                }
+            }
+        }, 3000);
+    }
+
 
     public void startTrimActivity(@NonNull Uri uri) {
         Intent intent = new Intent(getActivity(), VideoTrimmerActivity.class);
@@ -201,6 +231,7 @@ public class ChallengeDetailFragment extends Fragment implements View.OnClickLis
         } else {
             viewPager.setCurrentItem(1);
             saveTextView.setVisibility(View.VISIBLE);
+            showToolTip();
         }
     }
 

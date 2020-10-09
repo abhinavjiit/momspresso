@@ -1,293 +1,779 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="@color/white_color"
-    android:orientation="vertical">
+  xmlns:app="http://schemas.android.com/apk/res-auto"
+  android:layout_width="match_parent"
+  android:layout_height="match_parent"
+  android:background="@color/white_color"
+  android:orientation="vertical">
 
-    <RelativeLayout
+  <RelativeLayout
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_above="@id/bottomText"
+    android:layout_below="@id/toolbar"
+    android:orientation="vertical"
+    android:visibility="visible">
+
+    <androidx.core.widget.NestedScrollView
+      android:layout_width="match_parent"
+      android:layout_height="match_parent"
+      android:clipToPadding="false">
+
+      <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_above="@id/bottomText"
-        android:layout_below="@id/toolbar"
+        android:layout_height="match_parent"
         android:orientation="vertical">
 
-        <androidx.core.widget.NestedScrollView
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:clipToPadding="false">
+        <androidx.constraintlayout.widget.ConstraintLayout
+          android:id="@+id/dashboard_layout"
+          android:layout_width="match_parent"
+          android:layout_height="wrap_content"
+          android:background="@color/color_49D6BE"
+          android:paddingBottom="@dimen/space_20"
+          android:visibility="gone">
 
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:orientation="vertical">
+          <com.mikhaellopez.circularimageview.CircularImageView
+            android:id="@+id/profileImageView"
+            android:layout_width="@dimen/space_56"
+            android:layout_height="@dimen/space_56"
+            android:layout_marginLeft="@dimen/space_20"
+            android:layout_marginTop="@dimen/space_20"
+            android:src="@drawable/family_xxhdpi"
+            app:civ_border_color="@color/white_color"
+            app:civ_border_width="@dimen/space_2"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
-                <androidx.constraintlayout.widget.ConstraintLayout
-                    android:id="@+id/dashboard_layout"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:background="@color/color_49D6BE"
-                    android:visibility="gone"
-                    android:paddingBottom="@dimen/space_20">
-
-                    <com.mikhaellopez.circularimageview.CircularImageView
-                        android:id="@+id/profileImageView"
-                        android:layout_width="@dimen/space_56"
-                        android:layout_height="@dimen/space_56"
-                        android:layout_marginLeft="@dimen/space_20"
-                        android:layout_marginTop="@dimen/space_20"
-                        android:src="@drawable/family_xxhdpi"
-                        app:civ_border_color="@color/white_color"
-                        app:civ_border_width="@dimen/space_2"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toTopOf="parent" />
-
-                    <com.mycity4kids.widget.CustomFontTextView
-                        android:id="@+id/user_name"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginStart="@dimen/space_10"
-                        android:layout_marginLeft="@dimen/space_10"
-                        android:layout_toRightOf="@id/profileImageView"
-                        android:textColor="@color/white_color"
-                        android:textSize="18sp"
-                        android:textStyle="bold"
-                        app:layout_constraintStart_toEndOf="@id/profileImageView"
-                        app:layout_constraintTop_toTopOf="@id/profileImageView" />
-
-                    <com.mycity4kids.widget.CustomFontTextView
-                        android:id="@+id/campaign_nos"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_below="@id/user_name"
-                        android:layout_marginStart="@dimen/space_10"
-                        android:layout_marginLeft="@dimen/space_10"
-                        android:layout_marginTop="@dimen/space_10"
-                        android:layout_toRightOf="@id/profileImageView"
-                        android:textColor="@color/white_color"
-                        android:textSize="13sp"
-                        app:layout_constraintStart_toEndOf="@id/profileImageView"
-                        app:layout_constraintTop_toBottomOf="@id/user_name" />
-
-                    <com.mycity4kids.widget.CustomFontTextView
-                        android:id="@+id/total_earning"
-                        android:layout_width="@dimen/space_100"
-                        android:layout_height="wrap_content"
-                        android:layout_alignParentRight="true"
-                        android:layout_marginRight="@dimen/space_15"
-                        android:background="@drawable/campaign_list_total_payout_bg"
-                        android:gravity="center"
-                        android:paddingLeft="@dimen/space_7"
-                        android:paddingTop="@dimen/space_10"
-                        android:paddingRight="@dimen/space_7"
-                        android:paddingBottom="@dimen/space_10"
-                        android:textColor="@color/color_0EA095"
-                        android:textSize="22sp"
-                        android:textStyle="bold"
-                        app:layout_constraintBottom_toBottomOf="@id/profileImageView"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintTop_toTopOf="@id/profileImageView" />
-
-
-                    <ProgressBar
-                        android:id="@+id/loader"
-                        style="@android:style/Widget.ProgressBar.Small"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        app:layout_constraintBottom_toBottomOf="@+id/total_earning"
-                        app:layout_constraintEnd_toEndOf="@+id/total_earning"
-                        app:layout_constraintStart_toStartOf="@+id/total_earning"
-                        app:layout_constraintTop_toTopOf="@+id/total_earning" />
-
-                    <com.mycity4kids.widget.CustomFontTextView
-                        android:id="@+id/header_mymoney"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginLeft="@dimen/space_20"
-                        android:layout_marginTop="@dimen/space_16"
-                        android:text="@string/mymoney_profile"
-                        android:textColor="@color/white_color"
-                        android:textSize="14sp"
-                        android:textStyle="bold"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toBottomOf="@id/profileImageView" />
-
-                    <com.mycity4kids.widget.RoundedHorizontalProgressBar
-                        android:id="@+id/progress_bar_1"
-                        style="?android:attr/progressBarStyleHorizontal"
-                        android:layout_width="200dp"
-                        android:layout_height="9dp"
-                        android:layout_marginStart="@dimen/space_20"
-                        android:layout_marginTop="@dimen/space_13"
-                        android:indeterminate="true"
-                        android:maxHeight="9dp"
-                        android:minHeight="9dp"
-                        android:progress="0"
-                        app:backgroundColor="@color/color_B4ECE4"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toBottomOf="@id/header_mymoney"
-                        app:progressColor="@color/color_0EA095" />
-
-                    <com.mycity4kids.widget.CustomFontTextView
-                        android:id="@+id/profilePercentageTextView"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginLeft="@dimen/space_15"
-                        android:layout_marginTop="@dimen/space_5"
-                        android:textColor="@color/white_color"
-                        android:textStyle="bold"
-                        app:layout_constraintBottom_toBottomOf="parent"
-                        app:layout_constraintStart_toEndOf="@id/progress_bar_1"
-                        app:layout_constraintTop_toBottomOf="@id/header_mymoney" />
-
-                    <ImageView
-                        android:id="@+id/edit_profile"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:background="@drawable/white_border"
-                        android:paddingTop="@dimen/space_7"
-                        android:paddingBottom="@dimen/space_7"
-                        android:paddingLeft="@dimen/space_13"
-                        android:paddingRight="@dimen/space_13"
-                        android:layout_marginRight="@dimen/space_15"
-                        app:srcCompat="@drawable/ic_campaign_list_edit_icon"
-                        app:layout_constraintTop_toBottomOf="@+id/header_mymoney"
-                        app:layout_constraintEnd_toEndOf="parent"/>
-
-                </androidx.constraintlayout.widget.ConstraintLayout>
-
-                <com.mycity4kids.widget.CustomFontTextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="@dimen/space_10"
-                    android:layout_marginTop="@dimen/space_20"
-                    android:layout_marginBottom="@dimen/space_20"
-                    android:text="@string/campaigns"
-                    android:textColor="@color/campaign_4A4A4A"
-                    android:textSize="14sp"
-                    android:textStyle="bold"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/profileImageView" />
-
-                <androidx.recyclerview.widget.RecyclerView
-                    android:id="@+id/recyclerView"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:layout_marginTop="@dimen/space_7"
-                    android:background="@color/white_color"
-                    android:scrollbars="vertical" />
-            </LinearLayout>
-        </androidx.core.widget.NestedScrollView>
-
-        <com.facebook.shimmer.ShimmerFrameLayout
-            android:id="@+id/shimmer1"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:background="@color/white_color"
-            android:visibility="visible">
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical">
-
-                <include layout="@layout/mainshimmer_layout" />
-
-                <include layout="@layout/mainshimmer_layout" />
-
-                <include layout="@layout/mainshimmer_layout" />
-
-            </LinearLayout>
-
-        </com.facebook.shimmer.ShimmerFrameLayout>
-    </RelativeLayout>
-
-    <androidx.appcompat.widget.Toolbar
-        android:id="@+id/toolbar"
-        android:layout_width="match_parent"
-        android:layout_height="?attr/actionBarSize"
-        android:background="?attr/colorPrimary"
-        android:minHeight="?attr/actionBarSize"
-        app:titleTextAppearance="@style/ToolbarTheme.Title">
-
-        <RelativeLayout
-            android:id="@+id/toolbarRelativeLayout"
+          <com.mycity4kids.widget.CustomFontTextView
+            android:id="@+id/user_name"
             android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:visibility="visible">
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/space_10"
+            android:layout_marginLeft="@dimen/space_10"
+            android:layout_toRightOf="@id/profileImageView"
+            android:textColor="@color/white_color"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            app:layout_constraintStart_toEndOf="@id/profileImageView"
+            app:layout_constraintTop_toTopOf="@id/profileImageView" />
 
-            <ImageView
-                android:id="@+id/back"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_centerVertical="true"
-                android:padding="@dimen/space_10"
-                android:src="@drawable/back_xxhdpi"
-                android:tint="@color/black_color" />
+          <com.mycity4kids.widget.CustomFontTextView
+            android:id="@+id/campaign_nos"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/user_name"
+            android:layout_marginStart="@dimen/space_10"
+            android:layout_marginLeft="@dimen/space_10"
+            android:layout_marginTop="@dimen/space_10"
+            android:layout_toRightOf="@id/profileImageView"
+            android:textColor="@color/white_color"
+            android:textSize="13sp"
+            app:layout_constraintStart_toEndOf="@id/profileImageView"
+            app:layout_constraintTop_toBottomOf="@id/user_name" />
 
-            <com.mycity4kids.widget.CustomFontTextView
-                android:id="@+id/refer_text"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentRight="true"
-                android:layout_centerVertical="true"
-                android:textColor="@color/white_color"
-                android:background="@drawable/campaign_list_refer_bg"
-                android:text="@string/refer_text"
-                android:textAllCaps="true"
-                android:padding="@dimen/space_7"
-                android:textStyle="bold"
-                android:visibility="gone"
-                android:layout_marginRight="@dimen/space_10" />
-
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:layout_alignParentBottom="true"
-                android:background="@color/grey_light" />
-
-            <com.mycity4kids.widget.CustomFontTextView
-                android:id="@+id/toolbarTitle"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_centerVertical="true"
-                android:layout_marginStart="@dimen/space_10"
-                android:layout_marginLeft="@dimen/space_10"
-                android:layout_toEndOf="@id/back"
-                android:layout_toRightOf="@id/back"
-                android:text="@string/campaign_listing_mymoney_campaign_toolbar_text"
-                android:textColor="@color/home.toolbar.titlecolor"
-                android:textSize="20sp"
-                app:fontName="oswald_regular.ttf" />
-        </RelativeLayout>
-    </androidx.appcompat.widget.Toolbar>
+          <com.mycity4kids.widget.CustomFontTextView
+            android:id="@+id/total_earning"
+            android:layout_width="@dimen/space_100"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_marginRight="@dimen/space_15"
+            android:background="@drawable/campaign_list_total_payout_bg"
+            android:gravity="center"
+            android:paddingLeft="@dimen/space_7"
+            android:paddingTop="@dimen/space_10"
+            android:paddingRight="@dimen/space_7"
+            android:paddingBottom="@dimen/space_10"
+            android:textColor="@color/color_0EA095"
+            android:textSize="22sp"
+            android:textStyle="bold"
+            app:layout_constraintBottom_toBottomOf="@id/profileImageView"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="@id/profileImageView" />
 
 
-    <com.mycity4kids.widget.CustomFontTextView
-        android:id="@+id/bottomText"
+          <ProgressBar
+            android:id="@+id/loader"
+            style="@android:style/Widget.ProgressBar.Small"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintBottom_toBottomOf="@+id/total_earning"
+            app:layout_constraintEnd_toEndOf="@+id/total_earning"
+            app:layout_constraintStart_toStartOf="@+id/total_earning"
+            app:layout_constraintTop_toTopOf="@+id/total_earning" />
+
+          <com.mycity4kids.widget.CustomFontTextView
+            android:id="@+id/header_mymoney"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/space_20"
+            android:layout_marginTop="@dimen/space_16"
+            android:text="@string/mymoney_profile"
+            android:textColor="@color/white_color"
+            android:textSize="14sp"
+            android:textStyle="bold"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/profileImageView" />
+
+          <com.mycity4kids.widget.RoundedHorizontalProgressBar
+            android:id="@+id/progress_bar_1"
+            style="?android:attr/progressBarStyleHorizontal"
+            android:layout_width="200dp"
+            android:layout_height="9dp"
+            android:layout_marginStart="@dimen/space_20"
+            android:layout_marginTop="@dimen/space_13"
+            android:indeterminate="true"
+            android:maxHeight="9dp"
+            android:minHeight="9dp"
+            android:progress="0"
+            app:backgroundColor="@color/color_B4ECE4"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/header_mymoney"
+            app:progressColor="@color/color_0EA095" />
+
+          <com.mycity4kids.widget.CustomFontTextView
+            android:id="@+id/profilePercentageTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/space_15"
+            android:layout_marginTop="@dimen/space_5"
+            android:textColor="@color/white_color"
+            android:textStyle="bold"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toEndOf="@id/progress_bar_1"
+            app:layout_constraintTop_toBottomOf="@id/header_mymoney" />
+
+          <ImageView
+            android:id="@+id/edit_profile"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="@dimen/space_15"
+            android:background="@drawable/white_border"
+            android:paddingLeft="@dimen/space_13"
+            android:paddingTop="@dimen/space_7"
+            android:paddingRight="@dimen/space_13"
+            android:paddingBottom="@dimen/space_7"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/header_mymoney"
+            app:srcCompat="@drawable/ic_campaign_list_edit_icon" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <com.mycity4kids.widget.CustomFontTextView
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:layout_marginLeft="@dimen/space_10"
+          android:layout_marginTop="@dimen/space_20"
+          android:layout_marginBottom="@dimen/space_20"
+          android:text="@string/campaigns"
+          android:textColor="@color/campaign_4A4A4A"
+          android:textSize="14sp"
+          android:textStyle="bold"
+          app:layout_constraintStart_toStartOf="parent"
+          app:layout_constraintTop_toBottomOf="@id/profileImageView" />
+        <androidx.recyclerview.widget.RecyclerView
+          android:id="@+id/recyclerView"
+          android:layout_width="match_parent"
+          android:layout_height="match_parent"
+          android:layout_marginTop="@dimen/space_7"
+          android:background="@color/white_color"
+          android:scrollbars="vertical" />
+      </LinearLayout>
+    </androidx.core.widget.NestedScrollView>
+
+    <com.facebook.shimmer.ShimmerFrameLayout
+      android:id="@+id/shimmer1"
+      android:layout_width="match_parent"
+      android:layout_height="match_parent"
+      android:background="@color/white_color"
+      android:visibility="gone">
+
+      <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_marginLeft="@dimen/space_10"
-        android:layout_marginTop="@dimen/space_10"
-        android:layout_marginRight="@dimen/space_10"
-        android:layout_marginBottom="@dimen/space_10"
-        android:background="@drawable/campaign_mymoney_btn"
-        android:gravity="center"
+        android:orientation="vertical">
+
+        <include layout="@layout/mainshimmer_layout" />
+
+        <include layout="@layout/mainshimmer_layout" />
+
+        <include layout="@layout/mainshimmer_layout" />
+
+      </LinearLayout>
+
+    </com.facebook.shimmer.ShimmerFrameLayout>
+  </RelativeLayout>
+
+  <androidx.appcompat.widget.Toolbar
+    android:id="@+id/toolbar"
+    android:layout_width="match_parent"
+    android:layout_height="?attr/actionBarSize"
+    android:background="?attr/colorPrimary"
+    android:minHeight="?attr/actionBarSize"
+    app:titleTextAppearance="@style/ToolbarTheme.Title">
+
+    <RelativeLayout
+      android:id="@+id/toolbarRelativeLayout"
+      android:layout_width="wrap_content"
+      android:layout_height="match_parent"
+      android:visibility="visible">
+
+      <ImageView
+        android:id="@+id/back"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
         android:padding="@dimen/space_10"
-        android:text="@string/check_campaigns_available_for_you"
+        android:src="@drawable/back_xxhdpi"
+        android:tint="@color/black_color" />
+
+      <com.mycity4kids.widget.CustomFontTextView
+        android:id="@+id/refer_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_centerVertical="true"
+        android:layout_marginRight="@dimen/space_10"
+        android:background="@drawable/campaign_list_refer_bg"
+        android:padding="@dimen/space_7"
+        android:text="@string/refer_text"
         android:textAllCaps="true"
         android:textColor="@color/white_color"
-        android:textSize="20dp"
-        app:fontName="oswald_regular.ttf" />
-
-
-    <include
-        android:id="@+id/include"
-        layout="@layout/campaign_pop_up"
-        android:layout_width="fill_parent"
-        android:layout_height="match_parent"
+        android:textStyle="bold"
         android:visibility="gone" />
+
+      <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_alignParentBottom="true"
+        android:background="@color/grey_light" />
+
+      <com.mycity4kids.widget.CustomFontTextView
+        android:id="@+id/toolbarTitle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
+        android:layout_marginStart="@dimen/space_10"
+        android:layout_marginLeft="@dimen/space_10"
+        android:layout_toEndOf="@id/back"
+        android:layout_toRightOf="@id/back"
+        android:text="@string/campaign_listing_mymoney_campaign_toolbar_text"
+        android:textColor="@color/home.toolbar.titlecolor"
+        android:textSize="20sp"
+        app:fontName="oswald_regular.ttf" />
+    </RelativeLayout>
+  </androidx.appcompat.widget.Toolbar>
+  <com.mycity4kids.widget.CustomFontTextView
+    android:id="@+id/bottomText"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_alignParentBottom="true"
+    android:layout_marginLeft="@dimen/space_10"
+    android:layout_marginTop="@dimen/space_10"
+    android:layout_marginRight="@dimen/space_10"
+    android:layout_marginBottom="@dimen/space_10"
+    android:background="@drawable/campaign_mymoney_btn"
+    android:gravity="center"
+    android:padding="@dimen/space_10"
+    android:text="@string/check_campaigns_available_for_you"
+    android:textAllCaps="true"
+    android:textColor="@color/white_color"
+    android:textSize="20dp"
+    app:fontName="oswald_regular.ttf" />
+  <include
+    android:id="@+id/include"
+    layout="@layout/campaign_pop_up"
+    android:layout_width="fill_parent"
+    android:layout_height="match_parent"
+    android:visibility="gone" />
+
+  <androidx.appcompat.widget.Toolbar
+    android:id="@+id/toolbarCoachMark"
+    android:layout_width="match_parent"
+    android:layout_height="?attr/actionBarSize"
+    android:background="@color/transparent_black_90"
+    android:minHeight="?attr/actionBarSize"
+    android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
+    android:visibility="gone"
+    app:titleTextAppearance="@style/ToolbarTheme.Title">
+
+    <RelativeLayout
+      android:id="@+id/toolbarRelativeLayoutCoachMark"
+      android:layout_width="wrap_content"
+      android:layout_height="match_parent"
+      android:visibility="visible">
+
+      <ImageView
+        android:id="@+id/backCoachMark"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
+        android:padding="@dimen/space_10"
+        android:src="@drawable/back_xxhdpi"
+        android:tint="@color/black_color" />
+
+      <com.mycity4kids.widget.CustomFontTextView
+        android:id="@+id/refer_textCoachMark"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_centerVertical="true"
+        android:layout_marginRight="@dimen/space_10"
+        android:background="@drawable/campaign_list_refer_bg"
+        android:text="@string/refer_text"
+        android:textAllCaps="true"
+        android:textColor="@color/white_color"
+        android:textStyle="bold"
+        android:visibility="gone" />
+
+      <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_alignParentBottom="true"
+        android:background="@color/grey_light"
+        android:visibility="invisible" />
+
+      <com.mycity4kids.widget.CustomFontTextView
+        android:id="@+id/toolbarTitleCoachMark"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
+        android:layout_marginStart="@dimen/space_10"
+        android:layout_marginLeft="@dimen/space_10"
+        android:layout_toEndOf="@id/backCoachMark"
+        android:layout_toRightOf="@id/backCoachMark"
+        android:text="@string/campaign_listing_mymoney_campaign_toolbar_text"
+        android:textColor="@color/home.toolbar.titlecolor"
+        android:textSize="20sp"
+        app:fontName="oswald_regular.ttf" />
+    </RelativeLayout>
+  </androidx.appcompat.widget.Toolbar>
+  <RelativeLayout
+    android:id="@+id/coachMarkContainer"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_below="@id/toolbarCoachMark"
+    android:background="@color/transparent_black_90"
+    android:visibility="gone">
+
+    <androidx.core.widget.NestedScrollView
+      android:layout_width="match_parent"
+      android:layout_height="match_parent"
+      android:clipToPadding="false">
+
+      <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/transparent"
+        android:orientation="vertical">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+          android:id="@+id/dashboard_layoutCoachMark"
+          android:layout_width="match_parent"
+          android:layout_height="wrap_content"
+          android:background="@color/color_49D6BE"
+          android:paddingBottom="@dimen/space_20"
+          android:visibility="invisible">
+
+          <com.mikhaellopez.circularimageview.CircularImageView
+            android:id="@+id/profileImageViewCoachMark"
+            android:layout_width="@dimen/space_56"
+            android:layout_height="@dimen/space_56"
+            android:layout_marginLeft="@dimen/space_20"
+            android:layout_marginTop="@dimen/space_20"
+            android:src="@drawable/family_xxhdpi"
+            android:visibility="invisible"
+            app:civ_border_color="@color/white_color"
+            app:civ_border_width="@dimen/space_2"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+          <com.mycity4kids.widget.CustomFontTextView
+            android:id="@+id/user_nameCoachMark"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/space_10"
+            android:layout_marginLeft="@dimen/space_10"
+            android:layout_toRightOf="@id/profileImageViewCoachMark"
+            android:textColor="@color/white_color"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            android:visibility="invisible"
+            app:layout_constraintStart_toEndOf="@id/profileImageViewCoachMark"
+            app:layout_constraintTop_toTopOf="@id/profileImageViewCoachMark" />
+
+          <com.mycity4kids.widget.CustomFontTextView
+            android:id="@+id/campaign_nosCoachMark"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/user_nameCoachMark"
+            android:layout_marginStart="@dimen/space_10"
+            android:layout_marginLeft="@dimen/space_10"
+            android:layout_marginTop="@dimen/space_10"
+            android:layout_toRightOf="@id/profileImageViewCoachMark"
+            android:textColor="@color/white_color"
+            android:textSize="13sp"
+            android:visibility="invisible"
+            app:layout_constraintStart_toEndOf="@id/profileImageViewCoachMark"
+            app:layout_constraintTop_toBottomOf="@id/user_nameCoachMark" />
+
+          <com.mycity4kids.widget.CustomFontTextView
+            android:id="@+id/total_earningCoachMark"
+            android:layout_width="@dimen/space_100"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_marginRight="@dimen/space_15"
+            android:background="@drawable/campaign_list_total_payout_bg"
+            android:gravity="center"
+            android:paddingLeft="@dimen/space_7"
+            android:paddingTop="@dimen/space_10"
+            android:paddingRight="@dimen/space_7"
+            android:paddingBottom="@dimen/space_10"
+            android:textColor="@color/color_0EA095"
+            android:textSize="22sp"
+            android:textStyle="bold"
+            android:visibility="invisible"
+            app:layout_constraintBottom_toBottomOf="@id/profileImageViewCoachMark"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="@id/profileImageViewCoachMark" />
+
+
+          <ProgressBar
+            android:id="@+id/loaderCoachMark"
+            style="@android:style/Widget.ProgressBar.Small"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:visibility="invisible"
+            app:layout_constraintBottom_toBottomOf="@+id/total_earningCoachMark"
+            app:layout_constraintEnd_toEndOf="@+id/total_earningCoachMark"
+            app:layout_constraintStart_toStartOf="@+id/total_earningCoachMark"
+            app:layout_constraintTop_toTopOf="@+id/total_earningCoachMark" />
+
+          <com.mycity4kids.widget.CustomFontTextView
+            android:id="@+id/header_mymoneyCoachMark"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/space_20"
+            android:layout_marginTop="@dimen/space_16"
+            android:text="@string/mymoney_profile"
+            android:textColor="@color/white_color"
+            android:textSize="14sp"
+            android:textStyle="bold"
+            android:visibility="invisible"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/profileImageViewCoachMark" />
+
+          <com.mycity4kids.widget.RoundedHorizontalProgressBar
+            android:id="@+id/progress_bar_1CoachMark"
+            style="?android:attr/progressBarStyleHorizontal"
+            android:layout_width="200dp"
+            android:layout_height="9dp"
+            android:layout_marginStart="@dimen/space_20"
+            android:layout_marginTop="@dimen/space_13"
+            android:indeterminate="true"
+            android:maxHeight="9dp"
+            android:minHeight="9dp"
+            android:progress="0"
+            android:visibility="invisible"
+            app:backgroundColor="@color/color_B4ECE4"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/header_mymoneyCoachMark"
+            app:progressColor="@color/color_0EA095" />
+
+          <com.mycity4kids.widget.CustomFontTextView
+            android:id="@+id/profilePercentageTextViewCoachMark"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/space_15"
+            android:layout_marginTop="@dimen/space_5"
+            android:textColor="@color/white_color"
+            android:textStyle="bold"
+            android:visibility="invisible"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toEndOf="@id/progress_bar_1CoachMark"
+            app:layout_constraintTop_toBottomOf="@id/header_mymoneyCoachMark" />
+
+          <ImageView
+            android:id="@+id/edit_profileCoachMark"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="@dimen/space_15"
+            android:background="@drawable/white_border"
+            android:paddingLeft="@dimen/space_13"
+            android:paddingTop="@dimen/space_7"
+            android:paddingRight="@dimen/space_13"
+            android:paddingBottom="@dimen/space_7"
+            android:visibility="invisible"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/header_mymoneyCoachMark"
+            app:srcCompat="@drawable/ic_campaign_list_edit_icon" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <com.mycity4kids.widget.CustomFontTextView
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:layout_marginLeft="@dimen/space_10"
+          android:layout_marginTop="@dimen/space_20"
+          android:layout_marginBottom="@dimen/space_20"
+          android:text="@string/campaigns"
+          android:textColor="@color/campaign_4A4A4A"
+          android:textSize="14sp"
+          android:textStyle="bold"
+          android:visibility="invisible"
+          app:layout_constraintStart_toStartOf="parent"
+          app:layout_constraintTop_toBottomOf="@id/profileImageView" />
+
+        <RelativeLayout
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:layout_marginTop="@dimen/space_7">
+          <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/recyclerViewCoachMark"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:scrollbars="vertical" />
+
+          <androidx.cardview.widget.CardView
+            android:id="@+id/cardView"
+            style="@style/CardView.Light"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/space_10"
+            android:layout_marginRight="@dimen/space_10"
+            android:layout_marginBottom="@dimen/space_10"
+            app:cardCornerRadius="@dimen/space_2"
+            app:cardElevation="@dimen/space_4">
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+              android:layout_width="match_parent"
+              android:layout_height="match_parent">
+
+              <ImageView
+                android:id="@+id/campaign_header"
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:adjustViewBounds="true"
+                app:layout_constraintDimensionRatio="H,16:9"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:srcCompat="@drawable/default_article" />
+
+              <com.mycity4kids.widget.CustomFontTextView
+                android:id="@+id/share"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/space_10"
+                android:layout_marginEnd="@dimen/space_10"
+                android:layout_marginRight="@dimen/space_10"
+                android:background="@drawable/share_background"
+                android:drawableLeft="@drawable/ic_share_white"
+                android:drawablePadding="@dimen/space_7"
+                android:gravity="center"
+                android:paddingLeft="8dp"
+                android:paddingTop="5dp"
+                android:paddingRight="8dp"
+                android:paddingBottom="5dp"
+                android:text="@string/detail_bottom_share"
+                android:textColor="@color/white_color"
+                android:textSize="14sp"
+                app:fontName="oswald.ttf"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="@+id/campaign_header" />
+
+              <com.mikhaellopez.circularimageview.CircularImageView
+                android:id="@+id/brand_img"
+                android:layout_width="42dp"
+                android:layout_height="42dp"
+                android:layout_marginStart="@dimen/space_10"
+                android:layout_marginLeft="@dimen/space_10"
+                android:layout_marginTop="8dp"
+                android:layout_marginBottom="13dp"
+                android:src="@drawable/family_xxhdpi"
+                app:civ_border_color="#E0E0E0"
+                app:civ_border_width="1dp"
+                app:layout_constraintBottom_toTopOf="@+id/view4"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/campaign_header" />
+
+              <com.mycity4kids.widget.CustomFontTextView
+                android:id="@+id/brand_name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:paddingStart="@dimen/space_7"
+                android:paddingEnd="@dimen/space_7"
+                android:textColor="#515151"
+                android:textSize="16sp"
+                app:fontName="oswald_regular.ttf"
+                app:layout_constraintStart_toEndOf="@+id/brand_img"
+                app:layout_constraintTop_toBottomOf="@+id/campaign_header" />
+
+              <com.mycity4kids.widget.CustomFontTextView
+                android:id="@+id/campaign_name"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="4dp"
+                android:paddingStart="@dimen/space_7"
+                android:paddingEnd="@dimen/space_7"
+                android:textColor="#9B9B9B"
+                android:textSize="12sp"
+                app:fontName="open_sans.ttf"
+                app:layout_constraintEnd_toStartOf="@id/submission_status"
+                app:layout_constraintStart_toEndOf="@id/brand_img"
+                app:layout_constraintTop_toBottomOf="@+id/brand_name" />
+
+              <com.mycity4kids.widget.CustomFontTextView
+                android:id="@+id/submission_status"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:layout_marginEnd="@dimen/space_15"
+                android:layout_marginBottom="8dp"
+                android:background="@drawable/campaign_subscription_open"
+                android:gravity="center"
+                android:paddingLeft="@dimen/space_15"
+                android:paddingTop="5dp"
+                android:paddingRight="@dimen/space_15"
+                android:paddingBottom="5dp"
+                android:text="ApplicationFull"
+                android:textColor="@color/white_color"
+                android:textSize="12sp"
+                app:fontName="oswald_regular.ttf"
+                app:layout_constraintBottom_toTopOf="@+id/view4"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/campaign_header" />
+
+              <View
+                android:id="@+id/view4"
+                android:layout_width="0dp"
+                android:layout_height="66dp"
+                android:layout_marginTop="16dp"
+                android:alpha="0.04"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="1.0"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/campaign_name" />
+
+              <View
+                android:id="@+id/view5"
+                android:layout_width="0.1dp"
+                android:layout_height="66dp"
+                app:layout_constraintBottom_toBottomOf="@id/view4"
+                app:layout_constraintEnd_toEndOf="@+id/view4"
+                app:layout_constraintStart_toStartOf="@id/view4"
+                app:layout_constraintTop_toTopOf="@id/view4" />
+
+              <com.mycity4kids.widget.CustomFontTextView
+                android:id="@+id/end_date"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:textColor="@color/campaign_515151"
+                android:textSize="11sp"
+                app:fontName="open_sans.ttf"
+                app:layout_constraintEnd_toStartOf="@+id/view5"
+                app:layout_constraintStart_toStartOf="@+id/view4"
+                app:layout_constraintTop_toTopOf="@+id/view5" />
+
+              <com.mycity4kids.widget.CustomFontTextView
+                android:id="@+id/end_date_text"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="10dp"
+                android:layout_marginLeft="10dp"
+                android:layout_marginTop="5dp"
+                android:layout_marginEnd="8dp"
+                android:layout_marginRight="8dp"
+                android:layout_marginBottom="10dp"
+                android:background="@drawable/campaign_detail_red_bg"
+                android:gravity="center"
+                android:paddingTop="5dp"
+                android:paddingBottom="5dp"
+                android:textColor="@color/white_color"
+                android:textSize="15sp"
+                app:fontName="oswald_regular.ttf"
+                app:layout_constraintBottom_toBottomOf="@+id/view5"
+                app:layout_constraintEnd_toStartOf="@id/view5"
+                app:layout_constraintStart_toStartOf="@+id/view4"
+                app:layout_constraintTop_toBottomOf="@+id/end_date" />
+
+              <com.mycity4kids.widget.CustomFontTextView
+                android:id="@+id/earn_upto"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:text="@string/slots_left"
+                android:textColor="@color/campaign_515151"
+                android:textSize="11sp"
+                app:fontName="open_sans.ttf"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@+id/view5"
+                app:layout_constraintTop_toTopOf="@+id/view5" />
+
+              <com.mycity4kids.widget.CustomFontTextView
+                android:id="@+id/amount"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:layout_marginLeft="8dp"
+                android:layout_marginTop="5dp"
+                android:layout_marginEnd="10dp"
+                android:layout_marginRight="10dp"
+                android:layout_marginBottom="10dp"
+                android:background="@drawable/campaign_detail_red_bg"
+                android:gravity="center"
+                android:paddingTop="5dp"
+                android:paddingBottom="5dp"
+                android:textColor="@color/white_color"
+                android:textSize="15sp"
+                app:fontName="oswald_regular.ttf"
+                app:layout_constraintBottom_toBottomOf="@+id/view5"
+                app:layout_constraintEnd_toEndOf="@+id/view4"
+                app:layout_constraintHorizontal_bias="0.5"
+                app:layout_constraintStart_toEndOf="@+id/view5"
+                app:layout_constraintTop_toBottomOf="@+id/earn_upto" />
+            </androidx.constraintlayout.widget.ConstraintLayout>
+          </androidx.cardview.widget.CardView>
+
+        </RelativeLayout>
+      </LinearLayout>
+    </androidx.core.widget.NestedScrollView>
+
+    <com.facebook.shimmer.ShimmerFrameLayout
+      android:id="@+id/shimmer1CoachMark"
+      android:layout_width="match_parent"
+      android:layout_height="match_parent"
+      android:background="@color/transparent_black_90"
+      android:visibility="gone">
+
+      <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <include layout="@layout/mainshimmer_layout" />
+
+        <include layout="@layout/mainshimmer_layout" />
+
+        <include layout="@layout/mainshimmer_layout" />
+
+      </LinearLayout>
+
+    </com.facebook.shimmer.ShimmerFrameLayout>
+
+    <com.mycity4kids.widget.CustomFontTextView
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:layout_alignParentBottom="true"
+      android:layout_marginStart="@dimen/space_16"
+      android:layout_marginEnd="@dimen/space_16"
+      android:layout_marginBottom="@dimen/space_50"
+      android:background="@drawable/tooltip_shape_layout"
+      android:padding="@dimen/space_18"
+      android:text="Apply for campaigns, complete the requirements, and earn money!"
+      android:textColor="@color/campaign_515151" />
+  </RelativeLayout>
+
 
 </RelativeLayout>

@@ -4,6 +4,8 @@ import android.accounts.NetworkErrorException;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
@@ -14,6 +16,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 import androidx.cardview.widget.CardView;
+import androidx.constraintlayout.widget.ConstraintLayout;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.crashlytics.FirebaseCrashlytics;
@@ -71,7 +74,7 @@ public class VideoUploadProgressActivity extends BaseActivity implements View.On
     private ImageView cancelImage;
     private MomspressoButtonWidget joinVloggersGroup;
     private TextView needOpinionTextView;
-    private CardView youAreDoneView;
+    private ConstraintLayout youAreDoneView;
     private int groupId;
 
     @Override
@@ -121,6 +124,16 @@ public class VideoUploadProgressActivity extends BaseActivity implements View.On
         joinVloggersGroup.setOnClickListener(view -> {
 
         });
+        final Handler handler = new Handler(Looper.getMainLooper());
+        handler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                if (youAreDoneView.getVisibility() == View.VISIBLE) {
+                    youAreDoneView.setVisibility(View.GONE);
+                    cancelImage.setVisibility(View.GONE);
+                }
+            }
+        }, 3000);
 
     }
 
@@ -152,7 +165,6 @@ public class VideoUploadProgressActivity extends BaseActivity implements View.On
     protected void onStart() {
         super.onStart();
         FirebaseUser currentUser = firebaseAuth.getCurrentUser();
-
         firebaseAuth.signInAnonymously()
                 .addOnCompleteListener(this, task -> {
                     if (task.isSuccessful()) {
@@ -170,7 +182,6 @@ public class VideoUploadProgressActivity extends BaseActivity implements View.On
                                 Toast.LENGTH_SHORT).show();
                     }
                 });
-
     }
 
     private void uploadToFirebase(Uri file2) {
@@ -326,6 +337,7 @@ public class VideoUploadProgressActivity extends BaseActivity implements View.On
         switch (v.getId()) {
             case R.id.cancelImage: {
                 youAreDoneView.setVisibility(View.GONE);
+                cancelImage.setVisibility(View.GONE);
                 break;
             }
             case R.id.joinVloggersGroup: {

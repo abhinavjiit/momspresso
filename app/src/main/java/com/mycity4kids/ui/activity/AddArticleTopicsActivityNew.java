@@ -3,6 +3,8 @@ package com.mycity4kids.ui.activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
@@ -83,6 +85,7 @@ public class AddArticleTopicsActivityNew extends BaseActivity implements View.On
     private TextView maxTopicsLabel;
     private TextView nextTextView;
     private ImageView clearSearchImageView;
+    private RelativeLayout toolTipContainer;
 
     @Override
     public void onCreate(Bundle icicle) {
@@ -107,11 +110,25 @@ public class AddArticleTopicsActivityNew extends BaseActivity implements View.On
         selectedTopicsContainer = findViewById(R.id.selectedTopicsContainer);
         searchEditText = findViewById(R.id.searchEditText);
         clearSearchImageView = findViewById(R.id.clearSearchImageView);
+        toolTipContainer = findViewById(R.id.toolTipContainer);
 
+        //  if (!SharedPrefUtils.isCoachmarksShownFlag(this, "addArticleTopicScreen")) {
+        toolTipContainer.setVisibility(View.VISIBLE);
+        final Handler handler = new Handler(Looper.getMainLooper());
+        handler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                if (toolTipContainer.getVisibility() == View.VISIBLE) {
+                    toolTipContainer.setVisibility(View.GONE);
+                }
+            }
+        }, 3000);
+        // }
         clearAllTextView.setOnClickListener(this);
         nextTextView.setOnClickListener(this);
         nextTextView.setEnabled(false);
         clearSearchImageView.setOnClickListener(this);
+        toolTipContainer.setOnClickListener(this);
 
         searchEditText.addTextChangedListener(new TextWatcher() {
             @Override
@@ -540,6 +557,12 @@ public class AddArticleTopicsActivityNew extends BaseActivity implements View.On
     @Override
     public void onClick(View view) {
         switch (view.getId()) {
+            case R.id.toolTipContainer: {
+                toolTipContainer.setVisibility(View.GONE);
+                //     SharedPrefUtils.setCoachmarksShownFlag(BaseApplication.getAppContext(), "addArticleTopicScreen", true);
+                break;
+            }
+
             case R.id.nextTextView:
                 try {
                     getSelectedTopicsFromList();

@@ -125,7 +125,7 @@
       android:id="@+id/recyclerView"
       android:layout_width="match_parent"
       android:layout_height="match_parent"
-      android:background="@color/white"/>
+      android:background="@color/white" />
   </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 
   <com.mycity4kids.widget.CustomFontTextView
@@ -247,4 +247,6 @@
     app:fab_colorNormal="@color/fab.white"
     app:fab_colorPressed="@color/fab.white"
     app:fab_icon="@drawable/ic_flip" />
+
+
 </RelativeLayout>

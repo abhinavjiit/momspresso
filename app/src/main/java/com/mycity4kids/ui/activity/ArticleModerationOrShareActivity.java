@@ -3,6 +3,8 @@ package com.mycity4kids.ui.activity;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
 import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
@@ -46,8 +48,8 @@ public class ArticleModerationOrShareActivity extends BaseActivity implements Vi
     private MomspressoButtonWidget createMoreButton;
     private int groupId;
     private ConstraintLayout youAreDoneView;
-    private ImageView cancelImageModeration;
     private MomspressoButtonWidget gotoYourBlog;
+    private ImageView headerImageView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -61,8 +63,10 @@ public class ArticleModerationOrShareActivity extends BaseActivity implements Vi
         createMoreHeaderTextView = findViewById(R.id.createMoreHeaderTextView);
         createMoreButton = findViewById(R.id.createMoreButton);
         youAreDoneView = findViewById(R.id.youAreDoneView);
-        cancelImageModeration = findViewById(R.id.cancelImageModeration);
+        headerImageView = findViewById(R.id.headerImageView);
+        ImageView cancelImageModeration = findViewById(R.id.cancelImageModeration);
         gotoYourBlog = findViewById(R.id.gotoYourBlog);
+        TextView wayToGoTextView = findViewById(R.id.wayToGoTextView);
         LinearLayout moderationContainer = findViewById(R.id.moderationContainer);
         LinearLayout publishContainer = findViewById(R.id.publishContainer);
         ImageView facebookImageView = findViewById(R.id.facebookImageView);
@@ -77,12 +81,25 @@ public class ArticleModerationOrShareActivity extends BaseActivity implements Vi
         okayTextView.setOnClickListener(this);
         checkCreatorGroupStatus();
         if (StringUtils.isNullOrEmpty(shareUrl)) {
+            wayToGoTextView.setText("WAY TO GO!");
+            headerImageView.setImageResource(R.drawable.ic_moderation);
             moderationContainer.setVisibility(View.VISIBLE);
             publishContainer.setVisibility(View.GONE);
         } else {
+            headerImageView.setImageResource(R.drawable.ic_live_content);
+            wayToGoTextView.setText("Congratulation! Your Article is live now");
             moderationContainer.setVisibility(View.GONE);
             publishContainer.setVisibility(View.VISIBLE);
         }
+        final Handler handler = new Handler(Looper.getMainLooper());
+        handler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                if (youAreDoneView.getVisibility() == View.VISIBLE) {
+                    youAreDoneView.setVisibility(View.GONE);
+                }
+            }
+        }, 3000);
         createMoreButton.setOnClickListener(this);
         createMoreButtonModeration.setOnClickListener(this);
         cancelImageModeration.setOnClickListener(this);

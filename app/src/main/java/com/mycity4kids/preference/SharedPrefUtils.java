@@ -73,6 +73,10 @@ public class SharedPrefUtils {
     private static final String COACH_MARK_CHOOSE_VIDEO_CHALLENGE = "videoOrChallengeSelectionScreen";
     private static final String COACH_MARK_EDITOR_BOTTOM = "newEditor_bottom";
     private static final String COACH_MARK_EDITOR_CONTROLLER_VIEW = "newEditor_controllerView";
+    private static final String COACH_MARK_ADD_ARTICLE_TAG_IMAGE = "addArticleTagImageScreen";
+    private static final String COACH_MARK_ADD_ARTICLE_TOPICS = "addArticleTopicScreen";
+    private static final String COACH_MARK_CAMPAIGN_LIST = "campaignList";
+    private static final String COACH_MARK_DASHBOARD_CONTENT_FILTER = "dashBoardContentFilterScreen";
     private static final String COACHMARK_TAGGING = "coachmarkTagging";
     private static final String COACHMARK_TOPCOMMENT = "coachmarkTopComment";
     private static final String LOCATION_LATITUDE = "latitude";
@@ -342,6 +346,14 @@ public class SharedPrefUtils {
             editor.putBoolean(COACH_MARK_EDITOR_BOTTOM, flag);
         } else if ("newEditor_controllerView".equals(screenName)) {
             editor.putBoolean(COACH_MARK_EDITOR_CONTROLLER_VIEW, flag);
+        } else if ("addArticleTagImageScreen".equals(screenName)) {
+            editor.putBoolean(COACH_MARK_ADD_ARTICLE_TAG_IMAGE, flag);
+        } else if ("addArticleTopicScreen".equals(screenName)) {
+            editor.putBoolean(COACH_MARK_ADD_ARTICLE_TOPICS, flag);
+        } else if ("campaignList".equals(screenName)) {
+            editor.putBoolean(COACH_MARK_CAMPAIGN_LIST, flag);
+        } else if ("dashBoardContentFilterScreen".equals(screenName)) {
+            editor.putBoolean(COACH_MARK_DASHBOARD_CONTENT_FILTER, flag);
         }
         editor.commit();
     }
@@ -374,6 +386,14 @@ public class SharedPrefUtils {
             return sharedPref.getBoolean(COACH_MARK_EDITOR_BOTTOM, false);
         } else if ("newEditor_controllerView".equals(screenName)) {
             return sharedPref.getBoolean(COACH_MARK_EDITOR_CONTROLLER_VIEW, false);
+        } else if ("addArticleTagImageScreen".equals(screenName)) {
+            return sharedPref.getBoolean(COACH_MARK_ADD_ARTICLE_TAG_IMAGE, false);
+        } else if ("addArticleTopicScreen".equals(screenName)) {
+            return sharedPref.getBoolean(COACH_MARK_ADD_ARTICLE_TOPICS, false);
+        } else if ("campaignList".equals(screenName)) {
+            return sharedPref.getBoolean(COACH_MARK_CAMPAIGN_LIST, false);
+        } else if ("dashBoardContentFilterScreen".equals(screenName)) {
+            return sharedPref.getBoolean(COACH_MARK_DASHBOARD_CONTENT_FILTER, false);
         }
         return true;
     }

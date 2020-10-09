@@ -10,6 +10,8 @@ import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
 import android.provider.MediaStore;
 import android.text.TextUtils;
 import android.util.Log;
@@ -112,6 +114,8 @@ public class ArticleImageTagUploadActivity extends BaseActivity implements View.
     private ArticleTagsImagesGridAdapter adapter;
     private View mLayout;
     private String userAgent;
+    private RelativeLayout toolTipContainer;
+    private TextView headerText;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -129,11 +133,22 @@ public class ArticleImageTagUploadActivity extends BaseActivity implements View.
         changePictureTextView = (TextView) findViewById(R.id.changePictureTextView);
         mLodingView = (RelativeLayout) findViewById(R.id.relativeLoadingView);
         publishTextView = (TextView) findViewById(R.id.publishTextView);
+        toolTipContainer = (RelativeLayout) findViewById(R.id.toolTipContainer);
 
         findViewById(R.id.imgLoader).startAnimation(AnimationUtils.loadAnimation(this, R.anim.rotate_indefinitely));
 
         tags = getIntent().getStringExtra("tag");
         userAgent = getIntent().getStringExtra("userAgent");
+        toolTipContainer.setVisibility(View.VISIBLE);
+        final Handler handler = new Handler(Looper.getMainLooper());
+        handler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                if (toolTipContainer.getVisibility() == View.VISIBLE) {
+                    toolTipContainer.setVisibility(View.GONE);
+                }
+            }
+        }, 3000);
 
         setTagsList();
         Utils.pushOpenScreenEvent(this, "AddImageScreen", SharedPrefUtils.getUserDetailModel(this).getDynamoId() + "");
@@ -157,6 +172,7 @@ public class ArticleImageTagUploadActivity extends BaseActivity implements View.
         publishTextView.setOnClickListener(this);
         uploadImageCardView.setOnClickListener(this);
         changePictureTextView.setOnClickListener(this);
+        toolTipContainer.setOnClickListener(this);
 
         tagsImageList = new ArrayList<>();
         adapter = new ArticleTagsImagesGridAdapter(this);
@@ -594,6 +610,11 @@ public class ArticleImageTagUploadActivity extends BaseActivity implements View.
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
+            case R.id.toolTipContainer: {
+                toolTipContainer.setVisibility(View.GONE);
+                break;
+
+            }
             case R.id.changePictureTextView:
             case R.id.articleImage:
             case R.id.uploadImageContainer:

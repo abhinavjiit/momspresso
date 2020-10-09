@@ -55,7 +55,6 @@
       android:layout_height="wrap_content"
       android:background="@color/white_color"
       android:visibility="gone" />
-
     <com.facebook.shimmer.ShimmerFrameLayout
       android:id="@+id/categoriesShimmerLayout"
       android:layout_width="match_parent"
@@ -91,7 +90,6 @@
       </LinearLayout>
     </com.facebook.shimmer.ShimmerFrameLayout>
   </FrameLayout>
-
   <FrameLayout
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
@@ -208,6 +206,9 @@
       </com.facebook.shimmer.ShimmerFrameLayout>
     </LinearLayout>
   </FrameLayout>
+
+
+
   <View
     android:id="@+id/transViewCoachMark"
     android:layout_width="match_parent"
@@ -226,117 +227,6 @@
     android:focusable="true"
     android:visibility="gone">
 
-    <androidx.recyclerview.widget.RecyclerView
-      android:id="@+id/challengesRecyclerViewCoachMark"
-      android:layout_width="match_parent"
-      android:layout_height="match_parent"
-      android:visibility="gone" />
-    <LinearLayout
-      android:layout_width="match_parent"
-      android:layout_height="wrap_content"
-      android:orientation="vertical"
-      android:visibility="invisible">
-
-      <com.facebook.shimmer.ShimmerFrameLayout
-        android:id="@+id/challengesShimmerLayout1CoachMark"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
-        android:animateLayoutChanges="true"
-        android:visibility="visible">
-
-        <LinearLayout
-          android:layout_width="match_parent"
-          android:layout_height="wrap_content"
-          android:orientation="horizontal"
-          android:visibility="visible">
-
-          <ImageView
-            android:layout_width="220dp"
-            android:layout_height="150dp"
-            android:layout_margin="16dp"
-            android:background="@color/background" />
-
-          <ImageView
-            android:layout_width="220dp"
-            android:layout_height="150dp"
-            android:layout_margin="16dp"
-            android:background="@color/background" />
-
-          <ImageView
-            android:layout_width="220dp"
-            android:layout_height="150dp"
-            android:layout_margin="16dp"
-            android:background="@color/background" />
-        </LinearLayout>
-      </com.facebook.shimmer.ShimmerFrameLayout>
-
-      <com.facebook.shimmer.ShimmerFrameLayout
-        android:id="@+id/challengesShimmerLayout2CoachMark"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:animateLayoutChanges="true"
-        android:visibility="visible">
-
-        <LinearLayout
-          android:layout_width="match_parent"
-          android:layout_height="wrap_content"
-          android:orientation="horizontal"
-          android:visibility="visible">
-
-          <ImageView
-            android:layout_width="220dp"
-            android:layout_height="150dp"
-            android:layout_margin="16dp"
-            android:background="@color/background" />
-
-          <ImageView
-            android:layout_width="220dp"
-            android:layout_height="150dp"
-            android:layout_margin="16dp"
-            android:background="@color/background" />
-
-          <ImageView
-            android:layout_width="220dp"
-            android:layout_height="150dp"
-            android:layout_margin="16dp"
-            android:background="@color/background" />
-        </LinearLayout>
-      </com.facebook.shimmer.ShimmerFrameLayout>
-
-      <com.facebook.shimmer.ShimmerFrameLayout
-        android:id="@+id/challengesShimmerLayout3CoachMark"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:animateLayoutChanges="true"
-        android:visibility="visible">
-
-        <LinearLayout
-          android:layout_width="match_parent"
-          android:layout_height="wrap_content"
-          android:orientation="horizontal"
-          android:visibility="visible">
-
-          <ImageView
-            android:layout_width="220dp"
-            android:layout_height="150dp"
-            android:layout_margin="16dp"
-            android:background="@color/background" />
-
-          <ImageView
-            android:layout_width="220dp"
-            android:layout_height="150dp"
-            android:layout_margin="16dp"
-            android:background="@color/background" />
-
-          <ImageView
-            android:layout_width="220dp"
-            android:layout_height="150dp"
-            android:layout_margin="16dp"
-            android:background="@color/background" />
-        </LinearLayout>
-      </com.facebook.shimmer.ShimmerFrameLayout>
-    </LinearLayout>
 
     <RelativeLayout
       android:layout_width="wrap_content"
@@ -401,7 +291,40 @@
       </RelativeLayout>
     </RelativeLayout>
   </FrameLayout>
+  <FrameLayout
+    android:id="@+id/categoryCoachMarkContainer"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_below="@id/toolbar"
+    android:visibility="gone">
+    <androidx.cardview.widget.CardView
+      android:id="@+id/categoriesCoachMark"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:layout_marginStart="16dp"
+      android:layout_marginTop="16dp"
+      android:layout_marginBottom="16dp"
+      app:cardCornerRadius="10dp">
 
+      <androidx.appcompat.widget.AppCompatImageView
+        android:id="@+id/categoryImageViewCoachMark"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:scaleType="centerCrop" />
+    </androidx.cardview.widget.CardView>
+
+    <com.mycity4kids.widget.CustomFontTextView
+      android:id="@+id/categoryTextViewCoachMark"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:layout_marginStart="16dp"
+      android:layout_marginTop="16dp"
+      android:layout_marginBottom="16dp"
+      android:gravity="center"
+      android:text=""
+      android:textColor="@color/app_light_black" />
+
+  </FrameLayout>
 
 </RelativeLayout>
 
