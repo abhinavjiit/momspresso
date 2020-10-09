@@ -18,6 +18,7 @@ import com.mycity4kids.models.response.LeaderboardDataResponse
 import com.mycity4kids.preference.SharedPrefUtils
 import com.mycity4kids.retrofitAPIsInterfaces.BloggerGoldAPI
 import com.mycity4kids.ui.adapter.LeaderboardPagerAdapter
+import com.mycity4kids.utils.AppUtils
 import com.mycity4kids.utils.CustomTabsHelper
 import retrofit2.Call
 import retrofit2.Callback
@@ -31,6 +32,7 @@ class ViewLeaderboardActivity : BaseActivity() {
     private lateinit var viewpager: ViewPager
     private lateinit var leaderboardPagerAdapter: LeaderboardPagerAdapter
     private lateinit var checkout_growth_btn: TextView
+    private lateinit var emptyLeaderboard: TextView
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -39,6 +41,7 @@ class ViewLeaderboardActivity : BaseActivity() {
         viewpager = findViewById(R.id.viewpager)
         toolbarTitleTextView = findViewById(R.id.toolbarTitleTextView)
         checkout_growth_btn = findViewById(R.id.checkout_growth_btn)
+        emptyLeaderboard = findViewById(R.id.empty_leaderboard)
         tabs = findViewById(R.id.tabs)
 
         checkout_growth_btn.visibility = View.VISIBLE
@@ -51,7 +54,13 @@ class ViewLeaderboardActivity : BaseActivity() {
             onBackPressed()
         }
         checkout_growth_btn.setOnClickListener {
-            launchChromeTabs("https://www.momspresso.com/birthdaybonanza/hack_to_get_more_page_views")
+            launchChromeTabs(
+                "https://" + AppUtils.getLanguage(
+                    SharedPrefUtils.getAppLocale(
+                        BaseApplication.getAppContext()
+                    )
+                ) + ".momspresso.com/birthdaybonanza/hack_to_get_more_page_views"
+            )
         }
         showProgressDialog("please wait")
         getLeaderboardData()
@@ -87,7 +96,12 @@ class ViewLeaderboardActivity : BaseActivity() {
             try {
                 val responseData = response.body()
                 if (responseData?.code == 200 && Constants.SUCCESS == responseData.status) {
-                    processLeaderboardDataResponse(responseData)
+                    if (responseData.data.result != null) {
+                        processLeaderboardDataResponse(responseData)
+                    } else {
+                        emptyLeaderboard.visibility = View.VISIBLE
+                        viewpager.visibility = View.GONE
+                    }
                 }
             } catch (e: Exception) {
                 FirebaseCrashlytics.getInstance().recordException(e)

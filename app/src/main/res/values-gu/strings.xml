@@ -1534,13 +1534,13 @@ Thank you! We will be reviewing your story. You can expect to hear from us withi
   <string name="live_started_ago">%1$s મિનિટ પહેલા શરૂ થયું છે.</string>
   <string name="live_watching_count">%1$d લોકો લાઈવ જોઈ રહ્યા છે. </string>
   <string name="blogger_gold">Blogger Gold</string>
-  <string name="my_dashboard">My Dashboard</string>
+  <string name="my_dashboard">મારું ડેશબોર્ડ </string>
   <string name="start_creating_text">લાગે છે તમે કઈ યોગદાન નથી કર્યો </string>
   <string name="start_creating_btn">રચવાની શરૂઆત કરો </string>
   <string name="leaderboard_text">લિડર બોર્ડ જોવા નીચે ક્લિક કરો </string>
   <string name="leaderboard_btn">View Leaderboard</string>
-  <string name="total_blog_view">Total Blog views</string>
-  <string name="total_vlog_view">Total Vlog view</string>
+  <string name="total_blog_view">કુલ ઓર્ગેનિક બ્લોગ વ્યુઝ</string>
+  <string name="total_vlog_view">કુલ ઓર્ગેનિક વી લૉગ વ્યુઝ </string>
   <string name="leaderboard">Leaderboard</string>
   <string name="leaderboard_blogs">BLOGS</string>
   <string name="leaderboard_vlogs">VLOG</string>
@@ -1579,4 +1579,6 @@ Thank you! We will be reviewing your story. You can expect to hear from us withi
   <string name="all_join">જોડાઓ </string>
   <string name="explore_self">હું મારી રીતે શોધી લઇશ </string>
   <string name="home_onboarding_title">તમે તમારી સફર કેવી રીતે શરૂ કરવા ઈચ્છો છો?</string>
+  <string name="empty_leaderboard_text">લીડરબોર્ડ હજી જનરેટ થયું નથી. કૃપા કરીને કાલે પાછા આવો.</string>
+  <string name="yesterday">ગઈકાલે </string>
 </resources>

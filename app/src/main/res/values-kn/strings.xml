@@ -1462,13 +1462,13 @@ Thank you! We will be reviewing your story. You can expect to hear from us withi
   <string name="live_started_ago">Started %1$s ago</string>
   <string name="live_watching_count">%1$d watching</string>
   <string name="blogger_gold">Blogger Gold</string>
-  <string name="my_dashboard">My Dashboard</string>
+  <string name="my_dashboard">ನನ್ನ ಡ್ಯಾಶ್ ಬೋರ್ಡ್</string>
   <string name="start_creating_text">ನೀವಿನ್ನೂ ರಚಿಸಿದಂತೆ ಕಂಡುಬರುತ್ತಿಲ್ಲ</string>
   <string name="start_creating_btn">ರಚಿಸಲು ಪ್ರಾರಂಭಿಸಿ</string>
   <string name="leaderboard_text">ಲೀಡರ್ ಬೋರ್ಡ್ ನೋಡಲು ಇಲ್ಲಿ ಕ್ಲಿಕ್ ಮಾಡಿ</string>
   <string name="leaderboard_btn">View Leaderboard</string>
-  <string name="total_blog_view">Total Blog views</string>
-  <string name="total_vlog_view">Total Vlog view</string>
+  <string name="total_blog_view">ಬ್ಲಾಗ್ ಗಳಿಸಿದ ಒಟ್ಟು ಆರ್ಗ್ಯಾನಿಕ್ ವೀಕ್ಷಣೆಗಳು</string>
+  <string name="total_vlog_view">ವ್ಲೋಗ್ ಗಳಿಸಿದ ಒಟ್ಟು ಆರ್ಗ್ಯಾನಿಕ್ ವೀಕ್ಷಣೆಗಳು</string>
   <string name="leaderboard">Leaderboard</string>
   <string name="leaderboard_blogs">BLOGS</string>
   <string name="leaderboard_vlogs">VLOG</string>
@@ -1507,4 +1507,6 @@ Thank you! We will be reviewing your story. You can expect to hear from us withi
   <string name="all_join">ಸೇರಿಕೊಳ್ಳಿ</string>
   <string name="explore_self">ನನ್ನನ್ನು ನಾನು ವ್ಯಕ್ತಪಡಿಸುತ್ತೇನೆ</string>
   <string name="home_onboarding_title">ಹೇಗಿದ್ದೀರಾ?ನಿಮ್ಮ ಪ್ರಯಾಣವನ್ನು ಪ್ರಾರಂಭಿಸಲು ಬಯಸುತ್ತೀರಾ?</string>
+  <string name="empty_leaderboard_text">ಲೀಡರ್‌ಬೋರ್ಡ್ ಇನ್ನೂ ರಚಿಸಲಾಗಿಲ್ಲ. ದಯವಿಟ್ಟು ನಾಳೆ ಹಿಂತಿರುಗಿ.</string>
+  <string name="yesterday">ನಿನ್ನೆ</string>
 </resources>

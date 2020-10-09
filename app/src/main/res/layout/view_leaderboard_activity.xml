@@ -103,4 +103,16 @@
     android:textSize="18sp"
     app:fontName="Roboto-Regular.ttf" />
 
+  <com.mycity4kids.widget.CustomFontTextView
+    android:id="@+id/empty_leaderboard"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_below="@+id/id_appbar"
+    android:background="@color/white"
+    android:layout_above="@+id/checkout_growth_btn"
+    android:gravity="center"
+    android:text="@string/empty_leaderboard_text"
+    android:textSize="18sp"
+    app:fontName="Roboto-Regular.ttf" />
+
 </RelativeLayout>

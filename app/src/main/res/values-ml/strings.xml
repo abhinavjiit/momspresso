@@ -1466,13 +1466,13 @@ Thank you! We will be reviewing your story. You can expect to hear from us withi
   <string name="live_started_ago">%1$s മിനിറ്റ് മുൻപ് തുടങ്ങി </string>
   <string name="live_watching_count">%1$d പേർ കാണുന്നു </string>
   <string name="blogger_gold">Blogger Gold</string>
-  <string name="my_dashboard">My Dashboard</string>
+  <string name="my_dashboard">എന്റെ ഡാഷ്‌ബോർഡ്</string>
   <string name="start_creating_text">നിങ്ങൾ ഒന്നും സൃഷ്ടിച്ചിട്ടില്ലെന്ന് തോന്നുന്നു</string>
   <string name="start_creating_btn">സൃഷ്ടിക്കാൻ ആരംഭിക്കുക</string>
   <string name="leaderboard_text">ലീഡർബോർഡുകൾ കാണുന്നതിന് ചുവടെ ക്ലിക്കുചെയ്യുക</string>
   <string name="leaderboard_btn">View Leaderboard</string>
-  <string name="total_blog_view">Total Blog views</string>
-  <string name="total_vlog_view">Total Vlog view</string>
+  <string name="total_blog_view">മൊത്തം ഓർഗാനിക് ബ്ലോഗ് വ്യൂസ് </string>
+  <string name="total_vlog_view">മൊത്തം ഓർഗാനിക് വ്ലോഗ് വ്യൂസ് </string>
   <string name="leaderboard">Leaderboard</string>
   <string name="leaderboard_blogs">BLOGS</string>
   <string name="leaderboard_vlogs">VLOG</string>
@@ -1511,4 +1511,6 @@ Thank you! We will be reviewing your story. You can expect to hear from us withi
   <string name="all_join">ചേരുക </string>
   <string name="explore_self">ഞാൻ സ്വന്തമായിഅന്വേഷിച്ചു കണ്ടെത്താം </string>
   <string name="home_onboarding_title">നിങ്ങളുടെ യാത്ര എങ്ങനെ ആരംഭിക്കാനാണ് ആഗ്രഹിക്കുന്നത്?</string>
+  <string name="empty_leaderboard_text">ലീഡർബോർഡ് ഇതുവരെ സൃഷ്ടിച്ചിട്ടില്ല. നാളെ മടങ്ങിവരിക.</string>
+  <string name="yesterday">ഇന്നലെ</string>
 </resources>
