@@ -135,9 +135,14 @@
     android:id="@+id/uploadFinishContainer"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:layout_marginTop="80dp"
     android:visibility="visible">
-
+    <androidx.appcompat.widget.AppCompatImageView
+      android:id="@+id/back"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:layout_alignParentEnd="true"
+      android:padding="@dimen/space_16"
+      app:srcCompat="@drawable/ic_cancel" />
 
     <androidx.constraintlayout.widget.ConstraintLayout
       android:id="@+id/youAreDoneView"
@@ -145,6 +150,7 @@
       android:layout_height="wrap_content"
       android:layout_below="@id/view2"
       android:layout_centerHorizontal="true"
+      android:layout_marginTop="@dimen/space_25"
       android:background="@drawable/tooltip_shape_layout"
       android:padding="@dimen/space_16">
 
@@ -169,6 +175,7 @@
       android:layout_height="wrap_content"
       android:layout_alignTop="@id/view2"
       android:layout_alignEnd="@id/view"
+      android:layout_marginTop="@dimen/space_25"
       app:srcCompat="@drawable/ic_cross" />
 
     <View

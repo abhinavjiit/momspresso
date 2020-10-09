@@ -15,7 +15,6 @@ import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
-import androidx.cardview.widget.CardView;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -76,6 +75,8 @@ public class VideoUploadProgressActivity extends BaseActivity implements View.On
     private TextView needOpinionTextView;
     private ConstraintLayout youAreDoneView;
     private int groupId;
+    private ImageView back;
+    private TextView modrationText;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -110,9 +111,11 @@ public class VideoUploadProgressActivity extends BaseActivity implements View.On
         mtxtvideosize = findViewById(R.id.video_size);
         mtxtvideoname = findViewById(R.id.video_name);
         imgCancelUpload = findViewById(R.id.cancel_upload);
-
+        back = findViewById(R.id.back);
+        modrationText=findViewById(R.id.modrationText);
         okayTextView.setOnClickListener(this);
         imgCancelUpload.setOnClickListener(this);
+        back.setOnClickListener(this);
 
         uploadingContainer.setVisibility(View.VISIBLE);
         uploadFinishContainer.setVisibility(View.GONE);
@@ -335,9 +338,20 @@ public class VideoUploadProgressActivity extends BaseActivity implements View.On
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
+            case R.id.modrationText:
+                    {
+                       handleDeeplinks("https://www.momspresso.com/moderation-rules");
+                        break;
+                    }
+            case R.id.back: {
+                Intent intent = new Intent(this, DashboardActivity.class);
+                intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
+                startActivity(intent);
+                break;
+            }
             case R.id.cancelImage: {
-                youAreDoneView.setVisibility(View.GONE);
-                cancelImage.setVisibility(View.GONE);
+                youAreDoneView.setVisibility(View.INVISIBLE);
+                cancelImage.setVisibility(View.INVISIBLE);
                 break;
             }
             case R.id.joinVloggersGroup: {

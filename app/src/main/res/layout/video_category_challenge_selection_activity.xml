@@ -208,7 +208,6 @@
   </FrameLayout>
 
 
-
   <View
     android:id="@+id/transViewCoachMark"
     android:layout_width="match_parent"
@@ -326,5 +325,59 @@
 
   </FrameLayout>
 
+  <androidx.cardview.widget.CardView
+    android:id="@+id/coachMarkBottom"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_alignParentBottom="true"
+    android:layout_margin="16dp"
+    android:visibility="gone"
+    app:cardCornerRadius="4dp">
+    <androidx.constraintlayout.widget.ConstraintLayout
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:background="@drawable/tooltip_shape_layout">
+
+      <com.mycity4kids.widget.CustomFontTextView
+        android:id="@+id/headerText"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="10dp"
+        android:text="Let us help you create your first vlog! Select a category
+or a challenge to start with"
+        android:textColor="@color/campaign_515151"
+        android:textSize="16sp"
+        app:fontName="Roboto-Medium.ttf"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+      <com.mycity4kids.widget.CustomFontTextView
+        android:id="@+id/secondTextView"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:padding="15dp"
+        android:text="Skip the tour"
+        android:textColor="#979797"
+        android:textSize="14sp"
+        app:fontName="Roboto-Regular.ttf"
+        app:layout_constraintEnd_toStartOf="@+id/okgot"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/headerText" />
+
+      <com.mycity4kids.widget.CustomFontTextView
+        android:id="@+id/okgot"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:padding="15dp"
+        android:text="Ok, Got it"
+        android:textColor="@color/app_red"
+        android:textSize="16sp"
+        app:fontName="Roboto-Medium.ttf"
+        app:layout_constraintBottom_toBottomOf="@id/secondTextView"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@id/secondTextView" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+  </androidx.cardview.widget.CardView>
 </RelativeLayout>
 

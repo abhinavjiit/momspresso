@@ -19,6 +19,7 @@ import android.webkit.WebView
 import android.widget.FrameLayout
 import android.widget.ImageView
 import android.widget.Toast
+import androidx.cardview.widget.CardView
 import androidx.core.app.ActivityCompat
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.snackbar.Snackbar
@@ -66,6 +67,7 @@ class VideoCategoryAndChallengeSelectionActivity : BaseActivity(),
     private lateinit var tagImageViewCoachMark: ImageView
     private lateinit var categoryImageViewCoachMark: ImageView
     private lateinit var categoryCoachMarkContainer: FrameLayout
+    private lateinit var coachMarkBottom: CardView
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -75,6 +77,7 @@ class VideoCategoryAndChallengeSelectionActivity : BaseActivity(),
         tagImageViewCoachMark = findViewById(R.id.tagImageViewCoachMark)
         categoryImageViewCoachMark = findViewById(R.id.categoryImageViewCoachMark)
         categoryCoachMarkContainer = findViewById(R.id.categoryCoachMarkContainer)
+        coachMarkBottom = findViewById(R.id.coachMarkBottom)
 
         vlogTutorialImageView.setOnClickListener(this)
 
@@ -223,6 +226,7 @@ class VideoCategoryAndChallengeSelectionActivity : BaseActivity(),
                         try {
                             transViewCoachMark.visibility = View.VISIBLE
                             coachMark.visibility = View.VISIBLE
+                            coachMarkBottom.visibility = View.VISIBLE
                             Picasso.get().load(catWiseChallengeList[0].child[0].extraData[0].challenge.imageUrl).into(
                                 tagImageViewCoachMark
                             )
@@ -255,15 +259,21 @@ class VideoCategoryAndChallengeSelectionActivity : BaseActivity(),
             }
             try {
                 if (categoryList.size > 0) {
-                    categoryCoachMarkContainer.visibility = View.VISIBLE
-                    categoryImageViewCoachMark.visibility = View.VISIBLE
-                    Picasso.get().load(categoryList[0].extraData[0].categoryBackImage.app).into(
-                        categoryImageViewCoachMark
-                    )
+                    if (!SharedPrefUtils.isCoachmarksShownFlag(
+                            BaseApplication.getAppContext(),
+                            "videoOrChallengeSelectionScreen"
+                        )) {
+                        categoryCoachMarkContainer.visibility = View.VISIBLE
+                        categoryImageViewCoachMark.visibility = View.VISIBLE
+                        Picasso.get().load(categoryList[0].extraData[0].categoryBackImage.app).into(
+                            categoryImageViewCoachMark
+                        )
+                    }
                 }
             } catch (e: Exception) {
                 categoryCoachMarkContainer.visibility = View.GONE
                 categoryImageViewCoachMark.visibility = View.GONE
+                coachMarkBottom.visibility = View.GONE
             }
             videoCategoriesSelectionAdapter.notifyDataSetChanged()
         }
@@ -550,7 +560,7 @@ class VideoCategoryAndChallengeSelectionActivity : BaseActivity(),
             val intent = Intent(this, ContentCreationTutorialListingActivity::class.java)
             intent.putExtra(AppConstants.COLLECTION_ID, AppConstants.MOM_VLOG_TUTORIAL_COLLECTION)
             startActivity(intent)
-        } else if (view?.id == R.id.transViewCoachMark || view?.id == R.id.coachMark|| view?.id == R.id.categoryImageViewCoachMark) {
+        } else if (view?.id == R.id.transViewCoachMark || view?.id == R.id.coachMark || view?.id == R.id.categoryImageViewCoachMark) {
             SharedPrefUtils.setCoachmarksShownFlag(
                 BaseApplication.getAppContext(),
                 "videoOrChallengeSelectionScreen",
@@ -560,6 +570,7 @@ class VideoCategoryAndChallengeSelectionActivity : BaseActivity(),
             transViewCoachMark.visibility = View.GONE
             categoryImageViewCoachMark.visibility = View.GONE
             categoryCoachMarkContainer.visibility = View.GONE
+            coachMarkBottom.visibility = View.GONE
         }
     }
 
