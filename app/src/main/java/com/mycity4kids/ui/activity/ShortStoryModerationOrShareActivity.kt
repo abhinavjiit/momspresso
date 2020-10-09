@@ -538,4 +538,20 @@ class ShortStoryModerationOrShareActivity : BaseActivity(), GroupMembershipStatu
         }
 
     }
+
+    override fun onMembershipStatusFetchFail() {
+        if (shareUrl == "https://www.momspresso.com/parenting/topic/short-stories") {
+            createMoreButtonModeration.visibility = View.VISIBLE
+            createMoreHeaderTextViewModeration.visibility = View.VISIBLE
+            createMoreButtonModeration.setText("Join Creator's Hangout")
+            createMoreHeaderTextViewModeration.text = "Get tips or ideas from other creators"
+            createMoreButtonModeration.tag = "please_join"
+        } else {
+            createMoreButton.visibility = View.VISIBLE
+            createMoreHeaderTextView.visibility = View.VISIBLE
+            createMoreButton.setText("Join Creator's Hangout")
+            createMoreHeaderTextView.text = "Get tips or ideas from other creators"
+            createMoreButton.tag = "please_join"
+        }
+    }
 }

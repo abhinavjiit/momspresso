@@ -314,5 +314,19 @@ public class ArticleModerationOrShareActivity extends BaseActivity implements Vi
 
     @Override
     public void onMembershipStatusFetchFail() {
+        if (StringUtils.isNullOrEmpty(shareUrl)) {
+            createMoreButtonModeration.setVisibility(View.VISIBLE);
+            createMoreHeaderTextViewModeration.setVisibility(View.VISIBLE);
+            createMoreButtonModeration.setText("Join Creator's Hangout");
+            createMoreHeaderTextViewModeration.setText("Get tips or ideas from other creators");
+            createMoreButtonModeration.setTag("please_join");
+        } else {
+            createMoreButton.setVisibility(View.VISIBLE);
+            createMoreHeaderTextView.setVisibility(View.VISIBLE);
+            createMoreButton.setText("Join Creator's Hangout");
+            createMoreHeaderTextView.setText("Get tips or ideas from other creators");
+            createMoreButton.setTag("please_join");
+        }
+
     }
 }
