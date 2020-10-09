@@ -12,7 +12,10 @@ import androidx.browser.customtabs.CustomTabsIntent
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.firebase.crashlytics.FirebaseCrashlytics
 import com.mycity4kids.R
+import com.mycity4kids.application.BaseApplication
 import com.mycity4kids.base.BaseFragment
+import com.mycity4kids.preference.SharedPrefUtils
+import com.mycity4kids.utils.AppUtils
 import com.mycity4kids.utils.CustomTabsHelper
 
 class BloggerGoldAboutFragment : BaseFragment() {
@@ -33,19 +36,19 @@ class BloggerGoldAboutFragment : BaseFragment() {
         webviewTerms = view.findViewById(R.id.webview_terms)
         webviewFAQ = view.findViewById(R.id.webview_faq)
         fabwhatsapp = view.findViewById(R.id.fabwhatsapp)
-        webviewKnowMore = view.findViewById(R.id.webview_know_more)
+        webviewKnowMore = view.findViewById(R.id.blogger_gold_about_text7)
         bloggerGoldAboutText = view.findViewById(R.id.blogger_gold_about_text)
         webviewHack.setOnClickListener {
-            launchChromeTabs("https://www.momspresso.com/birthdaybonanza/hack_to_get_more_page_views")
+            launchChromeTabs("https://" + AppUtils.getLanguage(SharedPrefUtils.getAppLocale(BaseApplication.getAppContext())) + ".momspresso.com/birthdaybonanza/hack_to_get_more_page_views")
         }
         webviewTerms.setOnClickListener {
-            launchChromeTabs("https://www.momspresso.com/birthdaybonanza/terms_and_conditions")
+            launchChromeTabs("https://" + AppUtils.getLanguage(SharedPrefUtils.getAppLocale(BaseApplication.getAppContext())) + ".momspresso.com/birthdaybonanza/terms_and_conditions")
         }
         webviewFAQ.setOnClickListener {
-            launchChromeTabs("https://www.momspresso.com/birthdaybonanza/faqs")
+            launchChromeTabs("https://" + AppUtils.getLanguage(SharedPrefUtils.getAppLocale(BaseApplication.getAppContext())) + ".momspresso.com/birthdaybonanza/faqs")
         }
         webviewKnowMore.setOnClickListener {
-            launchChromeTabs("https://www.momspresso.com/birthdaybonanza/know_more")
+            launchChromeTabs("https://" + AppUtils.getLanguage(SharedPrefUtils.getAppLocale(BaseApplication.getAppContext())) + ".momspresso.com/birthdaybonanza/know_more")
         }
         fabwhatsapp.setOnClickListener {
             val shareIntent =

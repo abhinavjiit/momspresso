@@ -1129,6 +1129,30 @@ public class AppUtils {
         }
     }
 
+    public static String getLanguage(String appLocale) {
+        if (AppConstants.LOCALE_HINDI.equals(appLocale)) {
+            return "hindi";
+        } else if (AppConstants.LOCALE_MARATHI.equals(appLocale)) {
+            return "marathi";
+        } else if (AppConstants.LOCALE_BENGALI.equals(appLocale)) {
+            return "bengali";
+        } else if (AppConstants.LOCALE_TAMIL.equals(appLocale)) {
+            return "tamil";
+        } else if (AppConstants.LOCALE_TELUGU.equals(appLocale)) {
+            return "telegu";
+        } else if (AppConstants.LOCALE_KANNADA.equals(appLocale)) {
+            return "kannada";
+        } else if (AppConstants.LOCALE_MALAYALAM.equals(appLocale)) {
+            return "malayalam";
+        } else if (AppConstants.LOCALE_GUJARATI.equals(appLocale)) {
+            return "gujarati";
+        } else if (AppConstants.LOCALE_PUNJABI.equals(appLocale)) {
+            return "punjabi";
+        } else {
+            return "www";
+        }
+    }
+
     public static SpannableString createSpannableForMentionHandling(String commenterId, String userName, String message,
             Map<String, Mentions> mentions, int color, int tagColor) {
         try {

@@ -22,7 +22,7 @@ import retrofit2.Response
 
 class AllVlogLeaderboardFragment : BaseFragment() {
     private lateinit var viewMoreTextView: TextView
-    private var recyclerView: RecyclerView? = null
+    private lateinit var recyclerView: RecyclerView
     private var recyclerAdapterBlog: AllVlogLeaderboardRecyclerAdapter? = null
     private var llm: LinearLayoutManager? = null
     private var allVlogList: ArrayList<AllLeaderboardDataResponse.AllLeaderboardData.AllLeaderboardRankHolder>? =
@@ -51,28 +51,36 @@ class AllVlogLeaderboardFragment : BaseFragment() {
             AllVlogLeaderboardRecyclerAdapter(activity)
         llm = LinearLayoutManager(activity)
         llm!!.setOrientation(RecyclerView.VERTICAL)
-        recyclerView!!.layoutManager = llm
+        recyclerView.layoutManager = llm
         if (allVlogList == null) {
             allVlogList = arguments!!.getParcelableArrayList("vlogList")
             recyclerAdapterBlog!!.setListData(allVlogList)
         }
-        recyclerView!!.adapter = recyclerAdapterBlog
+        recyclerView.adapter = recyclerAdapterBlog
 
-        recyclerView!!.addOnScrollListener(object : RecyclerView.OnScrollListener() {
-            override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
-                nextPageNumber = nextPageNumber + 1
-                visibleItemCount = llm!!.childCount
-                totalItemCount = llm!!.itemCount
-                pastVisiblesItems = llm!!.findFirstVisibleItemPosition()
+        recyclerView.addOnScrollListener(object :
+            RecyclerView.OnScrollListener() {
+            override fun onScrolled(
+                recyclerView: RecyclerView,
+                dx: Int,
+                dy: Int
+            ) {
+                if (dy > 0) {
+                    nextPageNumber = nextPageNumber + 1
+                    visibleItemCount = llm!!.childCount
+                    totalItemCount = llm!!.itemCount
+                    pastVisiblesItems = llm!!.findFirstVisibleItemPosition()
 
-                if (!isReuqestRunning) {
-                    //  if (visibleItemCount + pastVisiblesItems >= totalItemCount) {
-                    isReuqestRunning = true
-                    getAllVlogLeaderboardData(nextPageNumber)
-                    // }
+                    if (!isReuqestRunning) {
+                        if (visibleItemCount + pastVisiblesItems >= totalItemCount) {
+                            if (recyclerView.adapter is AllVlogLeaderboardRecyclerAdapter) {
+                                isReuqestRunning = true
+                                getAllVlogLeaderboardData(nextPageNumber)
+                            }
+                        }
+                    }
                 }
             }
-
         })
 
         return view
