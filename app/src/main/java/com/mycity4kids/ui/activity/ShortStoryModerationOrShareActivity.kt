@@ -71,11 +71,14 @@ class ShortStoryModerationOrShareActivity : BaseActivity(), GroupMembershipStatu
     private var groupId: Int? = null
     private lateinit var cancelImageModeration: ImageView
     private lateinit var youAreDoneView: ConstraintLayout
+    private lateinit var back: ImageView
+    private lateinit var moderationGuidLines: TextView
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.short_story_moderation_share_activity)
+        back = findViewById(R.id.back)
         val toolbar: Toolbar? = findViewById(R.id.toolbar)
         val moderationContainer: RelativeLayout? = findViewById(R.id.moderationContainer)
         val publishContainer: ScrollView? = findViewById(R.id.publishedContainer)
@@ -96,6 +99,7 @@ class ShortStoryModerationOrShareActivity : BaseActivity(), GroupMembershipStatu
         createMoreButtonModeration = findViewById(R.id.createMoreButtonModeration)
         createMoreHeaderTextViewModeration = findViewById(R.id.createMoreHeaderTextViewModeration)
         cancelImageModeration = findViewById(R.id.cancelImageModeration)
+        moderationGuidLines = findViewById(R.id.moderationGuidLines)
         youAreDoneView = findViewById(R.id.youAreDoneView)
         cancelImage = includeShareLayout?.findViewById(R.id.cancelImage)
         secondTextView = includeShareLayout?.findViewById(R.id.secondTextView)
@@ -120,6 +124,8 @@ class ShortStoryModerationOrShareActivity : BaseActivity(), GroupMembershipStatu
         createMoreButton.setOnClickListener(this)
         createMoreButtonModeration.setOnClickListener(this)
         cancelImageModeration.setOnClickListener(this)
+        moderationGuidLines.setOnClickListener(this)
+        back.setOnClickListener(this)
 
         if (shareUrl == "https://www.momspresso.com/parenting/topic/short-stories") {
             moderationContainer?.visibility = View.VISIBLE
@@ -238,8 +244,19 @@ class ShortStoryModerationOrShareActivity : BaseActivity(), GroupMembershipStatu
 
     override fun onClick(v: View?) {
         when (v?.id) {
+            R.id.moderationGuidLines -> {
+                handleDeeplinks("https://www.momspresso.com/moderation-rules")
+            }
+            R.id.back -> {
+                val intent = Intent(
+                    this,
+                    DashboardActivity::class.java
+                )
+                intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_NEW_TASK
+                startActivity(intent)
+            }
             R.id.cancelImageModeration -> {
-                youAreDoneView.visibility = View.GONE
+                youAreDoneView.visibility = View.INVISIBLE
             }
             R.id.createMoreButton -> {
                 if (createMoreButton.tag == "already_join") {

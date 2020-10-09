@@ -51,6 +51,8 @@ public class ArticleModerationOrShareActivity extends BaseActivity implements Vi
     private ConstraintLayout youAreDoneView;
     private MomspressoButtonWidget gotoYourBlog;
     private ImageView headerImageView;
+    private ImageView back;
+    private TextView moderationGuideLines;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -65,6 +67,8 @@ public class ArticleModerationOrShareActivity extends BaseActivity implements Vi
         createMoreButton = findViewById(R.id.createMoreButton);
         youAreDoneView = findViewById(R.id.youAreDoneView);
         headerImageView = findViewById(R.id.headerImageView);
+        moderationGuideLines = findViewById(R.id.moderationGuideLines);
+        back = findViewById(R.id.back);
         ImageView cancelImageModeration = findViewById(R.id.cancelImageModeration);
         gotoYourBlog = findViewById(R.id.gotoYourBlog);
         TextView wayToGoTextView = findViewById(R.id.wayToGoTextView);
@@ -104,6 +108,8 @@ public class ArticleModerationOrShareActivity extends BaseActivity implements Vi
         createMoreButton.setOnClickListener(this);
         createMoreButtonModeration.setOnClickListener(this);
         cancelImageModeration.setOnClickListener(this);
+        back.setOnClickListener(this);
+        moderationGuideLines.setOnClickListener(this);
     }
 
     @Override
@@ -119,8 +125,18 @@ public class ArticleModerationOrShareActivity extends BaseActivity implements Vi
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
+            case R.id.moderationGuideLines: {
+                handleDeeplinks("https://www.momspresso.com/moderation-rules");
+                break;
+            }
+            case R.id.back: {
+                Intent intent = new Intent(this, DashboardActivity.class);
+                intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
+                startActivity(intent);
+                break;
+            }
             case R.id.cancelImageModeration: {
-                youAreDoneView.setVisibility(View.GONE);
+                youAreDoneView.setVisibility(View.INVISIBLE);
                 break;
             }
             case R.id.createMoreButton: {
