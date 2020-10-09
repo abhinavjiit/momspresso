@@ -18,6 +18,7 @@ import com.mycity4kids.constants.Constants
 import com.mycity4kids.models.response.BloggerRankResponse
 import com.mycity4kids.preference.SharedPrefUtils
 import com.mycity4kids.retrofitAPIsInterfaces.BloggerGoldAPI
+import com.mycity4kids.ui.activity.DashboardActivity
 import com.mycity4kids.ui.activity.ViewLeaderboardActivity
 import com.mycity4kids.utils.AppUtils
 import com.mycity4kids.utils.CustomTabsHelper
@@ -32,6 +33,7 @@ class BloggerGoldDashboardFragment : BaseFragment() {
     private lateinit var leaderBoardLayout: LinearLayout
     private lateinit var leaderBoardLayout1: LinearLayout
     private lateinit var leaderBoardBtn1: TextView
+    private lateinit var startCreatingBtn: TextView
     private lateinit var viewsLayout: LinearLayout
     private lateinit var articleViewLayout: LinearLayout
     private lateinit var videoViewLayout: LinearLayout
@@ -69,6 +71,7 @@ class BloggerGoldDashboardFragment : BaseFragment() {
         updatedAt = view.findViewById(R.id.last_updated)
         leaderBoardLayout1 = view.findViewById(R.id.leaderboard_layout1)
         leaderBoardBtn1 = view.findViewById(R.id.leaderboard_btn1)
+        startCreatingBtn = view.findViewById(R.id.start_creating_btn)
         divider = view.findViewById(R.id.view)
         leaderboard_btn.setOnClickListener {
             val intent = Intent(activity, ViewLeaderboardActivity::class.java)
@@ -83,6 +86,15 @@ class BloggerGoldDashboardFragment : BaseFragment() {
         videoViewLayout.setOnClickListener {
             val intent = Intent(activity, ViewLeaderboardActivity::class.java)
             startActivity(intent)
+        }
+
+        startCreatingBtn.setOnClickListener {
+            val i = Intent(
+                activity,
+                DashboardActivity::class.java
+            )
+            activity!!.finish()
+            startActivity(i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_NEW_TASK))
         }
 
         showProgressDialog("please wait")
@@ -156,7 +168,7 @@ class BloggerGoldDashboardFragment : BaseFragment() {
             articleViewLayout.visibility = View.VISIBLE
             earningCalculator.visibility = View.VISIBLE
             article_total_view.setText((response.data.result.article.total_views / 1000).toString() + "K")
-            article_yesterday_view.setText("Yesterday " + (response.data.result.article.yesterday_views / 1000).toString() + "K")
+            article_yesterday_view.setText((activity?.resources?.getString(R.string.yesterday)) + (response.data.result.article.yesterday_views / 1000).toString() + "K")
             blogAverageView = response.data.result.article.average_daily_views
             startCreatingLayout.visibility = View.GONE
             leaderBoardLayout.visibility = View.GONE
@@ -172,7 +184,7 @@ class BloggerGoldDashboardFragment : BaseFragment() {
             videoViewLayout.visibility = View.VISIBLE
             earningCalculator.visibility = View.VISIBLE
             video_total_view.setText((response.data.result.video.total_views / 1000).toString() + "K")
-            video_yesterday_view.setText("Yesterday " + (response.data.result.video.yesterday_views / 1000).toString() + "K")
+            video_yesterday_view.setText((activity?.resources?.getString(R.string.yesterday)) + (response.data.result.video.yesterday_views / 1000).toString() + "K")
             vlogAverageView = response.data.result.video.average_daily_views
             startCreatingLayout.visibility = View.GONE
             leaderBoardLayout.visibility = View.GONE

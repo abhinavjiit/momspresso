@@ -1418,13 +1418,13 @@ Thank you! We will be reviewing your story. You can expect to hear from us withi
   <string name="live_started_ago">%1$s நிமிடத்திற்கு முன்பு தொடங்கியது</string>
   <string name="live_watching_count">%1$d பேர் பார்த்துக் கொண்டிருக்கின்றனர்</string>
   <string name="blogger_gold">Blogger Gold</string>
-  <string name="my_dashboard">My Dashboard</string>
+  <string name="my_dashboard">என் முகப்பு விவரம்</string>
   <string name="start_creating_text">நீங்கள் எதுவும் உருவாக்கவில்லை </string>
   <string name="start_creating_btn">உருவாக்கத்  தொடங்கு </string>
   <string name="leaderboard_text">முன்னிலை பட்டியல்  பார்க்க கீழே க்ளிக் செய்யுங்கள் </string>
   <string name="leaderboard_btn">View Leaderboard</string>
-  <string name="total_blog_view">Total Blog views</string>
-  <string name="total_vlog_view">Total Vlog view</string>
+  <string name="total_blog_view">பதிவுகளின்  தன்னிச்சையான பார்வையாளர்கள்  எண்ணிக்கை </string>
+  <string name="total_vlog_view">விலாக்கள்   தன்னிச்சையான பார்வையாளர்கள்  எண்ணிக்கை </string>
   <string name="leaderboard">Leaderboard</string>
   <string name="leaderboard_blogs">BLOGS</string>
   <string name="leaderboard_vlogs">VLOG</string>
@@ -1463,4 +1463,6 @@ Thank you! We will be reviewing your story. You can expect to hear from us withi
   <string name="all_join">இணைய </string>
   <string name="explore_self">நானே  ஆராய்ந்து கொள்கிறேன்</string>
   <string name="home_onboarding_title">உங்களின் பயணத்தை எவ்வாறு தொடங்க விரும்புகிறீர்கள்?</string>
+  <string name="empty_leaderboard_text">லீடர்போர்டு இன்னும் உருவாக்கப்படவில்லை. தயவுசெய்து நாளை திரும்பி வாருங்கள்.</string>
+  <string name="yesterday">நேற்று</string>
 </resources>
