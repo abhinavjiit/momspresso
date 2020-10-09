@@ -77,6 +77,7 @@ public class VideoUploadProgressActivity extends BaseActivity implements View.On
     private int groupId;
     private ImageView back;
     private TextView modrationText;
+    private RelativeLayout bottomLayout;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -85,7 +86,6 @@ public class VideoUploadProgressActivity extends BaseActivity implements View.On
         root = findViewById(R.id.root);
         ((BaseApplication) getApplication()).setView(root);
         ((BaseApplication) getApplication()).setActivity(this);
-        checkCreatorGroupStatus();
         Utils.pushOpenScreenEvent(this, "VideoUploadScreen",
                 SharedPrefUtils.getUserDetailModel(this).getDynamoId() + "");
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
@@ -111,33 +111,16 @@ public class VideoUploadProgressActivity extends BaseActivity implements View.On
         mtxtvideosize = findViewById(R.id.video_size);
         mtxtvideoname = findViewById(R.id.video_name);
         imgCancelUpload = findViewById(R.id.cancel_upload);
+        bottomLayout = findViewById(R.id.bottomLayout);
         back = findViewById(R.id.back);
-        modrationText=findViewById(R.id.modrationText);
+        modrationText = findViewById(R.id.modrationText);
         okayTextView.setOnClickListener(this);
         imgCancelUpload.setOnClickListener(this);
         back.setOnClickListener(this);
-
+        joinVloggersGroup.setOnClickListener(this);
         uploadingContainer.setVisibility(View.VISIBLE);
         uploadFinishContainer.setVisibility(View.GONE);
-
         mixpanel = MixpanelAPI.getInstance(BaseApplication.getAppContext(), AppConstants.MIX_PANEL_TOKEN);
-        cancelImage.setOnClickListener(view -> {
-            youAreDoneView.setVisibility(View.GONE);
-        });
-        joinVloggersGroup.setOnClickListener(view -> {
-
-        });
-        final Handler handler = new Handler(Looper.getMainLooper());
-        handler.postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                if (youAreDoneView.getVisibility() == View.VISIBLE) {
-                    youAreDoneView.setVisibility(View.GONE);
-                    cancelImage.setVisibility(View.GONE);
-                }
-            }
-        }, 3000);
-
     }
 
     private void checkCreatorGroupStatus() {
@@ -292,6 +275,19 @@ public class VideoUploadProgressActivity extends BaseActivity implements View.On
                     MixPanelUtils.pushVideoPublishSuccessEvent(mixpanel, title);
                     uploadingContainer.setVisibility(View.GONE);
                     uploadFinishContainer.setVisibility(View.VISIBLE);
+                    checkCreatorGroupStatus();
+                    youAreDoneView.setVisibility(View.VISIBLE);
+                    cancelImage.setVisibility(View.VISIBLE);
+                    final Handler handler = new Handler(Looper.getMainLooper());
+                    handler.postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            if (youAreDoneView.getVisibility() == View.VISIBLE) {
+                                youAreDoneView.setVisibility(View.INVISIBLE);
+                                cancelImage.setVisibility(View.INVISIBLE);
+                            }
+                        }
+                    }, 3000);
                 }
             } catch (Exception e) {
                 FirebaseCrashlytics.getInstance().recordException(e);
@@ -338,11 +334,10 @@ public class VideoUploadProgressActivity extends BaseActivity implements View.On
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
-            case R.id.modrationText:
-                    {
-                       handleDeeplinks("https://www.momspresso.com/moderation-rules");
-                        break;
-                    }
+            case R.id.modrationText: {
+                handleDeeplinks("https://www.momspresso.com/moderation-rules");
+                break;
+            }
             case R.id.back: {
                 Intent intent = new Intent(this, DashboardActivity.class);
                 intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
@@ -402,8 +397,7 @@ public class VideoUploadProgressActivity extends BaseActivity implements View.On
 
     @Override
     public void onMembershipStatusFetchSuccess(GroupsMembershipResponse body, int groupId) {
-        joinVloggersGroup.setVisibility(View.VISIBLE);
-        needOpinionTextView.setVisibility(View.VISIBLE);
+        bottomLayout.setVisibility(View.VISIBLE);
         if (body.getData().getResult() == null || body.getData().getResult().isEmpty() || body.getData().getResult()
                 .get(0).getStatus().equals("2")) {
             joinVloggersGroup.setText(getString(R.string.join_creator_group));
@@ -419,5 +413,9 @@ public class VideoUploadProgressActivity extends BaseActivity implements View.On
 
     @Override
     public void onMembershipStatusFetchFail() {
+        bottomLayout.setVisibility(View.VISIBLE);
+        joinVloggersGroup.setText("Join Creator's Hangout");
+        needOpinionTextView.setText("Get tips or ideas from other creators");
+        joinVloggersGroup.setTag("please_join");
     }
 }

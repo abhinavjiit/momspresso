@@ -151,6 +151,7 @@
       android:layout_below="@id/view2"
       android:layout_centerHorizontal="true"
       android:layout_marginTop="@dimen/space_25"
+      android:visibility="invisible"
       android:background="@drawable/tooltip_shape_layout"
       android:padding="@dimen/space_16">
 
@@ -176,6 +177,7 @@
       android:layout_alignTop="@id/view2"
       android:layout_alignEnd="@id/view"
       android:layout_marginTop="@dimen/space_25"
+      android:visibility="invisible"
       app:srcCompat="@drawable/ic_cross" />
 
     <View
