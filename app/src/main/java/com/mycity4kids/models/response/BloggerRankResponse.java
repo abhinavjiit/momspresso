@@ -81,6 +81,8 @@ public class BloggerRankResponse extends BaseResponse {
             private String author_id;
             @SerializedName("type")
             private String type;
+            @SerializedName("average_daily_views")
+            private int average_daily_views = 0;
             @SerializedName("total_views")
             private float total_views = 0;
             @SerializedName("yesterday_views")
@@ -127,6 +129,14 @@ public class BloggerRankResponse extends BaseResponse {
 
             public void setContent_created(boolean content_created) {
                 this.content_created = content_created;
+            }
+
+            public int getAverage_daily_views() {
+                return average_daily_views;
+            }
+
+            public void setAverage_daily_views(int average_daily_views) {
+                this.average_daily_views = average_daily_views;
             }
 
         }

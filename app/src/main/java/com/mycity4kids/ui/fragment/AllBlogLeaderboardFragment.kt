@@ -16,13 +16,14 @@ import com.mycity4kids.constants.Constants
 import com.mycity4kids.models.response.AllLeaderboardDataResponse
 import com.mycity4kids.retrofitAPIsInterfaces.BloggerGoldAPI
 import com.mycity4kids.ui.adapter.AllBlogLeaderboardRecyclerAdapter
+import com.mycity4kids.ui.adapter.AllVlogLeaderboardRecyclerAdapter
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 
 
 class AllBlogLeaderboardFragment : BaseFragment() {
-    private var recyclerView: RecyclerView? = null
+    private lateinit var recyclerView: RecyclerView
     private var recyclerAdapterBlog: AllBlogLeaderboardRecyclerAdapter? = null
     private lateinit var viewMoreTextView: TextView
     private var llm: LinearLayoutManager? = null
@@ -51,22 +52,26 @@ class AllBlogLeaderboardFragment : BaseFragment() {
             AllBlogLeaderboardRecyclerAdapter(activity)
         llm = LinearLayoutManager(activity)
         llm!!.setOrientation(RecyclerView.VERTICAL)
-        recyclerView!!.layoutManager = llm
+        recyclerView.layoutManager = llm
         recyclerAdapterBlog!!.setListData(blogList)
         recyclerView!!.adapter = recyclerAdapterBlog
 
-        recyclerView!!.addOnScrollListener(object : RecyclerView.OnScrollListener() {
+        recyclerView.addOnScrollListener(object : RecyclerView.OnScrollListener() {
             override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
-                nextPageNumber = nextPageNumber + 1
-                visibleItemCount = llm!!.childCount
-                totalItemCount = llm!!.itemCount
-                pastVisiblesItems = llm!!.findFirstVisibleItemPosition()
+                if (dy > 0) {
+                    nextPageNumber = nextPageNumber + 1
+                    visibleItemCount = llm!!.childCount
+                    totalItemCount = llm!!.itemCount
+                    pastVisiblesItems = llm!!.findFirstVisibleItemPosition()
 
-                if (!isReuqestRunning) {
-                    //                    if (visibleItemCount + pastVisiblesItems >= totalItemCount) {
-                    isReuqestRunning = true
-                    getALLBlogLeaderboardData(nextPageNumber)
-                    //                    }
+                    if (!isReuqestRunning) {
+                        if (visibleItemCount + pastVisiblesItems >= totalItemCount) {
+                            if (recyclerView.adapter is AllBlogLeaderboardRecyclerAdapter) {
+                                isReuqestRunning = true
+                                getALLBlogLeaderboardData(nextPageNumber)
+                            }
+                        }
+                    }
                 }
             }
         })

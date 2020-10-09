@@ -19,6 +19,7 @@ import com.mycity4kids.models.response.BloggerRankResponse
 import com.mycity4kids.preference.SharedPrefUtils
 import com.mycity4kids.retrofitAPIsInterfaces.BloggerGoldAPI
 import com.mycity4kids.ui.activity.ViewLeaderboardActivity
+import com.mycity4kids.utils.AppUtils
 import com.mycity4kids.utils.CustomTabsHelper
 import com.mycity4kids.utils.StringUtils
 import retrofit2.Call
@@ -43,6 +44,9 @@ class BloggerGoldDashboardFragment : BaseFragment() {
     private lateinit var updatedAt: TextView
     private lateinit var earningCalculator: TextView
     private lateinit var divider: View
+    private lateinit var date: String
+    private var blogAverageView: Int = 0
+    private var vlogAverageView: Int = 0
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -84,10 +88,22 @@ class BloggerGoldDashboardFragment : BaseFragment() {
         showProgressDialog("please wait")
         getBloggerRank
         webviewHack.setOnClickListener {
-            launchChromeTabs("https://www.momspresso.com/birthdaybonanza/hack_to_get_more_page_views")
+            launchChromeTabs(
+                "https://" + AppUtils.getLanguage(
+                    SharedPrefUtils.getAppLocale(
+                        BaseApplication.getAppContext()
+                    )
+                ) + ".momspresso.com/birthdaybonanza/hack_to_get_more_page_views"
+            )
         }
         earningCalculator.setOnClickListener {
-            launchChromeTabs("https://www.momspresso.com/birthdaybonanza/earning_calculator")
+            launchChromeTabs(
+                "https://" + AppUtils.getLanguage(
+                    SharedPrefUtils.getAppLocale(
+                        BaseApplication.getAppContext()
+                    )
+                ) + ".momspresso.com/birthdaybonanza/earning_calculator?b=" + blogAverageView + "&v=" + vlogAverageView + "&d=" + date
+            )
         }
 
         return view
@@ -141,6 +157,7 @@ class BloggerGoldDashboardFragment : BaseFragment() {
             earningCalculator.visibility = View.VISIBLE
             article_total_view.setText((response.data.result.article.total_views / 1000).toString() + "K")
             article_yesterday_view.setText("Yesterday " + (response.data.result.article.yesterday_views / 1000).toString() + "K")
+            blogAverageView = response.data.result.article.average_daily_views
             startCreatingLayout.visibility = View.GONE
             leaderBoardLayout.visibility = View.GONE
             leaderBoardLayout1.visibility = View.VISIBLE
@@ -156,6 +173,7 @@ class BloggerGoldDashboardFragment : BaseFragment() {
             earningCalculator.visibility = View.VISIBLE
             video_total_view.setText((response.data.result.video.total_views / 1000).toString() + "K")
             video_yesterday_view.setText("Yesterday " + (response.data.result.video.yesterday_views / 1000).toString() + "K")
+            vlogAverageView = response.data.result.video.average_daily_views
             startCreatingLayout.visibility = View.GONE
             leaderBoardLayout.visibility = View.GONE
             leaderBoardLayout1.visibility = View.VISIBLE
@@ -166,7 +184,8 @@ class BloggerGoldDashboardFragment : BaseFragment() {
             videoViewLayout.visibility = View.GONE
         }
         if (!StringUtils.isNullOrEmpty(response.data.result.updated_at)) {
-            updatedAt.setText("Last updated: " + response.data.result.updated_at)
+            date = response.data.result.updated_at
+            updatedAt.setText("Last updated: " + date)
         }
         removeProgressDialog()
     }
