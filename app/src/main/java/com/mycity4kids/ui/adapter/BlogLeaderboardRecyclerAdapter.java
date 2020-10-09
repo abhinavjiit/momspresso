@@ -1,11 +1,10 @@
 package com.mycity4kids.ui.adapter;
 
-import android.content.Context;
 import android.os.Handler;
 import android.util.Log;
-import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
@@ -14,6 +13,7 @@ import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
 import com.google.firebase.crashlytics.FirebaseCrashlytics;
 import com.mycity4kids.R;
+import com.mycity4kids.application.BaseApplication;
 import com.mycity4kids.models.response.LeaderboardDataResponse.LeaderboardData.LeaderBoradRank;
 import com.mycity4kids.preference.SharedPrefUtils;
 import com.squareup.picasso.Picasso;
@@ -26,15 +26,13 @@ import io.github.douglasjunior.androidSimpleTooltip.SimpleTooltip;
 public class BlogLeaderboardRecyclerAdapter extends
         RecyclerView.Adapter<BlogLeaderboardRecyclerAdapter.LeaderboardViewHolder> {
 
-    private Context mContext;
-    private LayoutInflater mInflator;
     private LeaderBoradRank articleDataModelsNew;
     private SimpleTooltip simpleTooltip;
     private Handler handler;
+    private RecyclerViewClickListener recyclerViewClickListener;
 
-    public BlogLeaderboardRecyclerAdapter(Context pContext) {
-        mInflator = (LayoutInflater) pContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        mContext = pContext;
+    public BlogLeaderboardRecyclerAdapter(RecyclerViewClickListener recyclerViewClickListener) {
+        this.recyclerViewClickListener = recyclerViewClickListener;
     }
 
     @Override
@@ -48,8 +46,8 @@ public class BlogLeaderboardRecyclerAdapter extends
 
     @Override
     public LeaderboardViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        LeaderboardViewHolder viewHolder = null;
-        View v0 = mInflator.inflate(R.layout.leaderboard_listing_item, parent, false);
+        LeaderboardViewHolder viewHolder;
+        View v0 = LayoutInflater.from(parent.getContext()).inflate(R.layout.leaderboard_listing_item, parent, false);
         viewHolder = new LeaderboardViewHolder(v0);
         return viewHolder;
     }
@@ -69,8 +67,8 @@ public class BlogLeaderboardRecyclerAdapter extends
         holder.userRank.setText("" + articleDataModelsNew.ranks.get(position).getRank());
         holder.viewCount.setText("" + (articleDataModelsNew.ranks.get(position).getScore() / 1000) + "K");
         if (articleDataModelsNew.ranks.get(position).getUser_id()
-                .equals(SharedPrefUtils.getUserDetailModel(mContext).getDynamoId())) {
-            holder.rl.setBackgroundColor(ContextCompat.getColor(mContext, R.color.color_FFF7F8));
+                .equals(SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId())) {
+            holder.rl.setBackgroundColor(ContextCompat.getColor(holder.rl.getContext(), R.color.color_FFF7F8));
             /*int rankDiff =
                     articleDataModelsNew.ranks.get(position).getRank() - articleDataModelsNew.ranks.get(position)
                             .getYesterday_rank();
@@ -91,7 +89,7 @@ public class BlogLeaderboardRecyclerAdapter extends
         return articleDataModelsNew == null ? 0 : articleDataModelsNew.ranks.size();
     }
 
-    public class LeaderboardViewHolder extends RecyclerView.ViewHolder {
+    public class LeaderboardViewHolder extends RecyclerView.ViewHolder implements OnClickListener {
 
         TextView userName, userHandle, userRank, viewCount;
         ImageView profilePic;
@@ -105,24 +103,30 @@ public class BlogLeaderboardRecyclerAdapter extends
             userRank = itemView.findViewById(R.id.user_rank);
             viewCount = itemView.findViewById(R.id.view_count);
             rl = itemView.findViewById(R.id.rl);
+            itemView.setOnClickListener(this);
+        }
+
+        @Override
+        public void onClick(View view) {
+            recyclerViewClickListener.onRecyclerViewItemClick(view, getAdapterPosition());
         }
     }
 
     private void tooltipForShare(View view, String msg) {
-        simpleTooltip = new SimpleTooltip.Builder(mContext)
-                .anchorView(view)
-                .backgroundColor(mContext.getResources().getColor(R.color.app_blue))
-                .text(msg)
-                .textColor(mContext.getResources().getColor(R.color.white_color))
-                .arrowColor(mContext.getResources().getColor(R.color.app_blue))
-                .gravity(Gravity.END)
-                .arrowWidth(60)
-                .arrowHeight(20)
-                .animated(false)
-                .focusable(true)
-                .transparentOverlay(true)
-                .build();
-        simpleTooltip.show();
+//        simpleTooltip = new SimpleTooltip.Builder(mContext)
+//                .anchorView(view)
+//                .backgroundColor(mContext.getResources().getColor(R.color.app_blue))
+//                .text(msg)
+//                .textColor(mContext.getResources().getColor(R.color.white_color))
+//                .arrowColor(mContext.getResources().getColor(R.color.app_blue))
+//                .gravity(Gravity.END)
+//                .arrowWidth(60)
+//                .arrowHeight(20)
+//                .animated(false)
+//                .focusable(true)
+//                .transparentOverlay(true)
+//                .build();
+//        simpleTooltip.show();
         /*handler = new Handler();
         handler.postDelayed(() -> {
             if (simpleTooltip.isShowing()) {
@@ -130,5 +134,10 @@ public class BlogLeaderboardRecyclerAdapter extends
             }
         }, 30000);*/
 
+    }
+
+    public interface RecyclerViewClickListener {
+
+        void onRecyclerViewItemClick(View view, int position);
     }
 }

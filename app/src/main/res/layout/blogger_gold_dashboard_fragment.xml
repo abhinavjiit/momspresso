@@ -25,17 +25,17 @@
       android:paddingTop="@dimen/space_13"
       android:paddingBottom="@dimen/space_13"
       android:text="@string/earning_calculator"
-      android:visibility="gone"
       android:textColor="#03BE94"
-      android:textSize="16sp" />
+      android:textSize="16sp"
+      android:visibility="gone" />
 
 
     <LinearLayout
       android:id="@+id/start_creating_layout"
       android:layout_width="match_parent"
       android:layout_height="wrap_content"
-      android:gravity="center_horizontal"
       android:layout_marginTop="@dimen/space_25"
+      android:gravity="center_horizontal"
       android:orientation="vertical">
 
       <com.mycity4kids.widget.CustomFontTextView
@@ -60,16 +60,14 @@
         android:paddingBottom="@dimen/space_10"
         android:text="@string/start_creating_btn"
         android:textColor="@color/white" />
-
     </LinearLayout>
-
 
     <LinearLayout
       android:id="@+id/leaderboard_layout"
       android:layout_width="match_parent"
       android:layout_height="wrap_content"
-      android:gravity="center_horizontal"
       android:layout_marginTop="@dimen/space_25"
+      android:gravity="center_horizontal"
       android:orientation="vertical">
 
       <com.mycity4kids.widget.CustomFontTextView
@@ -104,8 +102,8 @@
       android:layout_marginLeft="@dimen/space_20"
       android:layout_marginRight="@dimen/space_20"
       android:background="@color/white"
-      android:visibility="gone"
-      android:orientation="vertical">
+      android:orientation="vertical"
+      android:visibility="gone">
 
       <com.mycity4kids.widget.CustomFontTextView
         android:id="@+id/leaderboard_text1"
@@ -177,19 +175,19 @@
           android:layout_height="wrap_content"
           android:layout_marginTop="@dimen/space_10"
           android:gravity="center_horizontal"
-          android:textSize="14sp"
           android:text="@string/total_blog_view"
-          android:textColor="@color/white" />
+          android:textColor="@color/white"
+          android:textSize="14sp" />
 
         <com.mycity4kids.widget.CustomFontTextView
           android:id="@+id/article_yesterday_view"
           android:layout_width="match_parent"
           android:layout_height="wrap_content"
-          android:textSize="12sp"
           android:layout_marginTop="@dimen/space_20"
           android:layout_marginBottom="@dimen/space_5"
           android:gravity="center_horizontal"
-          android:textColor="@color/white" />
+          android:textColor="@color/white"
+          android:textSize="12sp" />
 
       </LinearLayout>
 
@@ -234,19 +232,19 @@
           android:layout_height="wrap_content"
           android:layout_marginTop="@dimen/space_10"
           android:gravity="center_horizontal"
-          android:textSize="14sp"
           android:text="@string/total_vlog_view"
-          android:textColor="@color/white" />
+          android:textColor="@color/white"
+          android:textSize="14sp" />
 
         <com.mycity4kids.widget.CustomFontTextView
           android:id="@+id/video_yesterday_view"
           android:layout_width="match_parent"
           android:layout_height="wrap_content"
-          android:textSize="12sp"
           android:layout_marginTop="@dimen/space_20"
           android:layout_marginBottom="@dimen/space_5"
           android:gravity="center_horizontal"
-          android:textColor="@color/white" />
+          android:textColor="@color/white"
+          android:textSize="12sp" />
       </LinearLayout>
 
     </LinearLayout>
@@ -258,8 +256,8 @@
       android:layout_marginLeft="@dimen/space_20"
       android:layout_marginTop="@dimen/space_10"
       android:layout_marginBottom="@dimen/space_10"
-      android:visibility="gone"
-      android:textColor="@color/grey_faded" />
+      android:textColor="@color/grey_faded"
+      android:visibility="gone" />
 
     <View
       android:id="@+id/view"
@@ -267,8 +265,8 @@
       android:layout_height="1dp"
       android:layout_marginLeft="@dimen/space_20"
       android:layout_marginRight="@dimen/space_20"
-      android:visibility="gone"
-      android:background="@color/grey_faded" />
+      android:background="@color/grey_faded"
+      android:visibility="gone" />
 
 
     <com.mycity4kids.widget.CustomFontTextView
@@ -277,10 +275,10 @@
       android:layout_height="wrap_content"
       android:layout_marginLeft="@dimen/space_20"
       android:layout_marginTop="@dimen/space_30"
-      android:visibility="gone"
       android:layout_marginBottom="@dimen/space_30"
       android:text="@string/webview_hack_text"
       android:textColor="@color/campaign_list_buttons"
-      android:textSize="14sp" />
+      android:textSize="14sp"
+      android:visibility="gone" />
   </LinearLayout>
 </androidx.core.widget.NestedScrollView>

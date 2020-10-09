@@ -32,7 +32,6 @@ class ViewLeaderboardActivity : BaseActivity() {
     private lateinit var viewpager: ViewPager
     private lateinit var leaderboardPagerAdapter: LeaderboardPagerAdapter
     private lateinit var checkout_growth_btn: TextView
-    private lateinit var emptyLeaderboard: TextView
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -41,7 +40,6 @@ class ViewLeaderboardActivity : BaseActivity() {
         viewpager = findViewById(R.id.viewpager)
         toolbarTitleTextView = findViewById(R.id.toolbarTitleTextView)
         checkout_growth_btn = findViewById(R.id.checkout_growth_btn)
-        emptyLeaderboard = findViewById(R.id.empty_leaderboard)
         tabs = findViewById(R.id.tabs)
 
         checkout_growth_btn.visibility = View.VISIBLE
@@ -96,10 +94,9 @@ class ViewLeaderboardActivity : BaseActivity() {
             try {
                 val responseData = response.body()
                 if (responseData?.code == 200 && Constants.SUCCESS == responseData.status) {
-                    if (responseData.data.result != null) {
+                    if (responseData.data.result != null && responseData.data.result.isNotEmpty()) {
                         processLeaderboardDataResponse(responseData)
                     } else {
-                        emptyLeaderboard.visibility = View.VISIBLE
                         viewpager.visibility = View.GONE
                     }
                 }

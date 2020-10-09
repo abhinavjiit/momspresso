@@ -1,41 +1,46 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
   xmlns:app="http://schemas.android.com/apk/res-auto"
   android:layout_width="wrap_content"
-  android:layout_height="wrap_content"
-  android:orientation="horizontal"
-  android:padding="4dp">
-
-  //Do not change order of the child layouts. Used childAt function
-
-  <com.mycity4kids.widget.CustomFontTextView
-    android:id="@+id/subcategoryTextView"
+  android:layout_height="wrap_content">
+  <RelativeLayout
     android:layout_width="wrap_content"
-    android:layout_height="38dp"
-    android:background="@drawable/profile_create_content_bg"
-    android:gravity="center"
-    android:hint="Add waddd"
-    android:paddingLeft="8dp"
-    android:paddingRight="8dp"
-    android:textColor="@color/app_red"
-    android:textSize="14sp"
-    app:fontName="oswald_regular.ttf" />
+    android:layout_height="wrap_content"
+    android:layout_margin="4dp"
+    android:background="@drawable/ad_tags_bg"
+    android:padding="4dp">
 
-  <View
-    android:id="@+id/seperator"
-    android:layout_width="1dp"
-    android:layout_height="38dp"
-    android:layout_toRightOf="@+id/subcategoryTextView"
-    android:background="#e9e9e9"
-    android:visibility="gone" />
+    //Do not change order of the child layouts. Used childAt function
 
-  <ImageView
-    android:layout_width="@dimen/related_article.article_image.width"
-    android:layout_height="@dimen/related_article.article_image.height"
-    android:layout_centerVertical="true"
-    android:layout_toRightOf="@+id/seperator"
-    android:background="@color/ad.tags.follow_bg"
-    android:padding="6dp"
-    android:tint="@color/app_red"
-    android:visibility="gone" />
-</RelativeLayout>
+    <com.mycity4kids.widget.CustomFontTextView
+      android:id="@+id/subcategoryTextView"
+      android:layout_width="wrap_content"
+      android:layout_height="38dp"
+      android:gravity="center"
+      android:hint=""
+      android:paddingLeft="8dp"
+      android:paddingRight="8dp"
+      android:textColor="#D03F56"
+      android:textSize="14sp"
+      app:fontName="oswald_regular.ttf" />
+
+    <View
+      android:id="@+id/seperator"
+      android:layout_width="1dp"
+      android:layout_height="38dp"
+      android:layout_toEndOf="@+id/subcategoryTextView"
+      android:background="#e9e9e9"
+      android:visibility="gone" />
+
+    <ImageView
+      android:layout_width="30dp"
+      android:layout_height="30dp"
+      android:layout_centerVertical="true"
+      android:layout_toEndOf="@+id/seperator"
+      android:background="@drawable/ad_tags_follow_bg"
+      android:padding="8dp"
+      android:src="@drawable/ic_plus"
+      android:tint="@color/app_red"
+      android:visibility="visible" />
+  </RelativeLayout>
+</FrameLayout>

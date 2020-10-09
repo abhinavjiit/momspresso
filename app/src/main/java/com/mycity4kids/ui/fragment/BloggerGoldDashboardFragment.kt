@@ -14,10 +14,12 @@ import com.google.firebase.crashlytics.FirebaseCrashlytics
 import com.mycity4kids.R
 import com.mycity4kids.application.BaseApplication
 import com.mycity4kids.base.BaseFragment
+import com.mycity4kids.constants.AppConstants
 import com.mycity4kids.constants.Constants
 import com.mycity4kids.models.response.BloggerRankResponse
 import com.mycity4kids.preference.SharedPrefUtils
 import com.mycity4kids.retrofitAPIsInterfaces.BloggerGoldAPI
+import com.mycity4kids.ui.activity.BloggerGoldActivity
 import com.mycity4kids.ui.activity.DashboardActivity
 import com.mycity4kids.ui.activity.ViewLeaderboardActivity
 import com.mycity4kids.utils.AppUtils
@@ -93,8 +95,12 @@ class BloggerGoldDashboardFragment : BaseFragment() {
                 activity,
                 DashboardActivity::class.java
             )
-            activity!!.finish()
+            i.putExtra(
+                AppConstants.HOME_SELECTED_TAB,
+                Constants.CREATE_CONTENT_PROMPT
+            )
             startActivity(i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_NEW_TASK))
+            activity!!.finish()
         }
 
         showProgressDialog("please wait")
@@ -109,13 +115,15 @@ class BloggerGoldDashboardFragment : BaseFragment() {
             )
         }
         earningCalculator.setOnClickListener {
-            launchChromeTabs(
-                "https://" + AppUtils.getLanguage(
-                    SharedPrefUtils.getAppLocale(
-                        BaseApplication.getAppContext()
-                    )
-                ) + ".momspresso.com/birthdaybonanza/earning_calculator?b=" + blogAverageView + "&v=" + vlogAverageView + "&d=" + date
-            )
+            activity?.let {
+                (it as BloggerGoldActivity).handleDeeplinks(
+                    "https://" + AppUtils.getLanguage(
+                        SharedPrefUtils.getAppLocale(
+                            BaseApplication.getAppContext()
+                        )
+                    ) + ".momspresso.com/birthdaybonanza/earning_calculator?b=" + blogAverageView + "&v=" + vlogAverageView + "&d=" + date
+                )
+            }
         }
 
         return view
@@ -167,8 +175,10 @@ class BloggerGoldDashboardFragment : BaseFragment() {
             viewsLayout.visibility = View.VISIBLE
             articleViewLayout.visibility = View.VISIBLE
             earningCalculator.visibility = View.VISIBLE
-            article_total_view.setText((response.data.result.article.total_views / 1000).toString() + "K")
-            article_yesterday_view.setText((activity?.resources?.getString(R.string.yesterday)) + (response.data.result.article.yesterday_views / 1000).toString() + "K")
+            article_total_view.text =
+                (response.data.result.article.total_views / 1000).toString() + "K"
+            article_yesterday_view.text =
+                "Yesterday " + (response.data.result.article.yesterday_views / 1000).toString() + "K"
             blogAverageView = response.data.result.article.average_daily_views
             startCreatingLayout.visibility = View.GONE
             leaderBoardLayout.visibility = View.GONE
@@ -183,8 +193,9 @@ class BloggerGoldDashboardFragment : BaseFragment() {
             viewsLayout.visibility = View.VISIBLE
             videoViewLayout.visibility = View.VISIBLE
             earningCalculator.visibility = View.VISIBLE
-            video_total_view.setText((response.data.result.video.total_views / 1000).toString() + "K")
-            video_yesterday_view.setText((activity?.resources?.getString(R.string.yesterday)) + (response.data.result.video.yesterday_views / 1000).toString() + "K")
+            video_total_view.text = (response.data.result.video.total_views / 1000).toString() + "K"
+            video_yesterday_view.text =
+                "Yesterday " + (response.data.result.video.yesterday_views / 1000).toString() + "K"
             vlogAverageView = response.data.result.video.average_daily_views
             startCreatingLayout.visibility = View.GONE
             leaderBoardLayout.visibility = View.GONE
@@ -197,7 +208,7 @@ class BloggerGoldDashboardFragment : BaseFragment() {
         }
         if (!StringUtils.isNullOrEmpty(response.data.result.updated_at)) {
             date = response.data.result.updated_at
-            updatedAt.setText("Last updated: " + date)
+            updatedAt.text = "Last updated: " + date
         }
         removeProgressDialog()
     }

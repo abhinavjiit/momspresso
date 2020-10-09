@@ -1,9 +1,9 @@
 package com.mycity4kids.ui.adapter;
 
-import android.content.Context;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
@@ -12,8 +12,10 @@ import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
 import com.google.firebase.crashlytics.FirebaseCrashlytics;
 import com.mycity4kids.R;
+import com.mycity4kids.application.BaseApplication;
 import com.mycity4kids.models.response.AllLeaderboardDataResponse.AllLeaderboardData.AllLeaderboardRankHolder;
 import com.mycity4kids.preference.SharedPrefUtils;
+import com.mycity4kids.ui.adapter.VlogLeaderboardRecyclerAdapter.RecyclerViewClickListener;
 import com.squareup.picasso.Picasso;
 import java.util.ArrayList;
 
@@ -24,13 +26,11 @@ import java.util.ArrayList;
 public class AllBlogLeaderboardRecyclerAdapter extends
         RecyclerView.Adapter<AllBlogLeaderboardRecyclerAdapter.LeaderboardViewHolder> {
 
-    private Context mContext;
-    private LayoutInflater mInflator;
     private ArrayList<AllLeaderboardRankHolder> articleDataModelsNew;
+    private RecyclerViewClickListener recyclerViewClickListener;
 
-    public AllBlogLeaderboardRecyclerAdapter(Context pContext) {
-        mInflator = (LayoutInflater) pContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        mContext = pContext;
+    public AllBlogLeaderboardRecyclerAdapter(RecyclerViewClickListener recyclerViewClickListener) {
+        this.recyclerViewClickListener = recyclerViewClickListener;
     }
 
     @Override
@@ -45,7 +45,7 @@ public class AllBlogLeaderboardRecyclerAdapter extends
     @Override
     public LeaderboardViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         LeaderboardViewHolder viewHolder = null;
-        View v0 = mInflator.inflate(R.layout.leaderboard_listing_item, parent, false);
+        View v0 = LayoutInflater.from(parent.getContext()).inflate(R.layout.leaderboard_listing_item, parent, false);
         viewHolder = new LeaderboardViewHolder(v0);
         return viewHolder;
     }
@@ -65,8 +65,8 @@ public class AllBlogLeaderboardRecyclerAdapter extends
         holder.userRank.setText("" + articleDataModelsNew.get(position).getRank());
         holder.viewCount.setText("" + (articleDataModelsNew.get(position).getScore() / 1000) + "K");
         if (articleDataModelsNew.get(position).getUser_id()
-                .equals(SharedPrefUtils.getUserDetailModel(mContext).getDynamoId())) {
-            holder.rl.setBackgroundColor(ContextCompat.getColor(mContext, R.color.color_FFF7F8));
+                .equals(SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId())) {
+            holder.rl.setBackgroundColor(ContextCompat.getColor(holder.rl.getContext(), R.color.color_FFF7F8));
         }
     }
 
@@ -75,7 +75,7 @@ public class AllBlogLeaderboardRecyclerAdapter extends
         return articleDataModelsNew == null ? 0 : articleDataModelsNew.size();
     }
 
-    public class LeaderboardViewHolder extends RecyclerView.ViewHolder {
+    public class LeaderboardViewHolder extends RecyclerView.ViewHolder implements OnClickListener {
 
         TextView userName, userHandle, userRank, viewCount;
         ImageView profilePic;
@@ -89,6 +89,17 @@ public class AllBlogLeaderboardRecyclerAdapter extends
             userRank = itemView.findViewById(R.id.user_rank);
             viewCount = itemView.findViewById(R.id.view_count);
             rl = itemView.findViewById(R.id.rl);
+            itemView.setOnClickListener(this);
         }
+
+        @Override
+        public void onClick(View view) {
+            recyclerViewClickListener.onRecyclerViewItemClick(view, getAdapterPosition());
+        }
+    }
+
+    public interface RecyclerViewClickListener {
+
+        void onRecyclerViewItemClick(View view, int position);
     }
 }

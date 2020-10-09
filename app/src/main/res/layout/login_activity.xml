@@ -17,7 +17,6 @@
     app:theme="@style/ToolbarTheme"
     app:titleTextAppearance="@style/ToolbarTheme.Title" />
 
-
   <TextView
     android:id="@+id/headerTextView"
     android:layout_width="wrap_content"
@@ -60,7 +59,7 @@
     android:paddingStart="24dp"
     android:paddingTop="10dp"
     android:paddingBottom="10dp"
-    android:text="@string/all_facebook"
+    android:text="@string/ad.bottom_bar.facebook"
     android:textColor="@color/white_color"
     android:textSize="16sp"
     app:fontName="Roboto-Medium.ttf" />
@@ -102,7 +101,7 @@
     android:paddingStart="24dp"
     android:paddingTop="10dp"
     android:paddingBottom="10dp"
-    android:text="@string/phone"
+    android:text="@string/rewards_phone"
     android:textColor="@color/white_color"
     android:textSize="16sp"
     app:fontName="Roboto-Medium.ttf" />

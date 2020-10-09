@@ -469,7 +469,7 @@ public class SharedPrefUtils {
 
     public static String getLanguageFilters(Context context) {
         SharedPreferences sharedPref = context.getSharedPreferences(COMMON_PREF_FILE, Context.MODE_PRIVATE);
-        return sharedPref.getString(LANGUAGE_FILTER, "");
+        return sharedPref.getString(LANGUAGE_FILTER, "0");
     }
 
     public static void setFollowedTopicsCount(Context context, int topicCount) {

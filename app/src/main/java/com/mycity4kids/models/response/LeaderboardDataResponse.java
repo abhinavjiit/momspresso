@@ -95,7 +95,7 @@ public class LeaderboardDataResponse extends BaseResponse {
 
             @SerializedName("name")
             private String name;
-            @SerializedName("profilePic")
+            @SerializedName("profile_pic")
             private ProfilePic profilePic;
             @SerializedName("rank")
             private int rank;

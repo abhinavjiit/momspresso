@@ -1334,4 +1334,76 @@ public class AppUtils {
             return new SpannableString("");
         }
     }
+
+    public static String getBloggerGoldImageUrl() {
+        if (AppConstants.LOCALE_ENGLISH
+                .equals(SharedPrefUtils.getAppLocale(BaseApplication.getAppContext()))) {
+            return "https://static.momspresso.com/assets/birthdaybonanza/banner-for-app-without-cta-english.png";
+        } else if (AppConstants.LOCALE_HINDI
+                .equals(SharedPrefUtils.getAppLocale(BaseApplication.getAppContext()))) {
+            return "https://static.momspresso.com/assets/birthdaybonanza/banner-for-app-without-cta-hindi.png";
+        } else if (AppConstants.LOCALE_MARATHI
+                .equals(SharedPrefUtils.getAppLocale(BaseApplication.getAppContext()))) {
+            return "https://static.momspresso.com/assets/birthdaybonanza/banner-for-app-without-cta-marathi.png";
+        } else if (AppConstants.LOCALE_BENGALI
+                .equals(SharedPrefUtils.getAppLocale(BaseApplication.getAppContext()))) {
+            return "https://static.momspresso.com/assets/birthdaybonanza/banner-for-app-without-cta-bengali.jpg";
+        } else if (AppConstants.LOCALE_TAMIL
+                .equals(SharedPrefUtils.getAppLocale(BaseApplication.getAppContext()))) {
+            return "https://static.momspresso.com/assets/birthdaybonanza/banner-for-app-without-cta-tamil.png";
+        } else if (AppConstants.LOCALE_TELUGU
+                .equals(SharedPrefUtils.getAppLocale(BaseApplication.getAppContext()))) {
+            return "https://static.momspresso.com/assets/birthdaybonanza/banner-for-app-without-cta-telugu.png";
+        } else if (AppConstants.LOCALE_KANNADA
+                .equals(SharedPrefUtils.getAppLocale(BaseApplication.getAppContext()))) {
+            return "https://static.momspresso.com/assets/birthdaybonanza/banner-for-app-without-cta-kannada.png";
+        } else if (AppConstants.LOCALE_MALAYALAM
+                .equals(SharedPrefUtils.getAppLocale(BaseApplication.getAppContext()))) {
+            return "https://static.momspresso.com/assets/birthdaybonanza/banner-for-app-without-cta-malayalam.png";
+        } else if (AppConstants.LOCALE_GUJARATI
+                .equals(SharedPrefUtils.getAppLocale(BaseApplication.getAppContext()))) {
+            return "https://static.momspresso.com/assets/birthdaybonanza/banner-for-app-without-cta-gujrati.png";
+        } else if (AppConstants.LOCALE_PUNJABI
+                .equals(SharedPrefUtils.getAppLocale(BaseApplication.getAppContext()))) {
+            return "https://static.momspresso.com/assets/birthdaybonanza/banner-for-app-without-cta-punjabi.jpg";
+        } else {
+            return "https://static.momspresso.com/assets/birthdaybonanza/banner-for-app-without-cta-english.png";
+        }
+    }
+
+    public static String getBloggerGoldImageUrlCreateSection() {
+        if (AppConstants.LOCALE_ENGLISH
+                .equals(SharedPrefUtils.getAppLocale(BaseApplication.getAppContext()))) {
+            return "https://static.momspresso.com/assets/birthdaybonanza/banner-with-CTA-english.png";
+        } else if (AppConstants.LOCALE_HINDI
+                .equals(SharedPrefUtils.getAppLocale(BaseApplication.getAppContext()))) {
+            return "https://static.momspresso.com/assets/birthdaybonanza/banner-with-CTA-hindi.jpg";
+        } else if (AppConstants.LOCALE_MARATHI
+                .equals(SharedPrefUtils.getAppLocale(BaseApplication.getAppContext()))) {
+            return "https://static.momspresso.com/assets/birthdaybonanza/banner-with-CTA-marathi.jpg";
+        } else if (AppConstants.LOCALE_BENGALI
+                .equals(SharedPrefUtils.getAppLocale(BaseApplication.getAppContext()))) {
+            return "https://static.momspresso.com/assets/birthdaybonanza/banner-with-CTA-bengali.jpg";
+        } else if (AppConstants.LOCALE_TAMIL
+                .equals(SharedPrefUtils.getAppLocale(BaseApplication.getAppContext()))) {
+            return "https://static.momspresso.com/assets/birthdaybonanza/banner-with-CTA-tamil.png";
+        } else if (AppConstants.LOCALE_TELUGU
+                .equals(SharedPrefUtils.getAppLocale(BaseApplication.getAppContext()))) {
+            return "https://static.momspresso.com/assets/birthdaybonanza/banner-with-CTA-telugu.png";
+        } else if (AppConstants.LOCALE_KANNADA
+                .equals(SharedPrefUtils.getAppLocale(BaseApplication.getAppContext()))) {
+            return "https://static.momspresso.com/assets/birthdaybonanza/banner-with-CTA-kannada.png";
+        } else if (AppConstants.LOCALE_MALAYALAM
+                .equals(SharedPrefUtils.getAppLocale(BaseApplication.getAppContext()))) {
+            return "https://static.momspresso.com/assets/birthdaybonanza/banner-with-CTA-malayalam.png";
+        } else if (AppConstants.LOCALE_GUJARATI
+                .equals(SharedPrefUtils.getAppLocale(BaseApplication.getAppContext()))) {
+            return "https://static.momspresso.com/assets/birthdaybonanza/banner-with-CTA-gujrati.png";
+        } else if (AppConstants.LOCALE_PUNJABI
+                .equals(SharedPrefUtils.getAppLocale(BaseApplication.getAppContext()))) {
+            return "https://static.momspresso.com/assets/birthdaybonanza/banner-with-CTA-punjabi.jpg";
+        } else {
+            return "https://static.momspresso.com/assets/birthdaybonanza/banner-with-CTA-english.png";
+        }
+    }
 }

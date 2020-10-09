@@ -15,6 +15,7 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import androidx.appcompat.app.AppCompatDelegate;
 import androidx.appcompat.widget.Toolbar;
+import androidx.cardview.widget.CardView;
 import androidx.core.content.ContextCompat;
 import com.google.firebase.crashlytics.FirebaseCrashlytics;
 import com.google.firebase.remoteconfig.FirebaseRemoteConfig;
@@ -70,6 +71,7 @@ public class ArticleDetailsContainerActivity extends BaseActivity implements Vie
     private RelativeLayout guideOverlay;
     private RelativeLayout root;
     private Toolbar guidetoolbar;
+    private CardView bloggerGoldCardView;
     private Synthesizer synthesizer;
 
     static {
@@ -89,11 +91,13 @@ public class ArticleDetailsContainerActivity extends BaseActivity implements Vie
         Utils.pushOpenScreenEvent(this, "DetailArticleScreen", userDynamoId + "");
 
         newArticleDetailFlag = firebaseRemoteConfig.getBoolean(AppConstants.NEW_ARTICLE_DETAIL_FLAG);
-        toolbar = (Toolbar) findViewById(R.id.anim_toolbar);
-        backNavigationImageView = (ImageView) findViewById(R.id.backNavigationImageView);
-        playTtsTextView = (ImageView) findViewById(R.id.playTtsTextView);
-        guideOverlay = (RelativeLayout) findViewById(R.id.guideOverlay);
-        guidetoolbar = (Toolbar) findViewById(R.id.guidetoolbar);
+        toolbar = findViewById(R.id.anim_toolbar);
+        backNavigationImageView = findViewById(R.id.backNavigationImageView);
+        playTtsTextView = findViewById(R.id.playTtsTextView);
+        guideOverlay = findViewById(R.id.guideOverlay);
+        guidetoolbar = findViewById(R.id.guidetoolbar);
+        customViewPager = findViewById(R.id.pager);
+        bloggerGoldCardView = findViewById(R.id.bloggerGoldCardView);
 
         setSupportActionBar(toolbar);
         getSupportActionBar().setTitle("");
@@ -117,9 +121,7 @@ public class ArticleDetailsContainerActivity extends BaseActivity implements Vie
             parentId = bundle.getString("id");
             Utils.pushViewArticleEvent(this, screen, userDynamoId + "", articleId, listingType, index + "", author);
         }
-
-        customViewPager = (CustomViewPager) findViewById(R.id.pager);
-
+        bloggerGoldCardView.setOnClickListener(this);
         if (articleList == null || articleList.isEmpty()) {
             articleId = bundle.getString(Constants.ARTICLE_ID);
             authorId = bundle.getString(Constants.AUTHOR_ID);
@@ -284,6 +286,10 @@ public class ArticleDetailsContainerActivity extends BaseActivity implements Vie
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
+            case R.id.bloggerGoldCardView:
+                Intent intent = new Intent(this, BloggerGoldActivity.class);
+                startActivity(intent);
+                break;
             case R.id.backNavigationImageView:
                 finish();
                 break;

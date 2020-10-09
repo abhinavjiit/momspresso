@@ -138,11 +138,11 @@ public class LanguageSelectionActivity extends BaseActivity implements View.OnCl
                 continueButtonWidget.setSelected(true);
                 break;
             case 4:
-                selectedLang = AppConstants.LOCALE_TELUGU;
+                selectedLang = AppConstants.LOCALE_TAMIL;
                 continueButtonWidget.setSelected(true);
                 break;
             case 5:
-                selectedLang = AppConstants.LOCALE_TAMIL;
+                selectedLang = AppConstants.LOCALE_TELUGU;
                 continueButtonWidget.setSelected(true);
                 break;
             case 6:

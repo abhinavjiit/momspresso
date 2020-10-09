@@ -215,13 +215,6 @@
       android:screenOrientation="portrait"
       android:theme="@style/Theme.rankingTheme" />
     <activity
-      android:name=".ui.activity.TutorialActivity"
-      android:configChanges="keyboardHidden|screenSize|orientation|screenLayout|uiMode|keyboard"
-      android:label="@string/app_name"
-      android:screenOrientation="portrait"
-      android:theme="@style/transparent_status"
-      android:windowSoftInputMode="adjustPan" />
-    <activity
       android:name=".editor.ArticleImageTagUploadActivity"
       android:screenOrientation="portrait" />
     <activity

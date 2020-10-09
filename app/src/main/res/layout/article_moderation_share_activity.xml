@@ -23,7 +23,7 @@
       android:layout_marginEnd="@dimen/space_12"
       android:background="@drawable/tooltip_shape_layout"
       android:padding="@dimen/space_16"
-      android:text="Yay! You are all done!"
+      android:text="@string/yay_all_done"
       android:textColor="@color/campaign_515151"
       android:textSize="14sp"
       app:fontName="Roboto-Regular.ttf"
@@ -120,7 +120,7 @@
       android:paddingTop="14dp"
       android:paddingRight="60dp"
       android:paddingBottom="14dp"
-      android:text="Moderation Guidelines"
+      android:text="@string/view_moderation_guidelines"
       android:textColor="@color/app_red"
       android:textSize="18sp"
       app:fontName="oswald.ttf" />
@@ -177,7 +177,7 @@
       app:fb_borderWidth="1dp"
       app:fb_defaultColor="@color/white"
       app:fb_radius="4dp"
-      app:fb_text="Go to your Blog"
+      app:fb_text="@string/go_to_blog"
       app:fb_textColor="@color/app_red"
       app:fontName="Roboto-Regular.ttf" />
     <androidx.constraintlayout.widget.ConstraintLayout

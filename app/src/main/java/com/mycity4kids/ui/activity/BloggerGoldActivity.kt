@@ -8,6 +8,7 @@ import com.google.android.material.tabs.TabLayout
 import com.mycity4kids.R
 import com.mycity4kids.base.BaseActivity
 import com.mycity4kids.ui.adapter.BloggerGoldPagerAdapter
+import com.mycity4kids.utils.AppUtils
 import com.squareup.picasso.Picasso
 
 class BloggerGoldActivity : BaseActivity() {
@@ -31,8 +32,7 @@ class BloggerGoldActivity : BaseActivity() {
             addTab(tabs.newTab().setText(R.string.my_dashboard))
         }
 
-        Picasso.get().load("https://static.momspresso.com/assets/anniversary-bonnanza.png")
-            .into(thumbNail)
+        Picasso.get().load(AppUtils.getBloggerGoldImageUrl()).into(thumbNail)
 
         bloggerGoldPagerAdapter = BloggerGoldPagerAdapter(
             supportFragmentManager

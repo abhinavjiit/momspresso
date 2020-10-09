@@ -5,19 +5,22 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.webkit.WebView
 import android.widget.TextView
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.mycity4kids.R
 import com.mycity4kids.base.BaseFragment
+import com.mycity4kids.constants.Constants
 import com.mycity4kids.models.response.LeaderboardDataResponse
+import com.mycity4kids.profile.UserProfileActivity
 import com.mycity4kids.ui.activity.ViewAllLeaderboardActivity
 import com.mycity4kids.ui.adapter.VlogLeaderboardRecyclerAdapter
 
-class VlogLeaderboardFragment : BaseFragment() {
+class VlogLeaderboardFragment : BaseFragment(),
+    VlogLeaderboardRecyclerAdapter.RecyclerViewClickListener {
     private var recyclerView: RecyclerView? = null
     private var recyclerAdapterBlog: VlogLeaderboardRecyclerAdapter? = null
+    private var vlogList: ArrayList<LeaderboardDataResponse.LeaderboardData.LeaderBoradRank>? = null
     private lateinit var viewMoreTextView: TextView
     private var llm: LinearLayoutManager? = null
     override fun onCreateView(
@@ -26,15 +29,14 @@ class VlogLeaderboardFragment : BaseFragment() {
         savedInstanceState: Bundle?
     ): View? {
         val view = inflater.inflate(R.layout.blog_vlog_leaderboard_fragment, container, false)
-        val vlogList: ArrayList<LeaderboardDataResponse.LeaderboardData.LeaderBoradRank>? = arguments!!.getParcelableArrayList("vlogList")
+        vlogList = arguments!!.getParcelableArrayList("vlogList")
 
         recyclerView = view.findViewById<View>(R.id.recyclerView) as RecyclerView
         viewMoreTextView = view.findViewById(R.id.viewMoreTextView)
-        if (vlogList == null){
+        if (vlogList == null) {
             viewMoreTextView.visibility = View.GONE
         }
-        recyclerAdapterBlog =
-            VlogLeaderboardRecyclerAdapter(activity)
+        recyclerAdapterBlog = VlogLeaderboardRecyclerAdapter(this)
         llm = LinearLayoutManager(activity)
         llm!!.setOrientation(RecyclerView.VERTICAL)
         recyclerView!!.layoutManager = llm
@@ -42,9 +44,22 @@ class VlogLeaderboardFragment : BaseFragment() {
         recyclerView!!.adapter = recyclerAdapterBlog
         viewMoreTextView.setOnClickListener {
             val intent = Intent(activity, ViewAllLeaderboardActivity::class.java)
+            intent.putExtra("tab", "vlogs")
             startActivity(intent)
         }
 
         return view
+    }
+
+    override fun onRecyclerViewItemClick(view: View?, position: Int) {
+        val userProfileIntent = Intent(
+            activity,
+            UserProfileActivity::class.java
+        )
+        userProfileIntent.putExtra(
+            Constants.USER_ID,
+            vlogList?.get(1)?.ranks?.get(position)?.user_id
+        )
+        startActivity(userProfileIntent)
     }
 }

@@ -162,6 +162,7 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
     private TextView shareAppTextView;
     private TextView bloggerGoldTextView;
     private TextView settingTextView;
+    private TextView takeTourTextView;
     private TextView referral;
     private LinearLayout drawerTopContainer;
     private LinearLayout drawerContainer;
@@ -264,7 +265,7 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
 
         final FragmentManager fragmentManager = getSupportFragmentManager();
         fragmentManager.addOnBackStackChangedListener(this);
-        groupCoachMark=findViewById(R.id.groupCoachMark);
+        groupCoachMark = findViewById(R.id.groupCoachMark);
         dashBoardContentFilterCoachMark = findViewById(R.id.dashBoardContentFilterCoachMark);
         rootLayout = findViewById(R.id.rootLayout);
         langTextView = findViewById(R.id.langTextView);
@@ -297,6 +298,7 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
         shareAppTextView = findViewById(R.id.shareAppTextView);
         bloggerGoldTextView = findViewById(R.id.bloggerGoldTextView);
         settingTextView = findViewById(R.id.settingTextView);
+        takeTourTextView = findViewById(R.id.takeTourTextView);
         usernameTextView = findViewById(R.id.usernameTextView);
         coachUsernameTextView = findViewById(R.id.coachUsernameTextView);
         homeTextView = findViewById(R.id.homeTextView);
@@ -378,6 +380,7 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
         exploreOwnTextView.setOnClickListener(this);
         createTextImageView.setOnClickListener(this);
         dashBoardContentFilterCoachMark.setOnClickListener(this);
+        takeTourTextView.setOnClickListener(this);
 
         slideAnim = AnimationUtils.loadAnimation(this, R.anim.appear_from_bottom);
         fadeAnim = AnimationUtils.loadAnimation(this, R.anim.alpha_anim);
@@ -426,7 +429,7 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
                     .error(R.drawable.family_xxhdpi).into(profileImageView);
         }
 
-        Picasso.get().load("https://static.momspresso.com/assets/anniversary-bonnanza.png").into(createTextImageView);
+        Picasso.get().load(AppUtils.getBloggerGoldImageUrlCreateSection()).into(createTextImageView);
         usernameTextView.setText(
                 SharedPrefUtils.getUserDetailModel(this).getFirst_name() + " " + SharedPrefUtils
                         .getUserDetailModel(this).getLast_name());
@@ -529,6 +532,10 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
                 bottomNavigationView.setSelectedItemId(R.id.action_location);
             }
         }
+        welcomeUserTextView.setText(getString(R.string.welcome_user,
+                SharedPrefUtils.getUserDetailModel(this).getFirst_name() + " " + SharedPrefUtils
+                        .getUserDetailModel(this).getLast_name()));
+
         if (!SharedPrefUtils.isUserJourneyCompleted(this)) {
             journeyLayout.setVisibility(View.VISIBLE);
             Utils.shareEventTracking(this, "Home screen", "Onboarding_Android", "Home_Onboarding_Options");
@@ -558,7 +565,6 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
             launchInviteFriendsDialog(getIntent().getStringExtra("source"));
         }
         getUsersData();
-        showContentFilterCoachmark();
     }
 
     private void createContentAction() {
@@ -1139,6 +1145,14 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
         } else if (AppConstants.NOTIFICATION_TYPE_LIVE_STREAM.equalsIgnoreCase(notificationType)) {
             pushEvent("event_detail");
             getLiveStreamInfoFromId(notificationExtras.getInt("eventId"));
+        } else if (AppConstants.NOTIFICATION_TYPE_BLOGGER_GOLD.equalsIgnoreCase(notificationType)) {
+            pushEvent("blogger_gold");
+            Intent intent = new Intent(this, BloggerGoldActivity.class);
+            startActivity(intent);
+        } else if (AppConstants.NOTIFICATION_TYPE_LEADERBOARD.equalsIgnoreCase(notificationType)) {
+            pushEvent("blogger_leaderboard");
+            Intent intent = new Intent(this, ViewLeaderboardActivity.class);
+            startActivity(intent);
         }
     }
 
@@ -1227,8 +1241,8 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
         switch (v.getId()) {
             case R.id.dashBoardContentFilterCoachMark: {
                 removeContentFilterCoachmark();
-                break;
             }
+            break;
             case R.id.createTextImageView: {
                 Intent intent = new Intent(this, BloggerGoldActivity.class);
                 startActivity(intent);
@@ -1398,6 +1412,11 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
                 startActivity(cityIntent);
             }
             break;
+            case R.id.takeTourTextView: {
+                drawerLayout.closeDrawers();
+                journeyLayout.setVisibility(View.VISIBLE);
+            }
+            break;
             case R.id.createJourneyCardView: {
                 Utils.shareEventTracking(this, "Home screen", "Onboarding_Android", "Home_Create");
                 journeyLayout.setVisibility(View.GONE);
@@ -1408,11 +1427,8 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
             case R.id.consumptionJourneyCardView: {
                 Utils.shareEventTracking(this, "Home screen", "Onboarding_Android", "Home_Read");
                 journeyLayout.setVisibility(View.GONE);
+                showContentFilterCoachmark();
                 SharedPrefUtils.setUserJourneyCompletedFlag(this, true);
-                ExploreArticleListingTypeFragment fragment0 = new ExploreArticleListingTypeFragment();
-                Bundle bundle1 = new Bundle();
-                fragment0.setArguments(bundle1);
-                addFragment(fragment0, bundle1);
             }
             break;
             case R.id.mymoneyJourneyCardView: {

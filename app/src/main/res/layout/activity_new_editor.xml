@@ -223,7 +223,7 @@
           android:id="@+id/secondTextView"
           android:layout_width="0dp"
           android:layout_height="wrap_content"
-          android:text="You can add images and format the content as per your need"
+          android:text="@string/coachmark_article_2"
           android:textColor="@color/campaign_515151"
           android:textSize="14sp"
           app:fontName="Roboto-Regular.ttf"

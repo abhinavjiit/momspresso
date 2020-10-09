@@ -213,7 +213,7 @@
           android:paddingTop="@dimen/space_16"
           android:paddingEnd="@dimen/space_16"
           android:paddingBottom="@dimen/space_16"
-          android:text="Tags help Moms discover your blog."
+          android:text="@string/coachmark_article_4"
           android:textColor="@color/campaign_515151"
           android:textSize="16sp"
           app:fontName="Roboto-Regular.ttf"

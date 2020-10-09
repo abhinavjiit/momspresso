@@ -114,8 +114,6 @@ public class AppConstants {
     public static final String DEEPLINK_GROUPS = "momspresso.com/groups/";
     public static final String BRANCH_DEEPLINK = "https://momspr.app.link";
     public static final String BRANCH_DEEPLINK_URL = "https://www.momspresso.com://open?link_click_id=";
-    public static final String DEEPLINK_BLOGGER_GOLD = "https://www.momspresso.com/birthdaybonanza";
-
 
     public static final String IGNORE_TAG = "ignore";
     public static final String EDITOR_PICKS_CATEGORY_ID = "category-66b6883fd0434683b053f18aa4d52b59";
@@ -162,6 +160,8 @@ public class AppConstants {
     public static final String NOTIFICATION_TYPE_PERSONAL_INFO = "personal_info";
     public static final String NOTIFICATION_TYPE_ARTICLE_CHALLENGE = "article_challenge_detail";
     public static final String NOTIFICATION_TYPE_LIVE_STREAM = "event_detail";
+    public static final String NOTIFICATION_TYPE_BLOGGER_GOLD = "blogger_gold";
+    public static final String NOTIFICATION_TYPE_LEADERBOARD = "blogger_leaderboard";
 
     public static final String NOTIFICATION_CENTER_APP_SETTINGS = "-1";
     public static final String NOTIFICATION_CENTER_WEB_VIEW = "0";
@@ -206,6 +206,8 @@ public class AppConstants {
     public static final String NOTIFICATION_CENTER_ARTICLE_CHALLENGE = "40";
     public static final String NOTIFICATION_CENTER_MY_MONEY_EARNINGS = "41";
     public static final String NOTIFICATION_CENTER_LIVE_STREAM = "42";
+    public static final String NOTIFICATION_CENTER_BLOGGER_GOLD = "43";
+    public static final String NOTIFICATION_CENTER_LEADERBOARD = "44";
 
     public static final String VIDEO_STATUS_DRAFT = "0";
     public static final String VIDEO_STATUS_APPROVAL_PENDING = "1";
@@ -374,7 +376,7 @@ public class AppConstants {
     public static final String STORY_CHALLENGE_DETAIL_REGEX =
             ".+?(parenting\\/topic\\/short-stories\\/challenges\\/)([a-zA-Z0-9-]+$)";
     public static final String LIVE_STREAM_DETAIL_REGEX = ".+?(live\\/)([a-zA-Z0-9-]+$)";
-    public static final String BLOGGER_GOLD_REGEX = ".+?(mymoney).*";
+    public static final String BLOGGER_GOLD_REGEX = ".+?(birthdaybonanza)";
 
     public static final String BADGE_ID = "badgeId";
     public static final String MILESTONE_ID = "milestoneId";

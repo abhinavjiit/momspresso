@@ -3764,31 +3764,40 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
                         continue;
                     }
 
-                    final RelativeLayout topicView = (RelativeLayout) layoutInflater
+                    final FrameLayout topicView = (FrameLayout) layoutInflater
                             .inflate(R.layout.related_tags_view, null, false);
                     topicView.setClickable(true);
-                    topicView.getChildAt(0).setTag(key);
-                    topicView.getChildAt(2).setTag(key);
-                    ((TextView) topicView.getChildAt(0)).setText(value.toUpperCase());
-                    ((TextView) topicView.getChildAt(0)).measure(0, 0);
-                    width = width - ((TextView) topicView.getChildAt(0)).getMeasuredWidth() - AppUtils
-                            .dpTopx(1)
-
-                            - relatedImageWidth - topicView.getPaddingStart() - topicView
-                            .getPaddingEnd();
+                    ((RelativeLayout) topicView.getChildAt(0)).getChildAt(0).setTag(key);
+                    ((RelativeLayout) topicView.getChildAt(0)).getChildAt(2).setTag(key);
+                    ((TextView) ((RelativeLayout) topicView.getChildAt(0)).getChildAt(0)).setText(value.toUpperCase());
+                    ((RelativeLayout) topicView.getChildAt(0)).getChildAt(0).measure(0, 0);
+                    width = width - ((RelativeLayout) topicView.getChildAt(0)).getChildAt(0).getMeasuredWidth()
+                            - AppUtils.dpTopx(1) - relatedImageWidth
+                            - ((RelativeLayout) topicView.getChildAt(0)).getChildAt(0).getPaddingStart()
+                            - ((RelativeLayout) topicView.getChildAt(0)).getChildAt(0).getPaddingEnd();
 
                     if (width < 0) {
                         viewAllTagsTextView.setVisibility(View.VISIBLE);
                     }
                     if (sponsoredList.contains(key)) {
-                        ((ImageView) topicView.getChildAt(2)).setVisibility(View.GONE);
-                        ((View) topicView.getChildAt(1)).setVisibility(View.GONE);
+                        ((RelativeLayout) topicView.getChildAt(0)).getChildAt(2).setVisibility(View.GONE);
+                        ((RelativeLayout) topicView.getChildAt(0)).getChildAt(1).setVisibility(View.GONE);
+                    }
+                    if (null != previouslyFollowedTopics && previouslyFollowedTopics.contains(key)) {
+                        ((ImageView) ((RelativeLayout) topicView.getChildAt(0)).getChildAt(2)).setImageDrawable(ContextCompat
+                                .getDrawable(BaseApplication.getAppContext(), R.drawable.ic_tick));
+                        ((RelativeLayout) topicView.getChildAt(0)).getChildAt(2).setOnClickListener(v -> followUnfollowTopics((String) v.getTag(),
+                                (RelativeLayout) v.getParent(), 0));
+                    } else {
+                        ((ImageView) ((RelativeLayout) topicView.getChildAt(0)).getChildAt(2)).setImageDrawable(ContextCompat
+                                .getDrawable(BaseApplication.getAppContext(), R.drawable.ic_plus));
+                        ((RelativeLayout) topicView.getChildAt(0)).getChildAt(2).setOnClickListener(v -> followUnfollowTopics((String) v.getTag(),
+                                (RelativeLayout) v.getParent(), 1));
                     }
 
-                    topicView.getChildAt(0).setOnClickListener(v -> {
+                    ((RelativeLayout) topicView.getChildAt(0)).getChildAt(0).setOnClickListener(v -> {
                         String categoryId = (String) v.getTag();
-                        Intent intent = new Intent(getActivity(),
-                                FilteredTopicsArticleListingActivity.class);
+                        Intent intent = new Intent(getActivity(), FilteredTopicsArticleListingActivity.class);
                         intent.putExtra("selectedTopics", categoryId);
                         intent.putExtra("displayName", value);
                         startActivity(intent);
@@ -3799,23 +3808,6 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
                 FirebaseCrashlytics.getInstance().recordException(e);
                 Log.d("MC4kException", Log.getStackTraceString(e));
             }
-        }
-        loadGroupDataForCategories(tagsList);
-    }
-
-    private void loadGroupDataForCategories(ArrayList<Map<String, String>> tagsList) {
-        ArrayList<String> categoriesList = new ArrayList<>();
-        for (int i = 0; i < tagsList.size(); i++) {
-            categoriesList.addAll(tagsList.get(i).keySet());
-        }
-        if (categoriesList.size() == 1) {
-            GroupIdCategoryMap groupIdCategoryMap = new GroupIdCategoryMap(categoriesList.get(0),
-                    this, "details");
-            groupIdCategoryMap.getGroupIdForCurrentCategory();
-        } else {
-            GroupIdCategoryMap groupIdCategoryMap = new GroupIdCategoryMap(categoriesList, this,
-                    "details");
-            groupIdCategoryMap.getGroupIdForMultipleCategories();
         }
     }
 
@@ -3845,11 +3837,7 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
             tagView.getChildAt(0).setTag(selectedTopic);
             tagView.getChildAt(2).setTag(selectedTopic);
             ((ImageView) tagView.getChildAt(2)).setImageDrawable(
-                    ContextCompat.getDrawable(getActivity(), R.drawable.follow_plus));
-            tagView.getChildAt(2).setBackgroundColor(
-                    ContextCompat.getColor(getActivity(), R.color.ad_tags_follow_bg));
-            ((ImageView) tagView.getChildAt(2))
-                    .setColorFilter(ContextCompat.getColor(getActivity(), R.color.app_red));
+                    ContextCompat.getDrawable(tagView.getContext(), R.drawable.ic_plus));
             tagView.getChildAt(2).setOnClickListener(
                     v -> followUnfollowTopics((String) v.getTag(), (RelativeLayout) v.getParent(), 1));
         } else {
@@ -3873,11 +3861,7 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
             tagView.getChildAt(0).setTag(selectedTopic);
             tagView.getChildAt(2).setTag(selectedTopic);
             ((ImageView) tagView.getChildAt(2))
-                    .setImageDrawable(ContextCompat.getDrawable(getActivity(), R.drawable.tick));
-            tagView.getChildAt(2)
-                    .setBackgroundColor(ContextCompat.getColor(getActivity(), R.color.app_red));
-            ((ImageView) tagView.getChildAt(2))
-                    .setColorFilter(ContextCompat.getColor(getActivity(), R.color.white_color));
+                    .setImageDrawable(ContextCompat.getDrawable(tagView.getContext(), R.drawable.ic_tick));
             tagView.getChildAt(2).setOnClickListener(
                     v -> followUnfollowTopics((String) v.getTag(), (RelativeLayout) v.getParent(), 0));
         }

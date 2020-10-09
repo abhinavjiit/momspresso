@@ -39,6 +39,7 @@ import com.mycity4kids.ui.activity.ArticleChallengeOrTopicSelectionActivity
 import com.mycity4kids.ui.activity.ArticleDetailsContainerActivity
 import com.mycity4kids.ui.activity.ArticleListingActivity
 import com.mycity4kids.ui.activity.BadgeActivity
+import com.mycity4kids.ui.activity.BloggerGoldActivity
 import com.mycity4kids.ui.activity.CategoryVideosListingActivity
 import com.mycity4kids.ui.activity.DashboardActivity
 import com.mycity4kids.ui.activity.GroupDetailsActivity
@@ -53,6 +54,7 @@ import com.mycity4kids.ui.activity.ShortStoryContainerActivity
 import com.mycity4kids.ui.activity.ShortStoryModerationOrShareActivity
 import com.mycity4kids.ui.activity.TopicsListingActivity
 import com.mycity4kids.ui.activity.ViewGroupPostCommentsRepliesActivity
+import com.mycity4kids.ui.activity.ViewLeaderboardActivity
 import com.mycity4kids.ui.activity.collection.UserCollectionItemListActivity
 import com.mycity4kids.ui.adapter.NotificationCenterRecyclerAdapter
 import com.mycity4kids.ui.campaign.activity.CampaignContainerActivity
@@ -851,6 +853,16 @@ class NotificationFragment : BaseFragment(), IMembershipStatus,
                         )
                     }
                     pushEvent("NOTIFICATION_CENTER_LIVE_STREAM")
+                }
+                AppConstants.NOTIFICATION_CENTER_BLOGGER_GOLD -> {
+                    val intent = Intent(activity, BloggerGoldActivity::class.java)
+                    startActivity(intent)
+                    pushEvent("NOTIFICATION_CENTER_BLOGGER_GOLD")
+                }
+                AppConstants.NOTIFICATION_CENTER_LEADERBOARD -> {
+                    val intent = Intent(activity, ViewLeaderboardActivity::class.java)
+                    startActivity(intent)
+                    pushEvent("NOTIFICATION_CENTER_LEADERBOARD")
                 }
                 else -> {
                 }

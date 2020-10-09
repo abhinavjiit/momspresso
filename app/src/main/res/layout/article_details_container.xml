@@ -1,187 +1,204 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:id="@+id/content_frame"
+  xmlns:app="http://schemas.android.com/apk/res-auto"
+  android:id="@+id/content_frame"
+  android:layout_width="match_parent"
+  android:layout_height="match_parent">
+
+  <androidx.appcompat.widget.Toolbar
+    android:id="@+id/anim_toolbar"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
-
-    <androidx.appcompat.widget.Toolbar
-        android:id="@+id/anim_toolbar"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentTop="true"
-        android:background="?attr/colorPrimary"
-        android:elevation="5dp"
-        android:minHeight="?attr/actionBarSize"
-        android:visibility="visible"
-        app:theme="@style/ToolbarTheme"
-        app:titleTextAppearance="@style/ToolbarTheme.Title">
-
-        <RelativeLayout
-            android:id="@+id/toolbarRelativeLayout"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:visibility="visible">
-
-            <com.mycity4kids.widget.CustomFontTextView
-                android:id="@+id/toolbarTitle"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_centerVertical="true"
-                android:text=""
-                android:textSize="20sp"
-                app:fontName="oswald_regular.ttf" />
-
-            <ImageView
-                android:id="@+id/playTtsTextView"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentEnd="true"
-                android:layout_alignParentRight="true"
-                android:layout_centerVertical="true"
-                android:layout_marginRight="5dp"
-                android:padding="12dp"
-                android:src="@drawable/ic_play_tts"
-                android:tint="@color/app_red"
-                android:visibility="gone" />
-
-        </RelativeLayout>
-    </androidx.appcompat.widget.Toolbar>
-
-    <ImageView
-        android:id="@+id/backNavigationImageView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_margin="10dp"
-        android:background="@drawable/article_details_back_btn_bg"
-        android:elevation="6dp"
-        android:src="@drawable/back_arroow"
-        android:visibility="gone" />
-
-    <com.mycity4kids.widget.CustomViewPager
-        android:id="@+id/pager"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_below="@+id/anim_toolbar" />
+    android:layout_height="wrap_content"
+    android:layout_alignParentTop="true"
+    android:background="?attr/colorPrimary"
+    android:elevation="5dp"
+    android:minHeight="?attr/actionBarSize"
+    android:visibility="visible"
+    app:theme="@style/ToolbarTheme"
+    app:titleTextAppearance="@style/ToolbarTheme.Title">
 
     <RelativeLayout
-        android:id="@+id/guideOverlay"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:background="@color/dark_transparent"
-        android:elevation="6dp"
-        android:visibility="gone">
+      android:id="@+id/toolbarRelativeLayout"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:visibility="visible">
 
-        <androidx.appcompat.widget.Toolbar
-            android:id="@+id/guidetoolbar"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_alignParentTop="true"
-            android:minHeight="?attr/actionBarSize"
-            android:visibility="visible"
-            app:theme="@style/ToolbarTheme"
-            app:titleTextAppearance="@style/ToolbarTheme.Title">
+      <com.mycity4kids.widget.CustomFontTextView
+        android:id="@+id/toolbarTitle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
+        android:text=""
+        android:textSize="20sp"
+        app:fontName="oswald_regular.ttf" />
 
-            <RelativeLayout
-                android:id="@+id/guideToolbarRelativeLayout"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:visibility="visible">
+      <ImageView
+        android:id="@+id/playTtsTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
+        android:layout_marginEnd="5dp"
+        android:layout_toStartOf="@+id/bloggerGoldCardView"
+        android:padding="12dp"
+        android:src="@drawable/ic_play_tts"
+        android:tint="@color/app_red"
+        android:visibility="gone" />
 
-                <ImageView
-                    android:id="@+id/guidePlayTtsTextView"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentEnd="true"
-                    android:layout_alignParentRight="true"
-                    android:layout_centerVertical="true"
-                    android:layout_marginRight="5dp"
-                    android:padding="12dp"
-                    android:src="@drawable/ic_play_tts"
-                    android:tint="@color/white_color"
-                    android:visibility="visible" />
+      <androidx.cardview.widget.CardView
+        android:id="@+id/bloggerGoldCardView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:layout_centerVertical="true"
+        android:layout_margin="10dp"
+        app:cardCornerRadius="4dp"
+        app:cardPreventCornerOverlap="false">
+        <ImageView
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:background="@drawable/rectangle_gradient_bg"
+          android:padding="4dp"
+          android:src="@drawable/ic_gift"
+          android:tint="@color/white_color"
+          android:visibility="visible" />
+      </androidx.cardview.widget.CardView>
 
-            </RelativeLayout>
-        </androidx.appcompat.widget.Toolbar>
-
-        <View
-            android:layout_width="40dp"
-            android:layout_height="2dp"
-            android:layout_below="@+id/guidetoolbar"
-            android:layout_alignParentRight="true"
-            android:layout_marginRight="10dp"
-            android:background="@color/white_color" />
-
-        <View
-            android:id="@+id/verticalLine1"
-            android:layout_width="2dp"
-            android:layout_height="30dp"
-            android:layout_below="@+id/guidetoolbar"
-            android:layout_alignParentRight="true"
-            android:layout_marginRight="28dp"
-            android:background="@color/white_color" />
-
-        <com.mycity4kids.widget.CustomFontTextView
-            android:id="@+id/langGuideTextView"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/verticalLine1"
-            android:layout_alignParentRight="true"
-            android:layout_marginRight="10dp"
-            android:background="@color/white_color"
-            android:paddingLeft="9dp"
-            android:paddingTop="7dp"
-            android:paddingRight="9dp"
-            android:paddingBottom="7dp"
-            android:text="@string/guide.listen_tour"
-            android:textColor="@color/black_color"
-            app:fontName="oswald.ttf" />
-
-        <View
-            android:layout_width="150dp"
-            android:layout_height="2dp"
-            android:layout_above="@+id/bottombar"
-            android:layout_centerHorizontal="true"
-            android:background="@color/white_color" />
-
-        <View
-            android:id="@+id/verticalLine"
-            android:layout_width="2dp"
-            android:layout_height="50dp"
-            android:layout_above="@+id/bottombar"
-            android:layout_centerHorizontal="true"
-            android:background="@color/white_color" />
-
-        <com.mycity4kids.widget.CustomFontTextView
-            android:id="@+id/shareGuideTextView"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_above="@+id/verticalLine"
-            android:layout_centerHorizontal="true"
-            android:layout_marginLeft="20dp"
-            android:layout_marginRight="20dp"
-            android:background="@color/white_color"
-            android:paddingLeft="9dp"
-            android:paddingTop="7dp"
-            android:paddingRight="9dp"
-            android:paddingBottom="7dp"
-            android:text="@string/guide.share_like_bookmark_tour"
-            android:textColor="@color/black_color"
-            app:fontName="oswald.ttf" />
-
-        <LinearLayout
-            android:id="@+id/bottombar"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_alignParentBottom="true"
-            android:layout_gravity="center"
-            android:orientation="horizontal"
-            android:paddingTop="6dp"
-            android:paddingBottom="6dp">
-
-        </LinearLayout>
     </RelativeLayout>
+  </androidx.appcompat.widget.Toolbar>
 
+  <ImageView
+    android:id="@+id/backNavigationImageView"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_margin="10dp"
+    android:background="@drawable/article_details_back_btn_bg"
+    android:elevation="6dp"
+    android:src="@drawable/back_arroow"
+    android:visibility="gone" />
+
+  <com.mycity4kids.widget.CustomViewPager
+    android:id="@+id/pager"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_below="@+id/anim_toolbar" />
+
+  <RelativeLayout
+    android:id="@+id/guideOverlay"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/dark_transparent"
+    android:elevation="6dp"
+    android:visibility="gone">
+
+    <androidx.appcompat.widget.Toolbar
+      android:id="@+id/guidetoolbar"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:layout_alignParentTop="true"
+      android:minHeight="?attr/actionBarSize"
+      android:visibility="visible"
+      app:theme="@style/ToolbarTheme"
+      app:titleTextAppearance="@style/ToolbarTheme.Title">
+
+      <RelativeLayout
+        android:id="@+id/guideToolbarRelativeLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:visibility="visible">
+
+        <ImageView
+          android:id="@+id/guidePlayTtsTextView"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:layout_alignParentEnd="true"
+          android:layout_alignParentRight="true"
+          android:layout_centerVertical="true"
+          android:layout_marginRight="5dp"
+          android:padding="12dp"
+          android:src="@drawable/ic_play_tts"
+          android:tint="@color/white_color"
+          android:visibility="visible" />
+
+      </RelativeLayout>
+    </androidx.appcompat.widget.Toolbar>
+
+    <View
+      android:layout_width="40dp"
+      android:layout_height="2dp"
+      android:layout_below="@+id/guidetoolbar"
+      android:layout_alignParentRight="true"
+      android:layout_marginRight="10dp"
+      android:background="@color/white_color" />
+
+    <View
+      android:id="@+id/verticalLine1"
+      android:layout_width="2dp"
+      android:layout_height="30dp"
+      android:layout_below="@+id/guidetoolbar"
+      android:layout_alignParentRight="true"
+      android:layout_marginRight="28dp"
+      android:background="@color/white_color" />
+
+    <com.mycity4kids.widget.CustomFontTextView
+      android:id="@+id/langGuideTextView"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:layout_below="@+id/verticalLine1"
+      android:layout_alignParentRight="true"
+      android:layout_marginRight="10dp"
+      android:background="@color/white_color"
+      android:paddingLeft="9dp"
+      android:paddingTop="7dp"
+      android:paddingRight="9dp"
+      android:paddingBottom="7dp"
+      android:text="@string/guide.listen_tour"
+      android:textColor="@color/black_color"
+      app:fontName="oswald.ttf" />
+
+    <View
+      android:layout_width="150dp"
+      android:layout_height="2dp"
+      android:layout_above="@+id/bottombar"
+      android:layout_centerHorizontal="true"
+      android:background="@color/white_color" />
+
+    <View
+      android:id="@+id/verticalLine"
+      android:layout_width="2dp"
+      android:layout_height="50dp"
+      android:layout_above="@+id/bottombar"
+      android:layout_centerHorizontal="true"
+      android:background="@color/white_color" />
+
+    <com.mycity4kids.widget.CustomFontTextView
+      android:id="@+id/shareGuideTextView"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:layout_above="@+id/verticalLine"
+      android:layout_centerHorizontal="true"
+      android:layout_marginLeft="20dp"
+      android:layout_marginRight="20dp"
+      android:background="@color/white_color"
+      android:paddingLeft="9dp"
+      android:paddingTop="7dp"
+      android:paddingRight="9dp"
+      android:paddingBottom="7dp"
+      android:text="@string/guide.share_like_bookmark_tour"
+      android:textColor="@color/black_color"
+      app:fontName="oswald.ttf" />
+
+    <LinearLayout
+      android:id="@+id/bottombar"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:layout_alignParentBottom="true"
+      android:layout_gravity="center"
+      android:orientation="horizontal"
+      android:paddingTop="6dp"
+      android:paddingBottom="6dp">
+
+    </LinearLayout>
+  </RelativeLayout>
 
 
 </RelativeLayout>

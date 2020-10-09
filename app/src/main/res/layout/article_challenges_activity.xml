@@ -346,7 +346,7 @@
           android:layout_height="wrap_content"
           android:padding="10dp"
           android:gravity="center_vertical"
-          android:text="Let us help you create your first blog! Select a challenge to start with or simply click on start writing"
+          android:text="@string/coachmark_article_1"
           android:textColor="@color/campaign_515151"
           android:textSize="16sp"
           app:fontName="Roboto-Medium.ttf"

@@ -83,10 +83,9 @@
     android:id="@+id/viewpager"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:layout_above="@+id/checkout_growth_btn"
     android:layout_below="@+id/id_appbar"
-    android:background="@color/white"
-    android:layout_above="@+id/checkout_growth_btn"/>
-
+    android:background="@color/white" />
 
   <com.mycity4kids.widget.CustomFontTextView
     android:id="@+id/checkout_growth_btn"
@@ -99,20 +98,21 @@
     android:paddingBottom="@dimen/space_13"
     android:text="@string/checkout_growth_hack"
     android:textColor="@color/white"
-    android:visibility="gone"
     android:textSize="18sp"
+    android:visibility="gone"
     app:fontName="Roboto-Regular.ttf" />
 
   <com.mycity4kids.widget.CustomFontTextView
-    android:id="@+id/empty_leaderboard"
+    android:id="@+id/emptyLeaderboardTextView"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:layout_above="@+id/checkout_growth_btn"
     android:layout_below="@+id/id_appbar"
     android:background="@color/white"
-    android:layout_above="@+id/checkout_growth_btn"
     android:gravity="center"
     android:text="@string/empty_leaderboard_text"
     android:textSize="18sp"
+    android:visibility="gone"
     app:fontName="Roboto-Regular.ttf" />
 
 </RelativeLayout>

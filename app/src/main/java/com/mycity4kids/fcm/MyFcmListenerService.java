@@ -37,6 +37,7 @@ import com.mycity4kids.ui.activity.AppSettingsActivity;
 import com.mycity4kids.ui.activity.ArticleChallengeDetailActivity;
 import com.mycity4kids.ui.activity.ArticleDetailsContainerActivity;
 import com.mycity4kids.ui.activity.BadgeActivity;
+import com.mycity4kids.ui.activity.BloggerGoldActivity;
 import com.mycity4kids.ui.activity.CategoryVideosListingActivity;
 import com.mycity4kids.ui.activity.LoadWebViewActivity;
 import com.mycity4kids.ui.activity.MyTotalEarningActivity;
@@ -47,6 +48,7 @@ import com.mycity4kids.ui.activity.ShortStoryContainerActivity;
 import com.mycity4kids.ui.activity.ShortStoryModerationOrShareActivity;
 import com.mycity4kids.ui.activity.SplashActivity;
 import com.mycity4kids.ui.activity.TopicsListingActivity;
+import com.mycity4kids.ui.activity.ViewLeaderboardActivity;
 import com.mycity4kids.ui.activity.collection.UserCollectionItemListActivity;
 import com.mycity4kids.ui.campaign.activity.CampaignContainerActivity;
 import com.mycity4kids.ui.rewards.activity.RewardsContainerActivity;
@@ -552,8 +554,8 @@ public class MyFcmListenerService extends FirebaseMessagingService {
                         contentIntent = stackBuilder.getPendingIntent(0, PendingIntent.FLAG_UPDATE_CURRENT);
                     }
                     handleNotificationAccordingToStructure(remoteMessage, pushNotificationModel, contentIntent,
-                            "personal_info ----- Notification Message --- ",
-                            "personal_info ----- Notification MixFeedData");
+                            "article_challenge_detail ----- Notification Message --- ",
+                            "article_challenge_detail ----- Notification MixFeedData");
                 } else if (AppConstants.NOTIFICATION_TYPE_LIVE_STREAM.equalsIgnoreCase(type)) {
                     if (SharedPrefUtils.getAppUpgrade(BaseApplication.getAppContext())) {
                         contentIntent = handleForcedUpdate();
@@ -567,8 +569,36 @@ public class MyFcmListenerService extends FirebaseMessagingService {
                         contentIntent = stackBuilder.getPendingIntent(0, PendingIntent.FLAG_UPDATE_CURRENT);
                     }
                     handleNotificationAccordingToStructure(remoteMessage, pushNotificationModel, contentIntent,
-                            "personal_info ----- Notification Message --- ",
-                            "personal_info ----- Notification MixFeedData");
+                            "event_detail ----- Notification Message --- ",
+                            "event_detail ----- Notification MixFeedData");
+                } else if (AppConstants.NOTIFICATION_TYPE_ARTICLE_CHALLENGE.equalsIgnoreCase(type)) {
+                    if (SharedPrefUtils.getAppUpgrade(BaseApplication.getAppContext())) {
+                        contentIntent = handleForcedUpdate();
+                    } else {
+                        intent = new Intent(getApplicationContext(), BloggerGoldActivity.class);
+                        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                        intent.putExtra("fromNotification", true);
+                        TaskStackBuilder stackBuilder = TaskStackBuilder.create(this);
+                        stackBuilder.addNextIntentWithParentStack(intent);
+                        contentIntent = stackBuilder.getPendingIntent(0, PendingIntent.FLAG_UPDATE_CURRENT);
+                    }
+                    handleNotificationAccordingToStructure(remoteMessage, pushNotificationModel, contentIntent,
+                            "blogger_gold ----- Notification Message --- ",
+                            "blogger_gold ----- Notification MixFeedData");
+                } else if (AppConstants.NOTIFICATION_TYPE_LEADERBOARD.equalsIgnoreCase(type)) {
+                    if (SharedPrefUtils.getAppUpgrade(BaseApplication.getAppContext())) {
+                        contentIntent = handleForcedUpdate();
+                    } else {
+                        intent = new Intent(getApplicationContext(), ViewLeaderboardActivity.class);
+                        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                        intent.putExtra("fromNotification", true);
+                        TaskStackBuilder stackBuilder = TaskStackBuilder.create(this);
+                        stackBuilder.addNextIntentWithParentStack(intent);
+                        contentIntent = stackBuilder.getPendingIntent(0, PendingIntent.FLAG_UPDATE_CURRENT);
+                    }
+                    handleNotificationAccordingToStructure(remoteMessage, pushNotificationModel, contentIntent,
+                            "blogger_leaderboard ----- Notification Message --- ",
+                            "blogger_leaderboard ----- Notification MixFeedData");
                 } else {
                     Utils.pushEventNotificationClick(this, GTMEventType.NOTIFICATION_CLICK_EVENT,
                             SharedPrefUtils.getUserDetailModel(this).getDynamoId(), "Notification Popup", "default");

@@ -272,13 +272,12 @@ public class ArticleModerationOrShareActivity extends BaseActivity implements Vi
             if (body.getData().getResult() == null || body.getData().getResult().isEmpty() || body.getData().getResult()
                     .get(0).getStatus().equals("2")) {
 
-                createMoreButtonModeration.setText("Join Creator's Hangout");
-                createMoreHeaderTextViewModeration.setText("Get tips or ideas from other creators");
+                createMoreButtonModeration.setText(getString(R.string.join_creator_group));
+                createMoreHeaderTextViewModeration.setText(getString(R.string.get_tips_ideas));
                 createMoreButtonModeration.setTag("please_join");
             } else {
-                createMoreButtonModeration.setText("Create More");
-                createMoreHeaderTextViewModeration.setText(
-                        "Don't stop all the magic you were creating");
+                createMoreButtonModeration.setText(getString(R.string.create_more));
+                createMoreHeaderTextViewModeration.setText(getString(R.string.dont_stop_magic));
                 createMoreButtonModeration.setTag("already_join");
             }
         } else {
@@ -286,13 +285,12 @@ public class ArticleModerationOrShareActivity extends BaseActivity implements Vi
             createMoreHeaderTextView.setVisibility(View.VISIBLE);
             if (body.getData().getResult() == null || body.getData().getResult().isEmpty() || body.getData().getResult()
                     .get(0).getStatus().equals("2")) {
-                createMoreButton.setText("Join Creator's Hangout");
-                createMoreHeaderTextView.setText("Get tips or ideas from other creators");
+                createMoreButton.setText(getString(R.string.join_creator_group));
+                createMoreHeaderTextView.setText(getString(R.string.get_tips_ideas));
                 createMoreButton.setTag("please_join");
             } else {
-                createMoreButton.setText("Create More");
-                createMoreHeaderTextView.setText(
-                        "Don't stop all the magic you were creating");
+                createMoreButton.setText(getString(R.string.create_more));
+                createMoreHeaderTextView.setText(getString(R.string.dont_stop_magic));
                 createMoreButton.setTag("already_join");
             }
         }

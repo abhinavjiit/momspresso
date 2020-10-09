@@ -40,6 +40,7 @@ import com.mycity4kids.preference.SharedPrefUtils
 import com.mycity4kids.retrofitAPIsInterfaces.LoginRegistrationAPI
 import com.mycity4kids.sync.CategorySyncService
 import com.mycity4kids.sync.PushTokenService
+import com.mycity4kids.ui.activity.CustomSignUpActivity
 import com.mycity4kids.ui.activity.LoadingActivity
 import com.mycity4kids.ui.activity.PhoneLoginUserDetailActivity
 import com.mycity4kids.ui.activity.phoneLogin.SendSMSFragment
@@ -67,6 +68,7 @@ class LoginActivity : BaseActivity(), IFacebookUser, View.OnClickListener {
     private val accessToken = ""
     private var googleToken = ""
     private var loginMode = ""
+    private var count = 0
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -83,9 +85,26 @@ class LoginActivity : BaseActivity(), IFacebookUser, View.OnClickListener {
         mSignInClient = GoogleSignIn.getClient(this, options)
         callbackManager = CallbackManager.Factory.create()
 
+        facebookTextView.text =
+            getString(R.string.ad_bottom_bar_facebook).toLowerCase().capitalize()
+        googleTextView.text =
+            getString(R.string.app_settings_edit_prefs_google).toLowerCase().capitalize()
+        phoneTextView.text =
+            getString(R.string.rewards_phone).toLowerCase().capitalize()
+
         facebookTextView.setOnClickListener(this)
         googleTextView.setOnClickListener(this)
         phoneTextView.setOnClickListener(this)
+
+        headerTextView.setOnClickListener {
+            if (count == 9) {
+                count = 0
+                val signUpSIntent = Intent(this, CustomSignUpActivity::class.java)
+                startActivity(signUpSIntent)
+            } else {
+                count++;
+            }
+        }
     }
 
     override fun onClick(v: View?) {

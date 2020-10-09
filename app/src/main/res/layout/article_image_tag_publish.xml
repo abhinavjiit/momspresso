@@ -211,7 +211,7 @@
                   android:paddingTop="@dimen/space_16"
                   android:paddingEnd="@dimen/space_16"
                   android:paddingBottom="@dimen/space_16"
-                  android:text="Blogs with an interesting image get more readership."
+                  android:text="@string/coachmark_article_5"
                   android:textColor="@color/campaign_515151"
                   android:textSize="16sp"
                   app:fontName="Roboto-Regular.ttf"

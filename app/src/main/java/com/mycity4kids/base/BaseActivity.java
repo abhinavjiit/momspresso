@@ -1,7 +1,13 @@
 package com.mycity4kids.base;
 
+import static androidx.browser.customtabs.CustomTabsService.ACTION_CUSTOM_TABS_CONNECTION;
+
+
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.content.pm.ResolveInfo;
 import android.graphics.Color;
 import android.net.Uri;
 import android.os.Build.VERSION;
@@ -87,6 +93,8 @@ import com.mycity4kids.utils.StringUtils;
 import com.squareup.picasso.Picasso;
 import java.net.SocketTimeoutException;
 import java.net.UnknownHostException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import org.greenrobot.eventbus.EventBus;
@@ -801,9 +809,6 @@ public abstract class BaseActivity extends AppCompatActivity implements GroupMem
                     || tempDeepLinkUrl.contains(AppConstants.DEEPLINK_ADD_SHORT_STORY_URL_1)) {
                 Intent ssIntent = new Intent(this, AddShortStoryActivity.class);
                 startActivity(ssIntent);
-            } else if (tempDeepLinkUrl.contains(AppConstants.DEEPLINK_BLOGGER_GOLD)) {
-                Intent intent = new Intent(this, BloggerGoldActivity.class);
-                startActivity(intent);
             } else {
                 getDeepLinkData(tempDeepLinkUrl);
             }
@@ -1028,10 +1033,10 @@ public abstract class BaseActivity extends AppCompatActivity implements GroupMem
                             .equals(responseData.getStatus())) {
                         identifyTargetScreen(responseData.getData().getResult());
                     } else {
-                        launchChromeTabs(finalUrlWithNoParams);
+                        launchChromeTabs(deepLinkUrl);
                     }
                 } catch (Exception e) {
-                    launchChromeTabs(finalUrlWithNoParams);
+                    launchChromeTabs(deepLinkUrl);
                 }
             }
 
@@ -1047,6 +1052,7 @@ public abstract class BaseActivity extends AppCompatActivity implements GroupMem
 
     private void launchChromeTabs(String deepLinkUrl) {
         try {
+//            getCustomTabsPackages();
             CustomTabsIntent.Builder builder = new CustomTabsIntent.Builder();
             CustomTabsIntent customTabsIntent = builder.build();
             String packageName = CustomTabsHelper.getPackageNameToUse(this);
@@ -1266,12 +1272,36 @@ public abstract class BaseActivity extends AppCompatActivity implements GroupMem
         }
     };
 
-    public void syncFollowingList(){
+    public void syncFollowingList() {
         Intent intent = new Intent(this, SyncUserFollowingList.class);
         if (VERSION.SDK_INT >= VERSION_CODES.O) {
             startForegroundService(intent);
         } else {
             startService(intent);
         }
+    }
+
+    public ArrayList<ResolveInfo> getCustomTabsPackages() {
+        PackageManager pm = getPackageManager();
+        // Get default VIEW intent handler.
+        Intent activityIntent = new Intent()
+                .setAction(Intent.ACTION_VIEW)
+                .addCategory(Intent.CATEGORY_BROWSABLE)
+                .setData(Uri.fromParts("http", "", null));
+
+        // Get all apps that can handle VIEW intents.
+        List<ResolveInfo> resolvedActivityList = pm.queryIntentActivities(activityIntent, 0);
+        ArrayList<ResolveInfo> packagesSupportingCustomTabs = new ArrayList<>();
+        for (ResolveInfo info : resolvedActivityList) {
+            Intent serviceIntent = new Intent();
+            serviceIntent.setAction(ACTION_CUSTOM_TABS_CONNECTION);
+            serviceIntent.setPackage(info.activityInfo.packageName);
+            Log.e("package Name", "-------- " + info.activityInfo.packageName);
+            // Check if this package also resolves the Custom Tabs service.
+            if (pm.resolveService(serviceIntent, 0) != null) {
+                packagesSupportingCustomTabs.add(info);
+            }
+        }
+        return packagesSupportingCustomTabs;
     }
 }

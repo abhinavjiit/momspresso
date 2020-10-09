@@ -1498,11 +1498,11 @@ Thank you! We will be reviewing your story. You can expect to hear from us withi
   <string name="blogger_gold_about_text8">അപ്പോൾ ആഘോഷങ്ങൾ തുടങ്ങുകയല്ലേ? ഇനി എന്തിനാണ് കാത്തിരിക്കുന്നത്? സൃഷ്ടിക്കൂ. ഷെയർ ചെയ്യൂ. സമ്പാദിക്കൂ. </string>
   <string name="lang_sel_express_yourself">10 ഭാഷകളിൽ ആശയാവിഷ്കാരം നടത്തുക </string>
   <string name="select_language">ഭാഷ തിരഞ്ഞെടുക്കുക</string>
-  <string name="login_or_sign_up">ലോഗിൻ ചെയ്യുക അല്ലെങ്കിൽ സൈൻ അപ്പ് ചെയ്യുക</string>
+  <string name="login_or_sign_up">ലോഗിൻ / സൈൻ അപ്പ്‌</string>
   <string name="login_subheading">സൃഷ്ടിക്കുക, വായിക്കുക, സമ്പാദിക്കുക, 32 ദശലക്ഷം അമ്മമാരോടൊപ്പം ചേരുക</string>
   <string name="welcome_user">പ്രിയപ്പെട്ട %1$s,</string>
-  <string name="home_onboarding_consume">5 ലക്ഷത്തിലധികം ബ്ലോഗുകളിൽ നിന്നും കഥകളിൽ നിന്നും ഇഷ്ടമുള്ളവ തിരഞ്ഞെടുത്ത് വായിക്കുക അല്ലെങ്കിൽ വീഡിയോകൾ കാണുക</string>
-  <string name="home_onboarding_create">ബ്ലോഗുകൾ,കഥകൾ അല്ലെങ്കിൽ വീഡിയോകൾ വഴി ആശയാവിഷ്കാരം നടത്തുക.</string>
+  <string name="home_onboarding_consume">5 ലക്ഷത്തിലധികം സൃഷ്ടികളിൽ നിന്നും തിരഞ്ഞെടുക്കുക</string>
+  <string name="home_onboarding_create">ബ്ലോഗ്, കഥ, വ്ലോഗ് എന്നിവ സൃഷ്ടിക്കുക</string>
   <string name="home_onboarding_mymoney">മൈമണി കാമ്പെയ്‌നുകളിൽ പങ്കെടുത്ത് സമ്പാദിക്കുക</string>
   <string name="home_onboarding_groups">സപ്പോർട്ട്  ഗ്രൂപ്പുകളിലൂടെ പിന്തുണ നൽകുകയും അന്വേഷിക്കുകയും ചെയ്യുക</string>
   <string name="all_create">സൃഷ്ടിക്കുക </string>
@@ -1513,4 +1513,17 @@ Thank you! We will be reviewing your story. You can expect to hear from us withi
   <string name="home_onboarding_title">നിങ്ങളുടെ യാത്ര എങ്ങനെ ആരംഭിക്കാനാണ് ആഗ്രഹിക്കുന്നത്?</string>
   <string name="empty_leaderboard_text">ലീഡർബോർഡ് ഇതുവരെ സൃഷ്ടിച്ചിട്ടില്ല. നാളെ മടങ്ങിവരിക.</string>
   <string name="yesterday">ഇന്നലെ</string>
+  <string name="take_tour">TAKE THE TOUR</string>
+  <string name="coachmark_article_1">Let us help you create your first blog! Select a challenge to start with or simply click on start writing</string>
+  <string name="coachmark_article_2">You can add images and format the content as per your need</string>
+  <string name="coachmark_article_3">Once done publish your story</string>
+  <string name="coachmark_article_4">Tags help Moms discover your blog.</string>
+  <string name="coachmark_article_5">Blogs with an interesting image get more readership.</string>
+  <string name="yay_all_done">Yay! You are all done!</string>
+  <string name="view_moderation_guidelines">View Moderation Guidelines</string>
+  <string name="get_tips_ideas">Get tips or ideas from other creators</string>
+  <string name="dont_stop_magic">Don\'t stop all the magic you were creating</string>
+  <string name="join_creator_group">Join Creator\'s Hangout</string>
+  <string name="create_more">Create More</string>
+  <string name="go_to_blog">Go to your Blog</string>
 </resources>

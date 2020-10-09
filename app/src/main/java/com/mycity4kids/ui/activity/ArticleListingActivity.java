@@ -165,34 +165,28 @@ public class ArticleListingActivity extends BaseActivity implements View.OnClick
             progressBar.setVisibility(View.VISIBLE);
             Call<ArticleListingResponse> call = recommendationApi
                     .getRecommendedArticlesList(SharedPrefUtils.getUserDetailModel(this).getDynamoId(), 10, chunks,
-                            SharedPrefUtils.getLanguageFilters(BaseApplication.getAppContext()));
+                            "0");
             call.enqueue(recommendedArticlesResponseCallback);
         } else if (Constants.KEY_EDITOR_PICKS.equals(sortKey)) {
             Retrofit retrofit = BaseApplication.getInstance().getRetrofit();
             TopicsCategoryAPI topicsApi = retrofit.create(TopicsCategoryAPI.class);
-
             int from = (nextPageNumber - 1) * limit + 1;
             Call<ArticleListingResponse> filterCall = topicsApi
-                    .getArticlesForCategory(AppConstants.EDITOR_PICKS_CATEGORY_ID, 0, from, from + limit - 1,
-                            SharedPrefUtils.getLanguageFilters(BaseApplication.getAppContext()));
+                    .getArticlesForCategory(AppConstants.EDITOR_PICKS_CATEGORY_ID, 0, from, from + limit - 1, "0");
             filterCall.enqueue(articleListingResponseCallback);
         } else if (Constants.KEY_TODAYS_BEST.equals(sortKey)) {
             Retrofit retrofit = BaseApplication.getInstance().getRetrofit();
             TopicsCategoryAPI topicsApi = retrofit.create(TopicsCategoryAPI.class);
-
             int from = (nextPageNumber - 1) * limit + 1;
             Call<ArticleListingResponse> filterCall = topicsApi
                     .getTodaysBestArticles(DateTimeUtils.getKidsDOBNanoMilliTimestamp("" + System.currentTimeMillis()),
-                            from, from + limit - 1,
-                            SharedPrefUtils.getLanguageFilters(BaseApplication.getAppContext()));
+                            from, from + limit - 1, "0");
             filterCall.enqueue(articleListingResponseCallback);
         } else {
             Retrofit retrofit = BaseApplication.getInstance().getRetrofit();
             TopicsCategoryAPI topicsApi = retrofit.create(TopicsCategoryAPI.class);
-
             int from = (nextPageNumber - 1) * limit + 1;
-            Call<ArticleListingResponse> filterCall = topicsApi.getRecentArticles(from, from + limit - 1,
-                    SharedPrefUtils.getLanguageFilters(BaseApplication.getAppContext()));
+            Call<ArticleListingResponse> filterCall = topicsApi.getRecentArticles(from, from + limit - 1, "0");
             filterCall.enqueue(articleListingResponseCallback);
         }
     }
@@ -286,7 +280,6 @@ public class ArticleListingActivity extends BaseActivity implements View.OnClick
             FirebaseCrashlytics.getInstance().recordException(ex);
             Log.d("MC4kException", Log.getStackTraceString(ex));
         }
-
     }
 
     private Callback<ArticleListingResponse> articleListingResponseCallback = new Callback<ArticleListingResponse>() {
