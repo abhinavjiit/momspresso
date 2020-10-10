@@ -84,6 +84,7 @@ public class ArticleModerationOrShareActivity extends BaseActivity implements Vi
         laterTextView.setOnClickListener(this);
         TextView okayTextView = findViewById(R.id.okayTextView);
         okayTextView.setOnClickListener(this);
+        gotoYourBlog.setOnClickListener(this);
         checkCreatorGroupStatus();
         if (StringUtils.isNullOrEmpty(shareUrl)) {
             wayToGoTextView.setText("WAY TO GO!");
@@ -125,6 +126,10 @@ public class ArticleModerationOrShareActivity extends BaseActivity implements Vi
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
+            case R.id.gotoYourBlog: {
+                handleDeeplinks(shareUrl);
+                break;
+            }
             case R.id.moderationGuideLines: {
                 handleDeeplinks("https://www.momspresso.com/moderation-rules");
                 break;

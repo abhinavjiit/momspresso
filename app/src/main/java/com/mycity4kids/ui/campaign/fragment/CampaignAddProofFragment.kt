@@ -84,7 +84,6 @@ class CampaignAddProofFragment : BaseFragment(), UrlProofRecyclerAdapter.ClickLi
     }
 
     override fun onCellClick() {
-        TODO("not implemented") // To change body of created functions use File | Settings | File Templates.
     }
 
     override fun onUrlProofDelete(cellIndex: Int) {

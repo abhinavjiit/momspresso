@@ -116,6 +116,7 @@ public class VideoUploadProgressActivity extends BaseActivity implements View.On
         modrationText = findViewById(R.id.modrationText);
         okayTextView.setOnClickListener(this);
         imgCancelUpload.setOnClickListener(this);
+        modrationText.setOnClickListener(this);
         back.setOnClickListener(this);
         joinVloggersGroup.setOnClickListener(this);
         uploadingContainer.setVisibility(View.VISIBLE);

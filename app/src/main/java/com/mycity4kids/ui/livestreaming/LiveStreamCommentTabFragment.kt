@@ -271,6 +271,5 @@ class LiveStreamCommentTabFragment : BaseFragment(),
     }
 
     override fun onTextChanged(text: String) {
-        TODO("Not yet implemented")
     }
 }

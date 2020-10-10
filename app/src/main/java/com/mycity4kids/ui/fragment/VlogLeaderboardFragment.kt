@@ -22,6 +22,7 @@ class VlogLeaderboardFragment : BaseFragment(),
     private var recyclerAdapterBlog: VlogLeaderboardRecyclerAdapter? = null
     private var vlogList: ArrayList<LeaderboardDataResponse.LeaderboardData.LeaderBoradRank>? = null
     private lateinit var viewMoreTextView: TextView
+    private lateinit var emptyLeaderboardTextView: TextView
     private var llm: LinearLayoutManager? = null
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -33,8 +34,13 @@ class VlogLeaderboardFragment : BaseFragment(),
 
         recyclerView = view.findViewById<View>(R.id.recyclerView) as RecyclerView
         viewMoreTextView = view.findViewById(R.id.viewMoreTextView)
-        if (vlogList == null) {
+        emptyLeaderboardTextView = view.findViewById(R.id.emptyLeaderboardTextView)
+
+        if (vlogList == null || vlogList!!.isEmpty() || vlogList?.get(0) == null || vlogList?.get(0)!!.ranks == null || vlogList?.get(
+                0
+            )!!.ranks.isEmpty()) {
             viewMoreTextView.visibility = View.GONE
+            emptyLeaderboardTextView.visibility = View.VISIBLE
         }
         recyclerAdapterBlog = VlogLeaderboardRecyclerAdapter(this)
         llm = LinearLayoutManager(activity)

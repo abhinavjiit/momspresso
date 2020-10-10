@@ -1564,7 +1564,6 @@ class CampaignDetailFragment : BaseFragment(), IMembershipStatus {
     }
 
     override fun onMembershipStatusFetchFail() {
-        TODO("not implemented") // To change body of created functions use File | Settings | File Templates.
     }
 
     override fun onMembershipStatusFetchSuccess(body: GroupsMembershipResponse?, groupId: Int) {

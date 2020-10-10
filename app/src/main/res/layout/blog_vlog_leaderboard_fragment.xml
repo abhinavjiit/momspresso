@@ -31,5 +31,18 @@
       android:textSize="@dimen/space_16"
       app:fontName="oswald_regular.ttf" />
 
+    <com.mycity4kids.widget.CustomFontTextView
+      android:id="@+id/emptyLeaderboardTextView"
+      android:layout_width="match_parent"
+      android:layout_height="match_parent"
+      android:layout_centerInParent="true"
+      android:layout_marginTop="200dp"
+      android:background="@color/white"
+      android:gravity="center"
+      android:text="@string/empty_leaderboard_text"
+      android:textSize="18sp"
+      android:visibility="gone" />
+
   </RelativeLayout>
+
 </androidx.core.widget.NestedScrollView>

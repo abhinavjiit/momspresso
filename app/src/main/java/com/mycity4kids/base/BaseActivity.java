@@ -4,7 +4,6 @@ import static androidx.browser.customtabs.CustomTabsService.ACTION_CUSTOM_TABS_C
 
 
 import android.app.ProgressDialog;
-import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
@@ -78,6 +77,7 @@ import com.mycity4kids.ui.activity.ShortStoryChallengeDetailActivity;
 import com.mycity4kids.ui.activity.ShortStoryContainerActivity;
 import com.mycity4kids.ui.activity.UserDraftsContentActivity;
 import com.mycity4kids.ui.activity.ViewGroupPostCommentsRepliesActivity;
+import com.mycity4kids.ui.activity.ViewLeaderboardActivity;
 import com.mycity4kids.ui.activity.collection.CollectionsActivity;
 import com.mycity4kids.ui.activity.collection.UserCollectionItemListActivity;
 import com.mycity4kids.ui.campaign.activity.CampaignContainerActivity;
@@ -997,6 +997,14 @@ public abstract class BaseActivity extends AppCompatActivity implements GroupMem
             Matcher matcher17 = pattern17.matcher(urlWithNoParams);
             if (matcher17.matches()) {
                 Intent intent = new Intent(this, BloggerGoldActivity.class);
+                startActivity(intent);
+                return true;
+            }
+
+            Pattern pattern18 = Pattern.compile(AppConstants.BLOGGER_GOLD_LEADERBOARD_REGEX);
+            Matcher matcher18 = pattern18.matcher(urlWithNoParams);
+            if (matcher18.matches()) {
+                Intent intent = new Intent(this, ViewLeaderboardActivity.class);
                 startActivity(intent);
                 return true;
             }

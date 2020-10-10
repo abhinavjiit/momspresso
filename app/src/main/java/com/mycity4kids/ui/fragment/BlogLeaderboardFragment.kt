@@ -22,6 +22,7 @@ class BlogLeaderboardFragment : BaseFragment(),
     private var recyclerView: RecyclerView? = null
     private var recyclerAdapterBlog: BlogLeaderboardRecyclerAdapter? = null
     private lateinit var viewMoreTextView: TextView
+    private lateinit var emptyLeaderboardTextView: TextView
     private var llm: LinearLayoutManager? = null
     private var blogList: ArrayList<LeaderboardDataResponse.LeaderboardData.LeaderBoradRank>? = null
 
@@ -34,9 +35,13 @@ class BlogLeaderboardFragment : BaseFragment(),
         blogList = arguments!!.getParcelableArrayList("blogList")
         recyclerView = view.findViewById<View>(R.id.recyclerView) as RecyclerView
         viewMoreTextView = view.findViewById(R.id.viewMoreTextView)
+        emptyLeaderboardTextView = view.findViewById(R.id.emptyLeaderboardTextView)
 
-        if (blogList == null) {
+        if (blogList == null || blogList!!.isEmpty() || blogList?.get(0) == null || blogList?.get(0)!!.ranks == null || blogList?.get(
+                0
+            )!!.ranks.isEmpty()) {
             viewMoreTextView.visibility = View.GONE
+            emptyLeaderboardTextView.visibility = View.VISIBLE
         }
 
         recyclerAdapterBlog = BlogLeaderboardRecyclerAdapter(this)

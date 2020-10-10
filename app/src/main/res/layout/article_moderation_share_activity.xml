@@ -11,17 +11,17 @@
     android:id="@+id/back"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
-    app:srcCompat="@drawable/ic_cancel"
     android:layout_alignParentEnd="true"
-    android:padding="@dimen/space_16"/>
+    android:padding="@dimen/space_16"
+    app:srcCompat="@drawable/ic_cancel" />
 
   <androidx.constraintlayout.widget.ConstraintLayout
     android:id="@+id/youAreDoneView"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     android:layout_centerHorizontal="true"
-    android:layout_marginBottom="@dimen/space_12"
-    android:layout_marginTop="@dimen/space_25">
+    android:layout_marginTop="@dimen/space_25"
+    android:layout_marginBottom="@dimen/space_12">
 
     <com.mycity4kids.widget.CustomFontTextView
       android:id="@+id/secondTextView"
@@ -122,10 +122,10 @@
       android:id="@+id/moderationGuideLines"
       android:layout_width="wrap_content"
       android:layout_height="wrap_content"
+      android:layout_gravity="center_horizontal"
       android:layout_marginTop="18dp"
       android:gravity="center"
       android:paddingLeft="60dp"
-      android:layout_gravity="center_horizontal"
       android:paddingTop="14dp"
       android:paddingRight="60dp"
       android:paddingBottom="14dp"
@@ -138,6 +138,7 @@
       android:id="@+id/createMoreHeaderTextViewModeration"
       android:layout_width="wrap_content"
       android:layout_height="wrap_content"
+      android:layout_gravity="center_horizontal"
       android:layout_marginTop="60dp"
       android:text="@string/dont_stop_magic"
       android:textColor="@color/campaign_515151"
@@ -149,6 +150,7 @@
       android:id="@+id/createMoreButtonModeration"
       android:layout_width="wrap_content"
       android:layout_height="wrap_content"
+      android:layout_gravity="center_horizontal"
       android:layout_marginTop="12dp"
       android:padding="@dimen/space_16"
       android:visibility="gone"

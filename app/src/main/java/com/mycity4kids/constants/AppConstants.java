@@ -377,6 +377,7 @@ public class AppConstants {
             ".+?(parenting\\/topic\\/short-stories\\/challenges\\/)([a-zA-Z0-9-]+$)";
     public static final String LIVE_STREAM_DETAIL_REGEX = ".+?(live\\/)([a-zA-Z0-9-]+$)";
     public static final String BLOGGER_GOLD_REGEX = ".+?(birthdaybonanza)";
+    public static final String BLOGGER_GOLD_LEADERBOARD_REGEX = ".+?(birthdaybonanza\\/leaderboard)";
 
     public static final String BADGE_ID = "badgeId";
     public static final String MILESTONE_ID = "milestoneId";
