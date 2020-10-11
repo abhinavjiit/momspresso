@@ -112,18 +112,14 @@ public class AddArticleTopicsActivityNew extends BaseActivity implements View.On
         clearSearchImageView = findViewById(R.id.clearSearchImageView);
         toolTipContainer = findViewById(R.id.toolTipContainer);
 
-        //  if (!SharedPrefUtils.isCoachmarksShownFlag(this, "addArticleTopicScreen")) {
-        toolTipContainer.setVisibility(View.VISIBLE);
-        final Handler handler = new Handler(Looper.getMainLooper());
-        handler.postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                if (toolTipContainer.getVisibility() == View.VISIBLE) {
-                    toolTipContainer.setVisibility(View.GONE);
-                }
-            }
-        }, 3000);
-        // }
+        if (!checkCoachmarkFlagStatus("addArticleTopicScreen")) {
+            toolTipContainer.setVisibility(View.VISIBLE);
+            final Handler handler = new Handler(Looper.getMainLooper());
+            handler.postDelayed(() -> {
+                updateCoachmarkFlag("addArticleTopicScreen", true);
+                toolTipContainer.setVisibility(View.GONE);
+            }, 3000);
+        }
         clearAllTextView.setOnClickListener(this);
         nextTextView.setOnClickListener(this);
         nextTextView.setEnabled(false);
@@ -559,10 +555,9 @@ public class AddArticleTopicsActivityNew extends BaseActivity implements View.On
         switch (view.getId()) {
             case R.id.toolTipContainer: {
                 toolTipContainer.setVisibility(View.GONE);
-                //     SharedPrefUtils.setCoachmarksShownFlag(BaseApplication.getAppContext(), "addArticleTopicScreen", true);
+                updateCoachmarkFlag("addArticleTopicScreen", true);
                 break;
             }
-
             case R.id.nextTextView:
                 try {
                     getSelectedTopicsFromList();

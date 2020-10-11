@@ -1488,4 +1488,8 @@ Thank you! We will be reviewing your story. You can expect to hear from us withi
   <string name="click_to_upload_the_video">व्हिडिओ अपलोड करण्यासाठी क्लिक करा</string>
   <string name="choose_interesting_title">दर्शकाचे लक्ष वेधण्यासाठी एक मनोरंजक शीर्षक वापरा</string>
   <string name="coachmark_story_3">एकदा झाल्यावर आपली पहिली 100 शब्दांची गोष्ट प्रकाशित करा!</string>
+  <string name="coachmark_read">सर्वोत्कृष्ट ब्लॉग, व्हीलॉग आणि 100 शब्दांच्या गोष्टी शोधा.</string>
+  <string name="coachmark_mymoney">कॅम्पेन साठी अर्ज करा, आवश्यकता पूर्ण करा आणि पैसे कमवा!</string>
+  <string name="coachmark_vlogs_1">तुमचा आपला  व्हीलॉग तयार करण्यास मदत करू ! एक श्रेणी निवडा किंवा एखाद्या आव्हानाने सुरवात करा</string>
+  <string name="tags_help_discover">टॅग्ज दर्शकांना व्हिडिओ सहजपणे शोधण्यात मदत करतात</string>
 </resources>

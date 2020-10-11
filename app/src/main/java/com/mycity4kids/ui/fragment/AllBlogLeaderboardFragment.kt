@@ -15,6 +15,7 @@ import com.mycity4kids.R
 import com.mycity4kids.application.BaseApplication
 import com.mycity4kids.base.BaseFragment
 import com.mycity4kids.constants.Constants
+import com.mycity4kids.gtmutils.Utils
 import com.mycity4kids.models.response.AllLeaderboardDataResponse
 import com.mycity4kids.profile.UserProfileActivity
 import com.mycity4kids.retrofitAPIsInterfaces.BloggerGoldAPI
@@ -22,7 +23,6 @@ import com.mycity4kids.ui.adapter.AllBlogLeaderboardRecyclerAdapter
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
-
 
 class AllBlogLeaderboardFragment : BaseFragment(),
     AllBlogLeaderboardRecyclerAdapter.RecyclerViewClickListener {
@@ -36,7 +36,6 @@ class AllBlogLeaderboardFragment : BaseFragment(),
     private var pastVisiblesItems: Int = 0
     private var visibleItemCount: Int = 0
     private var totalItemCount: Int = 0
-
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -126,6 +125,12 @@ class AllBlogLeaderboardFragment : BaseFragment(),
     }
 
     override fun onRecyclerViewItemClick(view: View?, position: Int) {
+        Utils.shareEventTracking(
+            activity,
+            "BB Program Page",
+            "BirthdayBonanza_Android",
+            "LB_ProfileClick_BB"
+        )
         val userProfileIntent = Intent(
             activity,
             UserProfileActivity::class.java
@@ -136,5 +141,4 @@ class AllBlogLeaderboardFragment : BaseFragment(),
         )
         startActivity(userProfileIntent)
     }
-
 }

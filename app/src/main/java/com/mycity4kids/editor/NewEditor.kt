@@ -77,6 +77,19 @@ import com.mycity4kids.utils.GenericFileProvider
 import com.mycity4kids.utils.PermissionUtil
 import com.mycity4kids.utils.StringUtils
 import io.github.douglasjunior.androidSimpleTooltip.SimpleTooltip
+import java.io.ByteArrayOutputStream
+import java.io.File
+import java.io.FileOutputStream
+import java.io.IOException
+import java.lang.ref.WeakReference
+import java.text.SimpleDateFormat
+import java.util.ArrayList
+import java.util.Calendar
+import java.util.Date
+import java.util.HashMap
+import java.util.Locale
+import java.util.Random
+import java.util.regex.Pattern
 import kotlinx.android.synthetic.main.activity_new_editor.*
 import okhttp3.MediaType
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
@@ -107,19 +120,6 @@ import org.xml.sax.Attributes
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
-import java.io.ByteArrayOutputStream
-import java.io.File
-import java.io.FileOutputStream
-import java.io.IOException
-import java.lang.ref.WeakReference
-import java.text.SimpleDateFormat
-import java.util.ArrayList
-import java.util.Calendar
-import java.util.Date
-import java.util.HashMap
-import java.util.Locale
-import java.util.Random
-import java.util.regex.Pattern
 
 const val MAX_WORDS = 300
 
@@ -212,6 +212,7 @@ class NewEditor : BaseActivity(),
     var draftChallengeTagList: ArrayList<Map<String, String>>? = null
     var taggedChallengeMap: HashMap<String, String>? = null
     private lateinit var aztecCoachMark: RelativeLayout
+    private lateinit var okgotit: TextView
     val HTML_PATTERN = "(?i)<p.*?>.*?</p>"
     var pattern: Pattern = Pattern.compile(HTML_PATTERN)
     private lateinit var bottomCoachMark: CardView
@@ -231,6 +232,7 @@ class NewEditor : BaseActivity(),
         lastSavedTextView = findViewById<View>(R.id.lastSavedTextView) as TextView
         publishTextView = findViewById<View>(R.id.publishTextView) as TextView
         aztecCoachMark = findViewById(R.id.aztecCoachMark)
+        okgotit = findViewById(R.id.okgot)
         val sourceEditor = findViewById<SourceViewEditText>(R.id.source)
         titleTxt = findViewById<View>(R.id.title) as EditText
         editorGetHelp = findViewById(R.id.editor_get_help)
@@ -242,13 +244,13 @@ class NewEditor : BaseActivity(),
         taggedChallengeId = intent.getStringExtra("articleChallengeId")
         taggedChallengeName = intent.getStringExtra("challengeName")
 
-        if (!SharedPrefUtils.isCoachmarksShownFlag(
-                BaseApplication.getAppContext(),
-                "newEditor_bottom"
-            )) {
+        if (!checkCoachmarkFlagStatus("newEditor_bottom")) {
             aztecCoachMark.visibility = View.VISIBLE
+        } else if (!checkCoachmarkFlagStatus("articleEditorPublish")) {
+            Handler(Looper.getMainLooper()).postDelayed({
+                showToolTip()
+            }, 20000)
         }
-
 
         if (!taggedChallengeId.isNullOrBlank() && !taggedChallengeName.isNullOrBlank()) {
             draftChallengeTagList = ArrayList()
@@ -419,7 +421,7 @@ class NewEditor : BaseActivity(),
             }
         })
         bottomCoachMark.setOnClickListener(this)
-        aztecCoachMark.setOnClickListener(this)
+        okgotit.setOnClickListener(this)
     }
 
     private fun generateAttributesForMedia(
@@ -1348,20 +1350,20 @@ class NewEditor : BaseActivity(),
     override fun onClick(v: View) {
         when (v.id) {
             R.id.closeEditorImageView -> onBackPressed()
-            R.id.bottomCoachMark, R.id.aztecCoachMark -> {
+            R.id.okgot -> {
+                Utils.shareEventTracking(
+                    this,
+                    "Create section",
+                    "Create_Android",
+                    "B_CM_Format_Image"
+                )
                 bottomCoachMark.visibility = View.GONE
                 aztecCoachMark.visibility = View.GONE
-                SharedPrefUtils.setCoachmarksShownFlag(
-                    BaseApplication.getAppContext(),
-                    "newEditor_bottom",
-                    true
-                )
+                updateCoachmarkFlag("newEditor_bottom", true)
                 Handler(Looper.getMainLooper()).postDelayed({
                     showToolTip()
-                }, 2000)
-
+                }, 20000)
             }
-
             R.id.editor_get_help -> {
                 editorGetHelpDialog()
                 closeEditorImageView?.setEnabled(false)
@@ -1693,16 +1695,35 @@ class NewEditor : BaseActivity(),
     }
 
     private fun showToolTip() {
+        var isTimeUp = false
         val tooltip = SimpleTooltip.Builder(this)
             .anchorView(publishTextView)
             .contentView(R.layout.article_publish_tooltip_layout)
+            .margin(0f)
+            .padding(0f)
             .arrowColor(ContextCompat.getColor(this, R.color.tooltip_border))
             .gravity(Gravity.BOTTOM)
-            .arrowWidth(40f)
-            .animated(true)
+            .arrowWidth(50f)
+            .animated(false)
+            .dismissOnOutsideTouch(false)
             .transparentOverlay(true)
+            .onDismissListener {
+                updateCoachmarkFlag("articleEditorPublish", true)
+                if (!isTimeUp) {
+                    Utils.shareEventTracking(
+                        this,
+                        "Create section",
+                        "Create_Android",
+                        "B_TT_Publish"
+                    )
+                }
+            }
             .build()
         tooltip.show()
-        Handler(Looper.getMainLooper()).postDelayed({ tooltip.dismiss() }, 3000)
+
+        Handler(Looper.getMainLooper()).postDelayed({
+            isTimeUp = true
+            tooltip.dismiss()
+        }, 3000)
     }
 }

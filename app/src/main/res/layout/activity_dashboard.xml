@@ -445,7 +445,7 @@
         android:layout_marginEnd="@dimen/space_16"
         android:background="@drawable/tooltip_shape_layout"
         android:padding="@dimen/space_18"
-        android:text="Explore the best of blogs, vlogs and 100 word stories."
+        android:text="@string/coachmark_read"
         android:textColor="@color/campaign_515151"
         android:layout_alignParentBottom="true"
         android:layout_marginBottom="@dimen/space_50"/>

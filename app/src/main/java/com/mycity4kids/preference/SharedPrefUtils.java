@@ -67,16 +67,17 @@ public class SharedPrefUtils {
     private static final String COACHMARK_ARTICLE_DETAILS = "coachmarkArticleDetails";
     private static final String COACHMARK_DRAWER = "coachmarkDrawer";
     private static final String COACHMARK_STORY = "coachmarkStory";
-    private static final String COACHMARK_STORY_BACKGROUND = "addShortStory";
     private static final String COACH_MARK_CHOOSE_STORY_CHALLENGE = "chooseStoryOrChallenge";
     private static final String COACH_MARK_CHOOSE_ARTICLE_CHALLENGE = "articleChallengeSelectionScreenCoachMark";
     private static final String COACH_MARK_CHOOSE_VIDEO_CHALLENGE = "videoOrChallengeSelectionScreen";
     private static final String COACH_MARK_EDITOR_BOTTOM = "newEditor_bottom";
-    private static final String COACH_MARK_EDITOR_CONTROLLER_VIEW = "newEditor_controllerView";
+    private static final String COACHMARK_ARTICLE_PUBLISH = "articleEditorPublish";
     private static final String COACH_MARK_ADD_ARTICLE_TAG_IMAGE = "addArticleTagImageScreen";
     private static final String COACH_MARK_ADD_ARTICLE_TOPICS = "addArticleTopicScreen";
     private static final String COACH_MARK_CAMPAIGN_LIST = "campaignList";
     private static final String COACH_MARK_DASHBOARD_CONTENT_FILTER = "dashBoardContentFilterScreen";
+    private static final String COACHMARK_VIDEOS_TRIMMER = "videoTrimmer";
+    private static final String COACHMARK_VIDEOS_TITLE_TAGS = "videoTitleAndTags";
     private static final String COACHMARK_TAGGING = "coachmarkTagging";
     private static final String COACHMARK_TOPCOMMENT = "coachmarkTopComment";
     private static final String LOCATION_LATITUDE = "latitude";
@@ -334,8 +335,6 @@ public class SharedPrefUtils {
             editor.putBoolean(COACHMARK_TAGGING, flag);
         } else if ("topCommentCoachMark".equals(screenName)) {
             editor.putBoolean(COACHMARK_TOPCOMMENT, flag);
-        } else if ("addShortStory".equals(screenName)) {
-            editor.putBoolean(COACHMARK_STORY_BACKGROUND, flag);
         } else if ("chooseStoryOrChallenge".equals(screenName)) {
             editor.putBoolean(COACH_MARK_CHOOSE_STORY_CHALLENGE, flag);
         } else if ("articleChallengeSelectionScreenCoachMark".equals(screenName)) {
@@ -344,8 +343,8 @@ public class SharedPrefUtils {
             editor.putBoolean(COACH_MARK_CHOOSE_VIDEO_CHALLENGE, flag);
         } else if ("newEditor_bottom".equals(screenName)) {
             editor.putBoolean(COACH_MARK_EDITOR_BOTTOM, flag);
-        } else if ("newEditor_controllerView".equals(screenName)) {
-            editor.putBoolean(COACH_MARK_EDITOR_CONTROLLER_VIEW, flag);
+        } else if ("articleEditorPublish".equals(screenName)) {
+            editor.putBoolean(COACHMARK_ARTICLE_PUBLISH, flag);
         } else if ("addArticleTagImageScreen".equals(screenName)) {
             editor.putBoolean(COACH_MARK_ADD_ARTICLE_TAG_IMAGE, flag);
         } else if ("addArticleTopicScreen".equals(screenName)) {
@@ -354,6 +353,10 @@ public class SharedPrefUtils {
             editor.putBoolean(COACH_MARK_CAMPAIGN_LIST, flag);
         } else if ("dashBoardContentFilterScreen".equals(screenName)) {
             editor.putBoolean(COACH_MARK_DASHBOARD_CONTENT_FILTER, flag);
+        } else if ("videoTrimmer".equals(screenName)) {
+            editor.putBoolean(COACHMARK_VIDEOS_TRIMMER, flag);
+        } else if ("videoTitleAndTags".equals(screenName)) {
+            editor.putBoolean(COACHMARK_VIDEOS_TITLE_TAGS, flag);
         }
         editor.commit();
     }
@@ -374,8 +377,6 @@ public class SharedPrefUtils {
             return sharedPref.getBoolean(COACHMARK_TAGGING, false);
         } else if ("topCommentCoachMark".equals(screenName)) {
             return sharedPref.getBoolean(COACHMARK_TOPCOMMENT, false);
-        } else if ("addShortStory".equals(screenName)) {
-            return sharedPref.getBoolean(COACHMARK_STORY_BACKGROUND, false);
         } else if ("chooseStoryOrChallenge".equals(screenName)) {
             return sharedPref.getBoolean(COACH_MARK_CHOOSE_STORY_CHALLENGE, false);
         } else if ("articleChallengeSelectionScreenCoachMark".equals(screenName)) {
@@ -384,8 +385,8 @@ public class SharedPrefUtils {
             return sharedPref.getBoolean(COACH_MARK_CHOOSE_VIDEO_CHALLENGE, false);
         } else if ("newEditor_bottom".equals(screenName)) {
             return sharedPref.getBoolean(COACH_MARK_EDITOR_BOTTOM, false);
-        } else if ("newEditor_controllerView".equals(screenName)) {
-            return sharedPref.getBoolean(COACH_MARK_EDITOR_CONTROLLER_VIEW, false);
+        } else if ("articleEditorPublish".equals(screenName)) {
+            return sharedPref.getBoolean(COACHMARK_ARTICLE_PUBLISH, false);
         } else if ("addArticleTagImageScreen".equals(screenName)) {
             return sharedPref.getBoolean(COACH_MARK_ADD_ARTICLE_TAG_IMAGE, false);
         } else if ("addArticleTopicScreen".equals(screenName)) {
@@ -394,6 +395,10 @@ public class SharedPrefUtils {
             return sharedPref.getBoolean(COACH_MARK_CAMPAIGN_LIST, false);
         } else if ("dashBoardContentFilterScreen".equals(screenName)) {
             return sharedPref.getBoolean(COACH_MARK_DASHBOARD_CONTENT_FILTER, false);
+        } else if ("videoTrimmer".equals(screenName)) {
+            return sharedPref.getBoolean(COACHMARK_VIDEOS_TRIMMER, false);
+        } else if ("videoTitleAndTags".equals(screenName)) {
+            return sharedPref.getBoolean(COACHMARK_VIDEOS_TITLE_TAGS, false);
         }
         return true;
     }

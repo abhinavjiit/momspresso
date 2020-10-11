@@ -2,11 +2,11 @@ package com.mycity4kids.ui.activity
 
 import android.os.Bundle
 import android.widget.ImageView
-import android.widget.TextView
 import androidx.viewpager.widget.ViewPager
 import com.google.android.material.tabs.TabLayout
 import com.mycity4kids.R
 import com.mycity4kids.base.BaseActivity
+import com.mycity4kids.gtmutils.Utils
 import com.mycity4kids.ui.adapter.BloggerGoldPagerAdapter
 import com.mycity4kids.utils.AppUtils
 import com.squareup.picasso.Picasso
@@ -28,8 +28,8 @@ class BloggerGoldActivity : BaseActivity() {
         tabs = findViewById(R.id.tabs)
 
         tabs.apply {
-            addTab(tabs.newTab().setText(R.string.about_txt))
-            addTab(tabs.newTab().setText(R.string.my_dashboard))
+            addTab(tabs.newTab().setText(getString(R.string.about_txt)))
+            addTab(tabs.newTab().setText(getString(R.string.my_dashboard)))
         }
 
         Picasso.get().load(AppUtils.getBloggerGoldImageUrl()).into(thumbNail)
@@ -49,6 +49,21 @@ class BloggerGoldActivity : BaseActivity() {
 
             override fun onTabSelected(tab: TabLayout.Tab?) {
                 viewpager.currentItem = tab?.position!!
+                if (tab.text == getString(R.string.about_txt)) {
+                    Utils.shareEventTracking(
+                        this@BloggerGoldActivity,
+                        "BB Program Page",
+                        "BirthdayBonanza_Android",
+                        "AboutTab_BB"
+                    )
+                } else if (tab.text == getString(R.string.my_dashboard)) {
+                    Utils.shareEventTracking(
+                        this@BloggerGoldActivity,
+                        "BB Program Page",
+                        "BirthdayBonanza_Android",
+                        "DashboardTab_BB"
+                    )
+                }
             }
         })
         back.setOnClickListener {

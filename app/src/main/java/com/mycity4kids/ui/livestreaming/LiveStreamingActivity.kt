@@ -45,15 +45,15 @@ import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.YouTubePlayer
 import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.listeners.AbstractYouTubePlayerListener
 import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.listeners.YouTubePlayerFullScreenListener
 import com.squareup.picasso.Picasso
+import java.net.SocketTimeoutException
+import java.net.UnknownHostException
+import java.util.Arrays
 import kotlinx.android.synthetic.main.live_streaming_activity.*
 import okhttp3.ResponseBody
 import org.apache.commons.lang3.StringUtils
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
-import java.net.SocketTimeoutException
-import java.net.UnknownHostException
-import java.util.Arrays
 
 class LiveStreamingActivity : BaseActivity(), LiveChatRecyclerAdapter.RecyclerViewClickListener,
     View.OnClickListener, QueryTokenReceiver, ResizableTextView.SeeMore,
@@ -176,7 +176,7 @@ class LiveStreamingActivity : BaseActivity(), LiveChatRecyclerAdapter.RecyclerVi
                 for (i in snapshot.children) {
                     counter++
                 }
-                userCountTextView.text =  getString(R.string.live_watching_count, counter)
+                userCountTextView.text = getString(R.string.live_watching_count, counter)
             }
         })
 

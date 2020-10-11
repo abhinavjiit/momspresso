@@ -127,10 +127,12 @@ public class ArticleModerationOrShareActivity extends BaseActivity implements Vi
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.gotoYourBlog: {
+                Utils.shareEventTracking(this, "Post creation", "Create_Android", "PCA_View_blog");
                 handleDeeplinks(shareUrl);
                 break;
             }
             case R.id.moderationGuideLines: {
+                Utils.shareEventTracking(this, "Post creation", "Create_Android", "PCA_Moderation_Guide");
                 handleDeeplinks("https://www.momspresso.com/moderation-rules");
                 break;
             }
@@ -146,15 +148,13 @@ public class ArticleModerationOrShareActivity extends BaseActivity implements Vi
             }
             case R.id.createMoreButton: {
                 if (createMoreButton.getTag() == "already_join") {
-                    Intent chooseShortStory = new Intent(
-                            this,
-                            ChooseShortStoryCategoryActivity.class
-                    );
-                    chooseShortStory.setFlags(
+                    Utils.shareEventTracking(this, "Post creation", "Create_Android", "PCS_Create_AM");
+                    Intent articleCreationIntent = new Intent(this, ArticleChallengeOrTopicSelectionActivity.class);
+                    articleCreationIntent.setFlags(
                             (Intent.FLAG_ACTIVITY_SINGLE_TOP | Intent.FLAG_ACTIVITY_CLEAR_TOP));
-                    chooseShortStory.putExtra("source", "dashboard");
-                    startActivity(chooseShortStory);
+                    startActivity(articleCreationIntent);
                 } else {
+                    Utils.shareEventTracking(this, "Post creation", "Create_Android", "PCA_Support_Group_AM");
                     Intent intent = new Intent(this, GroupsSummaryActivity.class);
                     intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                     intent.putExtra("groupId", groupId);
@@ -165,12 +165,13 @@ public class ArticleModerationOrShareActivity extends BaseActivity implements Vi
             }
             case R.id.createMoreButtonModeration: {
                 if (createMoreButtonModeration.getTag() == "already_join") {
-                    Intent chooseShortStory = new Intent(this, ChooseShortStoryCategoryActivity.class);
-                    chooseShortStory.setFlags(
+                    Utils.shareEventTracking(this, "Post creation", "Create_Android", "PCS_Suppport_Group_M");
+                    Intent articleCreationIntent = new Intent(this, ArticleChallengeOrTopicSelectionActivity.class);
+                    articleCreationIntent.setFlags(
                             (Intent.FLAG_ACTIVITY_SINGLE_TOP | Intent.FLAG_ACTIVITY_CLEAR_TOP));
-                    chooseShortStory.putExtra("source", "dashboard");
-                    startActivity(chooseShortStory);
+                    startActivity(articleCreationIntent);
                 } else {
+                    Utils.shareEventTracking(this, "Post creation", "Create_Android", "PCA_Suppport_Group_M");
                     Intent intent = new Intent(this, GroupsSummaryActivity.class);
                     intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                     intent.putExtra("groupId", groupId);
@@ -262,24 +263,7 @@ public class ArticleModerationOrShareActivity extends BaseActivity implements Vi
 
     private void checkCreatorGroupStatus() {
         GroupMembershipStatus groupMembershipStatus = new GroupMembershipStatus(this);
-        switch (SharedPrefUtils.getAppLocale(BaseApplication.getAppContext())) {
-            case "en": {
-                groupId = AppConstants.ENGLISH_JOIN_CREATOR_GROUP_ID;
-                break;
-            }
-            case "ta": {
-                groupId = AppConstants.TAMIL_JOIN_CREATOR_GROUP_ID;
-                break;
-            }
-            case "bn": {
-                groupId = AppConstants.BANGLA_JOIN_CREATOR_GROUP_ID;
-                break;
-            }
-            case "hi": {
-                groupId = AppConstants.HINDI_JOIN_CREATOR_GROUP_ID;
-                break;
-            }
-        }
+        groupId = AppUtils.getCreatorGroupIdForLanguage();
         groupMembershipStatus.checkMembershipStatus(groupId,
                 SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId());
     }
@@ -292,7 +276,6 @@ public class ArticleModerationOrShareActivity extends BaseActivity implements Vi
             createMoreHeaderTextViewModeration.setVisibility(View.VISIBLE);
             if (body.getData().getResult() == null || body.getData().getResult().isEmpty() || body.getData().getResult()
                     .get(0).getStatus().equals("2")) {
-
                 createMoreButtonModeration.setText(getString(R.string.join_creator_group));
                 createMoreHeaderTextViewModeration.setText(getString(R.string.get_tips_ideas));
                 createMoreButtonModeration.setTag("please_join");
@@ -322,14 +305,14 @@ public class ArticleModerationOrShareActivity extends BaseActivity implements Vi
         if (StringUtils.isNullOrEmpty(shareUrl)) {
             createMoreButtonModeration.setVisibility(View.VISIBLE);
             createMoreHeaderTextViewModeration.setVisibility(View.VISIBLE);
-            createMoreButtonModeration.setText("Join Creator's Hangout");
-            createMoreHeaderTextViewModeration.setText("Get tips or ideas from other creators");
+            createMoreButtonModeration.setText(getString(R.string.join_creator_group));
+            createMoreHeaderTextViewModeration.setText(getString(R.string.get_tips_ideas));
             createMoreButtonModeration.setTag("please_join");
         } else {
             createMoreButton.setVisibility(View.VISIBLE);
             createMoreHeaderTextView.setVisibility(View.VISIBLE);
-            createMoreButton.setText("Join Creator's Hangout");
-            createMoreHeaderTextView.setText("Get tips or ideas from other creators");
+            createMoreButton.setText(getString(R.string.join_creator_group));
+            createMoreHeaderTextView.setText(getString(R.string.get_tips_ideas));
             createMoreButton.setTag("please_join");
         }
 

@@ -48,12 +48,12 @@ import com.mycity4kids.ui.fragment.ChooseLoginAccountDialogFragment
 import com.mycity4kids.ui.fragment.FacebookAddEmailDialogFragment
 import com.mycity4kids.utils.ConnectivityUtils
 import com.mycity4kids.utils.StringUtils
+import java.util.ArrayList
 import kotlinx.android.synthetic.main.login_activity.*
 import org.json.JSONObject
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
-import java.util.ArrayList
 
 class LoginActivity : BaseActivity(), IFacebookUser, View.OnClickListener {
 
@@ -102,7 +102,7 @@ class LoginActivity : BaseActivity(), IFacebookUser, View.OnClickListener {
                 val signUpSIntent = Intent(this, CustomSignUpActivity::class.java)
                 startActivity(signUpSIntent)
             } else {
-                count++;
+                count++
             }
         }
     }
@@ -264,7 +264,7 @@ class LoginActivity : BaseActivity(), IFacebookUser, View.OnClickListener {
         } catch (e: Exception) {
             e.printStackTrace()
         }
-        if (null == userDetailResult.socialTokens) { //token already expired or not yet connected with facebook
+        if (null == userDetailResult.socialTokens) { // token already expired or not yet connected with facebook
             SharedPrefUtils.setFacebookConnectedFlag(BaseApplication.getAppContext(), "1")
         } else {
             SharedPrefUtils.setFacebookConnectedFlag(
@@ -284,7 +284,7 @@ class LoginActivity : BaseActivity(), IFacebookUser, View.OnClickListener {
                 socialConnectAPI.socialConnect(socialConnectRequest)
             socialConnectCall.enqueue(socialConnectResponseListener)
         }
-        //facebook login with an account without email
+        // facebook login with an account without email
         if (AppConstants.VALIDATED_USER != model.isValidated && "fb" == loginMode) {
             dialogFragment = FacebookAddEmailDialogFragment()
             dialogFragment.setTargetFragment(dialogFragment, 2)
@@ -295,8 +295,8 @@ class LoginActivity : BaseActivity(), IFacebookUser, View.OnClickListener {
         } else {
             if ("phone" == loginMode &&
                 ((StringUtils.isNullOrEmpty(userDetailResult.firstName) && StringUtils
-                    .isNullOrEmpty(userDetailResult.lastName))
-                    || userDetailResult.firstName.toUpperCase().contains("XXX"))) {
+                    .isNullOrEmpty(userDetailResult.lastName)) ||
+                    userDetailResult.firstName.toUpperCase().contains("XXX"))) {
                 startSyncingUserInfo()
                 val intent = Intent(this, PushTokenService::class.java)
                 startService(intent)
@@ -382,7 +382,7 @@ class LoginActivity : BaseActivity(), IFacebookUser, View.OnClickListener {
                             e.printStackTrace()
                         }
                         if (null == responseData.data[0].result.socialTokens) {
-                            //token already expired or not yet connected with facebook
+                            // token already expired or not yet connected with facebook
                             SharedPrefUtils.setFacebookConnectedFlag(
                                 BaseApplication.getAppContext(),
                                 "1"
@@ -406,7 +406,7 @@ class LoginActivity : BaseActivity(), IFacebookUser, View.OnClickListener {
                                 socialConnectAPI.socialConnect(socialConnectRequest)
                             socialConnectCall.enqueue(socialConnectResponseListener)
                         }
-                        //facebook login with an account without email
+                        // facebook login with an account without email
                         if (AppConstants.VALIDATED_USER != model.isValidated && "fb" == loginMode) {
                             dialogFragment = FacebookAddEmailDialogFragment()
                             val bundle = Bundle()
@@ -499,12 +499,12 @@ class LoginActivity : BaseActivity(), IFacebookUser, View.OnClickListener {
             .setNegativeButton(
                 R.string.resend_email
             ) { dialogInterface, i ->
-                val lr = LoginRegistrationRequest();
+                val lr = LoginRegistrationRequest()
                 lr.email = SharedPrefUtils.getUserDetailModel(this).email
                 val retrofit = BaseApplication.getInstance().retrofit
                 val loginRegistrationAPI = retrofit.create(LoginRegistrationAPI::class.java)
                 val call = loginRegistrationAPI.resendVerificationLink(lr)
-                call.enqueue(onVerifyEmailLinkResendResponseReceived);
+                call.enqueue(onVerifyEmailLinkResendResponseReceived)
                 dialogInterface.dismiss()
             }.setIcon(android.R.drawable.ic_dialog_alert).show()
     }

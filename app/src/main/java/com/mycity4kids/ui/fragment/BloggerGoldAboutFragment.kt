@@ -14,6 +14,7 @@ import com.google.firebase.crashlytics.FirebaseCrashlytics
 import com.mycity4kids.R
 import com.mycity4kids.application.BaseApplication
 import com.mycity4kids.base.BaseFragment
+import com.mycity4kids.gtmutils.Utils
 import com.mycity4kids.preference.SharedPrefUtils
 import com.mycity4kids.utils.AppUtils
 import com.mycity4kids.utils.CustomTabsHelper
@@ -39,16 +40,64 @@ class BloggerGoldAboutFragment : BaseFragment() {
         webviewKnowMore = view.findViewById(R.id.blogger_gold_about_text7)
         bloggerGoldAboutText = view.findViewById(R.id.blogger_gold_about_text)
         webviewHack.setOnClickListener {
-            launchChromeTabs("https://" + AppUtils.getLanguage(SharedPrefUtils.getAppLocale(BaseApplication.getAppContext())) + ".momspresso.com/birthdaybonanza/hack_to_get_more_page_views")
+            Utils.shareEventTracking(
+                activity,
+                "BB Program Page",
+                "BirthdayBonanza_Android",
+                "AboutTab_Hacks_CTA_BB"
+            )
+            launchChromeTabs(
+                "https://" + AppUtils.getLanguage(
+                    SharedPrefUtils.getAppLocale(
+                        BaseApplication.getAppContext()
+                    )
+                ) + ".momspresso.com/birthdaybonanza/hack_to_get_more_page_views"
+            )
         }
         webviewTerms.setOnClickListener {
-            launchChromeTabs("https://" + AppUtils.getLanguage(SharedPrefUtils.getAppLocale(BaseApplication.getAppContext())) + ".momspresso.com/birthdaybonanza/terms_and_conditions")
+            Utils.shareEventTracking(
+                activity,
+                "BB Program Page",
+                "BirthdayBonanza_Android",
+                "AboutTab_TnC_CTA_BB"
+            )
+            launchChromeTabs(
+                "https://" + AppUtils.getLanguage(
+                    SharedPrefUtils.getAppLocale(
+                        BaseApplication.getAppContext()
+                    )
+                ) + ".momspresso.com/birthdaybonanza/terms_and_conditions"
+            )
         }
         webviewFAQ.setOnClickListener {
-            launchChromeTabs("https://" + AppUtils.getLanguage(SharedPrefUtils.getAppLocale(BaseApplication.getAppContext())) + ".momspresso.com/birthdaybonanza/faqs")
+            Utils.shareEventTracking(
+                activity,
+                "BB Program Page",
+                "BirthdayBonanza_Android",
+                "AboutTab_FAQ_CTA_BB"
+            )
+            launchChromeTabs(
+                "https://" + AppUtils.getLanguage(
+                    SharedPrefUtils.getAppLocale(
+                        BaseApplication.getAppContext()
+                    )
+                ) + ".momspresso.com/birthdaybonanza/faqs"
+            )
         }
         webviewKnowMore.setOnClickListener {
-            launchChromeTabs("https://" + AppUtils.getLanguage(SharedPrefUtils.getAppLocale(BaseApplication.getAppContext())) + ".momspresso.com/birthdaybonanza/know_more")
+            Utils.shareEventTracking(
+                activity,
+                "BB Program Page",
+                "BirthdayBonanza_Android",
+                "AboutTab_KnowMore_CTA_BB"
+            )
+            launchChromeTabs(
+                "https://" + AppUtils.getLanguage(
+                    SharedPrefUtils.getAppLocale(
+                        BaseApplication.getAppContext()
+                    )
+                ) + ".momspresso.com/birthdaybonanza/know_more"
+            )
         }
         fabwhatsapp.setOnClickListener {
             val shareIntent =

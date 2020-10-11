@@ -61,6 +61,8 @@ import io.reactivex.Observer
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable
 import io.reactivex.schedulers.Schedulers
+import java.util.ArrayList
+import java.util.HashMap
 import okhttp3.ResponseBody
 import org.json.JSONArray
 import org.json.JSONException
@@ -68,8 +70,6 @@ import org.json.JSONObject
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
-import java.util.ArrayList
-import java.util.HashMap
 
 class ContentCommentReplyNotificationActivity : BaseActivity(),
     ArticleCommentsRecyclerAdapter.RecyclerViewClickListener,
@@ -118,10 +118,6 @@ class ContentCommentReplyNotificationActivity : BaseActivity(),
         commentList = ArrayList()
         getComments(null)
         horizontalCommentSuggestionsContainer.visibility = View.GONE
-     /*   if (SharedPrefUtils.getCommentSuggestionsVisibilityFlag(BaseApplication.getAppContext()))
-           // getCommentSuggestions()
-        else
-            horizontalCommentSuggestionsContainer.visibility = View.GONE*/
         if ("comment" == show || replyId.isNullOrBlank()) {
             showCommentFragment(commentId)
         } else if ("reply" == show) {
@@ -176,7 +172,7 @@ class ContentCommentReplyNotificationActivity : BaseActivity(),
     }
 
     private fun getCommentSuggestions() {
-        val rest = BaseApplication.getInstance().retrofit;
+        val rest = BaseApplication.getInstance().retrofit
         val articleDetailsAPI = rest.create(ArticleDetailsAPI::class.java)
         val call =
             articleDetailsAPI.getCommentSuggestions(null)
@@ -201,19 +197,15 @@ class ContentCommentReplyNotificationActivity : BaseActivity(),
                         val result = data.getJSONArray("result")
                         setHorizontalCommentSuggestions(result)
                     }
-
-
                 } catch (e: Exception) {
                     FirebaseCrashlytics.getInstance().recordException(e)
                     Log.d("MC4kException", Log.getStackTraceString(e))
                 }
             }
-
         })
     }
 
-
-    private fun setHorizontalCommentSuggestions(result: JSONArray) { //suggestionContainer
+    private fun setHorizontalCommentSuggestions(result: JSONArray) { // suggestionContainer
         for (i in 0 until result.length()) {
             try {
                 val textView = CustomFontTextView(this)

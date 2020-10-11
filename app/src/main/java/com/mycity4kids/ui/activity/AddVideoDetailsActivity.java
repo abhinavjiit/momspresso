@@ -1,7 +1,6 @@
 package com.mycity4kids.ui.activity;
 
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
@@ -18,8 +17,6 @@ import android.widget.Toast;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.content.ContextCompat;
 import androidx.core.content.FileProvider;
-import androidx.work.OneTimeWorkRequest;
-import androidx.work.WorkManager;
 import com.afollestad.easyvideoplayer.EasyVideoCallback;
 import com.afollestad.easyvideoplayer.EasyVideoPlayer;
 import com.google.firebase.auth.FirebaseAuth;
@@ -66,21 +63,18 @@ public class AddVideoDetailsActivity extends BaseActivity implements View.OnClic
     private String mappedCategoryId;
     private String duration;
     private String thumbnailTime;
-    private SharedPreferences pref;
     private String comingFrom;
     private String challengeId;
     private RelativeLayout root;
     private FirebaseAuth auth;
-    private WorkManager workManager;
     private Boolean signIn = false;
-    private OneTimeWorkRequest request;
     private RelativeLayout popup;
     private TextView okay;
     private FlowLayout subCategoriesContainer;
     private Topics selectedCategory;
     MixpanelAPI mixpanel;
     private RelativeLayout toolTipContainer;
-    private View tooltip;
+    private RelativeLayout coachmarkTagsContainer;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -93,18 +87,17 @@ public class AddVideoDetailsActivity extends BaseActivity implements View.OnClic
 
         Utils.pushOpenScreenEvent(this, "CreateVideoScreen",
                 SharedPrefUtils.getUserDetailModel(this).getDynamoId() + "");
-        popup = (RelativeLayout) findViewById(R.id.popup);
-        okay = (TextView) findViewById(R.id.okay);
-        videoTitleEditText = (EditText) findViewById(R.id.videoTitleEditText);
-        toolbar = (Toolbar) findViewById(R.id.toolbar);
-        player = (EasyVideoPlayer) findViewById(R.id.player);
-        saveUploadTextView = (TextView) findViewById(R.id.saveUploadTextView);
-        subCategoriesContainer = (FlowLayout) findViewById(R.id.subCategoriesContainer);
+        popup = findViewById(R.id.popup);
+        okay = findViewById(R.id.okay);
+        videoTitleEditText = findViewById(R.id.videoTitleEditText);
+        toolbar = findViewById(R.id.toolbar);
+        player = findViewById(R.id.player);
+        saveUploadTextView = findViewById(R.id.saveUploadTextView);
+        subCategoriesContainer = findViewById(R.id.subCategoriesContainer);
         toolTipContainer = findViewById(R.id.toolTipContainer);
-        tooltip = findViewById(R.id.tooltip);
-        TextView next = tooltip.findViewById(R.id.okgot);
+        coachmarkTagsContainer = findViewById(R.id.coachmarkTagsContainer);
+
         auth = FirebaseAuth.getInstance();
-        workManager = WorkManager.getInstance(this);
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setTitle("Upload Video");
@@ -114,7 +107,6 @@ public class AddVideoDetailsActivity extends BaseActivity implements View.OnClic
         comingFrom = getIntent().getStringExtra("comingFrom");
         selectedCategory = getIntent().getParcelableExtra("selectedCategory");
         saveUploadTextView.setOnClickListener(this);
-        next.setOnClickListener(this);
         if ("Challenge".equals(comingFrom)) {
             challengeId = getIntent().getStringExtra("ChallengeId");
             saveUploadTextView.setEnabled(false);
@@ -134,20 +126,28 @@ public class AddVideoDetailsActivity extends BaseActivity implements View.OnClic
         originalUri = Uri.parse(originalPath);
         player.start();
         okay.setOnClickListener(this);
+        coachmarkTagsContainer.setOnClickListener(this);
         toolTipContainer.setOnClickListener(this);
-        tooltip.setOnClickListener(this);
-        showToolTip();
+
+        if (!checkCoachmarkFlagStatus("videoTitleAndTags")) {
+            showTitleToolTip();
+        }
     }
 
-    private void showToolTip() {
+    private void showTitleToolTip() {
+        toolTipContainer.setVisibility(View.VISIBLE);
         final Handler handler = new Handler(Looper.getMainLooper());
-        handler.postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                if (toolTipContainer.getVisibility() == View.VISIBLE) {
-                    toolTipContainer.setVisibility(View.GONE);
-                }
-            }
+        handler.postDelayed(() -> {
+            toolTipContainer.setVisibility(View.GONE);
+            showTagsTooltip();
+        }, 3000);
+    }
+
+    private void showTagsTooltip() {
+        coachmarkTagsContainer.setVisibility(View.VISIBLE);
+        new Handler().postDelayed(() -> {
+            coachmarkTagsContainer.setVisibility(View.GONE);
+            updateCoachmarkFlag("videoTitleAndTags", true);
         }, 3000);
     }
 
@@ -278,15 +278,15 @@ public class AddVideoDetailsActivity extends BaseActivity implements View.OnClic
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
-            case R.id.tooltip:
-            case R.id.toolTipContainer:
-            case R.id.okgot: {
-                if (toolTipContainer.getVisibility() == View.VISIBLE) {
-                    toolTipContainer.setVisibility(View.GONE);
-                }
+            case R.id.toolTipContainer: {
+                toolTipContainer.setVisibility(View.GONE);
+                showTagsTooltip();
                 break;
             }
-
+            case R.id.coachmarkTagsContainer: {
+                coachmarkTagsContainer.setVisibility(View.GONE);
+                updateCoachmarkFlag("videoTitleAndTags", true);
+            }
             case R.id.saveUploadTextView:
                 if (StringUtils.isNullOrEmpty(videoTitleEditText.getText().toString())) {
                     videoTitleEditText.setFocusableInTouchMode(true);
@@ -311,7 +311,6 @@ public class AddVideoDetailsActivity extends BaseActivity implements View.OnClic
                 break;
             default:
                 break;
-
         }
     }
 
@@ -330,7 +329,6 @@ public class AddVideoDetailsActivity extends BaseActivity implements View.OnClic
     private void uploadVideo() {
         showProgressDialog("Please wait ...");
         contentUri = FileProvider.getUriForFile(this, "com.momspresso.fileprovider", new File(originalPath));
-        Log.e("dwadad", "dwadad" + contentUri);
         if (contentUri != null) {
             removeProgressDialog();
             resumeUpload();

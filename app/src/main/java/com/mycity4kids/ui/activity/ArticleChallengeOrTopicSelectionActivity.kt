@@ -104,15 +104,14 @@ class ArticleChallengeOrTopicSelectionActivity : BaseActivity(),
             onBackPressed()
         }
 
-        if (!SharedPrefUtils.getOriginalContentChallengeClick(this)) {
-            showOriginalContentDialog()
-        }
         coachMark.setOnClickListener {
-            SharedPrefUtils.setCoachmarksShownFlag(
-                BaseApplication.getAppContext(),
-                "articleChallengeSelectionScreenCoachMark",
-                true
+            Utils.shareEventTracking(
+                this,
+                "Create section",
+                "Create_Android",
+                "B_TT_Topic_Challenge"
             )
+            updateCoachmarkFlag("articleChallengeSelectionScreenCoachMark", true)
             coachMark.visibility = View.GONE
         }
         secondTextView.setOnClickListener(this)
@@ -171,22 +170,27 @@ class ArticleChallengeOrTopicSelectionActivity : BaseActivity(),
         for (i in 0 until catWiseChallengeList.size) {
             if ("1" == catWiseChallengeList[i].publicVisibility) {
                 articleChallengesList.add(catWiseChallengeList[i])
-                if (!SharedPrefUtils.isCoachmarksShownFlag(
-                        BaseApplication.getAppContext(),
-                        "articleChallengeSelectionScreenCoachMark"
-                    )) {
-                    coachMark.visibility = View.VISIBLE
-                    if (i == 0) {
-                        Picasso.get().load(catWiseChallengeList[i].extraData[0].challenge.imageUrl).error(
-                            R.drawable.default_article
-                        ).into(
-                            tagImageViewCoachMark
-                        )
+                if (i == 0) {
+                    if (!SharedPrefUtils.getOriginalContentChallengeClick(this)) {
+                        showOriginalContentDialog()
+                    } else {
+                        handleCoachmarkVisibility(catWiseChallengeList[i])
                     }
                 }
             }
         }
         articleChallengesRecyclerAdapter.notifyDataSetChanged()
+    }
+
+    private fun handleCoachmarkVisibility(challengeItem: Topics) {
+        if (!checkCoachmarkFlagStatus("articleChallengeSelectionScreenCoachMark")) {
+            coachMark.visibility = View.VISIBLE
+            Picasso.get().load(challengeItem.extraData[0].challenge.imageUrl).error(
+                R.drawable.default_article
+            ).into(
+                tagImageViewCoachMark
+            )
+        }
     }
 
     private val suggestedTopics: Unit
@@ -266,7 +270,7 @@ class ArticleChallengeOrTopicSelectionActivity : BaseActivity(),
                 dialog.show()
             }
         } else {
-            Utils.shareEventTracking(this, "Create section", "Create_Android", "B_Topic")
+            Utils.shareEventTracking(this, "Create section", "Create_Android", "B_Show_Challenges")
             val intent = Intent(this, ArticleChallengeDetailActivity::class.java)
             intent.putExtra("articleChallengeId", topics.id)
             intent.putExtra("challengeName", topics.display_name)
@@ -274,8 +278,8 @@ class ArticleChallengeOrTopicSelectionActivity : BaseActivity(),
         }
     }
 
-
     override fun onSuggestedTopicClick() {
+        Utils.shareEventTracking(this, "Create section", "Create_Android", "B_Topic")
         val intent = Intent(this, NewEditor::class.java)
         startActivity(intent)
     }
@@ -287,6 +291,7 @@ class ArticleChallengeOrTopicSelectionActivity : BaseActivity(),
         dialog.setCancelable(false)
         dialog.findViewById<View>(R.id.okBtn).setOnClickListener { view: View? ->
             SharedPrefUtils.setOriginalContentChallengeClick(this, true)
+            handleCoachmarkVisibility(articleChallengesList[0])
             dialog.dismiss()
         }
         dialog.window!!.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
@@ -296,34 +301,13 @@ class ArticleChallengeOrTopicSelectionActivity : BaseActivity(),
     override fun onClick(view: View?) {
         when (view?.id) {
             R.id.secondTextView -> {
-                SharedPrefUtils.setCoachmarksShownFlag(
-                    BaseApplication.getAppContext(),
-                    "articleChallengeSelectionScreenCoachMark",
-                    true
-                )
+                Utils.shareEventTracking(this, "Create section", "Create_Android", "B_TT_CS_Skip")
                 coachMark.visibility = View.GONE
-                SharedPrefUtils.setCoachmarksShownFlag(
-                    BaseApplication.getAppContext(),
-                    "newEditor_bottom",
-                    true
-                )
-                SharedPrefUtils.setCoachmarksShownFlag(
-                    BaseApplication.getAppContext(),
-                    "newEditor",
-                    true
-                )
-
-                SharedPrefUtils.setCoachmarksShownFlag(
-                    BaseApplication.getAppContext(),
-                    "addArticleTagImageScreen",
-                    true
-                )
-                SharedPrefUtils.setCoachmarksShownFlag(
-                    BaseApplication.getAppContext(),
-                    "addArticleTopicScreen",
-                    true
-                )
-
+                updateCoachmarkFlag("articleChallengeSelectionScreenCoachMark", true)
+                updateCoachmarkFlag("newEditor_bottom", true)
+                updateCoachmarkFlag("articleEditorPublish", true)
+                updateCoachmarkFlag("addArticleTagImageScreen", true)
+                updateCoachmarkFlag("addArticleTopicScreen", true)
             }
         }
     }

@@ -3784,18 +3784,23 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
                         ((RelativeLayout) topicView.getChildAt(0)).getChildAt(1).setVisibility(View.GONE);
                     }
                     if (null != previouslyFollowedTopics && previouslyFollowedTopics.contains(key)) {
-                        ((ImageView) ((RelativeLayout) topicView.getChildAt(0)).getChildAt(2)).setImageDrawable(ContextCompat
-                                .getDrawable(BaseApplication.getAppContext(), R.drawable.ic_tick));
-                        ((RelativeLayout) topicView.getChildAt(0)).getChildAt(2).setOnClickListener(v -> followUnfollowTopics((String) v.getTag(),
-                                (RelativeLayout) v.getParent(), 0));
+                        ((ImageView) ((RelativeLayout) topicView.getChildAt(0)).getChildAt(2))
+                                .setImageDrawable(ContextCompat
+                                        .getDrawable(BaseApplication.getAppContext(), R.drawable.ic_tick));
+                        ((RelativeLayout) topicView.getChildAt(0)).getChildAt(2)
+                                .setOnClickListener(v -> followUnfollowTopics((String) v.getTag(),
+                                        (RelativeLayout) v.getParent(), 0));
                     } else {
-                        ((ImageView) ((RelativeLayout) topicView.getChildAt(0)).getChildAt(2)).setImageDrawable(ContextCompat
-                                .getDrawable(BaseApplication.getAppContext(), R.drawable.ic_plus));
-                        ((RelativeLayout) topicView.getChildAt(0)).getChildAt(2).setOnClickListener(v -> followUnfollowTopics((String) v.getTag(),
-                                (RelativeLayout) v.getParent(), 1));
+                        ((ImageView) ((RelativeLayout) topicView.getChildAt(0)).getChildAt(2))
+                                .setImageDrawable(ContextCompat
+                                        .getDrawable(BaseApplication.getAppContext(), R.drawable.ic_plus));
+                        ((RelativeLayout) topicView.getChildAt(0)).getChildAt(2)
+                                .setOnClickListener(v -> followUnfollowTopics((String) v.getTag(),
+                                        (RelativeLayout) v.getParent(), 1));
                     }
 
                     ((RelativeLayout) topicView.getChildAt(0)).getChildAt(0).setOnClickListener(v -> {
+                        Utils.shareEventTracking(getActivity(), "Article Detail", "Topic_Android", "AD_Tag");
                         String categoryId = (String) v.getTag();
                         Intent intent = new Intent(getActivity(), FilteredTopicsArticleListingActivity.class);
                         intent.putExtra("selectedTopics", categoryId);
@@ -3817,23 +3822,6 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
         topicIdLList.add(selectedTopic);
         followUnfollowCategoriesRequest.setCategories(topicIdLList);
         if (action == 0) {
-            try {
-                JSONObject jsonObject = new JSONObject();
-                jsonObject.put("userId",
-                        SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext())
-                                .getDynamoId());
-                jsonObject.put("Topic",
-                        "" + selectedTopic + "~" + ((TextView) tagView.getChildAt(0)).getText()
-                                .toString());
-                jsonObject.put("ScreenName", "DetailArticleScreen");
-                jsonObject.put("isFirstTimeUser", followTopicChangeNewUser);
-                Log.d("UnfollowTopics", jsonObject.toString());
-                mixpanel.track("UnfollowTopic", jsonObject);
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-            Utils.pushUnfollowTopicEvent(getActivity(), "DetailArticleScreen", userDynamoId,
-                    selectedTopic + "~" + ((TextView) tagView.getChildAt(0)).getText().toString());
             tagView.getChildAt(0).setTag(selectedTopic);
             tagView.getChildAt(2).setTag(selectedTopic);
             ((ImageView) tagView.getChildAt(2)).setImageDrawable(
@@ -3841,23 +3829,7 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
             tagView.getChildAt(2).setOnClickListener(
                     v -> followUnfollowTopics((String) v.getTag(), (RelativeLayout) v.getParent(), 1));
         } else {
-            try {
-                JSONObject jsonObject = new JSONObject();
-                jsonObject.put("userId",
-                        SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext())
-                                .getDynamoId());
-                jsonObject.put("Topic",
-                        "" + selectedTopic + "~" + ((TextView) tagView.getChildAt(0)).getText()
-                                .toString());
-                jsonObject.put("ScreenName", "DetailArticleScreen");
-                jsonObject.put("isFirstTimeUser", followTopicChangeNewUser);
-                Log.d("FollowTopics", jsonObject.toString());
-                mixpanel.track("FollowTopic", jsonObject);
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-            Utils.pushFollowTopicEvent(getActivity(), "DetailArticleScreen", userDynamoId,
-                    selectedTopic + "~" + ((TextView) tagView.getChildAt(0)).getText().toString());
+            Utils.shareEventTracking(getActivity(), "Article Detail", "Topic_Android", "AD_Tag_Follow");
             tagView.getChildAt(0).setTag(selectedTopic);
             tagView.getChildAt(2).setTag(selectedTopic);
             ((ImageView) tagView.getChildAt(2))

@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+  xmlns:app="http://schemas.android.com/tools"
   xmlns:fab="http://schemas.android.com/apk/res-auto"
   android:id="@+id/root"
   android:layout_width="match_parent"
@@ -68,6 +69,24 @@
         android:layout_height="250dp"
         android:layout_below="@+id/videoTitleEditText" />
 
+      <RelativeLayout
+        android:id="@+id/toolTipContainer"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@id/videoTitleEditText"
+        android:clickable="true"
+        android:focusable="true"
+        android:visibility="gone">
+        <include
+          android:id="@+id/tooltip"
+          layout="@layout/add_video_detail_tooltip"
+          android:layout_width="match_parent"
+          android:layout_height="wrap_content"
+          android:layout_alignParentBottom="true"
+          android:layout_marginStart="16dp"
+          android:layout_marginEnd="16dp" />
+      </RelativeLayout>
+
       <com.mycity4kids.widget.CustomFontTextView
         android:id="@+id/selectTagLabel"
         android:layout_width="wrap_content"
@@ -78,14 +97,6 @@
         android:text="@string/add_vlogs_detail_select_tag"
         android:textColor="@color/app_dark_black"
         android:textSize="18sp" />
-
-      <!--    <ScrollView-->
-      <!--      android:id="@+id/subcategoryScrollView"-->
-      <!--      android:layout_width="match_parent"-->
-      <!--      android:layout_height="wrap_content"-->
-      <!--      android:layout_above="@+id/saveUploadTextView"-->
-      <!--      android:layout_below="@+id/selectTagLabel"-->
-      <!--      android:layout_marginTop="10dp">-->
 
       <org.apmem.tools.layouts.FlowLayout
         android:id="@+id/subCategoriesContainer"
@@ -142,26 +153,44 @@
             android:textAllCaps="true"
             android:textColor="@color/white" />
         </RelativeLayout>
-
       </RelativeLayout>
     </RelativeLayout>
   </ScrollView>
+
   <RelativeLayout
-    android:id="@+id/toolTipContainer"
+    android:id="@+id/coachmarkTagsContainer"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:layout_above="@id/saveUploadTextView"
-    android:clickable="true"
-    android:focusable="true">
-    <include
-      android:id="@+id/tooltip"
-      layout="@layout/add_video_detail_tooltip"
-      android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_above="@+id/saveUploadTextView"
+    android:layout_margin="16dp"
+    android:background="@drawable/tooltip_shape_layout"
+    android:padding="@dimen/space_20"
+    android:visibility="gone">
+
+    <com.mycity4kids.widget.CustomFontTextView
+      android:id="@+id/coachmarkVlogsTags"
+      android:layout_width="wrap_content"
       android:layout_height="wrap_content"
-      android:layout_alignParentBottom="true"
-      android:layout_marginStart="16dp"
-      android:layout_marginEnd="16dp" />
+      android:layout_toStartOf="@+id/gotit"
+      android:text="@string/tags_help_discover"
+      android:textColor="@color/campaign_515151"
+      android:textSize="14sp"
+      app:fontName="Roboto-Regular.ttf" />
+
+    <com.mycity4kids.widget.CustomFontTextView
+      android:id="@+id/gotit"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:layout_alignParentEnd="true"
+      android:layout_marginStart="10dp"
+      android:maxWidth="100dp"
+      android:text="@string/ok_got_it"
+      android:textColor="@color/app_red"
+      android:textSize="16sp"
+      app:fontName="Roboto-Medium.ttf" />
+
   </RelativeLayout>
+
   <com.mycity4kids.widget.CustomFontTextView
     android:id="@+id/saveUploadTextView"
     android:layout_width="match_parent"

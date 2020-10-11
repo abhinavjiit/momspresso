@@ -6,7 +6,6 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-
 import android.widget.RelativeLayout
 import android.widget.TextView
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -16,6 +15,7 @@ import com.mycity4kids.R
 import com.mycity4kids.application.BaseApplication
 import com.mycity4kids.base.BaseFragment
 import com.mycity4kids.constants.Constants
+import com.mycity4kids.gtmutils.Utils
 import com.mycity4kids.models.response.AllLeaderboardDataResponse
 import com.mycity4kids.profile.UserProfileActivity
 import com.mycity4kids.retrofitAPIsInterfaces.BloggerGoldAPI
@@ -124,6 +124,12 @@ class AllVlogLeaderboardFragment : BaseFragment(),
     }
 
     override fun onRecyclerViewItemClick(view: View?, position: Int) {
+        Utils.shareEventTracking(
+            activity,
+            "BB Program Page",
+            "BirthdayBonanza_Android",
+            "LB_ProfileClick_BB"
+        )
         val userProfileIntent = Intent(
             activity,
             UserProfileActivity::class.java

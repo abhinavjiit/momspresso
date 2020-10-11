@@ -8,7 +8,6 @@
   android:background="@drawable/tooltip_shape_layout"
   android:padding="@dimen/space_20">
 
-
   <com.mycity4kids.widget.CustomFontTextView
     android:id="@+id/secondTextView"
     android:layout_width="0dp"
@@ -17,12 +16,12 @@
     android:textColor="@color/campaign_515151"
     android:textSize="14sp"
     app:fontName="Roboto-Regular.ttf"
-    app:layout_constraintEnd_toStartOf="@+id/okgot"
+    app:layout_constraintEnd_toStartOf="@+id/nextTextView"
     app:layout_constraintStart_toStartOf="parent"
     app:layout_constraintTop_toTopOf="parent" />
 
   <com.mycity4kids.widget.CustomFontTextView
-    android:id="@+id/okgot"
+    android:id="@+id/nextTextView"
     android:layout_width="0dp"
     android:layout_height="wrap_content"
     android:layout_marginStart="10dp"

@@ -18,6 +18,7 @@ import android.view.Window
 import android.webkit.WebView
 import android.widget.FrameLayout
 import android.widget.ImageView
+import android.widget.TextView
 import android.widget.Toast
 import androidx.cardview.widget.CardView
 import androidx.core.app.ActivityCompat
@@ -68,6 +69,7 @@ class VideoCategoryAndChallengeSelectionActivity : BaseActivity(),
     private lateinit var categoryImageViewCoachMark: ImageView
     private lateinit var categoryCoachMarkContainer: FrameLayout
     private lateinit var coachMarkBottom: CardView
+    private lateinit var secondTextView: TextView
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -78,6 +80,7 @@ class VideoCategoryAndChallengeSelectionActivity : BaseActivity(),
         categoryImageViewCoachMark = findViewById(R.id.categoryImageViewCoachMark)
         categoryCoachMarkContainer = findViewById(R.id.categoryCoachMarkContainer)
         coachMarkBottom = findViewById(R.id.coachMarkBottom)
+        secondTextView = findViewById(R.id.secondTextView)
 
         vlogTutorialImageView.setOnClickListener(this)
 
@@ -119,7 +122,7 @@ class VideoCategoryAndChallengeSelectionActivity : BaseActivity(),
         coachMark.setOnClickListener(this)
         transViewCoachMark.setOnClickListener(this)
         categoryImageViewCoachMark.setOnClickListener(this)
-
+        secondTextView.setOnClickListener(this)
     }
 
     private fun getCategoriesData() {
@@ -219,10 +222,7 @@ class VideoCategoryAndChallengeSelectionActivity : BaseActivity(),
             for (j in 0 until originalChallengeList.size) {
                 if (originalChallengeList[j].publicVisibility == "1") {
                     categoryWiseChallengeList[i].child.add(originalChallengeList[j])
-                    if (i == 0 && !SharedPrefUtils.isCoachmarksShownFlag(
-                            BaseApplication.getAppContext(),
-                            "videoOrChallengeSelectionScreen"
-                        )) {
+                    if (i == 0 && !checkCoachmarkFlagStatus("videoOrChallengeSelectionScreen")) {
                         try {
                             transViewCoachMark.visibility = View.VISIBLE
                             coachMark.visibility = View.VISIBLE
@@ -233,7 +233,6 @@ class VideoCategoryAndChallengeSelectionActivity : BaseActivity(),
                         } catch (e: Exception) {
                             Log.d("TAG", e.message!!)
                         }
-
                     }
                 }
             }
@@ -254,15 +253,11 @@ class VideoCategoryAndChallengeSelectionActivity : BaseActivity(),
                         ("category-ee7ea82543bd4bc0a8dad288561f2beb" == it[i].id)) {
                         categoryList.add(it[i])
                     }
-
                 }
             }
             try {
                 if (categoryList.size > 0) {
-                    if (!SharedPrefUtils.isCoachmarksShownFlag(
-                            BaseApplication.getAppContext(),
-                            "videoOrChallengeSelectionScreen"
-                        )) {
+                    if (!checkCoachmarkFlagStatus("videoOrChallengeSelectionScreen")) {
                         categoryCoachMarkContainer.visibility = View.VISIBLE
                         categoryImageViewCoachMark.visibility = View.VISIBLE
                         Picasso.get().load(categoryList[0].extraData[0].categoryBackImage.app).into(
@@ -557,15 +552,21 @@ class VideoCategoryAndChallengeSelectionActivity : BaseActivity(),
 
     override fun onClick(view: View?) {
         if (view?.id == R.id.vlogTutorialImageView) {
+            Utils.shareEventTracking(this, "Create section", "Create_Android", "V_Tutorial_Video")
             val intent = Intent(this, ContentCreationTutorialListingActivity::class.java)
             intent.putExtra(AppConstants.COLLECTION_ID, AppConstants.MOM_VLOG_TUTORIAL_COLLECTION)
             startActivity(intent)
         } else if (view?.id == R.id.transViewCoachMark || view?.id == R.id.coachMark || view?.id == R.id.categoryImageViewCoachMark) {
-            SharedPrefUtils.setCoachmarksShownFlag(
-                BaseApplication.getAppContext(),
-                "videoOrChallengeSelectionScreen",
-                true
-            )
+            updateCoachmarkFlag("videoOrChallengeSelectionScreen", true)
+            coachMark.visibility = View.GONE
+            transViewCoachMark.visibility = View.GONE
+            categoryImageViewCoachMark.visibility = View.GONE
+            categoryCoachMarkContainer.visibility = View.GONE
+            coachMarkBottom.visibility = View.GONE
+        } else if (view?.id == R.id.secondTextView) {
+            updateCoachmarkFlag("videoOrChallengeSelectionScreen", true)
+            updateCoachmarkFlag("videoTrimmer", true)
+            updateCoachmarkFlag("videoTitleAndTags", true)
             coachMark.visibility = View.GONE
             transViewCoachMark.visibility = View.GONE
             categoryImageViewCoachMark.visibility = View.GONE

@@ -35,14 +35,14 @@ import com.mycity4kids.widget.MomspressoButtonWidget
 import com.mycity4kids.widget.ShareButtonWidget
 import com.mycity4kids.widget.StoryShareCardWidget
 import com.squareup.picasso.Picasso
+import java.io.File
+import java.net.SocketTimeoutException
+import java.net.UnknownHostException
 import org.apache.commons.lang3.text.WordUtils
 import pub.devrel.easypermissions.AppSettingsDialog
 import pub.devrel.easypermissions.EasyPermissions
 import retrofit2.Call
 import retrofit2.Callback
-import java.io.File
-import java.net.SocketTimeoutException
-import java.net.UnknownHostException
 
 class ShortStoryModerationOrShareActivity : BaseActivity(), GroupMembershipStatus.IMembershipStatus,
     View.OnClickListener,
@@ -68,12 +68,11 @@ class ShortStoryModerationOrShareActivity : BaseActivity(), GroupMembershipStatu
     private lateinit var createMoreHeaderTextView: TextView
     private lateinit var createMoreHeaderTextViewModeration: TextView
     private lateinit var createMoreButtonModeration: MomspressoButtonWidget
-    private var groupId: Int? = null
+    private var groupId: Int = AppConstants.ENGLISH_JOIN_CREATOR_GROUP_ID
     private lateinit var cancelImageModeration: ImageView
     private lateinit var youAreDoneView: ConstraintLayout
     private lateinit var back: ImageView
     private lateinit var moderationGuidLines: TextView
-
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -156,34 +155,12 @@ class ShortStoryModerationOrShareActivity : BaseActivity(), GroupMembershipStatu
 
     private fun checkCreatorGroupMemberShip() {
         val groupMembershipStatus = GroupMembershipStatus(this)
-        when (SharedPrefUtils.getAppLocale(BaseApplication.getAppContext())) {
-            "en" -> {
-                groupId = AppConstants.ENGLISH_JOIN_CREATOR_GROUP_ID
-            }
-            "ta" -> {
-                groupId = AppConstants.TAMIL_JOIN_CREATOR_GROUP_ID
-
-            }
-            "bn" -> {
-                groupId = AppConstants.BANGLA_JOIN_CREATOR_GROUP_ID
-
-            }
-            "hi" -> {
-                groupId = AppConstants.HINDI_JOIN_CREATOR_GROUP_ID
-
-            }
-
-
-        }
-        groupId?.let {
-            groupMembershipStatus
-                .checkMembershipStatus(
-                    it,
-                    SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).dynamoId
-                )
-        }
+        groupId = AppUtils.getCreatorGroupIdForLanguage()
+        groupMembershipStatus.checkMembershipStatus(
+            groupId,
+            SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).dynamoId
+        )
     }
-
 
     private fun getShortStoryDetails(storyId: String?) {
         val retro = BaseApplication.getInstance().retrofit
@@ -245,6 +222,12 @@ class ShortStoryModerationOrShareActivity : BaseActivity(), GroupMembershipStatu
     override fun onClick(v: View?) {
         when (v?.id) {
             R.id.moderationGuidLines -> {
+                Utils.shareEventTracking(
+                    this,
+                    "Post creation",
+                    "Create_Android",
+                    "PCS_Moderation_Guide"
+                )
                 handleDeeplinks("https://www.momspresso.com/moderation-rules")
             }
             R.id.back -> {
@@ -260,6 +243,12 @@ class ShortStoryModerationOrShareActivity : BaseActivity(), GroupMembershipStatu
             }
             R.id.createMoreButton -> {
                 if (createMoreButton.tag == "already_join") {
+                    Utils.shareEventTracking(
+                        this,
+                        "Post creation",
+                        "Create_Android",
+                        "PCS_Create_M"
+                    )
                     val chooseShortStory = Intent(
                         this,
                         ChooseShortStoryCategoryActivity::class.java
@@ -269,6 +258,12 @@ class ShortStoryModerationOrShareActivity : BaseActivity(), GroupMembershipStatu
                     chooseShortStory.putExtra("source", "dashboard")
                     startActivity(chooseShortStory)
                 } else {
+                    Utils.shareEventTracking(
+                        this,
+                        "Post creation",
+                        "Create_Android",
+                        "PCS_Suppport_Group_M"
+                    )
                     val intent = Intent(this, GroupsSummaryActivity::class.java)
                     intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
                     intent.putExtra("groupId", groupId)
@@ -278,6 +273,12 @@ class ShortStoryModerationOrShareActivity : BaseActivity(), GroupMembershipStatu
             }
             R.id.createMoreButtonModeration -> {
                 if (createMoreButtonModeration.tag == "already_join") {
+                    Utils.shareEventTracking(
+                        this,
+                        "Post creation",
+                        "Create_Android",
+                        "PCS_Create_AM"
+                    )
                     val chooseShortStory = Intent(
                         this,
                         ChooseShortStoryCategoryActivity::class.java
@@ -286,14 +287,18 @@ class ShortStoryModerationOrShareActivity : BaseActivity(), GroupMembershipStatu
                         (Intent.FLAG_ACTIVITY_SINGLE_TOP or Intent.FLAG_ACTIVITY_CLEAR_TOP)
                     chooseShortStory.putExtra("source", "dashboard")
                     startActivity(chooseShortStory)
-
                 } else {
+                    Utils.shareEventTracking(
+                        this,
+                        "Post creation",
+                        "Create_Android",
+                        "PCS_Support_Group_AM"
+                    )
                     val intent = Intent(this, GroupsSummaryActivity::class.java)
                     intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
                     intent.putExtra("groupId", groupId)
                     intent.putExtra("comingFrom", "story")
                     startActivity(intent)
-
                 }
             }
             R.id.cancelImage -> {
@@ -463,8 +468,6 @@ class ShortStoryModerationOrShareActivity : BaseActivity(), GroupMembershipStatu
     }
 
     override fun onPermissionsDenied(requestCode: Int, perms: List<String?>) {
-        // (Optional) Check whether the user denied any permissions and checked "NEVER ASK AGAIN."
-        // This will display a dialog directing them to enable the permission in app settings.
         if (EasyPermissions.somePermissionPermanentlyDenied(this, perms)) {
             AppSettingsDialog.Builder(this).build().show()
         }
@@ -510,17 +513,13 @@ class ShortStoryModerationOrShareActivity : BaseActivity(), GroupMembershipStatu
             createMoreButtonModeration.visibility = View.VISIBLE
             createMoreHeaderTextViewModeration.visibility = View.VISIBLE
             if (body?.data?.result == null || body.data.result.isEmpty() || body.data.result[0].status == "2") {
-
                 createMoreButtonModeration.setText(getString(R.string.join_creator_group))
                 createMoreHeaderTextViewModeration.text = getString(R.string.get_tips_ideas)
                 createMoreButtonModeration.tag = "please_join"
-
             } else {
                 createMoreButtonModeration.setText(getString(R.string.create_more))
                 createMoreHeaderTextViewModeration.text = getString(R.string.dont_stop_magic)
                 createMoreButtonModeration.tag = "already_join"
-
-
             }
         } else {
             createMoreButton.visibility = View.VISIBLE
@@ -533,24 +532,22 @@ class ShortStoryModerationOrShareActivity : BaseActivity(), GroupMembershipStatu
                 createMoreButton.setText(getString(R.string.create_more))
                 createMoreHeaderTextView.text = getString(R.string.dont_stop_magic)
                 createMoreButton.tag = "already_join"
-
             }
         }
-
     }
 
     override fun onMembershipStatusFetchFail() {
         if (shareUrl == "https://www.momspresso.com/parenting/topic/short-stories") {
             createMoreButtonModeration.visibility = View.VISIBLE
             createMoreHeaderTextViewModeration.visibility = View.VISIBLE
-            createMoreButtonModeration.setText("Join Creator's Hangout")
-            createMoreHeaderTextViewModeration.text = "Get tips or ideas from other creators"
+            createMoreButtonModeration.setText(getString(R.string.join_creator_group))
+            createMoreHeaderTextViewModeration.text = getString(R.string.get_tips_ideas)
             createMoreButtonModeration.tag = "please_join"
         } else {
             createMoreButton.visibility = View.VISIBLE
             createMoreHeaderTextView.visibility = View.VISIBLE
-            createMoreButton.setText("Join Creator's Hangout")
-            createMoreHeaderTextView.text = "Get tips or ideas from other creators"
+            createMoreButton.setText(getString(R.string.join_creator_group))
+            createMoreHeaderTextView.text = getString(R.string.get_tips_ideas)
             createMoreButton.tag = "please_join"
         }
     }

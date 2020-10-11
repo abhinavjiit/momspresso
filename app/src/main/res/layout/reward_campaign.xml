@@ -767,7 +767,7 @@
       android:layout_marginBottom="@dimen/space_16"
       android:background="@drawable/tooltip_shape_layout"
       android:padding="@dimen/space_18"
-      android:text="Apply for campaigns, complete the requirements, and earn money!"
+      android:text="@string/coachmark_mymoney"
       android:textColor="@color/campaign_515151" />
   </RelativeLayout>
 

@@ -34,7 +34,9 @@ import com.mycity4kids.preference.SharedPrefUtils;
 import com.mycity4kids.retrofitAPIsInterfaces.VlogsListingAndDetailsAPI;
 import com.mycity4kids.ui.GroupMembershipStatus;
 import com.mycity4kids.ui.GroupMembershipStatus.IMembershipStatus;
+import com.mycity4kids.utils.AppUtils;
 import com.mycity4kids.utils.MixPanelUtils;
+import com.mycity4kids.vlogs.VideoCategoryAndChallengeSelectionActivity;
 import com.mycity4kids.widget.MomspressoButtonWidget;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
@@ -126,24 +128,7 @@ public class VideoUploadProgressActivity extends BaseActivity implements View.On
 
     private void checkCreatorGroupStatus() {
         GroupMembershipStatus groupMembershipStatus = new GroupMembershipStatus(this);
-        switch (SharedPrefUtils.getAppLocale(BaseApplication.getAppContext())) {
-            case "en": {
-                groupId = AppConstants.ENGLISH_JOIN_CREATOR_GROUP_ID;
-                break;
-            }
-            case "ta": {
-                groupId = AppConstants.TAMIL_JOIN_CREATOR_GROUP_ID;
-                break;
-            }
-            case "bn": {
-                groupId = AppConstants.BANGLA_JOIN_CREATOR_GROUP_ID;
-                break;
-            }
-            case "hi": {
-                groupId = AppConstants.HINDI_JOIN_CREATOR_GROUP_ID;
-                break;
-            }
-        }
+        groupId = AppUtils.getCreatorGroupIdForLanguage();
         groupMembershipStatus.checkMembershipStatus(groupId,
                 SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId());
     }
@@ -336,6 +321,7 @@ public class VideoUploadProgressActivity extends BaseActivity implements View.On
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.modrationText: {
+                Utils.shareEventTracking(this, "Post creation", "Create_Android", "PCV_Moderation_Guide");
                 handleDeeplinks("https://www.momspresso.com/moderation-rules");
                 break;
             }
@@ -352,15 +338,16 @@ public class VideoUploadProgressActivity extends BaseActivity implements View.On
             }
             case R.id.joinVloggersGroup: {
                 if (joinVloggersGroup.getTag() == "already_join") {
-                    Intent chooseShortStory = new Intent(
+                    Utils.shareEventTracking(this, "Post creation", "Create_Android", "PCV_Create_M");
+                    Intent videoCreationIntent = new Intent(
                             this,
-                            ChooseShortStoryCategoryActivity.class
+                            VideoCategoryAndChallengeSelectionActivity.class
                     );
-                    chooseShortStory.setFlags(
+                    videoCreationIntent.setFlags(
                             (Intent.FLAG_ACTIVITY_SINGLE_TOP | Intent.FLAG_ACTIVITY_CLEAR_TOP));
-                    chooseShortStory.putExtra("source", "dashboard");
-                    startActivity(chooseShortStory);
+                    startActivity(videoCreationIntent);
                 } else {
+                    Utils.shareEventTracking(this, "Post creation", "Create_Android", "PCV_Suppport_Group_M");
                     Intent intent = new Intent(this, GroupsSummaryActivity.class);
                     intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                     intent.putExtra("groupId", groupId);
@@ -369,7 +356,6 @@ public class VideoUploadProgressActivity extends BaseActivity implements View.On
                 }
                 break;
             }
-
             case R.id.okayTextView:
                 Intent intent = new Intent(VideoUploadProgressActivity.this, DashboardActivity.class);
                 intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
@@ -378,7 +364,6 @@ public class VideoUploadProgressActivity extends BaseActivity implements View.On
                 startActivity(intent);
                 finish();
                 break;
-
             case R.id.cancel_upload:
                 if (isUploading) {
                     showAlertDialog("Momspresso", getString(R.string.video_progress_progress_lost_msg),
@@ -395,7 +380,6 @@ public class VideoUploadProgressActivity extends BaseActivity implements View.On
         }
     }
 
-
     @Override
     public void onMembershipStatusFetchSuccess(GroupsMembershipResponse body, int groupId) {
         bottomLayout.setVisibility(View.VISIBLE);
@@ -410,7 +394,6 @@ public class VideoUploadProgressActivity extends BaseActivity implements View.On
             joinVloggersGroup.setTag("already_join");
         }
     }
-
 
     @Override
     public void onMembershipStatusFetchFail() {

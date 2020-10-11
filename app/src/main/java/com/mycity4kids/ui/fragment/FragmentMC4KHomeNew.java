@@ -105,7 +105,6 @@ public class FragmentMC4KHomeNew extends BaseFragment implements View.OnClickLis
                     }
                 } catch (Exception e) {
                 }
-
                 viewPager.setCurrentItem(tab.getPosition());
             }
 

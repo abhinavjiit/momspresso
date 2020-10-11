@@ -1259,6 +1259,43 @@ public class AppUtils {
         }
     }
 
+    public static int getCreatorGroupIdForLanguage() {
+        switch (SharedPrefUtils.getAppLocale(BaseApplication.getAppContext())) {
+            case AppConstants.LOCALE_ENGLISH: {
+                return AppConstants.ENGLISH_JOIN_CREATOR_GROUP_ID;
+            }
+            case AppConstants.LOCALE_HINDI: {
+                return AppConstants.HINDI_JOIN_CREATOR_GROUP_ID;
+            }
+            case AppConstants.LOCALE_MARATHI: {
+                return AppConstants.MARATHI_JOIN_CREATOR_GROUP_ID;
+            }
+            case AppConstants.LOCALE_BENGALI: {
+                return AppConstants.BANGLA_JOIN_CREATOR_GROUP_ID;
+            }
+            case AppConstants.LOCALE_TAMIL: {
+                return AppConstants.TAMIL_JOIN_CREATOR_GROUP_ID;
+            }
+            case AppConstants.LOCALE_TELUGU: {
+                return AppConstants.TELUGU_JOIN_CREATOR_GROUP_ID;
+            }
+            case AppConstants.LOCALE_KANNADA: {
+                return AppConstants.KANNADA_JOIN_CREATOR_GROUP_ID;
+            }
+            case AppConstants.LOCALE_MALAYALAM: {
+                return AppConstants.MALAYALAM_JOIN_CREATOR_GROUP_ID;
+            }
+            case AppConstants.LOCALE_GUJARATI: {
+                return AppConstants.GUJARATI_JOIN_CREATOR_GROUP_ID;
+            }
+            case AppConstants.LOCALE_PUNJABI: {
+                return AppConstants.PUNJABI_JOIN_CREATOR_GROUP_ID;
+            }
+            default:
+                return AppConstants.ENGLISH_JOIN_CREATOR_GROUP_ID;
+        }
+    }
+
     public static class SpanData {
 
         private int start;

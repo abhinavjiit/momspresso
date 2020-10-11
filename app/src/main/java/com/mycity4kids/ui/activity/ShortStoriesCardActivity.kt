@@ -10,6 +10,8 @@ import android.graphics.drawable.GradientDrawable
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import android.util.Log
 import android.view.Gravity
 import android.view.MenuItem
@@ -27,9 +29,7 @@ import androidx.viewpager.widget.ViewPager
 import com.google.android.material.snackbar.Snackbar
 import com.google.android.material.tabs.TabLayout
 import com.google.firebase.crashlytics.FirebaseCrashlytics
-import com.mycity4kids.ArrowDrawable
 import com.mycity4kids.R
-import com.mycity4kids.SimpleTooltip
 import com.mycity4kids.application.BaseApplication
 import com.mycity4kids.base.BaseActivity
 import com.mycity4kids.constants.AppConstants
@@ -52,6 +52,8 @@ import com.mycity4kids.utils.OnDragTouchListener
 import com.mycity4kids.utils.StringUtils
 import com.mycity4kids.utils.ToastUtils
 import com.squareup.picasso.Picasso
+import io.github.douglasjunior.androidSimpleTooltip.SimpleTooltip
+import java.io.File
 import okhttp3.MediaType
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.RequestBody
@@ -60,7 +62,6 @@ import okhttp3.RequestBody.Companion.toRequestBody
 import okhttp3.ResponseBody
 import retrofit2.Call
 import retrofit2.Callback
-import java.io.File
 
 class ShortStoriesCardActivity : BaseActivity(), View.OnClickListener {
     private val REQUEST_INIT_PERMISSION = 1
@@ -152,11 +153,8 @@ class ShortStoriesCardActivity : BaseActivity(), View.OnClickListener {
         setSupportActionBar(toolbar)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
         supportActionBar?.setDisplayShowHomeEnabled(true)
-        if (!SharedPrefUtils.isCoachmarksShownFlag(
-                BaseApplication.getAppContext(),
-                "storyCoachmark"
-            )
-        ) {
+
+        if (!checkCoachmarkFlagStatus("storyCoachmark")) {
             storyCoachmark.visibility = View.VISIBLE
         }
 
@@ -262,40 +260,42 @@ class ShortStoriesCardActivity : BaseActivity(), View.OnClickListener {
         }
 
         gotItTextView.setOnClickListener {
-            if (moveTextCoachmark.visibility == View.VISIBLE) {
-                moveTextCoachmark.visibility = View.GONE
-                tab_layoutCoachMark.visibility = View.VISIBLE
-                showToolTip
-            } else if (tab_layoutCoachMark.visibility == View.VISIBLE) {
-                tab_layoutCoachMark.visibility = View.GONE
-                textStylingCoachmark.visibility = View.VISIBLE
-                gotItTextView.text = resources.getString(R.string.story_got_it)
-            } else {
-                textStylingCoachmark.visibility = View.GONE
-                moveTextCoachmark.visibility = View.VISIBLE
-                storyCoachmark.visibility = View.GONE
-                SharedPrefUtils.setCoachmarksShownFlag(this, "storyCoachmark", true)
-                showPublishToolTip()
+            when {
+                moveTextCoachmark.visibility == View.VISIBLE -> {
+                    Utils.shareEventTracking(
+                        this,
+                        "Create section",
+                        "Create_Android",
+                        "HWS_CM_Text_move"
+                    )
+                    moveTextCoachmark.visibility = View.GONE
+                    storyBgEditCoachmark.visibility = View.VISIBLE
+                }
+                storyBgEditCoachmark.visibility == View.VISIBLE -> {
+                    Utils.shareEventTracking(
+                        this,
+                        "Create section",
+                        "Create_Android",
+                        "HWS_CM_BG_Image"
+                    )
+                    storyBgEditCoachmark.visibility = View.GONE
+                    textStylingCoachmark.visibility = View.VISIBLE
+                }
+                else -> {
+                    Utils.shareEventTracking(
+                        this,
+                        "Create section",
+                        "Create_Android",
+                        "HWS_CM_Text_size"
+                    )
+                    textStylingCoachmark.visibility = View.GONE
+                    moveTextCoachmark.visibility = View.VISIBLE
+                    storyCoachmark.visibility = View.GONE
+                    showPublishToolTip()
+                }
             }
         }
     }
-
-    private val showToolTip: Unit
-        get() =
-            SimpleTooltip.Builder(this)
-                .anchorView(collectionTabLayoutCoachMark)
-                .contentView(R.layout.short_story_choose_background_tooltip_layout)
-                .arrowColor(ContextCompat.getColor(this, R.color.tooltip_border))
-                .arrowWidth(40f)
-                .animated(true)
-                .gravity(Gravity.TOP)
-                .arrowDirection(ArrowDrawable.BOTTOM)
-                .transparentOverlay(true)
-                .setMargin(180)
-                .padding(16f)
-                .build()
-                .show()
-
 
     fun setCategoryId(id: String) {
         imagesCategoryId = id
@@ -771,8 +771,8 @@ class ShortStoriesCardActivity : BaseActivity(), View.OnClickListener {
                 responseData?.font_size_title?.toFloat()?.let { titleTv.textSize = it }
                 responseData?.font_alignment?.let { textAlign(it) }
                 responseData?.category_image_url?.let {
-                    responseData?.font_colour?.let { it1 ->
-                        responseData?.category_image?.let { it2 ->
+                    responseData.font_colour?.let { it1 ->
+                        responseData.category_image.let { it2 ->
                             setBackground(
                                 it,
                                 it1,
@@ -815,21 +815,6 @@ class ShortStoriesCardActivity : BaseActivity(), View.OnClickListener {
     }
 
     fun setBackground(url: String, fontColor: String, imageId: Int) {
-        //        Glide.with(this).load("https://media.giphy.com/media/3o6ozrsVQF6Fv1ljNe/giphy.gif").listener(
-        //                object : RequestListener<Drawable> {
-        //                    override fun onLoadFailed(e: GlideException?, model: Any?, target: Target<Drawable>?,
-        //                                              isFirstResource: Boolean): Boolean {
-        //                        isImageLoaded = false
-        //                        return false
-        //                    }
-        //
-        //                    override fun onResourceReady(resource: Drawable?, model: Any?, target: Target<Drawable>?,
-        //                                                 dataSource: DataSource?, isFirstResource: Boolean): Boolean {
-        //                        //do something when picture already loaded
-        //                        isImageLoaded = true
-        //                        return false
-        //                    }
-        //                }).into(cardBg)
         Picasso.get().load(url).placeholder(R.drawable.default_article)
             .error(R.drawable.default_article)
             .fit().into(cardBg, object : com.squareup.picasso.Callback {
@@ -913,9 +898,9 @@ class ShortStoriesCardActivity : BaseActivity(), View.OnClickListener {
     fun textAlign(align: String) {
         if (align == "LEFT") {
             fontAlignment = align
-            shortLayout.gravity = Gravity.LEFT
-            titleTv.gravity = Gravity.LEFT
-            storyTv.gravity = Gravity.LEFT
+            shortLayout.gravity = Gravity.START
+            titleTv.gravity = Gravity.START
+            storyTv.gravity = Gravity.START
         } else if (align == "CENTER") {
             fontAlignment = align
             shortLayout.gravity = Gravity.CENTER
@@ -923,18 +908,18 @@ class ShortStoriesCardActivity : BaseActivity(), View.OnClickListener {
             storyTv.gravity = Gravity.CENTER
         } else {
             fontAlignment = align
-            shortLayout.gravity = Gravity.RIGHT
-            titleTv.gravity = Gravity.RIGHT
-            storyTv.gravity = Gravity.RIGHT
+            shortLayout.gravity = Gravity.END
+            titleTv.gravity = Gravity.END
+            storyTv.gravity = Gravity.END
         }
     }
 
     override fun onClick(view: View?) {
-
     }
 
     private fun showPublishToolTip() {
-        io.github.douglasjunior.androidSimpleTooltip.SimpleTooltip.Builder(this)
+        var isTimeUp = false
+        val tooltip = SimpleTooltip.Builder(this)
             .anchorView(publishTextView)
             .contentView(R.layout.story_publish_tooltip_layout)
             .arrowColor(ContextCompat.getColor(this, R.color.tooltip_border))
@@ -943,7 +928,21 @@ class ShortStoriesCardActivity : BaseActivity(), View.OnClickListener {
             .arrowWidth(40f)
             .animated(false)
             .transparentOverlay(true)
-            .build()
-            .show()
+            .onDismissListener {
+                updateCoachmarkFlag("storyCoachmark", true)
+                if (!isTimeUp) {
+                    Utils.shareEventTracking(
+                        this,
+                        "Create section",
+                        "Create_Android",
+                        "B_TT_Publish"
+                    )
+                }
+            }.build()
+        tooltip.show()
+        Handler(Looper.getMainLooper()).postDelayed({
+            isTimeUp = true
+            tooltip.dismiss()
+        }, 3000)
     }
 }

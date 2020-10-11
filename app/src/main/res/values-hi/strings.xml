@@ -1511,4 +1511,8 @@ Thank you! We will be reviewing your story. You can expect to hear from us withi
   <string name="click_to_upload_the_video">वीडियो अपलोड करने के लिए क्लिक करें</string>
   <string name="choose_interesting_title">दर्शकों का ध्यान खींचने के लिए एक दिलचस्प शीर्षक का उपयोग करें</string>
   <string name="coachmark_story_3">सब हो जाने के बाद  अपनी पहली 100 शब्दों की कहानी को  प्रकाशित करें</string>
+  <string name="coachmark_read">बेस्ट ब्लॉग्स, वी लॉग्स और 100 शब्द कहानियां खोजें </string>
+  <string name="coachmark_mymoney">कैम्पेन्स के लिए अप्लाई करें, आवश्यकताओं को पूरा करें और पैसा कमाएं!</string>
+  <string name="coachmark_vlogs_1">हमें आपका  पहला वी लॉग क्रिएट करने  में आपकी मदद करने दें .शुरू करने के लिए एक चैलेंज का चयन करें या  केटेगरी से शुरुआत करें </string>
+  <string name="tags_help_discover">टैग्स दर्शकों को आसानी से वीडियो खोजने में मदद करते हैं </string>
 </resources>

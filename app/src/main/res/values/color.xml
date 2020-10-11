@@ -10,7 +10,7 @@
   <color name="app_red">#D54058</color>
   <color name="app_light_pink">#E997A8</color>
   <color name="tooltip_solid">#F9F5F5</color>
-  <color name="tooltip_border">#F6E1E1</color>
+  <color name="tooltip_border">#F9F5F5</color>
 
   <color name="all_google_share">#DB4A38</color>
   <color name="all_facebook_share">#3B5998</color>

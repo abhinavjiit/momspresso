@@ -31,11 +31,11 @@ import com.mycity4kids.tagging.tokenization.interfaces.QueryTokenReceiver
 import com.mycity4kids.tagging.ui.RichEditorView
 import com.mycity4kids.utils.ToastUtils
 import com.squareup.picasso.Picasso
+import java.util.Arrays
 import org.apache.commons.lang3.StringUtils
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
-import java.util.Arrays
 
 class LiveStreamCommentTabFragment : BaseFragment(),
     LiveChatRecyclerAdapter.RecyclerViewClickListener, QueryTokenReceiver,

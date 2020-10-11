@@ -1495,4 +1495,8 @@ Thank you! We will be reviewing your story. You can expect to hear from us withi
   <string name="click_to_upload_the_video">காணொளியை பதிவேற்ற இங்கே க்ளிக் செய்யுங்கள் </string>
   <string name="choose_interesting_title">கவர்ச்சியான தலைப்பு  பார்வையாளர் கவனத்தை ஈர்க்கும் </string>
   <string name="coachmark_story_3">হয়ে গেলে আপনার প্রথম শত শব্দের গল্পটি পাবলিশ করুন</string>
+  <string name="coachmark_read">পড়ুন সেরা ব্লগস,ভিলগস আর শতশব্দের গল্পের সম্ভার।</string>
+  <string name="coachmark_mymoney">ক্যাম্পেইনে অংশগ্রহণ করার জন্য আবেদন করুন, প্রয়োজনীয় তথ্য সম্পূর্ণ করুন আর উপার্জন করুন!</string>
+  <string name="coachmark_vlogs_1">আসুন, আপনাকে আপনার প্রথম ভিলগটি বানাতে সাহায্য করা যাক! প্রথমেই বেছে নিন একটি বিভাগ অথবা চ্যালেঞ্জ</string>
+  <string name="tags_help_discover">ট্যাগ দর্শকদের ভিডিও খুঁজে পেতে সাহায্য করে</string>
 </resources>

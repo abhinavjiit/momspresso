@@ -11,11 +11,11 @@ import androidx.recyclerview.widget.RecyclerView
 import com.mycity4kids.R
 import com.mycity4kids.base.BaseFragment
 import com.mycity4kids.constants.Constants
+import com.mycity4kids.gtmutils.Utils
 import com.mycity4kids.models.response.LeaderboardDataResponse
 import com.mycity4kids.profile.UserProfileActivity
 import com.mycity4kids.ui.activity.ViewAllLeaderboardActivity
 import com.mycity4kids.ui.adapter.BlogLeaderboardRecyclerAdapter
-
 
 class BlogLeaderboardFragment : BaseFragment(),
     BlogLeaderboardRecyclerAdapter.RecyclerViewClickListener {
@@ -52,6 +52,12 @@ class BlogLeaderboardFragment : BaseFragment(),
         recyclerView!!.adapter = recyclerAdapterBlog
 
         viewMoreTextView.setOnClickListener {
+            Utils.shareEventTracking(
+                activity,
+                "BB Program Page",
+                "BirthdayBonanza_Android",
+                "LB_ViewMore_BB"
+            )
             val intent = Intent(activity, ViewAllLeaderboardActivity::class.java)
             intent.putExtra("tab", "blogs")
             startActivity(intent)
@@ -60,6 +66,12 @@ class BlogLeaderboardFragment : BaseFragment(),
     }
 
     override fun onRecyclerViewItemClick(view: View?, position: Int) {
+        Utils.shareEventTracking(
+            activity,
+            "BB Program Page",
+            "BirthdayBonanza_Android",
+            "LB_ProfileClick_BB"
+        )
         val userProfileIntent = Intent(
             activity,
             UserProfileActivity::class.java

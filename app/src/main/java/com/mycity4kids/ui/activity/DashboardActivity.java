@@ -1240,10 +1240,12 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
         Fragment topFragment = getSupportFragmentManager().findFragmentById(R.id.content_frame);
         switch (v.getId()) {
             case R.id.dashBoardContentFilterCoachMark: {
+                Utils.shareEventTracking(this, "Home screen", "Read_Android", "TT_Home_Format");
                 removeContentFilterCoachmark();
             }
             break;
             case R.id.createTextImageView: {
+                Utils.shareEventTracking(this, "Create section", "BirthdayBonanza_Android", "CreationEntry_BB");
                 Intent intent = new Intent(this, BloggerGoldActivity.class);
                 startActivity(intent);
             }
@@ -1395,6 +1397,7 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
             break;
             case R.id.bloggerGoldTextView: {
                 drawerLayout.closeDrawers();
+                Utils.shareEventTracking(this, "Sidebar", "BirthdayBonanza_Android", "SidebarEntry_BB");
                 Intent intent = new Intent(this, BloggerGoldActivity.class);
                 startActivity(intent);
             }
@@ -1414,6 +1417,16 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
             break;
             case R.id.takeTourTextView: {
                 drawerLayout.closeDrawers();
+                updateCoachmarkFlag("articleChallengeSelectionScreenCoachMark", false);
+                updateCoachmarkFlag("newEditor_bottom", false);
+                updateCoachmarkFlag("articleEditorPublish", false);
+                updateCoachmarkFlag("addArticleTopicScreen", false);
+                updateCoachmarkFlag("addArticleTagImageScreen", false);
+                updateCoachmarkFlag("chooseStoryOrChallenge", false);
+                updateCoachmarkFlag("storyCoachmark", false);
+                updateCoachmarkFlag("videoOrChallengeSelectionScreen", false);
+                updateCoachmarkFlag("videoTrimmer", false);
+                updateCoachmarkFlag("videoTitleAndTags", false);
                 journeyLayout.setVisibility(View.VISIBLE);
             }
             break;
@@ -1891,13 +1904,13 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
     }
 
     private void showContentFilterCoachmark() {
-        if (!SharedPrefUtils.isCoachmarksShownFlag(BaseApplication.getAppContext(), "dashBoardContentFilterScreen")) {
+        if (!checkCoachmarkFlagStatus("dashBoardContentFilterScreen")) {
             dashBoardContentFilterCoachMark.setVisibility(View.VISIBLE);
         }
     }
 
     private void removeContentFilterCoachmark() {
         dashBoardContentFilterCoachMark.setVisibility(View.GONE);
-        SharedPrefUtils.setCoachmarksShownFlag(BaseApplication.getAppContext(), "dashBoardContentFilterScreen", true);
+        updateCoachmarkFlag("dashBoardContentFilterScreen", true);
     }
 }

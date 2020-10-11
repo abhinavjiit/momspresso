@@ -1490,4 +1490,8 @@ Thank you! We will be reviewing your story. You can expect to hear from us withi
   <string name="click_to_upload_the_video">వీడియోను అప్‌లోడ్ చేయడానికి క్లిక్ చేయండి</string>
   <string name="choose_interesting_title">వీక్షకుల దృష్టిని ఆకర్షించడానికి ఆసక్తికరమైన శీర్షికను ఉపయోగించండి</string>
   <string name="coachmark_story_3">పూర్తయిన తర్వాత, మీ మొదటి 100 పదాల కథనాన్ని ప్రచురించండి!</string>
+  <string name="coachmark_read">ఉత్తమ బ్లాగులు, వ్లాగ్‌లు మరియు 100 పదాల కథలను అన్వేషించండి.</string>
+  <string name="coachmark_mymoney">ప్రచారాల కోసం దరఖాస్తు చేసుకోండి, అడిగిన వివరాలు పూర్తి చేయండి మరియు డబ్బు సంపాదించండి!</string>
+  <string name="coachmark_vlogs_1">మీ మొదటి వ్లాగ్‌ను క్రియేట్ చేయడానికి మా సహాయం తీసుకోండి! ఒక వర్గాన్ని ఎంచుకోండి లేదా ప్రారంభించడానికి ఛాలెంజ్ ఎంచుకోండి</string>
+  <string name="tags_help_discover">ట్యాగ్‌లు వీక్షకులకు వీడియోలను సులభంగా కనుగొనడంలో సహాయపడతాయి</string>
 </resources>

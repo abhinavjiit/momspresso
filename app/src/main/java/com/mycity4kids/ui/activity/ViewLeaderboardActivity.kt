@@ -14,6 +14,7 @@ import com.mycity4kids.R
 import com.mycity4kids.application.BaseApplication
 import com.mycity4kids.base.BaseActivity
 import com.mycity4kids.constants.Constants
+import com.mycity4kids.gtmutils.Utils
 import com.mycity4kids.models.response.LeaderboardDataResponse
 import com.mycity4kids.preference.SharedPrefUtils
 import com.mycity4kids.retrofitAPIsInterfaces.BloggerGoldAPI
@@ -52,6 +53,12 @@ class ViewLeaderboardActivity : BaseActivity() {
             onBackPressed()
         }
         checkout_growth_btn.setOnClickListener {
+            Utils.shareEventTracking(
+                this,
+                "BB Program Page",
+                "BirthdayBonanza_Android",
+                "LB_Hacks_BB"
+            )
             launchChromeTabs(
                 "https://" + AppUtils.getLanguage(
                     SharedPrefUtils.getAppLocale(

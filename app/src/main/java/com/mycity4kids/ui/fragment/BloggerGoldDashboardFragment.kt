@@ -16,6 +16,7 @@ import com.mycity4kids.application.BaseApplication
 import com.mycity4kids.base.BaseFragment
 import com.mycity4kids.constants.AppConstants
 import com.mycity4kids.constants.Constants
+import com.mycity4kids.gtmutils.Utils
 import com.mycity4kids.models.response.BloggerRankResponse
 import com.mycity4kids.preference.SharedPrefUtils
 import com.mycity4kids.retrofitAPIsInterfaces.BloggerGoldAPI
@@ -76,21 +77,45 @@ class BloggerGoldDashboardFragment : BaseFragment() {
         startCreatingBtn = view.findViewById(R.id.start_creating_btn)
         divider = view.findViewById(R.id.view)
         leaderboard_btn.setOnClickListener {
+            Utils.shareEventTracking(
+                activity,
+                "BB Program Page",
+                "BirthdayBonanza_Android",
+                "DashboardTab_Empty_Create_CTA_BB"
+            )
             val intent = Intent(activity, ViewLeaderboardActivity::class.java)
             startActivity(intent)
         }
 
         articleViewLayout.setOnClickListener {
+            Utils.shareEventTracking(
+                activity,
+                "BB Program Page",
+                "BirthdayBonanza_Android",
+                "DashboardTab_BlogLB_CTA_BB"
+            )
             val intent = Intent(activity, ViewLeaderboardActivity::class.java)
             startActivity(intent)
         }
 
         videoViewLayout.setOnClickListener {
+            Utils.shareEventTracking(
+                activity,
+                "BB Program Page",
+                "BirthdayBonanza_Android",
+                "DashboardTab_VlogLB_CTA_BB"
+            )
             val intent = Intent(activity, ViewLeaderboardActivity::class.java)
             startActivity(intent)
         }
 
         startCreatingBtn.setOnClickListener {
+            Utils.shareEventTracking(
+                activity,
+                "BB Program Page",
+                "BirthdayBonanza_Android",
+                "DashboardTab_Empty_Create_CTA_BB"
+            )
             val i = Intent(
                 activity,
                 DashboardActivity::class.java
@@ -106,6 +131,12 @@ class BloggerGoldDashboardFragment : BaseFragment() {
         showProgressDialog("please wait")
         getBloggerRank
         webviewHack.setOnClickListener {
+            Utils.shareEventTracking(
+                activity,
+                "BB Program Page",
+                "BirthdayBonanza_Android",
+                "DashboardTab_Hacks_CTA_BB"
+            )
             launchChromeTabs(
                 "https://" + AppUtils.getLanguage(
                     SharedPrefUtils.getAppLocale(
@@ -116,6 +147,12 @@ class BloggerGoldDashboardFragment : BaseFragment() {
         }
         earningCalculator.setOnClickListener {
             activity?.let {
+                Utils.shareEventTracking(
+                    it,
+                    "BB Program Page",
+                    "BirthdayBonanza_Android",
+                    "DashboardTab_CheckEarning_CTA_BB"
+                )
                 (it as BloggerGoldActivity).handleDeeplinks(
                     "https://" + AppUtils.getLanguage(
                         SharedPrefUtils.getAppLocale(

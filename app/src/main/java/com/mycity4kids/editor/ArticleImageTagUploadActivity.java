@@ -139,17 +139,13 @@ public class ArticleImageTagUploadActivity extends BaseActivity implements View.
 
         tags = getIntent().getStringExtra("tag");
         userAgent = getIntent().getStringExtra("userAgent");
-        toolTipContainer.setVisibility(View.VISIBLE);
-        final Handler handler = new Handler(Looper.getMainLooper());
-        handler.postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                if (toolTipContainer.getVisibility() == View.VISIBLE) {
-                    toolTipContainer.setVisibility(View.GONE);
-                }
-            }
-        }, 3000);
-
+        if (!checkCoachmarkFlagStatus("addArticleTagImageScreen")) {
+            toolTipContainer.setVisibility(View.VISIBLE);
+            final Handler handler = new Handler(Looper.getMainLooper());
+            handler.postDelayed(() -> {
+                toolTipContainer.setVisibility(View.GONE);
+            }, 3000);
+        }
         setTagsList();
         Utils.pushOpenScreenEvent(this, "AddImageScreen", SharedPrefUtils.getUserDetailModel(this).getDynamoId() + "");
         if ((getIntent().getStringExtra("from") != null && getIntent().getStringExtra("from")
@@ -611,9 +607,9 @@ public class ArticleImageTagUploadActivity extends BaseActivity implements View.
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.toolTipContainer: {
+                updateCoachmarkFlag("addArticleTagImageScreen", true);
                 toolTipContainer.setVisibility(View.GONE);
                 break;
-
             }
             case R.id.changePictureTextView:
             case R.id.articleImage:

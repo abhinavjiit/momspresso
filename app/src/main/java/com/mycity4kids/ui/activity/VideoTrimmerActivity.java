@@ -21,6 +21,7 @@ import com.mycity4kids.utils.StringUtils;
 import com.mycity4kids.videotrimmer.K4LVideoTrimmer;
 import com.mycity4kids.videotrimmer.interfaces.OnTrimVideoListener;
 import io.github.douglasjunior.androidSimpleTooltip.SimpleTooltip;
+import io.github.douglasjunior.androidSimpleTooltip.SimpleTooltip.OnDismissListener;
 import java.io.File;
 import java.io.IOException;
 import org.apache.commons.io.FileUtils;
@@ -69,7 +70,7 @@ public class VideoTrimmerActivity extends BaseActivity implements OnTrimVideoLis
         progressDialog.setCancelable(false);
         progressDialog.setMessage(getString(R.string.trimming_progress));
 
-        videoTrimmer = ((K4LVideoTrimmer) findViewById(R.id.timeLine));
+        videoTrimmer = findViewById(R.id.timeLine);
         bottomLayout = videoTrimmer.findViewById(R.id.bottomLayout);
         ((BaseApplication) getApplication()).setView(videoTrimmer);
 
@@ -83,7 +84,9 @@ public class VideoTrimmerActivity extends BaseActivity implements OnTrimVideoLis
                 e.printStackTrace();
             }
         }
-        showToolTip();
+        if (!checkCoachmarkFlagStatus("videoTrimmer")) {
+            showToolTip();
+        }
     }
 
     private void showToolTip() {
@@ -96,16 +99,16 @@ public class VideoTrimmerActivity extends BaseActivity implements OnTrimVideoLis
                 .animated(false)
                 .showArrow(false)
                 .transparentOverlay(true)
+                .onDismissListener(tooltip1 -> {
+                    updateCoachmarkFlag("videoTrimmer", true);
+                })
                 .build();
         tooltip.show();
 
         final Handler handler = new Handler(Looper.getMainLooper());
-        handler.postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                if (tooltip.isShowing()) {
-                    tooltip.dismiss();
-                }
+        handler.postDelayed(() -> {
+            if (tooltip.isShowing()) {
+                tooltip.dismiss();
             }
         }, 3000);
     }
@@ -147,7 +150,6 @@ public class VideoTrimmerActivity extends BaseActivity implements OnTrimVideoLis
                 finish();
             }
         }
-
     }
 
     @Override

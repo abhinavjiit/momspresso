@@ -417,7 +417,12 @@ public class AppConstants {
 
     public static final int ENGLISH_JOIN_CREATOR_GROUP_ID = 103;
     public static final int HINDI_JOIN_CREATOR_GROUP_ID = 101;
+    public static final int MARATHI_JOIN_CREATOR_GROUP_ID = 103;
     public static final int BANGLA_JOIN_CREATOR_GROUP_ID = 104;
     public static final int TAMIL_JOIN_CREATOR_GROUP_ID = 105;
-
+    public static final int TELUGU_JOIN_CREATOR_GROUP_ID = 103;
+    public static final int KANNADA_JOIN_CREATOR_GROUP_ID = 103;
+    public static final int MALAYALAM_JOIN_CREATOR_GROUP_ID = 106;
+    public static final int GUJARATI_JOIN_CREATOR_GROUP_ID = 103;
+    public static final int PUNJABI_JOIN_CREATOR_GROUP_ID = 103;
 }

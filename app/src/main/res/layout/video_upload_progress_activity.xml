@@ -160,7 +160,7 @@
         android:id="@+id/secondTextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Yay! You are all done!"
+        android:text="@string/yay_all_done"
         android:textColor="@color/campaign_515151"
         android:textSize="14sp"
         app:fontName="Roboto-Regular.ttf"

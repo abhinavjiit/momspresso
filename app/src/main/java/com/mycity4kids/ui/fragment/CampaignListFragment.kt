@@ -14,7 +14,6 @@ import android.widget.ProgressBar
 import android.widget.RelativeLayout
 import android.widget.TextView
 import androidx.constraintlayout.widget.ConstraintLayout
-import androidx.core.widget.NestedScrollView
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
@@ -48,12 +47,12 @@ import io.reactivex.Observer
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable
 import io.reactivex.schedulers.Schedulers
-import retrofit2.Call
-import retrofit2.Callback
 import java.text.SimpleDateFormat
 import java.util.ArrayList
 import java.util.Calendar
 import java.util.Date
+import retrofit2.Call
+import retrofit2.Callback
 
 const val REWARDS_FILL_FORM = 1000
 
@@ -364,7 +363,6 @@ class CampaignListFragment : BaseFragment(), View.OnClickListener {
         }
     }
 
-
     private fun showCoachMark(campaignList: CampaignDataListResult) {
         toolbarCoachMark.visibility = View.VISIBLE
         coachMarkContainer.visibility = View.VISIBLE
@@ -379,7 +377,6 @@ class CampaignListFragment : BaseFragment(), View.OnClickListener {
         (campaign_name).text = campaignList.name
         (amount).text = "" + campaignList.slotAvailable
         compareDate(campaignList.campaignStatus, campaignList)
-
     }
 
     private fun compareDate(campaignStatus: Int, campaignList: CampaignDataListResult) {
@@ -588,8 +585,6 @@ class CampaignListFragment : BaseFragment(), View.OnClickListener {
                     true
                 )
             }
-
-
         }
     }
 }

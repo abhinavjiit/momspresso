@@ -1,12 +1,8 @@
 package com.mycity4kids.base;
 
-import static androidx.browser.customtabs.CustomTabsService.ACTION_CUSTOM_TABS_CONNECTION;
-
 
 import android.app.ProgressDialog;
 import android.content.Intent;
-import android.content.pm.PackageManager;
-import android.content.pm.ResolveInfo;
 import android.graphics.Color;
 import android.net.Uri;
 import android.os.Build.VERSION;
@@ -93,8 +89,6 @@ import com.mycity4kids.utils.StringUtils;
 import com.squareup.picasso.Picasso;
 import java.net.SocketTimeoutException;
 import java.net.UnknownHostException;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import org.greenrobot.eventbus.EventBus;
@@ -1289,27 +1283,11 @@ public abstract class BaseActivity extends AppCompatActivity implements GroupMem
         }
     }
 
-    public ArrayList<ResolveInfo> getCustomTabsPackages() {
-        PackageManager pm = getPackageManager();
-        // Get default VIEW intent handler.
-        Intent activityIntent = new Intent()
-                .setAction(Intent.ACTION_VIEW)
-                .addCategory(Intent.CATEGORY_BROWSABLE)
-                .setData(Uri.fromParts("http", "", null));
+    public void updateCoachmarkFlag(String coachmark, boolean flag) {
+        SharedPrefUtils.setCoachmarksShownFlag(BaseApplication.getAppContext(), coachmark, flag);
+    }
 
-        // Get all apps that can handle VIEW intents.
-        List<ResolveInfo> resolvedActivityList = pm.queryIntentActivities(activityIntent, 0);
-        ArrayList<ResolveInfo> packagesSupportingCustomTabs = new ArrayList<>();
-        for (ResolveInfo info : resolvedActivityList) {
-            Intent serviceIntent = new Intent();
-            serviceIntent.setAction(ACTION_CUSTOM_TABS_CONNECTION);
-            serviceIntent.setPackage(info.activityInfo.packageName);
-            Log.e("package Name", "-------- " + info.activityInfo.packageName);
-            // Check if this package also resolves the Custom Tabs service.
-            if (pm.resolveService(serviceIntent, 0) != null) {
-                packagesSupportingCustomTabs.add(info);
-            }
-        }
-        return packagesSupportingCustomTabs;
+    public boolean checkCoachmarkFlagStatus(String coachmark) {
+       return SharedPrefUtils.isCoachmarksShownFlag(BaseApplication.getAppContext(), coachmark);
     }
 }

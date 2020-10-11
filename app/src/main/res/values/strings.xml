@@ -1651,5 +1651,9 @@ Thank you! We will be reviewing your story. You can expect to hear from us withi
   <string name="click_to_upload_the_video">Click to upload the video</string>
   <string name="choose_interesting_title">Use an interesting title to grab the viewer\'s attention</string>
   <string name="coachmark_story_3">Once done, publish your first 100 word story!</string>
+  <string name="coachmark_read">Explore the best of blogs, vlogs, and 100 word stories.</string>
+  <string name="coachmark_mymoney">Apply for campaigns, complete the requirements, and earn money!</string>
+  <string name="coachmark_vlogs_1">Let us help you create your first vlog! Select a category or a challenge to start with</string>
+  <string name="tags_help_discover">Tags help viewers discover videos easily</string>
 </resources>
 

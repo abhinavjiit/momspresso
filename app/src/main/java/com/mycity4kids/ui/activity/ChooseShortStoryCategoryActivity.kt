@@ -19,6 +19,7 @@ import com.mycity4kids.R
 import com.mycity4kids.application.BaseApplication
 import com.mycity4kids.base.BaseActivity
 import com.mycity4kids.constants.AppConstants
+import com.mycity4kids.gtmutils.Utils
 import com.mycity4kids.models.Topics
 import com.mycity4kids.preference.SharedPrefUtils
 import com.mycity4kids.retrofitAPIsInterfaces.VlogsListingAndDetailsAPI
@@ -55,14 +56,9 @@ class ChooseShortStoryCategoryActivity : BaseActivity(),
         secondTextView = findViewById(R.id.secondTextView)
         source = intent.getStringExtra("source")
 
-        if (!SharedPrefUtils.isCoachmarksShownFlag(
-                BaseApplication.getAppContext(),
-                "chooseStoryOrChallenge"
-            )) {
-
+        if (!checkCoachmarkFlagStatus("chooseStoryOrChallenge")) {
             coachMark.visibility = View.VISIBLE
         }
-
 
         shortShortTopicsData = ArrayList()
         shortStoryChallengesData = ArrayList()
@@ -80,6 +76,7 @@ class ChooseShortStoryCategoryActivity : BaseActivity(),
             finish()
         }
         topicsGridView.setOnItemClickListener { parent, view, position, id ->
+            Utils.shareEventTracking(this, "Create section", "Create_Android", "HWS_Category")
             val topicId = shortShortTopicsData.get(position).id
             val intent =
                 Intent(this@ChooseShortStoryCategoryActivity, AddShortStoryActivity::class.java)
@@ -200,11 +197,9 @@ class ChooseShortStoryCategoryActivity : BaseActivity(),
                     tagImageViewCoachMark
                 )
                 challengeNameText.text = shortStoryChallengesData[0].display_name
-                if (!SharedPrefUtils.isCoachmarksShownFlag(
-                        BaseApplication.getAppContext(),
-                        "chooseStoryOrChallenge"
-                    ))
+                if (!checkCoachmarkFlagStatus("chooseStoryOrChallenge")) {
                     coachMark.visibility = View.VISIBLE
+                }
             } catch (e: Exception) {
                 coachMark.visibility = View.GONE
             }
@@ -245,30 +240,19 @@ class ChooseShortStoryCategoryActivity : BaseActivity(),
     override fun onClick(v: View?) {
         if (v?.id == R.id.coachMark || v?.id == R.id.tagImageViewCoachMark) {
             coachMark.visibility = View.GONE
-            SharedPrefUtils.setCoachmarksShownFlag(
-                BaseApplication.getAppContext(),
-                "chooseStoryOrChallenge",
-                true
+            Utils.shareEventTracking(
+                this,
+                "Create section",
+                "Create_Android",
+                "HWS_TT_Topic_Challenge"
             )
+            updateCoachmarkFlag("chooseStoryOrChallenge", true)
         }
         if (v?.id == R.id.secondTextView) {
+            Utils.shareEventTracking(this, "Create section", "Create_Android", "HWS_TT_CS_Skip")
             coachMark.visibility = View.GONE
-            SharedPrefUtils.setCoachmarksShownFlag(
-                BaseApplication.getAppContext(),
-                "chooseStoryOrChallenge",
-                true
-            )
-            SharedPrefUtils.setCoachmarksShownFlag(
-                BaseApplication.getAppContext(),
-                "addShortStory",
-                true
-            )
-
-            SharedPrefUtils.setCoachmarksShownFlag(
-                BaseApplication.getAppContext(),
-                "storyCoachmark",
-                true
-            )
+            updateCoachmarkFlag("chooseStoryOrChallenge", true)
+            updateCoachmarkFlag("storyCoachmark", true)
         }
     }
 }

@@ -111,12 +111,12 @@ import io.reactivex.Observer
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable
 import io.reactivex.schedulers.Schedulers
-import retrofit2.Call
-import retrofit2.Callback
-import retrofit2.Response
 import java.io.File
 import java.net.SocketTimeoutException
 import java.net.UnknownHostException
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
 
 class UserProfileActivity : BaseActivity(),
     UserContentAdapter.RecyclerViewClickListener, View.OnClickListener,
@@ -1201,6 +1201,12 @@ class UserProfileActivity : BaseActivity(),
                 launchInviteFriendsDialog("profile")
             }
             view?.id == R.id.bloggerGoldTextView -> {
+                Utils.shareEventTracking(
+                    this,
+                    "Self Profile",
+                    "BirthdayBonanza_Android",
+                    "ProfileEntry_BB"
+                )
                 val intent = Intent(
                     this,
                     BloggerGoldActivity::class.java
@@ -1474,7 +1480,6 @@ class UserProfileActivity : BaseActivity(),
     }
 
     override fun onTorcaiAdClick(request: WebResourceRequest) {
-
     }
 
     private fun showArticleMenuOptions(view: View, position: Int) {
