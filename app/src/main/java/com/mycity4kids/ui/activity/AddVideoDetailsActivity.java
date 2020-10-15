@@ -10,10 +10,14 @@ import android.view.Gravity;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemSelectedListener;
+import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
+import androidx.appcompat.widget.AppCompatSpinner;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.content.ContextCompat;
 import androidx.core.content.FileProvider;
@@ -34,11 +38,13 @@ import com.mycity4kids.models.response.UserDetailResponse;
 import com.mycity4kids.preference.SharedPrefUtils;
 import com.mycity4kids.retrofitAPIsInterfaces.LoginRegistrationAPI;
 import com.mycity4kids.retrofitAPIsInterfaces.TopicsCategoryAPI;
+import com.mycity4kids.ui.adapter.VlogLanguageSelectionAdapter;
 import com.mycity4kids.utils.ConnectivityUtils;
 import com.mycity4kids.utils.MixPanelUtils;
 import com.mycity4kids.utils.StringUtils;
 import com.mycity4kids.widget.ShareButtonWidget;
 import java.io.File;
+import java.util.ArrayList;
 import org.apmem.tools.layouts.FlowLayout;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -75,6 +81,38 @@ public class AddVideoDetailsActivity extends BaseActivity implements View.OnClic
     MixpanelAPI mixpanel;
     private RelativeLayout toolTipContainer;
     private RelativeLayout coachmarkTagsContainer;
+    private AppCompatSpinner spinner;
+    private String[] langCodes = {
+            "0",
+            "all",
+            AppConstants.LOCALE_ENGLISH,
+            AppConstants.LOCALE_HINDI,
+            AppConstants.LOCALE_MARATHI,
+            AppConstants.LOCALE_BENGALI,
+            AppConstants.LOCALE_TAMIL,
+            AppConstants.LOCALE_TELUGU,
+            AppConstants.LOCALE_KANNADA,
+            AppConstants.LOCALE_MALAYALAM,
+            AppConstants.LOCALE_GUJARATI,
+            AppConstants.LOCALE_PUNJABI};
+
+    private String[] langNameList = {
+            "Select Your Language",
+            "Instrumental",
+            "English",
+            "Hindi",
+            "Marathi",
+            "Bangali",
+            "Tamil",
+            "Telgu",
+            "Kannada",
+            "Malayalam",
+            "Gujarati",
+            "Punjabi"
+    };
+
+    private ArrayList<String> selectedLangs;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -87,6 +125,7 @@ public class AddVideoDetailsActivity extends BaseActivity implements View.OnClic
 
         Utils.pushOpenScreenEvent(this, "CreateVideoScreen",
                 SharedPrefUtils.getUserDetailModel(this).getDynamoId() + "");
+        spinner = findViewById(R.id.spinner);
         popup = findViewById(R.id.popup);
         okay = findViewById(R.id.okay);
         videoTitleEditText = findViewById(R.id.videoTitleEditText);
@@ -128,10 +167,10 @@ public class AddVideoDetailsActivity extends BaseActivity implements View.OnClic
         okay.setOnClickListener(this);
         coachmarkTagsContainer.setOnClickListener(this);
         toolTipContainer.setOnClickListener(this);
-
         if (!checkCoachmarkFlagStatus("videoTitleAndTags")) {
             showTitleToolTip();
         }
+        showLangAdapter();
     }
 
     private void showTitleToolTip() {
@@ -314,6 +353,36 @@ public class AddVideoDetailsActivity extends BaseActivity implements View.OnClic
         }
     }
 
+    private void showLangAdapter() {
+        ArrayAdapter<String> langAdapter = new VlogLanguageSelectionAdapter(this,
+                R.layout.vlog_lang_drop_down_item_layout, langNameList);
+        spinner.setAdapter(langAdapter);
+        spinner.setOnItemSelectedListener(new OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+                if (i == 1) {//send all langfor
+                    selectedLangs = new ArrayList<>();
+                    for (int j = 2; j < langCodes.length; j++) {
+                        selectedLangs.add(langCodes[j]);
+                    }
+
+                } else if (i == 0) {//send nothing
+                    selectedLangs = null;
+                } else {//send selected lang
+                    selectedLangs = new ArrayList<>();
+                    selectedLangs.add(langCodes[i]);
+                }
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> adapterView) {
+//send nothing
+                selectedLangs = null;
+            }
+        });
+    }
+
+
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
@@ -350,6 +419,9 @@ public class AddVideoDetailsActivity extends BaseActivity implements View.OnClic
         intt.putExtra("uri", contentUri);
         intt.putExtra("title", videoTitleEditText.getText().toString());
         intt.putExtra("categoryId", subcategoryId);
+        if (selectedLangs != null && !selectedLangs.isEmpty()) {
+            intt.putStringArrayListExtra("langs", selectedLangs);
+        }
         intt.putExtra("duration", duration);
         intt.putExtra("thumbnailTime", thumbnailTime);
         intt.putExtra("extension", originalUri.getPath().substring(originalUri.getPath().lastIndexOf(".")));

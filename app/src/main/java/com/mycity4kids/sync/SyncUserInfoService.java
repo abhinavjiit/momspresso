@@ -105,7 +105,7 @@ public class SyncUserInfoService extends IntentService {
                             responseData.getData().get(0).getResult().getProfilePicUrl().getClientApp());
                     userInfo.setSessionId(responseData.getData().get(0).getResult().getSessionId());
                     userInfo.setSubscriptionEmail(responseData.getData().get(0).getResult().getSubscriptionEmail());
-
+                    userInfo.setVideoPreferredLanguages(responseData.getData().get(0).getResult().getVideoPreferredLanguages());
                     SharedPrefUtils.setUserDetailModel(BaseApplication.getAppContext(), userInfo);
 
                     FileInputStream fileInputStream = openFileInput(AppConstants.LANGUAGES_JSON_FILE);

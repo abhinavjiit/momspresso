@@ -9,9 +9,13 @@ import com.mycity4kids.constants.AppConstants;
 import com.mycity4kids.models.city.MetroCity;
 import com.mycity4kids.models.user.UserInfo;
 import com.mycity4kids.models.version.RateVersion;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import org.json.JSONArray;
+import org.json.JSONException;
 
 public class SharedPrefUtils {
 
@@ -189,6 +193,9 @@ public class SharedPrefUtils {
         editor.putString(USER_HANDLE, model.getUserHandle());
         editor.putString(REQUEST_MEDIUM, model.getRequestMedium());
         editor.putString(EMAIL_VALIDATED, model.getEmailValidated());
+        Gson gson = new Gson();
+        String jsonLangs = gson.toJson(model.getVideoPreferredLanguages());
+        editor.putString("languages", jsonLangs);
 
         editor.commit();
     }
@@ -222,6 +229,20 @@ public class SharedPrefUtils {
         user.setUserHandle(sharedPref.getString(USER_HANDLE, ""));
         user.setRequestMedium(sharedPref.getString(REQUEST_MEDIUM, ""));
         user.setEmailValidated(sharedPref.getString(EMAIL_VALIDATED, "0"));
+
+        JSONArray jsonArray = null;
+        try {
+            jsonArray = new JSONArray(sharedPref.getString("languages", ""));
+            ArrayList<String> list = new ArrayList<String>();
+            for (int i = 0; i < jsonArray.length(); i++) {
+                list.add(jsonArray.getString(i));
+            }
+            user.setVideoPreferredLanguages(list);
+
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
         return user;
     }
 
@@ -846,5 +867,27 @@ public class SharedPrefUtils {
     public static boolean isUserJourneyCompleted(Context context) {
         SharedPreferences sharedPreferences = context.getSharedPreferences(COMMON_PREF_FILE, Context.MODE_PRIVATE);
         return sharedPreferences.getBoolean(USER_JOURNEY_COMPLETED_FLAG, false);
+    }
+
+    public static void setVlogSelectedLanguages(Context context, Boolean flag, ArrayList<String> selectedLang) {
+        SharedPreferences sharedPreferences = context.getSharedPreferences(COMMON_PREF_FILE, Context.MODE_PRIVATE);
+        Editor editor = sharedPreferences.edit();
+        Gson gson = new Gson();
+        List<String> vlogSelectedList;
+        vlogSelectedList = selectedLang;
+        String jsonLangs = gson.toJson(vlogSelectedList);
+        editor.putString("languages", jsonLangs);
+        editor.putBoolean("langSelected", flag);
+        editor.commit();
+    }
+
+    public static String getSelectedVlogsLangs(Context context) {
+        SharedPreferences sharedPreferences = context.getSharedPreferences(COMMON_PREF_FILE, Context.MODE_PRIVATE);
+        return sharedPreferences.getString("languages", "");
+    }
+
+    public static Boolean getSelectedVlogsLangsFlag(Context context) {
+        SharedPreferences sharedPreferences = context.getSharedPreferences(COMMON_PREF_FILE, Context.MODE_PRIVATE);
+        return sharedPreferences.getBoolean("langSelected", false);
     }
 }

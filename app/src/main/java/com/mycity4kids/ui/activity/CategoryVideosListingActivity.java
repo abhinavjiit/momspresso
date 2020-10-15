@@ -12,6 +12,7 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.widget.Toolbar;
 import androidx.coordinatorlayout.widget.CoordinatorLayout;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
 import androidx.viewpager.widget.ViewPager;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.tabs.TabLayout;
@@ -23,17 +24,21 @@ import com.mycity4kids.constants.AppConstants;
 import com.mycity4kids.gtmutils.Utils;
 import com.mycity4kids.models.Topics;
 import com.mycity4kids.models.request.VlogsEventRequest;
+import com.mycity4kids.models.user.UserInfo;
 import com.mycity4kids.preference.SharedPrefUtils;
 import com.mycity4kids.retrofitAPIsInterfaces.TopicsCategoryAPI;
 import com.mycity4kids.retrofitAPIsInterfaces.VlogsListingAndDetailsAPI;
 import com.mycity4kids.ui.adapter.VideoTopicsPagerAdapter;
 import com.mycity4kids.ui.fragment.CategoryVideosTabFragment;
 import com.mycity4kids.ui.fragment.ChallengeCategoryVideoTabFragment;
+import com.mycity4kids.ui.fragment.ChooseVideosLanguageDialogFragment;
+import com.mycity4kids.ui.fragment.ChooseVideosLanguageDialogFragment.VlogLanguage;
 import com.mycity4kids.utils.AppUtils;
 import com.mycity4kids.utils.StringUtils;
 import com.mycity4kids.vlogs.VideoCategoryAndChallengeSelectionActivity;
 import java.util.ArrayList;
 import okhttp3.ResponseBody;
+import org.jetbrains.annotations.NotNull;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -42,7 +47,7 @@ import retrofit2.Retrofit;
 /**
  * Created by hemant on 25/5/17.
  */
-public class CategoryVideosListingActivity extends BaseActivity implements View.OnClickListener {
+public class CategoryVideosListingActivity extends BaseActivity implements View.OnClickListener, VlogLanguage {
 
     private TabLayout tabLayout;
     private ViewPager viewPager;
@@ -57,6 +62,7 @@ public class CategoryVideosListingActivity extends BaseActivity implements View.
     private ArrayList<Topics> categoriesList;
     private String selectedTabCategoryId;
     private int selectedTabIndex = 0;
+    private ChooseVideosLanguageDialogFragment chooseVideosLangDialogFragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -192,6 +198,11 @@ public class CategoryVideosListingActivity extends BaseActivity implements View.
     protected void onResume() {
         super.onResume();
         ((BaseApplication) getApplication()).setView(root);
+        if (null == SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getVideoPreferredLanguages()
+                || SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getVideoPreferredLanguages()
+                .isEmpty()) {
+            showLangPopUp();
+        }
     }
 
     private void initializeUI() {
@@ -273,5 +284,25 @@ public class CategoryVideosListingActivity extends BaseActivity implements View.
 
     @Override
     public void onClick(View view) {
+    }
+
+
+    private void showLangPopUp() {
+        if (chooseVideosLangDialogFragment != null) {
+            return;
+        } else {
+            chooseVideosLangDialogFragment = new ChooseVideosLanguageDialogFragment(this);
+            FragmentManager fm = getSupportFragmentManager();
+            chooseVideosLangDialogFragment.show(fm, "choose language");
+        }
+    }
+
+    @Override
+    public void selectedVlogLanguages(@NotNull ArrayList<String> selectedLanguage) {
+        UserInfo userInfo = SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext());
+        userInfo.setVideoPreferredLanguages(selectedLanguage);
+        SharedPrefUtils.setUserDetailModel(BaseApplication.getAppContext(), userInfo);
+        pagerAdapter.selectedVlogLangs(selectedLanguage);
+        pagerAdapter.notifyDataSetChanged();
     }
 }

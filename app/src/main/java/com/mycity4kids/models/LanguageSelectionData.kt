@@ -10,5 +10,11 @@ data class LanguageSelectionData(
     @SerializedName("enabledImage")
     var enabledImage: Int? = null,
     @SerializedName("disabledImage")
-    var disabledImage: Int? = null
-)
+    var disabledImage: Int? = null,
+    @SerializedName("langCode")
+    var langCode: String? = null
+
+) {
+    @SerializedName("videoPreferredLanguages")
+    var videoPreferredLanguages: Array<String>? = null
+}

@@ -350,6 +350,7 @@ public class BaseApplication extends Application {
         return retrofit;
     }
 
+
     public Retrofit createGroupRetrofitInstance(String baseUrl) {
         Interceptor mainInterceptor = new Interceptor() {
             @Override
