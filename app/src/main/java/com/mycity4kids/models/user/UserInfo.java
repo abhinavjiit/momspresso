@@ -3,6 +3,7 @@ package com.mycity4kids.models.user;
 import android.os.Parcel;
 import android.os.Parcelable;
 import com.google.gson.annotations.SerializedName;
+import java.util.ArrayList;
 
 public class UserInfo implements Parcelable {
 
@@ -60,6 +61,16 @@ public class UserInfo implements Parcelable {
     private String requestMedium = "";
     @SerializedName("emailValidated")
     private String emailValidated = "";
+    @SerializedName(("preferredLanguages"))
+    private ArrayList<String> videoPreferredLanguages;
+
+    public ArrayList<String> getVideoPreferredLanguages() {
+        return videoPreferredLanguages;
+    }
+
+    public void setVideoPreferredLanguages(ArrayList<String> videoPreferredLanguages) {
+        this.videoPreferredLanguages = videoPreferredLanguages;
+    }
 
     public UserInfo() {
         super();

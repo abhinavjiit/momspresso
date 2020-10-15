@@ -3,6 +3,7 @@ package com.mycity4kids.ui.adapter;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.ViewGroup;
+import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentPagerAdapter;
@@ -20,12 +21,18 @@ public class VideoTopicsPagerAdapter extends FragmentPagerAdapter {
     private int mNumOfTabs;
     private ArrayList<Topics> subTopicsList;
     private Fragment currentFragment;
+    private ArrayList<String> str = new ArrayList<>();
 
     public VideoTopicsPagerAdapter(FragmentManager fm, int NumOfTabs, ArrayList<Topics> subTopicsList) {
         super(fm, BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT);
         this.mNumOfTabs = NumOfTabs;
         this.subTopicsList = subTopicsList;
         //currentFragment = new ArrayList<>();
+    }
+
+    @Override
+    public int getItemPosition(@NonNull Object object) {
+        return POSITION_NONE;
     }
 
     public Fragment getCurrentFragment() {
@@ -54,6 +61,7 @@ public class VideoTopicsPagerAdapter extends FragmentPagerAdapter {
         } else {
             bundle.putString("video_category_id", subTopicsList.get(position).getId());
             bundle.putParcelable("currentSubTopic", subTopicsList.get(position));
+            bundle.putStringArrayList("vlogSelectedlangs", str);
             CategoryVideosTabFragment tab1 = new CategoryVideosTabFragment();
             tab1.setArguments(bundle);
             currentFragment = tab1;
@@ -65,5 +73,9 @@ public class VideoTopicsPagerAdapter extends FragmentPagerAdapter {
     @Override
     public int getCount() {
         return mNumOfTabs;
+    }
+
+    public void selectedVlogLangs(ArrayList<String> langs) {
+        this.str = langs;
     }
 }

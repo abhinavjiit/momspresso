@@ -37,8 +37,8 @@ import io.reactivex.Observer
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable
 import io.reactivex.schedulers.Schedulers
-import java.io.InputStreamReader
 import retrofit2.HttpException
+import java.io.InputStreamReader
 
 class AddCollectionAndCollectionItemDialogFragment : DialogFragment(),
     AddCollectionAdapter.RecyclerViewClickListener {
@@ -84,9 +84,9 @@ class AddCollectionAndCollectionItemDialogFragment : DialogFragment(),
             try {
                 val addCollectionPopUpDialogFragment = AddCollectionPopUpDialogFragment()
                 addCollectionPopUpDialogFragment.arguments = bundle
-                val fm = fragmentManager
+                val fm = childFragmentManager
                 addCollectionPopUpDialogFragment.setTargetFragment(this, 100)
-                addCollectionPopUpDialogFragment.show(fm!!, "collectionAddPopUp")
+                addCollectionPopUpDialogFragment.show(fm, "collectionAddPopUp")
                 Utils.pushProfileEvents(
                     activity, "CTA_Add_Collection_From_Content",
                     "AddCollectionAndCollectionItemDialogFragment", "New collection", "-"

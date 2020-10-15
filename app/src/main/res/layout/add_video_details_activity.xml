@@ -87,11 +87,79 @@
           android:layout_marginEnd="16dp" />
       </RelativeLayout>
 
+      <RelativeLayout
+        android:id="@+id/chooseLangConatiner"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/player">
+
+        <com.mycity4kids.widget.CustomFontTextView
+          android:id="@+id/languageChooseHeaderTextView"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:layout_marginStart="10dp"
+          android:layout_marginTop="10dp"
+          android:text="Language"
+          android:textAllCaps="true"
+          android:textColor="@color/campaign_515151"
+          android:textSize="16sp"
+          app:fontName="Roboto-Medium.ttf" />
+        <com.mycity4kids.widget.CustomFontTextView
+          android:id="@+id/selectLanguageTextView"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:layout_below="@id/languageChooseHeaderTextView"
+          android:layout_marginStart="10dp"
+          android:layout_marginTop="10dp"
+          android:text="Select language of audience who can understand the video"
+          android:textAllCaps="true"
+          android:textColor="#9B9B9B"
+          android:textSize="13sp"
+          app:fontName="Roboto-Regular.ttf" />
+
+
+        <RelativeLayout
+          android:id="@+id/selectLangDropDownContainer"
+          android:layout_width="match_parent"
+          android:layout_height="wrap_content"
+          android:layout_below="@id/selectLanguageTextView"
+          android:layout_marginStart="@dimen/space_15"
+          android:layout_marginTop="@dimen/space_15"
+          android:layout_marginEnd="@dimen/space_15"
+          android:background="@drawable/border_layout_for_campaign"
+          android:orientation="horizontal">
+
+          <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/dropDown"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_centerVertical="true"
+            android:layout_gravity="center"
+            android:clickable="false"
+            android:padding="@dimen/space_10"
+            android:src="@drawable/arrow_down"
+            android:tint="@color/gray2" />
+          <androidx.appcompat.widget.AppCompatSpinner
+            android:id="@+id/spinner"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_gravity="center"
+            android:gravity="center"
+            android:spinnerMode="dropdown" />
+
+
+        </RelativeLayout>
+
+      </RelativeLayout>
+
+
       <com.mycity4kids.widget.CustomFontTextView
         android:id="@+id/selectTagLabel"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/player"
+        android:layout_below="@+id/chooseLangConatiner"
         android:layout_marginStart="10dp"
         android:layout_marginTop="10dp"
         android:text="@string/add_vlogs_detail_select_tag"

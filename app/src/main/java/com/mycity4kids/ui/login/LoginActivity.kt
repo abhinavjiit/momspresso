@@ -48,12 +48,12 @@ import com.mycity4kids.ui.fragment.ChooseLoginAccountDialogFragment
 import com.mycity4kids.ui.fragment.FacebookAddEmailDialogFragment
 import com.mycity4kids.utils.ConnectivityUtils
 import com.mycity4kids.utils.StringUtils
-import java.util.ArrayList
 import kotlinx.android.synthetic.main.login_activity.*
 import org.json.JSONObject
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
+import java.util.ArrayList
 
 class LoginActivity : BaseActivity(), IFacebookUser, View.OnClickListener {
 
@@ -241,6 +241,7 @@ class LoginActivity : BaseActivity(), IFacebookUser, View.OnClickListener {
         }
         model.sessionId = userDetailResult.sessionId
         model.loginMode = loginMode
+        model.videoPreferredLanguages = userDetailResult.videoPreferredLanguages
         SharedPrefUtils.setUserDetailModel(BaseApplication.getAppContext(), model)
         SharedPrefUtils
             .setProfileImgUrl(
@@ -356,6 +357,7 @@ class LoginActivity : BaseActivity(), IFacebookUser, View.OnClickListener {
                         }
                         model.sessionId = responseData.data[0].result.sessionId
                         model.loginMode = loginMode
+                        model.videoPreferredLanguages = responseData.data[0].result.videoPreferredLanguages
                         SharedPrefUtils.setUserDetailModel(BaseApplication.getAppContext(), model)
                         SharedPrefUtils.setProfileImgUrl(
                             BaseApplication.getAppContext(),

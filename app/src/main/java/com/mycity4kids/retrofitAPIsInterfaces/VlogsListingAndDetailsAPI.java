@@ -1,5 +1,6 @@
 package com.mycity4kids.retrofitAPIsInterfaces;
 
+import com.mycity4kids.models.LanguageSelectionData;
 import com.mycity4kids.models.Topics;
 import com.mycity4kids.models.TopicsResponse;
 import com.mycity4kids.models.collectionsModels.TutorialCollectionsListModel;
@@ -170,4 +171,22 @@ public interface VlogsListingAndDetailsAPI {
             @Query("start") int start,
             @Query("end") int end,
             @Query("is_gold") int isGold);
+
+    //'https://api.momspresso.com/v2/users/916538ec877f455cabd29dacef2f22b4?fn=4'
+
+    @PUT("/v2/users/{userId}")
+    Call<ResponseBody> postLanguages(@Path("userId") String userId,
+            @Query("fn") int fn,
+            @Body LanguageSelectionData body);
+
+// 'https://stagingapi.momspresso.com/v2/videos/?start=0&end=8&sort=0&type=3&preferredLanguages=ta,bn'
+
+    @GET("/v2/videos/")
+    Call<VlogsListingResponse> getLangWiseVlogs(@Query("start") int start,
+            @Query("end") int end,
+            @Query("sort") int sort,
+            @Query("type") int type,
+            @Query("category_id") String categoryId,
+            @Query("preferredLanguages")
+                    String langs);
 }

@@ -80,6 +80,7 @@ public class VideoUploadProgressActivity extends BaseActivity implements View.On
     private ImageView back;
     private TextView modrationText;
     private RelativeLayout bottomLayout;
+    private ArrayList<String> langs;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -98,6 +99,9 @@ public class VideoUploadProgressActivity extends BaseActivity implements View.On
         thumbnailTime = getIntent().getStringExtra("thumbnailTime");
         extension = getIntent().getStringExtra("extension");
         comingFrom = getIntent().getStringExtra("comingFrom");
+        if (getIntent().hasExtra("langs")) {
+            langs = getIntent().getStringArrayListExtra("langs");
+        }
         if ("Challenge".equals(comingFrom)) {
             challengeId = getIntent().getStringExtra("ChallengeId");
         }
@@ -224,6 +228,9 @@ public class VideoUploadProgressActivity extends BaseActivity implements View.On
         }
         UploadVideoRequest uploadVideoRequest = new UploadVideoRequest();
         uploadVideoRequest.setTitle(title);
+        if (langs != null && !langs.isEmpty()) {
+            uploadVideoRequest.setLang(langs.toArray(new String[langs.size()]));
+        }
         uploadVideoRequest.setFilename(contentUri.getLastPathSegment() + "_" + suffixName);
         uploadVideoRequest.setCategory_id(catList);
         uploadVideoRequest

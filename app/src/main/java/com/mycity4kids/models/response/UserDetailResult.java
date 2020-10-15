@@ -2,9 +2,7 @@ package com.mycity4kids.models.response;
 
 import android.os.Parcel;
 import android.os.Parcelable;
-
 import com.google.gson.annotations.SerializedName;
-
 import java.util.ArrayList;
 import java.util.Map;
 
@@ -115,6 +113,8 @@ public class UserDetailResult implements Parcelable {
     private String requestMedium;
     @SerializedName("isTaggable")
     private String isTaggable = "1";
+    @SerializedName("videoPreferredLanguages")
+    private ArrayList<String> videoPreferredLanguages;
 
     protected UserDetailResult(Parcel in) {
         id = in.readString();
@@ -144,6 +144,7 @@ public class UserDetailResult implements Parcelable {
         rewardsAdded = in.readString();
         userTag = in.createStringArrayList();
         preferredLanguages = in.createStringArrayList();
+        videoPreferredLanguages = in.createStringArrayList();
         interests = in.createStringArrayList();
         cityName = in.readString();
         latitude = in.readDouble();
@@ -223,6 +224,14 @@ public class UserDetailResult implements Parcelable {
 
     public void setPhoneNumber(String phoneNumber) {
         this.phoneNumber = phoneNumber;
+    }
+
+    public ArrayList<String> getVideoPreferredLanguages() {
+        return videoPreferredLanguages;
+    }
+
+    public void setVideoPreferredLanguages(ArrayList<String> videoPreferredLanguages) {
+        this.videoPreferredLanguages = videoPreferredLanguages;
     }
 
     public String getId() {
@@ -623,6 +632,7 @@ public class UserDetailResult implements Parcelable {
         parcel.writeString(rewardsAdded);
         parcel.writeStringList(userTag);
         parcel.writeStringList(preferredLanguages);
+        parcel.writeStringList(videoPreferredLanguages);
         parcel.writeStringList(interests);
         parcel.writeString(cityName);
         parcel.writeDouble(latitude);

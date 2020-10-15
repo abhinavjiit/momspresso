@@ -8,7 +8,6 @@ import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
@@ -28,7 +27,6 @@ import com.facebook.shimmer.ShimmerFrameLayout;
 import com.getbase.floatingactionbutton.FloatingActionButton;
 import com.getbase.floatingactionbutton.FloatingActionsMenu;
 import com.google.firebase.crashlytics.FirebaseCrashlytics;
-import com.mixpanel.android.mpmetrics.MixpanelAPI;
 import com.mycity4kids.R;
 import com.mycity4kids.application.BaseApplication;
 import com.mycity4kids.base.BaseFragment;
@@ -87,6 +85,8 @@ public class CategoryVideosTabFragment extends BaseFragment implements View.OnCl
     private int visibleItemCount;
     private int totalItemCount;
     private GridLayoutManager gridLayoutManager;
+    private ArrayList<String> vlogSelectedLangs;
+    private String[] selectedLanguages;
 
     static {
         AppCompatDelegate.setCompatVectorFromResourcesEnabled(true);
@@ -171,8 +171,15 @@ public class CategoryVideosTabFragment extends BaseFragment implements View.OnCl
 
         articleDataModelsNew = new ArrayList<>();
         nextPageNumber = 1;
+        if (null != SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getVideoPreferredLanguages()
+                && !SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getVideoPreferredLanguages()
+                .isEmpty()) {
+            vlogSelectedLangs = SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext())
+                    .getVideoPreferredLanguages();
+            selectedLanguages = vlogSelectedLangs.toArray(new String[vlogSelectedLangs.size()]);
+            Log.d("vlogSelectedLangs", vlogSelectedLangs.toString());
+        }
         hitArticleListingApi();
-
         articlesListingAdapter = new MomVlogListingAdapter(getActivity());
         gridLayoutManager = new GridLayoutManager(getActivity(), 2);
         listView.setLayoutManager(gridLayoutManager);
@@ -235,7 +242,22 @@ public class CategoryVideosTabFragment extends BaseFragment implements View.OnCl
         return view;
     }
 
+    @Override
+    public void onStart() {
+        super.onStart();
+        funnyvideosshimmer.startShimmerAnimation();
+        funnyvideosshimmer.setVisibility(View.VISIBLE);
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        funnyvideosshimmer.stopShimmerAnimation();
+        funnyvideosshimmer.setVisibility(View.GONE);
+    }
+
     private void hitArticleListingApi() {
+        String langFilter = getLangFilter();
         int from;
         int end;
         if (!ConnectivityUtils.isNetworkEnabled(getActivity())) {
@@ -253,12 +275,28 @@ public class CategoryVideosTabFragment extends BaseFragment implements View.OnCl
         VlogsListingAndDetailsAPI vlogsListingAndDetailsApi = retrofit.create(VlogsListingAndDetailsAPI.class);
         if (AppConstants.HOME_VIDEOS_CATEGORYID.equals(videoCategory)) {
             Call<VlogsListingResponse> callRecentVideoArticles = vlogsListingAndDetailsApi
-                    .getVlogsList(from, end, sortType, 3, null);
+                    .getLangWiseVlogs(from, end, sortType, 3, null, langFilter);
             callRecentVideoArticles.enqueue(recentArticleResponseCallback);
         } else {
             Call<VlogsListingResponse> callRecentVideoArticles = vlogsListingAndDetailsApi
-                    .getVlogsList(from, end, sortType, 3, videoCategory);
+                    .getLangWiseVlogs(from, end, sortType, 3, videoCategory, langFilter);
             callRecentVideoArticles.enqueue(recentArticleResponseCallback);
+        }
+    }
+
+    private String getLangFilter() {
+        StringBuilder langFilter = new StringBuilder();
+        if (null == selectedLanguages || selectedLanguages.length == 0) {
+            return null;
+        } else {
+            for (String selectedLanguage : selectedLanguages) {
+                if (langFilter.length() == 0) {
+                    langFilter.append(selectedLanguage);
+                } else {
+                    langFilter.append(",").append(selectedLanguage);
+                }
+            }
+            return langFilter.toString();
         }
     }
 

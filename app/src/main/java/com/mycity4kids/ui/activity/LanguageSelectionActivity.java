@@ -55,34 +55,34 @@ public class LanguageSelectionActivity extends BaseActivity implements View.OnCl
 
         languageSelectionList
                 .add(new LanguageSelectionData("English", getString(R.string.language_label_english),
-                        R.drawable.lang_enabled_english, R.drawable.lang_disabled_english));
+                        R.drawable.lang_enabled_english, R.drawable.lang_disabled_english, null));
         languageSelectionList
                 .add(new LanguageSelectionData("Hindi", getString(R.string.language_label_hindi),
-                        R.drawable.lang_enabled_hindi, R.drawable.lang_disabled_hindi));
+                        R.drawable.lang_enabled_hindi, R.drawable.lang_disabled_hindi, null));
         languageSelectionList
                 .add(new LanguageSelectionData("Marathi", getString(R.string.language_label_marathi),
-                        R.drawable.lang_enabled_marathi, R.drawable.lang_disabled_marathi));
+                        R.drawable.lang_enabled_marathi, R.drawable.lang_disabled_marathi, null));
         languageSelectionList
                 .add(new LanguageSelectionData("Bangla", getString(R.string.language_label_bengali),
-                        R.drawable.lang_enabled_bangla, R.drawable.lang_disabled_bangla));
+                        R.drawable.lang_enabled_bangla, R.drawable.lang_disabled_bangla, null));
         languageSelectionList
                 .add(new LanguageSelectionData("Tamil", getString(R.string.language_label_tamil),
-                        R.drawable.lang_enabled_tamil, R.drawable.lang_disabled_tamil));
+                        R.drawable.lang_enabled_tamil, R.drawable.lang_disabled_tamil, null));
         languageSelectionList
                 .add(new LanguageSelectionData("Telugu", getString(R.string.language_label_telegu),
-                        R.drawable.lang_enabled_telugu, R.drawable.lang_disabled_telugu));
+                        R.drawable.lang_enabled_telugu, R.drawable.lang_disabled_telugu, null));
         languageSelectionList
                 .add(new LanguageSelectionData("Kannada", getString(R.string.language_label_kannada),
-                        R.drawable.lang_enabled_kannada, R.drawable.lang_disabled_kannada));
+                        R.drawable.lang_enabled_kannada, R.drawable.lang_disabled_kannada, null));
         languageSelectionList
                 .add(new LanguageSelectionData("Malayalam", getString(R.string.language_label_malayalam),
-                        R.drawable.lang_enabled_malayalam, R.drawable.lang_disabled_malayalam));
+                        R.drawable.lang_enabled_malayalam, R.drawable.lang_disabled_malayalam, null));
         languageSelectionList
                 .add(new LanguageSelectionData("Gujarati", getString(R.string.language_label_gujarati),
-                        R.drawable.lang_enabled_gujrati, R.drawable.lang_disabled_gujrati));
+                        R.drawable.lang_enabled_gujrati, R.drawable.lang_disabled_gujrati, null));
         languageSelectionList
                 .add(new LanguageSelectionData("Punjabi", getString(R.string.language_label_punjabi),
-                        R.drawable.lang_enabled_punjabi, R.drawable.lang_disabled_punjabi));
+                        R.drawable.lang_enabled_punjabi, R.drawable.lang_disabled_punjabi, null));
 
         languageSelectionRecyclerAdapter.setNewListData(languageSelectionList);
         languageRecyclerView.setAdapter(languageSelectionRecyclerAdapter);

@@ -1,13 +1,13 @@
 package com.mycity4kids.models.request;
 
 import com.google.gson.annotations.SerializedName;
-
 import java.util.ArrayList;
 
 /**
  * Created by hemant on 12/1/17.
  */
 public class UploadVideoRequest {
+
     @SerializedName("video_id")
     private String video_id;
     @SerializedName("title")
@@ -36,6 +36,16 @@ public class UploadVideoRequest {
     private ArrayList<String> category_id;
     @SerializedName("thumbnail")
     private String thumbnail;
+    @SerializedName("lang")
+    private String[] lang;
+
+    public String[] getLang() {
+        return lang;
+    }
+
+    public void setLang(String[] lang) {
+        this.lang = lang;
+    }
 
     public String getVideo_id() {
         return video_id;

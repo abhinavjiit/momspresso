@@ -132,7 +132,7 @@ public class CustomSignUpActivity extends BaseActivity implements View.OnClickLi
                     model.setSessionId(responseData.getData().get(0).getResult().getSessionId());
                     model.setBlogTitle(responseData.getData().get(0).getResult().getBlogTitle());
                     model.setIsNewUser(responseData.getData().get(0).getResult().getIsNewUser());
-
+                    model.setVideoPreferredLanguages(responseData.getData().get(0).getResult().getVideoPreferredLanguages());
                     SharedPrefUtils.setUserDetailModel(BaseApplication.getAppContext(), model);
                     SharedPrefUtils.setProfileImgUrl(BaseApplication.getAppContext(),
                             responseData.getData().get(0).getResult().getProfilePicUrl().getClientApp());
