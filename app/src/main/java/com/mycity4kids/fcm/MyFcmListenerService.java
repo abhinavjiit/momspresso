@@ -33,7 +33,6 @@ import com.mycity4kids.preference.SharedPrefUtils;
 import com.mycity4kids.profile.UserProfileActivity;
 import com.mycity4kids.sync.PushTokenService;
 import com.mycity4kids.ui.ContentCommentReplyNotificationActivity;
-import com.mycity4kids.ui.activity.AppSettingsActivity;
 import com.mycity4kids.ui.activity.ArticleChallengeDetailActivity;
 import com.mycity4kids.ui.activity.ArticleDetailsContainerActivity;
 import com.mycity4kids.ui.activity.BadgeActivity;
@@ -265,21 +264,6 @@ public class MyFcmListenerService extends FirebaseMessagingService {
                     }
                     handleNotificationAccordingToStructure(remoteMessage, pushNotificationModel, contentIntent,
                             "badge_list ----- Notification Message --- ", "profile ----- Notification MixFeedData");
-                } else if (AppConstants.NOTIFICATION_TYPE_APP_SETTINGS.equalsIgnoreCase(type)) {
-                    if (SharedPrefUtils.getAppUpgrade(BaseApplication.getAppContext())) {
-                        contentIntent = handleForcedUpdate();
-                    } else {
-                        intent = new Intent(getApplicationContext(), AppSettingsActivity.class);
-                        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                        intent.putExtra("fromNotification", true);
-                        intent.putExtra("load_fragment", Constants.SETTINGS_FRAGMENT);
-                        TaskStackBuilder stackBuilder = TaskStackBuilder.create(this);
-                        stackBuilder.addParentStack(AppSettingsActivity.class);
-                        stackBuilder.addNextIntent(intent);
-                        contentIntent = stackBuilder.getPendingIntent(0, PendingIntent.FLAG_UPDATE_CURRENT);
-                    }
-                    handleNotificationAccordingToStructure(remoteMessage, pushNotificationModel, contentIntent,
-                            "app_settings ----- Notification  --- ", "app_settings ----- Notification MixFeedData");
                 } else if (AppConstants.NOTIFICATION_TYPE_MOMSIGHT_REWARD_LISTING.equalsIgnoreCase(type)) {
                     if (SharedPrefUtils.getAppUpgrade(BaseApplication.getAppContext())) {
                         contentIntent = handleForcedUpdate();

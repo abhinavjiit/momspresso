@@ -52,7 +52,6 @@ import com.mycity4kids.sync.SyncUserFollowingList;
 import com.mycity4kids.sync.SyncUserInfoService;
 import com.mycity4kids.ui.GroupMembershipStatus;
 import com.mycity4kids.ui.activity.AddShortStoryActivity;
-import com.mycity4kids.ui.activity.AppSettingsActivity;
 import com.mycity4kids.ui.activity.ArticleChallengeDetailActivity;
 import com.mycity4kids.ui.activity.ArticleChallengeOrTopicSelectionActivity;
 import com.mycity4kids.ui.activity.ArticleDetailsContainerActivity;
@@ -341,11 +340,6 @@ public abstract class BaseActivity extends AppCompatActivity implements GroupMem
                 intent1.putExtra(Constants.USER_ID, userId);
                 startActivity(intent1);
             }
-        } else if (type.equalsIgnoreCase(AppConstants.APP_SETTINGS_DEEPLINK)) {
-            Intent intent1 = new Intent(this, AppSettingsActivity.class);
-            intent1.putExtra("fromNotification", true);
-            intent1.putExtra("load_fragment", Constants.SETTINGS_FRAGMENT);
-            startActivity(intent1);
         }
     }
 
@@ -1288,6 +1282,6 @@ public abstract class BaseActivity extends AppCompatActivity implements GroupMem
     }
 
     public boolean checkCoachmarkFlagStatus(String coachmark) {
-       return SharedPrefUtils.isCoachmarksShownFlag(BaseApplication.getAppContext(), coachmark);
+        return SharedPrefUtils.isCoachmarksShownFlag(BaseApplication.getAppContext(), coachmark);
     }
 }

@@ -10,9 +10,12 @@ import android.graphics.Rect;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
 import android.text.Html;
 import android.text.method.LinkMovementMethod;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -124,6 +127,8 @@ import com.mycity4kids.widget.RelatedArticlesView;
 import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.utils.YouTubePlayerUtils;
 import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.views.YouTubePlayerView;
 import com.squareup.picasso.Picasso;
+import io.github.douglasjunior.androidSimpleTooltip.SimpleTooltip;
+import io.github.douglasjunior.androidSimpleTooltip.SimpleTooltip.OnDismissListener;
 import io.reactivex.Observer;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
@@ -3944,6 +3949,9 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
                                         AppUtils.getString(getActivity(), R.string.ad_follow_author));
                                 isFollowing = false;
                                 userFollowPlusIconContainer.setVisibility(View.VISIBLE);
+                                if (!((BaseActivity) getActivity()).checkCoachmarkFlagStatus("article_following_fab")) {
+                                    showTooltip();
+                                }
                             } else {
                                 followTextViewFollowContainer.setEnabled(true);
                                 followTextViewFollowContainer.setText(
@@ -3966,6 +3974,29 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
                     handleExceptions(t);
                 }
             };
+
+    public void showTooltip() {
+        SimpleTooltip tooltip = new SimpleTooltip.Builder(userFollowPlusIconContainer.getContext())
+                .anchorView(userFollowPlusIconContainer)
+                .contentView(R.layout.follow_author_tooltip)
+                .arrowColor(ContextCompat.getColor(userFollowPlusIconContainer.getContext(), R.color.tooltip_border))
+                .gravity(Gravity.TOP)
+                .showArrow(true)
+                .margin(0f)
+                .padding(0f)
+                .arrowWidth(40f)
+                .animated(false)
+                .dismissOnOutsideTouch(false)
+                .onDismissListener(tooltip1 -> {
+                    if (getActivity() != null) {
+                        ((BaseActivity) getActivity()).updateCoachmarkFlag("article_following_fab", true);
+                    }
+                })
+                .transparentOverlay(true)
+                .build();
+        tooltip.show();
+        new Handler().postDelayed(() -> tooltip.dismiss(), 8000);
+    }
 
     private Callback<ResponseBody> updateViewCountResponseCallback = new Callback<ResponseBody>() {
         @Override

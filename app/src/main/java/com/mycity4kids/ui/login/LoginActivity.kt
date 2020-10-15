@@ -45,6 +45,7 @@ import com.mycity4kids.ui.activity.LoadingActivity
 import com.mycity4kids.ui.activity.PhoneLoginUserDetailActivity
 import com.mycity4kids.ui.activity.phoneLogin.SendSMSFragment
 import com.mycity4kids.ui.fragment.ChooseLoginAccountDialogFragment
+import com.mycity4kids.ui.fragment.EmailLoginFragment
 import com.mycity4kids.ui.fragment.FacebookAddEmailDialogFragment
 import com.mycity4kids.utils.ConnectivityUtils
 import com.mycity4kids.utils.StringUtils
@@ -95,6 +96,7 @@ class LoginActivity : BaseActivity(), IFacebookUser, View.OnClickListener {
         facebookTextView.setOnClickListener(this)
         googleTextView.setOnClickListener(this)
         phoneTextView.setOnClickListener(this)
+        emailTextView.setOnClickListener(this)
 
         headerTextView.setOnClickListener {
             if (count == 9) {
@@ -120,6 +122,12 @@ class LoginActivity : BaseActivity(), IFacebookUser, View.OnClickListener {
             v?.id == R.id.phoneTextView -> {
                 Utils.shareEventTracking(this, "Login screen", "Login_Android", "Login_Phone")
                 val fragment = SendSMSFragment()
+                val mBundle = Bundle()
+                fragment.arguments = mBundle
+                addFragment(fragment, mBundle)
+            }
+            v?.id == R.id.emailTextView -> {
+                val fragment = EmailLoginFragment()
                 val mBundle = Bundle()
                 fragment.arguments = mBundle
                 addFragment(fragment, mBundle)
@@ -680,6 +688,24 @@ class LoginActivity : BaseActivity(), IFacebookUser, View.OnClickListener {
                 super.onOptionsItemSelected(item)
             }
             else -> super.onOptionsItemSelected(item)
+        }
+    }
+
+    fun loginRequest(emailId: String, password: String) {
+        if (ConnectivityUtils.isNetworkEnabled(this)) {
+            showProgressDialog(getString(R.string.please_wait))
+            loginMode = "email"
+            val lr = LoginRegistrationRequest()
+            lr.email = emailId
+            lr.password = password
+            lr.requestMedium = "custom"
+
+            val retrofit = BaseApplication.getInstance().retrofit
+            val loginRegistrationAPI = retrofit.create(LoginRegistrationAPI::class.java)
+            val call = loginRegistrationAPI.login(lr)
+            call.enqueue(onLoginResponseReceivedListener)
+        } else {
+            showToast(getString(R.string.error_network))
         }
     }
 }

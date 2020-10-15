@@ -137,9 +137,7 @@ public class ArticleModerationOrShareActivity extends BaseActivity implements Vi
                 break;
             }
             case R.id.back: {
-                Intent intent = new Intent(this, DashboardActivity.class);
-                intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
-                startActivity(intent);
+                launchHome();
                 break;
             }
             case R.id.cancelImageModeration: {
@@ -220,46 +218,21 @@ public class ArticleModerationOrShareActivity extends BaseActivity implements Vi
                 break;
             case R.id.laterTextView:
             case R.id.okayTextView:
-                Retrofit retrofit = BaseApplication.getInstance().getRetrofit();
-                BloggerDashboardAPI bloggerDashboardApi = retrofit.create(BloggerDashboardAPI.class);
-                Call<UserDetailResponse> call = bloggerDashboardApi.getBloggerData(
-                        SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId());
-                call.enqueue(getUserDetailsResponseCallback);
+                launchHome();
                 break;
             default:
                 break;
         }
     }
 
-    private Callback<UserDetailResponse> getUserDetailsResponseCallback = new Callback<UserDetailResponse>() {
-        @Override
-        public void onResponse(Call<UserDetailResponse> call, retrofit2.Response<UserDetailResponse> response) {
-            removeProgressDialog();
-            if (response.body() == null) {
-                return;
-            }
-
-            UserDetailResponse responseData = response.body();
-            if (responseData.getCode() == 200 && Constants.SUCCESS.equals(responseData.getStatus())) {
-                Intent intent = new Intent(ArticleModerationOrShareActivity.this, DashboardActivity.class);
-                intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
-                intent.putExtra("showInviteDialog", true);
-                intent.putExtra("source", AppConstants.CONTENT_TYPE_ARTICLE);
-                startActivity(intent);
-                finish();
-            } else {
-                showToast("" + responseData.getReason());
-            }
-        }
-
-        @Override
-        public void onFailure(Call<UserDetailResponse> call, Throwable t) {
-            removeProgressDialog();
-            FirebaseCrashlytics.getInstance().recordException(t);
-            Log.d("MC4kException", Log.getStackTraceString(t));
-        }
-    };
-
+    private void launchHome() {
+        Intent intent = new Intent(ArticleModerationOrShareActivity.this, DashboardActivity.class);
+        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
+        intent.putExtra("showInviteDialog", true);
+        intent.putExtra("source", AppConstants.CONTENT_TYPE_ARTICLE);
+        startActivity(intent);
+        finish();
+    }
 
     private void checkCreatorGroupStatus() {
         GroupMembershipStatus groupMembershipStatus = new GroupMembershipStatus(this);
@@ -267,7 +240,6 @@ public class ArticleModerationOrShareActivity extends BaseActivity implements Vi
         groupMembershipStatus.checkMembershipStatus(groupId,
                 SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId());
     }
-
 
     @Override
     public void onMembershipStatusFetchSuccess(GroupsMembershipResponse body, int groupId) {
@@ -315,6 +287,5 @@ public class ArticleModerationOrShareActivity extends BaseActivity implements Vi
             createMoreHeaderTextView.setText(getString(R.string.get_tips_ideas));
             createMoreButton.setTag("please_join");
         }
-
     }
 }

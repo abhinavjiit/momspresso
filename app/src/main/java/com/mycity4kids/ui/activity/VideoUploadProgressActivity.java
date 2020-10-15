@@ -332,12 +332,6 @@ public class VideoUploadProgressActivity extends BaseActivity implements View.On
                 handleDeeplinks("https://www.momspresso.com/moderation-rules");
                 break;
             }
-            case R.id.back: {
-                Intent intent = new Intent(this, DashboardActivity.class);
-                intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
-                startActivity(intent);
-                break;
-            }
             case R.id.cancelImage: {
                 youAreDoneView.setVisibility(View.INVISIBLE);
                 cancelImage.setVisibility(View.INVISIBLE);
@@ -363,6 +357,7 @@ public class VideoUploadProgressActivity extends BaseActivity implements View.On
                 }
                 break;
             }
+            case R.id.back:
             case R.id.okayTextView:
                 Intent intent = new Intent(VideoUploadProgressActivity.this, DashboardActivity.class);
                 intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
@@ -405,8 +400,8 @@ public class VideoUploadProgressActivity extends BaseActivity implements View.On
     @Override
     public void onMembershipStatusFetchFail() {
         bottomLayout.setVisibility(View.VISIBLE);
-        joinVloggersGroup.setText("Join Creator's Hangout");
-        needOpinionTextView.setText("Get tips or ideas from other creators");
+        joinVloggersGroup.setText(getString(R.string.join_creator_group));
+        needOpinionTextView.setText(getString(R.string.get_tips_ideas));
         joinVloggersGroup.setTag("please_join");
     }
 }

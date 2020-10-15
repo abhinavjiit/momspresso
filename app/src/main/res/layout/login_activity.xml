@@ -106,6 +106,22 @@
     android:textSize="16sp"
     app:fontName="Roboto-Medium.ttf" />
 
+  <com.mycity4kids.widget.CustomFontTextView
+    android:id="@+id/emailTextView"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_below="@+id/phoneTextView"
+    android:layout_gravity="center"
+    android:layout_marginTop="16dp"
+    android:paddingStart="28dp"
+    android:gravity="center"
+    android:paddingTop="4dp"
+    android:paddingBottom="4dp"
+    android:text="@string/signin.login_via_email"
+    android:textColor="@color/app_dark_black"
+    android:textSize="16sp"
+    app:fontName="Roboto-Medium.ttf" />
+
   <ImageView
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"

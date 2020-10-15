@@ -82,14 +82,13 @@ public class BloggerRankResponse extends BaseResponse {
             @SerializedName("type")
             private String type;
             @SerializedName("average_daily_views")
-            private int average_daily_views = 0;
+            private long average_daily_views = 0;
             @SerializedName("total_views")
-            private float total_views = 0;
+            private long total_views = 0;
             @SerializedName("yesterday_views")
-            private int yesterday_views = 0;
+            private long yesterday_views = 0;
             @SerializedName("content_created")
             private boolean content_created;
-
 
             public String getAuthor_id() {
                 return author_id;
@@ -107,19 +106,19 @@ public class BloggerRankResponse extends BaseResponse {
                 this.type = type;
             }
 
-            public float getTotal_views() {
+            public long getTotal_views() {
                 return total_views;
             }
 
-            public void setTotal_views(float total_views) {
+            public void setTotal_views(long total_views) {
                 this.total_views = total_views;
             }
 
-            public int getYesterday_views() {
+            public long getYesterday_views() {
                 return yesterday_views;
             }
 
-            public void setYesterday_views(int yesterday_views) {
+            public void setYesterday_views(long yesterday_views) {
                 this.yesterday_views = yesterday_views;
             }
 
@@ -131,15 +130,13 @@ public class BloggerRankResponse extends BaseResponse {
                 this.content_created = content_created;
             }
 
-            public int getAverage_daily_views() {
+            public long getAverage_daily_views() {
                 return average_daily_views;
             }
 
-            public void setAverage_daily_views(int average_daily_views) {
+            public void setAverage_daily_views(long average_daily_views) {
                 this.average_daily_views = average_daily_views;
             }
-
         }
     }
-
 }

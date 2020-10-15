@@ -1,6 +1,5 @@
 package com.mycity4kids.ui.adapter;
 
-import android.os.Handler;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -16,8 +15,8 @@ import com.mycity4kids.R;
 import com.mycity4kids.application.BaseApplication;
 import com.mycity4kids.models.response.LeaderboardDataResponse.LeaderboardData.LeaderBoradRank;
 import com.mycity4kids.preference.SharedPrefUtils;
+import com.mycity4kids.utils.AppUtils;
 import com.squareup.picasso.Picasso;
-import io.github.douglasjunior.androidSimpleTooltip.SimpleTooltip;
 
 /**
  * Created by hemant on 30/5/18.
@@ -27,8 +26,6 @@ public class VlogLeaderboardRecyclerAdapter extends
         RecyclerView.Adapter<VlogLeaderboardRecyclerAdapter.LeaderboardViewHolder> {
 
     private LeaderBoradRank articleDataModelsNew;
-    private SimpleTooltip simpleTooltip;
-    private Handler handler;
     private RecyclerViewClickListener recyclerViewClickListener;
 
     public VlogLeaderboardRecyclerAdapter(RecyclerViewClickListener recyclerViewClickListener) {
@@ -64,23 +61,26 @@ public class VlogLeaderboardRecyclerAdapter extends
         }
         holder.userName.setText(articleDataModelsNew.ranks.get(position).getName());
         holder.userHandle.setText(articleDataModelsNew.ranks.get(position).getUser_handle());
-        holder.userRank.setText("" + articleDataModelsNew.ranks.get(position).getRank());
-        holder.viewCount.setText("" + (articleDataModelsNew.ranks.get(position).getScore() / 1000) + "K");
+        holder.userRank.setText("#" + articleDataModelsNew.ranks.get(position).getRank());
+        holder.viewCount.setText(AppUtils.withSuffix(articleDataModelsNew.ranks.get(position).getScore()));
         if (articleDataModelsNew.ranks.get(position).getUser_id()
                 .equals(SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId())) {
-            holder.rl.setBackgroundColor(ContextCompat.getColor(holder.rl.getContext(), R.color.color_FFF7F8));
-            /*int rankDiff =
-                    articleDataModelsNew.ranks.get(position).getRank() - articleDataModelsNew.ranks.get(position)
-                            .getYesterday_rank();
+            holder.rl.setBackground(
+                    ContextCompat.getDrawable(holder.rl.getContext(), R.drawable.leaderboard_item_border_selected));
             if (articleDataModelsNew.ranks.get(position).getRank() < articleDataModelsNew.ranks.get(position)
                     .getYesterday_rank()) {
-                tooltipForShare(holder.rl, mContext.getString(R.string.rank_up, rankDiff));
+                holder.rankChangeIndicatorImageView.setImageResource(R.drawable.ic_arrow_1);
+                holder.rankChangeIndicatorImageView.setVisibility(View.VISIBLE);
             } else if (articleDataModelsNew.ranks.get(position).getRank() > articleDataModelsNew.ranks.get(position)
                     .getYesterday_rank()) {
-                tooltipForShare(holder.rl, mContext.getString(R.string.rank_down, rankDiff));
+                holder.rankChangeIndicatorImageView.setImageResource(R.drawable.ic_arrow);
+                holder.rankChangeIndicatorImageView.setVisibility(View.VISIBLE);
             } else {
-                tooltipForShare(holder.rl, mContext.getString(R.string.rank_same));
-            }*/
+                holder.rankChangeIndicatorImageView.setVisibility(View.GONE);
+            }
+        } else {
+            holder.rl.setBackground(
+                    ContextCompat.getDrawable(holder.rl.getContext(), R.drawable.leaderboard_item_border));
         }
     }
 
@@ -94,10 +94,11 @@ public class VlogLeaderboardRecyclerAdapter extends
         TextView userName, userHandle, userRank, viewCount;
         ImageView profilePic;
         RelativeLayout rl;
-
+        ImageView rankChangeIndicatorImageView;
 
         LeaderboardViewHolder(View itemView) {
             super(itemView);
+            rankChangeIndicatorImageView = itemView.findViewById(R.id.rankChangeIndicatorImageView);
             profilePic = itemView.findViewById(R.id.profilePicImageView);
             userName = itemView.findViewById(R.id.user_name);
             userHandle = itemView.findViewById(R.id.user_handle);
@@ -111,29 +112,6 @@ public class VlogLeaderboardRecyclerAdapter extends
         public void onClick(View view) {
             recyclerViewClickListener.onRecyclerViewItemClick(view, getAdapterPosition());
         }
-    }
-
-    private void tooltipForShare(View view, String msg) {
-//        simpleTooltip = new SimpleTooltip.Builder(mContext)
-//                .anchorView(view)
-//                .backgroundColor(mContext.getResources().getColor(R.color.app_blue))
-//                .text(msg)
-//                .textColor(mContext.getResources().getColor(R.color.white_color))
-//                .arrowColor(mContext.getResources().getColor(R.color.app_blue))
-//                .gravity(Gravity.END)
-//                .arrowWidth(60)
-//                .arrowHeight(20)
-//                .animated(false)
-//                .focusable(true)
-//                .transparentOverlay(true)
-//                .build();
-//        simpleTooltip.show();
-        /*handler = new Handler();
-        handler.postDelayed(() -> {
-            if (simpleTooltip.isShowing()) {
-                simpleTooltip.dismiss();
-            }
-        }, 30000);*/
     }
 
     public interface RecyclerViewClickListener {

@@ -1499,4 +1499,7 @@ Thank you! We will be reviewing your story. You can expect to hear from us withi
   <string name="coachmark_mymoney">ক্যাম্পেইনে অংশগ্রহণ করার জন্য আবেদন করুন, প্রয়োজনীয় তথ্য সম্পূর্ণ করুন আর উপার্জন করুন!</string>
   <string name="coachmark_vlogs_1">আসুন, আপনাকে আপনার প্রথম ভিলগটি বানাতে সাহায্য করা যাক! প্রথমেই বেছে নিন একটি বিভাগ অথবা চ্যালেঞ্জ</string>
   <string name="tags_help_discover">ট্যাগ দর্শকদের ভিডিও খুঁজে পেতে সাহায্য করে</string>
+  <string name="tooltip_liked_the_blog">ভালো লেগেছে গল্প? প্রস্তুতকারীকে অনুসরণ করুন যাতে তাঁর পোস্ট সদাই দেখতে পান</string>
+  <string name="coachmark_vlogs_2">থাম্বনেল ভালো হলে ভিডিওটি বেশিবার দর্শিত হবে</string>
+  <string name="tooltip_groups">আপনার পছন্দের গ্রুপগুলিতে যোগ দিন।সমমনস্ক মানুষদের সাথে করুন আলাপচারিতা।</string>
 </resources>

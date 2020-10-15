@@ -1515,4 +1515,7 @@ Thank you! We will be reviewing your story. You can expect to hear from us withi
   <string name="coachmark_mymoney">कैम्पेन्स के लिए अप्लाई करें, आवश्यकताओं को पूरा करें और पैसा कमाएं!</string>
   <string name="coachmark_vlogs_1">हमें आपका  पहला वी लॉग क्रिएट करने  में आपकी मदद करने दें .शुरू करने के लिए एक चैलेंज का चयन करें या  केटेगरी से शुरुआत करें </string>
   <string name="tags_help_discover">टैग्स दर्शकों को आसानी से वीडियो खोजने में मदद करते हैं </string>
+  <string name="tooltip_liked_the_blog">लेख पसंद आया? लेखक की पोस्ट्स को मिस न करने के लिए क्रिएटर को फॉलो  करें</string>
+  <string name="coachmark_vlogs_2">एक अच्छा थंबनेल अधिक व्यूज लाता है</string>
+  <string name="tooltip_groups">उन ग्रुप्स से जुड़ें जिन्हें आप पसंद करते हैं. कम्युनिटी के साथ बातचीत शुरू करें!</string>
 </resources>

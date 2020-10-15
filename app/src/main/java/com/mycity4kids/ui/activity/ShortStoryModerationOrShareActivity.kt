@@ -231,12 +231,7 @@ class ShortStoryModerationOrShareActivity : BaseActivity(), GroupMembershipStatu
                 handleDeeplinks("https://www.momspresso.com/moderation-rules")
             }
             R.id.back -> {
-                val intent = Intent(
-                    this,
-                    DashboardActivity::class.java
-                )
-                intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_NEW_TASK
-                startActivity(intent)
+                launchHome()
             }
             R.id.cancelImageModeration -> {
                 youAreDoneView.visibility = View.INVISIBLE

@@ -50,8 +50,8 @@ class BloggerGoldDashboardFragment : BaseFragment() {
     private lateinit var earningCalculator: TextView
     private lateinit var divider: View
     private lateinit var date: String
-    private var blogAverageView: Int = 0
-    private var vlogAverageView: Int = 0
+    private var blogAverageView: Long = 0
+    private var vlogAverageView: Long = 0
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -106,6 +106,7 @@ class BloggerGoldDashboardFragment : BaseFragment() {
                 "DashboardTab_VlogLB_CTA_BB"
             )
             val intent = Intent(activity, ViewLeaderboardActivity::class.java)
+            intent.putExtra("tab", "vlogs")
             startActivity(intent)
         }
 
@@ -212,10 +213,8 @@ class BloggerGoldDashboardFragment : BaseFragment() {
             viewsLayout.visibility = View.VISIBLE
             articleViewLayout.visibility = View.VISIBLE
             earningCalculator.visibility = View.VISIBLE
-            article_total_view.text =
-                (response.data.result.article.total_views / 1000).toString() + "K"
-            article_yesterday_view.text =
-                "Yesterday " + (response.data.result.article.yesterday_views / 1000).toString() + "K"
+            article_total_view.text = AppUtils.withSuffix(response.data.result.article.total_views)
+            article_yesterday_view.text = "Yesterday " + AppUtils.withSuffix(response.data.result.article.yesterday_views)
             blogAverageView = response.data.result.article.average_daily_views
             startCreatingLayout.visibility = View.GONE
             leaderBoardLayout.visibility = View.GONE
@@ -230,9 +229,8 @@ class BloggerGoldDashboardFragment : BaseFragment() {
             viewsLayout.visibility = View.VISIBLE
             videoViewLayout.visibility = View.VISIBLE
             earningCalculator.visibility = View.VISIBLE
-            video_total_view.text = (response.data.result.video.total_views / 1000).toString() + "K"
-            video_yesterday_view.text =
-                "Yesterday " + (response.data.result.video.yesterday_views / 1000).toString() + "K"
+            video_total_view.text = AppUtils.withSuffix(response.data.result.video.total_views)
+            video_yesterday_view.text = "Yesterday " + AppUtils.withSuffix(response.data.result.video.yesterday_views)
             vlogAverageView = response.data.result.video.average_daily_views
             startCreatingLayout.visibility = View.GONE
             leaderBoardLayout.visibility = View.GONE

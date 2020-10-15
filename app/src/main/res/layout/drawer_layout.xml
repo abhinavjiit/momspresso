@@ -344,22 +344,5 @@
       android:textSize="14sp"
       app:drawableTint="@color/app_red"
       app:fontName="oswald.ttf" />
-
-    <com.mycity4kids.widget.CustomFontTextView
-      android:id="@+id/settingTextView"
-      android:layout_width="match_parent"
-      android:layout_height="wrap_content"
-      android:layout_below="@+id/takeTourTextView"
-      android:drawablePadding="20dp"
-      android:gravity="center_vertical"
-      android:paddingStart="30dp"
-      android:paddingTop="11dp"
-      android:paddingEnd="16dp"
-      android:paddingBottom="11dp"
-      android:text="@string/app_settings"
-      android:textAllCaps="true"
-      android:textSize="14sp"
-      app:drawableTint="#d54058"
-      app:fontName="oswald.ttf" />
   </RelativeLayout>
 </ScrollView>

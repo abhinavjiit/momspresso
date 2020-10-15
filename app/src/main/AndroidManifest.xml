@@ -267,9 +267,6 @@
       android:name=".ui.activity.SubscribeTopicsActivity"
       android:screenOrientation="portrait" />
     <activity
-      android:name=".ui.activity.AppSettingsActivity"
-      android:screenOrientation="portrait" />
-    <activity
       android:name=".ui.rewards.activity.RewardsContainerActivity"
       android:configChanges="orientation|keyboardHidden|screenSize|layoutDirection"
       android:screenOrientation="portrait"

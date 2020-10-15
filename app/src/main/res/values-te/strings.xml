@@ -1494,4 +1494,7 @@ Thank you! We will be reviewing your story. You can expect to hear from us withi
   <string name="coachmark_mymoney">ప్రచారాల కోసం దరఖాస్తు చేసుకోండి, అడిగిన వివరాలు పూర్తి చేయండి మరియు డబ్బు సంపాదించండి!</string>
   <string name="coachmark_vlogs_1">మీ మొదటి వ్లాగ్‌ను క్రియేట్ చేయడానికి మా సహాయం తీసుకోండి! ఒక వర్గాన్ని ఎంచుకోండి లేదా ప్రారంభించడానికి ఛాలెంజ్ ఎంచుకోండి</string>
   <string name="tags_help_discover">ట్యాగ్‌లు వీక్షకులకు వీడియోలను సులభంగా కనుగొనడంలో సహాయపడతాయి</string>
+  <string name="tooltip_liked_the_blog">వ్యాసం నచ్చిందా? వారి అద్భుతమైన పోస్ట్‌లను ఎప్పటికీ కోల్పోకుండా ఉండటానికి క్రియేటర్ను అనుసరించండి</string>
+  <string name="coachmark_vlogs_2">మంచి థంబ్ నైల్  మరిన్ని వీక్షణలను ఆకర్షిస్తుంది </string>
+  <string name="tooltip_groups">మీకు నచ్చిన సమూహాలలో చేరండి. సంఘంతో సంభాషించడం ప్రారంభించండి!</string>
 </resources>

@@ -1492,4 +1492,7 @@ Thank you! We will be reviewing your story. You can expect to hear from us withi
   <string name="coachmark_mymoney">कॅम्पेन साठी अर्ज करा, आवश्यकता पूर्ण करा आणि पैसे कमवा!</string>
   <string name="coachmark_vlogs_1">तुमचा आपला  व्हीलॉग तयार करण्यास मदत करू ! एक श्रेणी निवडा किंवा एखाद्या आव्हानाने सुरवात करा</string>
   <string name="tags_help_discover">टॅग्ज दर्शकांना व्हिडिओ सहजपणे शोधण्यात मदत करतात</string>
+  <string name="tooltip_liked_the_blog">लेख आवडले? निर्मात्याच्या  पोस्ट न चुकता वाचण्यासाठी त्यांना फॉलो करा. </string>
+  <string name="coachmark_vlogs_2">चांगली लघुप्रतिमा असेल तर व्हीव्यूज  जास्त मिळतात.</string>
+  <string name="tooltip_groups">तुमच्या आवडीच्या गटात सामील व्हा. समुदायाशी संवाद साधण्यास प्रारंभ करा!</string>
 </resources>

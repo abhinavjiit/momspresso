@@ -31,11 +31,11 @@ import com.mycity4kids.tagging.tokenization.interfaces.QueryTokenReceiver
 import com.mycity4kids.tagging.ui.RichEditorView
 import com.mycity4kids.utils.ToastUtils
 import com.squareup.picasso.Picasso
-import java.util.Arrays
 import org.apache.commons.lang3.StringUtils
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
+import java.util.Arrays
 
 class LiveStreamCommentTabFragment : BaseFragment(),
     LiveChatRecyclerAdapter.RecyclerViewClickListener, QueryTokenReceiver,
@@ -43,10 +43,10 @@ class LiveStreamCommentTabFragment : BaseFragment(),
 
     private var liveStreamResult: LiveStreamResult? = null
     val commentsList = ArrayList<ChatListData>()
-    private lateinit var chatRecyclerView: RecyclerView
+    private var chatRecyclerView: RecyclerView? = null
     private lateinit var addCommentImageView: ImageView
     private lateinit var inputEditText: RichEditorView
-    private lateinit var emptyStateTextView: TextView
+    private var emptyStateTextView: TextView? = null
     private lateinit var userImageView: ImageView
 
     private val liveChatRecyclerAdapter: LiveChatRecyclerAdapter by lazy {
@@ -70,9 +70,9 @@ class LiveStreamCommentTabFragment : BaseFragment(),
         val llm = LinearLayoutManager(activity)
         llm.orientation = LinearLayoutManager.VERTICAL
         llm.stackFromEnd = true
-        chatRecyclerView.layoutManager = llm
+        chatRecyclerView?.layoutManager = llm
         liveChatRecyclerAdapter.setData(commentsList)
-        chatRecyclerView.adapter = liveChatRecyclerAdapter
+        chatRecyclerView?.adapter = liveChatRecyclerAdapter
 
         Picasso.get().load(SharedPrefUtils.getProfileImgUrl(BaseApplication.getAppContext())).error(
             R.drawable.default_commentor_img
@@ -93,9 +93,7 @@ class LiveStreamCommentTabFragment : BaseFragment(),
                 formatMentionDataForApiRequest()
             }
         }
-
-        emptyStateTextView.visibility = View.VISIBLE
-
+        emptyStateTextView?.visibility = View.VISIBLE
         return fragView
     }
 
@@ -193,17 +191,17 @@ class LiveStreamCommentTabFragment : BaseFragment(),
         try {
             val chat = snapshot.getValue(ChatListData::class.java)
             chat?.let { commentsList.add(it) }
+            liveChatRecyclerAdapter.notifyDataSetChanged()
+            if (commentsList.size > 0) {
+                chatRecyclerView?.smoothScrollToPosition(commentsList.size - 1)
+            }
+            if (commentsList.isEmpty()) {
+                emptyStateTextView?.visibility = View.VISIBLE
+            } else {
+                emptyStateTextView?.visibility = View.GONE
+            }
         } catch (e: Exception) {
             Log.e("dwada", "" + e.message)
-        }
-        liveChatRecyclerAdapter.notifyDataSetChanged()
-        if (commentsList.size > 0) {
-            chatRecyclerView.smoothScrollToPosition(commentsList.size - 1)
-        }
-        if (commentsList.isEmpty()) {
-            emptyStateTextView.visibility = View.VISIBLE
-        } else {
-            emptyStateTextView.visibility = View.GONE
         }
     }
 

@@ -3,17 +3,17 @@
   xmlns:app="http://schemas.android.com/apk/res-auto"
   android:layout_width="match_parent"
   android:layout_height="wrap_content"
-  android:background="@color/white"
   android:orientation="vertical">
 
   <androidx.cardview.widget.CardView
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_marginLeft="@dimen/space_16"
-    android:layout_marginTop="@dimen/space_10"
-    android:layout_marginRight="@dimen/space_16"
-    android:layout_marginBottom="@dimen/space_13"
-    android:elevation="@dimen/space_5">
+    android:layout_marginStart="16dp"
+    android:layout_marginTop="5dp"
+    android:layout_marginEnd="16dp"
+    android:layout_marginBottom="5dp"
+    android:elevation="@dimen/space_5"
+    app:cardCornerRadius="8dp">
 
     <RelativeLayout
       android:id="@+id/rl"
@@ -41,8 +41,8 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignTop="@+id/profilePicImageView"
-        android:layout_marginLeft="10dp"
-        android:layout_toRightOf="@+id/profilePicImageView"
+        android:layout_marginStart="10dp"
+        android:layout_toEndOf="@+id/profilePicImageView"
         android:textColor="@color/campaign_515151"
         app:fontName="oswald.ttf" />
 
@@ -52,9 +52,9 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignBottom="@+id/profilePicImageView"
-        android:layout_marginLeft="10dp"
+        android:layout_marginStart="10dp"
         android:layout_marginTop="@dimen/space_10"
-        android:layout_toRightOf="@+id/profilePicImageView"
+        android:layout_toEndOf="@+id/profilePicImageView"
         android:textColor="@color/grey_faded"
         app:fontName="oswald.ttf" />
 
@@ -62,8 +62,9 @@
         android:id="@+id/view_img"
         android:layout_width="@dimen/space_20"
         android:layout_height="@dimen/space_20"
+        android:layout_alignParentEnd="true"
         android:layout_marginTop="5dp"
-        android:layout_toLeftOf="@id/view_count"
+        android:layout_marginEnd="30dp"
         android:background="@drawable/leaderboard_view"
         app:fontName="oswald.ttf" />
 
@@ -71,10 +72,10 @@
         android:id="@+id/view_count"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentRight="true"
-        android:layout_marginLeft="10dp"
+        android:layout_alignParentEnd="true"
+        android:layout_marginStart="10dp"
         android:layout_marginTop="5dp"
-        android:layout_marginRight="@dimen/space_13"
+        android:layout_marginEnd="20dp"
         android:textColor="@color/app_red"
         app:fontName="oswald.ttf" />
 
@@ -84,10 +85,19 @@
         android:layout_height="wrap_content"
         android:layout_below="@+id/view_count"
         android:layout_alignStart="@+id/view_count"
-        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true"
         android:layout_marginTop="@dimen/space_10"
         android:textColor="@color/campaign_515151"
         app:fontName="oswald.ttf" />
+
+      <ImageView
+        android:id="@+id/rankChangeIndicatorImageView"
+        android:layout_width="20dp"
+        android:layout_height="20dp"
+        android:layout_alignTop="@+id/user_rank"
+        android:layout_toStartOf="@+id/user_rank"
+        android:src="@drawable/ic_arrow"
+        android:visibility="gone" />
 
     </RelativeLayout>
   </androidx.cardview.widget.CardView>

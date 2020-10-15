@@ -33,6 +33,7 @@ class ViewLeaderboardActivity : BaseActivity() {
     private lateinit var viewpager: ViewPager
     private lateinit var leaderboardPagerAdapter: LeaderboardPagerAdapter
     private lateinit var checkout_growth_btn: TextView
+    private var tabName: String? = ""
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -42,6 +43,8 @@ class ViewLeaderboardActivity : BaseActivity() {
         toolbarTitleTextView = findViewById(R.id.toolbarTitleTextView)
         checkout_growth_btn = findViewById(R.id.checkout_growth_btn)
         tabs = findViewById(R.id.tabs)
+
+        tabName = intent.getStringExtra("tab")
 
         checkout_growth_btn.visibility = View.VISIBLE
         tabs.apply {
@@ -134,6 +137,9 @@ class ViewLeaderboardActivity : BaseActivity() {
                 viewpager.currentItem = tab?.position!!
             }
         })
+        if ("vlogs" == tabName) {
+            viewpager.currentItem = 1
+        }
     }
 
     private fun launchChromeTabs(deepLinkUrl: String) {

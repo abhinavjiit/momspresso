@@ -12,6 +12,7 @@ import androidx.viewpager.widget.ViewPager;
 import com.google.android.material.tabs.TabLayout;
 import com.mycity4kids.R;
 import com.mycity4kids.base.BaseFragment;
+import com.mycity4kids.ui.activity.DashboardActivity;
 import com.mycity4kids.ui.activity.GroupsListingActivity;
 import com.mycity4kids.utils.AppUtils;
 import org.greenrobot.eventbus.EventBus;
@@ -78,6 +79,9 @@ public class GroupsViewFragment extends BaseFragment {
                 tabLayout.getTabCount());
         viewPager.setAdapter(adapter);
         if ("group_list".equals(selectedTab)) {
+            if (getActivity() != null) {
+                ((DashboardActivity) getActivity()).showGroupsCoachmark();
+            }
             viewPager.setCurrentItem(0);
         } else {
             viewPager.setCurrentItem(1);

@@ -1181,26 +1181,29 @@ public class GroupDetailsActivity extends BaseActivity implements OnClickListene
         switch (v.getId()) {
             case R.id.shareGroupImageViewLinearLayoutContainer:
             case R.id.shareGroupImageView:
-                MixpanelAPI mixpanel = MixpanelAPI
-                        .getInstance(BaseApplication.getAppContext(), AppConstants.MIX_PANEL_TOKEN);
                 try {
-                    JSONObject jsonObject = new JSONObject();
-                    jsonObject.put("userId",
-                            SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId());
-                    jsonObject.put("groupId", "" + groupId);
-                    mixpanel.track("GroupInvite", jsonObject);
+                    MixpanelAPI mixpanel = MixpanelAPI
+                            .getInstance(BaseApplication.getAppContext(), AppConstants.MIX_PANEL_TOKEN);
+                    try {
+                        JSONObject jsonObject = new JSONObject();
+                        jsonObject.put("userId",
+                                SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId());
+                        jsonObject.put("groupId", "" + groupId);
+                        mixpanel.track("GroupInvite", jsonObject);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                    Intent shareIntent = new Intent(android.content.Intent.ACTION_SEND);
+                    shareIntent.setType("text/plain");
+                    String shareUrl = AppConstants.WEB_URL + selectedGroup.getUrl();
+                    shareIntent.putExtra(android.content.Intent.EXTRA_TEXT,
+                            selectedGroup.getDescription() + "\n\n" + "Join " + selectedGroup.getTitle()
+                                    + " support group\n" + shareUrl);
+                    startActivity(Intent.createChooser(shareIntent, "Momspresso"));
                 } catch (Exception e) {
-                    e.printStackTrace();
+                    FirebaseCrashlytics.getInstance().recordException(e);
+                    Log.d("MC4kException", Log.getStackTraceString(e));
                 }
-
-                Intent shareIntent = new Intent(android.content.Intent.ACTION_SEND);
-                shareIntent.setType("text/plain");
-
-                String shareUrl = AppConstants.WEB_URL + selectedGroup.getUrl();
-                shareIntent.putExtra(android.content.Intent.EXTRA_TEXT,
-                        selectedGroup.getDescription() + "\n\n" + "Join " + selectedGroup.getTitle()
-                                + " support group\n" + shareUrl);
-                startActivity(Intent.createChooser(shareIntent, "Momspresso"));
                 break;
             case R.id.clearSearchImageView: {
                 toolbarTitle.setText("");
@@ -2618,82 +2621,85 @@ public class GroupDetailsActivity extends BaseActivity implements OnClickListene
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (resultCode == RESULT_OK) {
-            if (requestCode == 1111) {
-                if (data != null && data.getParcelableExtra("postDatas") != null) {
-                    GroupPostResult currentPost = data.getParcelableExtra("postDatas");
-                    for (int i = 0; i < postList.size(); i++) {
-                        if (postList.get(i).getId() == currentPost.getId()) {
-                            postList.get(i).setHelpfullCount(currentPost.getHelpfullCount());
-                            postList.get(i).setNotHelpfullCount(currentPost.getNotHelpfullCount());
-                            groupsGenericPostRecyclerAdapter.notifyDataSetChanged();
-                            break;
-                        }
-                    }
-                }
-                if (data != null && data.getParcelableArrayListExtra("completeResponseList") != null
-                        && data.getIntExtra("postId", -1) != -1) {
-                    ArrayList<GroupPostCommentResult> completeCommentResponseList = data
-                            .getParcelableArrayListExtra("completeResponseList");
-                    int postId = data.getIntExtra("postId", -1);
-
-                    for (int i = 0; i < postList.size(); i++) {
-
-                        if (postList.get(i).getId() == postId) {
-                            postList.get(i).setResponseCount(completeCommentResponseList.size() - 1);
-                            groupsGenericPostRecyclerAdapter.notifyDataSetChanged();
-                            break;
-                        }
-                    }
-                } else {
-                    MixpanelAPI mixpanel = MixpanelAPI
-                            .getInstance(BaseApplication.getAppContext(), AppConstants.MIX_PANEL_TOKEN);
-                    try {
-                        JSONObject jsonObject = new JSONObject();
-                        jsonObject.put("userId",
-                                SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId());
-                        jsonObject.put("groupId", "" + groupId);
-                        mixpanel.track("GroupPostCreation", jsonObject);
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
-
-                    if (addPostContainer.getVisibility() == View.VISIBLE) {
-                        addPostContainer.setVisibility(View.GONE);
-                    }
-                    isLastPageReached = false;
-                    skip = 0;
-                    limit = 10;
-                    postList.clear();
-                    groupsGenericPostRecyclerAdapter.notifyDataSetChanged();
-                    TabLayout.Tab tab = groupPostTabLayout.getTabAt(1);
-                    tab.select();
-                }
-            } else if (requestCode == EDIT_POST_REQUEST_CODE) {
-                if (postSettingsContainerMain.getVisibility() == View.VISIBLE) {
-                    postSettingsContainerMain.setVisibility(View.GONE);
-                }
-                editedPost = data.getParcelableExtra("editedPost");
-                selectedPost.setMediaUrls(editedPost.getMediaUrls());
-                selectedPost.setContent(editedPost.getContent());
-                selectedPost.setType(editedPost.getType());
-                groupsGenericPostRecyclerAdapter.notifyDataSetChanged();
-            } else if (requestCode == 2222) {
-                if (data != null && data.getParcelableArrayListExtra("completeResponseList") != null
-                        && data.getIntExtra("postId", -1) != -1 && data.getIntExtra("replyCount", -1) != -1) {
-                    ArrayList<GroupPostCommentResult> completeCommentResponseList = data
-                            .getParcelableArrayListExtra("completeResponseList");
-                    int postId = data.getIntExtra("postId", -1);
-                    int responseCount = data.getIntExtra("responseCount", -1);
-                    if (responseCount != -1) {
+            try {
+                if (requestCode == 1111) {
+                    if (data != null && data.getParcelableExtra("postDatas") != null) {
+                        GroupPostResult currentPost = data.getParcelableExtra("postDatas");
                         for (int i = 0; i < postList.size(); i++) {
-                            if (postList.get(i).getId() == postId) {
-                                postList.get(i).setResponseCount(responseCount);
+                            if (postList.get(i).getId() == currentPost.getId()) {
+                                postList.get(i).setHelpfullCount(currentPost.getHelpfullCount());
+                                postList.get(i).setNotHelpfullCount(currentPost.getNotHelpfullCount());
                                 groupsGenericPostRecyclerAdapter.notifyDataSetChanged();
                                 break;
                             }
                         }
                     }
+                    if (data != null && data.getParcelableArrayListExtra("completeResponseList") != null
+                            && data.getIntExtra("postId", -1) != -1) {
+                        ArrayList<GroupPostCommentResult> completeCommentResponseList = data
+                                .getParcelableArrayListExtra("completeResponseList");
+                        int postId = data.getIntExtra("postId", -1);
+                        for (int i = 0; i < postList.size(); i++) {
+                            if (postList.get(i).getId() == postId) {
+                                postList.get(i).setResponseCount(completeCommentResponseList.size() - 1);
+                                groupsGenericPostRecyclerAdapter.notifyDataSetChanged();
+                                break;
+                            }
+                        }
+                    } else {
+                        MixpanelAPI mixpanel = MixpanelAPI
+                                .getInstance(BaseApplication.getAppContext(), AppConstants.MIX_PANEL_TOKEN);
+                        try {
+                            JSONObject jsonObject = new JSONObject();
+                            jsonObject.put("userId",
+                                    SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId());
+                            jsonObject.put("groupId", "" + groupId);
+                            mixpanel.track("GroupPostCreation", jsonObject);
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+
+                        if (addPostContainer.getVisibility() == View.VISIBLE) {
+                            addPostContainer.setVisibility(View.GONE);
+                        }
+                        isLastPageReached = false;
+                        skip = 0;
+                        limit = 10;
+                        postList.clear();
+                        groupsGenericPostRecyclerAdapter.notifyDataSetChanged();
+                        TabLayout.Tab tab = groupPostTabLayout.getTabAt(1);
+                        tab.select();
+                    }
+                } else if (requestCode == EDIT_POST_REQUEST_CODE) {
+                    if (postSettingsContainerMain.getVisibility() == View.VISIBLE) {
+                        postSettingsContainerMain.setVisibility(View.GONE);
+                    }
+                    editedPost = data.getParcelableExtra("editedPost");
+                    selectedPost.setMediaUrls(editedPost.getMediaUrls());
+                    selectedPost.setContent(editedPost.getContent());
+                    selectedPost.setType(editedPost.getType());
+                    groupsGenericPostRecyclerAdapter.notifyDataSetChanged();
+                } else if (requestCode == 2222) {
+                    if (data != null && data.getParcelableArrayListExtra("completeResponseList") != null
+                            && data.getIntExtra("postId", -1) != -1 && data.getIntExtra("replyCount", -1) != -1) {
+                        ArrayList<GroupPostCommentResult> completeCommentResponseList = data
+                                .getParcelableArrayListExtra("completeResponseList");
+                        int postId = data.getIntExtra("postId", -1);
+                        int responseCount = data.getIntExtra("responseCount", -1);
+                        if (responseCount != -1) {
+                            for (int i = 0; i < postList.size(); i++) {
+                                if (postList.get(i).getId() == postId) {
+                                    postList.get(i).setResponseCount(responseCount);
+                                    groupsGenericPostRecyclerAdapter.notifyDataSetChanged();
+                                    break;
+                                }
+                            }
+                        }
+                    }
                 }
+            } catch (Exception e) {
+                FirebaseCrashlytics.getInstance().recordException(e);
+                Log.d("MC4kException", Log.getStackTraceString(e));
             }
         }
     }

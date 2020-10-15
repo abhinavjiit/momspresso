@@ -34,6 +34,9 @@ allprojects {
         maven { url "https://sdk.smartlook.com/android/release" }
         jcenter()
         google()
+        maven {
+            url "https://oss.sonatype.org/content/repositories/snapshots"
+        }
     }
 }
 

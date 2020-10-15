@@ -46,7 +46,8 @@ class ProfileSetting : BaseActivity(), GoogleApiClient.OnConnectionFailedListene
     private lateinit var social_accounts: TextView
     private var help: TextView? = null
     private var inviteContactTextView: TextView? = null
-    private var appSettingsTextView: TextView? = null
+    private lateinit var vlogsLanguageSettingTextView: TextView
+    private lateinit var chooseTopicsTextView: TextView
     private var report_spam: TextView? = null
     private var about: TextView? = null
     private var app_version: TextView? = null
@@ -59,39 +60,6 @@ class ProfileSetting : BaseActivity(), GoogleApiClient.OnConnectionFailedListene
     private var isRewardAdded: String? = null
     private var toolbar: Toolbar? = null
     private lateinit var securitySettingTextView: TextView
-
-    internal var getTotalPayout: Callback<TotalPayoutResponse> =
-        object : Callback<TotalPayoutResponse> {
-            override fun onResponse(
-                call: Call<TotalPayoutResponse>,
-                response: retrofit2.Response<TotalPayoutResponse>
-            ) {
-                removeProgressDialog()
-                if (response.body() == null) {
-                    showToast(getString(R.string.went_wrong))
-                    return
-                }
-                try {
-                    val responseData = response.body()
-                    if (responseData!!.code == 200 && Constants.SUCCESS == responseData.status) {
-                        if (responseData.data.size > 0) {
-                            totalPayout = responseData.data[0].result[0].total_payout
-                        }
-                    }
-                } catch (e: Exception) {
-                    showToast(getString(R.string.server_went_wrong))
-                    FirebaseCrashlytics.getInstance().recordException(e)
-                    Log.d("MC4kException", Log.getStackTraceString(e))
-                }
-            }
-
-            override fun onFailure(call: Call<TotalPayoutResponse>, t: Throwable) {
-                showToast(getString(R.string.server_went_wrong))
-                FirebaseCrashlytics.getInstance().recordException(t)
-                apiExceptions(t)
-                Log.d("MC4kException", Log.getStackTraceString(t))
-            }
-        }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -107,7 +75,8 @@ class ProfileSetting : BaseActivity(), GoogleApiClient.OnConnectionFailedListene
         myMoneyContainer = findViewById(R.id.mymoney_info)
         payment_details = findViewById(R.id.payment_details)
         social_accounts = findViewById(R.id.social_accounts)
-        appSettingsTextView = findViewById(R.id.appSettingsTextView)
+        vlogsLanguageSettingTextView = findViewById(R.id.vlogsLanguageSettingTextView)
+        chooseTopicsTextView = findViewById(R.id.chooseTopicsTextView)
         inviteContactTextView = findViewById(R.id.inviteContactTextView)
         help = findViewById(R.id.help)
         report_spam = findViewById(R.id.report_spam)
@@ -157,7 +126,8 @@ class ProfileSetting : BaseActivity(), GoogleApiClient.OnConnectionFailedListene
         personal_info!!.setOnClickListener(this)
         payment_details.setOnClickListener(this)
         social_accounts.setOnClickListener(this)
-        appSettingsTextView!!.setOnClickListener(this)
+        vlogsLanguageSettingTextView.setOnClickListener(this)
+        chooseTopicsTextView.setOnClickListener(this)
         help!!.setOnClickListener(this)
         report_spam!!.setOnClickListener(this)
         about!!.setOnClickListener(this)
@@ -193,10 +163,16 @@ class ProfileSetting : BaseActivity(), GoogleApiClient.OnConnectionFailedListene
                 socialIntent.putExtra("pageLimit", 3)
                 startActivity(socialIntent)
             }
-            R.id.appSettingsTextView -> {
-                val notificationIntent = Intent(this, AppSettingsActivity::class.java)
-                notificationIntent.putExtra("source", "settings")
-                startActivity(notificationIntent)
+            R.id.vlogsLanguageSettingTextView -> {
+
+            }
+            R.id.chooseTopicsTextView -> {
+                val subscribeTopicIntent = Intent(
+                    this,
+                    SubscribeTopicsActivity::class.java
+                )
+                subscribeTopicIntent.putExtra("source", "settings")
+                startActivity(subscribeTopicIntent)
             }
             R.id.help -> {
                 val intent1 = Intent(this, ProfileWebViewActivity::class.java)
@@ -381,6 +357,39 @@ class ProfileSetting : BaseActivity(), GoogleApiClient.OnConnectionFailedListene
         val call = campaignAPI.getTotalPayout(userId)
         call.enqueue(getTotalPayout)
     }
+
+    internal var getTotalPayout: Callback<TotalPayoutResponse> =
+        object : Callback<TotalPayoutResponse> {
+            override fun onResponse(
+                call: Call<TotalPayoutResponse>,
+                response: retrofit2.Response<TotalPayoutResponse>
+            ) {
+                removeProgressDialog()
+                if (response.body() == null) {
+                    showToast(getString(R.string.went_wrong))
+                    return
+                }
+                try {
+                    val responseData = response.body()
+                    if (responseData!!.code == 200 && Constants.SUCCESS == responseData.status) {
+                        if (responseData.data.size > 0) {
+                            totalPayout = responseData.data[0].result[0].total_payout
+                        }
+                    }
+                } catch (e: Exception) {
+                    showToast(getString(R.string.server_went_wrong))
+                    FirebaseCrashlytics.getInstance().recordException(e)
+                    Log.d("MC4kException", Log.getStackTraceString(e))
+                }
+            }
+
+            override fun onFailure(call: Call<TotalPayoutResponse>, t: Throwable) {
+                showToast(getString(R.string.server_went_wrong))
+                FirebaseCrashlytics.getInstance().recordException(t)
+                apiExceptions(t)
+                Log.d("MC4kException", Log.getStackTraceString(t))
+            }
+        }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {

@@ -15,7 +15,7 @@ import com.mycity4kids.R;
 import com.mycity4kids.application.BaseApplication;
 import com.mycity4kids.models.response.AllLeaderboardDataResponse.AllLeaderboardData.AllLeaderboardRankHolder;
 import com.mycity4kids.preference.SharedPrefUtils;
-import com.mycity4kids.ui.adapter.VlogLeaderboardRecyclerAdapter.RecyclerViewClickListener;
+import com.mycity4kids.utils.AppUtils;
 import com.squareup.picasso.Picasso;
 import java.util.ArrayList;
 
@@ -62,11 +62,15 @@ public class AllBlogLeaderboardRecyclerAdapter extends
         }
         holder.userName.setText(articleDataModelsNew.get(position).getName());
         holder.userHandle.setText(articleDataModelsNew.get(position).getUser_handle());
-        holder.userRank.setText("" + articleDataModelsNew.get(position).getRank());
-        holder.viewCount.setText("" + (articleDataModelsNew.get(position).getScore() / 1000) + "K");
+        holder.userRank.setText("#" + articleDataModelsNew.get(position).getRank());
+        holder.viewCount.setText(AppUtils.withSuffix(articleDataModelsNew.get(position).getScore()));
         if (articleDataModelsNew.get(position).getUser_id()
                 .equals(SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId())) {
-            holder.rl.setBackgroundColor(ContextCompat.getColor(holder.rl.getContext(), R.color.color_FFF7F8));
+            holder.rl.setBackground(
+                    ContextCompat.getDrawable(holder.rl.getContext(), R.drawable.leaderboard_item_border_selected));
+        } else {
+            holder.rl.setBackground(
+                    ContextCompat.getDrawable(holder.rl.getContext(), R.drawable.leaderboard_item_border));
         }
     }
 
@@ -83,6 +87,7 @@ public class AllBlogLeaderboardRecyclerAdapter extends
 
         LeaderboardViewHolder(View itemView) {
             super(itemView);
+
             profilePic = itemView.findViewById(R.id.profilePicImageView);
             userName = itemView.findViewById(R.id.user_name);
             userHandle = itemView.findViewById(R.id.user_handle);

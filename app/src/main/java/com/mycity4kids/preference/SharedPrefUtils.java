@@ -82,6 +82,8 @@ public class SharedPrefUtils {
     private static final String COACH_MARK_DASHBOARD_CONTENT_FILTER = "dashBoardContentFilterScreen";
     private static final String COACHMARK_VIDEOS_TRIMMER = "videoTrimmer";
     private static final String COACHMARK_VIDEOS_TITLE_TAGS = "videoTitleAndTags";
+    private static final String COACHMARK_ARTICLE_FOLLOW_AUTHOR = "article_following_fab";
+    private static final String COACHMARK_GROUPS = "groupCoachMark";
     private static final String COACHMARK_TAGGING = "coachmarkTagging";
     private static final String COACHMARK_TOPCOMMENT = "coachmarkTopComment";
     private static final String LOCATION_LATITUDE = "latitude";
@@ -378,6 +380,10 @@ public class SharedPrefUtils {
             editor.putBoolean(COACHMARK_VIDEOS_TRIMMER, flag);
         } else if ("videoTitleAndTags".equals(screenName)) {
             editor.putBoolean(COACHMARK_VIDEOS_TITLE_TAGS, flag);
+        } else if ("article_following_fab".equals(screenName)) {
+            editor.putBoolean(COACHMARK_ARTICLE_FOLLOW_AUTHOR, flag);
+        } else if ("groupCoachMark".equals(screenName)) {
+            editor.putBoolean(COACHMARK_GROUPS, flag);
         }
         editor.commit();
     }
@@ -420,6 +426,10 @@ public class SharedPrefUtils {
             return sharedPref.getBoolean(COACHMARK_VIDEOS_TRIMMER, false);
         } else if ("videoTitleAndTags".equals(screenName)) {
             return sharedPref.getBoolean(COACHMARK_VIDEOS_TITLE_TAGS, false);
+        } else if ("article_following_fab".equals(screenName)) {
+            return sharedPref.getBoolean(COACHMARK_ARTICLE_FOLLOW_AUTHOR, false);
+        } else if ("groupCoachMark".equals(screenName)) {
+            return sharedPref.getBoolean(COACHMARK_GROUPS, false);
         }
         return true;
     }

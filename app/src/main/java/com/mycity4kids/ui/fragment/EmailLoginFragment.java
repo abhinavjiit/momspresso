@@ -17,6 +17,7 @@ import com.mycity4kids.base.BaseFragment;
 import com.mycity4kids.gtmutils.Utils;
 import com.mycity4kids.preference.SharedPrefUtils;
 import com.mycity4kids.ui.activity.ForgotPasswordActivity;
+import com.mycity4kids.ui.login.LoginActivity;
 import com.mycity4kids.utils.StringUtils;
 import com.mycity4kids.widget.CustomFontEditText;
 import com.mycity4kids.widget.CustomFontTextView;
@@ -37,26 +38,23 @@ public class EmailLoginFragment extends BaseFragment implements View.OnClickList
         view = inflater.inflate(R.layout.email_login_fragment, container, false);
         Utils.pushOpenScreenEvent(getActivity(), "EmailLoginScreen",
                 SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId() + "");
-        mEmailId = (CustomFontEditText) view.findViewById(R.id.emailEditText);
-        mPassword = (CustomFontEditText) view.findViewById(R.id.passwordEditText);
-        forgotPasswordTextView = (CustomFontTextView) view.findViewById(R.id.forgotPasswordTextView);
-        loginEmailTextView = (CustomFontTextView) view.findViewById(R.id.loginEmailTextView);
-        signupTextView = (CustomFontTextView) view.findViewById(R.id.signupTextView);
+        mEmailId = view.findViewById(R.id.emailEditText);
+        mPassword = view.findViewById(R.id.passwordEditText);
+        forgotPasswordTextView = view.findViewById(R.id.forgotPasswordTextView);
+        loginEmailTextView = view.findViewById(R.id.loginEmailTextView);
+        signupTextView = view.findViewById(R.id.signupTextView);
 
         if (BuildConfig.DEBUG) {
             mEmailId.setText("nananaa@gmail.com");
         }
         mEmailId.addTextChangedListener(mTextWatcher);
         mPassword.addTextChangedListener(mTextWatcher);
-        mPassword.setOnEditorActionListener(new TextView.OnEditorActionListener() {
-            @Override
-            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
-                if ((event != null && (event.getKeyCode() == KeyEvent.KEYCODE_ENTER)) || (actionId
-                        == EditorInfo.IME_ACTION_DONE)) {
-                    loginWithEmail();
-                }
-                return false;
+        mPassword.setOnEditorActionListener((v, actionId, event) -> {
+            if ((event != null && (event.getKeyCode() == KeyEvent.KEYCODE_ENTER)) || (actionId
+                    == EditorInfo.IME_ACTION_DONE)) {
+                loginWithEmail();
             }
+            return false;
         });
 
         loginEmailTextView.setEnabled(false);
@@ -69,6 +67,11 @@ public class EmailLoginFragment extends BaseFragment implements View.OnClickList
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
+            case R.id.signupTextView:
+                if (getActivity() != null) {
+                    getActivity().onBackPressed();
+                }
+                break;
             case R.id.loginEmailTextView:
                 Utils.pushGenericEvent(getActivity(), "Login_email_click_event", "NA", "EmailLoginFragment");
                 loginWithEmail();
@@ -91,7 +94,7 @@ public class EmailLoginFragment extends BaseFragment implements View.OnClickList
             if (BuildConfig.DEBUG && emailId.equals("nananaa@gmail.com")) {
                 password = "rikkichu";
             }
-//            ((LoginActivity) getActivity()).loginRequest(emailId, password);
+            ((LoginActivity) getActivity()).loginRequest(emailId, password);
         }
     }
 
@@ -112,10 +115,8 @@ public class EmailLoginFragment extends BaseFragment implements View.OnClickList
     };
 
     void checkFieldsForEmptyValues() {
-
         String s1 = mEmailId.getText().toString();
         String s2 = mPassword.getText().toString();
-
         if (s1.equals("") || s2.equals("")) {
             loginEmailTextView.setEnabled(false);
         } else {
@@ -126,7 +127,6 @@ public class EmailLoginFragment extends BaseFragment implements View.OnClickList
     private boolean isDataValid() {
         boolean isLoginOk = true;
         String email_id = mEmailId.getText().toString().trim();
-
         if (email_id.trim().length() == 0 || ((!StringUtils.isValidEmail(email_id)) && (!StringUtils
                 .checkMobileNumber(email_id)))) {
             mEmailId.setFocusableInTouchMode(true);
@@ -137,14 +137,11 @@ public class EmailLoginFragment extends BaseFragment implements View.OnClickList
             mPassword.setFocusableInTouchMode(true);
             mPassword.requestFocus();
             mPassword.setError("Password can't be left blank");
-            //mPassword.requestFocus();
             isLoginOk = false;
         } else if (mPassword.getText().toString().length() < 1) {
             mPassword.setFocusableInTouchMode(true);
             mPassword.requestFocus();
-
             mPassword.setError("Password should not less than 5 character.");
-            //mPassword.requestFocus();
             isLoginOk = false;
         }
         return isLoginOk;

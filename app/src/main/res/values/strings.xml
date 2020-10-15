@@ -287,7 +287,7 @@
   <string name="login_email.password_hint">Password</string>
   <string name="signin.login_via_facebook">LOGIN USING FACEBOOK</string>
   <string name="signin.login_via_google">LOGIN USING GOOGLE</string>
-  <string name="signin.login_via_email">LOGIN USING EMAIL</string>
+  <string name="signin.login_via_email">Login using email</string>
   <string name="signin.login_via_phone">LOGIN USING PHONE</string>
 
   <string name="signup.connect_via_facebook">CONNECT USING FACEBOOK</string>
@@ -1366,8 +1366,8 @@ Thank you! We will be reviewing your story. You can expect to hear from us withi
   <string name="topic_of_interest">Topic of interest</string>
   <string name="help">Help</string>
   <string name="report_spams">Report spam</string>
-  <string name="app_version">App Version</string>
-  <string name="logout">Logout</string>
+  <string name="app_version" translatable="false">App Version</string>
+  <string name="logout" translatable="false">Logout</string>
   <string name="spam_header_text">Write to us for any help and assistance</string>
   <string name="spam_send">Send</string>
   <string name="featured_on">Featured on</string>
@@ -1655,5 +1655,8 @@ Thank you! We will be reviewing your story. You can expect to hear from us withi
   <string name="coachmark_mymoney">Apply for campaigns, complete the requirements, and earn money!</string>
   <string name="coachmark_vlogs_1">Let us help you create your first vlog! Select a category or a challenge to start with</string>
   <string name="tags_help_discover">Tags help viewers discover videos easily</string>
+  <string name="tooltip_liked_the_blog">Liked the blog? Follow the creator to never miss their amazing posts</string>
+  <string name="coachmark_vlogs_2">A good thumbnail brings more views</string>
+  <string name="tooltip_groups">Join the groups you like. Start interacting with the community!</string>
 </resources>
 
