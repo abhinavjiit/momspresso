@@ -17,6 +17,8 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.DialogFragment
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import com.google.firebase.crashlytics.FirebaseCrashlytics
 import com.mycity4kids.R
 import com.mycity4kids.application.BaseApplication
@@ -33,10 +35,10 @@ import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 
-class ChooseVideosLanguageDialogFragment(private val selcetedLangInterface: VlogLanguage) :
+class ChooseVideosLanguageDialogFragment() :
     DialogFragment() {
 
-
+    private var selectedLang = MutableLiveData<ArrayList<String>>()
     private lateinit var languagesContainer: FlowLayout
     private lateinit var continueTextView: MomspressoButtonWidget
     private lateinit var cancel: ImageView
@@ -90,7 +92,7 @@ class ChooseVideosLanguageDialogFragment(private val selcetedLangInterface: Vlog
         setLangData()
         continueTextView.setOnClickListener {
             if (isValid()) {
-                selcetedLangInterface.selectedVlogLanguages(selectedLanguage)
+                selectedLang.value = selectedLanguage
                 postVlogChoosenLanguagesToServer()
             }
             dismiss()
@@ -224,7 +226,6 @@ class ChooseVideosLanguageDialogFragment(private val selcetedLangInterface: Vlog
                         Toast.makeText(activity, data.getString("msg"), Toast.LENGTH_SHORT).show()
                     }
 
-
                 } catch (e: Exception) {
                     Log.d("MC4kException", Log.getStackTraceString(e))
                     FirebaseCrashlytics.getInstance().recordException(e)
@@ -239,7 +240,7 @@ class ChooseVideosLanguageDialogFragment(private val selcetedLangInterface: Vlog
         })
     }
 
-    interface VlogLanguage {
-        fun selectedVlogLanguages(selectedLanguage: ArrayList<String>)
+    fun selectedLanguages(): LiveData<ArrayList<String>> {
+        return selectedLang
     }
 }

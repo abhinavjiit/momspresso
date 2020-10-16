@@ -879,25 +879,4 @@ public class SharedPrefUtils {
         return sharedPreferences.getBoolean(USER_JOURNEY_COMPLETED_FLAG, false);
     }
 
-    public static void setVlogSelectedLanguages(Context context, Boolean flag, ArrayList<String> selectedLang) {
-        SharedPreferences sharedPreferences = context.getSharedPreferences(COMMON_PREF_FILE, Context.MODE_PRIVATE);
-        Editor editor = sharedPreferences.edit();
-        Gson gson = new Gson();
-        List<String> vlogSelectedList;
-        vlogSelectedList = selectedLang;
-        String jsonLangs = gson.toJson(vlogSelectedList);
-        editor.putString("languages", jsonLangs);
-        editor.putBoolean("langSelected", flag);
-        editor.commit();
-    }
-
-    public static String getSelectedVlogsLangs(Context context) {
-        SharedPreferences sharedPreferences = context.getSharedPreferences(COMMON_PREF_FILE, Context.MODE_PRIVATE);
-        return sharedPreferences.getString("languages", "");
-    }
-
-    public static Boolean getSelectedVlogsLangsFlag(Context context) {
-        SharedPreferences sharedPreferences = context.getSharedPreferences(COMMON_PREF_FILE, Context.MODE_PRIVATE);
-        return sharedPreferences.getBoolean("langSelected", false);
-    }
 }

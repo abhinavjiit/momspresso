@@ -86,6 +86,7 @@ public class CategoryVideosTabFragment extends BaseFragment implements View.OnCl
     private int totalItemCount;
     private GridLayoutManager gridLayoutManager;
     private ArrayList<String> vlogSelectedLangs;
+
     private String[] selectedLanguages;
 
     static {
