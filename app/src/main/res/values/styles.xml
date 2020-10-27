@@ -320,5 +320,13 @@
     <item name="actionMenuTextColor">@color/black_color</item>
   </style>
 
+  <style name="AppBottomSheetDialogTheme" parent="Theme.MaterialComponents.Light.BottomSheetDialog">
+    <item name="bottomSheetStyle">@style/CustomBottomSheetStyle</item>
+  </style>
+
+  <style name="CustomBottomSheetStyle" parent="Widget.Design.BottomSheet.Modal">
+    <item name="android:background">@drawable/upper_rounded_corner_layout</item>
+  </style>
+
 
 </resources>

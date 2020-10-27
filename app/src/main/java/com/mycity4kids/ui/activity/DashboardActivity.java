@@ -80,6 +80,7 @@ import com.mycity4kids.ui.campaign.activity.CampaignContainerActivity;
 import com.mycity4kids.ui.fragment.BecomeBloggerFragment;
 import com.mycity4kids.ui.fragment.ChangePreferredLanguageDialogFragment;
 import com.mycity4kids.ui.fragment.ChooseVideoUploadOptionDialogFragment;
+import com.mycity4kids.ui.fragment.CustomizeFeedUsingTopicsAndFriendsBottomSheetDialogFragment;
 import com.mycity4kids.ui.fragment.FragmentMC4KHomeNew;
 import com.mycity4kids.ui.fragment.GroupsViewFragment;
 import com.mycity4kids.ui.fragment.InviteFriendsDialogFragment;
@@ -561,6 +562,7 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
             launchInviteFriendsDialog(getIntent().getStringExtra("source"));
         }
         getUsersData();
+        showBottomSheet();
     }
 
     private void createContentAction() {
@@ -809,6 +811,22 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
             } else if (Constants.DISCOVER_CONTENT.equals(newIntent.getStringExtra(AppConstants.HOME_SELECTED_TAB))) {
                 fragmentToLoad = Constants.DISCOVER_CONTENT;
             }
+        } else if (newIntent.hasExtra("comingFor") && "followingFeed".equals(newIntent.getStringExtra("comingFor"))) {
+            final Fragment topFragment = getSupportFragmentManager()
+                    .findFragmentById(R.id.content_frame);
+            if (topFragment instanceof FragmentMC4KHomeNew) {
+                getSupportFragmentManager().beginTransaction().remove(topFragment).commit();
+            }
+            Log.d("Fragment", String.valueOf(getSupportFragmentManager().getBackStackEntryCount()));
+            if (getSupportFragmentManager().getBackStackEntryCount() > 0) {
+                FragmentManager fragmentManager = getSupportFragmentManager();
+                fragmentManager.popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
+            }
+            FragmentMC4KHomeNew fragment1 = new FragmentMC4KHomeNew();
+            Bundle bundle1 = new Bundle();
+            bundle1.putString("comingFor", "followingFeed");
+            fragment1.setArguments(bundle1);
+            addFragment(fragment1, bundle1);
         }
     }
 
@@ -1430,7 +1448,8 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
             case R.id.consumptionJourneyCardView: {
                 Utils.shareEventTracking(this, "Home screen", "Onboarding_Android", "Home_Read");
                 journeyLayout.setVisibility(View.GONE);
-                showContentFilterCoachmark();
+                //  showContentFilterCoachmark();
+                showBottomSheet();
                 SharedPrefUtils.setUserJourneyCompletedFlag(this, true);
             }
             break;
@@ -1904,12 +1923,19 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
         }
     }
 
+    private void showBottomSheet() {
+        CustomizeFeedUsingTopicsAndFriendsBottomSheetDialogFragment customizeFeedBottomSheetDialogFragment =
+                new CustomizeFeedUsingTopicsAndFriendsBottomSheetDialogFragment();
+        customizeFeedBottomSheetDialogFragment.show(getSupportFragmentManager(), "bottom_sheet");
+
+    }
+
     private void removeContentFilterCoachmark() {
         dashBoardContentFilterCoachMark.setVisibility(View.GONE);
         updateCoachmarkFlag("dashBoardContentFilterScreen", true);
     }
 
-    public void showGroupsCoachmark(){
+    public void showGroupsCoachmark() {
         if (!checkCoachmarkFlagStatus("groupCoachMark")) {
             groupCoachMark.setVisibility(View.VISIBLE);
         }
@@ -1918,5 +1944,11 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
     public void hideGroupsCoachmark() {
         groupCoachMark.setVisibility(View.GONE);
         updateCoachmarkFlag("groupCoachMark", true);
+    }
+
+    public void selectedContentTopics(ArrayList<String> selectedContentContainer, int selectedContainersCount) {
+        Intent intent = new Intent(this, SelectContentTopicsActivity.class);
+        intent.putStringArrayListExtra("selectedContentContainer", selectedContentContainer);
+        startActivity(intent);
     }
 }

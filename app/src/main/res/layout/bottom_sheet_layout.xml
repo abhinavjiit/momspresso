@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+  xmlns:app="http://schemas.android.com/apk/res-auto"
+  android:layout_width="match_parent"
+  android:layout_height="wrap_content"
+  android:background="@drawable/upper_rounded_corner_layout"
+  android:orientation="vertical"
+  android:paddingBottom="@dimen/space_40"
+  app:layout_behavior="@string/bottom_sheet_behavior">
+
+  <com.mycity4kids.widget.CustomFontTextView
+    android:id="@+id/headerTextView"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_gravity="center_horizontal"
+    android:layout_marginStart="32.5dp"
+    android:layout_marginTop="@dimen/space_35"
+    android:layout_marginEnd="32.5dp"
+    android:gravity="center_horizontal"
+    android:text="How do you want to make your feed better?"
+    android:textColor="#515151"
+    android:textSize="18sp"
+    app:fontName="Roboto-Medium.ttf" />
+
+  <com.mycity4kids.widget.MomspressoButtonWidget
+    android:id="@+id/findFriendsTextView"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_gravity="center_horizontal"
+    android:layout_marginTop="35dp"
+    android:paddingStart="65dp"
+    android:paddingTop="14dp"
+    android:paddingEnd="65dp"
+    android:paddingBottom="14dp"
+    android:text="By finding my friends"
+    android:textSize="18sp"
+    app:fb_borderColor="@color/app_red"
+    app:fb_borderWidth="1dp"
+    app:fb_defaultColor="@color/white"
+    app:fb_radius="4dp"
+    app:fb_textColor="#D03F56"
+    app:fb_textFont="Roboto-Medium.ttf" />
+
+  <com.mycity4kids.widget.MomspressoButtonWidget
+    android:id="@+id/chooseTopicsTextView"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_gravity="center_horizontal"
+    android:layout_marginTop="@dimen/space_20"
+    android:paddingStart="65dp"
+    android:paddingTop="14dp"
+    android:paddingEnd="65dp"
+    android:paddingBottom="14dp"
+    android:text="Choosing topics I like"
+    android:textSize="18sp"
+    app:fb_borderColor="@color/app_red"
+    app:fb_borderWidth="1dp"
+    app:fb_defaultColor="@color/white"
+    app:fb_radius="4dp"
+    app:fb_textColor="#D03F56"
+    app:fb_textFont="Roboto-Medium.ttf" />
+
+  <com.mycity4kids.widget.CustomFontTextView
+    android:id="@+id/noNeedToCustomize"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_gravity="center_horizontal"
+    android:layout_marginStart="32.5dp"
+    android:layout_marginTop="@dimen/space_35"
+    android:layout_marginEnd="32.5dp"
+    android:gravity="center_horizontal"
+    android:text="No, I don’t need customized feed"
+    android:textColor="#9B9B9B"
+    android:textSize="18sp"
+    app:fontName="Roboto-Regular.ttf" />
+
+
+</LinearLayout>
+

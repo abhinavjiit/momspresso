@@ -1,0 +1,230 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+  xmlns:app="http://schemas.android.com/apk/res-auto"
+  android:id="@+id/design_bottom_sheet"
+  android:layout_width="match_parent"
+  android:layout_height="wrap_content"
+  android:background="@drawable/upper_rounded_corner_layout"
+  android:orientation="vertical"
+  android:paddingBottom="@dimen/space_40"
+  app:layout_behavior="@string/bottom_sheet_behavior">
+
+  <com.mycity4kids.widget.CustomFontTextView
+    android:id="@+id/headerTextView"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_gravity="center_horizontal"
+    android:layout_marginStart="32.5dp"
+    android:layout_marginTop="@dimen/space_35"
+    android:layout_marginEnd="32.5dp"
+    android:gravity="center_horizontal"
+    android:text="What do you prefer? We have 3 formats you can dig into"
+    android:textColor="#515151"
+    android:textSize="18sp"
+    app:fontName="Roboto-Medium.ttf" />
+
+  <androidx.constraintlayout.widget.ConstraintLayout
+    android:id="@+id/blogContainer"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_margin="16dp"
+    android:background="@drawable/campaign_border_round_rectangular_layout"
+    android:padding="@dimen/space_16">
+
+    <androidx.appcompat.widget.AppCompatImageView
+      android:id="@+id/blogIcon"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:padding="@dimen/space_10"
+
+      app:layout_constraintBottom_toBottomOf="parent"
+      app:layout_constraintStart_toStartOf="parent"
+      app:layout_constraintTop_toTopOf="parent"
+      app:srcCompat="@drawable/ic_blog" />
+
+    <com.mycity4kids.widget.CustomFontTextView
+      android:id="@+id/blogHeaderTextView"
+      android:layout_width="0dp"
+      android:layout_height="wrap_content"
+      android:padding="@dimen/space_7"
+      android:text="Blog"
+      android:textColor="@color/campaign_515151"
+      android:textSize="18sp"
+      app:fontName="Roboto-Medium.ttf"
+      app:layout_constraintStart_toEndOf="@id/blogIcon"
+      app:layout_constraintTop_toTopOf="parent" />
+
+    <com.mycity4kids.widget.CustomFontTextView
+      android:id="@+id/blogSubHeaderTextView"
+      android:layout_width="0dp"
+      android:layout_height="wrap_content"
+      android:paddingStart="@dimen/space_7"
+      android:paddingEnd="@dimen/space_7"
+      android:text="Interesting stories, articles, experiences by bloggers experts"
+      android:textColor="@color/campaign_515151"
+      android:textSize="14sp"
+      app:fontName="Roboto-Regular.ttf"
+      app:layout_constraintEnd_toEndOf="@+id/blogSelectImageView"
+      app:layout_constraintStart_toEndOf="@id/blogIcon"
+      app:layout_constraintTop_toBottomOf="@id/blogHeaderTextView" />
+
+    <androidx.appcompat.widget.AppCompatImageView
+      android:id="@+id/blogSelectImageView"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:layout_marginEnd="@dimen/space_10"
+      app:layout_constraintEnd_toEndOf="parent"
+      app:layout_constraintTop_toTopOf="parent"
+      app:srcCompat="@drawable/ic_rectangle" />
+
+
+  </androidx.constraintlayout.widget.ConstraintLayout>
+  <androidx.constraintlayout.widget.ConstraintLayout
+    android:id="@+id/storyContainer"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginStart="16dp"
+    android:layout_marginEnd="@dimen/space_16"
+    android:background="@drawable/campaign_border_round_rectangular_layout"
+    android:padding="@dimen/space_16">
+
+    <androidx.appcompat.widget.AppCompatImageView
+      android:id="@+id/storyIcon"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:padding="@dimen/space_10"
+      app:layout_constraintBottom_toBottomOf="parent"
+      app:layout_constraintStart_toStartOf="parent"
+      app:layout_constraintTop_toTopOf="parent"
+      app:srcCompat="@drawable/ic_short_story" />
+
+    <com.mycity4kids.widget.CustomFontTextView
+      android:id="@+id/storyHeaderTextView"
+      android:layout_width="0dp"
+      android:layout_height="wrap_content"
+      android:padding="@dimen/space_7"
+      android:text="100 Word Story"
+      android:textColor="@color/campaign_515151"
+      android:textSize="18sp"
+      app:fontName="Roboto-Medium.ttf"
+      app:layout_constraintStart_toEndOf="@id/storyIcon"
+      app:layout_constraintTop_toTopOf="parent" />
+
+    <com.mycity4kids.widget.CustomFontTextView
+      android:id="@+id/storySubHeaderTextView"
+      android:layout_width="0dp"
+      android:layout_height="wrap_content"
+      android:paddingStart="@dimen/space_7"
+      android:paddingEnd="@dimen/space_7"
+      android:text="Short stories, poems, motivational or funny quotes"
+      android:textColor="@color/campaign_515151"
+      android:textSize="14sp"
+      app:fontName="Roboto-Regular.ttf"
+      app:layout_constraintEnd_toEndOf="@+id/storySelectImageView"
+      app:layout_constraintStart_toEndOf="@id/storyIcon"
+      app:layout_constraintTop_toBottomOf="@id/storyHeaderTextView" />
+
+    <androidx.appcompat.widget.AppCompatImageView
+      android:id="@+id/storySelectImageView"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:layout_marginEnd="@dimen/space_10"
+      app:layout_constraintEnd_toEndOf="parent"
+      app:layout_constraintTop_toTopOf="parent"
+      app:srcCompat="@drawable/ic_rectangle" />
+
+
+  </androidx.constraintlayout.widget.ConstraintLayout>
+  <androidx.constraintlayout.widget.ConstraintLayout
+    android:id="@+id/vlogContainer"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_margin="16dp"
+    android:background="@drawable/campaign_border_round_rectangular_layout"
+    android:padding="@dimen/space_16">
+
+    <androidx.appcompat.widget.AppCompatImageView
+      android:id="@+id/vlogIcon"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:padding="@dimen/space_10"
+      app:layout_constraintBottom_toBottomOf="parent"
+      app:layout_constraintStart_toStartOf="parent"
+      app:layout_constraintTop_toTopOf="parent"
+      app:srcCompat="@drawable/ic_vlog" />
+
+    <com.mycity4kids.widget.CustomFontTextView
+      android:id="@+id/vlogHeaderTextView"
+      android:layout_width="0dp"
+      android:layout_height="wrap_content"
+      android:padding="@dimen/space_7"
+      android:text="Vlogs"
+      android:textColor="@color/campaign_515151"
+      android:textSize="18sp"
+      app:fontName="Roboto-Medium.ttf"
+      app:layout_constraintStart_toEndOf="@id/vlogIcon"
+      app:layout_constraintTop_toTopOf="parent" />
+
+    <com.mycity4kids.widget.CustomFontTextView
+      android:id="@+id/vlogSubHeaderTextView"
+      android:layout_width="0dp"
+      android:layout_height="wrap_content"
+      android:paddingStart="@dimen/space_7"
+      android:paddingEnd="@dimen/space_7"
+      android:text="Entertaining videos showcasing mum’s talent, recipes  more"
+      android:textColor="@color/campaign_515151"
+      android:textSize="14sp"
+      app:fontName="Roboto-Regular.ttf"
+      app:layout_constraintEnd_toEndOf="@+id/vlogSelectImageView"
+      app:layout_constraintStart_toEndOf="@id/vlogIcon"
+      app:layout_constraintTop_toBottomOf="@id/vlogHeaderTextView" />
+
+    <androidx.appcompat.widget.AppCompatImageView
+      android:id="@+id/vlogSelectImageView"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:layout_marginEnd="@dimen/space_10"
+      app:layout_constraintEnd_toEndOf="parent"
+      app:layout_constraintTop_toTopOf="parent"
+      app:srcCompat="@drawable/ic_rectangle" />
+
+
+  </androidx.constraintlayout.widget.ConstraintLayout>
+
+  <com.mycity4kids.widget.MomspressoButtonWidget
+    android:id="@+id/selectTopicsTextView"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_gravity="center_horizontal"
+    android:layout_marginStart="@dimen/space_16"
+    android:layout_marginTop="@dimen/space_6"
+    android:layout_marginEnd="@dimen/space_16"
+    android:paddingTop="16dp"
+    android:paddingBottom="16dp"
+    android:text="Select Topics"
+    android:textSize="18sp"
+    app:fb_borderColor="@color/white"
+    app:fb_borderWidth="1dp"
+    app:fb_defaultColor="#9B9B9B"
+    app:fb_radius="4dp"
+    app:fb_textColor="@color/white"
+    app:fb_textFont="Roboto-Bold.ttf" />
+
+  <com.mycity4kids.widget.CustomFontTextView
+    android:id="@+id/mayBeLaterTextView"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_gravity="center_horizontal"
+    android:layout_marginStart="32.5dp"
+    android:layout_marginTop="@dimen/space_20"
+    android:layout_marginEnd="32.5dp"
+    android:gravity="center_horizontal"
+    android:text="Maybe Later"
+    android:textColor="#9B9B9B"
+    android:textSize="18sp"
+    app:fontName="Roboto-Regular.ttf" />
+
+
+</LinearLayout>
+

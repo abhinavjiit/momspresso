@@ -85,7 +85,6 @@ class AddCollectionAndCollectionItemDialogFragment : DialogFragment(),
                 val addCollectionPopUpDialogFragment = AddCollectionPopUpDialogFragment()
                 addCollectionPopUpDialogFragment.arguments = bundle
                 val fm = childFragmentManager
-                addCollectionPopUpDialogFragment.setTargetFragment(this, 100)
                 addCollectionPopUpDialogFragment.show(fm, "collectionAddPopUp")
                 Utils.pushProfileEvents(
                     activity, "CTA_Add_Collection_From_Content",

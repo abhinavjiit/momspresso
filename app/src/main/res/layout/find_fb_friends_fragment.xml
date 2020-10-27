@@ -1,0 +1,188 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+  xmlns:app="http://schemas.android.com/apk/res-auto"
+  android:layout_width="match_parent"
+  android:layout_height="match_parent"
+  android:background="#F9F9F9">
+
+
+  <androidx.appcompat.widget.Toolbar
+    android:id="@+id/toolbar"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/white"
+    android:elevation="@dimen/space_2"
+    app:layout_constraintStart_toStartOf="parent"
+    app:layout_constraintTop_toTopOf="parent">
+
+    <com.mycity4kids.widget.CustomFontTextView
+      android:id="@+id/back"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:drawableStart="@drawable/back_arroow"
+      android:drawablePadding="@dimen/space_10"
+      android:drawableTint="@color/campaign_515151"
+      android:text="Find friends"
+      android:textColor="@color/campaign_515151"
+      android:textSize="18sp"
+      app:fontName="Roboto-Bold.ttf" />
+
+  </androidx.appcompat.widget.Toolbar>
+
+
+  <androidx.constraintlayout.widget.ConstraintLayout
+    android:id="@+id/fbFriendListContainer"
+    android:layout_width="match_parent"
+    android:layout_height="0dp"
+    android:visibility="gone"
+    app:layout_constraintBottom_toBottomOf="parent"
+    app:layout_constraintTop_toBottomOf="@id/toolbar">
+    <com.mycity4kids.widget.CustomFontTextView
+      android:id="@+id/headerTextView"
+      android:layout_width="0dp"
+      android:layout_height="wrap_content"
+      android:layout_marginStart="60dp"
+      android:layout_marginEnd="60dp"
+      android:background="#F9F9F9"
+      android:gravity="center"
+      android:paddingTop="@dimen/space_16"
+      android:paddingBottom="5dp"
+      android:text="Friend1, Friend2  x other friends are on Momspresso"
+      android:textColor="@color/campaign_515151"
+      android:textSize="16sp"
+      app:fontName="Roboto-Bold.ttf"
+      app:layout_constraintEnd_toEndOf="parent"
+      app:layout_constraintStart_toStartOf="parent"
+      app:layout_constraintTop_toTopOf="parent" />
+
+    <com.mycity4kids.widget.CustomFontTextView
+      android:id="@+id/subHeaderTextView"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:layout_marginTop="5dp"
+      android:background="#F9F9F9"
+      android:gravity="center_horizontal"
+      android:paddingBottom="@dimen/space_16"
+      android:text="Follow them to never miss amazing posts they create"
+      android:textColor="@color/campaign_515151"
+      android:textSize="14sp"
+      app:fontName="Roboto-Regular.ttf"
+      app:layout_constraintTop_toBottomOf="@id/headerTextView" />
+
+    <androidx.recyclerview.widget.RecyclerView
+      android:id="@+id/recyclerView"
+      android:layout_width="match_parent"
+      android:layout_height="0dp"
+      android:background="@color/white"
+      android:padding="@dimen/space_16"
+      app:layout_constraintBottom_toBottomOf="parent"
+      app:layout_constraintTop_toBottomOf="@id/subHeaderTextView" />
+    <View
+      android:layout_width="match_parent"
+      android:layout_height="1dp"
+      android:background="#E3E3E3"
+      android:elevation="@dimen/space_2"
+      app:layout_constraintBottom_toTopOf="@+id/bottomLayout" />
+    <androidx.constraintlayout.widget.ConstraintLayout
+      android:id="@+id/bottomLayout"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:background="#F9F9F9"
+      android:elevation="@dimen/space_2"
+      android:padding="@dimen/space_5"
+      app:layout_constraintBottom_toBottomOf="parent">
+      <com.mycity4kids.widget.MomspressoButtonWidget
+        android:id="@+id/skip"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:padding="@dimen/space_16"
+        android:textSize="18sp"
+        app:fb_defaultColor="#F9F9F9"
+        app:fb_text="Skip"
+        app:fb_textColor="#9B9B9B"
+        app:fb_textFont="Roboto-Regular.ttf"
+        app:layout_constraintEnd_toStartOf="@+id/nextTextView"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_chainStyle="spread" />
+
+      <com.mycity4kids.widget.MomspressoButtonWidget
+        android:id="@+id/nextTextView"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/space_16"
+        android:layout_marginEnd="@dimen/space_16"
+        android:padding="@dimen/space_10"
+        android:textSize="20sp"
+        app:fb_defaultColor="@color/app_red"
+        app:fb_radius="@dimen/space_5"
+        app:fb_text="Next"
+        app:fb_textFont="Roboto-Bold.ttf"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@id/skip"
+        app:layout_constraintTop_toTopOf="parent" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+  </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+  <androidx.constraintlayout.widget.ConstraintLayout
+    android:id="@+id/connectFbContainer"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginTop="@dimen/space_16"
+    app:layout_constraintTop_toBottomOf="@id/toolbar">
+
+    <com.mycity4kids.widget.CustomFontTextView
+      android:id="@+id/connectToFbFriendsTextView"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:layout_marginStart="60dp"
+      android:layout_marginEnd="60dp"
+      android:gravity="center"
+      android:text="Connect with Facebook friends on Momspresso"
+      android:textColor="@color/campaign_515151"
+      android:textSize="16sp"
+      app:fontName="Roboto-Bold.ttf"
+      app:layout_constraintTop_toTopOf="parent" />
+
+
+    <com.mycity4kids.widget.ShareButtonWidget
+      android:id="@+id/facebookShareWidget"
+      android:layout_width="0dp"
+      android:layout_height="wrap_content"
+      android:layout_marginStart="60dp"
+      android:layout_marginTop="20dp"
+      android:layout_marginEnd="60dp"
+      android:visibility="visible"
+      app:fontName="Roboto-Medium.ttf"
+      app:gravity="center"
+      app:layout_constraintEnd_toEndOf="parent"
+      app:layout_constraintStart_toStartOf="parent"
+      app:layout_constraintTop_toBottomOf="@+id/connectToFbFriendsTextView"
+      app:radius="4dp"
+      app:shareBgColor="@color/all_facebook_share"
+      app:shareImage="@drawable/ic_facebook_svg"
+      app:shareImageTint="@color/white_color"
+      app:shareText="Connect with Facebook"
+      app:textSize="18sp" />
+
+
+    <com.mycity4kids.widget.CustomFontTextView
+      android:id="@+id/skipForNowTextView"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:layout_marginTop="@dimen/space_16"
+      android:text="Skip for now"
+      android:textSize="16sp"
+      app:fontName="Roboto-Medium.ttf"
+      app:layout_constraintEnd_toEndOf="parent"
+      app:layout_constraintStart_toStartOf="parent"
+      app:layout_constraintTop_toBottomOf="@id/facebookShareWidget" />
+
+  </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>

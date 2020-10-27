@@ -41,6 +41,7 @@
     android:theme="@style/AppTheme"
     android:usesCleartextTraffic="true"
     tools:replace="android:allowBackup">
+    <activity android:name=".ui.activity.FindFbFriendsActivity"></activity>
     <activity
       android:name=".ui.rewards.activity.RewardsShareReferralCodeActivity"
       android:screenOrientation="portrait" />
@@ -96,9 +97,9 @@
       android:theme="@style/transparent_status">
       <intent-filter>
         <action android:name="android.intent.action.MAIN" />
+
         <category android:name="android.intent.category.LAUNCHER" />
       </intent-filter>
-
       <intent-filter>
         <data android:scheme="mc4k" />
 
@@ -107,7 +108,6 @@
 
         <action android:name="android.intent.action.VIEW" />
       </intent-filter>
-
       <intent-filter android:autoVerify="true">
         <action android:name="android.intent.action.VIEW" />
 
@@ -121,17 +121,16 @@
           android:host="momspr-alternate.app.link"
           android:scheme="https" />
       </intent-filter>
-
       <intent-filter>
         <data
           android:host="open"
           android:scheme="momspr" />
+
         <action android:name="android.intent.action.VIEW" />
 
         <category android:name="android.intent.category.DEFAULT" />
         <category android:name="android.intent.category.BROWSABLE" />
       </intent-filter>
-
       <intent-filter>
         <action android:name="android.intent.action.VIEW" />
 
@@ -146,7 +145,6 @@
           android:scheme="http" />
       </intent-filter>
     </activity>
-
     <activity
       android:name="com.facebook.FacebookActivity"
       android:configChanges="keyboard|keyboardHidden|screenLayout|screenSize|orientation"
@@ -550,6 +548,9 @@
     <activity
       android:name=".ui.livestreaming.LiveStreamingActivity"
       android:configChanges="orientation|screenSize|keyboardHidden|smallestScreenSize|screenLayout" />
+    <activity
+      android:name=".ui.activity.SelectContentTopicsActivity"
+      android:screenOrientation="portrait" />
 
     <service android:name=".sync.PushTokenService" />
     <service android:name=".sync.FetchAdvertisementInfoService" />
@@ -580,7 +581,6 @@
         android:name="android.support.FILE_PROVIDER_PATHS"
         android:resource="@xml/provider_paths" />
     </provider>
-
     <provider
       android:name="androidx.core.content.FileProvider"
       android:authorities="com.momspresso.fileprovider"
@@ -619,7 +619,7 @@
         <action android:name="com.android.vending.INSTALL_REFERRER" />
       </intent-filter>
     </receiver>
-    <receiver android:name="com.mycity4kids.receiver.CancelNotification" />
+    <receiver android:name=".receiver.CancelNotification" />
   </application>
 
 </manifest>
