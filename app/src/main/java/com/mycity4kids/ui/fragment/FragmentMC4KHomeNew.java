@@ -37,6 +37,7 @@ public class FragmentMC4KHomeNew extends BaseFragment implements View.OnClickLis
     private TrendingTopicsPagerAdapter adapter;
     private String userId;
     private String[] feedOrderArray;
+    private String comingFor;
 
     @Nullable
     @Override
@@ -87,6 +88,10 @@ public class FragmentMC4KHomeNew extends BaseFragment implements View.OnClickLis
         viewPager = view.findViewById(R.id.pager);
         adapter = new TrendingTopicsPagerAdapter(getChildFragmentManager(), tabLayout.getTabCount(), feedOrderArray);
         viewPager.setAdapter(adapter);
+        if (null != getArguments() && getArguments().containsKey("comingFor") && "followingFeed"
+                .equals(getArguments().getString("comingFor"))) {
+            viewPager.setCurrentItem(2);
+        }
         viewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabLayout));
         tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
             @Override
@@ -110,7 +115,6 @@ public class FragmentMC4KHomeNew extends BaseFragment implements View.OnClickLis
 
             @Override
             public void onTabUnselected(TabLayout.Tab tab) {
-
             }
 
             @Override

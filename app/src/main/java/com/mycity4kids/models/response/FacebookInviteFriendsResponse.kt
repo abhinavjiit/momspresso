@@ -36,5 +36,9 @@ data class FacebookInviteFriendsData(
     @SerializedName("isFollowing")
     var isFollowing: String?,
     @SerializedName("isInvited")
-    var isInvited: String? = "0"
+    var isInvited: String? = "0",
+    @SerializedName("friendscount")
+    var friendsCount: String,
+    @SerializedName("friendsuserList")
+    var userFriendsList:List<UserDetailResult>
 )

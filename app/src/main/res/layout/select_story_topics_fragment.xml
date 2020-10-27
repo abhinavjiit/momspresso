@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+  xmlns:app="http://schemas.android.com/apk/res-auto"
+  android:id="@+id/root"
+  android:layout_width="match_parent"
+  android:layout_height="match_parent"
+  android:background="@color/white"
+  android:orientation="vertical">
+
+  <androidx.cardview.widget.CardView
+    android:id="@+id/toolbar"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    app:cardElevation="@dimen/space_10">
+    <androidx.appcompat.widget.Toolbar
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:elevation="5dp">
+
+      <com.mycity4kids.widget.CustomFontTextView
+        android:id="@+id/back"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:drawableStart="@drawable/back_arroow"
+        android:drawablePadding="@dimen/space_16"
+        android:drawableTint="@color/campaign_515151"
+        android:gravity="center_vertical"
+        android:text="Select Story Topics"
+        android:textColor="@color/campaign_515151"
+        android:textSize="18sp"
+        app:fontName="Roboto-Bold.ttf" />
+
+
+    </androidx.appcompat.widget.Toolbar>
+  </androidx.cardview.widget.CardView>
+
+  <ScrollView
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_below="@id/toolbar"
+    android:background="@color/white">
+    <LinearLayout
+      android:id="@+id/linearLayout"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:layout_marginStart="16dp"
+      android:layout_marginTop="@dimen/space_25"
+      android:layout_marginEnd="16dp"
+      android:layout_marginBottom="@dimen/space_25"
+      android:background="@color/white"
+      android:orientation="vertical" />
+
+  </ScrollView>
+
+  <androidx.cardview.widget.CardView
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_alignParentBottom="true"
+    android:layout_marginTop="@dimen/space_2"
+    app:cardElevation="@dimen/space_10">
+    <RelativeLayout
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content">
+
+
+      <com.mycity4kids.widget.MomspressoButtonWidget
+        android:id="@+id/selectMinimumTextView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingTop="@dimen/space_8"
+        android:paddingBottom="@dimen/space_8"
+        android:text="Select minimum 1 tags to continue"
+        android:textSize="14sp"
+        app:fb_defaultColor="@color/white"
+        app:fb_textColor="#707070"
+        app:fb_textFont="Roboto-Regular.ttf" />
+
+      <com.mycity4kids.widget.MomspressoButtonWidget
+        android:id="@+id/continueTextView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/selectMinimumTextView"
+        android:paddingTop="@dimen/space_16"
+        android:paddingBottom="@dimen/space_16"
+        android:text="Continue"
+        android:textSize="18sp"
+        app:fb_defaultColor="@color/app_red"
+        app:fb_textColor="@color/white"
+        app:fb_textFont="Roboto-Bold.ttf" />
+
+    </RelativeLayout>
+  </androidx.cardview.widget.CardView>
+
+
+</RelativeLayout>

@@ -1,5 +1,6 @@
 package com.mycity4kids.retrofitAPIsInterfaces;
 
+import com.mycity4kids.models.BloggersYourFriendsFollowingResponseModel;
 import com.mycity4kids.models.request.FacebookFriendsRequest;
 import com.mycity4kids.models.request.FacebookInviteFriendsRequest;
 import com.mycity4kids.models.request.FollowUnfollowUserRequest;
@@ -66,4 +67,11 @@ public interface FollowAPI {
     Call<FollowersFollowingResponse> getBlockUserList(@Path("userId") String userId,
             @Query("start") int start,
             @Query("limit") int limit);
+
+    @GET("/v1/followers-suggestion/{userId}/")
+    Call<BloggersYourFriendsFollowingResponseModel> getBloggersList(@Path("userId") String userId,
+            @Query("suggestion_type") int suggestion_type,
+            @Query("start") int start,
+            @Query("limit") int limit,
+            @Query("sort") int sort);
 }

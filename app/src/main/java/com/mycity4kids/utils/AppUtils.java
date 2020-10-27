@@ -57,6 +57,7 @@ import com.mycity4kids.constants.Constants;
 import com.mycity4kids.gtmutils.Utils;
 import com.mycity4kids.models.response.ArticleListingResult;
 import com.mycity4kids.models.response.ContributorListResult;
+import com.mycity4kids.models.response.FacebookInviteFriendsData;
 import com.mycity4kids.models.response.MixFeedResult;
 import com.mycity4kids.preference.SharedPrefUtils;
 import com.mycity4kids.tagging.Mentions;
@@ -1232,6 +1233,19 @@ public class AppUtils {
             for (int i = 0; i < dataList.size(); i++) {
                 if (map.containsKey(dataList.get(i).getUserId())) {
                     dataList.get(i).setIsfollowing("1");
+                }
+            }
+        }
+    }
+
+
+    public static void updateFollowingStatusBloggersYourFriendsFollowing(
+            ArrayList<FacebookInviteFriendsData> dataList) {
+        if (dataList != null) {
+            Map map = SharedPrefUtils.getFollowingJson(BaseApplication.getAppContext());
+            for (int i = 0; i < dataList.size(); i++) {
+                if (map.containsKey(dataList.get(i).getId())) {
+                    dataList.get(i).setFollowing("1");
                 }
             }
         }
