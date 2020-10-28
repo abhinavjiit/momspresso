@@ -191,7 +191,6 @@ public class ShortStoryFragment extends BaseFragment implements View.OnClickList
         suggestionContainer = fragmentView.findViewById(R.id.suggestionContainer);
         horizontalCommentSuggestionsContainer = fragmentView.findViewById(R.id.horizontalCommentSuggestionsContainer);
         userImageView = fragmentView.findViewById(R.id.userImageView);
-//TopicsShortStoryTabFragment_commentImage
         userDynamoId = SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId();
         try {
             Bundle bundle = getArguments();
@@ -1660,7 +1659,7 @@ public class ShortStoryFragment extends BaseFragment implements View.OnClickList
             try {
                 CommentListResponse responseData = response.body();
                 if (responseData.getCode() == 200 && Constants.SUCCESS.equals(responseData.getStatus())) {
-                    consolidatedCommentList.remove(actionItemPosition-1);
+                    consolidatedCommentList.remove(actionItemPosition - 1);
                     if (shortStoryCommentRepliesDialogFragment != null) {
                         shortStoryCommentRepliesDialogFragment.dismiss();
                     }

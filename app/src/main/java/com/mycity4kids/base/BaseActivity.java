@@ -5,7 +5,6 @@ import static androidx.browser.customtabs.CustomTabsService.ACTION_CUSTOM_TABS_C
 
 
 import android.app.ProgressDialog;
-import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
@@ -72,7 +71,6 @@ import com.mycity4kids.ui.activity.GroupPostDetailActivity;
 import com.mycity4kids.ui.activity.GroupsReportedContentActivity;
 import com.mycity4kids.ui.activity.GroupsSummaryActivity;
 import com.mycity4kids.ui.activity.LoadWebViewActivity;
-import com.mycity4kids.ui.activity.NewsLetterWebviewActivity;
 import com.mycity4kids.ui.activity.ParallelFeedActivity;
 import com.mycity4kids.ui.activity.ShortStoriesListingContainerActivity;
 import com.mycity4kids.ui.activity.ShortStoryChallengeDetailActivity;
@@ -1058,7 +1056,7 @@ public abstract class BaseActivity extends AppCompatActivity implements GroupMem
     private void launchChromeTabs(String deepLinkUrl) {
         try {
             ArrayList<ResolveInfo> tabSupportList = getCustomTabsPackages();
-            if (tabSupportList == null) {
+            if (tabSupportList == null || tabSupportList.isEmpty()) {
                 Intent i = new Intent(Intent.ACTION_VIEW);
                 i.setData(Uri.parse(url));
                 startActivity(i);

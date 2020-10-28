@@ -26,7 +26,6 @@ import com.mycity4kids.BuildConfig
 import com.mycity4kids.R
 import com.mycity4kids.application.BaseApplication
 import com.mycity4kids.constants.AppConstants
-import com.mycity4kids.gtmutils.Utils
 import com.mycity4kids.models.response.FollowUnfollowCategoriesResponse
 import com.mycity4kids.models.response.MixFeedResult
 import com.mycity4kids.newmodels.FollowUnfollowCategoriesRequest

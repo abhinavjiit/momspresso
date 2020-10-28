@@ -11,6 +11,7 @@
     android:id="@+id/shortStoryRecyclerView"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:layout_above="@+id/viewAllTextView"
     android:layout_marginTop="@dimen/space_10"
     android:background="@color/white_color"
     android:clipToPadding="false"
@@ -20,7 +21,7 @@
     android:id="@+id/viewAllTextView"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_alignParentBottom="true"
+    android:layout_above="@+id/horizontalCommentSuggestionsContainer"
     android:background="@color/app_red"
     android:gravity="center"
     android:padding="@dimen/space_10"
@@ -28,7 +29,6 @@
     android:textColor="@color/white"
     android:textSize="@dimen/space_16"
     android:visibility="gone" />
-
 
   <HorizontalScrollView
     android:id="@+id/horizontalCommentSuggestionsContainer"
