@@ -1324,7 +1324,7 @@ Thank you! We will be reviewing your story. You can expect to hear from us withi
   <string name="profile_featured_more">+%d More</string>
   <string name="all_drafts">Drafts</string>
   <string name="all_story">100 Word Story</string>
-  <string name="all_blogs">Blogs</string>
+  <string name="all_blogs">બ્લોગ</string>
   <string name="all_videos">Videos</string>
   <string name="profile_post_featured">Post featured on the following collections</string>
   <string name="dialog_fragment_add_collection_select_collection">સંગ્રહ પસંદ કરો</string>
@@ -1541,12 +1541,12 @@ Thank you! We will be reviewing your story. You can expect to hear from us withi
   <string name="leaderboard_btn">View Leaderboard</string>
   <string name="total_blog_view">કુલ ઓર્ગેનિક બ્લોગ વ્યુઝ</string>
   <string name="total_vlog_view">કુલ ઓર્ગેનિક વી લૉગ વ્યુઝ </string>
-  <string name="leaderboard">Leaderboard</string>
+  <string name="leaderboard">લીડરબોર્ડ </string>
   <string name="leaderboard_blogs">BLOGS</string>
   <string name="leaderboard_vlogs">VLOG</string>
   <string name="webview_hack_text">લાગે છે તમે કઈ યોગદાન નથી કર્યો </string>
   <string name="webview_term_text"> નિયમો અને શરતો </string>
-  <string name="earning_calculator">Earning Calculator</string>
+  <string name="earning_calculator">કમાણી કેલ્કયુલેટર </string>
   <string name="click_here_btn">Click to view leaderboard</string>
   <string name="checkout_growth_hack">Checkout the growth hacks</string>
   <string name="blogger_gold_about_text">અમે ઉત્સવ ના મૂડ માં છીએ અને તમને પણ અમારી સાથે જોડાવા આમંત્રણ છે!</string>
@@ -1609,4 +1609,11 @@ Thank you! We will be reviewing your story. You can expect to hear from us withi
   <string name="tooltip_liked_the_blog">બ્લોગ પસંદ પડ્યા?  આ રચનાકાર ને અનુસરો, જેથી તેમની રચનાઓ ક્યારેય  ન ચૂકો</string>
   <string name="coachmark_vlogs_2">એક સારા થમ્બ નેલ થી વ્યુઝ માં વધારો થાય છે </string>
   <string name="tooltip_groups">તમારી પસંદગીના સમૂહ માં જોડાઓ અને એમાં શામેલ માતાઓ સાથે ચર્ચા કરો. </string>
+  <string name="video_language_settings">વિડીયો માટે ભાષાની સેટિંગ</string>
+  <string name="all_intrumental">વાદ્ય</string>
+  <string name="select_video_preferences">વિડીયો માટે ની પસંદગી કરો</string>
+  <string name="please_select_lang">કૃપા કરી ભાષા પસંદ કરો</string>
+  <string name="watch_video_lang_choice">તમારી પસંદગીની ભાષામાં વિડીયો જુઓ</string>
+  <string name="know_more">વધુ જાણો </string>
+  <string name="all_vlogs">વી લોગ્સ </string>
 </resources>

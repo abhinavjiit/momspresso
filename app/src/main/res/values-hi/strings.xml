@@ -1232,7 +1232,7 @@ Thank you! We will be reviewing your story. You can expect to hear from us withi
   <string name="profile_featured_more">+%d More</string>
   <string name="all_drafts">Drafts</string>
   <string name="all_story">100 Word Story</string>
-  <string name="all_blogs">Blogs</string>
+  <string name="all_blogs">ब्लोग्स</string>
   <string name="all_videos">Videos</string>
   <string name="profile_post_featured">Post featured on the following collections</string>
   <string name="dialog_fragment_add_collection_select_collection">कलेक्शन का चुनाव करें</string>
@@ -1450,12 +1450,12 @@ Thank you! We will be reviewing your story. You can expect to hear from us withi
   <string name="leaderboard_btn">View Leaderboard</string>
   <string name="total_blog_view">कुल ऑर्गेनिक ब्लॉग व्यूज</string>
   <string name="total_vlog_view">कुल ऑर्गेनिक वी लॉग व्यूज</string>
-  <string name="leaderboard">Leaderboard</string>
+  <string name="leaderboard">लीडरबॉर्ड </string>
   <string name="leaderboard_blogs">BLOGS</string>
   <string name="leaderboard_vlogs">VLOG</string>
   <string name="webview_hack_text">अपने ब्लॉग और वी लॉग्स के लिए ऑर्गेनिक ट्रैफ़िक प्राप्त करने के तरीके :</string>
   <string name="webview_term_text">नियम और शर्तें</string>
-  <string name="earning_calculator">Earning Calculator</string>
+  <string name="earning_calculator">कमाई कैलकुलेटर</string>
   <string name="click_here_btn">Click to view leaderboard</string>
   <string name="checkout_growth_hack">Checkout the growth hacks</string>
   <string name="blogger_gold_about_text">हमारे लिए यह एक उत्सव की तरह है और हम आपको इसमें शामिल करना चाहते हैं!</string>
@@ -1518,4 +1518,11 @@ Thank you! We will be reviewing your story. You can expect to hear from us withi
   <string name="tooltip_liked_the_blog">लेख पसंद आया? लेखक की पोस्ट्स को मिस न करने के लिए क्रिएटर को फॉलो  करें</string>
   <string name="coachmark_vlogs_2">एक अच्छा थंबनेल अधिक व्यूज लाता है</string>
   <string name="tooltip_groups">उन ग्रुप्स से जुड़ें जिन्हें आप पसंद करते हैं. कम्युनिटी के साथ बातचीत शुरू करें!</string>
+  <string name="video_language_settings">वीडियो लैंग्वेज सेटिंग्स</string>
+  <string name="all_intrumental">वाद्य संगीत</string>
+  <string name="select_video_preferences">वीडियो प्राथमिकताएं चुनें</string>
+  <string name="please_select_lang">कृपया एक भाषा चुनें</string>
+  <string name="watch_video_lang_choice">अपनी पसंद की भाषा में वीडियो देखें</string>
+  <string name="know_more">अधिक जानिए</string>
+  <string name="all_vlogs">वी लॉग्स</string>
 </resources>

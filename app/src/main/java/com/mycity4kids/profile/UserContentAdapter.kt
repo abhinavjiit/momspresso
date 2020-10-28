@@ -2,9 +2,7 @@ package com.mycity4kids.profile
 
 import android.animation.ObjectAnimator
 import android.animation.ValueAnimator
-import android.content.Intent
 import android.graphics.PorterDuff
-import android.graphics.drawable.GradientDrawable
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -13,7 +11,7 @@ import android.view.animation.Animation
 import android.webkit.WebResourceRequest
 import android.webkit.WebView
 import android.webkit.WebViewClient
-import android.widget.HorizontalScrollView
+import android.widget.FrameLayout
 import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.RelativeLayout
@@ -23,22 +21,19 @@ import androidx.core.content.ContextCompat
 import androidx.core.graphics.drawable.DrawableCompat
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.facebook.shimmer.ShimmerFrameLayout
 import com.google.firebase.crashlytics.FirebaseCrashlytics
 import com.mycity4kids.BuildConfig
 import com.mycity4kids.R
 import com.mycity4kids.application.BaseApplication
 import com.mycity4kids.constants.AppConstants
-import com.mycity4kids.constants.Constants
 import com.mycity4kids.gtmutils.Utils
-import com.mycity4kids.models.request.FollowUnfollowUserRequest
-import com.mycity4kids.models.response.ContributorListResponse
-import com.mycity4kids.models.response.ContributorListResult
-import com.mycity4kids.models.response.FollowUnfollowUserResponse
+import com.mycity4kids.models.response.FollowUnfollowCategoriesResponse
 import com.mycity4kids.models.response.MixFeedResult
-import com.mycity4kids.retrofitAPIsInterfaces.ContributorListAPI
-import com.mycity4kids.retrofitAPIsInterfaces.FollowAPI
-import com.mycity4kids.sync.SyncUserFollowingList
+import com.mycity4kids.newmodels.FollowUnfollowCategoriesRequest
+import com.mycity4kids.preference.SharedPrefUtils
+import com.mycity4kids.retrofitAPIsInterfaces.TopicsCategoryAPI
+import com.mycity4kids.ui.adapter.SuggestedCreatorsRecyclerAdapter
+import com.mycity4kids.ui.adapter.TopCreatorsRecyclerAdapter
 import com.mycity4kids.ui.livestreaming.RecentOrUpcomingLiveStreamsHorizontalAdapter
 import com.mycity4kids.utils.AppUtils
 import com.mycity4kids.utils.DateTimeUtils
@@ -47,12 +42,12 @@ import com.mycity4kids.utils.StringUtils
 import com.mycity4kids.widget.MomspressoButtonWidget
 import com.mycity4kids.widget.StoryShareCardWidget
 import com.squareup.picasso.Picasso
-import java.util.Locale
-import kotlinx.android.synthetic.main.mom_vlog_follow_following_carousal.view.*
 import kotlinx.android.synthetic.main.short_story_listing_item.view.*
+import org.apmem.tools.layouts.FlowLayout
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
+import java.util.Locale
 
 /**
  * Created by hemant on 19/7/17.
@@ -60,6 +55,8 @@ import retrofit2.Response
 class UserContentAdapter(
     private val mListener: RecyclerViewClickListener,
     private val horizontalListener: RecentOrUpcomingLiveStreamsHorizontalAdapter.HorizontalRecyclerViewClickListener,
+    private val suggestedCreatorListener: SuggestedCreatorsRecyclerAdapter.SuggestedCreatorsClickListener,
+    private val topCreatorListener: TopCreatorsRecyclerAdapter.TopCreatorsClickListener,
     private val isPrivate: Boolean
 ) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
@@ -74,10 +71,21 @@ class UserContentAdapter(
             AppConstants.CONTENT_TYPE_CREATE_SECTION == mixFeedList?.get(position)?.contentType -> CONTENT_TYPE_CREATE
             AppConstants.CONTENT_TYPE_SHORT_STORY == mixFeedList?.get(position)?.contentType -> CONTENT_TYPE_SHORT_STORY
             AppConstants.CONTENT_TYPE_VIDEO == mixFeedList?.get(position)?.contentType -> CONTENT_TYPE_VIDEO
-            AppConstants.CONTENT_TYPE_SUGGESTED_BLOGGERS == mixFeedList?.get(position)?.contentType -> CONTENT_TYPE_SUGGESTED_BLOGGERS
             AppConstants.CONTENT_TYPE_RECENT_LIVE_STREAM == mixFeedList?.get(position)?.contentType -> CONTENT_TYPE_RECENT_LIVE_STREAM
             AppConstants.CONTENT_TYPE_UPCOMING_LIVE_STREAM == mixFeedList?.get(position)?.contentType -> CONTENT_TYPE_UPCOMING_LIVE_STREAM
             AppConstants.CONTENT_TYPE_TORCAI_ADS == mixFeedList?.get(position)?.contentType -> CONTENT_TYPE_TORCAI_ADS
+            AppConstants.CONTENT_TYPE_SUGGESTED_CREATORS_FOLLOWED_BY_FRIENDS == mixFeedList?.get(
+                position
+            )?.contentType -> CONTENT_TYPE_SUGGESTED_CREATORS_FOLLOWED_BY_FRIENDS
+            AppConstants.CONTENT_TYPE_SUGGESTED_CREATORS_BASED_ON_TOPICS == mixFeedList?.get(
+                position
+            )?.contentType -> CONTENT_TYPE_SUGGESTED_CREATORS_BASED_ON_TOPICS
+            AppConstants.CONTENT_TYPE_SUGGESTED_CREATORS_BASED_ON_ACTIVITY == mixFeedList?.get(
+                position
+            )?.contentType -> CONTENT_TYPE_SUGGESTED_CREATORS_BASED_ON_ACTIVITY
+            AppConstants.CONTENT_TYPE_SUGGESTED_CREATORS_TOP_RANKERS == mixFeedList?.get(position)?.contentType -> CONTENT_TYPE_SUGGESTED_CREATORS_TOP_RANKERS
+            AppConstants.CONTENT_TYPE_SUGGESTED_TOPICS == mixFeedList?.get(position)?.contentType -> CONTENT_TYPE_SUGGESTED_TOPICS
+            AppConstants.CONTENT_TYPE_FOLLOW_TOPICS_AND_CREATORS == mixFeedList?.get(position)?.contentType -> CONTENT_TYPE_FOLLOW_TOPICS_AND_CREATORS
             else -> CONTENT_TYPE_ARTICLE
         }
     }
@@ -99,11 +107,6 @@ class UserContentAdapter(
                     .inflate(R.layout.short_story_listing_item, parent, false)
                 ShortStoriesViewHolder(v0, mListener)
             }
-            CONTENT_TYPE_SUGGESTED_BLOGGERS -> {
-                val v0 = LayoutInflater.from(parent.context)
-                    .inflate(R.layout.mom_vlog_follow_following_carousal, parent, false)
-                FollowFollowingCarousel(v0, mListener)
-            }
             CONTENT_TYPE_RECENT_LIVE_STREAM -> {
                 val v0 = LayoutInflater.from(parent.context)
                     .inflate(R.layout.live_stream_list_item, parent, false)
@@ -118,6 +121,26 @@ class UserContentAdapter(
                 val v0 = LayoutInflater.from(parent.context)
                     .inflate(R.layout.torcai_ads_item, parent, false)
                 TorcaiAdsViewHolder(v0, mListener)
+            }
+            CONTENT_TYPE_SUGGESTED_CREATORS_FOLLOWED_BY_FRIENDS -> {
+                val v0 = LayoutInflater.from(parent.context)
+                    .inflate(R.layout.suggested_creator_item, parent, false)
+                SuggestedCreatorsMutualFriendsViewHolder(v0, mListener)
+            }
+            CONTENT_TYPE_SUGGESTED_CREATORS_BASED_ON_ACTIVITY, CONTENT_TYPE_SUGGESTED_CREATORS_BASED_ON_TOPICS, CONTENT_TYPE_SUGGESTED_CREATORS_TOP_RANKERS -> {
+                val v0 = LayoutInflater.from(parent.context)
+                    .inflate(R.layout.suggested_creator_item, parent, false)
+                SuggestedCreatorsViewHolder(v0, mListener, viewType)
+            }
+            CONTENT_TYPE_SUGGESTED_TOPICS -> {
+                val v0 = LayoutInflater.from(parent.context)
+                    .inflate(R.layout.suggested_topics_item, parent, false)
+                SuggestedTopicsViewHolder(v0, mListener)
+            }
+            CONTENT_TYPE_FOLLOW_TOPICS_AND_CREATORS -> {
+                val v0 = LayoutInflater.from(parent.context)
+                    .inflate(R.layout.follow_topic_creators_item, parent, false)
+                FollowTopicCreatorViewHolder(v0, mListener)
             }
             else -> {
                 val v0 = LayoutInflater.from(parent.context)
@@ -182,7 +205,6 @@ class UserContentAdapter(
                 } else {
                     holder.eventId.visibility = View.GONE
                 }
-
                 addRecentLiveStreamItem(
                     holder.liveStreamImageView,
                     holder.upcomingLiveTimeWidget,
@@ -201,237 +223,22 @@ class UserContentAdapter(
                 holder.webView,
                 mixFeedList?.get(position)
             )
-            is FollowFollowingCarousel -> {
-                try {
-                    holder.scroll.fullScroll(HorizontalScrollView.FOCUS_LEFT)
-                    if (!mixFeedList?.get(position)?.isCarouselRequestRunning!! && !mixFeedList?.get(
-                            position
-                        )?.responseReceived!!) {
-                        holder.shimmerLayout.startShimmerAnimation()
-                        holder.shimmerLayout.visibility = View.VISIBLE
-                        mixFeedList?.get(position)?.isCarouselRequestRunning = true
-                        val pos = position
-                        val retrofit = BaseApplication.getInstance().retrofit
-                        val contributorListApi =
-                            retrofit.create(
-                                ContributorListAPI::class.java
-                            )
-                        val call = contributorListApi
-                            .getContributorList(
-                                10,
-                                2,
-                                AppConstants.USER_TYPE_BLOGGER,
-                                "" + AppUtils.getLangKey(),
-                                ""
-                            )
-                        call.enqueue(object : Callback<ContributorListResponse> {
-                            override fun onFailure(
-                                call: Call<ContributorListResponse>,
-                                t: Throwable
-                            ) {
-                            }
-
-                            override fun onResponse(
-                                call: Call<ContributorListResponse>,
-                                response: Response<ContributorListResponse>
-                            ) {
-                                try {
-                                    holder.shimmerLayout.stopShimmerAnimation()
-                                    holder.shimmerLayout.visibility = View.GONE
-                                    holder.scroll.visibility = View.VISIBLE
-                                    if (response.isSuccessful && response.body() != null) {
-                                        val bloggersList = response.body()?.data?.result
-                                        AppUtils.updateFollowingStatusContributorList(bloggersList)
-                                        processBloggersData(
-                                            holder,
-                                            bloggersList as ArrayList<ContributorListResult>,
-                                            pos
-                                        )
-                                        mixFeedList?.get(pos)?.isCarouselRequestRunning =
-                                            false
-                                        mixFeedList?.get(pos)?.responseReceived = true
-                                    } else {
-                                        mixFeedList?.get(pos)?.isCarouselRequestRunning =
-                                            false
-                                        mixFeedList?.get(pos)?.responseReceived = true
-                                    }
-                                } catch (e: Exception) {
-                                    FirebaseCrashlytics.getInstance().recordException(e)
-                                    Log.d(
-                                        "MC4kException",
-                                        Log.getStackTraceString(e)
-                                    )
-                                }
-                            }
-                        })
-                    } else {
-                        mixFeedList?.get(position)?.carouselBloggerList?.let {
-                            populateCarouselFollowFollowing(
-                                holder,
-                                it
-                            )
-                        }
-                    }
-
-                    holder.carosalContainer1.setOnClickListener {
-                        val intent1 = Intent(it.context, UserProfileActivity::class.java)
-                        intent1.putExtra(
-                            Constants.USER_ID,
-                            mixFeedList?.get(position)?.carouselBloggerList?.get(0)?.id
-                        )
-                        it.context.startActivity(intent1)
-                    }
-                    holder.carosalContainer2.setOnClickListener {
-                        val intent1 = Intent(it.context, UserProfileActivity::class.java)
-                        intent1.putExtra(
-                            Constants.USER_ID,
-                            mixFeedList?.get(position)?.carouselBloggerList?.get(1)?.id
-                        )
-                        it.context.startActivity(intent1)
-                    }
-                    holder.carosalContainer3.setOnClickListener {
-                        val intent1 = Intent(it.context, UserProfileActivity::class.java)
-                        intent1.putExtra(
-                            Constants.USER_ID,
-                            mixFeedList?.get(position)?.carouselBloggerList?.get(2)?.id
-                        )
-                        it.context.startActivity(intent1)
-                    }
-                    holder.carosalContainer4.setOnClickListener {
-                        val intent1 = Intent(it.context, UserProfileActivity::class.java)
-                        intent1.putExtra(
-                            Constants.USER_ID,
-                            mixFeedList?.get(position)?.carouselBloggerList?.get(3)?.id
-                        )
-                        it.context.startActivity(intent1)
-                    }
-                    holder.carosalContainer5.setOnClickListener {
-                        val intent1 = Intent(it.context, UserProfileActivity::class.java)
-                        intent1.putExtra(
-                            Constants.USER_ID,
-                            mixFeedList?.get(position)?.carouselBloggerList?.get(4)?.id
-                        )
-                        it.context.startActivity(intent1)
-                    }
-                    holder.carosalContainer6.setOnClickListener {
-                        val intent1 = Intent(it.context, UserProfileActivity::class.java)
-                        intent1.putExtra(
-                            Constants.USER_ID,
-                            mixFeedList?.get(position)?.carouselBloggerList?.get(5)?.id
-                        )
-                        it.context.startActivity(intent1)
-                    }
-                    holder.authorFollowTextView1.setOnClickListener {
-                        if (mixFeedList?.get(position)?.carouselBloggerList?.get(0)?.isFollowed == 1) {
-                            unFollowApiCall(
-                                mixFeedList?.get(position)?.carouselBloggerList?.get(0)?.id,
-                                position,
-                                0,
-                                holder.authorFollowTextView1
-                            )
-                        } else {
-                            followApiCall(
-                                mixFeedList?.get(position)?.carouselBloggerList?.get(0)?.id,
-                                position,
-                                0,
-                                holder.authorFollowTextView1
-                            )
-                        }
-                    }
-                    holder.authorFollowTextView2.setOnClickListener {
-                        if (mixFeedList?.get(position)?.carouselBloggerList?.get(1)?.isFollowed == 1) {
-
-                            unFollowApiCall(
-                                mixFeedList?.get(position)?.carouselBloggerList?.get(1)?.id,
-                                position,
-                                1,
-                                holder.authorFollowTextView2
-                            )
-                        } else {
-                            followApiCall(
-                                mixFeedList?.get(position)?.carouselBloggerList?.get(1)?.id,
-                                position,
-                                1,
-                                holder.authorFollowTextView2
-                            )
-                        }
-                    }
-                    holder.authorFollowTextView3.setOnClickListener {
-                        if (mixFeedList?.get(position)?.carouselBloggerList?.get(2)?.isFollowed == 1) {
-
-                            unFollowApiCall(
-                                mixFeedList?.get(position)?.carouselBloggerList?.get(2)?.id,
-                                position,
-                                2,
-                                holder.authorFollowTextView3
-                            )
-                        } else {
-                            followApiCall(
-                                mixFeedList?.get(position)?.carouselBloggerList?.get(2)?.id,
-                                position,
-                                2,
-                                holder.authorFollowTextView3
-                            )
-                        }
-                    }
-                    holder.authorFollowTextView4.setOnClickListener {
-                        if (mixFeedList?.get(position)?.carouselBloggerList?.get(3)?.isFollowed == 1) {
-
-                            unFollowApiCall(
-                                mixFeedList?.get(position)?.carouselBloggerList?.get(3)?.id,
-                                position,
-                                3,
-                                holder.authorFollowTextView4
-                            )
-                        } else {
-                            followApiCall(
-                                mixFeedList?.get(position)?.carouselBloggerList?.get(3)?.id,
-                                position,
-                                3,
-                                holder.authorFollowTextView4
-                            )
-                        }
-                    }
-                    holder.authorFollowTextView5.setOnClickListener {
-                        if (mixFeedList?.get(position)?.carouselBloggerList?.get(4)?.isFollowed == 1) {
-
-                            unFollowApiCall(
-                                mixFeedList?.get(position)?.carouselBloggerList?.get(4)?.id,
-                                position,
-                                4,
-                                holder.authorFollowTextView5
-                            )
-                        } else {
-                            followApiCall(
-                                mixFeedList?.get(position)?.carouselBloggerList?.get(4)?.id,
-                                position,
-                                4,
-                                holder.authorFollowTextView5
-                            )
-                        }
-                    }
-                    holder.authorFollowTextView6.setOnClickListener {
-                        if (mixFeedList?.get(position)?.carouselBloggerList?.get(5)?.isFollowed == 1) {
-
-                            unFollowApiCall(
-                                mixFeedList?.get(position)?.carouselBloggerList?.get(5)?.id,
-                                position,
-                                5,
-                                holder.authorFollowTextView6
-                            )
-                        } else {
-                            followApiCall(
-                                mixFeedList?.get(position)?.carouselBloggerList?.get(5)?.id,
-                                position,
-                                5,
-                                holder.authorFollowTextView6
-                            )
-                        }
-                    }
-                } catch (e: Exception) {
-                    FirebaseCrashlytics.getInstance().recordException(e)
-                    Log.d("MC4kException", Log.getStackTraceString(e))
-                }
+            is SuggestedCreatorsMutualFriendsViewHolder -> addCreatorSuggestionsMutualFriends(
+                position,
+                holder.suggestedCreatorsRecyclerView,
+                mixFeedList?.get(position)
+            )
+            is SuggestedCreatorsViewHolder -> addCreatorSuggestions(
+                position,
+                holder.viewType,
+                holder.suggestedCreatorsRecyclerView,
+                mixFeedList?.get(position)
+            )
+            is SuggestedTopicsViewHolder -> addTopicsSuggestions(
+                holder.topicsContainerFlowLayout,
+                mixFeedList?.get(position)
+            )
+            is FollowTopicCreatorViewHolder -> {
             }
         }
     }
@@ -631,7 +438,6 @@ class UserContentAdapter(
                 )
                 DrawableCompat.setTintMode(it, PorterDuff.Mode.SRC_IN)
             }
-            //            goldLogo.setCompoundDrawablesWithIntrinsicBounds(drawable, null, null, null)
             itemView.setOnClickListener(this)
         }
 
@@ -639,54 +445,6 @@ class UserContentAdapter(
             if (adapterPosition != RecyclerView.NO_POSITION) {
                 listener.onClick(v, adapterPosition)
             }
-        }
-    }
-
-    inner class FollowFollowingCarousel(view: View, val listener: RecyclerViewClickListener) :
-        RecyclerView.ViewHolder(view) {
-
-        val headerTextView: TextView = view.headerTextView
-        val shimmerLayout: ShimmerFrameLayout = view.shimmerLayout
-        val carosalContainer1: LinearLayout = view.carosalContainer1
-        val carosalContainer2: LinearLayout = view.carosalContainer2
-        val carosalContainer3: LinearLayout = view.carosalContainer3
-        val carosalContainer4: LinearLayout = view.carosalContainer4
-        val carosalContainer5: LinearLayout = view.carosalContainer5
-        val carosalContainer6: LinearLayout = view.carosalContainer6
-
-        val scroll: HorizontalScrollView = view.scroll
-        val authorImageView1: ImageView = view.authorImageView1
-        val authorNameTextView1: TextView = view.authorNameTextView1
-        val authorRankTextView1: TextView = view.authorRankTextView1
-        val authorFollowTextView1: TextView = view.authorFollowTextView1
-
-        val authorImageView2: ImageView = view.authorImageView2
-        val authorNameTextView2: TextView = view.authorNameTextView2
-        val authorRankTextView2: TextView = view.authorRankTextView2
-        val authorFollowTextView2: TextView = view.authorFollowTextView2
-
-        val authorImageView3: ImageView = view.authorImageView3
-        val authorNameTextView3: TextView = view.authorNameTextView3
-        val authorRankTextView3: TextView = view.authorRankTextView3
-        val authorFollowTextView3: TextView = view.authorFollowTextView3
-
-        val authorImageView4: ImageView = view.authorImageView4
-        val authorNameTextView4: TextView = view.authorNameTextView4
-        val authorRankTextView4: TextView = view.authorRankTextView4
-        val authorFollowTextView4: TextView = view.authorFollowTextView4
-
-        val authorImageView5: ImageView = view.authorImageView5
-        val authorNameTextView5: TextView = view.authorNameTextView5
-        val authorRankTextView5: TextView = view.authorRankTextView5
-        val authorFollowTextView5: TextView = view.authorFollowTextView5
-
-        val authorImageView6: ImageView = view.authorImageView6
-        val authorNameTextView6: TextView = view.authorNameTextView6
-        val authorRankTextView6: TextView = view.authorRankTextView6
-        val authorFollowTextView6: TextView = view.authorFollowTextView6
-
-        init {
-            headerTextView.text = "Follow Top Ranking Authors"
         }
     }
 
@@ -739,6 +497,94 @@ class UserContentAdapter(
         init {
             viewAllLivesTextView.setOnClickListener(this)
             itemView.setOnClickListener(this)
+        }
+
+        override fun onClick(v: View) {
+            if (adapterPosition != RecyclerView.NO_POSITION) {
+                listener.onClick(v, adapterPosition)
+            }
+        }
+    }
+
+    inner class SuggestedCreatorsMutualFriendsViewHolder(
+        itemView: View,
+        val listener: RecyclerViewClickListener
+    ) : RecyclerView.ViewHolder(itemView), View.OnClickListener {
+        internal var sectionHeaderTextView: TextView =
+            itemView.findViewById(R.id.sectionHeaderTextView)
+        internal var suggestedCreatorsRecyclerView: RecyclerView =
+            itemView.findViewById(R.id.suggestedCreatorsRecyclerView)
+
+        init {
+            sectionHeaderTextView.text = "Creators your friends follow"
+            itemView.setOnClickListener(this)
+        }
+
+        override fun onClick(v: View) {
+            if (adapterPosition != RecyclerView.NO_POSITION) {
+                listener.onClick(v, adapterPosition)
+            }
+        }
+    }
+
+    inner class SuggestedCreatorsViewHolder(
+        itemView: View,
+        val listener: RecyclerViewClickListener,
+        val viewType: Int
+    ) : RecyclerView.ViewHolder(itemView), View.OnClickListener {
+        internal var sectionHeaderTextView: TextView =
+            itemView.findViewById(R.id.sectionHeaderTextView)
+        internal var suggestedCreatorsRecyclerView: RecyclerView =
+            itemView.findViewById(R.id.suggestedCreatorsRecyclerView)
+
+        init {
+            if (viewType == CONTENT_TYPE_SUGGESTED_CREATORS_BASED_ON_TOPICS) {
+                sectionHeaderTextView.text = "Bloggers based on topic followed"
+            } else if (viewType == CONTENT_TYPE_SUGGESTED_CREATORS_BASED_ON_ACTIVITY) {
+                sectionHeaderTextView.text = "Bloggers based on activity"
+            } else if (viewType == CONTENT_TYPE_SUGGESTED_CREATORS_TOP_RANKERS) {
+                sectionHeaderTextView.text = "Top Bloggers"
+            }
+            itemView.setOnClickListener(this)
+        }
+
+        override fun onClick(v: View) {
+            if (adapterPosition != RecyclerView.NO_POSITION) {
+                listener.onClick(v, adapterPosition)
+            }
+        }
+    }
+
+    inner class SuggestedTopicsViewHolder(
+        itemView: View,
+        val listener: RecyclerViewClickListener
+    ) : RecyclerView.ViewHolder(itemView), View.OnClickListener {
+        internal var topicsContainerFlowLayout: FlowLayout =
+            itemView.findViewById(R.id.topicsContainerFlowLayout)
+
+        init {
+            itemView.setOnClickListener(this)
+        }
+
+        override fun onClick(v: View) {
+            if (adapterPosition != RecyclerView.NO_POSITION) {
+                listener.onClick(v, adapterPosition)
+            }
+        }
+    }
+
+    inner class FollowTopicCreatorViewHolder(
+        itemView: View,
+        val listener: RecyclerViewClickListener
+    ) : RecyclerView.ViewHolder(itemView), View.OnClickListener {
+        internal var followTopicsWidget: MomspressoButtonWidget =
+            itemView.findViewById(R.id.followTopicsWidget)
+        internal var followCreatorsWidget: MomspressoButtonWidget =
+            itemView.findViewById(R.id.followCreatorsWidget)
+
+        init {
+            followTopicsWidget.setOnClickListener(this)
+            followCreatorsWidget.setOnClickListener(this)
         }
 
         override fun onClick(v: View) {
@@ -1135,6 +981,115 @@ class UserContentAdapter(
         webView.loadDataWithBaseURL("", mixFeedResult?.torcaiAdsData, "text/html", "utf-8", "")
     }
 
+    private fun addCreatorSuggestionsMutualFriends(
+        mixFeedPosition: Int,
+        recyclerView: RecyclerView,
+        data: MixFeedResult?
+    ) {
+        try {
+            val adapter = SuggestedCreatorsRecyclerAdapter(
+                mixFeedPosition,
+                data?.suggestedCreatorList,
+                suggestedCreatorListener
+            )
+            adapter.setHasMutualFriends(true)
+            recyclerView.adapter = adapter
+            recyclerView.layoutManager = LinearLayoutManager(
+                recyclerView.context,
+                LinearLayoutManager.HORIZONTAL,
+                false
+            )
+            recyclerView.setHasFixedSize(true)
+        } catch (e: Exception) {
+            FirebaseCrashlytics.getInstance().recordException(e)
+            Log.d("MC4kException", Log.getStackTraceString(e))
+        }
+    }
+
+    private fun addCreatorSuggestions(
+        mixFeedPosition: Int,
+        viewType: Int,
+        recyclerView: RecyclerView,
+        data: MixFeedResult?
+    ) {
+        try {
+            if (viewType == CONTENT_TYPE_SUGGESTED_CREATORS_TOP_RANKERS) {
+                recyclerView.adapter = TopCreatorsRecyclerAdapter(
+                    mixFeedPosition,
+                    data?.topCreatorList,
+                    topCreatorListener
+                )
+            } else {
+                recyclerView.adapter = SuggestedCreatorsRecyclerAdapter(
+                    mixFeedPosition,
+                    data?.suggestedCreatorList,
+                    suggestedCreatorListener
+                )
+            }
+            recyclerView.layoutManager = LinearLayoutManager(
+                recyclerView.context,
+                LinearLayoutManager.HORIZONTAL,
+                false
+            )
+            recyclerView.setHasFixedSize(true)
+        } catch (e: Exception) {
+            FirebaseCrashlytics.getInstance().recordException(e)
+            Log.d("MC4kException", Log.getStackTraceString(e))
+        }
+    }
+
+    private fun addTopicsSuggestions(
+        flowLayout: FlowLayout,
+        data: MixFeedResult?
+    ) {
+        flowLayout.removeAllViews()
+        for (i in 0 until data?.suggestedTopicsList?.size!!) {
+            val topicView = LayoutInflater.from(flowLayout.context)
+                .inflate(R.layout.suggested_topic_custom_view, null, false) as FrameLayout
+            topicView.isClickable = true
+            (topicView.getChildAt(0) as RelativeLayout).getChildAt(0).tag =
+                data.suggestedTopicsList?.get(i)?.categoryId
+            (topicView.getChildAt(0) as RelativeLayout).getChildAt(2).tag =
+                data.suggestedTopicsList?.get(i)?.categoryId
+            ((topicView.getChildAt(0) as RelativeLayout).getChildAt(0) as TextView).text =
+                data.suggestedTopicsList?.get(i)?.displayName?.toUpperCase()
+            if (data.suggestedTopicsList?.get(i)?.isFollowing == "1") {
+                ((topicView.getChildAt(0) as RelativeLayout).getChildAt(2) as ImageView)
+                    .setImageDrawable(
+                        ContextCompat
+                            .getDrawable(BaseApplication.getAppContext(), R.drawable.ic_tick)
+                    )
+                (topicView.getChildAt(0) as RelativeLayout).getChildAt(2)
+                    .setOnClickListener { v: View ->
+                        data.suggestedTopicsList?.get(i)?.isFollowing = "0"
+                        followUnfollowTopics(
+                            v.tag as String,
+                            v.parent as RelativeLayout, 0
+                        )
+                    }
+            } else {
+                ((topicView.getChildAt(0) as RelativeLayout).getChildAt(2) as ImageView)
+                    .setImageDrawable(
+                        ContextCompat
+                            .getDrawable(BaseApplication.getAppContext(), R.drawable.ic_plus)
+                    )
+                (topicView.getChildAt(0) as RelativeLayout).getChildAt(2)
+                    .setOnClickListener { v: View ->
+                        data.suggestedTopicsList?.get(i)?.isFollowing = "1"
+                        followUnfollowTopics(
+                            v.tag as String,
+                            v.parent as RelativeLayout, 1
+                        )
+                    }
+            }
+
+            (topicView.getChildAt(0) as RelativeLayout).getChildAt(0).setOnClickListener { v: View ->
+
+            }
+            flowLayout.addView(topicView)
+        }
+    }
+
     private fun showWinnerOrGoldMark(
         data: MixFeedResult?,
         winnerOrGoldImageView: ImageView
@@ -1160,227 +1115,78 @@ class UserContentAdapter(
         }
     }
 
+    private fun followUnfollowTopics(
+        selectedTopic: String,
+        tagView: RelativeLayout,
+        action: Int
+    ) {
+        val followUnfollowCategoriesRequest =
+            FollowUnfollowCategoriesRequest()
+        val topicIdLList = java.util.ArrayList<String>()
+        topicIdLList.add(selectedTopic)
+        followUnfollowCategoriesRequest.categories = topicIdLList
+        if (action == 0) {
+            tagView.getChildAt(0).tag = selectedTopic
+            tagView.getChildAt(2).tag = selectedTopic
+            (tagView.getChildAt(2) as ImageView).setImageDrawable(
+                ContextCompat.getDrawable(
+                    tagView.context,
+                    R.drawable.ic_plus
+                )
+            )
+            tagView.getChildAt(2).setOnClickListener { v: View ->
+                //                data.suggestedTopicsList?.get(i)?.isFollowing = "1"
+                followUnfollowTopics(
+                    v.tag as String,
+                    v.parent as RelativeLayout,
+                    1
+                )
+            }
+        } else {
+            tagView.getChildAt(0).tag = selectedTopic
+            tagView.getChildAt(2).tag = selectedTopic
+            (tagView.getChildAt(2) as ImageView)
+                .setImageDrawable(
+                    ContextCompat.getDrawable(
+                        tagView.context,
+                        R.drawable.ic_tick
+                    )
+                )
+            tagView.getChildAt(2).setOnClickListener { v: View ->
+                //                data.suggestedTopicsList?.get(i)?.isFollowing = "0"
+                followUnfollowTopics(
+                    v.tag as String,
+                    v.parent as RelativeLayout,
+                    0
+                )
+            }
+        }
+        val retro = BaseApplication.getInstance().retrofit
+        val topicsCategoryApi = retro.create(
+            TopicsCategoryAPI::class.java
+        )
+        val call = topicsCategoryApi
+            .followCategories(
+                SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).dynamoId,
+                followUnfollowCategoriesRequest
+            )
+        call.enqueue(object : Callback<FollowUnfollowCategoriesResponse> {
+            override fun onFailure(call: Call<FollowUnfollowCategoriesResponse>, t: Throwable) {
+
+            }
+
+            override fun onResponse(
+                call: Call<FollowUnfollowCategoriesResponse>,
+                response: Response<FollowUnfollowCategoriesResponse>
+            ) {
+            }
+        })
+    }
+
     interface RecyclerViewClickListener {
         fun onClick(view: View, position: Int)
         fun onFollowSuccess()
         fun onTorcaiAdClick(request: WebResourceRequest)
-    }
-
-    private fun processBloggersData(
-        holder: FollowFollowingCarousel,
-        bloggersList: ArrayList<ContributorListResult>,
-        position: Int
-    ) {
-        try {
-            if (bloggersList.isNotEmpty()) {
-                mixFeedList?.get(position)?.carouselBloggerList = bloggersList
-                mixFeedList?.get(position)?.carouselBloggerList?.let {
-                    populateCarouselFollowFollowing(
-                        holder,
-                        it
-                    )
-                }
-            }
-        } catch (e: Exception) {
-            FirebaseCrashlytics.getInstance().recordException(e)
-            Log.d("MC4kException", Log.getStackTraceString(e))
-        }
-    }
-
-    private fun populateCarouselFollowFollowing(
-        holder: FollowFollowingCarousel,
-        carouselList: ArrayList<ContributorListResult>
-    ) {
-        if (carouselList.isEmpty()) {
-            holder.scroll.visibility = View.GONE
-            return
-        } else {
-            holder.scroll.visibility = View.VISIBLE
-        }
-        if (carouselList.size >= 1) {
-            holder.carosalContainer1.visibility = View.VISIBLE
-            updateCarousel(
-                holder.authorFollowTextView1,
-                holder.authorImageView1,
-                holder.authorNameTextView1,
-                holder.authorRankTextView1,
-                carouselList[0]
-            )
-        }
-        if (carouselList.size >= 2) {
-            holder.carosalContainer2.visibility = View.VISIBLE
-            updateCarousel(
-                holder.authorFollowTextView2,
-                holder.authorImageView2,
-                holder.authorNameTextView2,
-                holder.authorRankTextView2,
-                carouselList[1]
-            )
-        }
-        if (carouselList.size >= 3) {
-            holder.carosalContainer3.visibility = View.VISIBLE
-            updateCarousel(
-                holder.authorFollowTextView3,
-                holder.authorImageView3,
-                holder.authorNameTextView3,
-                holder.authorRankTextView3,
-                carouselList[2]
-            )
-        }
-        if (carouselList.size >= 4) {
-            holder.carosalContainer4.visibility = View.VISIBLE
-            updateCarousel(
-                holder.authorFollowTextView4,
-                holder.authorImageView4,
-                holder.authorNameTextView4,
-                holder.authorRankTextView4,
-                carouselList[3]
-            )
-        }
-        if (carouselList.size >= 5) {
-            holder.carosalContainer5.visibility = View.VISIBLE
-            updateCarousel(
-                holder.authorFollowTextView5,
-                holder.authorImageView5,
-                holder.authorNameTextView5,
-                holder.authorRankTextView5,
-                carouselList[4]
-            )
-        }
-        if (carouselList.size >= 6) {
-            holder.carosalContainer6.visibility = View.VISIBLE
-            updateCarousel(
-                holder.authorFollowTextView6,
-                holder.authorImageView6,
-                holder.authorNameTextView6,
-                holder.authorRankTextView6,
-                carouselList[5]
-            )
-        }
-        holder.scroll.fullScroll(HorizontalScrollView.FOCUS_LEFT)
-    }
-
-    private fun updateCarousel(
-        followTextView: TextView,
-        authorImageView: ImageView,
-        authorNameTextView: TextView,
-        authorRanktextView: TextView,
-        contributorItem: ContributorListResult
-    ) {
-        Picasso.get().load(contributorItem.profilePic.clientApp).error(R.drawable.default_article)
-            .into(authorImageView, object : com.squareup.picasso.Callback {
-                override fun onSuccess() {
-                }
-
-                override fun onError(e: Exception?) {
-                }
-            })
-        if (contributorItem.isFollowed == 1) {
-            updateTextViewForFollowUnfollow(followTextView, 1)
-        } else {
-            updateTextViewForFollowUnfollow(followTextView, 0)
-        }
-        authorNameTextView.text = contributorItem.firstName.trim().toLowerCase().capitalize()
-            .plus(" " + contributorItem.lastName.trim().toLowerCase().capitalize())
-
-        authorRanktextView.text =
-            authorRanktextView.context.resources.getString(R.string.myprofile_rank_label).toLowerCase().capitalize() +
-                ":" + contributorItem.rank
-    }
-
-    private fun updateTextViewForFollowUnfollow(followTextView: TextView, status: Int) {
-        if (status == 1) {
-            followTextView.setTextColor(
-                ContextCompat.getColor(
-                    followTextView.context,
-                    R.color.color_BABABA
-                )
-            )
-            val myGrad: GradientDrawable =
-                followTextView.background as GradientDrawable
-            myGrad.setStroke(
-                2,
-                ContextCompat.getColor(followTextView.context, R.color.color_BABABA)
-            )
-            myGrad.setColor(ContextCompat.getColor(followTextView.context, R.color.white))
-            followTextView.text =
-                followTextView.context.getString(R.string.ad_following_author).toLowerCase().capitalize()
-        } else {
-            followTextView.setTextColor(
-                ContextCompat.getColor(
-                    followTextView.context,
-                    R.color.white
-                )
-            )
-            val myGrad: GradientDrawable =
-                followTextView.background as GradientDrawable
-            myGrad.setStroke(2, ContextCompat.getColor(followTextView.context, R.color.app_red))
-            myGrad.setColor(ContextCompat.getColor(followTextView.context, R.color.app_red))
-            followTextView.text =
-                followTextView.context.getString(R.string.ad_follow_author).toLowerCase().capitalize()
-        }
-    }
-
-    private fun unFollowApiCall(
-        authorId: String?,
-        position: Int,
-        index: Int,
-        followFollowingTextView: TextView
-    ) {
-        mixFeedList?.get(position)?.carouselBloggerList?.get(index)?.isFollowed = 0
-        updateTextViewForFollowUnfollow(followFollowingTextView, 0)
-        val retrofit = BaseApplication.getInstance().retrofit
-        val followApi = retrofit.create(FollowAPI::class.java)
-        val request = FollowUnfollowUserRequest()
-        request.followee_id = authorId
-        val followUnfollowUserResponseCall = followApi.unfollowUserV2(request)
-        followUnfollowUserResponseCall.enqueue(object : Callback<FollowUnfollowUserResponse> {
-            override fun onFailure(call: Call<FollowUnfollowUserResponse>, t: Throwable) {
-            }
-
-            override fun onResponse(
-                call: Call<FollowUnfollowUserResponse>,
-                response: Response<FollowUnfollowUserResponse>
-            ) {
-                mListener.onFollowSuccess()
-            }
-        })
-    }
-
-    private fun followApiCall(
-        authorId: String?,
-        position: Int,
-        index: Int,
-        followFollowingTextView: TextView
-    ) {
-        Utils.shareEventTracking(
-            followFollowingTextView.context,
-            "Main Follow Feed",
-            "Follow_Android",
-            "MainFollowFeed_C_Follow"
-        )
-        mixFeedList?.get(position)?.carouselBloggerList?.get(index)?.isFollowed = 1
-        updateTextViewForFollowUnfollow(followFollowingTextView, 1)
-        val retrofit = BaseApplication.getInstance().retrofit
-        val followApi = retrofit.create(FollowAPI::class.java)
-        val request = FollowUnfollowUserRequest()
-        request.followee_id = authorId
-        val followUnfollowUserResponseCall = followApi.followUserV2(request)
-        followUnfollowUserResponseCall.enqueue(object : Callback<FollowUnfollowUserResponse> {
-            override fun onFailure(call: Call<FollowUnfollowUserResponse>, t: Throwable) {
-            }
-
-            override fun onResponse(
-                call: Call<FollowUnfollowUserResponse>,
-                response: Response<FollowUnfollowUserResponse>
-            ) {
-                val followIntent = Intent(
-                    followFollowingTextView.context,
-                    SyncUserFollowingList::class.java
-                )
-                followFollowingTextView.context?.startService(followIntent)
-            }
-        })
     }
 
     companion object {
@@ -1388,9 +1194,14 @@ class UserContentAdapter(
         private val CONTENT_TYPE_SHORT_STORY = 1
         private val CONTENT_TYPE_ARTICLE = 2
         private val CONTENT_TYPE_VIDEO = 3
-        private val CONTENT_TYPE_SUGGESTED_BLOGGERS = 4
         private val CONTENT_TYPE_RECENT_LIVE_STREAM = 5
         private val CONTENT_TYPE_UPCOMING_LIVE_STREAM = 6
         private val CONTENT_TYPE_TORCAI_ADS = 7
+        private val CONTENT_TYPE_SUGGESTED_CREATORS_FOLLOWED_BY_FRIENDS = 8
+        private val CONTENT_TYPE_SUGGESTED_CREATORS_BASED_ON_TOPICS = 9
+        private val CONTENT_TYPE_SUGGESTED_CREATORS_BASED_ON_ACTIVITY = 10
+        private val CONTENT_TYPE_SUGGESTED_CREATORS_TOP_RANKERS = 11
+        private val CONTENT_TYPE_SUGGESTED_TOPICS = 13
+        private val CONTENT_TYPE_FOLLOW_TOPICS_AND_CREATORS = 14
     }
 }

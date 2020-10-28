@@ -11,7 +11,6 @@ import com.mycity4kids.models.user.UserInfo;
 import com.mycity4kids.models.version.RateVersion;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import org.json.JSONArray;
@@ -115,7 +114,9 @@ public class SharedPrefUtils {
     private static final String ADVERTISEMENT_ID = "advertisementId";
     private static final String IP_ADDRESS = "ipAddress";
     private static final String FOLLOWING_JSON = "followingJson";
+    private static final String FOLLOWING_TOPICS_JSON = "followingTopicsJson";
     private static final String USER_JOURNEY_COMPLETED_FLAG = "userJourneyCompletedFlag";
+    private static final String BLOGGER_GOLD_POPUP_FLAG = "bloggerGoldPopupFlag";
 
     public static void clearPrefrence(Context context) {
         SharedPreferences sharedPref = context.getSharedPreferences(COMMON_PREF_FILE, Context.MODE_PRIVATE);
@@ -232,7 +233,7 @@ public class SharedPrefUtils {
         user.setRequestMedium(sharedPref.getString(REQUEST_MEDIUM, ""));
         user.setEmailValidated(sharedPref.getString(EMAIL_VALIDATED, "0"));
 
-        JSONArray jsonArray = null;
+        JSONArray jsonArray;
         try {
             jsonArray = new JSONArray(sharedPref.getString("languages", ""));
             ArrayList<String> list = new ArrayList<String>();
@@ -240,11 +241,8 @@ public class SharedPrefUtils {
                 list.add(jsonArray.getString(i));
             }
             user.setVideoPreferredLanguages(list);
-
         } catch (JSONException e) {
-            e.printStackTrace();
         }
-
         return user;
     }
 
@@ -506,18 +504,6 @@ public class SharedPrefUtils {
     public static String getLanguageFilters(Context context) {
         SharedPreferences sharedPref = context.getSharedPreferences(COMMON_PREF_FILE, Context.MODE_PRIVATE);
         return sharedPref.getString(LANGUAGE_FILTER, "0");
-    }
-
-    public static void setFollowedTopicsCount(Context context, int topicCount) {
-        SharedPreferences sharedPref = context.getSharedPreferences(COMMON_PREF_FILE, Context.MODE_PRIVATE);
-        Editor editor = sharedPref.edit();
-        editor.putInt(FOLLOWED_TOPIC_COUNT, topicCount);
-        editor.commit();
-    }
-
-    public static int getFollowedTopicsCount(Context context) {
-        SharedPreferences sharedPref = context.getSharedPreferences(COMMON_PREF_FILE, Context.MODE_PRIVATE);
-        return sharedPref.getInt(FOLLOWED_TOPIC_COUNT, 0);
     }
 
     public static void setBecomeBloggerFlag(Context context, boolean flag) {
@@ -837,6 +823,22 @@ public class SharedPrefUtils {
         return (sharedPref.getString(IP_ADDRESS, ""));
     }
 
+    public static void setFollowingTopicsJson(Context context, String followingJson) {
+        SharedPreferences sharedPref = context.getSharedPreferences(COMMON_PREF_FILE, Context.MODE_PRIVATE);
+        Editor editor = sharedPref.edit();
+        editor.putString(FOLLOWING_TOPICS_JSON, followingJson);
+        editor.commit();
+    }
+
+    public static Map<String, String> getFollowingTopicsJson(Context context) {
+        SharedPreferences sharedPref = context.getSharedPreferences(COMMON_PREF_FILE, Context.MODE_PRIVATE);
+        Map<String, String> retMap = new Gson().fromJson(
+                sharedPref.getString(FOLLOWING_TOPICS_JSON, "{}"), new TypeToken<HashMap<String, String>>() {
+                }.getType()
+        );
+        return retMap;
+    }
+
     public static void setFollowingJson(Context context, String followingJson) {
         SharedPreferences sharedPref = context.getSharedPreferences(COMMON_PREF_FILE, Context.MODE_PRIVATE);
         Editor editor = sharedPref.edit();
@@ -879,4 +881,15 @@ public class SharedPrefUtils {
         return sharedPreferences.getBoolean(USER_JOURNEY_COMPLETED_FLAG, false);
     }
 
+    public static boolean isBloggerGoldPopShown(Context context) {
+        SharedPreferences sharedPreferences = context.getSharedPreferences(COMMON_PREF_FILE, Context.MODE_PRIVATE);
+        return sharedPreferences.getBoolean(BLOGGER_GOLD_POPUP_FLAG, false);
+    }
+
+    public static void setBloggerGoldPopShown(Context context, Boolean flag) {
+        SharedPreferences sharedPreferences = context.getSharedPreferences(COMMON_PREF_FILE, Context.MODE_PRIVATE);
+        Editor editor = sharedPreferences.edit();
+        editor.putBoolean(BLOGGER_GOLD_POPUP_FLAG, flag);
+        editor.commit();
+    }
 }

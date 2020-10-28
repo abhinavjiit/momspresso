@@ -28,8 +28,12 @@ import com.mycity4kids.utils.AppUtils;
 import com.mycity4kids.utils.ConnectivityUtils;
 import com.mycity4kids.utils.StringUtils;
 import java.io.FileInputStream;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Map;
+import org.json.JSONArray;
+import org.json.JSONObject;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Retrofit;
@@ -103,10 +107,11 @@ public class SyncUserInfoService extends IntentService {
                     userInfo.setLast_name(responseData.getData().get(0).getResult().getLastName());
                     userInfo.setProfilePicUrl(
                             responseData.getData().get(0).getResult().getProfilePicUrl().getClientApp());
-                    userInfo.setSessionId(responseData.getData().get(0).getResult().getSessionId());
                     userInfo.setSubscriptionEmail(responseData.getData().get(0).getResult().getSubscriptionEmail());
-                    userInfo.setVideoPreferredLanguages(responseData.getData().get(0).getResult().getVideoPreferredLanguages());
+                    userInfo.setVideoPreferredLanguages(
+                            responseData.getData().get(0).getResult().getVideoPreferredLanguages());
                     SharedPrefUtils.setUserDetailModel(BaseApplication.getAppContext(), userInfo);
+                    processFollowingTopicListResponse(responseData.getData().get(0).getResult().getFollowCategories());
 
                     FileInputStream fileInputStream = openFileInput(AppConstants.LANGUAGES_JSON_FILE);
                     String fileContent = AppUtils.convertStreamToString(fileInputStream);
@@ -154,4 +159,31 @@ public class SyncUserInfoService extends IntentService {
             FirebaseCrashlytics.getInstance().recordException(t);
         }
     };
+
+    private void processFollowingTopicListResponse(ArrayList<String> responseData) {
+        HashMap<String, String> map = new HashMap<>();
+        try {
+            if (responseData != null) {
+                for (int i = 0; i < responseData.size(); i++) {
+                    if (responseData.get(i) != null && !responseData.get(i).trim().isEmpty()) {
+                        map.put(responseData.get(i), "");
+                    }
+                }
+                Gson gsonObj = new Gson();
+                String followingJson = gsonObj.toJson(map);
+                Log.e("followedTopics", followingJson);
+                SharedPrefUtils.setFollowingTopicsJson(this, followingJson);
+            } else {
+                Gson gsonObj = new Gson();
+                String followingJson = gsonObj.toJson(map);
+                Log.e("followedTopics", followingJson);
+                SharedPrefUtils.setFollowingTopicsJson(this, followingJson);
+            }
+        } catch (Exception e) {
+            Gson gsonObj = new Gson();
+            String followingJson = gsonObj.toJson(map);
+            Log.e("followedTopics", followingJson);
+            SharedPrefUtils.setFollowingTopicsJson(this, followingJson);
+        }
+    }
 }

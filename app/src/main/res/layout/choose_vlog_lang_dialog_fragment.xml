@@ -6,13 +6,12 @@
   android:layout_marginStart="@dimen/space_10"
   android:layout_marginEnd="@dimen/space_10">
 
-
   <RelativeLayout
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
-    android:layout_marginStart="@dimen/space_15"
-    android:layout_marginTop="@dimen/space_15"
-    android:layout_marginEnd="@dimen/space_15"
+    android:layout_marginStart="12dp"
+    android:layout_marginTop="12dp"
+    android:layout_marginEnd="12dp"
     android:background="@drawable/rootlayout_with_rounded_corner">
 
     <com.mycity4kids.widget.CustomFontTextView
@@ -23,7 +22,7 @@
       android:layout_marginTop="@dimen/space_20"
       android:layout_marginEnd="@dimen/space_16"
       android:gravity="center_horizontal"
-      android:text="Video viewing preferences"
+      android:text="@string/select_video_preferences"
       android:textColor="@color/campaign_4A4A4A"
       android:textSize="18sp"
       app:fontName="Roboto-Bold.ttf" />
@@ -37,7 +36,7 @@
       android:layout_marginTop="@dimen/space_10"
       android:layout_marginEnd="@dimen/space_16"
       android:gravity="center_horizontal"
-      android:text="Watch videos in languages of your choice"
+      android:text="@string/watch_video_lang_choice"
       android:textColor="@color/gray2"
       android:textSize="14sp"
       app:fontName="Roboto-Regular.ttf" />
@@ -69,17 +68,14 @@
       app:fb_radius="4dp"
       app:fb_text="Continue"
       app:fb_textFont="Roboto-Bold.ttf" />
-
-
   </RelativeLayout>
-
 
   <androidx.appcompat.widget.AppCompatImageView
     android:id="@+id/cancel"
     android:layout_width="30dp"
     android:layout_height="30dp"
     android:layout_alignParentEnd="true"
-    android:elevation="@dimen/space_10"
+    android:elevation="4dp"
     android:src="@drawable/ic_close_pop_up"
     app:layout_constraintEnd_toEndOf="parent"
     app:layout_constraintTop_toTopOf="parent" />

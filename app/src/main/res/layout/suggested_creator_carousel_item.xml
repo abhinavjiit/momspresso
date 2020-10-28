@@ -1,0 +1,157 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+  xmlns:app="http://schemas.android.com/apk/res-auto"
+  android:layout_width="150dp"
+  android:layout_height="wrap_content"
+  android:layout_marginStart="4dp"
+  android:layout_marginTop="2dp"
+  android:layout_marginEnd="4dp"
+  android:layout_marginBottom="4dp"
+  app:cardCornerRadius="8dp"
+  app:cardElevation="2dp">
+
+  <LinearLayout
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_gravity="center"
+    android:gravity="center"
+    android:orientation="vertical"
+    android:padding="@dimen/space_10"
+    android:visibility="visible">
+
+    <com.mikhaellopez.circularimageview.CircularImageView
+      android:id="@+id/authorImageView"
+      android:layout_width="48dp"
+      android:layout_height="48dp"
+      android:layout_marginTop="8dp"
+      android:src="@drawable/default_article"
+      app:civ_border="false"
+      app:civ_shadow="false" />
+
+    <com.mycity4kids.widget.CustomFontTextView
+      android:id="@+id/authorNameTextView"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:layout_marginStart="6dp"
+      android:layout_marginTop="6dp"
+      android:layout_marginEnd="6dp"
+      android:layout_marginBottom="2dp"
+      android:ellipsize="end"
+      android:gravity="center"
+      android:lines="1"
+      android:text="author"
+      android:textColor="#515151"
+      android:textStyle="bold" />
+
+    <RelativeLayout
+      android:id="@+id/mutualFriendsContainer"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:layout_marginTop="6dp">
+      <RelativeLayout
+        android:id="@+id/imageContainer"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+        <com.mikhaellopez.circularimageview.CircularImageView
+          android:id="@+id/friend1ImageView"
+          android:layout_width="20dp"
+          android:layout_height="20dp"
+          android:src="@drawable/default_article"
+          app:civ_border="false"
+          app:civ_shadow="false" />
+        <com.mikhaellopez.circularimageview.CircularImageView
+          android:id="@+id/friend2ImageView"
+          android:layout_width="20dp"
+          android:layout_height="20dp"
+          android:layout_marginStart="14dp"
+          android:src="@drawable/default_article"
+          app:civ_border="false"
+          app:civ_shadow="false" />
+        <com.mikhaellopez.circularimageview.CircularImageView
+          android:id="@+id/friend3ImageView"
+          android:layout_width="20dp"
+          android:layout_height="20dp"
+          android:layout_marginStart="28dp"
+          android:src="@drawable/default_article"
+          app:civ_border="false"
+          app:civ_shadow="false" />
+      </RelativeLayout>
+      <TextView
+        android:id="@+id/followersCountTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
+        android:layout_marginStart="4dp"
+        android:layout_toEndOf="@+id/imageContainer"
+        android:text=""
+        android:textColor="#9B9B9B"
+        android:textSize="12sp" />
+    </RelativeLayout>
+
+    <com.mycity4kids.widget.CustomFontTextView
+      android:id="@+id/authorRankTextView"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:layout_marginTop="6dp"
+      android:text="Rank 1"
+      android:textColor="#E38E9C"
+      android:textSize="14sp"
+      app:fontName="Roboto-Medium.ttf" />
+
+    <com.mycity4kids.widget.CustomFontTextView
+      android:id="@+id/authorPostsTextView"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:layout_marginTop="2dp"
+      android:text="Posts 85"
+      android:textColor="#9B9B9B"
+      android:textSize="12sp"
+      app:fontName="Roboto-Medium.ttf" />
+
+    <com.mycity4kids.widget.MomspressoButtonWidget
+      android:id="@+id/authorFollowTextView"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:layout_marginStart="5dp"
+      android:layout_marginTop="@dimen/space_5"
+      android:layout_marginEnd="@dimen/space_5"
+      android:layout_marginBottom="@dimen/space_5"
+      android:elevation="0dp"
+      android:paddingStart="20dp"
+      android:paddingTop="6dp"
+      android:paddingEnd="20dp"
+      android:paddingBottom="6dp"
+      android:text="@string/all_follow"
+      app:borderColor="@color/app_red"
+      app:borderthickness="1dp"
+      app:elevation="0dp"
+      app:fb_borderColor="@color/app_red"
+      app:fb_borderWidth="1dp"
+      app:fb_defaultColor="@color/white_color"
+      app:fb_disabledColor="@color/app_red"
+      app:fb_disabledTextColor="@color/white_color"
+      app:fb_radius="8dp"
+      app:fb_textColor="@color/app_red"
+      app:fb_textSize="14sp"
+      app:gravity="center"
+      app:radius="4dp"
+      app:textStyle="bold" />
+
+    <!--    <com.mycity4kids.widget.MomspressoButtonWidget-->
+    <!--      android:id="@+id/authorFollowTextView"-->
+    <!--      android:layout_width="wrap_content"-->
+    <!--      android:layout_height="wrap_content"-->
+    <!--      android:layout_marginTop="12dp"-->
+    <!--      android:layout_marginBottom="6dp"-->
+    <!--      android:background="@drawable/red_rounded_border_shape"-->
+    <!--      android:paddingStart="16dp"-->
+    <!--      android:paddingTop="6dp"-->
+    <!--      android:paddingEnd="16dp"-->
+    <!--      android:paddingBottom="6dp"-->
+    <!--      android:text="@string/all_follow"-->
+    <!--      android:textColor="@color/white"-->
+    <!--      android:textSize="12sp"-->
+    <!--      app:fontName="Roboto-Medium.ttf" />-->
+
+  </LinearLayout>
+</androidx.cardview.widget.CardView>

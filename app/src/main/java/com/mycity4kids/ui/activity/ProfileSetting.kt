@@ -28,6 +28,7 @@ import com.mycity4kids.models.campaignmodels.TotalPayoutResponse
 import com.mycity4kids.preference.SharedPrefUtils
 import com.mycity4kids.retrofitAPIsInterfaces.CampaignAPI
 import com.mycity4kids.retrofitAPIsInterfaces.LoginRegistrationAPI
+import com.mycity4kids.ui.fragment.ChooseVideosLanguageDialogFragment
 import com.mycity4kids.ui.login.LoginActivity
 import com.mycity4kids.ui.rewards.activity.RewardsContainerActivity
 import com.mycity4kids.utils.AppUtils
@@ -164,7 +165,9 @@ class ProfileSetting : BaseActivity(), GoogleApiClient.OnConnectionFailedListene
                 startActivity(socialIntent)
             }
             R.id.vlogsLanguageSettingTextView -> {
-
+                val chooseVideosLangDialogFragment = ChooseVideosLanguageDialogFragment()
+                val fm = supportFragmentManager
+                chooseVideosLangDialogFragment.show(fm, "choose language")
             }
             R.id.chooseTopicsTextView -> {
                 val subscribeTopicIntent = Intent(

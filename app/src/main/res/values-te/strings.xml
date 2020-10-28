@@ -1211,7 +1211,7 @@ Thank you! We will be reviewing your story. You can expect to hear from us withi
   <string name="profile_featured_more">+%d More</string>
   <string name="all_drafts">Drafts</string>
   <string name="all_story">100 Word Story</string>
-  <string name="all_blogs">Blogs</string>
+  <string name="all_blogs">బ్లాగ్స్</string>
   <string name="all_videos">Videos</string>
   <string name="profile_post_featured">Post featured on the following collections</string>
   <string name="dialog_fragment_add_collection_select_collection">సేకరణను ఎంచుకోండి</string>
@@ -1429,12 +1429,12 @@ Thank you! We will be reviewing your story. You can expect to hear from us withi
   <string name="leaderboard_btn">View Leaderboard</string>
   <string name="total_blog_view">మొత్తం ఆర్గానిక్ బ్లాగ్ వీక్షణలు</string>
   <string name="total_vlog_view">మొత్తం ఆర్గానిక్ వ్లాగ్ వీక్షణలు</string>
-  <string name="leaderboard">Leaderboard</string>
+  <string name="leaderboard">లీడర్బోర్డ్ </string>
   <string name="leaderboard_blogs">BLOGS</string>
   <string name="leaderboard_vlogs">VLOG</string>
   <string name="webview_hack_text">మీ బ్లాగులు &amp; వ్లాగ్‌లకు ఆర్గానిక్ వ్యూస్ పొందడానికి చిట్కాలు:</string>
   <string name="webview_term_text">నిబంధనలు మరియు షరతులు</string>
-  <string name="earning_calculator">Earning Calculator</string>
+  <string name="earning_calculator">కాలిక్యులేటర్</string>
   <string name="click_here_btn">Click to view leaderboard</string>
   <string name="checkout_growth_hack">Checkout the growth hacks</string>
   <string name="blogger_gold_about_text">మా 10వ వార్షికోత్సవ సంబరాల ప్రయాణంలో మీరు భాగస్వాములు కావాలని కోరుకుంటున్నాము!</string>
@@ -1497,4 +1497,11 @@ Thank you! We will be reviewing your story. You can expect to hear from us withi
   <string name="tooltip_liked_the_blog">వ్యాసం నచ్చిందా? వారి అద్భుతమైన పోస్ట్‌లను ఎప్పటికీ కోల్పోకుండా ఉండటానికి క్రియేటర్ను అనుసరించండి</string>
   <string name="coachmark_vlogs_2">మంచి థంబ్ నైల్  మరిన్ని వీక్షణలను ఆకర్షిస్తుంది </string>
   <string name="tooltip_groups">మీకు నచ్చిన సమూహాలలో చేరండి. సంఘంతో సంభాషించడం ప్రారంభించండి!</string>
+  <string name="video_language_settings">వీడియో భాషా సెట్టింగ్‌లు</string>
+  <string name="all_intrumental">వాయిద్యాలు</string>
+  <string name="select_video_preferences">వీడియో ప్రాధాన్యతలను ఎంచుకోండి</string>
+  <string name="please_select_lang">దయచేసి భాషను ఎంచుకోండి</string>
+  <string name="watch_video_lang_choice">మీకు నచ్చిన భాషలో వీడియోలను చూడండి</string>
+  <string name="know_more">మరింత తెలుసుకోండి</string>
+  <string name="all_vlogs">వ్లాగ్స్</string>
 </resources>

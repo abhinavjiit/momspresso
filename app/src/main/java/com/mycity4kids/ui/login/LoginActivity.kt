@@ -237,7 +237,6 @@ class LoginActivity : BaseActivity(), IFacebookUser, View.OnClickListener {
         model.first_name = userDetailResult.firstName
         model.last_name = userDetailResult.lastName
         model.profilePicUrl = userDetailResult.profilePicUrl.clientApp
-        model.sessionId = userDetailResult.sessionId
         model.isLangSelection = userDetailResult.isLangSelection
         model.userType = userDetailResult.userType
         model.blogTitle = userDetailResult.blogTitle
@@ -247,7 +246,6 @@ class LoginActivity : BaseActivity(), IFacebookUser, View.OnClickListener {
         if (cityIdFromLocation == AppConstants.OTHERS_CITY_ID) {
             model.cityId = userDetailResult.cityId
         }
-        model.sessionId = userDetailResult.sessionId
         model.loginMode = loginMode
         model.videoPreferredLanguages = userDetailResult.videoPreferredLanguages
         SharedPrefUtils.setUserDetailModel(BaseApplication.getAppContext(), model)
@@ -352,7 +350,6 @@ class LoginActivity : BaseActivity(), IFacebookUser, View.OnClickListener {
                         model.first_name = responseData.data[0].result.firstName
                         model.last_name = responseData.data[0].result.lastName
                         model.profilePicUrl = responseData.data[0].result.profilePicUrl.clientApp
-                        model.sessionId = responseData.data[0].result.sessionId
                         model.isLangSelection = responseData.data[0].result.isLangSelection
                         model.userType = responseData.data[0].result.userType
                         model.gender = "" + responseData.data[0].result.gender
@@ -363,7 +360,6 @@ class LoginActivity : BaseActivity(), IFacebookUser, View.OnClickListener {
                         if (cityIdFromLocation == AppConstants.OTHERS_CITY_ID) {
                             model.cityId = responseData.data[0].result.cityId
                         }
-                        model.sessionId = responseData.data[0].result.sessionId
                         model.loginMode = loginMode
                         model.videoPreferredLanguages = responseData.data[0].result.videoPreferredLanguages
                         SharedPrefUtils.setUserDetailModel(BaseApplication.getAppContext(), model)

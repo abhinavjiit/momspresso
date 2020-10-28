@@ -2,7 +2,6 @@ package com.mycity4kids.retrofitAPIsInterfaces;
 
 import com.mycity4kids.models.LanguageSelectionData;
 import com.mycity4kids.models.Topics;
-import com.mycity4kids.models.TopicsResponse;
 import com.mycity4kids.models.collectionsModels.TutorialCollectionsListModel;
 import com.mycity4kids.models.request.AddCommentRequest;
 import com.mycity4kids.models.request.ArticleDetailRequest;
@@ -95,7 +94,8 @@ public interface VlogsListingAndDetailsAPI {
     @GET("v2/videos/related/{videoId}")
     Call<VlogsListingResponse> getRelatedVlogs(@Path("videoId") String videoId,
             @Query("start") int start,
-            @Query("end") int end);
+            @Query("end") int end,
+            @Query("preferredLanguages") ArrayList<String> langs);
 
     @GET("/v1/collections/{collectionId}")
     Call<BaseResponseGeneric<TutorialCollectionsListModel>> getTutorialCollectionItems(
@@ -103,7 +103,6 @@ public interface VlogsListingAndDetailsAPI {
             @Query("start") int start,
             @Query("offset") int offset
     );
-
 
     @GET("v2/videos/")
     Call<VlogsListingResponse> getVlogsListForWinner(@Query("start") int start,
@@ -123,9 +122,6 @@ public interface VlogsListingAndDetailsAPI {
 
     @POST("v2/videos/")
     Call<ResponseBody> publishHomeVideo(@Body UploadVideoRequest uploadVideoRequest);
-
-    @GET("/v1/categories/videochallenges/")
-    Call<TopicsResponse> getVlogChallenges();
 
     @GET("v1/users/vlog/bookmarkVideo/")
     Call<AddBookmarkResponse> checkFollowingBookmarkStatus(@Body ArticleDetailRequest articleDetailRequest);
@@ -153,13 +149,12 @@ public interface VlogsListingAndDetailsAPI {
     @POST("http://eventsapi.momspresso.com/datapipeline/")
     Call<ResponseBody> addVlogsCreateIntentEvent(@Body VlogsEventRequest vlogsEventRequest);
 
-    //35.200.142.199/personalised/vlogs/7ebbffc86dba4c8a82750278024d1332?start=0&end=10
     @GET("/personalised/vlogs/{userId}")
     Call<MomVlogListingResponse> getVlogsData(@Path("userId") String userId,
             @Query("start") int start,
-            @Query("end") int end);
+            @Query("end") int end,
+            @Query("preferredLanguages") ArrayList<String> langs);
 
-    //35.200.142.199/personalised/vloggers/7ebbffc86dba4c8a82750278024d1332?start=0&end=10&is_top=1
     @GET("/personalised/vloggers/{userId}")
     Call<MomVlogersDetailResponse> getVlogersData(@Path("userId") String userId,
             @Query("start") int start,
@@ -172,14 +167,10 @@ public interface VlogsListingAndDetailsAPI {
             @Query("end") int end,
             @Query("is_gold") int isGold);
 
-    //'https://api.momspresso.com/v2/users/916538ec877f455cabd29dacef2f22b4?fn=4'
-
     @PUT("/v2/users/{userId}")
     Call<ResponseBody> postLanguages(@Path("userId") String userId,
             @Query("fn") int fn,
             @Body LanguageSelectionData body);
-
-// 'https://stagingapi.momspresso.com/v2/videos/?start=0&end=8&sort=0&type=3&preferredLanguages=ta,bn'
 
     @GET("/v2/videos/")
     Call<VlogsListingResponse> getLangWiseVlogs(@Query("start") int start,
@@ -187,6 +178,5 @@ public interface VlogsListingAndDetailsAPI {
             @Query("sort") int sort,
             @Query("type") int type,
             @Query("category_id") String categoryId,
-            @Query("preferredLanguages")
-                    String langs);
+            @Query("preferredLanguages") ArrayList<String> langs);
 }

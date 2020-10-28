@@ -34,7 +34,7 @@
     android:id="@+id/languageRecyclerView"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:layout_above="@+id/continueTextView"
+    android:layout_above="@+id/continueButtonWidget"
     android:layout_below="@+id/selectLangtextView"
     android:layout_marginStart="8dp"
     android:layout_marginTop="20dp"

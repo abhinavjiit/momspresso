@@ -58,24 +58,21 @@
         android:textColor="@color/grey_faded"
         app:fontName="oswald.ttf" />
 
-      <com.mycity4kids.widget.CustomFontTextView
+      <ImageView
         android:id="@+id/view_img"
         android:layout_width="@dimen/space_20"
         android:layout_height="@dimen/space_20"
-        android:layout_alignParentEnd="true"
-        android:layout_marginTop="5dp"
-        android:layout_marginEnd="30dp"
-        android:background="@drawable/leaderboard_view"
-        app:fontName="oswald.ttf" />
+        android:layout_marginTop="6dp"
+        android:layout_toStartOf="@+id/view_count"
+        android:src="@drawable/ic_views" />
 
       <com.mycity4kids.widget.CustomFontTextView
         android:id="@+id/view_count"
-        android:layout_width="wrap_content"
+        android:layout_width="56dp"
         android:layout_height="wrap_content"
         android:layout_alignParentEnd="true"
         android:layout_marginStart="10dp"
         android:layout_marginTop="5dp"
-        android:layout_marginEnd="20dp"
         android:textColor="@color/app_red"
         app:fontName="oswald.ttf" />
 
@@ -95,6 +92,7 @@
         android:layout_width="20dp"
         android:layout_height="20dp"
         android:layout_alignTop="@+id/user_rank"
+        android:layout_marginEnd="8dp"
         android:layout_toStartOf="@+id/user_rank"
         android:src="@drawable/ic_arrow"
         android:visibility="gone" />

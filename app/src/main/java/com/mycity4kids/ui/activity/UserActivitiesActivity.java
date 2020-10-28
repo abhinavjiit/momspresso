@@ -1,18 +1,14 @@
 package com.mycity4kids.ui.activity;
 
 import android.os.Bundle;
-
-import com.google.android.material.tabs.TabLayout;
-
-import androidx.viewpager.widget.ViewPager;
-import androidx.appcompat.widget.Toolbar;
-
 import android.view.MenuItem;
 import android.widget.RelativeLayout;
-
-import com.mycity4kids.base.BaseActivity;
+import androidx.appcompat.widget.Toolbar;
+import androidx.viewpager.widget.ViewPager;
+import com.google.android.material.tabs.TabLayout;
 import com.mycity4kids.R;
 import com.mycity4kids.application.BaseApplication;
+import com.mycity4kids.base.BaseActivity;
 import com.mycity4kids.constants.Constants;
 import com.mycity4kids.preference.SharedPrefUtils;
 import com.mycity4kids.ui.adapter.UserActivitiesPagerAdapter;
@@ -46,20 +42,18 @@ public class UserActivitiesActivity extends BaseActivity {
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
 
-//        boolean isPrivateProfile = false;
         if (authorId.equals(SharedPrefUtils.getUserDetailModel(this).getDynamoId())) {
-//            isPrivateProfile = true;
             tabLayout.addTab(tabLayout.newTab().setText(getString(R.string.user_activities_tabs_recommended)));
             tabLayout.addTab(tabLayout.newTab().setText(getString(R.string.user_activities_tabs_comment)));
-            // tabLayout.addTab(tabLayout.newTab().setText(getString(R.string.user_activities_tabs_bookmark)));
             tabLayout.addTab(tabLayout.newTab().setText(getString(R.string.user_activities_tabs_watch_later)));
 
-            adapter = new UserActivitiesPagerAdapter(getSupportFragmentManager(), tabLayout.getTabCount(), authorId, true);
+            adapter = new UserActivitiesPagerAdapter(getSupportFragmentManager(), tabLayout.getTabCount(), authorId,
+                    true);
         } else {
-//            isPrivateProfile = false;
             tabLayout.addTab(tabLayout.newTab().setText(getString(R.string.user_activities_tabs_recommended)));
             tabLayout.addTab(tabLayout.newTab().setText(getString(R.string.user_activities_tabs_comment)));
-            adapter = new UserActivitiesPagerAdapter(getSupportFragmentManager(), tabLayout.getTabCount(), authorId, false);
+            adapter = new UserActivitiesPagerAdapter(getSupportFragmentManager(), tabLayout.getTabCount(), authorId,
+                    false);
         }
         AppUtils.changeTabsFont(tabLayout);
         viewPager.setAdapter(adapter);

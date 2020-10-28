@@ -1,26 +1,16 @@
 package com.mycity4kids.ui.activity;
 
-import android.accounts.NetworkErrorException;
 import android.content.Intent;
-import android.content.pm.PackageInfo;
 import android.os.Bundle;
-import android.util.Log;
 import android.widget.RelativeLayout;
 import com.google.firebase.crashlytics.FirebaseCrashlytics;
 import com.mycity4kids.R;
 import com.mycity4kids.application.BaseApplication;
 import com.mycity4kids.base.BaseActivity;
 import com.mycity4kids.constants.AppConstants;
-import com.mycity4kids.constants.Constants;
 import com.mycity4kids.gtmutils.Utils;
-import com.mycity4kids.models.response.FollowUnfollowCategoriesResponse;
 import com.mycity4kids.preference.SharedPrefUtils;
-import com.mycity4kids.retrofitAPIsInterfaces.TopicsCategoryAPI;
 import com.mycity4kids.utils.StringUtils;
-import java.util.ArrayList;
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Retrofit;
 
 /**
  * Created by kapil.vij on 13-08-2015.
@@ -43,93 +33,18 @@ public class LoadingActivity extends BaseActivity {
         FirebaseCrashlytics.getInstance().setUserId("" + SharedPrefUtils.getUserDetailModel(this).getDynamoId());
         FirebaseCrashlytics.getInstance()
                 .setCustomKey("email", "" + SharedPrefUtils.getUserDetailModel(this).getEmail());
-
-        navigateToDashboard();
         type = BaseApplication.getInstance().getBranchLink();
         navigateToDashboard();
     }
 
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);//64206,0  -1
-        if (resultCode == RESULT_OK) {
-            type = BaseApplication.getInstance().getBranchLink();
-            navigateToDashboard();
-        }
-    }
-
     public void navigateToDashboard() {
-        Retrofit retrofit = BaseApplication.getInstance().getRetrofit();
-        TopicsCategoryAPI topicsCategoryApi = retrofit.create(TopicsCategoryAPI.class);
-        Call<FollowUnfollowCategoriesResponse> call = topicsCategoryApi.getFollowedCategories(
-                SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId());
-        call.enqueue(getFollowedTopicsResponseCallback);
+        Intent intent = new Intent(LoadingActivity.this, DashboardActivity.class);
+        if (!StringUtils.isNullOrEmpty(type) && type.equals("true")) {
+            intent.putExtra("branchLink", AppConstants.BRANCH_DEEPLINK);
+        }
+        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
+        startActivity(intent);
+        finish();
     }
-
-    private Callback<FollowUnfollowCategoriesResponse> getFollowedTopicsResponseCallback =
-            new Callback<FollowUnfollowCategoriesResponse>() {
-                @Override
-                public void onResponse(Call<FollowUnfollowCategoriesResponse> call,
-                        retrofit2.Response<FollowUnfollowCategoriesResponse> response) {
-                    removeProgressDialog();
-                    if (null == response.body()) {
-                        NetworkErrorException nee = new NetworkErrorException(response.raw().toString());
-                        FirebaseCrashlytics.getInstance().recordException(nee);
-                        showToast(getString(R.string.server_went_wrong));
-                        return;
-                    }
-                    try {
-                        FollowUnfollowCategoriesResponse responseData = response.body();
-                        if (responseData.getCode() == 200 && Constants.SUCCESS.equals(responseData.getStatus())) {
-                            ArrayList<String> stringArrayList = (ArrayList<String>) responseData.getData();
-                            if (stringArrayList != null) {
-                                ArrayList<String> topicList = (ArrayList<String>) responseData.getData();
-                                PackageInfo packageInfo = getPackageManager().getPackageInfo(getPackageName(), 0);
-                                int version = packageInfo.versionCode;
-                                if (version > 100 && (topicList == null || topicList.size() < 1)) {
-                                    SharedPrefUtils
-                                            .setFollowTopicApproachChangeFlag(BaseApplication.getAppContext(), true);
-                                }
-                                SharedPrefUtils
-                                        .setFollowedTopicsCount(BaseApplication.getAppContext(), topicList.size());
-                            }
-                        } else {
-                            showToast(responseData.getReason());
-                        }
-
-                        Intent intent = new Intent(LoadingActivity.this, DashboardActivity.class);
-                        if (!StringUtils.isNullOrEmpty(type) && type.equals("true")) {
-                            intent.putExtra("branchLink", AppConstants.BRANCH_DEEPLINK);
-                        }
-                        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
-                        startActivity(intent);
-                        finish();
-                    } catch (Exception e) {
-                        FirebaseCrashlytics.getInstance().recordException(e);
-                        Log.d("MC4kException", Log.getStackTraceString(e));
-                        Intent intent = new Intent(LoadingActivity.this, DashboardActivity.class);
-                        if (!StringUtils.isNullOrEmpty(type) && type.equals("true")) {
-                            intent.putExtra("branchLink", AppConstants.BRANCH_DEEPLINK);
-                        }
-                        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
-                        startActivity(intent);
-                        finish();
-                    }
-                }
-
-                @Override
-                public void onFailure(Call<FollowUnfollowCategoriesResponse> call, Throwable t) {
-                    removeProgressDialog();
-                    FirebaseCrashlytics.getInstance().recordException(t);
-                    Log.d("MC4kException", Log.getStackTraceString(t));
-                    Intent intent = new Intent(LoadingActivity.this, DashboardActivity.class);
-                    if (!StringUtils.isNullOrEmpty(type) && type.equals("true")) {
-                        intent.putExtra("branchLink", AppConstants.BRANCH_DEEPLINK);
-                    }
-                    intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
-                    startActivity(intent);
-                    finish();
-                }
-            };
 
 }

@@ -193,7 +193,8 @@ class FollowingVideoTabFragment : BaseFragment(),
         val call = vlogsListingAndDetailsAPI.getVlogsData(
             SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).dynamoId,
             start,
-            end
+            end,
+            SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).videoPreferredLanguages
         )
         call.enqueue(object : Callback<MomVlogListingResponse> {
             override fun onFailure(call: Call<MomVlogListingResponse>, t: Throwable) {

@@ -49,10 +49,6 @@ public class UserDetailResult implements Parcelable {
     private ArrayList<LanguageRanksModel> ranks;
     @SerializedName("userBio")
     private String userBio = "";
-    @SerializedName("sessionId")
-    private String sessionId;
-    @SerializedName("phoneNumber")
-    private String phoneNumber;
     @SerializedName("phone")
     private PhoneDetails phone;
     @SerializedName("socialTokens")
@@ -115,6 +111,8 @@ public class UserDetailResult implements Parcelable {
     private String isTaggable = "1";
     @SerializedName("videoPreferredLanguages")
     private ArrayList<String> videoPreferredLanguages;
+    @SerializedName("followCategories")
+    private ArrayList<String> followCategories = new ArrayList<>();
 
     protected UserDetailResult(Parcel in) {
         id = in.readString();
@@ -133,8 +131,6 @@ public class UserDetailResult implements Parcelable {
         followingCount = in.readString();
         rank = in.readString();
         userBio = in.readString();
-        sessionId = in.readString();
-        phoneNumber = in.readString();
         isLangSelection = in.readString();
         subscriptionEmail = in.readString();
         totalArticles = in.readString();
@@ -160,6 +156,7 @@ public class UserDetailResult implements Parcelable {
         userHandle = in.readString();
         isUserHandleUpdated = in.readString();
         requestMedium = in.readString();
+        followCategories = in.createStringArrayList();
     }
 
     public static final Creator<UserDetailResult> CREATOR = new Creator<UserDetailResult>() {
@@ -216,14 +213,6 @@ public class UserDetailResult implements Parcelable {
 
     public void setIsTaggable(String isTaggable) {
         this.isTaggable = isTaggable;
-    }
-
-    public String getPhoneNumber() {
-        return phoneNumber;
-    }
-
-    public void setPhoneNumber(String phoneNumber) {
-        this.phoneNumber = phoneNumber;
     }
 
     public ArrayList<String> getVideoPreferredLanguages() {
@@ -460,22 +449,12 @@ public class UserDetailResult implements Parcelable {
         this.preferredLanguages = preferredLanguages;
     }
 
-
     public ArrayList<String> getInterests() {
         return interests;
     }
 
     public void setInterests(ArrayList<String> interests) {
         this.interests = interests;
-    }
-
-
-    public String getSessionId() {
-        return sessionId;
-    }
-
-    public void setSessionId(String sessionId) {
-        this.sessionId = sessionId;
     }
 
     public String getIsLangSelection() {
@@ -598,6 +577,14 @@ public class UserDetailResult implements Parcelable {
         this.isUserHandleUpdated = isUserHandleUpdated;
     }
 
+    public ArrayList<String> getFollowCategories() {
+        return followCategories;
+    }
+
+    public void setFollowCategories(ArrayList<String> followCategories) {
+        this.followCategories = followCategories;
+    }
+
     @Override
     public int describeContents() {
         return 0;
@@ -621,8 +608,6 @@ public class UserDetailResult implements Parcelable {
         parcel.writeString(followingCount);
         parcel.writeString(rank);
         parcel.writeString(userBio);
-        parcel.writeString(sessionId);
-        parcel.writeString(phoneNumber);
         parcel.writeString(isLangSelection);
         parcel.writeString(subscriptionEmail);
         parcel.writeString(totalArticles);
@@ -648,6 +633,7 @@ public class UserDetailResult implements Parcelable {
         parcel.writeString(userHandle);
         parcel.writeString(isUserHandleUpdated);
         parcel.writeString(requestMedium);
+        parcel.writeStringList(followCategories);
     }
 
     public class SocialTokens {

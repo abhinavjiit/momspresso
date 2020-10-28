@@ -209,7 +209,7 @@
         android:drawableStart="@drawable/ic_languages"
         android:drawableEnd="@drawable/arrow_right"
         android:drawablePadding="@dimen/space_20"
-        android:text="Video Language Settings"
+        android:text="@string/video_language_settings"
         android:textColor="@color/campaign_4A4A4A"
         android:textSize="16sp" />
 

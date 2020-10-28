@@ -1559,7 +1559,6 @@ public class GroupsGenericPostRecyclerAdapter extends RecyclerView.Adapter<Recyc
                 FirebaseCrashlytics.getInstance().recordException(e);
                 Log.d("MC4kException", Log.getStackTraceString(e));
             }
-
         }
     }
 

@@ -4,6 +4,7 @@
   android:id="@+id/content_frame"
   android:layout_width="match_parent"
   android:layout_height="match_parent"
+  android:background="@color/white_color"
   android:orientation="vertical">
 
   <androidx.appcompat.widget.Toolbar
@@ -113,8 +114,8 @@
     android:layout_below="@+id/phoneTextView"
     android:layout_gravity="center"
     android:layout_marginTop="16dp"
-    android:paddingStart="28dp"
     android:gravity="center"
+    android:paddingStart="28dp"
     android:paddingTop="4dp"
     android:paddingBottom="4dp"
     android:text="@string/signin.login_via_email"
@@ -123,10 +124,11 @@
     app:fontName="Roboto-Medium.ttf" />
 
   <ImageView
-    android:layout_width="wrap_content"
+    android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_alignParentBottom="true"
     android:layout_centerHorizontal="true"
+    android:adjustViewBounds="true"
     android:src="@drawable/login_bg" />
 
 </RelativeLayout>

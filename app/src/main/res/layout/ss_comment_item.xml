@@ -15,6 +15,7 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_below="@+id/topCommentTextView"
+    android:layout_marginBottom="20dp"
     android:paddingLeft="10dp"
     android:paddingTop="8dp"
     android:paddingRight="10dp"
@@ -169,12 +170,12 @@
     android:layout_height="wrap_content"
     android:layout_below="@+id/underlineView"
     android:layout_marginTop="@dimen/space_10"
-    android:layout_marginBottom="30dp"
+    android:layout_marginBottom="10dp"
     android:gravity="center"
-    android:visibility="gone"
     android:text="View More"
     android:textColor="@color/app_red"
     android:textSize="14sp"
+    android:visibility="gone"
     app:fontName="oswald_regular.ttf" />
 
   <com.mycity4kids.widget.CustomFontTextView

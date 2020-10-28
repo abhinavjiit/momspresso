@@ -231,7 +231,9 @@ public class ParallelFeedActivity extends BaseActivity implements View.OnClickLi
         if (StringUtils.isNullOrEmpty(collectionId)) {
             endIndex = startIndex + 10;
             Call<VlogsListingResponse> callAuthorRecentcall = vlogsListingAndDetailsApi
-                    .getRelatedVlogs(videoId, startIndex, endIndex);
+                    .getRelatedVlogs(videoId, startIndex, endIndex,
+                            SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext())
+                                    .getVideoPreferredLanguages());
             callAuthorRecentcall.enqueue(bloggersArticleResponseCallback);
         } else {
             if (startIndex != 0) {

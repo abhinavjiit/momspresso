@@ -99,30 +99,17 @@
           android:layout_height="wrap_content"
           android:layout_marginStart="10dp"
           android:layout_marginTop="10dp"
-          android:text="Language"
+          android:text="@string/select_video_preferences"
           android:textAllCaps="true"
           android:textColor="@color/campaign_515151"
           android:textSize="16sp"
           app:fontName="Roboto-Medium.ttf" />
-        <com.mycity4kids.widget.CustomFontTextView
-          android:id="@+id/selectLanguageTextView"
-          android:layout_width="wrap_content"
-          android:layout_height="wrap_content"
-          android:layout_below="@id/languageChooseHeaderTextView"
-          android:layout_marginStart="10dp"
-          android:layout_marginTop="10dp"
-          android:text="Select language of audience who can understand the video"
-          android:textAllCaps="true"
-          android:textColor="#9B9B9B"
-          android:textSize="13sp"
-          app:fontName="Roboto-Regular.ttf" />
-
 
         <RelativeLayout
           android:id="@+id/selectLangDropDownContainer"
           android:layout_width="match_parent"
           android:layout_height="wrap_content"
-          android:layout_below="@id/selectLanguageTextView"
+          android:layout_below="@id/languageChooseHeaderTextView"
           android:layout_marginStart="@dimen/space_15"
           android:layout_marginTop="@dimen/space_15"
           android:layout_marginEnd="@dimen/space_15"

@@ -19,7 +19,6 @@ import android.view.ViewGroup
 import android.view.animation.AnimationUtils
 import android.webkit.WebResourceRequest
 import android.webkit.WebView
-import android.widget.FrameLayout
 import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.ProgressBar
@@ -54,13 +53,19 @@ import com.mycity4kids.models.request.DeleteBookmarkRequest
 import com.mycity4kids.models.request.FollowUnfollowUserRequest
 import com.mycity4kids.models.request.RecommendUnrecommendArticleRequest
 import com.mycity4kids.models.response.AddBookmarkResponse
+import com.mycity4kids.models.response.ContributorListResponse
+import com.mycity4kids.models.response.ContributorListResult
 import com.mycity4kids.models.response.MixFeedResponse
 import com.mycity4kids.models.response.MixFeedResult
 import com.mycity4kids.models.response.RecommendUnrecommendArticleResponse
+import com.mycity4kids.models.response.SuggestedCreators
+import com.mycity4kids.models.response.SuggestedCreatorsResponse
+import com.mycity4kids.models.response.SuggestedTopics
 import com.mycity4kids.preference.SharedPrefUtils
 import com.mycity4kids.profile.UserContentAdapter
 import com.mycity4kids.profile.UserProfileActivity
 import com.mycity4kids.retrofitAPIsInterfaces.ArticleDetailsAPI
+import com.mycity4kids.retrofitAPIsInterfaces.ContributorListAPI
 import com.mycity4kids.retrofitAPIsInterfaces.FollowAPI
 import com.mycity4kids.retrofitAPIsInterfaces.LiveStreamApi
 import com.mycity4kids.retrofitAPIsInterfaces.RecommendationAPI
@@ -69,13 +74,15 @@ import com.mycity4kids.retrofitAPIsInterfaces.TorcaiAdsAPI
 import com.mycity4kids.retrofitAPIsInterfaces.VlogsListingAndDetailsAPI
 import com.mycity4kids.ui.activity.ArticleChallengeDetailActivity
 import com.mycity4kids.ui.activity.ArticleDetailsContainerActivity
-import com.mycity4kids.ui.activity.ExploreArticleListingTypeActivity
+import com.mycity4kids.ui.activity.FindFbFriendsActivity
 import com.mycity4kids.ui.activity.ParallelFeedActivity
 import com.mycity4kids.ui.activity.ShortStoryChallengeDetailActivity
 import com.mycity4kids.ui.activity.ShortStoryContainerActivity
 import com.mycity4kids.ui.activity.ViewAllCommentsActivity
 import com.mycity4kids.ui.adapter.BlogChallengeAdapter
 import com.mycity4kids.ui.adapter.ShortStoryChallengesRecyclerAdapter
+import com.mycity4kids.ui.adapter.SuggestedCreatorsRecyclerAdapter
+import com.mycity4kids.ui.adapter.TopCreatorsRecyclerAdapter
 import com.mycity4kids.ui.livestreaming.LiveStreamResult
 import com.mycity4kids.ui.livestreaming.RecentLiveStreamResponse
 import com.mycity4kids.ui.livestreaming.RecentOrUpcomingLiveStreamsHorizontalAdapter
@@ -93,20 +100,22 @@ import com.mycity4kids.vlogs.VideoChallengeSelectionVerticalAdapter
 import com.mycity4kids.vlogs.VlogsCategoryWiseChallengesResponse
 import com.mycity4kids.widget.MomspressoButtonWidget
 import com.mycity4kids.widget.StoryShareCardWidget
-import java.io.File
 import okhttp3.ResponseBody
 import org.apache.commons.lang3.text.WordUtils
 import org.json.JSONObject
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
+import java.io.File
 
 class ArticleListingFragment : BaseFragment(), View.OnClickListener,
     OnRefreshListener, UserContentAdapter.RecyclerViewClickListener,
     ContentChallengeSelectionHorizontalAdapter.RecyclerViewClickListener,
     ShortStoryChallengesRecyclerAdapter.RecyclerViewClickListener,
     BlogChallengeAdapter.BlogsChallengesClickListener,
-    RecentOrUpcomingLiveStreamsHorizontalAdapter.HorizontalRecyclerViewClickListener {
+    RecentOrUpcomingLiveStreamsHorizontalAdapter.HorizontalRecyclerViewClickListener,
+    SuggestedCreatorsRecyclerAdapter.SuggestedCreatorsClickListener,
+    TopCreatorsRecyclerAdapter.TopCreatorsClickListener {
     private var mixfeedList: ArrayList<MixFeedResult>? = null
     private var sortType: String? = null
     private var nextPageNumber = 1
@@ -120,8 +129,6 @@ class ArticleListingFragment : BaseFragment(), View.OnClickListener,
     private lateinit var loadingView: RelativeLayout
     private lateinit var noBlogsTextView: TextView
     private lateinit var recyclerView: RecyclerView
-    private lateinit var addTopicsLayout: LinearLayout
-    private lateinit var headerArticleCardLayout: FrameLayout
     private lateinit var shimmerFrameLayout: ShimmerFrameLayout
     private lateinit var pullToRefresh: SwipeRefreshLayout
     private var fromPullToRefresh = false
@@ -145,6 +152,7 @@ class ArticleListingFragment : BaseFragment(), View.OnClickListener,
     private lateinit var filterContentContainer: LinearLayout
     private lateinit var articleChallengesList: ArrayList<Topics>
     private var categoryWiseChallengeList = ArrayList<Topics>()
+    private var followingFeedExtrasFlag = ""
 
     private val blogChallengeAdapter: BlogChallengeAdapter by lazy {
         BlogChallengeAdapter(articleChallengesList, this)
@@ -171,10 +179,6 @@ class ArticleListingFragment : BaseFragment(), View.OnClickListener,
             rootView.findViewById(R.id.noBlogsTextView)
         progressBar =
             rootView.findViewById(R.id.progressBar)
-        addTopicsLayout =
-            rootView.findViewById(R.id.addTopicsLayout)
-        headerArticleCardLayout =
-            rootView.findViewById(R.id.headerArticleView)
         pullToRefresh = rootView.findViewById(R.id.pullToRefresh)
         rootLayout =
             rootView.findViewById(R.id.rootLayout)
@@ -206,7 +210,6 @@ class ArticleListingFragment : BaseFragment(), View.OnClickListener,
             MixpanelAPI.getInstance(BaseApplication.getAppContext(), AppConstants.MIX_PANEL_TOKEN)
         userDynamoId =
             SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).dynamoId
-        addTopicsLayout.setOnClickListener(this)
 
         activity?.let {
             rootView.findViewById<View>(R.id.imgLoader)
@@ -233,7 +236,7 @@ class ArticleListingFragment : BaseFragment(), View.OnClickListener,
             blogChallengeAdapter.notifyDataSetChanged()
             loadingView.visibility = View.GONE
         } else {
-            mixfeedAdapter = UserContentAdapter(this, this, false)
+            mixfeedAdapter = UserContentAdapter(this, this, this, this, false)
             mixfeedList = ArrayList()
             mixfeedList = ArrayList()
             nextPageNumber = 1
@@ -609,18 +612,15 @@ class ArticleListingFragment : BaseFragment(), View.OnClickListener,
 
     private fun processFollowingFeedData(responseData: MixFeedResponse?) {
         try {
-            if (responseData!!.data!!.result == null && (mixfeedList == null ||
-                    mixfeedList!!.isEmpty())) {
-                addTopicsLayout.visibility = View.VISIBLE
-                headerArticleCardLayout.visibility = View.GONE
+            if (responseData!!.data!!.result.isNullOrEmpty() && mixfeedList.isNullOrEmpty()) {
+                loadEmptyStateForFollowingFeed()
                 return
             }
             val dataList =
                 responseData.data!!.result as ArrayList<MixFeedResult>?
             if (dataList.isNullOrEmpty()) {
                 isLastPageReached = true
-                if (mixfeedList.isNullOrEmpty()) { // No results
-                    mixfeedList!!.add(MixFeedResult(contentType = AppConstants.CONTENT_TYPE_SUGGESTED_BLOGGERS))
+                if (mixfeedList.isNullOrEmpty()) {
                     mixfeedAdapter.setListData(mixfeedList)
                     mixfeedAdapter.notifyDataSetChanged()
                 }
@@ -631,19 +631,10 @@ class ArticleListingFragment : BaseFragment(), View.OnClickListener,
                 } else {
                     AppUtils.updateFollowingStatusMixFeed(dataList)
                     mixfeedList!!.addAll(dataList)
-                    chunks = responseData.data.chunks!!
-                }
-                if (!mixfeedList.isNullOrEmpty() && mixfeedList!!.size <= LIMIT) {
-                    if (mixfeedList?.size!! < 3) {
-                        mixfeedList?.add(
-                            MixFeedResult(contentType = AppConstants.CONTENT_TYPE_SUGGESTED_BLOGGERS)
-                        )
-                    } else {
-                        mixfeedList?.add(
-                            3,
-                            MixFeedResult(contentType = AppConstants.CONTENT_TYPE_SUGGESTED_BLOGGERS)
-                        )
+                    if (chunks == "0") {
+                        loadFollowingFeedExtras()
                     }
+                    chunks = responseData.data.chunks!!
                 }
                 mixfeedAdapter.setListData(mixfeedList)
                 mixfeedAdapter.notifyDataSetChanged()
@@ -653,6 +644,358 @@ class ArticleListingFragment : BaseFragment(), View.OnClickListener,
             FirebaseCrashlytics.getInstance().recordException(ex)
             Log.d("MC4kException", Log.getStackTraceString(ex))
         }
+    }
+
+    private fun loadEmptyStateForFollowingFeed() {
+        Log.e("ndkwandkwdkn", "----- EMPTY FOLLOWING FEED -----")
+        val item = MixFeedResult(
+            contentType = AppConstants.CONTENT_TYPE_FOLLOW_TOPICS_AND_CREATORS
+        )
+        mixfeedList?.add(item)
+        mixfeedAdapter.notifyDataSetChanged()
+        loadCreatorsBasedOnLangwiseRanking(1)
+    }
+
+    private fun loadFollowingFeedExtras() {
+        if (!SharedPrefUtils.getFollowingTopicsJson(BaseApplication.getAppContext()).isNullOrEmpty() &&
+            !SharedPrefUtils.getFollowingJson(BaseApplication.getAppContext()).isNullOrEmpty()) {
+            Log.e("ndkwandkwdkn", "----- TopicsAndFriends -----")
+            followingFeedExtrasFlag = "TopicsAndFriends"
+            loadCreatorsBasedOnFollowedTopics(3)
+        } else if (!SharedPrefUtils.getFollowingTopicsJson(BaseApplication.getAppContext()).isNullOrEmpty()) {
+            Log.e("ndkwandkwdkn", "----- Topics -----")
+            followingFeedExtrasFlag = "Topics"
+            loadCreatorsBasedOnFollowedTopics(3)
+        } else if (!SharedPrefUtils.getFollowingJson(BaseApplication.getAppContext()).isNullOrEmpty()) {
+            Log.e("ndkwandkwdkn", "----- Friends -----")
+            followingFeedExtrasFlag = "Friends"
+            loadCreatorsBasedFriendsFollowing(3)
+        } else {
+
+        }
+    }
+
+    private fun loadCreatorsBasedOnFollowedTopics(pos: Int) {
+        Log.e("ndkwandkwdkn", "----- loadCreatorsBasedOnFollowedTopics -----")
+        val retro = BaseApplication.getInstance().retrofit
+        val followAPI: FollowAPI = retro.create(FollowAPI::class.java)
+        val call = followAPI.getSuggestedCreators(
+            SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).dynamoId,
+            1,
+            0,
+            10
+        )
+        call.enqueue(object : Callback<SuggestedCreatorsResponse> {
+            override fun onResponse(
+                call: Call<SuggestedCreatorsResponse>,
+                response: Response<SuggestedCreatorsResponse>
+            ) {
+                try {
+                    val responseData = response.body()
+                    if (responseData!!.code == 200 && Constants.SUCCESS == responseData.status) {
+                        val item = MixFeedResult(
+                            contentType = AppConstants.CONTENT_TYPE_SUGGESTED_CREATORS_BASED_ON_TOPICS,
+                            suggestedCreatorList = responseData.data.result.suggestion
+                        )
+                        if (mixfeedList?.size!! > pos) {
+                            if (!responseData.data.result.suggestion.isNullOrEmpty()) {
+                                mixfeedList?.add(
+                                    pos,
+                                    item
+                                )
+                                loadCreatorsBasedOnUserActivity(7)
+                            } else {
+                                loadCreatorsBasedOnUserActivity(6)
+                            }
+                        } else {
+                            if (!responseData.data.result.suggestion.isNullOrEmpty()) {
+                                mixfeedList?.add(
+                                    item
+                                )
+                            }
+                            loadCreatorsBasedOnUserActivity(0)
+                        }
+                        mixfeedAdapter.notifyDataSetChanged()
+                    }
+                } catch (e: Exception) {
+                    FirebaseCrashlytics.getInstance().recordException(e)
+                    Log.d(
+                        "MC4kException",
+                        Log.getStackTraceString(e)
+                    )
+                }
+            }
+
+            override fun onFailure(call: Call<SuggestedCreatorsResponse>, t: Throwable) {
+                FirebaseCrashlytics.getInstance().recordException(t)
+                Log.d(
+                    "MC4kException",
+                    Log.getStackTraceString(t)
+                )
+            }
+        })
+    }
+
+    private fun loadCreatorsBasedOnUserActivity(pos: Int) {
+        Log.e("ndkwandkwdkn", "----- loadCreatorsBasedOnUserActivity -----")
+        val retro = BaseApplication.getInstance().retrofit
+        val followAPI: FollowAPI = retro.create(FollowAPI::class.java)
+        val call = followAPI.getSuggestedCreators(
+            SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).dynamoId,
+            2,
+            0,
+            10
+        )
+        call.enqueue(object : Callback<SuggestedCreatorsResponse> {
+            override fun onResponse(
+                call: Call<SuggestedCreatorsResponse>,
+                response: Response<SuggestedCreatorsResponse>
+            ) {
+                try {
+                    val responseData = response.body()
+                    if (responseData!!.code == 200 && Constants.SUCCESS == responseData.status) {
+                        val item = MixFeedResult(
+                            contentType = AppConstants.CONTENT_TYPE_SUGGESTED_CREATORS_BASED_ON_ACTIVITY,
+                            suggestedCreatorList = responseData.data.result.suggestion
+                        )
+                        if (mixfeedList?.size!! > pos) {
+                            if (!responseData.data.result.suggestion.isNullOrEmpty()) {
+                                mixfeedList?.add(
+                                    pos,
+                                    item
+                                )
+                                if (followingFeedExtrasFlag == "TopicsAndFriends") {
+                                    loadCreatorsBasedFriendsFollowing(13)
+                                } else if (followingFeedExtrasFlag == "Topics") {
+                                    loadCreatorsBasedOnLangwiseRanking(13)
+                                }
+                            } else {
+                                if (followingFeedExtrasFlag == "TopicsAndFriends") {
+                                    loadCreatorsBasedFriendsFollowing(12)
+                                } else if (followingFeedExtrasFlag == "Topics") {
+                                    loadCreatorsBasedOnLangwiseRanking(12)
+                                }
+                            }
+                        } else {
+                            if (!responseData.data.result.suggestion.isNullOrEmpty()) {
+                                mixfeedList?.add(
+                                    item
+                                )
+                            }
+                            if (followingFeedExtrasFlag == "TopicsAndFriends") {
+                                loadCreatorsBasedFriendsFollowing(0)
+                            } else if (followingFeedExtrasFlag == "Topics") {
+                                loadCreatorsBasedOnLangwiseRanking(0)
+                            }
+                        }
+                        mixfeedAdapter.notifyDataSetChanged()
+                    }
+                } catch (e: Exception) {
+                    FirebaseCrashlytics.getInstance().recordException(e)
+                    Log.d(
+                        "MC4kException",
+                        Log.getStackTraceString(e)
+                    )
+                }
+            }
+
+            override fun onFailure(call: Call<SuggestedCreatorsResponse>, t: Throwable) {
+
+            }
+        })
+    }
+
+    private fun loadCreatorsBasedFriendsFollowing(pos: Int) {
+        Log.e("ndkwandkwdkn", "----- loadCreatorsBasedFriendsFollowing -----")
+        val retro = BaseApplication.getInstance().retrofit
+        val followAPI: FollowAPI = retro.create(FollowAPI::class.java)
+        val call = followAPI.getSuggestedCreators(
+            SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).dynamoId,
+            3,
+            0,
+            10,
+            2
+        )
+        call.enqueue(object : Callback<SuggestedCreatorsResponse> {
+            override fun onResponse(
+                call: Call<SuggestedCreatorsResponse>,
+                response: Response<SuggestedCreatorsResponse>
+            ) {
+                try {
+                    val responseData = response.body()
+                    if (responseData!!.code == 200 && Constants.SUCCESS == responseData.status) {
+                        val item = MixFeedResult(
+                            contentType = AppConstants.CONTENT_TYPE_SUGGESTED_CREATORS_FOLLOWED_BY_FRIENDS,
+                            suggestedCreatorList = responseData.data.result.suggestion
+                        )
+                        if (followingFeedExtrasFlag == "TopicsAndFriends") {
+                            if (mixfeedList?.size!! > pos) {
+                                if (!responseData.data.result.suggestion.isNullOrEmpty()) {
+                                    mixfeedList?.add(
+                                        pos,
+                                        item
+                                    )
+                                }
+                            } else {
+                                if (!responseData.data.result.suggestion.isNullOrEmpty()) {
+                                    mixfeedList?.add(
+                                        item
+                                    )
+                                }
+                            }
+                        } else if (followingFeedExtrasFlag == "Friends") {
+                            if (mixfeedList?.size!! > pos) {
+                                if (!responseData.data.result.suggestion.isNullOrEmpty()) {
+                                    mixfeedList?.add(
+                                        pos,
+                                        item
+                                    )
+                                    loadSuggestedTopics(7)
+                                } else {
+                                    loadSuggestedTopics(6)
+                                }
+                            } else {
+                                if (!responseData.data.result.suggestion.isNullOrEmpty()) {
+                                    mixfeedList?.add(
+                                        item
+                                    )
+                                }
+                                loadSuggestedTopics(0)
+                            }
+                        }
+
+                        mixfeedAdapter.notifyDataSetChanged()
+                    }
+                } catch (e: Exception) {
+                    FirebaseCrashlytics.getInstance().recordException(e)
+                    Log.d(
+                        "MC4kException",
+                        Log.getStackTraceString(e)
+                    )
+                }
+            }
+
+            override fun onFailure(call: Call<SuggestedCreatorsResponse>, t: Throwable) {
+
+            }
+        })
+    }
+
+    private fun loadSuggestedTopics(pos: Int) {
+        Log.e("ndkwandkwdkn", "----- loadSuggestedTopics -----")
+        val retro = BaseApplication.getInstance().retrofit
+        val followAPI: FollowAPI = retro.create(FollowAPI::class.java)
+        val call = followAPI.getSuggestedTopics(
+            SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).dynamoId,
+            0,
+            10,
+            1
+        )
+        call.enqueue(object : Callback<SuggestedTopics> {
+            override fun onResponse(
+                call: Call<SuggestedTopics>,
+                response: Response<SuggestedTopics>
+            ) {
+                try {
+                    val responseData = response.body()
+                    if (responseData!!.code == 200 && Constants.SUCCESS == responseData.status) {
+                        val item = MixFeedResult(
+                            contentType = AppConstants.CONTENT_TYPE_SUGGESTED_TOPICS,
+                            suggestedTopicsList = responseData.data.result.suggestion
+                        )
+                        if (mixfeedList?.size!! > pos) {
+                            if (!responseData.data.result.suggestion.isNullOrEmpty()) {
+                                mixfeedList?.add(
+                                    pos,
+                                    item
+                                )
+                                loadCreatorsBasedOnLangwiseRanking(13)
+                            } else {
+                                loadCreatorsBasedOnLangwiseRanking(12)
+                            }
+                        } else {
+                            if (!responseData.data.result.suggestion.isNullOrEmpty()) {
+                                mixfeedList?.add(
+                                    item
+                                )
+                            }
+                            loadCreatorsBasedOnLangwiseRanking(0)
+                        }
+                        mixfeedAdapter.notifyDataSetChanged()
+                    }
+                } catch (e: Exception) {
+                    FirebaseCrashlytics.getInstance().recordException(e)
+                    Log.d(
+                        "MC4kException",
+                        Log.getStackTraceString(e)
+                    )
+                }
+            }
+
+            override fun onFailure(call: Call<SuggestedTopics>, t: Throwable) {
+
+            }
+        })
+    }
+
+    private fun loadCreatorsBasedOnLangwiseRanking(pos: Int) {
+        val retrofit = BaseApplication.getInstance().retrofit
+        val contributorListApi =
+            retrofit.create(
+                ContributorListAPI::class.java
+            )
+        val call = contributorListApi
+            .getContributorList(
+                10,
+                2,
+                AppConstants.USER_TYPE_BLOGGER,
+                "" + AppUtils.getLangKey(),
+                ""
+            )
+        call.enqueue(object : Callback<ContributorListResponse> {
+            override fun onResponse(
+                call: Call<ContributorListResponse>,
+                response: Response<ContributorListResponse>
+            ) {
+                try {
+                    val responseData = response.body()
+                    if (responseData!!.code == 200 && Constants.SUCCESS == responseData.status) {
+                        val bloggersList = response.body()?.data?.result
+                        AppUtils.updateFollowingStatusContributorList(bloggersList)
+
+                        val item = MixFeedResult(
+                            contentType = AppConstants.CONTENT_TYPE_SUGGESTED_CREATORS_TOP_RANKERS,
+                            topCreatorList = responseData.data.result
+                        )
+                        if (mixfeedList?.size!! > pos) {
+                            if (!responseData.data.result.isNullOrEmpty()) {
+                                mixfeedList?.add(
+                                    pos,
+                                    item
+                                )
+                            }
+                        } else {
+                            if (!responseData.data.result.isNullOrEmpty()) {
+                                mixfeedList?.add(
+                                    item
+                                )
+                            }
+                        }
+                        mixfeedAdapter.notifyDataSetChanged()
+                    }
+                } catch (e: Exception) {
+                    FirebaseCrashlytics.getInstance().recordException(e)
+                    Log.d(
+                        "MC4kException",
+                        Log.getStackTraceString(e)
+                    )
+                }
+            }
+
+            override fun onFailure(call: Call<ContributorListResponse>, t: Throwable) {
+
+            }
+        })
     }
 
     private val recentLivesResponseCallback: Callback<RecentLiveStreamResponse> =
@@ -1059,15 +1402,6 @@ class ArticleListingFragment : BaseFragment(), View.OnClickListener,
 
     override fun onClick(v: View) {
         when (v.id) {
-            R.id.addTopicsLayout -> {
-                val intent1 = Intent(
-                    activity,
-                    ExploreArticleListingTypeActivity::class.java
-                )
-                intent1.putExtra("fragType", "search")
-                intent1.putExtra("source", "foryou")
-                startActivity(intent1)
-            }
             R.id.articleFilterTextView -> {
                 articleFilterTextView.isSelected = true
                 storyFilterTextView.isSelected = false
@@ -1746,6 +2080,20 @@ class ArticleListingFragment : BaseFragment(), View.OnClickListener,
             }
             R.id.menuItemImageView -> {
             }
+            R.id.followTopicsWidget -> {
+                val chooseContentTopicsBottomSheetDialogFragment =
+                    ChooseContentTopicsBottomSheetDialogFragment()
+                chooseContentTopicsBottomSheetDialogFragment.show(
+                    activity?.supportFragmentManager!!,
+                    "choose_topic"
+                )
+            }
+            R.id.followCreatorsWidget -> {
+                activity?.let {
+                    val intent = Intent(it, FindFbFriendsActivity::class.java)
+                    startActivity(intent)
+                }
+            }
         }
     }
 
@@ -2157,6 +2505,88 @@ class ArticleListingFragment : BaseFragment(), View.OnClickListener,
             (activity as BaseActivity).getLiveStreamInfoFromId(
                 it
             )
+        }
+    }
+
+    override fun onSuggestedCreatorClick(
+        mixFeedPosition: Int,
+        position: Int,
+        view: View,
+        suggestedCreator: SuggestedCreators?
+    ) {
+        when (view.id) {
+            R.id.authorImageView -> {
+                val intent = Intent(activity, UserProfileActivity::class.java)
+                intent.putExtra(
+                    Constants.USER_ID,
+                    suggestedCreator?.id
+                )
+                startActivity(intent)
+            }
+            R.id.authorFollowTextView -> {
+                suggestedCreator?.id?.let { followSuggestedCreator(it, mixFeedPosition, position) }
+            }
+        }
+    }
+
+    override fun onTopCreatorClick(
+        mixFeedPosition: Int,
+        position: Int,
+        view: View,
+        topCreator: ContributorListResult?
+    ) {
+        when (view.id) {
+            R.id.authorImageView -> {
+                val intent = Intent(activity, UserProfileActivity::class.java)
+                intent.putExtra(
+                    Constants.USER_ID,
+                    topCreator?.id
+                )
+                startActivity(intent)
+            }
+            R.id.authorFollowTextView -> {
+                topCreator?.id?.let { followTopCreator(it, mixFeedPosition, position) }
+            }
+        }
+    }
+
+    private fun followSuggestedCreator(authorId: String, mixfeedPosition: Int, position: Int) {
+        val retrofit = BaseApplication.getInstance().retrofit
+        val followApi = retrofit.create(FollowAPI::class.java)
+        val request = FollowUnfollowUserRequest()
+        request.followee_id = authorId
+        if ("1" == mixfeedList!![mixfeedPosition].suggestedCreatorList?.get(position)?.isfollowing) {
+            mixfeedList!![mixfeedPosition].suggestedCreatorList?.get(position)?.isfollowing = "0"
+            mixfeedAdapter.notifyDataSetChanged()
+            val followUnfollowUserResponseCall =
+                followApi.unfollowUserInShortStoryListingV2(request)
+            followUnfollowUserResponseCall.enqueue(followUnfollowUserResponseCallback)
+        } else {
+            mixfeedList!![mixfeedPosition].suggestedCreatorList?.get(position)?.isfollowing = "1"
+            mixfeedAdapter.notifyDataSetChanged()
+            val followUnfollowUserResponseCall =
+                followApi.followUserInShortStoryListingV2(request)
+            followUnfollowUserResponseCall.enqueue(followUnfollowUserResponseCallback)
+        }
+    }
+
+    private fun followTopCreator(authorId: String, mixfeedPosition: Int, position: Int) {
+        val retrofit = BaseApplication.getInstance().retrofit
+        val followApi = retrofit.create(FollowAPI::class.java)
+        val request = FollowUnfollowUserRequest()
+        request.followee_id = authorId
+        if (1 == mixfeedList!![mixfeedPosition].topCreatorList?.get(position)?.isFollowed) {
+            mixfeedList!![mixfeedPosition].topCreatorList?.get(position)?.isFollowed = 0
+            mixfeedAdapter.notifyDataSetChanged()
+            val followUnfollowUserResponseCall =
+                followApi.unfollowUserInShortStoryListingV2(request)
+            followUnfollowUserResponseCall.enqueue(followUnfollowUserResponseCallback)
+        } else {
+            mixfeedList!![mixfeedPosition].topCreatorList?.get(position)?.isFollowed = 1
+            mixfeedAdapter.notifyDataSetChanged()
+            val followUnfollowUserResponseCall =
+                followApi.followUserInShortStoryListingV2(request)
+            followUnfollowUserResponseCall.enqueue(followUnfollowUserResponseCallback)
         }
     }
 }

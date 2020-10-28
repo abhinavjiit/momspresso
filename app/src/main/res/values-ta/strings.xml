@@ -1207,7 +1207,7 @@ Thank you! We will be reviewing your story. You can expect to hear from us withi
   <string name="profile_featured_more">+%d More</string>
   <string name="all_drafts">Drafts</string>
   <string name="all_story">100 Word Story</string>
-  <string name="all_blogs">Blogs</string>
+  <string name="all_blogs">பதிவுகள்</string>
   <string name="all_videos">Videos</string>
   <string name="profile_post_featured">Post featured on the following collections</string>
   <string name="dialog_fragment_add_collection_select_collection">தொகுப்பைத் தேர்ந்தெடுக்கவும்</string>
@@ -1425,12 +1425,12 @@ Thank you! We will be reviewing your story. You can expect to hear from us withi
   <string name="leaderboard_btn">View Leaderboard</string>
   <string name="total_blog_view">பதிவுகளின்  தன்னிச்சையான பார்வையாளர்கள்  எண்ணிக்கை </string>
   <string name="total_vlog_view">விலாக்கள்   தன்னிச்சையான பார்வையாளர்கள்  எண்ணிக்கை </string>
-  <string name="leaderboard">Leaderboard</string>
+  <string name="leaderboard">லேடெர்போர்டு</string>
   <string name="leaderboard_blogs">BLOGS</string>
   <string name="leaderboard_vlogs">VLOG</string>
   <string name="webview_hack_text">உங்கள் படைப்புக்களின் தன்னிச்சையான பார்வையாளர்கள் அதிகரிக்க சில குறிப்புகள்</string>
   <string name="webview_term_text">விதிமுறைகள் மற்றும் நிபந்தனைகள்</string>
-  <string name="earning_calculator">Earning Calculator</string>
+  <string name="earning_calculator">சன்மானம் கால்குலேட்டர்</string>
   <string name="click_here_btn">Click to view leaderboard</string>
   <string name="checkout_growth_hack">Checkout the growth hacks</string>
   <string name="blogger_gold_about_text">கொண்டாட்டத்திற்கான நேரம் இது.  எங்களுடைய இந்த வெற்றிப்பயணத்தில் உங்களையும் அழைத்துச்செல்ல விரும்புகிறோம். </string>
@@ -1493,4 +1493,11 @@ Thank you! We will be reviewing your story. You can expect to hear from us withi
   <string name="tooltip_liked_the_blog">article பிடித்துள்ளதா? படைப்பாளரின் இதர படைப்புக்களை தவறாமல் பார்க்க அவரை  தொடருங்கள் </string>
   <string name="coachmark_vlogs_2">நல்லதொரு  படம் பல பார்வையாளரை கவரும் </string>
   <string name="tooltip_groups">உங்களுக்கு பிடித்தாமான ஆதரவுக்குழுவில் இணைந்து சக தோழிகளோடு உரையாடுங்கள் </string>
+  <string name="video_language_settings">காணொளிக்கான மொழி அமைப்புகள்</string>
+  <string name="all_intrumental">இசைக்கருவிகள்</string>
+  <string name="select_video_preferences">காணொளி விருப்பங்களைத் தேர்ந்தெடுங்கள்</string>
+  <string name="please_select_lang">ஒரு மொழியைத் தேர்ந்தெடுங்கள்</string>
+  <string name="watch_video_lang_choice">உங்களுக்கு விருப்பமான மொழியில் காணொளிகளைப் பாருங்கள்</string>
+  <string name="know_more">மேலும் அறிய</string>
+  <string name="all_vlogs">விலாக்கள் </string>
 </resources>

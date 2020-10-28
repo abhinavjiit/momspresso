@@ -3,22 +3,29 @@ package com.mycity4kids.ui.fragment;
 import android.Manifest;
 import android.accounts.NetworkErrorException;
 import android.annotation.SuppressLint;
+import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.PorterDuff;
+import android.graphics.Typeface;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
+import android.text.Selection;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewGroup.MarginLayoutParams;
+import android.view.inputmethod.InputMethodManager;
+import android.widget.HorizontalScrollView;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -41,6 +48,7 @@ import com.mycity4kids.base.BaseFragment;
 import com.mycity4kids.constants.AppConstants;
 import com.mycity4kids.constants.Constants;
 import com.mycity4kids.gtmutils.Utils;
+import com.mycity4kids.interfaces.CommentPostButtonColorChangeInterface;
 import com.mycity4kids.models.BlockUserModel;
 import com.mycity4kids.models.TopCommentData;
 import com.mycity4kids.models.parentingdetails.CommentsData;
@@ -64,17 +72,27 @@ import com.mycity4kids.preference.SharedPrefUtils;
 import com.mycity4kids.profile.UserProfileActivity;
 import com.mycity4kids.retrofitAPIsInterfaces.ArticleDetailsAPI;
 import com.mycity4kids.retrofitAPIsInterfaces.FollowAPI;
+import com.mycity4kids.retrofitAPIsInterfaces.SearchArticlesAuthorsAPI;
 import com.mycity4kids.retrofitAPIsInterfaces.ShortStoryAPI;
 import com.mycity4kids.tagging.Mentions;
+import com.mycity4kids.tagging.MentionsResponse;
+import com.mycity4kids.tagging.mentions.MentionSpan;
+import com.mycity4kids.tagging.mentions.MentionsEditable;
+import com.mycity4kids.tagging.suggestions.SuggestionsResult;
+import com.mycity4kids.tagging.tokenization.QueryToken;
+import com.mycity4kids.tagging.tokenization.interfaces.QueryTokenReceiver;
+import com.mycity4kids.tagging.ui.RichEditorView;
 import com.mycity4kids.ui.activity.ArticleDetailsContainerActivity;
 import com.mycity4kids.ui.activity.ShortStoryContainerActivity;
 import com.mycity4kids.ui.adapter.ShortStoriesDetailRecyclerAdapter;
+import com.mycity4kids.ui.fragment.AddArticleCommentReplyDialogFragment.MentionIndex;
 import com.mycity4kids.utils.AppUtils;
 import com.mycity4kids.utils.ConnectivityUtils;
 import com.mycity4kids.utils.PermissionUtil;
 import com.mycity4kids.utils.SharingUtils;
 import com.mycity4kids.utils.StringUtils;
 import com.mycity4kids.utils.ToastUtils;
+import com.mycity4kids.widget.CustomFontTextView;
 import com.mycity4kids.widget.StoryShareCardWidget;
 import com.squareup.picasso.Picasso;
 import io.github.douglasjunior.androidSimpleTooltip.SimpleTooltip;
@@ -88,10 +106,16 @@ import java.io.FileNotFoundException;
 import java.net.SocketTimeoutException;
 import java.net.UnknownHostException;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import okhttp3.ResponseBody;
+import org.jetbrains.annotations.NotNull;
+import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -103,7 +127,7 @@ import retrofit2.Retrofit;
  */
 public class ShortStoryFragment extends BaseFragment implements View.OnClickListener,
         ShortStoriesDetailRecyclerAdapter.RecyclerViewClickListener,
-        CommentOptionsDialogFragment.ICommentOptionAction {
+        CommentOptionsDialogFragment.ICommentOptionAction, QueryTokenReceiver, CommentPostButtonColorChangeInterface {
 
     private static final int REQUEST_INIT_PERMISSION = 2;
     private SimpleTooltip simpleTooltip;
@@ -130,6 +154,7 @@ public class ShortStoryFragment extends BaseFragment implements View.OnClickList
 
     private ShortStoryDetailAndCommentModel headerModel;
     private ArrayList<ShortStoryDetailAndCommentModel> consolidatedList;
+    private List<CommentListData> consolidatedCommentList;
     ShortStoriesDetailRecyclerAdapter adapter;
     private int actionItemPosition;
     private String editContent;
@@ -144,9 +169,12 @@ public class ShortStoryFragment extends BaseFragment implements View.OnClickList
     private ImageView shareStoryImageView;
     private ShortStoryDetailResult sharedStoryItem;
     private TextView viewAllTextView;
-    private TextView typeHere;
+    private LinearLayout suggestionContainer;
+    private RichEditorView typeHere;
+    private ImageView disableStatePostTextView;
     private String comingFrom;
     private ShortStoryDetailResult responseData;
+    private HorizontalScrollView horizontalCommentSuggestionsContainer;
 
     private int pos;
 
@@ -159,6 +187,9 @@ public class ShortStoryFragment extends BaseFragment implements View.OnClickList
         shortStoryRecyclerView = (RecyclerView) fragmentView.findViewById(R.id.shortStoryRecyclerView);
         viewAllTextView = fragmentView.findViewById(R.id.viewAllTextView);
         typeHere = fragmentView.findViewById(R.id.typeHere);
+        disableStatePostTextView = fragmentView.findViewById(R.id.disableStatePostTextView);
+        suggestionContainer = fragmentView.findViewById(R.id.suggestionContainer);
+        horizontalCommentSuggestionsContainer = fragmentView.findViewById(R.id.horizontalCommentSuggestionsContainer);
         userImageView = fragmentView.findViewById(R.id.userImageView);
 //TopicsShortStoryTabFragment_commentImage
         userDynamoId = SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId();
@@ -172,6 +203,7 @@ public class ShortStoryFragment extends BaseFragment implements View.OnClickList
             shortStoryRecyclerView.setLayoutManager(llm);
             headerModel = new ShortStoryDetailAndCommentModel();
             consolidatedList = new ArrayList<>();
+            consolidatedCommentList = new ArrayList<>();
             if (bundle != null) {
                 articleId = bundle.getString(Constants.ARTICLE_ID);
                 authorId = bundle.getString(Constants.AUTHOR_ID, "");
@@ -195,13 +227,20 @@ public class ShortStoryFragment extends BaseFragment implements View.OnClickList
             Log.d("MC4kException", Log.getStackTraceString(e));
         }
         viewAllTextView.setOnClickListener(this);
+        typeHere.setMaxLines();
+        typeHere.displayTextCounter(false);
         typeHere.setOnClickListener(this);
+        disableStatePostTextView.setOnClickListener(this);
+        typeHere.requestFocus();
+        typeHere.setQueryTokenReceiver(this);
+        typeHere.changeButtonColorOnTextChanged(this);
         try {
             Picasso.get().load(SharedPrefUtils.getProfileImgUrl(BaseApplication.getAppContext()))
                     .error(R.drawable.default_commentor_img).into(userImageView);
         } catch (Exception e) {
             Picasso.get().load(R.drawable.default_commentor_img).into(userImageView);
         }
+
         return fragmentView;
     }
 
@@ -282,6 +321,13 @@ public class ShortStoryFragment extends BaseFragment implements View.OnClickList
                 if (isAdded()) {
                     updateGtmEvent(responseData.getLang());
                 }
+
+                if (SharedPrefUtils.getCommentSuggestionsVisibilityFlag(BaseApplication.getAppContext())) {
+                    getCommentSuggestions();
+                } else {
+                    horizontalCommentSuggestionsContainer.setVisibility(View.GONE);
+                }
+
             } catch (Exception e) {
                 removeProgressDialog();
                 FirebaseCrashlytics.getInstance().recordException(e);
@@ -356,6 +402,92 @@ public class ShortStoryFragment extends BaseFragment implements View.OnClickList
         }
     }
 
+    private void getCommentSuggestions() {
+        ArrayList<String> tagList = new ArrayList<>();
+        for (int i = 0; i < responseData.getTags().size(); i++) {
+            for (Map.Entry<String, String> mapEntry : responseData.getTags().get(i)
+                    .entrySet()) {
+                if (mapEntry.getKey().startsWith("category-")) {
+                    tagList.add(mapEntry.getKey());
+                }
+            }
+        }
+        Retrofit retro = BaseApplication.getInstance().getRetrofit();
+        ArticleDetailsAPI articleDetailsApi = retro.create(ArticleDetailsAPI.class);
+        Call<ResponseBody> call = articleDetailsApi.getCommentSuggestions(tagList);
+        call.enqueue(commentSuggestinsListCallback);
+    }
+
+    private Callback<ResponseBody> commentSuggestinsListCallback = new Callback<ResponseBody>() {
+        @Override
+        public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+            if (response.body() == null) {
+                NetworkErrorException nee = new NetworkErrorException("New comments API failure");
+                FirebaseCrashlytics.getInstance().recordException(nee);
+                return;
+            }
+
+            try {
+                String resData = new String(response.body().bytes());
+                JSONObject jsonObject = new JSONObject((resData));
+                int code = jsonObject.getInt("code");
+                String status = jsonObject.getString("status");
+                if (code == 200 && Constants.SUCCESS.equals(status)) {
+
+                    JSONObject data = jsonObject.getJSONObject("data");
+                    JSONArray result = data.getJSONArray("result");
+                    setHorizontalCommentSuggestions(result);
+                }
+
+
+            } catch (Exception e) {
+                FirebaseCrashlytics.getInstance().recordException(e);
+                Log.d("MC4kException", Log.getStackTraceString(e));
+            }
+        }
+
+        @Override
+        public void onFailure(Call<ResponseBody> call, Throwable t) {
+            if (isAdded()) {
+                ((BaseActivity) getActivity()).apiExceptions(t);
+            }
+            FirebaseCrashlytics.getInstance().recordException(t);
+            Log.d("MC4kException", Log.getStackTraceString(t));
+        }
+    };
+
+    private void setHorizontalCommentSuggestions(JSONArray result) {
+        //suggestionContainer
+        for (int i = 0; i < result.length(); i++) {
+            try {
+                CustomFontTextView textView = new CustomFontTextView(getActivity());
+                MarginLayoutParams params = new MarginLayoutParams(MarginLayoutParams.WRAP_CONTENT,
+                        MarginLayoutParams.WRAP_CONTENT);
+                params.leftMargin = 25;
+                textView.setLayoutParams(params);
+                textView.setText(result.getString(i));
+                textView.setTag(result.getString(i));
+                textView.setOnClickListener(view -> {
+                    MentionsEditable commentText = typeHere.getText();
+                    commentText.append(view.getTag().toString());
+                    Selection.setSelection(commentText, commentText.length());
+                    SharedPrefUtils.setCommentSuggestionsVisibilityFlag(BaseApplication.getAppContext(), false);
+                });
+                Typeface face = Typeface.createFromAsset(getResources().getAssets(), "fonts/Roboto-Regular.ttf");
+                textView.setTypeface(face);
+                textView.setTextSize(14f);
+                textView.setTextColor(getResources().getColor(R.color.campaign_4A4A4A));
+                textView.setPadding(10, 10, 10, 10);
+                textView.setBackground(getResources().getDrawable(R.drawable.comment_suggestions_background_layout));
+
+                suggestionContainer.addView(textView);
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+
     private void getStoryComments(String id, String commentType) {
         showProgressDialog("please wait");
         Call<CommentListResponse> call = shortStoryApi.getStoryComments(id, commentType, paginationCommentId);
@@ -373,10 +505,11 @@ public class ShortStoryFragment extends BaseFragment implements View.OnClickList
             }
             try {
                 CommentListResponse shortStoryCommentListResponse = response.body();
+                consolidatedCommentList = shortStoryCommentListResponse.getData();
                 if (shortStoryCommentListResponse.getCount() == 0) {
                     getFacebookComments();
                 } else {
-                    showComments(shortStoryCommentListResponse.getData());
+                    showComments(consolidatedCommentList);
                 }
             } catch (Exception e) {
                 FirebaseCrashlytics.getInstance().recordException(e);
@@ -630,6 +763,22 @@ public class ShortStoryFragment extends BaseFragment implements View.OnClickList
         try {
             switch (v.getId()) {
                 case R.id.typeHere:
+                    Bundle args = new Bundle();
+                    AddArticleCommentReplyDialogFragment addArticleCommentReplyDialogFragment =
+                            new AddArticleCommentReplyDialogFragment();
+                    addArticleCommentReplyDialogFragment.setArguments(args);
+                    addArticleCommentReplyDialogFragment.setCancelable(true);
+                    FragmentManager fm = getChildFragmentManager();
+                    addArticleCommentReplyDialogFragment.show(fm, "Add Comment");
+                    break;
+                case R.id.disableStatePostTextView:
+                    if (isValid()) {
+                        formatMentionDataForApiRequest();
+                        InputMethodManager imm = (InputMethodManager) getContext()
+                                .getSystemService(Context.INPUT_METHOD_SERVICE);
+                        imm.hideSoftInputFromWindow(typeHere.getWindowToken(), 0);
+                    }
+                    break;
                 case R.id.viewAllTextView:
                     try {
                         Utils.shareEventTracking(getActivity(), "100WS Detail", "Comment_Android",
@@ -673,6 +822,58 @@ public class ShortStoryFragment extends BaseFragment implements View.OnClickList
             Log.d("MC4kException", Log.getStackTraceString(e));
         }
     }
+
+    private boolean isValid() {
+        if (StringUtils.isNullOrEmpty(typeHere.getText().toString())) {
+            if (isAdded()) {
+                Toast.makeText(getActivity(), getString(R.string.ad_comments_toast_empty_comment), Toast.LENGTH_LONG)
+                        .show();
+            }
+            return false;
+        }
+        return true;
+    }
+
+
+    private void formatMentionDataForApiRequest() {
+        Map<String, Mentions> mentionsMap = new HashMap<>();
+        StringBuilder commentBody = new StringBuilder();
+        try {
+            MentionsEditable mentionsEditable = typeHere.getText();
+            List<MentionIndex> marker = new ArrayList<>();
+            marker.add(new MentionIndex(0, null));
+            List<MentionSpan> mentionsList = typeHere.getMentionSpans();
+            for (int i = 0; i < mentionsList.size(); i++) {
+                Mentions mention = (Mentions) mentionsList.get(i).getMention();
+                marker.add(new MentionIndex(mentionsEditable.getSpanStart(mentionsList.get(i)),
+                        mention));
+                mentionsMap.put(mention.getUserId(), mention);
+            }
+            marker.add(new MentionIndex(mentionsEditable.length(), null));
+            Collections.sort(marker);
+            ArrayList<MentionIndex> splittedComment = new ArrayList<>();
+            for (int i = 0; i < marker.size() - 1; i++) {
+                CharSequence value = mentionsEditable
+                        .subSequence(marker.get(i).index, marker.get(i + 1).index);
+                splittedComment.add(new MentionIndex(value, marker.get(i).mention));
+            }
+            for (int i = 0; i < splittedComment.size(); i++) {
+                if (splittedComment.get(i).mention != null) {
+                    commentBody.append(org.apache.commons.lang3.StringUtils
+                            .replaceFirst(splittedComment.get(i).charSequence.toString(),
+                                    splittedComment.get(i).mention.getName(),
+                                    "[~userId:" + splittedComment.get(i).mention.getUserId() + "]"));
+                } else {
+                    commentBody.append(splittedComment.get(i).charSequence);
+                }
+            }
+        } catch (Exception e) {
+            FirebaseCrashlytics.getInstance().recordException(e);
+            Log.d("MC4kException", Log.getStackTraceString(e));
+        }
+        addComment(commentBody.toString(), mentionsMap);
+    }
+
 
     @Override
     public void onClick(View view, int position, View whatsappShare) {
@@ -1073,6 +1274,7 @@ public class ShortStoryFragment extends BaseFragment implements View.OnClickList
             try {
                 CommentListResponse responseData = response.body();
                 if (responseData.getCode() == 200 && Constants.SUCCESS.equals(responseData.getStatus())) {
+                    typeHere.setText("");
                     CommentListData shortStoryCommentListData = new CommentListData();
                     shortStoryCommentListData.setId(responseData.getData().get(0).getId());
                     shortStoryCommentListData.setMessage(responseData.getData().get(0).getMessage());
@@ -1088,14 +1290,18 @@ public class ShortStoryFragment extends BaseFragment implements View.OnClickList
 
                     ShortStoryDetailAndCommentModel commentModel = new ShortStoryDetailAndCommentModel();
                     commentModel.setSsComment(shortStoryCommentListData);
-                    consolidatedList.add(1, commentModel);
-                    adapter.notifyDataSetChanged();
-                    if (!StringUtils.isNullOrEmpty(userType) && !StringUtils.isNullOrEmpty(titleSlug) && !StringUtils
+                    consolidatedCommentList.add(0, shortStoryCommentListData);
+                    consolidatedList.clear();
+                    consolidatedList.add(headerModel);
+//                    consolidatedList.add(1, commentModel);
+                    showComments(consolidatedCommentList);
+//                    adapter.notifyDataSetChanged();
+                    /*if (!StringUtils.isNullOrEmpty(userType) && !StringUtils.isNullOrEmpty(titleSlug) && !StringUtils
                             .isNullOrEmpty(blogSlug)) {
                         String shareUrl = AppUtils.getShortStoryShareUrl(userType, blogSlug, titleSlug);
                         shareCommentOnFacebook(shareUrl, responseData.getData().get(0).getMessage(),
                                 responseData.getData().get(0).getMentions());
-                    }
+                    }*/
                     if (isAdded()) {
                         Utils.pushShortStoryCommentReplyChangeEvent(getActivity(), "ShortStoryDetailsScreen",
                                 userDynamoId, articleId, "add", "comment");
@@ -1358,6 +1564,20 @@ public class ShortStoryFragment extends BaseFragment implements View.OnClickList
         call.enqueue(deleteReplyResponseListener);
     }
 
+
+    @Override
+    public void onTextChanged(@NotNull String text) {
+        if (text.isEmpty()) {
+            disableStatePostTextView
+                    .setImageDrawable(getResources().getDrawable(R.drawable.ic_post_comment_disabled_state));
+        } else {
+            horizontalCommentSuggestionsContainer.setVisibility(View.GONE);
+            SharedPrefUtils.setCommentSuggestionsVisibilityFlag(BaseApplication.getAppContext(), false);
+            disableStatePostTextView
+                    .setImageDrawable(getResources().getDrawable(R.drawable.ic_post_comment_enabled_state));
+        }
+    }
+
     private Callback<CommentListResponse> deleteReplyResponseListener = new Callback<CommentListResponse>() {
         @Override
         public void onResponse(Call<CommentListResponse> call, retrofit2.Response<CommentListResponse> response) {
@@ -1440,10 +1660,13 @@ public class ShortStoryFragment extends BaseFragment implements View.OnClickList
             try {
                 CommentListResponse responseData = response.body();
                 if (responseData.getCode() == 200 && Constants.SUCCESS.equals(responseData.getStatus())) {
-                    consolidatedList.remove(actionItemPosition);
+                    consolidatedCommentList.remove(actionItemPosition-1);
                     if (shortStoryCommentRepliesDialogFragment != null) {
                         shortStoryCommentRepliesDialogFragment.dismiss();
                     }
+                    consolidatedList.clear();
+                    consolidatedList.add(headerModel);
+                    showComments(consolidatedCommentList);
                     adapter.notifyDataSetChanged();
                     if (isAdded()) {
                         Utils.pushShortStoryCommentReplyChangeEvent(getActivity(), "ShortStoryDetailsScreen",
@@ -1559,6 +1782,39 @@ public class ShortStoryFragment extends BaseFragment implements View.OnClickList
             Log.d("MC4kException", Log.getStackTraceString(t));
         }
     };
+
+    @NonNull
+    @Override
+    public List<String> onQueryReceived(@NonNull QueryToken queryToken) {
+        final QueryTokenReceiver receiver = typeHere;
+        Retrofit retro = BaseApplication.getInstance().getRetrofit();
+        SearchArticlesAuthorsAPI searchArticlesAuthorsApi = retro.create(SearchArticlesAuthorsAPI.class);
+        Call<MentionsResponse> call = searchArticlesAuthorsApi.searchUserHandles(queryToken.getKeywords());
+        call.enqueue(new Callback<MentionsResponse>() {
+            @Override
+            public void onResponse(Call<MentionsResponse> call, Response<MentionsResponse> response) {
+                try {
+                    if (response.isSuccessful()) {
+                        MentionsResponse responseModel = response.body();
+                        List<Mentions> suggestions = new ArrayList<>(responseModel.getData().getResult());
+                        SuggestionsResult result = new SuggestionsResult(queryToken, suggestions);
+                        typeHere.onReceiveSuggestionsResult(result, "dddd");
+                    }
+                } catch (Exception e) {
+                    FirebaseCrashlytics.getInstance().recordException(e);
+                    Log.d("MC4kException", Log.getStackTraceString(e));
+                }
+            }
+
+            @Override
+            public void onFailure(Call<MentionsResponse> call, Throwable t) {
+                FirebaseCrashlytics.getInstance().recordException(t);
+                Log.d("MC4kException", Log.getStackTraceString(t));
+            }
+        });
+
+        return Arrays.asList("dddd");
+    }
 
     public class ShortStoryDetailAndCommentModel {
 

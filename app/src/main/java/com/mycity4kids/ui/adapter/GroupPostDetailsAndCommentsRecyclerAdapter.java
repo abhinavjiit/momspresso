@@ -34,6 +34,7 @@ import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.mycity4kids.R;
 import com.mycity4kids.application.BaseApplication;
+import com.mycity4kids.base.BaseActivity;
 import com.mycity4kids.constants.AppConstants;
 import com.mycity4kids.constants.Constants;
 import com.mycity4kids.models.request.GroupActionsRequest;
@@ -1828,9 +1829,12 @@ public class GroupPostDetailsAndCommentsRecyclerAdapter extends RecyclerView.Ada
 
         @Override
         public void onClick(View widget) {
-            Intent intent = new Intent(context, NewsLetterWebviewActivity.class);
-            intent.putExtra(Constants.URL, url);
-            context.startActivity(intent);
+            try {
+                ((BaseActivity) context).handleDeeplinks(url);
+            } catch (Exception e) {
+                FirebaseCrashlytics.getInstance().recordException(e);
+                Log.d("MC4kException", Log.getStackTraceString(e));
+            }
         }
     }
 

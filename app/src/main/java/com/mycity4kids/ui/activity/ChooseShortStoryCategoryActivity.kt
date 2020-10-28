@@ -219,6 +219,12 @@ class ChooseShortStoryCategoryActivity : BaseActivity(),
     }
 
     override fun onClick(v: View, position: Int) {
+        Utils.shareEventTracking(
+            this,
+            "Create section",
+            "Story_Challenges_Android",
+            "CS_SCL_Any_Challenge"
+        )
         val intent = Intent(this, ShortStoryChallengeDetailActivity::class.java)
         intent.putExtra("challenge", shortStoryChallengesData.get(position).id)
         startActivity(intent)

@@ -173,5 +173,8 @@ data class MixFeedResult(
     var responseReceived: Boolean = false,
     var carouselBloggerList: ArrayList<ContributorListResult>? = null,
     var recentLiveStreamsList: List<LiveStreamResult>? = null,
-    var torcaiAdsData: String? = ""
+    var torcaiAdsData: String? = "",
+    var suggestedTopicsList: List<Suggestion>? = null,
+    var suggestedCreatorList: List<SuggestedCreators>? = null,
+    var topCreatorList: List<ContributorListResult>? = null
 )

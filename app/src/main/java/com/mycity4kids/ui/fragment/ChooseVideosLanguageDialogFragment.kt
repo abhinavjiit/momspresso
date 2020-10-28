@@ -1,7 +1,6 @@
 package com.mycity4kids.ui.fragment
 
 
-import android.accounts.NetworkErrorException
 import android.app.Dialog
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
@@ -14,14 +13,13 @@ import android.view.ViewGroup
 import android.view.Window
 import android.widget.ImageView
 import android.widget.TextView
-import android.widget.Toast
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.DialogFragment
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import com.google.firebase.crashlytics.FirebaseCrashlytics
 import com.mycity4kids.R
 import com.mycity4kids.application.BaseApplication
+import com.mycity4kids.base.BaseActivity
 import com.mycity4kids.constants.AppConstants
 import com.mycity4kids.models.LanguageSelectionData
 import com.mycity4kids.preference.SharedPrefUtils
@@ -30,13 +28,11 @@ import com.mycity4kids.widget.MomspressoButtonWidget
 import com.mycity4kids.widget.ShareButtonWidget
 import okhttp3.ResponseBody
 import org.apmem.tools.layouts.FlowLayout
-import org.json.JSONObject
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 
-class ChooseVideosLanguageDialogFragment() :
-    DialogFragment() {
+class ChooseVideosLanguageDialogFragment : DialogFragment() {
 
     private var selectedLang = MutableLiveData<ArrayList<String>>()
     private lateinit var languagesContainer: FlowLayout
@@ -95,6 +91,9 @@ class ChooseVideosLanguageDialogFragment() :
                 selectedLang.value = selectedLanguage
                 postVlogChoosenLanguagesToServer()
             }
+        }
+
+        cancel.setOnClickListener {
             dismiss()
         }
         return view
@@ -178,6 +177,28 @@ class ChooseVideosLanguageDialogFragment() :
                         )
                     }
                 }
+                try {
+                    if (SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).videoPreferredLanguages.contains(
+                            langCodes[i]
+                        )) {
+                        shareButtonWidget.isSelected = true
+                        selectedLanguage.add(langCodes[i])
+                        shareButtonWidget.setTextColor(
+                            ContextCompat.getColor(
+                                it,
+                                R.color.app_red
+                            )
+                        )
+                        shareButtonWidget.setBorderColor(
+                            ContextCompat.getColor(
+                                it,
+                                R.color.app_red
+                            )
+                        )
+                    }
+                } catch (e: Exception) {
+
+                }
                 languagesContainer.addView(shareButtonWidget)
             }
         }
@@ -210,32 +231,25 @@ class ChooseVideosLanguageDialogFragment() :
             )
         call.enqueue(object : Callback<ResponseBody> {
             override fun onResponse(call: Call<ResponseBody>, response: Response<ResponseBody>) {
-                if (null == response.body()) {
-                    val nee = NetworkErrorException(response.raw().toString())
-                    FirebaseCrashlytics.getInstance().recordException(nee)
-                    return
-                }
-
                 try {
-                    val response = response.body()
-                    val jsonObject = JSONObject(String(response?.bytes()!!))
-                    val code = jsonObject.getInt("code")
-                    val status = jsonObject.getString("status")
-                    if (code == 200 && status == "success") {
-                        val data = jsonObject.getJSONObject("data")
-                        Toast.makeText(activity, data.getString("msg"), Toast.LENGTH_SHORT).show()
+                    activity?.let {
+                        (it as BaseActivity).startSyncingUserInfo()
                     }
-
+                    dismiss()
                 } catch (e: Exception) {
-                    Log.d("MC4kException", Log.getStackTraceString(e))
-                    FirebaseCrashlytics.getInstance().recordException(e)
+
                 }
             }
 
             override fun onFailure(call: Call<ResponseBody>, t: Throwable) {
-                Log.d("MC4kException", Log.getStackTraceString(t))
-                FirebaseCrashlytics.getInstance().recordException(t)
-                Toast.makeText(activity, t.message, Toast.LENGTH_SHORT).show()
+                try {
+                    activity?.let {
+                        (it as BaseActivity).startSyncingUserInfo()
+                    }
+                    dismiss()
+                } catch (e: Exception) {
+
+                }
             }
         })
     }

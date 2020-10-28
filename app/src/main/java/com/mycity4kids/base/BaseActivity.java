@@ -1,8 +1,14 @@
 package com.mycity4kids.base;
 
 
+import static androidx.browser.customtabs.CustomTabsService.ACTION_CUSTOM_TABS_CONNECTION;
+
+
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.content.pm.ResolveInfo;
 import android.graphics.Color;
 import android.net.Uri;
 import android.os.Build.VERSION;
@@ -66,6 +72,7 @@ import com.mycity4kids.ui.activity.GroupPostDetailActivity;
 import com.mycity4kids.ui.activity.GroupsReportedContentActivity;
 import com.mycity4kids.ui.activity.GroupsSummaryActivity;
 import com.mycity4kids.ui.activity.LoadWebViewActivity;
+import com.mycity4kids.ui.activity.NewsLetterWebviewActivity;
 import com.mycity4kids.ui.activity.ParallelFeedActivity;
 import com.mycity4kids.ui.activity.ShortStoriesListingContainerActivity;
 import com.mycity4kids.ui.activity.ShortStoryChallengeDetailActivity;
@@ -88,6 +95,8 @@ import com.mycity4kids.utils.StringUtils;
 import com.squareup.picasso.Picasso;
 import java.net.SocketTimeoutException;
 import java.net.UnknownHostException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import org.greenrobot.eventbus.EventBus;
@@ -1048,18 +1057,50 @@ public abstract class BaseActivity extends AppCompatActivity implements GroupMem
 
     private void launchChromeTabs(String deepLinkUrl) {
         try {
-//            getCustomTabsPackages();
-            CustomTabsIntent.Builder builder = new CustomTabsIntent.Builder();
-            CustomTabsIntent customTabsIntent = builder.build();
-            String packageName = CustomTabsHelper.getPackageNameToUse(this);
-            if (packageName != null) {
-                customTabsIntent.intent.setPackage(packageName);
+            ArrayList<ResolveInfo> tabSupportList = getCustomTabsPackages();
+            if (tabSupportList == null) {
+                Intent i = new Intent(Intent.ACTION_VIEW);
+                i.setData(Uri.parse(url));
+                startActivity(i);
+            } else {
+                CustomTabsIntent.Builder builder = new CustomTabsIntent.Builder();
+                CustomTabsIntent customTabsIntent = builder.build();
+                String packageName = CustomTabsHelper.getPackageNameToUse(this);
+                if (packageName != null) {
+                    customTabsIntent.intent.setPackage(packageName);
+                }
+                customTabsIntent.launchUrl(BaseActivity.this, Uri.parse(deepLinkUrl));
             }
-            customTabsIntent.launchUrl(BaseActivity.this, Uri.parse(deepLinkUrl));
         } catch (Exception e) {
             FirebaseCrashlytics.getInstance().recordException(e);
             Log.d("MC4kException", Log.getStackTraceString(e));
         }
+    }
+
+    /**
+     * Returns a list of packages that support Custom Tabs.
+     */
+    public ArrayList<ResolveInfo> getCustomTabsPackages() {
+        PackageManager pm = getPackageManager();
+        // Get default VIEW intent handler.
+        Intent activityIntent = new Intent()
+                .setAction(Intent.ACTION_VIEW)
+                .addCategory(Intent.CATEGORY_BROWSABLE)
+                .setData(Uri.fromParts("http", "", null));
+
+        // Get all apps that can handle VIEW intents.
+        List<ResolveInfo> resolvedActivityList = pm.queryIntentActivities(activityIntent, 0);
+        ArrayList<ResolveInfo> packagesSupportingCustomTabs = new ArrayList<>();
+        for (ResolveInfo info : resolvedActivityList) {
+            Intent serviceIntent = new Intent();
+            serviceIntent.setAction(ACTION_CUSTOM_TABS_CONNECTION);
+            serviceIntent.setPackage(info.activityInfo.packageName);
+            // Check if this package also resolves the Custom Tabs service.
+            if (pm.resolveService(serviceIntent, 0) != null) {
+                packagesSupportingCustomTabs.add(info);
+            }
+        }
+        return packagesSupportingCustomTabs;
     }
 
     private void identifyTargetScreen(DeepLinkingResult data) {

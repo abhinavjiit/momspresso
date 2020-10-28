@@ -1,6 +1,5 @@
 package com.mycity4kids.ui.activity;
 
-import android.accounts.NetworkErrorException;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
@@ -18,11 +17,9 @@ import com.mycity4kids.R;
 import com.mycity4kids.application.BaseApplication;
 import com.mycity4kids.base.BaseActivity;
 import com.mycity4kids.constants.AppConstants;
-import com.mycity4kids.constants.Constants;
 import com.mycity4kids.gtmutils.Utils;
 import com.mycity4kids.models.Topics;
 import com.mycity4kids.models.TopicsResponse;
-import com.mycity4kids.models.response.FollowUnfollowCategoriesResponse;
 import com.mycity4kids.models.response.GroupsCategoryMappingResult;
 import com.mycity4kids.newmodels.SelectTopic;
 import com.mycity4kids.preference.SharedPrefUtils;
@@ -296,45 +293,6 @@ public class GroupCategoriesSelectionActivity extends BaseActivity implements Vi
             }
         }
     }
-
-    private Callback<FollowUnfollowCategoriesResponse> followUnfollowCategoriesResponseCallback = new Callback<FollowUnfollowCategoriesResponse>() {
-        @Override
-        public void onResponse(Call<FollowUnfollowCategoriesResponse> call,
-                retrofit2.Response<FollowUnfollowCategoriesResponse> response) {
-            removeProgressDialog();
-            if (response == null || null == response.body()) {
-                NetworkErrorException nee = new NetworkErrorException(response.raw().toString());
-                FirebaseCrashlytics.getInstance().recordException(nee);
-                showToast(getString(R.string.server_went_wrong));
-                return;
-            }
-            try {
-                FollowUnfollowCategoriesResponse responseData = response.body();
-                if (responseData.getCode() == 200 && Constants.SUCCESS.equals(responseData.getStatus())) {
-                    SharedPrefUtils
-                            .setFollowedTopicsCount(BaseApplication.getAppContext(), responseData.getData().size());
-                    showToast(getString(R.string.subscribe_topics_toast_topic_updated));
-                    Intent intent = getIntent();
-                    intent.putStringArrayListExtra("updatedTopicList", updateTopicList);
-                    setResult(RESULT_OK, intent);
-                } else {
-                    showToast(responseData.getReason());
-                }
-            } catch (Exception e) {
-                FirebaseCrashlytics.getInstance().recordException(e);
-                Log.d("MC4kException", Log.getStackTraceString(e));
-                showToast(getString(R.string.went_wrong));
-            }
-        }
-
-        @Override
-        public void onFailure(Call<FollowUnfollowCategoriesResponse> call, Throwable t) {
-            removeProgressDialog();
-            FirebaseCrashlytics.getInstance().recordException(t);
-            Log.d("MC4kException", Log.getStackTraceString(t));
-            showToast(getString(R.string.went_wrong));
-        }
-    };
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {

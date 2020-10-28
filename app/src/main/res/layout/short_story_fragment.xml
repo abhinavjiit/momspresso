@@ -1,4 +1,5 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+  xmlns:app="http://schemas.android.com/apk/res-auto"
   android:id="@+id/rootLayout"
   android:layout_width="match_parent"
   android:layout_height="match_parent"
@@ -28,52 +29,96 @@
     android:textSize="@dimen/space_16"
     android:visibility="gone" />
 
-  <RelativeLayout
+
+  <HorizontalScrollView
+    android:id="@+id/horizontalCommentSuggestionsContainer"
     android:layout_width="match_parent"
-    android:layout_height="50dp"
-    android:layout_alignParentBottom="true"
-    android:background="@color/color_ECECEC">
-
-    <com.mikhaellopez.circularimageview.CircularImageView
-      android:id="@+id/userImageView"
-      android:layout_width="34dp"
-      android:layout_height="34dp"
-      android:layout_centerVertical="true"
-      android:layout_marginStart="@dimen/space_10"
-      android:src="@drawable/default_commentor_img" />
-
-
-    <com.mycity4kids.widget.CustomFontTextView
-      android:id="@+id/typeHere"
-      android:layout_width="match_parent"
-      android:layout_height="wrap_content"
-      android:layout_centerVertical="true"
-      android:layout_marginStart="@dimen/space_10"
-      android:layout_toRightOf="@id/userImageView"
-      android:background="@color/white"
-      android:drawableRight="@drawable/ic_post_arrow"
-      android:gravity="center_vertical"
-      android:hint="@string/write_a_comment"
-      android:maxLines="4"
-      android:paddingLeft="@dimen/space_17"
-      android:paddingTop="@dimen/space_10"
-      android:paddingRight="@dimen/space_10"
-      android:paddingBottom="@dimen/space_10"
-      android:textColor="#a1a4a8"
-      android:textColorHint="@color/color_A7A7A7"
-      android:textSize="18sp"
-      android:visibility="visible" />
-
-    <com.mycity4kids.widget.CustomFontTextView
-      android:id="@+id/post_arrow"
+    android:layout_height="wrap_content"
+    android:layout_above="@+id/rLayout"
+    android:background="@color/white"
+    android:elevation="3dp"
+    android:paddingStart="14dp"
+    android:paddingTop="@dimen/space_7"
+    android:paddingEnd="14dp"
+    android:paddingBottom="7dp"
+    android:visibility="visible">
+    <LinearLayout
+      android:id="@+id/suggestionContainer"
       android:layout_width="wrap_content"
       android:layout_height="wrap_content"
-      android:layout_alignParentRight="true"
-      android:layout_margin="@dimen/space_10"
-      android:background="@drawable/ic_post_arrow"
-      android:padding="@dimen/space_10"
-      android:visibility="gone" />
+      android:orientation="horizontal">
 
+    </LinearLayout>
+
+  </HorizontalScrollView>
+  <View
+    android:layout_width="match_parent"
+    android:layout_height="0.5dp"
+    android:layout_above="@id/rLayout"
+    android:background="@color/dark_grey" />
+
+  <RelativeLayout
+    android:id="@+id/rLayout"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_alignParentBottom="true"
+    android:background="#f0f0f0"
+    android:elevation="@dimen/space_5">
+
+    <RelativeLayout
+      android:layout_width="match_parent"
+      android:layout_height="50dp"
+      android:background="#f0f0f0">
+
+      <com.mikhaellopez.circularimageview.CircularImageView
+        android:id="@+id/userImageView"
+        android:layout_width="34dp"
+        android:layout_height="34dp"
+        android:layout_alignParentBottom="true"
+        android:layout_marginStart="@dimen/space_10"
+        android:layout_marginBottom="@dimen/space_5"
+        android:src="@drawable/default_commentor_img" />
+
+
+    </RelativeLayout>
+
+    <RelativeLayout
+      android:id="@+id/r"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:layout_marginStart="50dp"
+      android:layout_marginTop="@dimen/space_5"
+      android:layout_marginEnd="@dimen/space_8"
+      android:layout_marginBottom="@dimen/space_5"
+      android:background="@drawable/rootlayout_with_rounded_corner">
+
+      <com.mycity4kids.tagging.ui.RichEditorView
+        android:id="@+id/typeHere"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
+        android:layout_marginStart="@dimen/space_10"
+        android:layout_toStartOf="@+id/disableStatePostTextView"
+        android:background="@color/transparent"
+        android:gravity="center_vertical"
+        android:hint="Write a comment"
+        android:maxLines="4"
+        android:textColor="#a1a4a8"
+        android:textSize="18sp"
+        android:visibility="visible"
+        app:fontName="oswald.ttf" />
+      <androidx.appcompat.widget.AppCompatImageView
+        android:id="@+id/disableStatePostTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:layout_centerVertical="true"
+        android:paddingStart="10dp"
+        android:paddingEnd="@dimen/space_10"
+        android:src="@drawable/ic_post_comment_disabled_state" />
+
+
+    </RelativeLayout>
   </RelativeLayout>
 
 </RelativeLayout>

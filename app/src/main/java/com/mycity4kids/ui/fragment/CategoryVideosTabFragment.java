@@ -87,8 +87,6 @@ public class CategoryVideosTabFragment extends BaseFragment implements View.OnCl
     private GridLayoutManager gridLayoutManager;
     private ArrayList<String> vlogSelectedLangs;
 
-    private String[] selectedLanguages;
-
     static {
         AppCompatDelegate.setCompatVectorFromResourcesEnabled(true);
     }
@@ -177,8 +175,6 @@ public class CategoryVideosTabFragment extends BaseFragment implements View.OnCl
                 .isEmpty()) {
             vlogSelectedLangs = SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext())
                     .getVideoPreferredLanguages();
-            selectedLanguages = vlogSelectedLangs.toArray(new String[vlogSelectedLangs.size()]);
-            Log.d("vlogSelectedLangs", vlogSelectedLangs.toString());
         }
         hitArticleListingApi();
         articlesListingAdapter = new MomVlogListingAdapter(getActivity());
@@ -258,7 +254,6 @@ public class CategoryVideosTabFragment extends BaseFragment implements View.OnCl
     }
 
     private void hitArticleListingApi() {
-        String langFilter = getLangFilter();
         int from;
         int end;
         if (!ConnectivityUtils.isNetworkEnabled(getActivity())) {
@@ -276,28 +271,12 @@ public class CategoryVideosTabFragment extends BaseFragment implements View.OnCl
         VlogsListingAndDetailsAPI vlogsListingAndDetailsApi = retrofit.create(VlogsListingAndDetailsAPI.class);
         if (AppConstants.HOME_VIDEOS_CATEGORYID.equals(videoCategory)) {
             Call<VlogsListingResponse> callRecentVideoArticles = vlogsListingAndDetailsApi
-                    .getLangWiseVlogs(from, end, sortType, 3, null, langFilter);
+                    .getLangWiseVlogs(from, end, sortType, 3, null, vlogSelectedLangs);
             callRecentVideoArticles.enqueue(recentArticleResponseCallback);
         } else {
             Call<VlogsListingResponse> callRecentVideoArticles = vlogsListingAndDetailsApi
-                    .getLangWiseVlogs(from, end, sortType, 3, videoCategory, langFilter);
+                    .getLangWiseVlogs(from, end, sortType, 3, videoCategory, vlogSelectedLangs);
             callRecentVideoArticles.enqueue(recentArticleResponseCallback);
-        }
-    }
-
-    private String getLangFilter() {
-        StringBuilder langFilter = new StringBuilder();
-        if (null == selectedLanguages || selectedLanguages.length == 0) {
-            return null;
-        } else {
-            for (String selectedLanguage : selectedLanguages) {
-                if (langFilter.length() == 0) {
-                    langFilter.append(selectedLanguage);
-                } else {
-                    langFilter.append(",").append(selectedLanguage);
-                }
-            }
-            return langFilter.toString();
         }
     }
 
@@ -486,26 +465,11 @@ public class CategoryVideosTabFragment extends BaseFragment implements View.OnCl
     @Override
     public void onResume() {
         super.onResume();
-        funnyvideosshimmer.startShimmerAnimation();
-        Utils.momVlogEvent(
-                getActivity(),
-                "Video Listing",
-                topic.getDisplay_name(),
-                "",
-                "android",
-                SharedPrefUtils.getAppLocale(BaseApplication.getAppContext()),
-                SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId(),
-                "" + System.currentTimeMillis(),
-                "Show_Video_Listing",
-                topic.getId(),
-                ""
-        );
     }
 
     @Override
     public void onPause() {
         super.onPause();
-        funnyvideosshimmer.stopShimmerAnimation();
     }
 
     @Override

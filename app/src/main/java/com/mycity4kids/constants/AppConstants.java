@@ -288,10 +288,15 @@ public class AppConstants {
     public static final String GROUP_ACTION_TYPE_VOTE_KEY = "3";
     public static final String GROUP_ACTION_TYPE_TAG_KEY = "4";
 
+    public static final String CONTENT_TYPE_FOLLOW_TOPICS_AND_CREATORS = "14";
+    public static final String CONTENT_TYPE_SUGGESTED_TOPICS = "13";
+    public static final String CONTENT_TYPE_SUGGESTED_CREATORS_TOP_RANKERS = "12";
+    public static final String CONTENT_TYPE_SUGGESTED_CREATORS_BASED_ON_ACTIVITY = "11";
+    public static final String CONTENT_TYPE_SUGGESTED_CREATORS_BASED_ON_TOPICS = "10";
+    public static final String CONTENT_TYPE_SUGGESTED_CREATORS_FOLLOWED_BY_FRIENDS = "9";
     public static final String CONTENT_TYPE_TORCAI_ADS = "8";
     public static final String CONTENT_TYPE_UPCOMING_LIVE_STREAM = "7";
     public static final String CONTENT_TYPE_RECENT_LIVE_STREAM = "6";
-    public static final String CONTENT_TYPE_SUGGESTED_BLOGGERS = "5";
     public static final String CONTENT_TYPE_MYMONEY = "4";
     public static final String CONTENT_TYPE_VIDEO = "2";
     public static final String CONTENT_TYPE_SHORT_STORY = "1";

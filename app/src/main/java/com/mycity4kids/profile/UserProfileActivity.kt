@@ -57,12 +57,14 @@ import com.mycity4kids.models.response.AddBookmarkResponse
 import com.mycity4kids.models.response.ArticleDetailResponse
 import com.mycity4kids.models.response.ArticleDetailResult
 import com.mycity4kids.models.response.BaseResponseGeneric
+import com.mycity4kids.models.response.ContributorListResult
 import com.mycity4kids.models.response.FollowUnfollowUserResponse
 import com.mycity4kids.models.response.LanguageRanksModel
 import com.mycity4kids.models.response.MixFeedResponse
 import com.mycity4kids.models.response.MixFeedResult
 import com.mycity4kids.models.response.RecommendUnrecommendArticleResponse
 import com.mycity4kids.models.response.ShortStoryDetailResult
+import com.mycity4kids.models.response.SuggestedCreators
 import com.mycity4kids.models.response.UserDetailResponse
 import com.mycity4kids.preference.SharedPrefUtils
 import com.mycity4kids.retrofitAPIsInterfaces.ArticleDetailsAPI
@@ -87,6 +89,8 @@ import com.mycity4kids.ui.activity.UserPublishedContentActivity
 import com.mycity4kids.ui.activity.ViewAllCommentsActivity
 import com.mycity4kids.ui.activity.collection.CollectionsActivity
 import com.mycity4kids.ui.activity.collection.UserCollectionItemListActivity
+import com.mycity4kids.ui.adapter.SuggestedCreatorsRecyclerAdapter
+import com.mycity4kids.ui.adapter.TopCreatorsRecyclerAdapter
 import com.mycity4kids.ui.adapter.UserProfileCreatedCollectionsAdapter
 import com.mycity4kids.ui.adapter.UserProfileFollowedCollectionAdapter
 import com.mycity4kids.ui.fragment.AddCollectionAndCollectionItemDialogFragment
@@ -126,7 +130,9 @@ class UserProfileActivity : BaseActivity(),
     ResizableTextView.SeeMore,
     UserProfileCreatedCollectionsAdapter.CollectionRecyclerViewClickListener,
     UserProfileFollowedCollectionAdapter.CollectionRecyclerViewClickListener,
-    RecentOrUpcomingLiveStreamsHorizontalAdapter.HorizontalRecyclerViewClickListener {
+    RecentOrUpcomingLiveStreamsHorizontalAdapter.HorizontalRecyclerViewClickListener,
+    SuggestedCreatorsRecyclerAdapter.SuggestedCreatorsClickListener,
+    TopCreatorsRecyclerAdapter.TopCreatorsClickListener {
 
     override fun onCollectionsClick(position: Int, id: String?) {
         id?.let {
@@ -232,6 +238,8 @@ class UserProfileActivity : BaseActivity(),
 
     private val userContentAdapter: UserContentAdapter by lazy {
         UserContentAdapter(
+            this,
+            this,
             this,
             this,
             AppUtils.isPrivateProfile(authorId)
@@ -2411,5 +2419,23 @@ class UserProfileActivity : BaseActivity(),
     }
 
     override fun onLiveStreamItemClick(view: View, liveStreamResult: LiveStreamResult?) {
+    }
+
+    override fun onSuggestedCreatorClick(
+        mixFeedPosition: Int,
+        position: Int,
+        view: View,
+        liveStreamResult: SuggestedCreators?
+    ) {
+
+    }
+
+    override fun onTopCreatorClick(
+        mixFeedPosition: Int,
+        position: Int,
+        view: View,
+        liveStreamResult: ContributorListResult?
+    ) {
+
     }
 }

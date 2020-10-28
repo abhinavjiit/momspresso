@@ -2295,8 +2295,7 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
                         bundle.putString("articleId", articleId);
                         bundle.putString("type", AppConstants.ARTICLE_COLLECTION_TYPE);
                         addCollectionAndCollectionitemDialogFragment.setArguments(bundle);
-                        FragmentManager fm = getFragmentManager();
-                        addCollectionAndCollectionitemDialogFragment.setTargetFragment(this, 0);
+                        FragmentManager fm = getChildFragmentManager();
                         addCollectionAndCollectionitemDialogFragment.show(fm, "collectionAdd");
                         Utils.pushProfileEvents(getActivity(), "CTA_Article_Add_To_Collection",
                                 "ArticleDetailsFragment", "Add to Collection", "-");
@@ -2689,8 +2688,7 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
                         bundle.putString("articleId", articleId);
                         bundle.putString("type", AppConstants.ARTICLE_COLLECTION_TYPE);
                         addCollectionAndCollectionitemDialogFragment.setArguments(bundle);
-                        FragmentManager fm = getFragmentManager();
-                        addCollectionAndCollectionitemDialogFragment.setTargetFragment(ArticleDetailsFragment.this, 0);
+                        FragmentManager fm = getChildFragmentManager();
                         addCollectionAndCollectionitemDialogFragment.show(fm, "collectionAdd");
                         Utils.pushProfileEvents(getActivity(), "CTA_Article_Add_To_Collection",
                                 "ArticleDetailsFragment", "Add to Collection", "-");

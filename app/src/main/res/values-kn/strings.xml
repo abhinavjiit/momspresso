@@ -1251,7 +1251,7 @@ Thank you! We will be reviewing your story. You can expect to hear from us withi
   <string name="profile_featured_more">+%d More</string>
   <string name="all_drafts">Drafts</string>
   <string name="all_story">100 Word Story</string>
-  <string name="all_blogs">Blogs</string>
+  <string name="all_blogs">ಬ್ಲಾಗ್</string>
   <string name="all_videos">Videos</string>
   <string name="profile_post_featured">Post featured on the following collections</string>
   <string name="dialog_fragment_add_collection_select_collection">ಸಂಗ್ರಹವನ್ನು ಆಯ್ದುಕೊಳ್ಳಿ</string>
@@ -1469,12 +1469,12 @@ Thank you! We will be reviewing your story. You can expect to hear from us withi
   <string name="leaderboard_btn">View Leaderboard</string>
   <string name="total_blog_view">ಬ್ಲಾಗ್ ಗಳಿಸಿದ ಒಟ್ಟು ಆರ್ಗ್ಯಾನಿಕ್ ವೀಕ್ಷಣೆಗಳು</string>
   <string name="total_vlog_view">ವ್ಲೋಗ್ ಗಳಿಸಿದ ಒಟ್ಟು ಆರ್ಗ್ಯಾನಿಕ್ ವೀಕ್ಷಣೆಗಳು</string>
-  <string name="leaderboard">Leaderboard</string>
+  <string name="leaderboard">ಲೇಅದೆರ್ಬೊರ್ಡು </string>
   <string name="leaderboard_blogs">BLOGS</string>
   <string name="leaderboard_vlogs">VLOG</string>
   <string name="webview_hack_text">ಹೆಚ್ಚು ಪೇಜ್ ವ್ಯೂ ಗಳಿಸಲು ಈ ಹ್ಯಾಕ್ ಗಳನ್ನು ಓದಿ</string>
   <string name="webview_term_text">नನಿಯಮಾವಳಿಗಳು</string>
-  <string name="earning_calculator">Earning Calculator</string>
+  <string name="earning_calculator">ಅರ್ನಿಗ್ ಕ್ಯಾಲಿಕುಲೇಟರ್</string>
   <string name="click_here_btn">Click to view leaderboard</string>
   <string name="checkout_growth_hack">Checkout the growth hacks</string>
   <string name="blogger_gold_about_text">ಈ ಹತ್ತನೇ ವರ್ಷಾಚರಣೆಯನ್ನು ನಾವು ಸಂಭ್ರಮಿಸಲು ಬಯಸುತ್ತೇವೆ... ನಿಮ್ಮ ಜೊತೆಗೆ!</string>
@@ -1537,4 +1537,11 @@ Thank you! We will be reviewing your story. You can expect to hear from us withi
   <string name="tooltip_liked_the_blog">ನಿಮಗೆ ಇಷ್ಟವಾದ ಲೇಖನ ರಚನೆಕಾರರನ್ನು ಹಿಂಬಾಲಿಸಿ. ಅವರಿಂದ ರಚಿಸಲ್ಪಡುವ ಎಲ್ಲಾ ಬರಹಗಳನ್ನು ಓದುವ ಅವಕಾಶ ನಿಮ್ಮದಾಗಲಿ</string>
   <string name="coachmark_vlogs_2">ಒಂದು ಒಳ್ಳೆಯ ಮುಖಪುಟ ನಿಮ್ಮ ವೀಡಿಯೋ ವೀಕ್ಷಣೆಯನ್ನು ಹೆಚ್ಚಿಸುತ್ತದೆ</string>
   <string name="tooltip_groups">ನೀವು ಇಷ್ಟಪಡುವ ಗುಂಪುಗಳಿಗೆ ಸೇರಿ. ಸಮುದಾಯದೊಂದಿಗೆ ಸಂವಹನ ನಡೆಸಲು ಪ್ರಾರಂಭಿಸಿ!</string>
+  <string name="video_language_settings">ವೀಡಿಯೊ ಭಾಷೆ ಸೆಟ್ಟಿಂಗ್‌ಗಳು</string>
+  <string name="all_intrumental">ಸಂಗೀತ/ಮ್ಯೂಸಿಕ್</string>
+  <string name="select_video_preferences">ವೀಡಿಯೊ ಆದ್ಯತೆಗಳನ್ನು ಆಯ್ಕೆಮಾಡಿ</string>
+  <string name="please_select_lang">ದಯವಿಟ್ಟು ಭಾಷೆಯನ್ನು ಆಯ್ಕೆಮಾಡಿ</string>
+  <string name="watch_video_lang_choice">ನಿಮ್ಮ ಆಯ್ಕೆಯ ಭಾಷೆಯಲ್ಲಿ ವೀಡಿಯೊಗಳನ್ನು ವೀಕ್ಷಿಸಿ</string>
+  <string name="know_more">ಇನ್ನು ಹೆಚ್ಚು ತಿಳಿಯಿರಿ</string>
+  <string name="all_vlogs">ವ್ಲೋಗ್ಸ್</string>
 </resources>

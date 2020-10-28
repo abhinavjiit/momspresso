@@ -4,10 +4,13 @@ import com.mycity4kids.models.BloggersYourFriendsFollowingResponseModel;
 import com.mycity4kids.models.request.FacebookFriendsRequest;
 import com.mycity4kids.models.request.FacebookInviteFriendsRequest;
 import com.mycity4kids.models.request.FollowUnfollowUserRequest;
+import com.mycity4kids.models.response.ContributorListResponse;
 import com.mycity4kids.models.response.FacebookFriendsResponse;
 import com.mycity4kids.models.response.FacebookInviteFriendsResponse;
 import com.mycity4kids.models.response.FollowUnfollowUserResponse;
 import com.mycity4kids.models.response.FollowersFollowingResponse;
+import com.mycity4kids.models.response.SuggestedCreatorsResponse;
+import com.mycity4kids.models.response.SuggestedTopics;
 import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.http.Body;
@@ -74,4 +77,30 @@ public interface FollowAPI {
             @Query("start") int start,
             @Query("limit") int limit,
             @Query("sort") int sort);
+
+    @GET("/v1/followers-suggestion/{userId}")
+    Call<SuggestedCreatorsResponse> getSuggestedCreators(@Path("userId") String userId,
+            @Query("suggestion_type") int suggestionType,
+            @Query("start") int start,
+            @Query("limit") int limit,
+            @Query("sort") int sort);
+
+    @GET("/v1/followers-suggestion/{userId}")
+    Call<SuggestedCreatorsResponse> getSuggestedCreators(@Path("userId") String userId,
+            @Query("suggestion_type") int suggestionType,
+            @Query("start") int start,
+            @Query("limit") int limit);
+
+    @GET("/v1/follow-topic-suggestion/{userId}")
+    Call<SuggestedTopics> getSuggestedTopics(@Path("userId") String userId,
+            @Query("start") int start,
+            @Query("limit") int limit,
+            @Query("sort") int sort);
+
+    @GET("v1/users/")
+    Call<ContributorListResponse> getContributorList(@Query("limit") int limit,
+            @Query("sortType") int sortType,
+            @Query("type") String type,
+            @Query("lang") String lang,
+            @Query("pagination") String pagination);
 }

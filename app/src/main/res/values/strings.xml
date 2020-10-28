@@ -1658,5 +1658,12 @@ Thank you! We will be reviewing your story. You can expect to hear from us withi
   <string name="tooltip_liked_the_blog">Liked the blog? Follow the creator to never miss their amazing posts</string>
   <string name="coachmark_vlogs_2">A good thumbnail brings more views</string>
   <string name="tooltip_groups">Join the groups you like. Start interacting with the community!</string>
+  <string name="video_language_settings">Video Language Settings</string>
+  <string name="all_intrumental">Instrumental</string>
+  <string name="select_video_preferences">Select video preferences</string>
+  <string name="please_select_lang">Please select a language</string>
+  <string name="watch_video_lang_choice">Watch videos in the language of your choice</string>
+  <string name="know_more">Know More</string>
+  <string name="all_vlogs">Vlogs</string>
 </resources>
 

@@ -78,6 +78,7 @@ import com.mycity4kids.ui.activity.collection.UserCollectionItemListActivity;
 import com.mycity4kids.ui.adapter.UserAllDraftsRecyclerAdapter;
 import com.mycity4kids.ui.campaign.activity.CampaignContainerActivity;
 import com.mycity4kids.ui.fragment.BecomeBloggerFragment;
+import com.mycity4kids.ui.fragment.BloggerGoldDialogFragment;
 import com.mycity4kids.ui.fragment.ChangePreferredLanguageDialogFragment;
 import com.mycity4kids.ui.fragment.ChooseVideoUploadOptionDialogFragment;
 import com.mycity4kids.ui.fragment.CustomizeFeedUsingTopicsAndFriendsBottomSheetDialogFragment;
@@ -539,6 +540,8 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
             welcomeUserTextView.setText(getString(R.string.welcome_user,
                     SharedPrefUtils.getUserDetailModel(this).getFirst_name() + " " + SharedPrefUtils
                             .getUserDetailModel(this).getLast_name()));
+        } else if (!SharedPrefUtils.isBloggerGoldPopShown(this)) {
+            showBloggerGoldDialog();
         } else {
             journeyLayout.setVisibility(View.GONE);
         }
@@ -562,7 +565,15 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
             launchInviteFriendsDialog(getIntent().getStringExtra("source"));
         }
         getUsersData();
-        showBottomSheet();
+    }
+
+    private void showBloggerGoldDialog() {
+        BloggerGoldDialogFragment bloggerGoldDialogFragment = new BloggerGoldDialogFragment();
+        Bundle args = new Bundle();
+        bloggerGoldDialogFragment.setArguments(args);
+        bloggerGoldDialogFragment.setCancelable(true);
+        FragmentManager fm = getSupportFragmentManager();
+        bloggerGoldDialogFragment.show(fm, "Blogger Gold");
     }
 
     private void createContentAction() {
@@ -1543,6 +1554,10 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
     @Override
     public void onBackPressed() {
         try {
+            if (groupCoachMark.getVisibility() == View.VISIBLE) {
+                groupCoachMark.setVisibility(View.GONE);
+                updateCoachmarkFlag("groupCoachMark", true);
+            }
             if (drawerLayout.isDrawerOpen(GravityCompat.START)) {
                 drawerLayout.closeDrawer(GravityCompat.START);
                 return;
@@ -1553,6 +1568,7 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
             }
             if (journeyLayout.getVisibility() == View.VISIBLE) {
                 journeyLayout.setVisibility(View.GONE);
+                Utils.shareEventTracking(this, "Home screen", "Onboarding_Android", "Onboarding_Back");
                 SharedPrefUtils.setUserJourneyCompletedFlag(this, true);
                 return;
             }

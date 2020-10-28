@@ -96,23 +96,8 @@ public class AddVideoDetailsActivity extends BaseActivity implements View.OnClic
             AppConstants.LOCALE_GUJARATI,
             AppConstants.LOCALE_PUNJABI};
 
-    private String[] langNameList = {
-            "Select Your Language",
-            "Instrumental",
-            "English",
-            "Hindi",
-            "Marathi",
-            "Bangali",
-            "Tamil",
-            "Telgu",
-            "Kannada",
-            "Malayalam",
-            "Gujarati",
-            "Punjabi"
-    };
 
     private ArrayList<String> selectedLangs;
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -337,6 +322,8 @@ public class AddVideoDetailsActivity extends BaseActivity implements View.OnClic
                     videoTitleEditText.requestFocus();
                 } else if (StringUtils.isNullOrEmpty(subcategoryId)) {
                     showToast("Please select a category for your video");
+                } else if (selectedLangs == null || selectedLangs.isEmpty()) {
+                    showToast(getString(R.string.please_select_lang));
                 } else {
                     uploadVideo();
                 }
@@ -354,21 +341,34 @@ public class AddVideoDetailsActivity extends BaseActivity implements View.OnClic
     }
 
     private void showLangAdapter() {
+        String[] langNameList = {
+                getString(R.string.please_select_lang),
+                getString(R.string.all_intrumental),
+                getString(R.string.language_label_english),
+                getString(R.string.language_label_hindi),
+                getString(R.string.language_label_marathi),
+                getString(R.string.language_label_bengali),
+                getString(R.string.language_label_tamil),
+                getString(R.string.language_label_telegu),
+                getString(R.string.language_label_kannada),
+                getString(R.string.language_label_malayalam),
+                getString(R.string.language_label_gujarati),
+                getString(R.string.language_label_punjabi)
+        };
         ArrayAdapter<String> langAdapter = new VlogLanguageSelectionAdapter(this,
                 R.layout.vlog_lang_drop_down_item_layout, langNameList);
         spinner.setAdapter(langAdapter);
         spinner.setOnItemSelectedListener(new OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
-                if (i == 1) {//send all langfor
+                if (i == 1) {
                     selectedLangs = new ArrayList<>();
                     for (int j = 2; j < langCodes.length; j++) {
                         selectedLangs.add(langCodes[j]);
                     }
-
-                } else if (i == 0) {//send nothing
+                } else if (i == 0) {
                     selectedLangs = null;
-                } else {//send selected lang
+                } else {
                     selectedLangs = new ArrayList<>();
                     selectedLangs.add(langCodes[i]);
                 }
@@ -376,7 +376,6 @@ public class AddVideoDetailsActivity extends BaseActivity implements View.OnClic
 
             @Override
             public void onNothingSelected(AdapterView<?> adapterView) {
-//send nothing
                 selectedLangs = null;
             }
         });

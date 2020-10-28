@@ -28,8 +28,8 @@ class ViewAllLeaderboardActivity : BaseActivity() {
         val tabName = intent.getStringExtra("tab")
 
         tabs.apply {
-            addTab(tabs.newTab().setText(R.string.leaderboard_blogs))
-            addTab(tabs.newTab().setText(R.string.leaderboard_vlogs))
+            addTab(tabs.newTab().setText(R.string.all_blogs))
+            addTab(tabs.newTab().setText(R.string.all_vlogs))
         }
 
         back.setOnClickListener {
