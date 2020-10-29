@@ -565,6 +565,7 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
             launchInviteFriendsDialog(getIntent().getStringExtra("source"));
         }
         getUsersData();
+        showBottomSheet();
     }
 
     private void showBloggerGoldDialog() {

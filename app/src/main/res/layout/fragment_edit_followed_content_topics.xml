@@ -25,7 +25,7 @@
         android:drawablePadding="@dimen/space_16"
         android:drawableTint="@color/campaign_515151"
         android:gravity="center_vertical"
-        android:text="Select Story Topics"
+        android:text=""
         android:textColor="@color/campaign_515151"
         android:textSize="18sp"
         app:fontName="Roboto-Bold.ttf" />
@@ -37,7 +37,7 @@
   <ScrollView
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:layout_above="@id/bottomLayout"
+    android:layout_above="@+id/bottomLayout"
     android:layout_below="@id/toolbar"
     android:background="@color/white">
     <LinearLayout
@@ -71,8 +71,9 @@
         android:layout_height="wrap_content"
         android:paddingTop="@dimen/space_8"
         android:paddingBottom="@dimen/space_8"
-        android:text="Select minimum 1 tags to continue"
+        android:text="Select minimum 3 tags to continue"
         android:textSize="14sp"
+        android:visibility="gone"
         app:fb_defaultColor="@color/white"
         app:fb_textColor="#707070"
         app:fb_textFont="Roboto-Regular.ttf" />
@@ -84,7 +85,7 @@
         android:layout_below="@id/selectMinimumTextView"
         android:paddingTop="@dimen/space_16"
         android:paddingBottom="@dimen/space_16"
-        android:text=""
+        android:text="Save"
         android:textSize="18sp"
         app:fb_defaultColor="@color/app_red"
         app:fb_textColor="@color/white"

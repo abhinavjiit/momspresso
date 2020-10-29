@@ -25,6 +25,7 @@ import com.mycity4kids.ui.activity.DashboardActivity
 import com.mycity4kids.ui.activity.FindFbFriendsActivity
 import com.mycity4kids.ui.activity.phoneLogin.FBFriendsAdapter
 import com.mycity4kids.utils.AppUtils
+import com.mycity4kids.utils.EndlessScrollListener
 import com.mycity4kids.utils.ToastUtils
 import com.mycity4kids.widget.MomspressoButtonWidget
 import retrofit2.Call
@@ -40,6 +41,7 @@ class BloggersYourFriendsFollowingFeedFragment : BaseFragment(),
     private lateinit var skip: MomspressoButtonWidget
     private lateinit var back: TextView
     private lateinit var nextTextView: MomspressoButtonWidget
+    private lateinit var noResultTextView: TextView
 
 
     companion object {
@@ -57,6 +59,7 @@ class BloggersYourFriendsFollowingFeedFragment : BaseFragment(),
         skip = view.findViewById(R.id.skip)
         back = view.findViewById(R.id.back)
         nextTextView = view.findViewById(R.id.nextTextView)
+        noResultTextView = view.findViewById(R.id.noResultTextView)
         adapter = FBFriendsAdapter(this, "followFbFriends")
         adapter.setListData(facebookFriendList)
         val llm = LinearLayoutManager(activity)
@@ -64,19 +67,26 @@ class BloggersYourFriendsFollowingFeedFragment : BaseFragment(),
         recyclerView.layoutManager = llm
         recyclerView.adapter = adapter
         adapter.notifyDataSetChanged()
-        getBloggersYourFriendsFollowing()
+        getBloggersYourFriendsFollowing(0)
         skip.setOnClickListener(this)
         back.setOnClickListener(this)
         nextTextView.setOnClickListener(this)
+
+        recyclerView.addOnScrollListener(object : EndlessScrollListener(llm) {
+            override fun onLoadMore(page: Int, totalItemsCount: Int, view: RecyclerView?) {
+                getBloggersYourFriendsFollowing(totalItemsCount)
+            }
+
+        })
         return view
     }
 
-    private fun getBloggersYourFriendsFollowing() {
+    private fun getBloggersYourFriendsFollowing(start: Int) {
         showProgressDialog("please wait")
         BaseApplication.getInstance().retrofit.create(FollowAPI::class.java).getBloggersList(
             SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).dynamoId,
             3,
-            0,
+            start,
             10,
             1
         ).enqueue(bloggersListCallBack)
@@ -101,9 +111,11 @@ class BloggersYourFriendsFollowingFeedFragment : BaseFragment(),
                             facebookFriendList.addAll(it)
                             adapter.notifyDataSetChanged()
                         } ?: run {
-                            ToastUtils.showToast(activity, "something went wrong")
+                            noResultTextView.visibility = View.VISIBLE
+                            ToastUtils.showToast(activity, "no result")
                         }
                     }
+
                 } catch (t: Exception) {
                     FirebaseCrashlytics.getInstance().recordException(t)
                     Log.d("MC4kException", Log.getStackTraceString(t))

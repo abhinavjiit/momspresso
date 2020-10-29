@@ -37,6 +37,7 @@
   <ScrollView
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:layout_above="@+id/bottomLayout"
     android:layout_below="@id/toolbar"
     android:background="@color/white">
     <LinearLayout
@@ -53,6 +54,7 @@
   </ScrollView>
 
   <androidx.cardview.widget.CardView
+    android:id="@+id/bottomLayout"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_alignParentBottom="true"
@@ -82,7 +84,7 @@
         android:layout_below="@id/selectMinimumTextView"
         android:paddingTop="@dimen/space_16"
         android:paddingBottom="@dimen/space_16"
-        android:text="Go to My Feed"
+        android:text=""
         android:textSize="18sp"
         app:fb_defaultColor="@color/app_red"
         app:fb_textColor="@color/white"

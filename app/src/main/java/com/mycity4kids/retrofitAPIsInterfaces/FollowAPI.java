@@ -103,4 +103,5 @@ public interface FollowAPI {
             @Query("type") String type,
             @Query("lang") String lang,
             @Query("pagination") String pagination);
+
 }

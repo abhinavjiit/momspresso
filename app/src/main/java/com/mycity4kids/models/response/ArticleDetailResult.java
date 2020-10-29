@@ -1,6 +1,7 @@
 package com.mycity4kids.models.response;
 
 import com.google.gson.annotations.SerializedName;
+import com.mycity4kids.models.Topics;
 import com.mycity4kids.models.parentingdetails.DetailsBody;
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -65,6 +66,36 @@ public class ArticleDetailResult implements Serializable {
     private String sponsoredBadge;
     @SerializedName("lang")
     private String lang;
+    @SerializedName("followArticleCategories")
+    private ArrayList<Topics> followArticleCategories;
+    @SerializedName("followStoryCategories")
+    private ArrayList<Topics> followStoryCategories;
+    @SerializedName("followVideoCategories")
+    private ArrayList<Topics> followVideoCategories;
+
+    public ArrayList<Topics> getFollowArticleCategories() {
+        return followArticleCategories;
+    }
+
+    public void setFollowArticleCategories(ArrayList<Topics> followArticleCategories) {
+        this.followArticleCategories = followArticleCategories;
+    }
+
+    public ArrayList<Topics> getFollowStoryCategories() {
+        return followStoryCategories;
+    }
+
+    public void setFollowStoryCategories(ArrayList<Topics> followStoryCategories) {
+        this.followStoryCategories = followStoryCategories;
+    }
+
+    public ArrayList<Topics> getFollowVideoCategories() {
+        return followVideoCategories;
+    }
+
+    public void setFollowVideoCategories(ArrayList<Topics> followVideoCategories) {
+        this.followVideoCategories = followVideoCategories;
+    }
 
     public String getSponsoredImage() {
         return sponsoredImage;

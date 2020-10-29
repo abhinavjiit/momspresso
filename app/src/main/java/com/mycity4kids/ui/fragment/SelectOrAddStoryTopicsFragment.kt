@@ -1,6 +1,7 @@
 package com.mycity4kids.ui.fragment
 
 import android.accounts.NetworkErrorException
+import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.view.Gravity
@@ -18,6 +19,8 @@ import com.mycity4kids.models.SelectContentTopicsModel
 import com.mycity4kids.models.SelectContentTopicsSubModel
 import com.mycity4kids.preference.SharedPrefUtils
 import com.mycity4kids.retrofitAPIsInterfaces.ArticleDetailsAPI
+import com.mycity4kids.ui.activity.EditorAddFollowedTopicsActivity
+import com.mycity4kids.ui.activity.ProfileSetting
 import com.mycity4kids.ui.activity.SelectContentTopicsActivity
 import com.mycity4kids.utils.ToastUtils
 import com.mycity4kids.widget.MomspressoButtonWidget
@@ -29,7 +32,7 @@ import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 
-class SelectStoryTopicsFragment : BaseFragment() {
+class SelectOrAddStoryTopicsFragment : BaseFragment() {
 
     private lateinit var linearLayout: LinearLayout
     private var selectedSubCategories = ArrayList<String>()
@@ -45,7 +48,15 @@ class SelectStoryTopicsFragment : BaseFragment() {
         linearLayout = view.findViewById(R.id.linearLayout)
         continueTextView = view.findViewById(R.id.continueTextView)
         back = view.findViewById(R.id.back)
-        getTopicCategories()
+        val comingFor = arguments?.getString("comingFor")
+        if ("add" == comingFor) {
+            //setting flow
+            continueTextView.setText("Save")
+        } else {
+            //select dashboard flow
+            continueTextView.setText("Continue")
+        }
+
         continueTextView.setOnClickListener {
             if (isValid())
                 saveDataToServer()
@@ -54,9 +65,13 @@ class SelectStoryTopicsFragment : BaseFragment() {
         }
         back.setOnClickListener {
             activity?.let {
-                (it as SelectContentTopicsActivity).previousPageOnBackClick()
+                if (it is SelectContentTopicsActivity)
+                    (it).previousPageOnBackClick()
+                else if (it is EditorAddFollowedTopicsActivity)
+                    it.finish()
             }
         }
+        getTopicCategories()
         return view
     }
 
@@ -77,7 +92,7 @@ class SelectStoryTopicsFragment : BaseFragment() {
                 val res = response.body()
                 val data = res?.data
                 Log.d("data", data.toString())
-                data?.let {
+                data?.result?.let {
                     val flowLayout = FlowLayout(context)
                     it[0].child.forEach { child ->
                         getCategories(child.display_name, child.id, flowLayout)
@@ -174,7 +189,7 @@ class SelectStoryTopicsFragment : BaseFragment() {
             val selectContentTopicsSubModel = SelectContentTopicsSubModel(
                 id = selectedSubCategories[i],
                 itemType = "1",
-                status = "0"
+                status = "1"
             )
             list.add(selectContentTopicsSubModel)
         }
@@ -210,7 +225,10 @@ class SelectStoryTopicsFragment : BaseFragment() {
                 if (code == 200 && status == "success") {
                     activity?.let {
                         ToastUtils.showToast(it, msg)
-                        (it as SelectContentTopicsActivity).nextPageOnContinueClick()
+                        if (it is SelectContentTopicsActivity)
+                            (it).nextPageOnContinueClick()
+                        else if (it is EditorAddFollowedTopicsActivity)
+                            gotoProfileSetting(it)
                     } ?: run {
                         Log.d("tag", "something went wrong")
                     }
@@ -235,5 +253,12 @@ class SelectStoryTopicsFragment : BaseFragment() {
             return false
         }
         return true
+    }
+
+    private fun gotoProfileSetting(activity: EditorAddFollowedTopicsActivity) {
+        val int = Intent(activity, ProfileSetting::class.java)
+        int.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP or Intent.FLAG_ACTIVITY_CLEAR_TOP
+        startActivity(int)
+        activity.finish()
     }
 }
