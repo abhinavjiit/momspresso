@@ -17,11 +17,13 @@ import com.mycity4kids.application.BaseApplication
 import com.mycity4kids.base.BaseFragment
 import com.mycity4kids.models.SelectContentTopicsModel
 import com.mycity4kids.models.SelectContentTopicsSubModel
+import com.mycity4kids.models.Topics
 import com.mycity4kids.preference.SharedPrefUtils
 import com.mycity4kids.retrofitAPIsInterfaces.ArticleDetailsAPI
 import com.mycity4kids.ui.activity.EditorAddFollowedTopicsActivity
 import com.mycity4kids.ui.activity.ProfileSetting
 import com.mycity4kids.ui.activity.SelectContentTopicsActivity
+import com.mycity4kids.utils.AppUtils
 import com.mycity4kids.utils.ToastUtils
 import com.mycity4kids.widget.MomspressoButtonWidget
 import com.mycity4kids.widget.ShareButtonWidget
@@ -35,7 +37,7 @@ import retrofit2.Response
 class SelectOrAddStoryTopicsFragment : BaseFragment() {
 
     private lateinit var linearLayout: LinearLayout
-    private var selectedSubCategories = ArrayList<String>()
+    private var selectedSubCategories = ArrayList<Topics>()
     private lateinit var continueTextView: MomspressoButtonWidget
     private lateinit var back: TextView
 
@@ -94,8 +96,16 @@ class SelectOrAddStoryTopicsFragment : BaseFragment() {
                 Log.d("data", data.toString())
                 data?.result?.let {
                     val flowLayout = FlowLayout(context)
-                    it[0].child.forEach { child ->
-                        getCategories(child.display_name, child.id, flowLayout)
+                    val topicsList = it[0].child
+                    AppUtils.updateFollowingTopics(topicsList)
+                    topicsList.forEach { child ->
+                        getCategories(
+                            child.display_name,
+                            child.id,
+                            flowLayout,
+                            child.isSelected,
+                            child
+                        )
                     }
                     linearLayout.addView(flowLayout)
                 } ?: run {
@@ -118,7 +128,8 @@ class SelectOrAddStoryTopicsFragment : BaseFragment() {
 
     private fun getCategories(
         displayName: String,
-        id: String, flowLayout: FlowLayout
+        id: String, flowLayout: FlowLayout, isSelected: Boolean,
+        topic: Topics
     ) {
         activity?.let { context ->
             val shareButtonWidget = ShareButtonWidget(context)
@@ -126,7 +137,7 @@ class SelectOrAddStoryTopicsFragment : BaseFragment() {
             val layoutParams = shareTextView.layoutParams
             layoutParams.width = ViewGroup.LayoutParams.WRAP_CONTENT
             shareTextView.layoutParams = layoutParams
-            shareButtonWidget.tag = id
+            shareButtonWidget.tag = topic
             shareButtonWidget.setText(displayName)
             shareButtonWidget.setButtonStartImage(null)
             shareButtonWidget.setTextSizeInSP(14)
@@ -136,15 +147,44 @@ class SelectOrAddStoryTopicsFragment : BaseFragment() {
             shareButtonWidget.setBorderColor(ContextCompat.getColor(context, R.color.app_red))
             shareButtonWidget.setBorderThicknessInDP(1f)
             shareButtonWidget.elevation = 0.0f
-            shareButtonWidget.setButtonBackgroundColor(
-                ContextCompat.getColor(
-                    context,
-                    R.color.white_color
+            if (!isSelected) {
+                shareButtonWidget.isSelected = false
+                shareButtonWidget.setButtonBackgroundColor(
+                    ContextCompat.getColor(
+                        context,
+                        R.color.white_color
+                    )
                 )
-            )
+                shareButtonWidget.setTextColor(
+                    ContextCompat.getColor(
+                        context,
+                        R.color.app_red
+                    )
+                )
+            } else if (isSelected) {
+                topic.setIsSelected(true)
+                selectedSubCategories.add(topic)
+                shareButtonWidget.isSelected = true
+                shareButtonWidget.setButtonBackgroundColor(
+                    ContextCompat.getColor(
+                        context,
+                        R.color.app_red
+                    )
+                )
+                shareButtonWidget.setTextColor(
+                    ContextCompat.getColor(
+                        context,
+                        R.color.white
+                    )
+                )
+            }
             shareButtonWidget.setOnClickListener {
                 if (!it.isSelected) {
-                    selectedSubCategories.add(it.tag.toString())
+                    val topics = it.tag as Topics
+                    if (selectedSubCategories.contains(topics))
+                        selectedSubCategories.remove(topics)
+                    topics.setIsSelected(true)
+                    selectedSubCategories.add(topics)
                     it.isSelected = true
                     shareButtonWidget.setButtonBackgroundColor(
                         ContextCompat.getColor(
@@ -156,7 +196,10 @@ class SelectOrAddStoryTopicsFragment : BaseFragment() {
                     Log.d("subCate____", selectedSubCategories.toString())
 
                 } else {
-                    selectedSubCategories.remove(it.tag)
+                    val topics = it.tag as Topics
+                    selectedSubCategories.remove(topics)
+                    topics.setIsSelected(false)
+                    selectedSubCategories.add(topics)
                     it.isSelected = false
                     shareButtonWidget.setButtonBackgroundColor(
                         ContextCompat.getColor(
@@ -185,12 +228,13 @@ class SelectOrAddStoryTopicsFragment : BaseFragment() {
     private fun saveDataToServer() {
         showProgressDialog("please wait")
         val list = ArrayList<SelectContentTopicsSubModel>()
-        for (i in 0 until selectedSubCategories.size) {
-            val selectContentTopicsSubModel = SelectContentTopicsSubModel(
-                id = selectedSubCategories[i],
-                itemType = "1",
-                status = "1"
-            )
+        selectedSubCategories.forEach {
+            val status = if (it.isSelected)
+                "1"
+            else
+                "0"
+            val selectContentTopicsSubModel =
+                SelectContentTopicsSubModel(itemType = "1", id = it.id, status = status)
             list.add(selectContentTopicsSubModel)
         }
         val topicsList = SelectContentTopicsModel(null)

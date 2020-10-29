@@ -55,6 +55,7 @@ import com.mycity4kids.application.BaseApplication;
 import com.mycity4kids.constants.AppConstants;
 import com.mycity4kids.constants.Constants;
 import com.mycity4kids.gtmutils.Utils;
+import com.mycity4kids.models.Topics;
 import com.mycity4kids.models.response.ArticleListingResult;
 import com.mycity4kids.models.response.ContributorListResult;
 import com.mycity4kids.models.response.FacebookInviteFriendsData;
@@ -1457,4 +1458,17 @@ public class AppUtils {
             return "https://static.momspresso.com/assets/birthdaybonanza/banner-with-CTA-english.png";
         }
     }
+
+    public static void updateFollowingTopics(ArrayList<Topics> dataList) {
+        if (dataList != null) {
+            Map map = SharedPrefUtils.getFollowingTopicsJson(BaseApplication.getAppContext());
+            for (int i = 0; i < dataList.size(); i++) {
+                if (map.containsKey(dataList.get(i).getId())) {
+                    dataList.get(i).setIsSelected(true);
+                }
+            }
+        }
+    }
+
+
 }
