@@ -1,5 +1,6 @@
 package com.mycity4kids.ui.activity
 
+import android.content.Intent
 import android.os.Bundle
 import androidx.viewpager.widget.ViewPager
 import com.mycity4kids.R
@@ -26,8 +27,29 @@ class SelectContentTopicsActivity : BaseActivity() {
     }
 
     fun nextPageOnContinueClick() {
-        if (viewPager.currentItem <= viewPager.adapter?.count?.minus(1)!!)
-            viewPager.currentItem = viewPager.currentItem + 1
+        when (viewPager.adapter?.count) {
+            1 -> {
+                gotoMyFollowingFeed()
+            }
+            2 -> {
+                if (viewPager.currentItem < viewPager.adapter?.count!!.minus(1))
+                    viewPager.currentItem = viewPager.currentItem + 1
+                else
+                    gotoMyFollowingFeed()
+
+            }
+            3 -> {
+
+            }
+        }
+
+    }
+
+    private fun gotoMyFollowingFeed() {
+        val intent = Intent(this, DashboardActivity::class.java)
+        intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_SINGLE_TOP
+        intent.putExtra("comingFor", "followingFeed")
+        startActivity(intent)
     }
 
     fun previousPageOnBackClick() {

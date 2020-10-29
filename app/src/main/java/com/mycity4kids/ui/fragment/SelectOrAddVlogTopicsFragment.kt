@@ -26,6 +26,7 @@ import com.mycity4kids.ui.activity.DashboardActivity
 import com.mycity4kids.ui.activity.EditorAddFollowedTopicsActivity
 import com.mycity4kids.ui.activity.ProfileSetting
 import com.mycity4kids.ui.activity.SelectContentTopicsActivity
+import com.mycity4kids.utils.AppUtils
 import com.mycity4kids.utils.ToastUtils
 import com.mycity4kids.widget.MomspressoButtonWidget
 import com.mycity4kids.widget.ShareButtonWidget
@@ -40,7 +41,7 @@ import java.util.Locale
 class SelectOrAddVlogTopicsFragment : BaseFragment() {
 
     private lateinit var linearLayout: LinearLayout
-    private var selectedSubCategories = ArrayList<String>()
+    private var selectedSubCategories = ArrayList<Topics>()
     private lateinit var gotoMyFeed: MomspressoButtonWidget
     private lateinit var back: TextView
 
@@ -140,12 +141,16 @@ class SelectOrAddVlogTopicsFragment : BaseFragment() {
                 ll.orientation = LinearLayout.VERTICAL
                 ll.addView(textView)
                 val flowLayout = FlowLayout(context)
-                for (j in 0 until data[i].child.size) {
+                val topicsList = data[i].child
+                AppUtils.updateFollowingTopics(topicsList)
+                for (j in 0 until topicsList.size) {
                     getSubCategories(
                         it,
-                        data[i].child[j].display_name,
+                        topicsList[j].display_name,
                         flowLayout,
-                        data[i].child[j].id
+                        topicsList[j].id,
+                        topicsList[j].isSelected,
+                        topicsList[j]
                     )
                 }
                 ll.addView(flowLayout)
@@ -158,14 +163,15 @@ class SelectOrAddVlogTopicsFragment : BaseFragment() {
         context: Context,
         displayName: String,
         flowLayout: FlowLayout,
-        id: String
+        id: String, isSelected: Boolean,
+        topic: Topics
     ) {
         val shareButtonWidget = ShareButtonWidget(context)
         val shareTextView = shareButtonWidget.findViewById<TextView>(R.id.shareTextView)
         val layoutParams = shareTextView.layoutParams
         layoutParams.width = ViewGroup.LayoutParams.WRAP_CONTENT
         shareTextView.layoutParams = layoutParams
-        shareButtonWidget.tag = id
+        shareButtonWidget.tag = topic
         shareButtonWidget.setText(displayName)
         shareButtonWidget.setButtonStartImage(null)
         shareButtonWidget.setTextSizeInSP(14)
@@ -175,15 +181,34 @@ class SelectOrAddVlogTopicsFragment : BaseFragment() {
         shareButtonWidget.setBorderColor(ContextCompat.getColor(context, R.color.app_red))
         shareButtonWidget.setBorderThicknessInDP(1f)
         shareButtonWidget.elevation = 0.0f
-        shareButtonWidget.setButtonBackgroundColor(
-            ContextCompat.getColor(
-                context,
-                R.color.white_color
+        if (!isSelected) {
+            shareButtonWidget.isSelected = false
+            shareButtonWidget.setButtonBackgroundColor(
+                ContextCompat.getColor(
+                    context,
+                    R.color.white_color
+                )
             )
-        )
+            shareButtonWidget.setTextColor(ContextCompat.getColor(context, R.color.app_red))
+        } else if (isSelected) {
+            topic.setIsSelected(true)
+            selectedSubCategories.add(topic)
+            shareButtonWidget.isSelected = true
+            shareButtonWidget.setButtonBackgroundColor(
+                ContextCompat.getColor(
+                    context,
+                    R.color.app_red
+                )
+            )
+            shareButtonWidget.setTextColor(ContextCompat.getColor(context, R.color.white))
+        }
         shareButtonWidget.setOnClickListener {
             if (!it.isSelected) {
-                selectedSubCategories.add(it.tag.toString())
+                val topics = it.tag as Topics
+                if (selectedSubCategories.contains(topics))
+                    selectedSubCategories.remove(topics)
+                topics.setIsSelected(true)
+                selectedSubCategories.add(topics)
                 it.isSelected = true
                 shareButtonWidget.setButtonBackgroundColor(
                     ContextCompat.getColor(
@@ -195,7 +220,10 @@ class SelectOrAddVlogTopicsFragment : BaseFragment() {
                 Log.d("subCate____", selectedSubCategories.toString())
 
             } else {
-                selectedSubCategories.remove(it.tag)
+                val topics = it.tag as Topics
+                selectedSubCategories.remove(topics)
+                topics.setIsSelected(false)
+                selectedSubCategories.add(topics)
                 it.isSelected = false
                 shareButtonWidget.setButtonBackgroundColor(
                     ContextCompat.getColor(
@@ -221,12 +249,13 @@ class SelectOrAddVlogTopicsFragment : BaseFragment() {
     private fun saveDataToServer() {
         showProgressDialog("please wait")
         val list = ArrayList<SelectContentTopicsSubModel>()
-        for (i in 0 until selectedSubCategories.size) {
-            val selectContentTopicsSubModel = SelectContentTopicsSubModel(
-                id = selectedSubCategories[i],
-                itemType = "2",
-                status = "1"
-            )
+        selectedSubCategories.forEach {
+            val status = if (it.isSelected)
+                "1"
+            else
+                "0"
+            val selectContentTopicsSubModel =
+                SelectContentTopicsSubModel(itemType = "2", id = it.id, status = status)
             list.add(selectContentTopicsSubModel)
         }
         val topicsList = SelectContentTopicsModel(null)
