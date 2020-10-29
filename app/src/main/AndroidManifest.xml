@@ -41,7 +41,13 @@
     android:theme="@style/AppTheme"
     android:usesCleartextTraffic="true"
     tools:replace="android:allowBackup">
-    <activity android:name=".ui.activity.FindFbFriendsActivity"></activity>
+    <activity android:name=".ui.activity.EditorAddFollowedTopicsActivity"></activity>
+    <activity
+      android:name=".ui.activity.TopicsOfInterestActivity"
+      android:screenOrientation="portrait" />
+    <activity
+      android:name=".ui.activity.FindFbFriendsActivity"
+      android:screenOrientation="portrait" />
     <activity
       android:name=".ui.rewards.activity.RewardsShareReferralCodeActivity"
       android:screenOrientation="portrait" />
@@ -551,6 +557,7 @@
     <activity
       android:name=".ui.activity.SelectContentTopicsActivity"
       android:screenOrientation="portrait" />
+
 
     <service android:name=".sync.PushTokenService" />
     <service android:name=".sync.FetchAdvertisementInfoService" />

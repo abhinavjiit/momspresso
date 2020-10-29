@@ -36,6 +36,7 @@
   <color name="sign_in_out_text_red_color">#FF9BA8</color>
   <color name="app_nav_bg">#f4eded</color>
   <color name="black_15">#26000000</color>
+  <color name="followed_topics_background">#FEF4F4</color>
 
   <color name="a_light_blue">#e3eaff</color>
   <color name="a_light_pink">#ffedf0</color>

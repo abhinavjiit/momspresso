@@ -6,6 +6,7 @@ import android.content.SharedPreferences.Editor;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.mycity4kids.constants.AppConstants;
+import com.mycity4kids.models.Topics;
 import com.mycity4kids.models.city.MetroCity;
 import com.mycity4kids.models.user.UserInfo;
 import com.mycity4kids.models.version.RateVersion;

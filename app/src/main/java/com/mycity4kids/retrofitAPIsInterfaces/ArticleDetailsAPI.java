@@ -1,6 +1,5 @@
 package com.mycity4kids.retrofitAPIsInterfaces;
 
-import com.google.firebase.annotations.PublicApi;
 import com.mycity4kids.models.BlockUserModel;
 import com.mycity4kids.models.SelectContentTopicsModel;
 import com.mycity4kids.models.TopCommentData;
@@ -172,12 +171,15 @@ public interface ArticleDetailsAPI {
     @GET("v2/categories/suggestions")
     Call<ResponseBody> getCommentSuggestions(@Query("id") ArrayList<String> id);
 
-    @GET("/v1/categories/follow/")
-    Call<SelectContentTopicsModel> getAllTopicsCategorySubCategory(@Query("itemType") String itemType,
+    @GET("/v2/categories/follow/")
+    Call<SelectContentTopicsModel> getAllTopicsCategorySubCategory(@Query("item_type") String itemType,
             @Query("lang") int lang);
 
     @PUT("/v1/users/{userId}/followTopics")
     Call<ResponseBody> saveContentSelectedAllCategories(@Path("userId") String userId,
             @Body SelectContentTopicsModel selectContentTopicsModel);
+
+    @GET("v1/users/{userId}/followingTopics")
+    Call<ArticleDetailResponse> getAllFollowedTopics(@Path("userId") String userId);
 
 }

@@ -1,0 +1,219 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+  xmlns:app="http://schemas.android.com/apk/res-auto"
+  android:layout_width="match_parent"
+  android:layout_height="match_parent"
+  android:background="@color/white">
+
+  <androidx.constraintlayout.widget.ConstraintLayout
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+
+    <androidx.cardview.widget.CardView
+      android:id="@+id/toolbar"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      app:cardElevation="@dimen/space_10"
+      app:layout_constraintTop_toTopOf="parent">
+      <androidx.appcompat.widget.Toolbar
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:elevation="5dp">
+        <com.mycity4kids.widget.CustomFontTextView
+          android:id="@+id/back"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:drawableStart="@drawable/back_arroow"
+          android:drawablePadding="@dimen/space_16"
+          android:drawableTint="@color/campaign_515151"
+          android:gravity="center_vertical"
+          android:text="Topics of Interest"
+          android:textColor="@color/campaign_515151"
+          android:textSize="18sp"
+          app:fontName="Roboto-Bold.ttf" />
+      </androidx.appcompat.widget.Toolbar>
+    </androidx.cardview.widget.CardView>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+      android:id="@+id/followedArticleTopicsContainer"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:layout_margin="@dimen/space_16"
+      android:background="@color/white"
+      app:layout_constraintTop_toBottomOf="@id/toolbar">
+      <com.mycity4kids.widget.CustomFontTextView
+        android:id="@+id/blogsTextView"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:text="Blogs"
+        android:textAllCaps="true"
+        android:textColor="@color/campaign_515151"
+        android:textSize="18sp"
+        app:fontName="Roboto-Bold.ttf"
+        app:layout_constraintEnd_toStartOf="@id/blogEditTextView"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+      <com.mycity4kids.widget.CustomFontTextView
+        android:id="@+id/blogEditTextView"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:drawableEnd="@drawable/arrow_right"
+        android:drawablePadding="@dimen/space_5"
+        android:gravity="center_vertical"
+        android:text="Edit"
+        android:textAllCaps="true"
+        android:textColor="@color/app_red"
+        android:textSize="16sp"
+        app:fontName="Roboto-Bold.ttf"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+      <com.mycity4kids.widget.CustomFontTextView
+        android:id="@+id/blogAddTextView"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:drawableEnd="@drawable/arrow_right"
+        android:drawablePadding="@dimen/space_5"
+        android:gravity="center_vertical"
+        android:text="Add"
+        android:textAllCaps="true"
+        android:textColor="@color/app_red"
+        android:textSize="16sp"
+        android:visibility="invisible"
+        app:fontName="Roboto-Bold.ttf"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+      <org.apmem.tools.layouts.FlowLayout
+        android:id="@+id/articleTopicsFlowLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/space_10"
+        app:layout_constraintTop_toBottomOf="@id/blogsTextView" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+      android:id="@+id/followedVlogTopicsContainer"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:layout_margin="@dimen/space_16"
+      app:layout_constraintTop_toBottomOf="@id/followedArticleTopicsContainer">
+      <com.mycity4kids.widget.CustomFontTextView
+        android:id="@+id/vlogTextView"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:text="Vlogs "
+        android:textAllCaps="true"
+        android:textColor="@color/campaign_515151"
+        android:textSize="18sp"
+        app:fontName="Roboto-Bold.ttf"
+        app:layout_constraintEnd_toStartOf="@id/vlogEditTextView"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+      <com.mycity4kids.widget.CustomFontTextView
+        android:id="@+id/vlogEditTextView"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:drawableEnd="@drawable/arrow_right"
+        android:drawablePadding="@dimen/space_5"
+        android:gravity="center_vertical"
+        android:text="Edit"
+        android:textAllCaps="true"
+        android:textColor="@color/app_red"
+        android:textSize="16sp"
+        app:fontName="Roboto-Bold.ttf"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+      <com.mycity4kids.widget.CustomFontTextView
+        android:id="@+id/vlogAddTextView"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:drawableEnd="@drawable/arrow_right"
+        android:drawablePadding="@dimen/space_5"
+        android:gravity="center_vertical"
+        android:text="Add"
+        android:textAllCaps="true"
+        android:textColor="@color/app_red"
+        android:textSize="16sp"
+        android:visibility="invisible"
+        app:fontName="Roboto-Bold.ttf"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+      <org.apmem.tools.layouts.FlowLayout
+        android:id="@+id/vlogTopicsFlowLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/space_10"
+        app:layout_constraintTop_toBottomOf="@id/vlogTextView" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+      android:id="@+id/followedStoryTopicsContainer"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:layout_margin="@dimen/space_16"
+      app:layout_constraintTop_toBottomOf="@id/followedVlogTopicsContainer">
+
+      <com.mycity4kids.widget.CustomFontTextView
+        android:id="@+id/storyTextView"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:text="100 Word story"
+        android:textAllCaps="true"
+        android:textColor="@color/campaign_515151"
+        android:textSize="18sp"
+        app:fontName="Roboto-Bold.ttf"
+        app:layout_constraintEnd_toStartOf="@id/storyEditTextView"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+
+      <com.mycity4kids.widget.CustomFontTextView
+        android:id="@+id/storyEditTextView"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:drawableEnd="@drawable/arrow_right"
+        android:drawablePadding="@dimen/space_5"
+        android:gravity="center_vertical"
+        android:text="Edit"
+        android:textAllCaps="true"
+        android:textColor="@color/app_red"
+        android:textSize="16sp"
+        app:fontName="Roboto-Bold.ttf"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+      <com.mycity4kids.widget.CustomFontTextView
+        android:id="@+id/storyAddTextView"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:drawableEnd="@drawable/arrow_right"
+        android:drawablePadding="@dimen/space_5"
+        android:gravity="center_vertical"
+        android:text="Add"
+        android:textAllCaps="true"
+        android:textColor="@color/app_red"
+        android:textSize="16sp"
+        android:visibility="invisible"
+        app:fontName="Roboto-Bold.ttf"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+      <org.apmem.tools.layouts.FlowLayout
+        android:id="@+id/storyTopicsFlowLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/space_10"
+        app:layout_constraintTop_toBottomOf="@id/storyTextView" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <FrameLayout
+      android:id="@+id/content_frame"
+      android:layout_width="match_parent"
+      android:layout_height="0dp"
+      app:layout_constraintTop_toBottomOf="@id/toolbar"
+      app:layout_constraintBottom_toBottomOf="parent"/>
+
+
+  </androidx.constraintlayout.widget.ConstraintLayout>
+</ScrollView>

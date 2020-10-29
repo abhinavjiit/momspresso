@@ -2,6 +2,7 @@ package com.mycity4kids.ui.fragment
 
 import android.accounts.NetworkErrorException
 import android.content.Context
+import android.content.Intent
 import android.graphics.Typeface
 import android.os.Bundle
 import android.util.Log
@@ -21,6 +22,9 @@ import com.mycity4kids.models.SelectContentTopicsSubModel
 import com.mycity4kids.models.Topics
 import com.mycity4kids.preference.SharedPrefUtils
 import com.mycity4kids.retrofitAPIsInterfaces.ArticleDetailsAPI
+import com.mycity4kids.ui.activity.DashboardActivity
+import com.mycity4kids.ui.activity.EditorAddFollowedTopicsActivity
+import com.mycity4kids.ui.activity.ProfileSetting
 import com.mycity4kids.ui.activity.SelectContentTopicsActivity
 import com.mycity4kids.utils.ToastUtils
 import com.mycity4kids.widget.MomspressoButtonWidget
@@ -33,41 +37,54 @@ import retrofit2.Callback
 import retrofit2.Response
 import java.util.Locale
 
-class SelectBlogTopicsFragment : BaseFragment() {
+class SelectOrAddVlogTopicsFragment : BaseFragment() {
 
     private lateinit var linearLayout: LinearLayout
     private var selectedSubCategories = ArrayList<String>()
-    private lateinit var continueTextView: MomspressoButtonWidget
+    private lateinit var gotoMyFeed: MomspressoButtonWidget
     private lateinit var back: TextView
-    override fun onCreateView(
+
+    override
+    fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        val view = inflater.inflate(R.layout.select_blog_topics_fragment, container, false)
+        val view = inflater.inflate(R.layout.select_vlog_topics_fragment, container, false)
         linearLayout = view.findViewById(R.id.linearLayout)
-        continueTextView = view.findViewById(R.id.continueTextView)
+        gotoMyFeed = view.findViewById(R.id.gotoMyFeed)
         back = view.findViewById(R.id.back)
-        back.setOnClickListener {
-            activity?.let {
-                (it as SelectContentTopicsActivity).previousPageOnBackClick()
-            }
-        }
-        continueTextView.setOnClickListener {
-            if (isValid())
-                saveDataToServer()
-            else
-                activity?.let { ToastUtils.showToast(it, "choose minimum three topics") }
-
+        val comingFor = arguments?.getString("comingFor")
+        if ("add" == comingFor) {
+            //setting flow
+            gotoMyFeed.setText("Save")
+        } else {
+            //select dashboard flow
+            gotoMyFeed.setText("Go to my feed")
         }
         getTopicCategories()
+        gotoMyFeed.setOnClickListener {
+            if (isValid()) {
+                saveDataToServer()
+            } else
+                activity?.let { ToastUtils.showToast(it, "choose minimum three topics") }
+        }
+        back.setOnClickListener {
+            activity?.let {
+                if (it is SelectContentTopicsActivity)
+                    (it).previousPageOnBackClick()
+                else if (it is EditorAddFollowedTopicsActivity)
+                    it.finish()
+
+            }
+        }
         return view
     }
 
 
     private fun getTopicCategories() {
         BaseApplication.getInstance().retrofit.create(ArticleDetailsAPI::class.java).getAllTopicsCategorySubCategory(
-            "0",
+            "2",
             0
         ).enqueue(contentCategorySubCategoryCallBack)
     }
@@ -81,22 +98,19 @@ class SelectBlogTopicsFragment : BaseFragment() {
 
             val data = res?.data
             Log.d("data", data.toString())
-            data?.let {
+            data?.result?.let {
                 setDataIntoUi(it)
 
             } ?: run {
                 Log.e("Data_Tag", "data null")
             }
-
         }
 
         override fun onFailure(call: Call<SelectContentTopicsModel>, e: Throwable) {
             FirebaseCrashlytics.getInstance().recordException(e)
             Log.d("MC4kException", Log.getStackTraceString(e))
         }
-
     }
-
 
     private fun setDataIntoUi(data: ArrayList<Topics>) {
         for (i in 0 until data.size) {
@@ -109,7 +123,7 @@ class SelectBlogTopicsFragment : BaseFragment() {
                 parentParams.setMargins(10, 10, 10, 10)
                 textView.layoutParams = parentParams
                 textView.textSize = 16f
-                textView.text = data[0].display_name.toUpperCase(Locale.ROOT)
+                textView.text = data[i].display_name.toUpperCase(Locale.ROOT)
                 textView.setTextColor(ContextCompat.getColor(it, R.color.campaign_515151))
                 val face = Typeface.createFromAsset(
                     resources.assets,
@@ -140,14 +154,12 @@ class SelectBlogTopicsFragment : BaseFragment() {
         }
     }
 
-
     private fun getSubCategories(
         context: Context,
         displayName: String,
         flowLayout: FlowLayout,
         id: String
     ) {
-
         val shareButtonWidget = ShareButtonWidget(context)
         val shareTextView = shareButtonWidget.findViewById<TextView>(R.id.shareTextView)
         val layoutParams = shareTextView.layoutParams
@@ -205,12 +217,6 @@ class SelectBlogTopicsFragment : BaseFragment() {
         flowLayout.addView(shareButtonWidget)
     }
 
-    private fun isValid(): Boolean {
-        if (selectedSubCategories.isEmpty() ) {//|| selectedSubCategories.size < 3
-            return false
-        }
-        return true
-    }
 
     private fun saveDataToServer() {
         showProgressDialog("please wait")
@@ -218,8 +224,8 @@ class SelectBlogTopicsFragment : BaseFragment() {
         for (i in 0 until selectedSubCategories.size) {
             val selectContentTopicsSubModel = SelectContentTopicsSubModel(
                 id = selectedSubCategories[i],
-                itemType = "0",
-                status = "0"
+                itemType = "2",
+                status = "1"
             )
             list.add(selectContentTopicsSubModel)
         }
@@ -255,7 +261,10 @@ class SelectBlogTopicsFragment : BaseFragment() {
                 if (code == 200 && status == "success") {
                     activity?.let {
                         ToastUtils.showToast(it, msg)
-                        (it as SelectContentTopicsActivity).nextPageOnContinueClick()
+                        if (it is SelectContentTopicsActivity)
+                            gotoMyFollowingFeed(it)
+                        else if (it is EditorAddFollowedTopicsActivity)
+                            gotoProfileSetting(it)
                     } ?: run {
                         Log.d("tag", "something went wrong")
                     }
@@ -272,6 +281,28 @@ class SelectBlogTopicsFragment : BaseFragment() {
             }
 
         }
+    }
+
+
+    private fun gotoMyFollowingFeed(context: Context) {
+        val intent = Intent(context, DashboardActivity::class.java)
+        intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_SINGLE_TOP
+        intent.putExtra("comingFor", "followingFeed")
+        startActivity(intent)
+    }
+
+    private fun gotoProfileSetting(activity: EditorAddFollowedTopicsActivity) {
+        val int = Intent(activity, ProfileSetting::class.java)
+        int.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP or Intent.FLAG_ACTIVITY_CLEAR_TOP
+        startActivity(int)
+        activity.finish()
+    }
+
+    private fun isValid(): Boolean {
+        if (selectedSubCategories.isEmpty() || selectedSubCategories.size < 3) { //|| selectedSubCategories.size < 3
+            return false
+        }
+        return true
     }
 
 
