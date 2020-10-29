@@ -2,18 +2,23 @@ package com.mycity4kids.ui.fragment
 
 import android.accounts.NetworkErrorException
 import android.app.Activity
+import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
+import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.WindowManager
 import android.widget.ImageView
 import android.widget.LinearLayout
+import android.widget.PopupWindow
 import android.widget.ProgressBar
 import android.widget.RelativeLayout
 import android.widget.TextView
 import androidx.constraintlayout.widget.ConstraintLayout
+import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
@@ -33,26 +38,30 @@ import com.mycity4kids.models.response.UserDetailResult
 import com.mycity4kids.preference.SharedPrefUtils
 import com.mycity4kids.retrofitAPIsInterfaces.CampaignAPI
 import com.mycity4kids.retrofitAPIsInterfaces.RewardsAPI
+import com.mycity4kids.ui.activity.CampaignTourList
 import com.mycity4kids.ui.activity.MyTotalEarningActivity
 import com.mycity4kids.ui.adapter.RewardCampaignAdapter
 import com.mycity4kids.ui.campaign.BasicResponse
 import com.mycity4kids.ui.campaign.activity.CampaignContainerActivity
+import com.mycity4kids.ui.campaign.activity.CampaignHowToVideoActivity
 import com.mycity4kids.ui.rewards.activity.RewardsContainerActivity
 import com.mycity4kids.ui.rewards.activity.RewardsShareReferralCodeActivity
 import com.mycity4kids.utils.EndlessScrollListener
 import com.mycity4kids.utils.StringUtils
 import com.mycity4kids.widget.RoundedHorizontalProgressBar
 import com.squareup.picasso.Picasso
+import io.github.douglasjunior.androidSimpleTooltip.ArrowDrawable
+import io.github.douglasjunior.androidSimpleTooltip.SimpleTooltip
 import io.reactivex.Observer
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable
 import io.reactivex.schedulers.Schedulers
+import retrofit2.Call
+import retrofit2.Callback
 import java.text.SimpleDateFormat
 import java.util.ArrayList
 import java.util.Calendar
 import java.util.Date
-import retrofit2.Call
-import retrofit2.Callback
 
 const val REWARDS_FILL_FORM = 1000
 
@@ -73,6 +82,7 @@ class CampaignListFragment : BaseFragment(), View.OnClickListener {
     private lateinit var registerRewards: TextView
     private var forYouStatus: Int = 0
     private lateinit var defaultCampaignPopUp: View
+    private lateinit var campaignTourPopUp: View
     private var defaultapigetResponse: CampaignDetailResult? = null
     private lateinit var default_campaign_header: ImageView
     private lateinit var default_brand_img: ImageView
@@ -81,6 +91,9 @@ class CampaignListFragment : BaseFragment(), View.OnClickListener {
     private lateinit var default_submission_status: TextView
     private lateinit var cancel: ImageView
     private lateinit var default_participateTextView: TextView
+    private lateinit var campaign_tour_skip: TextView
+    private lateinit var campaign_tour_next: TextView
+    private lateinit var campaign_tour_layout: RelativeLayout
     private lateinit var mainLinearLayout: LinearLayout
     private lateinit var upperTextHeader: TextView
     private lateinit var lowerTextHeader: TextView
@@ -104,6 +117,7 @@ class CampaignListFragment : BaseFragment(), View.OnClickListener {
     private lateinit var campaign_name: TextView
     private lateinit var submission_status: TextView
     private lateinit var end_date: TextView
+    private lateinit var tooltip: SimpleTooltip
     private lateinit var end_date_text: TextView
     private lateinit var earn_upto: TextView
     private lateinit var amount: TextView
@@ -128,7 +142,11 @@ class CampaignListFragment : BaseFragment(), View.OnClickListener {
         editIcon = containerView.findViewById(R.id.edit_profile)
         recyclerView = containerView.findViewById(R.id.recyclerView)
         defaultCampaignPopUp = containerView.findViewById(R.id.include)
+        campaignTourPopUp = containerView.findViewById(R.id.tour)
         default_campaign_header = containerView.findViewById(R.id.default_campaign_header)
+        campaign_tour_skip = containerView.findViewById(R.id.campaign_tour_skip)
+        campaign_tour_next = containerView.findViewById(R.id.campaign_tour_next)
+        campaign_tour_layout = containerView.findViewById(R.id.campaign_tour_layout)
         default_brand_img = containerView.findViewById(R.id.default_brand_img)
         default_brand_name = containerView.findViewById(R.id.default_brand_name)
         default_campaign_name = containerView.findViewById(R.id.default_campaign_name)
@@ -185,6 +203,13 @@ class CampaignListFragment : BaseFragment(), View.OnClickListener {
             referText.visibility = View.VISIBLE
             fetchTotalEarning()
             fetchRewardsData()
+        } else {
+            if (!(context as CampaignContainerActivity).checkCoachmarkFlagStatus("listcampaignskiptour")
+                || !(context as CampaignContainerActivity).checkCoachmarkFlagStatus(
+                    "listcampaigntournext"
+                )) {
+                campaignTourPopUp.visibility = View.VISIBLE
+            }
         }
         editIcon.setOnClickListener {
             val personalIntent = Intent(context, RewardsContainerActivity::class.java)
@@ -198,6 +223,28 @@ class CampaignListFragment : BaseFragment(), View.OnClickListener {
 
         referText.setOnClickListener {
             val intent = Intent(context, RewardsShareReferralCodeActivity::class.java)
+            startActivity(intent)
+        }
+
+        campaign_tour_layout.setOnClickListener {
+            playVideo()
+        }
+
+        campaign_tour_skip.setOnClickListener {
+            campaignTourPopUp.visibility = View.GONE
+            (context as CampaignContainerActivity).updateCoachmarkFlag(
+                "listcampaignskiptour",
+                true
+            )
+        }
+
+        campaign_tour_next.setOnClickListener {
+            campaignTourPopUp.visibility = View.GONE
+            (context as CampaignContainerActivity).updateCoachmarkFlag(
+                "listcampaigntournext",
+                true
+            )
+            var intent = Intent(activity, CampaignTourList::class.java)
             startActivity(intent)
         }
 
@@ -253,6 +300,48 @@ class CampaignListFragment : BaseFragment(), View.OnClickListener {
                 }
             }
         }
+    }
+
+
+    private fun showToolTip() {
+        tooltip = SimpleTooltip.Builder(context)
+            .anchorView(submission_status)
+            .contentView(R.layout.readthis_campaign_tooltip_layout)
+            .margin(0f)
+            .padding(0f)
+            .gravity(Gravity.TOP)
+            .arrowColor(
+                ContextCompat.getColor(
+                    (context as CampaignContainerActivity),
+                    R.color.tooltip_border
+                )
+            )
+            .arrowWidth(50f)
+            .animated(false)
+            .focusable(true)
+            .dismissOnInsideTouch(false)
+            .dismissOnOutsideTouch(false)
+            .transparentOverlay(true)
+            .arrowDirection(ArrowDrawable.BOTTOM)
+            .build()
+        val text: TextView
+        text = tooltip.findViewById(R.id.secondTextView)
+        text.setText(R.string.list_campaign_tooltip_text)
+        val okgotIt: TextView
+        okgotIt = tooltip.findViewById(R.id.okgot)
+        okgotIt.setOnClickListener {
+            tooltip.dismiss()
+            (context as CampaignContainerActivity).updateCoachmarkFlag(
+                "listcampaigntooltip",
+                true
+            )
+        }
+        tooltip.show()
+    }
+
+    private fun playVideo() {
+        val intent = Intent(activity, CampaignHowToVideoActivity::class.java)
+        startActivity(intent)
     }
 
     fun checkRewardForm() {
@@ -584,6 +673,9 @@ class CampaignListFragment : BaseFragment(), View.OnClickListener {
                     "campaignList",
                     true
                 )
+                if (SharedPrefUtils.getIsRewardsAdded(BaseApplication.getAppContext()) == "0" && !(context as CampaignContainerActivity).checkCoachmarkFlagStatus("listcampaigntooltip")) {
+                    showToolTip()
+                }
             }
         }
     }

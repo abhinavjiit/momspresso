@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+  android:id="@+id/bottom_sheet"
+  android:layout_width="match_parent"
+  android:layout_height="wrap_content"
+  android:background="@drawable/campaign_unapply_white_bg"
+  android:clickable="true"
+  android:orientation="vertical"
+  android:layout_marginBottom="@dimen/space_50"
+  android:paddingLeft="@dimen/space_15"
+  android:paddingTop="@dimen/space_20"
+  android:paddingRight="@dimen/space_15">
+
+  <com.mycity4kids.widget.CustomFontTextView
+    android:id="@+id/header"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_marginLeft="@dimen/space_10"
+    android:layout_marginRight="@dimen/space_10"
+    android:drawableLeft="@drawable/ic_whatsapp_icon"
+    android:drawablePadding="@dimen/space_10"
+    android:text="@string/apply_whatsapp_dialog_text"
+    android:textColor="@color/campaign_4A4A4A"
+    android:textSize="20sp"
+    android:textStyle="bold" />
+
+  <LinearLayout
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_margin="@dimen/space_20">
+
+    <com.mycity4kids.widget.CustomFontTextView
+      android:id="@+id/btn_allow"
+      android:layout_width="0dp"
+      android:layout_height="wrap_content"
+      android:layout_marginEnd="@dimen/space_5"
+      android:layout_weight="1"
+      android:background="@drawable/campaign_unapply_red_bg"
+      android:gravity="center"
+      android:paddingTop="@dimen/space_15"
+      android:paddingBottom="@dimen/space_15"
+      android:text="@string/allow"
+      android:textColor="@color/white_color"
+      android:textSize="16sp" />
+
+    <com.mycity4kids.widget.CustomFontTextView
+      android:id="@+id/btn_skip"
+      android:layout_width="0dp"
+      android:layout_height="wrap_content"
+      android:layout_marginStart="@dimen/space_5"
+      android:layout_weight="1"
+      android:background="@drawable/campaign_unapply_yes"
+      android:gravity="center"
+      android:paddingTop="@dimen/space_15"
+      android:paddingBottom="@dimen/space_15"
+      android:text="@string/skip_for_now"
+      android:textColor="@color/campaign_list_buttons"
+      android:textSize="16sp" />
+  </LinearLayout>
+
+</LinearLayout>

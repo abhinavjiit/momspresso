@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+  android:id="@+id/bottom_sheet"
+  android:layout_width="match_parent"
+  android:layout_height="wrap_content"
+  android:background="@drawable/shape_shadow_rectangle"
+  android:orientation="vertical">
+
+  <com.mycity4kids.widget.CustomFontTextView
+    android:id="@+id/cross"
+    android:layout_width="@dimen/space_35"
+    android:layout_height="@dimen/space_35"
+    android:layout_centerHorizontal="true"
+    android:layout_marginTop="@dimen/space_40"
+    android:background="@drawable/circular_tick"
+    android:padding="@dimen/space_10" />
+
+  <com.mycity4kids.widget.CustomFontTextView
+    android:id="@+id/header"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_below="@id/cross"
+    android:layout_marginLeft="@dimen/space_20"
+    android:layout_marginTop="@dimen/space_25"
+    android:layout_marginRight="@dimen/space_20"
+    android:gravity="center"
+    android:text="@string/application_registered"
+    android:textColor="@color/campaign_515151"
+    android:textSize="20sp"
+    android:textStyle="bold" />
+
+  <com.mycity4kids.widget.CustomFontTextView
+    android:id="@+id/text"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_below="@id/header"
+    android:layout_marginLeft="@dimen/space_20"
+    android:layout_marginTop="@dimen/space_5"
+    android:layout_marginRight="@dimen/space_20"
+    android:layout_marginBottom="@dimen/space_20"
+    android:gravity="center"
+    android:text="@string/helpdesk_join_text"
+    android:textColor="@color/campaign_515151"
+    android:textSize="14sp" />
+
+  <com.mycity4kids.widget.CustomFontTextView
+    android:id="@+id/mymoney_helpdesk_btn"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_below="@id/text"
+    android:layout_centerHorizontal="true"
+    android:layout_marginTop="@dimen/space_15"
+    android:layout_marginBottom="@dimen/space_10"
+    android:background="@drawable/mymoney_helpdesk_btn_bg"
+    android:paddingLeft="@dimen/space_50"
+    android:paddingTop="@dimen/space_10"
+    android:paddingRight="@dimen/space_50"
+    android:paddingBottom="@dimen/space_10"
+    android:text="@string/join_mymoney_helpdesk"
+    android:textColor="@color/white"
+    android:textSize="16sp"
+    android:textStyle="bold" />
+
+  <com.mycity4kids.widget.CustomFontTextView
+    android:id="@+id/skip_text"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_below="@id/mymoney_helpdesk_btn"
+    android:layout_centerHorizontal="true"
+    android:layout_marginTop="@dimen/space_10"
+    android:layout_marginBottom="@dimen/space_25"
+    android:text="@string/skip_for_now"
+    android:textColor="@color/grey_faded" />
+
+</RelativeLayout>

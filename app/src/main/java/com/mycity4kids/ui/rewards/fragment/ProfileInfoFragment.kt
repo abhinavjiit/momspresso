@@ -63,12 +63,15 @@ import com.mycity4kids.constants.AppConstants
 import com.mycity4kids.constants.Constants
 import com.mycity4kids.filechooser.com.ipaulpro.afilechooser.utils.FileUtils
 import com.mycity4kids.gtmutils.Utils
+import com.mycity4kids.models.NotificationEnabledOrDisabledModel
 import com.mycity4kids.models.campaignmodels.UserHandleAvailabilityResponse
 import com.mycity4kids.models.request.UpdateUserDetailsRequest
 import com.mycity4kids.models.response.BaseResponseGeneric
 import com.mycity4kids.models.response.CityInfoItem
 import com.mycity4kids.models.response.ImageUploadResponse
 import com.mycity4kids.models.response.KidsModel
+import com.mycity4kids.models.response.NotificationCenterListResponse
+import com.mycity4kids.models.response.NotificationCenterResult
 import com.mycity4kids.models.response.UserDetailResponse
 import com.mycity4kids.models.response.UserDetailResult
 import com.mycity4kids.models.rewardsmodels.CityConfigResultResponse
@@ -76,6 +79,7 @@ import com.mycity4kids.models.rewardsmodels.RewardsPersonalResponse
 import com.mycity4kids.preference.SharedPrefUtils
 import com.mycity4kids.retrofitAPIsInterfaces.ConfigAPIs
 import com.mycity4kids.retrofitAPIsInterfaces.ImageUploadAPI
+import com.mycity4kids.retrofitAPIsInterfaces.NotificationsAPI
 import com.mycity4kids.retrofitAPIsInterfaces.RewardsAPI
 import com.mycity4kids.retrofitAPIsInterfaces.UserAttributeUpdateAPI
 import com.mycity4kids.ui.activity.ChangePasswordActivity
@@ -95,6 +99,13 @@ import io.reactivex.Observer
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable
 import io.reactivex.schedulers.Schedulers
+import okhttp3.MediaType.Companion.toMediaTypeOrNull
+import okhttp3.RequestBody.Companion.asRequestBody
+import okhttp3.RequestBody.Companion.toRequestBody
+import org.apmem.tools.layouts.FlowLayout
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
 import java.io.ByteArrayOutputStream
 import java.io.File
 import java.io.IOException
@@ -103,12 +114,6 @@ import java.util.ArrayList
 import java.util.Calendar
 import java.util.Collections
 import java.util.Date
-import okhttp3.MediaType.Companion.toMediaTypeOrNull
-import okhttp3.RequestBody.Companion.asRequestBody
-import okhttp3.RequestBody.Companion.toRequestBody
-import org.apmem.tools.layouts.FlowLayout
-import retrofit2.Call
-import retrofit2.Callback
 
 const val ADD_MEDIA_ACTIVITY_REQUEST_CODE = 1111
 const val ADD_MEDIA_CAMERA_ACTIVITY_REQUEST_CODE = 1113
@@ -169,6 +174,7 @@ class ProfileInfoFragment : BaseFragment(),
     private lateinit var textReferCodeError: TextView
     private lateinit var spinnernumberOfKids: AppCompatSpinner
     private lateinit var checkAreYouExpecting: AppCompatCheckBox
+    private lateinit var whatsappNotification: AppCompatCheckBox
     private lateinit var editLocation: EditText
     private lateinit var textVerify: TextView
     private lateinit var textApplyReferral: TextView
@@ -236,6 +242,7 @@ class ProfileInfoFragment : BaseFragment(),
     private var spannable: SpannableString? = null
     private lateinit var profileDisclaimerTwo: TextView
 
+    private var notificationCategoryListData = ArrayList<NotificationCenterResult>()
     private var endIndex: Int = 0
 
     companion object {
@@ -265,6 +272,7 @@ class ProfileInfoFragment : BaseFragment(),
         referralMainLayout = containerView.findViewById(R.id.referralMainLayout)
         spinnernumberOfKids = containerView.findViewById(R.id.spinnernumberOfKids)
         checkAreYouExpecting = containerView.findViewById(R.id.checkAreYouExpecting)
+        whatsappNotification = containerView.findViewById(R.id.whatsapp_notification)
         profileImageView = containerView.findViewById(R.id.profileImageView)
         editImageView = containerView.findViewById(R.id.editImageView)
         userHandleTextView = containerView.findViewById(R.id.userHandleTextView)
@@ -302,6 +310,7 @@ class ProfileInfoFragment : BaseFragment(),
         }
 
         initializeXMLComponents()
+        fetchNotificationOptout()
         fetchRewardsData()
 
         spannable =
@@ -329,6 +338,49 @@ class ProfileInfoFragment : BaseFragment(),
 
         return containerView
     }
+
+    private fun fetchNotificationOptout() {
+        val retrofit = BaseApplication.getInstance().retrofit
+        val notificationApi = retrofit.create(NotificationsAPI::class.java)
+        val call = notificationApi.allNotificationCategories
+        call.enqueue(allNotificationCategoriesCallback)
+    }
+
+
+    private val allNotificationCategoriesCallback =
+        object : Callback<NotificationCenterListResponse> {
+            override fun onFailure(call: Call<NotificationCenterListResponse>, t: Throwable) {
+//                removeProgressDialog()
+                FirebaseCrashlytics.getInstance().recordException(t)
+                Log.d("MC4kException", Log.getStackTraceString(t))
+            }
+
+            override fun onResponse(
+                call: Call<NotificationCenterListResponse>,
+                response: Response<NotificationCenterListResponse>
+            ) {
+                if (response.body() == null) {
+                    return
+                }
+                try {
+//                    removeProgressDialog()
+                    val res = response.body()
+                    if (res?.code == 200 && res.status == Constants.SUCCESS) {
+                        notificationCategoryListData = res.data.result
+                        for (i in 0 until notificationCategoryListData.size) {
+                            if (notificationCategoryListData.get(i).name.equals("Whatsapp Notifications") && notificationCategoryListData.get(i).disabled){
+                                whatsappNotification.visibility = View.VISIBLE
+                            }
+                        }
+
+                    }
+                } catch (t: Exception) {
+                    FirebaseCrashlytics.getInstance().recordException(t)
+                    Log.d("MC4kException", Log.getStackTraceString(t))
+                }
+            }
+        }
+
 
     private fun setValuesToComponents() {
         if (!apiGetResponse.firstName.isNullOrBlank()) editFirstName.setText(apiGetResponse.firstName)
@@ -685,6 +737,16 @@ class ProfileInfoFragment : BaseFragment(),
                 }
             })
 
+        whatsappNotification.setOnCheckedChangeListener(
+            object : CompoundButton.OnCheckedChangeListener {
+                override fun onCheckedChanged(p0: CompoundButton?, isChecked: Boolean) {
+                    if (isChecked) {
+                        showProgressDialog(resources.getString(R.string.please_wait))
+                        optWhatsapp()
+                    }
+                }
+            })
+
         textAddChild.setOnClickListener {
             if (validateChildData()) {
                 createKidsDetailDynamicView()
@@ -850,6 +912,45 @@ class ProfileInfoFragment : BaseFragment(),
             val intent = Intent(activity, ChangePasswordActivity::class.java)
             startActivity(intent)
         }
+    }
+
+    private fun optWhatsapp() {
+        val retrofit = BaseApplication.getInstance().retrofit
+        val notificationApi = retrofit.create(NotificationsAPI::class.java)
+        val notificationEnableRequestModel: NotificationEnabledOrDisabledModel
+        notificationEnableRequestModel = NotificationEnabledOrDisabledModel(10, enabled = false)
+        val call = notificationApi.enableOrDisableNotification(notificationEnableRequestModel)
+        call.enqueue(object : Callback<BaseResponseGeneric<NotificationEnabledOrDisabledModel>> {
+            override fun onFailure(
+                call: Call<BaseResponseGeneric<NotificationEnabledOrDisabledModel>>,
+                t: Throwable
+            ) {
+                removeProgressDialog()
+                FirebaseCrashlytics.getInstance().recordException(t)
+                Log.d("MC4kException", Log.getStackTraceString(t))
+            }
+
+            override fun onResponse(
+                call: Call<BaseResponseGeneric<NotificationEnabledOrDisabledModel>>,
+                response: Response<BaseResponseGeneric<NotificationEnabledOrDisabledModel>>
+            ) {
+                removeProgressDialog()
+                if (response.body() == null) {
+                    return
+                }
+                try {
+                    val res = response.body()
+                    if (res?.code == 200 && res.status == "success updated") {
+                        Log.d("TAG", res.status.toString())
+                        whatsappNotification.visibility = View.GONE
+                    }
+                } catch (t: Exception) {
+
+                    FirebaseCrashlytics.getInstance().recordException(t)
+                    Log.d("MC4kException", Log.getStackTraceString(t))
+                }
+            }
+        })
     }
 
     private fun checkUserHandleAvailability() {

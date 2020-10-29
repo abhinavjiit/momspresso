@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+  xmlns:app="http://schemas.android.com/apk/res-auto"
+  android:id="@+id/bottom_sheet"
+  android:layout_width="match_parent"
+  android:layout_height="wrap_content"
+  android:background="@drawable/shape_shadow_rectangle"
+  android:clickable="true"
+  android:orientation="vertical"
+  android:paddingBottom="10dp"
+  app:behavior_hideable="false"
+  app:layout_behavior="com.google.android.material.bottomsheet.BottomSheetBehavior">
+
+  <com.mycity4kids.widget.CustomFontTextView
+    android:id="@+id/campaign_type_list_header"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_margin="@dimen/space_16"
+    android:gravity="center"
+    android:padding="@dimen/space_10"
+    android:text="@string/select_a_campaign"
+    android:textColor="@color/campaign_515151"
+    android:textSize="20sp"
+    android:textStyle="bold" />
+
+  <androidx.recyclerview.widget.RecyclerView
+    android:id="@+id/recyclerview"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content" />
+
+  <LinearLayout
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_margin="@dimen/space_10">
+
+    <com.mycity4kids.widget.CustomFontTextView
+      android:id="@+id/skip"
+      android:layout_width="0dp"
+      android:layout_height="wrap_content"
+      android:layout_weight="0.5"
+      android:gravity="center"
+      android:padding="@dimen/space_10"
+      android:text="@string/skip_for_now"
+      android:textColor="@color/grey_faded"
+      android:textSize="16sp" />
+
+    <com.mycity4kids.widget.CustomFontTextView
+      android:id="@+id/next"
+      android:layout_width="0dp"
+      android:layout_height="wrap_content"
+      android:layout_weight="0.5"
+      android:background="@drawable/campaign_type_list_next_bg"
+      android:gravity="center"
+      android:paddingTop="@dimen/space_16"
+      android:paddingBottom="@dimen/space_16"
+      android:text="@string/coachmark_next"
+      android:textColor="@color/white"
+      android:textSize="18sp"
+      android:textStyle="bold" />
+
+  </LinearLayout>
+</LinearLayout>

@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+  android:id="@+id/root"
+  android:layout_width="match_parent"
+  android:layout_height="match_parent"
+  android:background="@color/trans_gray">
+
+  <View
+    android:id="@+id/hideBottomDrawer"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/transparent_color" />
+
+  <include layout="@layout/campaign_type_list_bottomsheet" />
+
+</androidx.coordinatorlayout.widget.CoordinatorLayout>
