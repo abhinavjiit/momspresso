@@ -1565,4 +1565,17 @@ Thank you! We will be reviewing your story. You can expect to hear from us withi
   <string name="watch_video_lang_choice">ਆਪਣੀ ਪਸੰਦ ਦੀ ਭਾਸ਼ਾ ਵਿੱਚ ਵੀਡੀਓ ਵੇਖੋ</string>
   <string name="know_more">ਹੋਰ ਜਾਣੋ </string>
   <string name="all_vlogs">ਵੀ-ਲੌਗਸ</string>
+  <string name="readthis_campaign_tooltip_text">Go Through the read this first and description Section and click on apply</string>
+  <string name="list_campaign_tooltip_text">Browse MyMoney campaigns read description, apply, participate and earn.</string>
+  <string name="new_to_mymoney">New To MyMoney?</string>
+  <string name="click_thumbnail">Click the thumbnail and watch how MyMoney works</string>
+  <string name="rewards_personal_disclaimer">Our campaigns have eligibility criteria. Give us some basic details so that we can match you to your perfect campaign!</string>
+  <string name="whatsapp_notification_text">Get MyMoney notifications on Whatsapp</string>
+  <string name="application_registered">Congrats! Your application is registered.</string>
+  <string name="helpdesk_join_text">We\'ll send you the next steps, join MyMoney helpdesk for any queries</string>
+  <string name="join_mymoney_helpdesk">Join My Money Helpdesk</string>
+  <string name="skip_for_now">Skip for Now</string>
+  <string name="select_a_campaign">Select a campaign you want to participate in</string>
+  <string name="apply_whatsapp_dialog_text">Get MyMoney Notifications on WhatsApp</string>
+  <string name="allow">Allow</string>
 </resources>

@@ -18,6 +18,7 @@ import android.text.TextWatcher
 import android.text.method.LinkMovementMethod
 import android.text.style.ClickableSpan
 import android.util.Log
+import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -34,6 +35,7 @@ import android.widget.Toast
 import androidx.appcompat.widget.Toolbar
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.app.ShareCompat
+import androidx.core.content.ContextCompat
 import androidx.core.widget.NestedScrollView
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -48,6 +50,7 @@ import com.mycity4kids.constants.AppConstants
 import com.mycity4kids.constants.Constants
 import com.mycity4kids.gtmutils.Utils
 import com.mycity4kids.models.BaseResponseModel
+import com.mycity4kids.models.NotificationEnabledOrDisabledModel
 import com.mycity4kids.models.campaignmodels.CampaignDataListResult
 import com.mycity4kids.models.campaignmodels.CampaignDetailResult
 import com.mycity4kids.models.campaignmodels.ParticipateCampaignResponse
@@ -55,9 +58,12 @@ import com.mycity4kids.models.request.CampaignParticipate
 import com.mycity4kids.models.request.CampaignReferral
 import com.mycity4kids.models.response.BaseResponseGeneric
 import com.mycity4kids.models.response.GroupsMembershipResponse
+import com.mycity4kids.models.response.NotificationCenterListResponse
+import com.mycity4kids.models.response.NotificationCenterResult
 import com.mycity4kids.models.rewardsmodels.RewardsDetailsResultResonse
 import com.mycity4kids.preference.SharedPrefUtils
 import com.mycity4kids.retrofitAPIsInterfaces.CampaignAPI
+import com.mycity4kids.retrofitAPIsInterfaces.NotificationsAPI
 import com.mycity4kids.retrofitAPIsInterfaces.RewardsAPI
 import com.mycity4kids.ui.GroupMembershipStatus
 import com.mycity4kids.ui.GroupMembershipStatus.IMembershipStatus
@@ -73,19 +79,22 @@ import com.mycity4kids.ui.rewards.activity.RewardsContainerActivity
 import com.mycity4kids.utils.AppUtils
 import com.mycity4kids.utils.ToastUtils
 import com.squareup.picasso.Picasso
+import io.github.douglasjunior.androidSimpleTooltip.ArrowDrawable.BOTTOM
+import io.github.douglasjunior.androidSimpleTooltip.SimpleTooltip
 import io.reactivex.Observer
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable
 import io.reactivex.schedulers.Schedulers
-import java.text.SimpleDateFormat
-import java.util.Calendar
-import java.util.regex.Pattern
 import kotlinx.coroutines.CoroutineExceptionHandler
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import retrofit2.Call
 import retrofit2.Callback
+import retrofit2.Response
+import java.text.SimpleDateFormat
+import java.util.Calendar
+import java.util.regex.Pattern
 
 const val REWARDS_FILL_FORM_REQUEST = 1000
 const val SURVEY_CAMPAIGN_REQUEST = 10000
@@ -145,6 +154,7 @@ class CampaignDetailFragment : BaseFragment(), IMembershipStatus {
     private var userId: String? = null
     private lateinit var defaultCampaignPopUp: View
     private var defaultCampaignShow: Boolean = false
+    private lateinit var tooltip: SimpleTooltip
     private val urlPattern = Pattern.compile(
         "(?:^|[\\W])((ht|f)tp(s?):\\/\\/|www\\.)" +
             "(([\\w\\-]+\\.){1,}?([\\w\\-.~]+\\/?)*" +
@@ -153,6 +163,8 @@ class CampaignDetailFragment : BaseFragment(), IMembershipStatus {
     )
     private var spannable: SpannableString? = null
 
+
+    private var notificationCategoryListData = java.util.ArrayList<NotificationCenterResult>()
     private lateinit var default_campaign_header: ImageView
     private lateinit var default_brand_img: ImageView
     private lateinit var default_brand_name: TextView
@@ -180,7 +192,7 @@ class CampaignDetailFragment : BaseFragment(), IMembershipStatus {
         "It should be visible in a few moments..."
     )
 
-    val handler = CoroutineExceptionHandler { _, exception ->
+    var handler = CoroutineExceptionHandler { _, exception ->
         FirebaseCrashlytics.getInstance().recordException(exception)
         Log.d("MC4kException", Log.getStackTraceString(exception))
     }
@@ -376,7 +388,6 @@ class CampaignDetailFragment : BaseFragment(), IMembershipStatus {
         default_participateTextView = containerView.findViewById(R.id.default_participateTextView)
         mainLinearLayout = containerView.findViewById(R.id.mainLinearLayout)
         cancel = containerView.findViewById(R.id.cancel)
-
         bannerImg = containerView.findViewById(R.id.header_img)
         brandImg = containerView.findViewById(R.id.brand_img)
         brandName = containerView.findViewById(R.id.brand_name)
@@ -443,6 +454,9 @@ class CampaignDetailFragment : BaseFragment(), IMembershipStatus {
                         //                        labelTextLayout.visibility = View.VISIBLE
                         //                        labelText.visibility = View.VISIBLE
                         bottomLayout.visibility = View.VISIBLE
+                        if (!SharedPrefUtils.isWhatsappNotificationOpt(BaseApplication.getAppContext())){
+                            fetchNotificationOptout()
+                        }
                     }
                 } catch (e: Exception) {
                     FirebaseCrashlytics.getInstance().recordException(e)
@@ -459,6 +473,49 @@ class CampaignDetailFragment : BaseFragment(), IMembershipStatus {
             }
         })
     }
+
+
+    private fun fetchNotificationOptout() {
+        val retrofit = BaseApplication.getInstance().retrofit
+        val notificationApi = retrofit.create(NotificationsAPI::class.java)
+        val call = notificationApi.allNotificationCategories
+        call.enqueue(allNotificationCategoriesCallback)
+    }
+
+
+    private val allNotificationCategoriesCallback =
+        object : Callback<NotificationCenterListResponse> {
+            override fun onFailure(call: Call<NotificationCenterListResponse>, t: Throwable) {
+                //                removeProgressDialog()
+                FirebaseCrashlytics.getInstance().recordException(t)
+                Log.d("MC4kException", Log.getStackTraceString(t))
+            }
+
+            override fun onResponse(
+                call: Call<NotificationCenterListResponse>,
+                response: Response<NotificationCenterListResponse>
+            ) {
+                if (response.body() == null) {
+                    return
+                }
+                try {
+                    //                    removeProgressDialog()
+                    val res = response.body()
+                    if (res?.code == 200 && res.status == Constants.SUCCESS) {
+                        notificationCategoryListData = res.data.result
+                        for (i in 0 until notificationCategoryListData.size) {
+                            if (notificationCategoryListData.get(i).name.equals("Whatsapp Notifications") && notificationCategoryListData.get(i).disabled){
+                                whatsppNotificationApplyDialog()
+                            }
+                        }
+
+                    }
+                } catch (t: Exception) {
+                    FirebaseCrashlytics.getInstance().recordException(t)
+                    Log.d("MC4kException", Log.getStackTraceString(t))
+                }
+            }
+        }
 
     private fun setResponseData(apiGetResponsee: CampaignDetailResult?) {
         apiGetResponse = apiGetResponsee
@@ -479,6 +536,9 @@ class CampaignDetailFragment : BaseFragment(), IMembershipStatus {
         if (status == 2 || status == 21 || status == 22 || status == 16 || status == 3 || status == 7 || status == 9 || status == 10 || status == 17) {
             readThisBox.visibility = View.GONE
         } else {
+            if (!(context as CampaignContainerActivity).checkCoachmarkFlagStatus("readthiscampaigntooltip")) {
+                showToolTip()
+            }
             readThisBox.visibility = View.VISIBLE
         }
 
@@ -565,6 +625,50 @@ class CampaignDetailFragment : BaseFragment(), IMembershipStatus {
         return popupWindow
     }
 
+    private fun showToolTip() {
+        tooltip = SimpleTooltip.Builder(context)
+            .anchorView(readThisBox)
+            .contentView(R.layout.readthis_campaign_tooltip_layout)
+            .margin(0f)
+            .padding(0f)
+            .gravity(Gravity.TOP)
+            .arrowColor(
+                ContextCompat.getColor(
+                    (context as CampaignContainerActivity),
+                    R.color.tooltip_border
+                )
+            )
+            .arrowWidth(50f)
+            .animated(false)
+            .focusable(true)
+            .dismissOnInsideTouch(false)
+            .dismissOnOutsideTouch(false)
+            .transparentOverlay(true)
+            .arrowDirection(BOTTOM)
+            /*.onDismissListener {
+                (context as CampaignContainerActivity).updateCoachmarkFlag("readthiscampaigntooltip", true)
+            }*/
+            .build()
+        val text: TextView
+        text = tooltip.findViewById(R.id.secondTextView)
+        text.setText(R.string.readthis_campaign_tooltip_text)
+        val okgotIt: TextView
+        okgotIt = tooltip.findViewById(R.id.okgot)
+        okgotIt.setOnClickListener {
+            tooltip.dismiss()
+            (context as CampaignContainerActivity).updateCoachmarkFlag(
+                "readthiscampaigntooltip",
+                true
+            )
+        }
+        tooltip.show()
+
+        /* Handler(Looper.getMainLooper()).postDelayed({
+             isTimeUp = true
+             tooltip.dismiss()
+         }, 3000)*/
+    }
+
     private fun getOffset(instruction: String, textView: TextView) {
         val matcher = urlPattern.matcher(instruction)
         var matchStart: Int? = null
@@ -595,6 +699,69 @@ class CampaignDetailFragment : BaseFragment(), IMembershipStatus {
         }
         textView.text = Html.fromHtml(spannable.toString())
         textView.movementMethod = LinkMovementMethod.getInstance()
+    }
+
+    fun whatsppNotificationApplyDialog() {
+        val dialog = activity?.let { Dialog(it) }
+        dialog?.window!!.requestFeature(Window.FEATURE_NO_TITLE)
+        dialog.setContentView(R.layout.dialog_apply_whatsapp_notification)
+        dialog.setCancelable(false)
+        dialog.window!!.setGravity(Gravity.BOTTOM)
+        val allow = dialog.findViewById<TextView>(R.id.btn_allow)
+        val skip = dialog.findViewById<TextView>(R.id.btn_skip)
+        allow.setOnClickListener {
+            SharedPrefUtils.setWhatsappNotificationOpt(BaseApplication.getAppContext(), true)
+            showProgressDialog(resources.getString(R.string.please_wait))
+            optWhatsapp()
+            dialog.dismiss()
+        }
+
+        skip.setOnClickListener {
+            SharedPrefUtils.setWhatsappNotificationOpt(BaseApplication.getAppContext(), true)
+            dialog.dismiss()
+        }
+
+        dialog.window!!.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+        dialog.show()
+    }
+
+
+    private fun optWhatsapp() {
+        val retrofit = BaseApplication.getInstance().retrofit
+        val notificationApi = retrofit.create(NotificationsAPI::class.java)
+        val notificationEnableRequestModel: NotificationEnabledOrDisabledModel
+        notificationEnableRequestModel = NotificationEnabledOrDisabledModel(10, enabled = false)
+        val call = notificationApi.enableOrDisableNotification(notificationEnableRequestModel)
+        call.enqueue(object : Callback<BaseResponseGeneric<NotificationEnabledOrDisabledModel>> {
+            override fun onFailure(
+                call: Call<BaseResponseGeneric<NotificationEnabledOrDisabledModel>>,
+                t: Throwable
+            ) {
+                removeProgressDialog()
+                FirebaseCrashlytics.getInstance().recordException(t)
+                Log.d("MC4kException", Log.getStackTraceString(t))
+            }
+
+            override fun onResponse(
+                call: Call<BaseResponseGeneric<NotificationEnabledOrDisabledModel>>,
+                response: Response<BaseResponseGeneric<NotificationEnabledOrDisabledModel>>
+            ) {
+                removeProgressDialog()
+                if (response.body() == null) {
+                    return
+                }
+                try {
+                    val res = response.body()
+                    if (res?.code == 200 && res.status == "success updated") {
+                        Log.d("TAG", res.status.toString())
+                    }
+                } catch (t: Exception) {
+
+                    FirebaseCrashlytics.getInstance().recordException(t)
+                    Log.d("MC4kException", Log.getStackTraceString(t))
+                }
+            }
+        })
     }
 
     private fun setClickAction() {
@@ -1029,6 +1196,7 @@ class CampaignDetailFragment : BaseFragment(), IMembershipStatus {
                 ).show()
                 labelText.text = it.resources.getString(R.string.label_campaign_applied)
                 submitBtn.text = it.resources.getString(R.string.detail_bottom_share)
+                showHelpdeskDialog()
             }
             appliedTag.visibility = View.VISIBLE
             unapplyCampaign.visibility = View.VISIBLE
@@ -1170,6 +1338,28 @@ class CampaignDetailFragment : BaseFragment(), IMembershipStatus {
         } else {
             txtTrackerStatus.visibility = View.VISIBLE
         }
+    }
+
+    private fun showHelpdeskDialog() {
+        val dialog = activity?.let { Dialog(it) }
+        dialog?.window!!.requestFeature(Window.FEATURE_NO_TITLE)
+        dialog.setContentView(R.layout.mymoney_helpdesk_dialog)
+        dialog.setCancelable(false)
+        val helpdeskBtn = dialog.findViewById<TextView>(R.id.mymoney_helpdesk_btn)
+        helpdeskBtn.setOnClickListener {
+            val groupMembershipStatus = GroupMembershipStatus(this)
+            groupMembershipStatus.checkMembershipStatus(
+                102,
+                SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).dynamoId
+            )
+            dialog.cancel()
+        }
+        val skipBtn = dialog.findViewById<TextView>(R.id.skip_text)
+        skipBtn.setOnClickListener {
+            dialog.cancel()
+        }
+        dialog.window!!.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+        dialog.show()
     }
 
     private fun getFeedback() {

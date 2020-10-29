@@ -110,6 +110,7 @@ public class SharedPrefUtils {
     private static final String DEMO_VIDEO_SEEN = "demovideoseen";
 
     private static final String DEFAULT_CAMPAIGN_SHOWN_FLAG = "defaultcampaignshownflag";
+    private static final String OPT_WHATSAPP_NOTIFICATION_FLAG = "optwhatsappnotificationflag";
 
     private static final String HOME_AD_SLOT_URL = "homeAdSlotUrl";
     private static final String ADVERTISEMENT_ID = "advertisementId";
@@ -118,6 +119,10 @@ public class SharedPrefUtils {
     private static final String FOLLOWING_TOPICS_JSON = "followingTopicsJson";
     private static final String USER_JOURNEY_COMPLETED_FLAG = "userJourneyCompletedFlag";
     private static final String BLOGGER_GOLD_POPUP_FLAG = "bloggerGoldPopupFlag";
+    private static final String READTHIS_CAMPAIGN_TOOLTIP = "readthiscampaigntooltip";
+    private static final String LIST_CAMPAIGN_TOOLTIP = "listcampaigntooltip";
+    private static final String LIST_CAMPAIGN_SKIP_TOUR = "listcampaignskiptour";
+    private static final String LIST_CAMPAIGN_TOUR_NEXT = "listcampaigntournext";
 
     public static void clearPrefrence(Context context) {
         SharedPreferences sharedPref = context.getSharedPreferences(COMMON_PREF_FILE, Context.MODE_PRIVATE);
@@ -383,6 +388,14 @@ public class SharedPrefUtils {
             editor.putBoolean(COACHMARK_ARTICLE_FOLLOW_AUTHOR, flag);
         } else if ("groupCoachMark".equals(screenName)) {
             editor.putBoolean(COACHMARK_GROUPS, flag);
+        } else if("readthiscampaigntooltip".equals(screenName)){
+            editor.putBoolean(READTHIS_CAMPAIGN_TOOLTIP, flag);
+        } else if ("listcampaigntooltip".equals(screenName)){
+            editor.putBoolean(LIST_CAMPAIGN_TOOLTIP, flag);
+        } else if ("listcampaignskiptour".equals(screenName)){
+            editor.putBoolean(LIST_CAMPAIGN_SKIP_TOUR, flag);
+        } else if ("listcampaigntournext".equals(screenName)){
+            editor.putBoolean(LIST_CAMPAIGN_TOUR_NEXT, flag);
         }
         editor.commit();
     }
@@ -429,6 +442,14 @@ public class SharedPrefUtils {
             return sharedPref.getBoolean(COACHMARK_ARTICLE_FOLLOW_AUTHOR, false);
         } else if ("groupCoachMark".equals(screenName)) {
             return sharedPref.getBoolean(COACHMARK_GROUPS, false);
+        } else if("readthiscampaigntooltip".equals(screenName)){
+            return sharedPref.getBoolean(READTHIS_CAMPAIGN_TOOLTIP, false);
+        } else if ("listcampaigntooltip".equals(screenName)){
+            return sharedPref.getBoolean(LIST_CAMPAIGN_TOOLTIP, false);
+        } else if ("listcampaignskiptour".equals(screenName)){
+            return sharedPref.getBoolean(LIST_CAMPAIGN_SKIP_TOUR, false);
+        } else if ("listcampaigntournext".equals(screenName)){
+            return sharedPref.getBoolean(LIST_CAMPAIGN_TOUR_NEXT, false);
         }
         return true;
     }
@@ -714,6 +735,18 @@ public class SharedPrefUtils {
     public static boolean getFirebaseRemoteConfigUpdateFlag(Context context) {
         SharedPreferences sharedPref = context.getSharedPreferences(COMMON_PREF_FILE, Context.MODE_PRIVATE);
         return sharedPref.getBoolean(FIREBASE_REMOTE_CONFIG_UPDATE_FLAG, false);
+    }
+
+    public static boolean isWhatsappNotificationOpt(Context context) {
+        SharedPreferences sharedPref = context.getSharedPreferences(COMMON_PREF_FILE, Context.MODE_PRIVATE);
+        return (sharedPref.getBoolean(OPT_WHATSAPP_NOTIFICATION_FLAG, false));
+    }
+
+    public static void setWhatsappNotificationOpt(Context context, boolean flag) {
+        SharedPreferences sharedPref = context.getSharedPreferences(COMMON_PREF_FILE, Context.MODE_PRIVATE);
+        Editor editor = sharedPref.edit();
+        editor.putBoolean(OPT_WHATSAPP_NOTIFICATION_FLAG, flag);
+        editor.commit();
     }
 
     public static boolean isDefaultCampaignShown(Context context) {

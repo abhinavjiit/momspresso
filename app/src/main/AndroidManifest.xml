@@ -185,6 +185,10 @@
       android:screenOrientation="portrait"
       android:theme="@style/Theme.Transparent" />
     <activity
+      android:name=".ui.activity.CampaignTourList"
+      android:screenOrientation="portrait"
+      android:windowSoftInputMode="adjustPan" />
+    <activity
       android:name=".ui.activity.NewsLetterWebviewActivity"
       android:configChanges="keyboardHidden|screenSize|orientation"
       android:label="@string/app_name"

@@ -1,9 +1,12 @@
 package com.mycity4kids.retrofitAPIsInterfaces
 
+import com.mycity4kids.models.CampaignTypeSelectionData
 import com.mycity4kids.models.GetAllPaymentDetails
+import com.mycity4kids.models.LanguageSelectionData
 import com.mycity4kids.models.campaignmodels.AllCampaignDataResponse
 import com.mycity4kids.models.campaignmodels.AllCampaignTotalPayoutResponse
 import com.mycity4kids.models.campaignmodels.CampaignDetailResult
+import com.mycity4kids.models.campaignmodels.CampaignListTypeResult
 import com.mycity4kids.models.campaignmodels.FaqResponse
 import com.mycity4kids.models.campaignmodels.GetCampaignSubmissionDetailsResponse
 import com.mycity4kids.models.campaignmodels.ParticipateCampaignResponse
@@ -144,4 +147,16 @@ interface CampaignAPI {
 
     @GET("rewards/v1/campaigns/feedback/{campaignId}")
     fun getFeedback(@Path("campaignId") campaignId: Int): Observable<BaseResponseGeneric<CampaignFeedBack>>
+
+    @GET("v1/utilities/config/rewadsConfig/")
+    fun getCampaignTypeList(): Observable<BaseResponseGeneric<CampaignListTypeResult>>
+
+    //'https://api.momspresso.com/v2/users/916538ec877f455cabd29dacef2f22b4?fn=4'
+
+    @PUT("/v2/users/{userId}")
+    fun postCampaignType(
+        @Path("userId") userId: String?,
+        @Query("fn") fn: Int,
+        @Body body: CampaignTypeSelectionData
+    ): Call<ResponseBody>
 }
