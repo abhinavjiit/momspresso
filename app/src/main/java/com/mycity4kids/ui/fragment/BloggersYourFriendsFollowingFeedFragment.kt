@@ -107,17 +107,17 @@ class BloggersYourFriendsFollowingFeedFragment : BaseFragment(),
                     val res = response.body()
                     if (res?.code == 200 && res.status == "success") {
                         res.data.result?.suggestion?.let {
-                            if(it.isNotEmpty()){
-                            AppUtils.updateFollowingStatusBloggersYourFriendsFollowing(it.toMutableList() as ArrayList<FacebookInviteFriendsData>)
-                            facebookFriendList.addAll(it)
-                            adapter.notifyDataSetChanged()}
-                            else{
-                                recyclerView.visibility=View.GONE
+                            if (it.isNotEmpty()) {
+                                AppUtils.updateFollowingStatusBloggersYourFriendsFollowing(it.toMutableList() as ArrayList<FacebookInviteFriendsData>)
+                                facebookFriendList.addAll(it)
+                                adapter.notifyDataSetChanged()
+                            } else {
+                                recyclerView.visibility = View.GONE
                                 noResultTextView.visibility = View.VISIBLE
                                 ToastUtils.showToast(activity, "no result")
                             }
                         } ?: run {
-                            recyclerView.visibility=View.GONE
+                            recyclerView.visibility = View.GONE
                             noResultTextView.visibility = View.VISIBLE
                             ToastUtils.showToast(activity, "no result")
                         }
@@ -159,8 +159,11 @@ class BloggersYourFriendsFollowingFeedFragment : BaseFragment(),
 
     override fun onClick(v: View?) {
         when (v?.id) {
-            R.id.skip, R.id.back -> {
+            R.id.back -> {
                 activity?.onBackPressed()
+            }
+            R.id.skip -> {
+                activity?.finish()
             }
             R.id.nextTextView -> {
                 val intent = Intent(context, DashboardActivity::class.java)
