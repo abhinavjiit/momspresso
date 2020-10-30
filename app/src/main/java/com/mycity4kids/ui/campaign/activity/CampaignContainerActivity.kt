@@ -237,6 +237,12 @@ class CampaignContainerActivity : BaseActivity(), CampaignAddProofFragment.Submi
                     super.onBackPressed()
                 }
             } else {
+                if (currentFragment is CampaignListFragment){
+                    updateCoachmarkFlag(
+                        "listcampaigntooltip",
+                        true
+                    )
+                }
                 super.onBackPressed()
             }
         }

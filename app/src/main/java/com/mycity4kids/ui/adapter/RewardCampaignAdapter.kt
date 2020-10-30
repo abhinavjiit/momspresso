@@ -15,6 +15,7 @@ import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
 import androidx.core.app.ShareCompat
+import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
 import com.google.firebase.crashlytics.FirebaseCrashlytics
 import com.mycity4kids.R
@@ -26,22 +27,28 @@ import com.mycity4kids.models.campaignmodels.ParticipateCampaignResponse
 import com.mycity4kids.preference.SharedPrefUtils
 import com.mycity4kids.retrofitAPIsInterfaces.CampaignAPI
 import com.mycity4kids.ui.campaign.activity.CampaignContainerActivity
+import com.mycity4kids.widget.CustomFontTextView
 import com.squareup.picasso.Picasso
+import io.github.douglasjunior.androidSimpleTooltip.ArrowDrawable
+import io.github.douglasjunior.androidSimpleTooltip.SimpleTooltip
+import kotlinx.android.synthetic.main.campaign_list_recycler_adapter.view.*
+import retrofit2.Call
+import retrofit2.Callback
 import java.text.SimpleDateFormat
 import java.util.Calendar
 import java.util.Date
 import java.util.Locale
-import kotlinx.android.synthetic.main.campaign_list_recycler_adapter.view.*
-import retrofit2.Call
-import retrofit2.Callback
 
 class RewardCampaignAdapter(
     private var campaignList: List<CampaignDataListResult>,
-    val context: Activity?
+    val context: Activity?,
+    val clickListener: ClickListener
 ) : RecyclerView.Adapter<RewardCampaignAdapter.RewardHolder>() {
 
     private var forYouStatus: Int = 0
+    private lateinit var view1: TextView
 
+    private lateinit var tooltip: SimpleTooltip
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RewardHolder {
         return RewardHolder(
             LayoutInflater.from(context).inflate(
@@ -60,8 +67,46 @@ class RewardCampaignAdapter(
 
     override fun onBindViewHolder(holder: RewardHolder, position: Int) {
         val itemPhoto = campaignList[position]
-        holder.bindPhoto(itemPhoto)
+        holder.bindPhoto(itemPhoto, position)
     }
+
+
+    fun showToolTip() {
+        tooltip = SimpleTooltip.Builder(context)
+            .anchorView(view1)
+            .contentView(R.layout.readthis_campaign_tooltip_layout)
+            .margin(0f)
+            .padding(0f)
+            .arrowColor(
+                ContextCompat.getColor(
+                    (context as CampaignContainerActivity),
+                    R.color.tooltip_border
+                )
+            )
+            .arrowWidth(50f)
+            .animated(false)
+            .focusable(true)
+            .dismissOnInsideTouch(false)
+            .dismissOnOutsideTouch(false)
+            .transparentOverlay(true)
+            .arrowDirection(ArrowDrawable.RIGHT)
+            .build()
+        val text: TextView
+        text = tooltip.findViewById(R.id.secondTextView)
+        text.setText(R.string.list_campaign_tooltip_text)
+        val okgotIt: TextView
+        okgotIt = tooltip.findViewById(R.id.okgot)
+        okgotIt.setOnClickListener {
+            tooltip.dismiss()
+            context.updateCoachmarkFlag(
+                "listcampaigntooltip",
+                true
+            )
+            clickListener.onRecyclerClick(0)
+        }
+        tooltip.show()
+    }
+
 
     // 1
     inner class RewardHolder(private val view: View) : RecyclerView.ViewHolder(view),
@@ -74,7 +119,7 @@ class RewardCampaignAdapter(
             (view.share).setOnClickListener(this)
         }
 
-        fun bindPhoto(campaignList: CampaignDataListResult) {
+        fun bindPhoto(campaignList: CampaignDataListResult, position: Int) {
             this.campaignList = campaignList
             Picasso.get().load(campaignList.imageUrl).placeholder(R.drawable.default_article)
                 .error(R.drawable.default_article).into(view.campaign_header)
@@ -86,6 +131,9 @@ class RewardCampaignAdapter(
             (view.amount).setText("" + campaignList.slotAvailable)
             setTextAndColor(campaignList.campaignStatus)
             compareDate(campaignList.campaignStatus)
+            if (position == 0) {
+                view1 = view.submission_status
+            }
         }
 
         // 4
@@ -361,5 +409,10 @@ class RewardCampaignAdapter(
                 Log.d("MC4kException", Log.getStackTraceString(t))
             }
         }
+    }
+
+
+    interface ClickListener {
+        fun onRecyclerClick(position: Int)
     }
 }
