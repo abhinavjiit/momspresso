@@ -43,11 +43,19 @@ class TopicsOfInterestActivity : BaseActivity(), View.OnClickListener {
     private var followVideoCategories: ArrayList<Topics>? = null
     private var followStoryCategories: ArrayList<Topics>? = null
 
+    private lateinit var addStoryTopicsTextView: TextView
+    private lateinit var addVlogTopicsTextView: TextView
+    private lateinit var addBlogTopicsTextView: TextView
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_topics_of_interest)
         back = findViewById(R.id.back)
+
+        addStoryTopicsTextView = findViewById(R.id.addStoryTopicsTextView)
+        addVlogTopicsTextView = findViewById(R.id.addVlogTopicsTextView)
+        addBlogTopicsTextView = findViewById(R.id.addBlogTopicsTextView)
 
         blogEditTextView = findViewById(R.id.blogEditTextView)
         blogAddTextView = findViewById(R.id.blogAddTextView)
@@ -99,10 +107,12 @@ class TopicsOfInterestActivity : BaseActivity(), View.OnClickListener {
                             } else {
                                 blogAddTextView.visibility = View.VISIBLE
                                 blogEditTextView.visibility = View.GONE
+                                addBlogTopicsTextView.visibility = View.VISIBLE
                             }
                         } ?: run {
                             blogAddTextView.visibility = View.VISIBLE
                             blogEditTextView.visibility = View.GONE
+                            addBlogTopicsTextView.visibility = View.VISIBLE
                         }
                         res.data.result.followVideoCategories?.let {
                             if (it.isNotEmpty()) {
@@ -111,10 +121,14 @@ class TopicsOfInterestActivity : BaseActivity(), View.OnClickListener {
                             } else {
                                 vlogAddTextView.visibility = View.VISIBLE
                                 vlogEditTextView.visibility = View.GONE
+                                addVlogTopicsTextView.visibility = View.VISIBLE
+
                             }
                         } ?: run {
                             vlogAddTextView.visibility = View.VISIBLE
                             vlogEditTextView.visibility = View.GONE
+                            addVlogTopicsTextView.visibility = View.VISIBLE
+
                         }
                         res.data.result.followStoryCategories?.let {
                             if (it.isNotEmpty()) {
@@ -123,10 +137,14 @@ class TopicsOfInterestActivity : BaseActivity(), View.OnClickListener {
                             } else {
                                 storyAddTextView.visibility = View.VISIBLE
                                 storyEditTextView.visibility = View.GONE
+                                addStoryTopicsTextView.visibility = View.VISIBLE
+
                             }
                         } ?: run {
                             storyAddTextView.visibility = View.VISIBLE
                             storyEditTextView.visibility = View.GONE
+                            addStoryTopicsTextView.visibility = View.VISIBLE
+
                         }
                     }
 

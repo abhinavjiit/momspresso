@@ -107,10 +107,17 @@ class BloggersYourFriendsFollowingFeedFragment : BaseFragment(),
                     val res = response.body()
                     if (res?.code == 200 && res.status == "success") {
                         res.data.result?.suggestion?.let {
+                            if(it.isNotEmpty()){
                             AppUtils.updateFollowingStatusBloggersYourFriendsFollowing(it.toMutableList() as ArrayList<FacebookInviteFriendsData>)
                             facebookFriendList.addAll(it)
-                            adapter.notifyDataSetChanged()
+                            adapter.notifyDataSetChanged()}
+                            else{
+                                recyclerView.visibility=View.GONE
+                                noResultTextView.visibility = View.VISIBLE
+                                ToastUtils.showToast(activity, "no result")
+                            }
                         } ?: run {
+                            recyclerView.visibility=View.GONE
                             noResultTextView.visibility = View.VISIBLE
                             ToastUtils.showToast(activity, "no result")
                         }

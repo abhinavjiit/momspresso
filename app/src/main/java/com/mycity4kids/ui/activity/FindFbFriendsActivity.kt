@@ -1,10 +1,11 @@
 package com.mycity4kids.ui.activity
 
+import android.content.Intent
 import android.os.Bundle
 import com.mycity4kids.R
 import com.mycity4kids.base.BaseActivity
-import com.mycity4kids.ui.fragment.FindFbFriendsFragment
 import com.mycity4kids.ui.fragment.BloggersYourFriendsFollowingFeedFragment
+import com.mycity4kids.ui.fragment.FindFbFriendsFragment
 
 class FindFbFriendsActivity : BaseActivity(), FindFbFriendsFragment.OnNextButtonClick {
 
@@ -36,6 +37,14 @@ class FindFbFriendsActivity : BaseActivity(), FindFbFriendsFragment.OnNextButton
         } else {
             super.onBackPressed()
             finish()
+        }
+    }
+
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        for (fragment in supportFragmentManager.fragments) {
+            fragment.onActivityResult(requestCode, resultCode, data)
         }
     }
 

@@ -84,7 +84,7 @@ class FindFbFriendsFragment : BaseFragment(), IFacebookUser,
         }
         facebookShareWidget.setOnClickListener {
             activity?.let {
-                FacebookUtils.facebookLogin(it, this)
+                FacebookUtils.facebookLogin(it as FindFbFriendsActivity, this)
             }
         }
         getFbFriends()
@@ -135,7 +135,11 @@ class FindFbFriendsFragment : BaseFragment(), IFacebookUser,
                     facebookFriendsResponse?.let { response ->
                         facebookFriendsResponse.data?.get(0)?.friendList?.let {
                             if (it.isNullOrEmpty() && !facebookFriendsResponse.data[0].hasExpired) {
-                                showToast(activity, "No friends")
+                                activity?.let {
+                                    showToast(activity, "no friends")
+                                }
+                            } else if (facebookFriendsResponse.data[0].hasExpired) {
+                                connectFbContainer.visibility = View.VISIBLE
                             } else {
                                 connectFbContainer.visibility = View.GONE
                                 fbFriendListContainer.visibility = View.VISIBLE
