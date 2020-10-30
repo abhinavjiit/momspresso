@@ -38,6 +38,8 @@ class SelectContentTopicsActivity : BaseActivity() {
                     gotoMyFollowingFeed()
             }
             3 -> {
+                if (viewPager.currentItem < viewPager.adapter?.count!!.minus(1))
+                    viewPager.currentItem = viewPager.currentItem + 1
             }
         }
     }

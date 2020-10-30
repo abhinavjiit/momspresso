@@ -411,7 +411,7 @@ class EditFollowedContentTopicsFragment : BaseFragment(), View.OnClickListener {
             saveDataToServer()
         } else {
             when (itemType) {
-                "1" -> {
+                "1","2" -> {
                     activity?.let { ToastUtils.showToast(it, "choose minimum one topics") }
                 }
                 else -> {
@@ -465,7 +465,7 @@ class EditFollowedContentTopicsFragment : BaseFragment(), View.OnClickListener {
                 val msg = data.getString("msg")
                 if (code == 200 && status == "success") {
                     activity?.let {
-                        ToastUtils.showToast(it, msg)
+                      //  ToastUtils.showToast(it, msg)
                         if (it is EditorAddFollowedTopicsActivity)
                             gotoProfileSetting(it)
                     } ?: run {
@@ -493,10 +493,10 @@ class EditFollowedContentTopicsFragment : BaseFragment(), View.OnClickListener {
             }
         }
         return when (itemType) {
-            "0", "2" -> {
+            "0" -> {
                 selectedTopics >= MINIMUM_VLOG_BLOG_TOPICS
             }
-            "1" -> {
+            "1", "2" -> {
                 selectedTopics >= MINIMUM_STORY_TOPICS
             }
             else -> {
@@ -504,7 +504,6 @@ class EditFollowedContentTopicsFragment : BaseFragment(), View.OnClickListener {
             }
         }
     }
-
 
     private fun gotoProfileSetting(activity: EditorAddFollowedTopicsActivity) {
         val int = Intent(activity, ProfileSetting::class.java)

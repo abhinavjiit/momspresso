@@ -74,7 +74,6 @@ class SelectOrAddBlogTopicsFragment : BaseFragment() {
                 saveDataToServer()
             else
                 activity?.let { ToastUtils.showToast(it, "choose minimum three topics") }
-
         }
         getTopicCategories()
         return view
@@ -251,6 +250,14 @@ class SelectOrAddBlogTopicsFragment : BaseFragment() {
     private fun isValid(): Boolean {
         if (selectedSubCategories.isEmpty() || selectedSubCategories.size < 3) {
             return false
+        } else if (selectedSubCategories.size >= 3) {
+            var isSelected = 0
+            selectedSubCategories.forEach {
+                if (it.isSelected) {
+                    isSelected++
+                }
+            }
+            return isSelected >= 3
         }
         return true
     }
@@ -298,11 +305,13 @@ class SelectOrAddBlogTopicsFragment : BaseFragment() {
                 val msg = data.getString("msg")
                 if (code == 200 && status == "success") {
                     activity?.let {
-                        ToastUtils.showToast(it, msg)
-                        if (it is SelectContentTopicsActivity)
+                        if (it is SelectContentTopicsActivity) {
+                            it.startSyncingUserInfo()
                             (it).nextPageOnContinueClick()
-                        else if (it is EditorAddFollowedTopicsActivity)
+                        } else if (it is EditorAddFollowedTopicsActivity) {
+                            it.startSyncingUserInfo()
                             gotoProfileSetting(it)
+                        }
                     } ?: run {
                         Log.d("tag", "something went wrong")
                     }

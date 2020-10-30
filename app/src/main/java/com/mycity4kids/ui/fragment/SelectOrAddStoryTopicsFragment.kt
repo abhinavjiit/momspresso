@@ -268,11 +268,13 @@ class SelectOrAddStoryTopicsFragment : BaseFragment() {
                 val msg = data.getString("msg")
                 if (code == 200 && status == "success") {
                     activity?.let {
-                        ToastUtils.showToast(it, msg)
-                        if (it is SelectContentTopicsActivity)
+                        if (it is SelectContentTopicsActivity) {
+                            it.startSyncingUserInfo()
                             (it).nextPageOnContinueClick()
-                        else if (it is EditorAddFollowedTopicsActivity)
+                        } else if (it is EditorAddFollowedTopicsActivity) {
+                            it.startSyncingUserInfo()
                             gotoProfileSetting(it)
+                        }
                     } ?: run {
                         Log.d("tag", "something went wrong")
                     }
@@ -293,10 +295,17 @@ class SelectOrAddStoryTopicsFragment : BaseFragment() {
 
 
     private fun isValid(): Boolean {
-        if (selectedSubCategories.isEmpty()) {
-            return false
+        return if (selectedSubCategories.isEmpty()) {
+            false
+        } else {
+            var isSelected = 0
+            selectedSubCategories.forEach {
+                if (it.isSelected) {
+                    isSelected++
+                }
+            }
+            isSelected >= 1
         }
-        return true
     }
 
     private fun gotoProfileSetting(activity: EditorAddFollowedTopicsActivity) {
