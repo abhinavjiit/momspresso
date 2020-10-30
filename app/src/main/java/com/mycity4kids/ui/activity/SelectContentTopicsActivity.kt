@@ -36,13 +36,10 @@ class SelectContentTopicsActivity : BaseActivity() {
                     viewPager.currentItem = viewPager.currentItem + 1
                 else
                     gotoMyFollowingFeed()
-
             }
             3 -> {
-
             }
         }
-
     }
 
     private fun gotoMyFollowingFeed() {

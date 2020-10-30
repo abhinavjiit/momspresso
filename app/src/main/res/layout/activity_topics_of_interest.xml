@@ -90,6 +90,19 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/space_10"
         app:layout_constraintTop_toBottomOf="@id/blogsTextView" />
+
+      <com.mycity4kids.widget.CustomFontTextView
+        android:id="@+id/addBlogTopicsTextView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/space_10"
+        android:text="No Topic Followed"
+        android:visibility="gone"
+        android:textColor="@color/campaign_515151"
+        android:textSize="16sp"
+        app:fontName="Roboto-Regular.ttf"
+        app:layout_constraintTop_toBottomOf="@id/blogsTextView" />
+
     </androidx.constraintlayout.widget.ConstraintLayout>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -145,6 +158,19 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/space_10"
         app:layout_constraintTop_toBottomOf="@id/vlogTextView" />
+
+      <com.mycity4kids.widget.CustomFontTextView
+        android:id="@+id/addVlogTopicsTextView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/space_10"
+        android:text="No Topic Followed"
+        android:visibility="gone"
+        android:textColor="@color/campaign_515151"
+        android:textSize="16sp"
+        app:fontName="Roboto-Regular.ttf"
+        app:layout_constraintTop_toBottomOf="@id/vlogTextView" />
+
     </androidx.constraintlayout.widget.ConstraintLayout>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -205,14 +231,27 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/space_10"
         app:layout_constraintTop_toBottomOf="@id/storyTextView" />
+
+      <com.mycity4kids.widget.CustomFontTextView
+        android:id="@+id/addStoryTopicsTextView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/space_10"
+        android:text="No Topic Followed"
+        android:textColor="@color/campaign_515151"
+        android:textSize="16sp"
+        android:visibility="gone"
+        app:fontName="Roboto-Regular.ttf"
+        app:layout_constraintTop_toBottomOf="@id/storyTextView" />
+
     </androidx.constraintlayout.widget.ConstraintLayout>
 
     <FrameLayout
       android:id="@+id/content_frame"
       android:layout_width="match_parent"
       android:layout_height="0dp"
-      app:layout_constraintTop_toBottomOf="@id/toolbar"
-      app:layout_constraintBottom_toBottomOf="parent"/>
+      app:layout_constraintBottom_toBottomOf="parent"
+      app:layout_constraintTop_toBottomOf="@id/toolbar" />
 
 
   </androidx.constraintlayout.widget.ConstraintLayout>
