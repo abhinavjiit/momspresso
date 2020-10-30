@@ -2,7 +2,6 @@ package com.mycity4kids.ui.fragment
 
 import android.accounts.NetworkErrorException
 import android.app.Activity
-import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
@@ -10,10 +9,8 @@ import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.view.WindowManager
 import android.widget.ImageView
 import android.widget.LinearLayout
-import android.widget.PopupWindow
 import android.widget.ProgressBar
 import android.widget.RelativeLayout
 import android.widget.TextView
@@ -65,7 +62,7 @@ import java.util.Date
 
 const val REWARDS_FILL_FORM = 1000
 
-class CampaignListFragment : BaseFragment(), View.OnClickListener {
+class CampaignListFragment : BaseFragment(), View.OnClickListener,RewardCampaignAdapter.ClickListener {
 
     private var campaignList = mutableListOf<CampaignDataListResult>()
     private lateinit var linearLayoutManager: LinearLayoutManager
@@ -160,7 +157,7 @@ class CampaignListFragment : BaseFragment(), View.OnClickListener {
         progressBar = containerView.findViewById(R.id.progress_bar_1)
         linearLayoutManager = LinearLayoutManager(activity, RecyclerView.VERTICAL, false)
         recyclerView.layoutManager = linearLayoutManager
-        adapter = RewardCampaignAdapter(campaignList, activity)
+        adapter = RewardCampaignAdapter(campaignList, activity, this)
         registerRewards = containerView.findViewById(R.id.bottomText)
         profileImageView = containerView.findViewById(R.id.profileImageView)
         userName = containerView.findViewById(R.id.user_name)
@@ -204,10 +201,10 @@ class CampaignListFragment : BaseFragment(), View.OnClickListener {
             fetchTotalEarning()
             fetchRewardsData()
         } else {
-            if (!(context as CampaignContainerActivity).checkCoachmarkFlagStatus("listcampaignskiptour")
-                || !(context as CampaignContainerActivity).checkCoachmarkFlagStatus(
+            if ((!(context as CampaignContainerActivity).checkCoachmarkFlagStatus("listcampaignskiptour")
+                    && !(context as CampaignContainerActivity).checkCoachmarkFlagStatus(
                     "listcampaigntournext"
-                )) {
+                )) && (context as CampaignContainerActivity).checkCoachmarkFlagStatus("listcampaigntooltip")) {
                 campaignTourPopUp.visibility = View.VISIBLE
             }
         }
@@ -300,43 +297,6 @@ class CampaignListFragment : BaseFragment(), View.OnClickListener {
                 }
             }
         }
-    }
-
-
-    private fun showToolTip() {
-        tooltip = SimpleTooltip.Builder(context)
-            .anchorView(submission_status)
-            .contentView(R.layout.readthis_campaign_tooltip_layout)
-            .margin(0f)
-            .padding(0f)
-            .gravity(Gravity.TOP)
-            .arrowColor(
-                ContextCompat.getColor(
-                    (context as CampaignContainerActivity),
-                    R.color.tooltip_border
-                )
-            )
-            .arrowWidth(50f)
-            .animated(false)
-            .focusable(true)
-            .dismissOnInsideTouch(false)
-            .dismissOnOutsideTouch(false)
-            .transparentOverlay(true)
-            .arrowDirection(ArrowDrawable.BOTTOM)
-            .build()
-        val text: TextView
-        text = tooltip.findViewById(R.id.secondTextView)
-        text.setText(R.string.list_campaign_tooltip_text)
-        val okgotIt: TextView
-        okgotIt = tooltip.findViewById(R.id.okgot)
-        okgotIt.setOnClickListener {
-            tooltip.dismiss()
-            (context as CampaignContainerActivity).updateCoachmarkFlag(
-                "listcampaigntooltip",
-                true
-            )
-        }
-        tooltip.show()
     }
 
     private fun playVideo() {
@@ -673,10 +633,18 @@ class CampaignListFragment : BaseFragment(), View.OnClickListener {
                     "campaignList",
                     true
                 )
-                if (SharedPrefUtils.getIsRewardsAdded(BaseApplication.getAppContext()) == "0" && !(context as CampaignContainerActivity).checkCoachmarkFlagStatus("listcampaigntooltip")) {
-                    showToolTip()
+                if (SharedPrefUtils.getIsRewardsAdded(BaseApplication.getAppContext()) == "0" && !(context as CampaignContainerActivity).checkCoachmarkFlagStatus(
+                        "listcampaigntooltip"
+                    )) {
+                        adapter.showToolTip()
                 }
             }
+        }
+    }
+
+    override fun onRecyclerClick(position: Int) {
+        if (((context as CampaignContainerActivity).checkCoachmarkFlagStatus("listcampaigntooltip"))) {
+            campaignTourPopUp.visibility = View.VISIBLE
         }
     }
 }

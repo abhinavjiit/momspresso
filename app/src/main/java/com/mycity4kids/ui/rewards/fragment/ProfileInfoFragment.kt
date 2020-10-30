@@ -737,15 +737,29 @@ class ProfileInfoFragment : BaseFragment(),
                 }
             })
 
-        whatsappNotification.setOnCheckedChangeListener(
-            object : CompoundButton.OnCheckedChangeListener {
-                override fun onCheckedChanged(p0: CompoundButton?, isChecked: Boolean) {
-                    if (isChecked) {
-                        showProgressDialog(resources.getString(R.string.please_wait))
-                        optWhatsapp()
+
+            whatsappNotification.setOnCheckedChangeListener(
+                object : CompoundButton.OnCheckedChangeListener {
+                    override fun onCheckedChanged(p0: CompoundButton?, isChecked: Boolean) {
+                        if (isChecked) {
+                            if (!apiGetResponse.mobile.isNullOrBlank() || !mobileNumber.isEmpty()) {
+                            showProgressDialog(resources.getString(R.string.please_wait))
+                            optWhatsapp()
+                            } else {
+                                whatsappNotification.isChecked = false
+                                Toast.makeText(
+                                    activity,
+                                    resources.getString(
+                                        R.string.cannot_be_left_blank,
+                                        resources.getString(R.string.rewards_phone)
+                                    ),
+                                    Toast.LENGTH_SHORT
+                                ).show()
+                            }
+
+                        }
                     }
-                }
-            })
+                })
 
         textAddChild.setOnClickListener {
             if (validateChildData()) {
