@@ -68,7 +68,7 @@ class SelectOrAddVlogTopicsFragment : BaseFragment() {
             if (isValid()) {
                 saveDataToServer()
             } else
-                activity?.let { ToastUtils.showToast(it, "choose minimum three topics") }
+                activity?.let { ToastUtils.showToast(it, "choose minimum one topics") }
         }
         back.setOnClickListener {
             activity?.let {
@@ -289,11 +289,13 @@ class SelectOrAddVlogTopicsFragment : BaseFragment() {
                 val msg = data.getString("msg")
                 if (code == 200 && status == "success") {
                     activity?.let {
-                        ToastUtils.showToast(it, msg)
-                        if (it is SelectContentTopicsActivity)
+                        if (it is SelectContentTopicsActivity) {
+                            it.startSyncingUserInfo()
                             gotoMyFollowingFeed(it)
-                        else if (it is EditorAddFollowedTopicsActivity)
+                        } else if (it is EditorAddFollowedTopicsActivity) {
+                            it.startSyncingUserInfo()
                             gotoProfileSetting(it)
+                        }
                     } ?: run {
                         Log.d("tag", "something went wrong")
                     }
@@ -328,10 +330,17 @@ class SelectOrAddVlogTopicsFragment : BaseFragment() {
     }
 
     private fun isValid(): Boolean {
-        if (selectedSubCategories.isEmpty() || selectedSubCategories.size < 3) { //|| selectedSubCategories.size < 3
-            return false
+        return if (selectedSubCategories.isEmpty()) {
+            false
+        } else {
+            var isSelected = 0
+            selectedSubCategories.forEach {
+                if (it.isSelected) {
+                    isSelected++
+                }
+            }
+            isSelected >= 1
         }
-        return true
     }
 
 
