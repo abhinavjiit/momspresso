@@ -262,8 +262,11 @@ class FindFbFriendsFragment : BaseFragment(), IFacebookUser,
 
     override fun onClick(view: View?) {
         when (view?.id) {
-            R.id.skipForNowTextView, R.id.skip, R.id.back -> {
+            R.id.back -> {
                 activity?.onBackPressed()
+            }
+            R.id.skipForNowTextView, R.id.skip -> {
+                activity?.finish()
             }
         }
     }
