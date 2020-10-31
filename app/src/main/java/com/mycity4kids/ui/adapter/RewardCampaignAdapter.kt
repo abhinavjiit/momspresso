@@ -41,8 +41,7 @@ import java.util.Locale
 
 class RewardCampaignAdapter(
     private var campaignList: List<CampaignDataListResult>,
-    val context: Activity?,
-    val clickListener: ClickListener
+    val context: Activity?
 ) : RecyclerView.Adapter<RewardCampaignAdapter.RewardHolder>() {
 
     private var forYouStatus: Int = 0
@@ -71,7 +70,7 @@ class RewardCampaignAdapter(
     }
 
 
-    fun showToolTip() {
+    /*fun showToolTip() {
         tooltip = SimpleTooltip.Builder(context)
             .anchorView(view1)
             .contentView(R.layout.readthis_campaign_tooltip_layout)
@@ -105,7 +104,7 @@ class RewardCampaignAdapter(
             clickListener.onRecyclerClick(0)
         }
         tooltip.show()
-    }
+    }*/
 
 
     // 1
@@ -409,10 +408,5 @@ class RewardCampaignAdapter(
                 Log.d("MC4kException", Log.getStackTraceString(t))
             }
         }
-    }
-
-
-    interface ClickListener {
-        fun onRecyclerClick(position: Int)
     }
 }
