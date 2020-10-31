@@ -62,7 +62,7 @@ import java.util.Date
 
 const val REWARDS_FILL_FORM = 1000
 
-class CampaignListFragment : BaseFragment(), View.OnClickListener,RewardCampaignAdapter.ClickListener {
+class CampaignListFragment : BaseFragment(), View.OnClickListener {
 
     private var campaignList = mutableListOf<CampaignDataListResult>()
     private lateinit var linearLayoutManager: LinearLayoutManager
@@ -157,7 +157,7 @@ class CampaignListFragment : BaseFragment(), View.OnClickListener,RewardCampaign
         progressBar = containerView.findViewById(R.id.progress_bar_1)
         linearLayoutManager = LinearLayoutManager(activity, RecyclerView.VERTICAL, false)
         recyclerView.layoutManager = linearLayoutManager
-        adapter = RewardCampaignAdapter(campaignList, activity, this)
+        adapter = RewardCampaignAdapter(campaignList, activity)
         registerRewards = containerView.findViewById(R.id.bottomText)
         profileImageView = containerView.findViewById(R.id.profileImageView)
         userName = containerView.findViewById(R.id.user_name)
@@ -204,7 +204,7 @@ class CampaignListFragment : BaseFragment(), View.OnClickListener,RewardCampaign
             if ((!(context as CampaignContainerActivity).checkCoachmarkFlagStatus("listcampaignskiptour")
                     && !(context as CampaignContainerActivity).checkCoachmarkFlagStatus(
                     "listcampaigntournext"
-                )) && (context as CampaignContainerActivity).checkCoachmarkFlagStatus("listcampaigntooltip")) {
+                )) && (context as CampaignContainerActivity).checkCoachmarkFlagStatus("campaignList")) {
                 campaignTourPopUp.visibility = View.VISIBLE
             }
         }
@@ -633,18 +633,13 @@ class CampaignListFragment : BaseFragment(), View.OnClickListener,RewardCampaign
                     "campaignList",
                     true
                 )
-                if (SharedPrefUtils.getIsRewardsAdded(BaseApplication.getAppContext()) == "0" && !(context as CampaignContainerActivity).checkCoachmarkFlagStatus(
+                campaignTourPopUp.visibility = View.VISIBLE
+                /*if (SharedPrefUtils.getIsRewardsAdded(BaseApplication.getAppContext()) == "0" && !(context as CampaignContainerActivity).checkCoachmarkFlagStatus(
                         "listcampaigntooltip"
                     )) {
                         adapter.showToolTip()
-                }
+                }*/
             }
-        }
-    }
-
-    override fun onRecyclerClick(position: Int) {
-        if (((context as CampaignContainerActivity).checkCoachmarkFlagStatus("listcampaigntooltip"))) {
-            campaignTourPopUp.visibility = View.VISIBLE
         }
     }
 }
