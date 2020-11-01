@@ -1513,7 +1513,7 @@ Thank you! We will be reviewing your story. You can expect to hear from us withi
   <string name="vlog_tutorial">Vlog Tutorial</string>
   <string name="share_app">Share App</string>
   <string name="choose_proof">Choose Proof</string>
-  <string name="no_facebook_friends">None of your friends are logged into momspresso using facebook</string>
+  <string name="no_facebook_friends">Looks like your friends aren\'t yet on Momspresso</string>
   <string name="invite_friends_whatsapp">Invite via Whatsapp</string>
   <string name="share_app_msg">Hi! Check out the Momspresso app, where I express myself through Stories and Videos. Download now %1s</string>
   <string name="invite_phone_contact">Invite contacts to follow you</string>
@@ -1616,7 +1616,7 @@ Thank you! We will be reviewing your story. You can expect to hear from us withi
   <string name="lang_sel_express_yourself">Express Yourself in 10 Languages</string>
   <string name="select_language">Select Language</string>
   <string name="login_or_sign_up">Login or Sign up</string>
-  <string name="login_subheading">Create, Read, Earn, and Join the 32 Million Mums</string>
+  <string name="login_subheading">Read. Create. Earn. Support</string>
   <string name="welcome_user">Hi %1$s,</string>
   <string name="home_onboarding_consume"><![CDATA[Read from over 5 Lac blogs & stories or watch videos]]></string>
   <string name="home_onboarding_create">Express yourself through blogs, stories, or videos</string>
@@ -1629,7 +1629,7 @@ Thank you! We will be reviewing your story. You can expect to hear from us withi
   <string name="explore_self">I\'ll explore on my own</string>
   <string name="empty_leaderboard_text">Leaderboard is not yet generated. Please come back tomorrow.</string>
   <string name="yesterday">Yesterday</string>
-  <string name="home_onboarding_title">How do you wish to start your journey?</string>
+  <string name="home_onboarding_title">%1$s, How do you wish to start your journey?</string>
   <string name="take_tour">TAKE THE TOUR</string>
   <string name="coachmark_article_1">Let us help you create your first blog! Select a challenge to start with or simply click on start writing</string>
   <string name="coachmark_article_2">You can add images and format the content as per your need</string>
@@ -1678,6 +1678,29 @@ Thank you! We will be reviewing your story. You can expect to hear from us withi
   <string name="select_a_campaign">Select a campaign you want to participate in</string>
   <string name="apply_whatsapp_dialog_text">Get MyMoney Notifications on WhatsApp</string>
   <string name="allow">Allow</string>
+  <string name="momspresso_is_fun_with_friends">Momspresso is fun with friends</string>
+  <string name="by_finding_my_friends">By finding my friends</string>
+  <string name="choosing_topics_i_like">Choosing topics I like</string>
+  <string name="dont_want_a_customized_feed">No, I don\'t want a customized feed</string>
+  <string name="follow_topics">Follow Topics</string>
+  <string name="find_my_friends">Find my friends</string>
+  <string name="follow_to_never_miss">Follow them to never miss amazing posts they create</string>
+  <string name="follow_bloggers_your_friends_are_following">Follow bloggers your friends are following</string>
+  <string name="select_topics">Select Topics</string>
+  <string name="go_to_my_feed">Go to my feed</string>
+  <string name="format_preference">What do you prefer? We have 3 formats you can dig into</string>
+  <string name="interesting_content">Interesting stories, articles, experiences by bloggers experts</string>
+  <string name="short_stories_content">Short stories, poems, motivational or funny quotes</string>
+  <string name="vlogs_content">Entertaining videos showcasing mum’s talent, recipes more</string>
+  <string name="topics_interest">Topics that might interest you</string>
+  <string name="select_at_least_3_topics">Select at least 3 topics</string>
+  <string name="select_at_least_1_topic">Select at least 1 topic</string>
+  <string name="top_blogger_you_like">Some top bloggers you may like</string>
+  <string name="bloggers_recently_read">Follow bloggers you recently read</string>
+  <string name="blogger_topic_based">Bloggers based on topic followed</string>
+  <string name="follow_friend_based_blogger">Follow bloggers your friends follow</string>
+  <string name="connect_with_facebook_friends_on_momspresso">Connect with Facebook friends on Momspresso</string>
+  <string name="connect_with_facebook">Connect with Facebook</string>
 
 </resources>
 

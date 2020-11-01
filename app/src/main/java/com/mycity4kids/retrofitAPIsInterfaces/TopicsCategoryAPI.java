@@ -1,5 +1,6 @@
 package com.mycity4kids.retrofitAPIsInterfaces;
 
+import com.mycity4kids.models.SelectContentTopicsModel;
 import com.mycity4kids.models.Topics;
 import com.mycity4kids.models.response.ArticleListingResponse;
 import com.mycity4kids.models.response.FollowUnfollowCategoriesResponse;
@@ -7,7 +8,6 @@ import com.mycity4kids.models.response.MixFeedResponse;
 import com.mycity4kids.models.response.SuggestedTopicsResponse;
 import com.mycity4kids.models.response.TopicsFollowingStatusResponse;
 import com.mycity4kids.models.response.TrendingListingResponse;
-import com.mycity4kids.newmodels.FollowUnfollowCategoriesRequest;
 import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.http.Body;
@@ -85,16 +85,9 @@ public interface TopicsCategoryAPI {
             @Query("lang") String lang,
             @Query("itemTypes") String itemType);
 
-    @GET("/v1/articles/cities/{cityId}")
-    Call<ArticleListingResponse> getBestArticlesForCity(@Path("cityId") String cityId,
-            @Query("sort") int sort,
-            @Query("start") int start,
-            @Query("end") int end,
-            @Query("lang") String lang);
-
-    @PUT("/v1/users/{userId}/topics")
+    @PUT("/v1/users/{userId}/followTopics")
     Call<FollowUnfollowCategoriesResponse> followCategories(@Path("userId") String userId,
-            @Body FollowUnfollowCategoriesRequest body);
+            @Body SelectContentTopicsModel body);
 
     @GET("/v1/users/{userId}/topics")
     Call<FollowUnfollowCategoriesResponse> getFollowedCategories(@Path("userId") String userId);

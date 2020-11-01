@@ -10,6 +10,7 @@ import com.mycity4kids.R
 import com.mycity4kids.application.BaseApplication
 import com.mycity4kids.base.BaseActivity
 import com.mycity4kids.constants.Constants
+import com.mycity4kids.gtmutils.Utils
 import com.mycity4kids.models.NotificationEnabledOrDisabledModel
 import com.mycity4kids.models.response.BaseResponseGeneric
 import com.mycity4kids.models.response.NotificationCenterListResponse
@@ -90,6 +91,14 @@ class NotificationSettingActivity : BaseActivity(),
         val notificationApi = retrofit.create(NotificationsAPI::class.java)
         val notificationEnableRequestModel: NotificationEnabledOrDisabledModel
         if (notificationOn) {
+            if(id =="10"){
+                Utils.shareEventTracking(
+                    this,
+                    "Notification Settings",
+                    "WhatsappSubscription_Android",
+                    "NotifSettings_On_WS"
+                )
+            }
             notificationEnableRequestModel =
                 NotificationEnabledOrDisabledModel(id.toInt(), enabled = false)
             notificationCategoryListData[position].disabled = false

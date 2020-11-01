@@ -65,6 +65,7 @@ import com.mycity4kids.ui.activity.BlogSetupActivity;
 import com.mycity4kids.ui.activity.BloggerGoldActivity;
 import com.mycity4kids.ui.activity.CategoryVideosListingActivity;
 import com.mycity4kids.ui.activity.DashboardActivity;
+import com.mycity4kids.ui.activity.FollowingListFBSuggestionActivity;
 import com.mycity4kids.ui.activity.GroupDetailsActivity;
 import com.mycity4kids.ui.activity.GroupMembershipActivity;
 import com.mycity4kids.ui.activity.GroupPostDetailActivity;
@@ -1001,6 +1002,32 @@ public abstract class BaseActivity extends AppCompatActivity implements GroupMem
             if (matcher18.matches()) {
                 Intent intent = new Intent(this, ViewLeaderboardActivity.class);
                 startActivity(intent);
+                return true;
+            }
+
+            Pattern pattern20 = Pattern.compile(AppConstants.CAMPAIGN_LISTING_REGEX);
+            Matcher matcher20 = pattern20.matcher(urlWithNoParams);
+            if (matcher20.matches()) {
+                Intent campaignIntent = new Intent(this, CampaignContainerActivity.class);
+                campaignIntent.putExtra("campaign_listing", "campaign_listing");
+                startActivity(campaignIntent);
+                return true;
+            }
+
+            Pattern pattern21 = Pattern.compile(AppConstants.FOLLOWING_USERS_LISTING_REGEX);
+            Matcher matcher21 = pattern21.matcher(urlWithNoParams);
+            if (matcher21.matches()) {
+                String[] params = tempDeepLinkUrl.split("\\?");
+                if (params.length > 1) {
+                    Intent intent = new Intent(this, FollowingListFBSuggestionActivity.class);
+                    intent.putExtra(AppConstants.FOLLOW_LIST_TYPE, AppConstants.FOLLOWER_LIST);
+                    intent.putExtra("selectedTab", params[1]);
+                    startActivity(intent);
+                } else {
+                    Intent intent = new Intent(this, FollowingListFBSuggestionActivity.class);
+                    intent.putExtra(AppConstants.FOLLOW_LIST_TYPE, AppConstants.FOLLOWER_LIST);
+                    startActivity(intent);
+                }
                 return true;
             }
         } catch (Exception e) {

@@ -6,6 +6,7 @@ import android.content.Context;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.os.Build;
+import android.os.Build.VERSION;
 import android.os.StrictMode;
 import android.text.TextUtils;
 import android.util.Log;
@@ -313,7 +314,9 @@ public class BaseApplication extends Application {
                 requestBuilder.addHeader("latitude", SharedPrefUtils.getUserLocationLatitude(getApplicationContext()));
                 requestBuilder
                         .addHeader("longitude", SharedPrefUtils.getUserLocationLongitude(getApplicationContext()));
-                requestBuilder.addHeader("userPrint", "" + AppUtils.getDeviceId(getApplicationContext()));
+                requestBuilder.addHeader("userPrint", "" + SharedPrefUtils.getDeviceToken(getApplicationContext()));
+                requestBuilder.addHeader("android_user_agent",
+                        "" + Build.MANUFACTURER + "/" + Build.MODEL + "/" + appVersion + "/" + VERSION.SDK_INT);
                 Request request = requestBuilder.build();
                 return chain.proceed(request);
             }
@@ -517,6 +520,8 @@ public class BaseApplication extends Application {
                 requestBuilder
                         .addHeader("longitude", SharedPrefUtils.getUserLocationLongitude(getApplicationContext()));
                 requestBuilder.addHeader("userPrint", "" + AppUtils.getDeviceId(getApplicationContext()));
+                requestBuilder.addHeader("android_user_agent",
+                        "" + Build.MANUFACTURER + "/" + Build.MODEL + "/" + appVersion + "/" + VERSION.SDK_INT);
                 Request request = requestBuilder.build();
                 return chain.proceed(request);
             }

@@ -1334,6 +1334,9 @@ class UserProfileActivity : BaseActivity(),
 
     override fun onClick(view: View, position: Int) {
         when {
+            view.id == R.id.shareVlogImageView -> {
+                shareContent(userContentList?.get(position))
+            }
             view.id == R.id.icSsComment -> {
                 val intent = Intent(this, ViewAllCommentsActivity::class.java)
                 intent.putExtra(Constants.ARTICLE_ID, userContentList?.get(position)?.id)
@@ -2112,16 +2115,14 @@ class UserProfileActivity : BaseActivity(),
                     data.title_slug,
                     getString(R.string.check_out_momvlog),
                     data.title,
-                    data.author?.firstName + " " + data.author?.lastName, "", ""
+                    data.author?.firstName + " " + data.author?.lastName,
+                    "SPV_Generic_Share",
+                    "Share_Android"
                 )
                 startActivity(Intent.createChooser(shareIntent, "Momspresso"))
-                Utils.pushShareVlogEvent(
-                    this,
-                    "Profile",
-                    SharedPrefUtils.getUserDetailModel(this).dynamoId + "",
-                    data.id,
-                    data.userId + "~" + data.author?.firstName + " " + data.author?.lastName,
-                    "Generic"
+                Utils.shareEventTracking(
+                    this, "Self Profile",
+                    "Share_Android", "SPV_Generic_Share"
                 )
             }
         }

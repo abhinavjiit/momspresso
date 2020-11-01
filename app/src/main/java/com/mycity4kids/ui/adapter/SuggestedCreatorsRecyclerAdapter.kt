@@ -8,10 +8,12 @@ import android.widget.RelativeLayout
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.mycity4kids.R
+import com.mycity4kids.models.response.Rank
 import com.mycity4kids.models.response.SuggestedCreators
 import com.mycity4kids.utils.AppUtils
 import com.mycity4kids.widget.MomspressoButtonWidget
 import com.squareup.picasso.Picasso
+import org.apache.commons.lang3.StringUtils
 
 class SuggestedCreatorsRecyclerAdapter(
     private val mixFeedPosition: Int,
@@ -54,7 +56,7 @@ class SuggestedCreatorsRecyclerAdapter(
                         loadImage(it[0].profilePic.clientApp, holder.friend1ImageView)
                         loadImage(it[1].profilePic.clientApp, holder.friend2ImageView)
                         loadImage(it[2].profilePic.clientApp, holder.friend3ImageView)
-                        if (suggestedCreatorsList.get(position).followersCount.toLong() - 3 > 0) {
+                        if (suggestedCreatorsList[position].followersCount.toLong() - 3 > 0) {
                             holder.followersCountTextView.text =
                                 "+" + AppUtils.withSuffix(suggestedCreatorsList.get(position).followersCount.toLong() - 3)
                         }
@@ -64,7 +66,7 @@ class SuggestedCreatorsRecyclerAdapter(
                         holder.friend3ImageView.visibility = View.GONE
                         loadImage(it[0].profilePic.clientApp, holder.friend1ImageView)
                         loadImage(it[1].profilePic.clientApp, holder.friend2ImageView)
-                        if (suggestedCreatorsList.get(position).followersCount.toLong() - 2 > 0) {
+                        if (suggestedCreatorsList[position].followersCount.toLong() - 2 > 0) {
                             holder.followersCountTextView.text =
                                 "+" + AppUtils.withSuffix(suggestedCreatorsList.get(position).followersCount.toLong() - 2)
                         }
@@ -87,12 +89,16 @@ class SuggestedCreatorsRecyclerAdapter(
             holder.authorRankTextView.visibility = View.VISIBLE
             holder.authorPostsTextView.visibility = View.VISIBLE
             try {
-                holder.authorRankTextView.text =
-                    suggestedCreatorsList?.get(position)?.ranks?.get(0)?.rank
                 holder.authorPostsTextView.text =
-                    suggestedCreatorsList?.get(position)?.totalArticles
+                    StringUtils.capitalize(holder.authorRankTextView.context.getString(R.string.blogger_profile_article_count_label).toLowerCase()) + " " + suggestedCreatorsList?.get(
+                        position
+                    )?.totalArticles
+                holder.authorRankTextView.text =
+                    StringUtils.capitalize(holder.authorRankTextView.context.getString(R.string.blogger_profile_rank_label).toLowerCase()) + " " + getCurrentLanguageRank(
+                        suggestedCreatorsList?.get(position)?.ranks
+                    )
             } catch (e: Exception) {
-
+                holder.authorRankTextView.visibility = View.GONE
             }
         }
 
@@ -165,9 +171,21 @@ class SuggestedCreatorsRecyclerAdapter(
     interface SuggestedCreatorsClickListener {
         fun onSuggestedCreatorClick(
             mixFeedPosition: Int,
-            position:Int,
+            position: Int,
             view: View,
             suggestedCreator: SuggestedCreators?
         )
+    }
+
+    private fun getCurrentLanguageRank(rankArray: List<Rank>?): String? {
+        val langKey = AppUtils.getLangKey().toString()
+        rankArray?.let {
+            for (i in it.indices) {
+                if (it[i].langKey == langKey) {
+                    return "" + it[i].rank
+                }
+            }
+        }
+        return "--"
     }
 }

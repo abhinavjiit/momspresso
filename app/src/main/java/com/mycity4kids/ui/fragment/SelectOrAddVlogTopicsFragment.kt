@@ -17,6 +17,7 @@ import com.google.firebase.crashlytics.FirebaseCrashlytics
 import com.mycity4kids.R
 import com.mycity4kids.application.BaseApplication
 import com.mycity4kids.base.BaseFragment
+import com.mycity4kids.gtmutils.Utils
 import com.mycity4kids.models.SelectContentTopicsModel
 import com.mycity4kids.models.SelectContentTopicsSubModel
 import com.mycity4kids.models.Topics
@@ -61,27 +62,50 @@ class SelectOrAddVlogTopicsFragment : BaseFragment() {
             gotoMyFeed.setText("Save")
         } else {
             //select dashboard flow
-            gotoMyFeed.setText("Go to my feed")
+            gotoMyFeed.setText(linearLayout.context.getString(R.string.go_to_my_feed))
         }
         getTopicCategories()
         gotoMyFeed.setOnClickListener {
             if (isValid()) {
+                Utils.shareEventTracking(
+                    activity,
+                    "Home screen",
+                    "Read_Android",
+                    "Select_Topic_Vlog_Contiue_CTA"
+                )
                 saveDataToServer()
             } else
                 activity?.let { ToastUtils.showToast(it, "choose minimum one topics") }
         }
         back.setOnClickListener {
             activity?.let {
-                if (it is SelectContentTopicsActivity)
+                if (it is SelectContentTopicsActivity) {
+                    Utils.shareEventTracking(
+                        activity,
+                        "Home screen",
+                        "Read_Android",
+                        "Select_Topic_Vlog_Back"
+                    )
                     (it).previousPageOnBackClick()
-                else if (it is EditorAddFollowedTopicsActivity)
+                } else if (it is EditorAddFollowedTopicsActivity) {
                     it.finish()
-
+                }
             }
         }
         return view
     }
 
+    override fun onResume() {
+        super.onResume()
+        if ("add" != arguments?.getString("comingFor")) {
+            Utils.shareEventTracking(
+                activity,
+                "Home screen",
+                "Read_Android",
+                "Select_Topic_Vlog"
+            )
+        }
+    }
 
     private fun getTopicCategories() {
         BaseApplication.getInstance().retrofit.create(ArticleDetailsAPI::class.java).getAllTopicsCategorySubCategory(

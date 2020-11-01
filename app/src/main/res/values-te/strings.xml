@@ -693,7 +693,7 @@
 
   <string name="groups.disable_notification_this_gp">Disable notifications from this group</string>
 
-  <string name="groups.leave_group">గ్రూపు నుండి నిష్క్రయించండి </string>
+  <string name="groups.leave_group">నిష్క్రమించండి</string>
   <string name="groups.exit_gp">ఈ గ్రూపు నుండి ఏ క్షణమైనా నిష్క్రమించవచ్చు </string>
   <string name="groups.sure_leave_gp">Are you sure you want to leave this group</string>
   <string name="groups.leave">Leave</string>
@@ -1351,7 +1351,7 @@ Thank you! We will be reviewing your story. You can expect to hear from us withi
   <string name="choose_video_from_gallery">Choose video from gallery</string>
   <string name="see_more_challenge">SEE MORE CHALLENGES</string>
   <string name="vlog_tutorial">Vlog Tutorial</string>
-  <string name="no_facebook_friends">None of your friends are logged into momspresso using facebook</string>
+  <string name="no_facebook_friends">మీ స్నేహితులు ఇంకా మామ్స్ ప్రెస్సోలో ఇంకా చేరలేదు</string>
   <string name="share_app">షేర్ అప్</string>
   <string name="choose_proof">Choose Proof</string>
   <string name="invite_friends_whatsapp">వాట్సాప్ నుండి ఆహ్వానించండి</string>
@@ -1455,7 +1455,7 @@ Thank you! We will be reviewing your story. You can expect to hear from us withi
   <string name="lang_sel_express_yourself">మీరు 10 భాషలలో మిమ్మల్ని మీరు వ్యక్తపరచవచ్చు </string>
   <string name="select_language">భాషను ఎంచుకోండి</string>
   <string name="login_or_sign_up">లాగిన్ అవ్వండి లేదా సైన్ అప్ చేయండి</string>
-  <string name="login_subheading">క్రియేట్, చదవండి  సంపాదించండి. 32 మిలియన్ తల్లుల వేదికలో చేరండి.</string>
+  <string name="login_subheading">కచదవండి . క్రియేట్ చేయండి . సంపాదించండి. సపోర్ట్ చేయండి </string>
   <string name="welcome_user">హాయ్ %1$s,</string>
   <string name="home_onboarding_consume">5 లక్షల కంటే ఎక్కువ బ్లాగులు &amp; కథలు చదవండి లేదా వీడియోలు చూడండి</string>
   <string name="home_onboarding_create">బ్లాగులు, కథలు లేదా వీడియోల ద్వారా మిమ్మల్ని మీరు వ్యక్తపరచండి</string>
@@ -1466,7 +1466,7 @@ Thank you! We will be reviewing your story. You can expect to hear from us withi
   <string name="all_earn">సంపాదించండి</string>
   <string name="all_join">జాయిన్ అవ్వండి </string>
   <string name="explore_self">నేను నా స్వంతంగా అన్వేషిస్తాను</string>
-  <string name="home_onboarding_title">మీరు మీ ప్రయాణాన్ని ఎలా ప్రారంభించాలనుకుంటున్నారు?</string>
+  <string name="home_onboarding_title">%1$s, మీరు మీ ప్రయాణాన్ని ఎలా ప్రారంభించాలనుకుంటున్నారు?</string>
   <string name="empty_leaderboard_text">లీడర్‌బోర్డ్ ఇంకా సృష్టించబడలేదు. రేపు తిరిగి రండి.</string>
   <string name="yesterday">నిన్న</string>
   <string name="take_tour">TAKE THE TOUR</string>
@@ -1517,4 +1517,27 @@ Thank you! We will be reviewing your story. You can expect to hear from us withi
   <string name="select_a_campaign">Select a campaign you want to participate in</string>
   <string name="apply_whatsapp_dialog_text">Get MyMoney Notifications on WhatsApp</string>
   <string name="allow">Allow</string>
+  <string name="momspresso_is_fun_with_friends">మామ్స్ ప్రెస్సో  స్నేహితులతో సరదాగా ఉంటుంది</string>
+  <string name="by_finding_my_friends">మీ స్నేహితులను కనుగొనండి</string>
+  <string name="choosing_topics_i_like">మీకు నచ్చిన అంశాలను ఎంచుకోండి </string>
+  <string name="dont_want_a_customized_feed">వద్దు, నాకు కస్టమైజ్డ్ ఫీడ్ అవసరం లేదు</string>
+  <string name="follow_topics">విషయాలను ఫాలో అవ్వండి </string>
+  <string name="find_my_friends">స్నేహితులను కనుగొనండి</string>
+  <string name="follow_to_never_miss">వారు క్రియేట్ చేసిన  అద్భుతమైన పోస్ట్‌లను ఎప్పటికీ కోల్పోకుండా వారిని అనుసరించండి</string>
+  <string name="follow_bloggers_your_friends_are_following">మీ ఫ్రెండ్స్ ఫాలో అవుతున్న బ్లాగర్స్ </string>
+  <string name="select_topics">అంశాలను ఎంచుకోండి  </string>
+  <string name="go_to_my_feed">నా ఫీడ్ కు వెళ్ళు </string>
+  <string name="format_preference">మీకు ఏది ఇష్టం? మీరు అన్వేషించగల 3 ఫార్మాట్‌లు ఇక్కడ ఉన్నాయి </string>
+  <string name="interesting_content">బ్లాగర్స్ &amp; ఎక్స్పర్ట్స్ రాసిన  ఆక్తికరమైన కథలు, వ్యాసాలు, అనుభవాలు ఇక్కడ చదవండి </string>
+  <string name="short_stories_content">చిన్న కథలు, కవితలు, సరదా లేదా స్ఫూర్తిదాయకమైన సూక్తులు </string>
+  <string name="vlogs_content">#అమ్మలఅభిరుచి, పిల్లల ప్రతిభ మరియు కుటుంబ సరదా క్షణాలు చూపించే వినోదాత్మక వీడియోలు</string>
+  <string name="topics_interest">మీకు ఆసక్తి కలిగించే విషయాలు</string>
+  <string name="select_at_least_3_topics">కనీసం 3 అంశాలను ఎంచుకోండి </string>
+  <string name="select_at_least_1_topic">కనీసం ఒక అంశాన్ని ఎంచుకోండి  </string>
+  <string name="top_blogger_you_like">మీకు నచ్చే ఉత్తమ బ్లాగర్స్ </string>
+  <string name="bloggers_recently_read">మీరు ఇటీవల చదివిన బ్లాగర్లను ఫాలో అవ్వండి </string>
+  <string name="blogger_topic_based">బ్లాగర్స్ అంశాన్ని బట్టి ఫాలో అవుతున్నారు </string>
+  <string name="follow_friend_based_blogger">మీ స్నేహితులు ఫాలో అవుతున్న బ్లాగర్లను ఫాలో అవ్వండి </string>
+  <string name="connect_with_facebook_friends_on_momspresso">మామ్స్ ప్రెస్సోలో  మీ ఫేస్‌బుక్‌ స్నేహితులతో కనెక్ట్ అవ్వండి</string>
+  <string name="connect_with_facebook">ఫేస్‌బుక్‌తో కనెక్ట్ అవ్వండి</string>
 </resources>

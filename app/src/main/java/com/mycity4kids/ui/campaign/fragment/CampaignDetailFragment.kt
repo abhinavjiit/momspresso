@@ -454,7 +454,7 @@ class CampaignDetailFragment : BaseFragment(), IMembershipStatus {
                         //                        labelTextLayout.visibility = View.VISIBLE
                         //                        labelText.visibility = View.VISIBLE
                         bottomLayout.visibility = View.VISIBLE
-                        if (!SharedPrefUtils.isWhatsappNotificationOpt(BaseApplication.getAppContext())){
+                        if (!SharedPrefUtils.isWhatsappNotificationOpt(BaseApplication.getAppContext())) {
                             fetchNotificationOptout()
                         }
                     }
@@ -504,7 +504,9 @@ class CampaignDetailFragment : BaseFragment(), IMembershipStatus {
                     if (res?.code == 200 && res.status == Constants.SUCCESS) {
                         notificationCategoryListData = res.data.result
                         for (i in 0 until notificationCategoryListData.size) {
-                            if (notificationCategoryListData.get(i).name.equals("Whatsapp Notifications") && notificationCategoryListData.get(i).disabled){
+                            if (notificationCategoryListData.get(i).name.equals("Whatsapp Notifications") && notificationCategoryListData.get(
+                                    i
+                                ).disabled) {
                                 whatsppNotificationApplyDialog()
                             }
                         }
@@ -702,6 +704,12 @@ class CampaignDetailFragment : BaseFragment(), IMembershipStatus {
     }
 
     fun whatsppNotificationApplyDialog() {
+        Utils.shareEventTracking(
+            activity,
+            "Campaign Detail",
+            "WhatsappSubscription_Android",
+            "CampaignDetail_Popup_WS"
+        )
         val dialog = activity?.let { Dialog(it) }
         dialog?.window!!.requestFeature(Window.FEATURE_NO_TITLE)
         dialog.setContentView(R.layout.dialog_apply_whatsapp_notification)
@@ -727,6 +735,12 @@ class CampaignDetailFragment : BaseFragment(), IMembershipStatus {
 
 
     private fun optWhatsapp() {
+        Utils.shareEventTracking(
+            activity,
+            "Campaign Detail",
+            "WhatsappSubscription_Android",
+            "CampaignDetail_Popup_On_WS"
+        )
         val retrofit = BaseApplication.getInstance().retrofit
         val notificationApi = retrofit.create(NotificationsAPI::class.java)
         val notificationEnableRequestModel: NotificationEnabledOrDisabledModel

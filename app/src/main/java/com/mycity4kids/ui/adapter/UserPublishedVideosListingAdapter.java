@@ -123,7 +123,7 @@ public class UserPublishedVideosListingAdapter extends BaseAdapter {
             } else if (AppConstants.VIDEO_STATUS_APPROVAL_CANCELLED
                     .equals(articleDataModelsNew.get(position).getPublication_status())) {
                 holder.shareImageView.setVisibility(View.GONE);
-                holder.vlogOptionImageView.setVisibility(View.GONE);
+                holder.vlogOptionImageView.setVisibility(View.VISIBLE);
                 holder.dateTextView.setText(
                         holder.dateTextView.getContext().getString(R.string.user_funny_video_rejected_on, DateTimeUtils
                                 .getDateFromTimestamp(

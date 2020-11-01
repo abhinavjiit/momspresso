@@ -287,6 +287,7 @@ public class ArticleDetailsContainerActivity extends BaseActivity implements Vie
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.bloggerGoldCardView:
+                Utils.shareEventTracking(this, "Article detail", "BirthdayBonanza_Android", "ArticleDetail_Icon_BB");
                 Intent intent = new Intent(this, BloggerGoldActivity.class);
                 startActivity(intent);
                 break;

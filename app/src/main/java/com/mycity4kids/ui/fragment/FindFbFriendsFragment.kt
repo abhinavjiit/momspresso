@@ -17,6 +17,7 @@ import com.mycity4kids.application.BaseApplication
 import com.mycity4kids.base.BaseFragment
 import com.mycity4kids.constants.Constants
 import com.mycity4kids.facebook.FacebookUtils
+import com.mycity4kids.gtmutils.Utils
 import com.mycity4kids.interfaces.IFacebookUser
 import com.mycity4kids.models.request.FacebookFriendsRequest
 import com.mycity4kids.models.request.FollowUnfollowUserRequest
@@ -48,6 +49,7 @@ class FindFbFriendsFragment : BaseFragment(), IFacebookUser,
     private lateinit var connectFbContainer: ConstraintLayout
     private lateinit var skipForNowTextView: TextView
     private lateinit var skip: MomspressoButtonWidget
+    private lateinit var emptyList: TextView
 
     companion object {
         @JvmStatic
@@ -67,7 +69,9 @@ class FindFbFriendsFragment : BaseFragment(), IFacebookUser,
         connectFbContainer = view.findViewById(R.id.connectFbContainer)
         skipForNowTextView = view.findViewById(R.id.skipForNowTextView)
         skip = view.findViewById(R.id.skip)
+        emptyList = view.findViewById(R.id.emptyList)
         back = view.findViewById(R.id.back)
+
         callbackManager = CallbackManager.Factory.create()
         adapter = FBFriendsAdapter(this, "followFbFriends")
         adapter.setListData(facebookFriendList)
@@ -78,6 +82,12 @@ class FindFbFriendsFragment : BaseFragment(), IFacebookUser,
         adapter.notifyDataSetChanged()
         nextTextView.setOnClickListener {
             activity?.let {
+                Utils.shareEventTracking(
+                    activity,
+                    "Follow friends screen",
+                    "Read_Android",
+                    "RO_Facebook_Friends_Next_CTA"
+                )
                 val onNextButtonClick = it as OnNextButtonClick
                 onNextButtonClick.onClick()
             }
@@ -95,7 +105,7 @@ class FindFbFriendsFragment : BaseFragment(), IFacebookUser,
     }
 
     private fun getFbFriends() {
-        showProgressDialog("getting Facebook Friends")
+        showProgressDialog("Fetching your facebook friends")
         val retrofit = BaseApplication.getInstance().retrofit
         val fbFriendsApi = retrofit.create(FollowAPI::class.java)
         val call = fbFriendsApi.facebookFriendsToInvite
@@ -108,7 +118,7 @@ class FindFbFriendsFragment : BaseFragment(), IFacebookUser,
         val arr = jsonObject?.getJSONObject("friends")?.getJSONArray("data")
         jsonObject?.let { json ->
             token?.let {
-                showProgressDialog("getting Facebook Friends")
+                showProgressDialog("Fetching your facebook friends")
                 val retrofit = BaseApplication.getInstance().retrofit
                 val facebookFriendsRequest = FacebookFriendsRequest(it, json.getString("id"))
                 val fbFriendsApi = retrofit.create(FollowAPI::class.java)
@@ -117,7 +127,6 @@ class FindFbFriendsFragment : BaseFragment(), IFacebookUser,
             }
         }
     }
-
 
     private var getFacebookFriendsResponseCallback: Callback<FacebookInviteFriendsResponse> =
         object : Callback<FacebookInviteFriendsResponse> {
@@ -136,11 +145,24 @@ class FindFbFriendsFragment : BaseFragment(), IFacebookUser,
                         facebookFriendsResponse.data?.get(0)?.friendList?.let {
                             if (it.isNullOrEmpty() && !facebookFriendsResponse.data[0].hasExpired) {
                                 activity?.let {
-                                    showToast(activity, "no friends")
+                                    connectFbContainer.visibility = View.GONE
+                                    emptyList.visibility = View.VISIBLE
                                 }
                             } else if (facebookFriendsResponse.data[0].hasExpired) {
+                                Utils.shareEventTracking(
+                                    activity,
+                                    "Connect with fb screen",
+                                    "Read_Android",
+                                    "RO_Connect_Facebook"
+                                )
                                 connectFbContainer.visibility = View.VISIBLE
                             } else {
+                                Utils.shareEventTracking(
+                                    activity,
+                                    "Connect with fb screen",
+                                    "Read_Android",
+                                    "RO_Connect_Facebook"
+                                )
                                 connectFbContainer.visibility = View.GONE
                                 fbFriendListContainer.visibility = View.VISIBLE
                                 facebookFriendList.addAll(it)
@@ -172,6 +194,12 @@ class FindFbFriendsFragment : BaseFragment(), IFacebookUser,
     override fun onClick(view: View, position: Int) {
         when (view.id) {
             R.id.followTextView -> {
+                Utils.shareEventTracking(
+                    activity,
+                    "Follow friends screen",
+                    "Read_Android",
+                    "RO_Facebook_Friends_Follow_CTA"
+                )
                 followApi(position)
             }
             R.id.followingTextView -> {
@@ -183,7 +211,6 @@ class FindFbFriendsFragment : BaseFragment(), IFacebookUser,
                 startActivity(userProfileIntent)
             }
         }
-
     }
 
     private fun followApi(position: Int) {
@@ -248,7 +275,6 @@ class FindFbFriendsFragment : BaseFragment(), IFacebookUser,
             }
 
             override fun onFailure(call: Call<FollowUnfollowUserResponse>, e: Throwable) {
-
                 FirebaseCrashlytics.getInstance().recordException(e)
                 Log.d("MC4kException", Log.getStackTraceString(e))
             }
@@ -265,10 +291,24 @@ class FindFbFriendsFragment : BaseFragment(), IFacebookUser,
             R.id.back -> {
                 activity?.onBackPressed()
             }
-            R.id.skipForNowTextView, R.id.skip -> {
+            R.id.skipForNowTextView -> {
+                Utils.shareEventTracking(
+                    activity,
+                    "Connect with fb screen",
+                    "Read_Android",
+                    "RO_Connect_Facebook_Skip"
+                )
+                activity?.finish()
+            }
+            R.id.skip -> {
+                Utils.shareEventTracking(
+                    activity,
+                    "Connect with fb screen",
+                    "Read_Android",
+                    "RO_Facebook_Friends_Skip"
+                )
                 activity?.finish()
             }
         }
     }
-
 }

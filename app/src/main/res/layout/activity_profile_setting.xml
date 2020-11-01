@@ -183,20 +183,6 @@
         android:textColor="@color/campaign_4A4A4A"
         android:textSize="16sp" />
 
-      <com.mycity4kids.widget.CustomFontTextView
-        android:id="@+id/topicOfInterestTextView"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/space_20"
-        android:layout_marginEnd="@dimen/space_8"
-        android:drawableStart="@drawable/ic_security_setting"
-        android:drawableEnd="@drawable/arrow_right"
-        android:drawablePadding="@dimen/space_20"
-        android:inputType="textCapSentences"
-        android:text="Topics of Interest"
-        android:textColor="@color/campaign_4A4A4A"
-        android:textSize="16sp" />
-
       <View
         android:layout_width="match_parent"
         android:layout_height="1dp"

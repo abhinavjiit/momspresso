@@ -929,6 +929,12 @@ class ProfileInfoFragment : BaseFragment(),
     }
 
     private fun optWhatsapp() {
+        Utils.shareEventTracking(
+            activity,
+            "MyMoney Registration",
+            "WhatsappSubscription_Android",
+            "MyMoneyReg_On_WS"
+        )
         val retrofit = BaseApplication.getInstance().retrofit
         val notificationApi = retrofit.create(NotificationsAPI::class.java)
         val notificationEnableRequestModel: NotificationEnabledOrDisabledModel

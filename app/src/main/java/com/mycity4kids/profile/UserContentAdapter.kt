@@ -25,10 +25,14 @@ import com.google.firebase.crashlytics.FirebaseCrashlytics
 import com.mycity4kids.BuildConfig
 import com.mycity4kids.R
 import com.mycity4kids.application.BaseApplication
+import com.mycity4kids.base.BaseActivity
 import com.mycity4kids.constants.AppConstants
+import com.mycity4kids.gtmutils.Utils
+import com.mycity4kids.models.SelectContentTopicsModel
+import com.mycity4kids.models.SelectContentTopicsSubModel
 import com.mycity4kids.models.response.FollowUnfollowCategoriesResponse
 import com.mycity4kids.models.response.MixFeedResult
-import com.mycity4kids.newmodels.FollowUnfollowCategoriesRequest
+import com.mycity4kids.models.response.Suggestion
 import com.mycity4kids.preference.SharedPrefUtils
 import com.mycity4kids.retrofitAPIsInterfaces.TopicsCategoryAPI
 import com.mycity4kids.ui.adapter.SuggestedCreatorsRecyclerAdapter
@@ -235,9 +239,20 @@ class UserContentAdapter(
             )
             is SuggestedTopicsViewHolder -> addTopicsSuggestions(
                 holder.topicsContainerFlowLayout,
-                mixFeedList?.get(position)
+                mixFeedList?.get(position),
+                holder.listener
             )
             is FollowTopicCreatorViewHolder -> {
+                if (SharedPrefUtils.getFollowingTopicsJson(BaseApplication.getAppContext()).isNullOrEmpty()) {
+                    holder.followTopicsWidget.visibility = View.VISIBLE
+                } else {
+                    holder.followTopicsWidget.visibility = View.INVISIBLE
+                }
+                if (SharedPrefUtils.getFollowingJson(BaseApplication.getAppContext()).isNullOrEmpty()) {
+                    holder.followCreatorsWidget.visibility = View.VISIBLE
+                } else {
+                    holder.followCreatorsWidget.visibility = View.INVISIBLE
+                }
             }
         }
     }
@@ -411,6 +426,7 @@ class UserContentAdapter(
     inner class VideosViewHolder(itemView: View, val listener: RecyclerViewClickListener) :
         RecyclerView.ViewHolder(itemView), View.OnClickListener {
         internal var winnerVlogImageView: ImageView
+        internal var shareVlogImageView: ImageView
         internal var txvArticleTitle: TextView
         internal var txvAuthorName: TextView
         internal var articleImageView: ImageView
@@ -419,6 +435,7 @@ class UserContentAdapter(
         internal var recommendCountTextView: TextView
 
         init {
+            shareVlogImageView = itemView.findViewById(R.id.shareVlogImageView)
             winnerVlogImageView = itemView.findViewById(R.id.winnerVlogImageView)
             txvArticleTitle = itemView.findViewById(R.id.txvArticleTitle)
             txvAuthorName = itemView.findViewById(R.id.txvAuthorName)
@@ -426,6 +443,12 @@ class UserContentAdapter(
             viewCountTextView = itemView.findViewById(R.id.viewCountTextView)
             commentCountTextView = itemView.findViewById(R.id.commentCountTextView)
             recommendCountTextView = itemView.findViewById(R.id.recommendCountTextView)
+
+            if (isPrivate) {
+                shareVlogImageView.visibility = View.VISIBLE
+            } else {
+                shareVlogImageView.visibility = View.GONE
+            }
 
             var drawable =
                 ContextCompat.getDrawable(itemView.context, R.drawable.ic_star_gold_videos)
@@ -438,6 +461,7 @@ class UserContentAdapter(
                 DrawableCompat.setTintMode(it, PorterDuff.Mode.SRC_IN)
             }
             itemView.setOnClickListener(this)
+            shareVlogImageView.setOnClickListener(this)
         }
 
         override fun onClick(v: View) {
@@ -515,7 +539,8 @@ class UserContentAdapter(
             itemView.findViewById(R.id.suggestedCreatorsRecyclerView)
 
         init {
-            sectionHeaderTextView.text = "Creators your friends follow"
+            sectionHeaderTextView.text =
+                sectionHeaderTextView.context.getString(R.string.follow_friend_based_blogger)
             itemView.setOnClickListener(this)
         }
 
@@ -538,11 +563,14 @@ class UserContentAdapter(
 
         init {
             if (viewType == CONTENT_TYPE_SUGGESTED_CREATORS_BASED_ON_TOPICS) {
-                sectionHeaderTextView.text = "Bloggers based on topic followed"
+                sectionHeaderTextView.text =
+                    sectionHeaderTextView.context.getString(R.string.blogger_topic_based)
             } else if (viewType == CONTENT_TYPE_SUGGESTED_CREATORS_BASED_ON_ACTIVITY) {
-                sectionHeaderTextView.text = "Bloggers based on activity"
+                sectionHeaderTextView.text =
+                    sectionHeaderTextView.context.getString(R.string.bloggers_recently_read)
             } else if (viewType == CONTENT_TYPE_SUGGESTED_CREATORS_TOP_RANKERS) {
-                sectionHeaderTextView.text = "Top Bloggers"
+                sectionHeaderTextView.text =
+                    sectionHeaderTextView.context.getString(R.string.top_blogger_you_like)
             }
             itemView.setOnClickListener(this)
         }
@@ -1039,7 +1067,8 @@ class UserContentAdapter(
 
     private fun addTopicsSuggestions(
         flowLayout: FlowLayout,
-        data: MixFeedResult?
+        data: MixFeedResult?,
+        listener: RecyclerViewClickListener
     ) {
         flowLayout.removeAllViews()
         for (i in 0 until data?.suggestedTopicsList?.size!!) {
@@ -1047,9 +1076,9 @@ class UserContentAdapter(
                 .inflate(R.layout.suggested_topic_custom_view, null, false) as FrameLayout
             topicView.isClickable = true
             (topicView.getChildAt(0) as RelativeLayout).getChildAt(0).tag =
-                data.suggestedTopicsList?.get(i)?.categoryId
+                data.suggestedTopicsList?.get(i)
             (topicView.getChildAt(0) as RelativeLayout).getChildAt(2).tag =
-                data.suggestedTopicsList?.get(i)?.categoryId
+                data.suggestedTopicsList?.get(i)
             ((topicView.getChildAt(0) as RelativeLayout).getChildAt(0) as TextView).text =
                 data.suggestedTopicsList?.get(i)?.displayName?.toUpperCase()
             if (data.suggestedTopicsList?.get(i)?.isFollowing == "1") {
@@ -1060,10 +1089,11 @@ class UserContentAdapter(
                     )
                 (topicView.getChildAt(0) as RelativeLayout).getChildAt(2)
                     .setOnClickListener { v: View ->
+                        listener.onClick(v, 0)
                         data.suggestedTopicsList?.get(i)?.isFollowing = "0"
                         followUnfollowTopics(
-                            v.tag as String,
-                            v.parent as RelativeLayout, 0
+                            v.tag as Suggestion,
+                            v.parent as RelativeLayout, 0, listener
                         )
                     }
             } else {
@@ -1074,16 +1104,15 @@ class UserContentAdapter(
                     )
                 (topicView.getChildAt(0) as RelativeLayout).getChildAt(2)
                     .setOnClickListener { v: View ->
+                        listener.onClick(v, 0)
                         data.suggestedTopicsList?.get(i)?.isFollowing = "1"
                         followUnfollowTopics(
-                            v.tag as String,
-                            v.parent as RelativeLayout, 1
+                            v.tag as Suggestion,
+                            v.parent as RelativeLayout, 1, listener
                         )
                     }
             }
-
             (topicView.getChildAt(0) as RelativeLayout).getChildAt(0).setOnClickListener { v: View ->
-
             }
             flowLayout.addView(topicView)
         }
@@ -1115,16 +1144,20 @@ class UserContentAdapter(
     }
 
     private fun followUnfollowTopics(
-        selectedTopic: String,
+        selectedTopic: Suggestion,
         tagView: RelativeLayout,
-        action: Int
+        action: Int,
+        listener: RecyclerViewClickListener
     ) {
-        val followUnfollowCategoriesRequest =
-            FollowUnfollowCategoriesRequest()
-        val topicIdLList = java.util.ArrayList<String>()
-        topicIdLList.add(selectedTopic)
-        followUnfollowCategoriesRequest.categories = topicIdLList
+        val followUnfollowCategoriesRequest = SelectContentTopicsModel(null)
+        val topicIdLList = ArrayList<SelectContentTopicsSubModel>()
         if (action == 0) {
+            val selectContentTopicsSubModel = SelectContentTopicsSubModel(
+                id = selectedTopic.categoryId,
+                itemType = selectedTopic.itemType[0],
+                status = "0"
+            )
+            topicIdLList.add(selectContentTopicsSubModel)
             tagView.getChildAt(0).tag = selectedTopic
             tagView.getChildAt(2).tag = selectedTopic
             (tagView.getChildAt(2) as ImageView).setImageDrawable(
@@ -1134,14 +1167,27 @@ class UserContentAdapter(
                 )
             )
             tagView.getChildAt(2).setOnClickListener { v: View ->
-                //                data.suggestedTopicsList?.get(i)?.isFollowing = "1"
+                listener.onClick(v, 0)
                 followUnfollowTopics(
-                    v.tag as String,
+                    v.tag as Suggestion,
                     v.parent as RelativeLayout,
-                    1
+                    1,
+                    listener
                 )
             }
         } else {
+            Utils.shareEventTracking(
+                tagView.context,
+                "My Feed",
+                "Read_Android",
+                "MyFeed_Friend_Topics_Follow_CTA"
+            )
+            val selectContentTopicsSubModel = SelectContentTopicsSubModel(
+                id = selectedTopic.categoryId,
+                itemType = selectedTopic.itemType[0],
+                status = "1"
+            )
+            topicIdLList.add(selectContentTopicsSubModel)
             tagView.getChildAt(0).tag = selectedTopic
             tagView.getChildAt(2).tag = selectedTopic
             (tagView.getChildAt(2) as ImageView)
@@ -1152,14 +1198,16 @@ class UserContentAdapter(
                     )
                 )
             tagView.getChildAt(2).setOnClickListener { v: View ->
-                //                data.suggestedTopicsList?.get(i)?.isFollowing = "0"
+                listener.onClick(v, 0)
                 followUnfollowTopics(
-                    v.tag as String,
+                    v.tag as Suggestion,
                     v.parent as RelativeLayout,
-                    0
+                    0,
+                    listener
                 )
             }
         }
+        followUnfollowCategoriesRequest.topics = topicIdLList
         val retro = BaseApplication.getInstance().retrofit
         val topicsCategoryApi = retro.create(
             TopicsCategoryAPI::class.java
@@ -1193,14 +1241,14 @@ class UserContentAdapter(
         private val CONTENT_TYPE_SHORT_STORY = 1
         private val CONTENT_TYPE_ARTICLE = 2
         private val CONTENT_TYPE_VIDEO = 3
-        private val CONTENT_TYPE_RECENT_LIVE_STREAM = 5
-        private val CONTENT_TYPE_UPCOMING_LIVE_STREAM = 6
-        private val CONTENT_TYPE_TORCAI_ADS = 7
-        private val CONTENT_TYPE_SUGGESTED_CREATORS_FOLLOWED_BY_FRIENDS = 8
-        private val CONTENT_TYPE_SUGGESTED_CREATORS_BASED_ON_TOPICS = 9
-        private val CONTENT_TYPE_SUGGESTED_CREATORS_BASED_ON_ACTIVITY = 10
-        private val CONTENT_TYPE_SUGGESTED_CREATORS_TOP_RANKERS = 11
-        private val CONTENT_TYPE_SUGGESTED_TOPICS = 13
-        private val CONTENT_TYPE_FOLLOW_TOPICS_AND_CREATORS = 14
+        private val CONTENT_TYPE_RECENT_LIVE_STREAM = 4
+        private val CONTENT_TYPE_UPCOMING_LIVE_STREAM = 5
+        private val CONTENT_TYPE_TORCAI_ADS = 6
+        private val CONTENT_TYPE_SUGGESTED_CREATORS_FOLLOWED_BY_FRIENDS = 7
+        private val CONTENT_TYPE_SUGGESTED_CREATORS_BASED_ON_TOPICS = 8
+        private val CONTENT_TYPE_SUGGESTED_CREATORS_BASED_ON_ACTIVITY = 9
+        private val CONTENT_TYPE_SUGGESTED_CREATORS_TOP_RANKERS = 10
+        private val CONTENT_TYPE_SUGGESTED_TOPICS = 11
+        private val CONTENT_TYPE_FOLLOW_TOPICS_AND_CREATORS = 12
     }
 }

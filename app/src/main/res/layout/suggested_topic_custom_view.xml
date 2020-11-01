@@ -33,6 +33,7 @@
       android:visibility="gone" />
 
     <ImageView
+      android:id="@+id/followCtaImageView"
       android:layout_width="18dp"
       android:layout_height="18dp"
       android:layout_centerVertical="true"

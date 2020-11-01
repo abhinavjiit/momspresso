@@ -103,6 +103,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import okhttp3.ResponseBody;
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -191,6 +193,7 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
     private int frequency;
     private RelativeLayout dashBoardContentFilterCoachMark;
     private RelativeLayout groupCoachMark;
+    private TextView startWithLabel;
 
     static {
         AppCompatDelegate.setCompatVectorFromResourcesEnabled(true);
@@ -318,9 +321,12 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
         groupsJourneyCardView = findViewById(R.id.groupsJourneyCardView);
         exploreOwnTextView = findViewById(R.id.exploreOwnTextView);
         welcomeUserTextView = findViewById(R.id.welcomeUserTextView);
+        startWithLabel = findViewById(R.id.startWithLabel);
+
         langView.setOnClickListener(this);
         languageLayout.setOnClickListener(this);
         drawerProfileCoachmark.setOnClickListener(this);
+        journeyLayout.setOnClickListener(this);
 
         referral.setOnClickListener(this);
         videosTextView.setCompoundDrawablesWithIntrinsicBounds(
@@ -533,6 +539,9 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
         welcomeUserTextView.setText(getString(R.string.welcome_user,
                 SharedPrefUtils.getUserDetailModel(this).getFirst_name() + " " + SharedPrefUtils
                         .getUserDetailModel(this).getLast_name()));
+        startWithLabel.setText(getString(R.string.home_onboarding_title,
+                SharedPrefUtils.getUserDetailModel(this).getFirst_name() + " " + SharedPrefUtils
+                        .getUserDetailModel(this).getLast_name()));
 
         if (!SharedPrefUtils.isUserJourneyCompleted(this)) {
             journeyLayout.setVisibility(View.VISIBLE);
@@ -565,7 +574,6 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
             launchInviteFriendsDialog(getIntent().getStringExtra("source"));
         }
         getUsersData();
-        showBottomSheet();
     }
 
     private void showBloggerGoldDialog() {
@@ -811,8 +819,18 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
                 e.printStackTrace();
             }
             if (!StringUtils.isNullOrEmpty(tempDeepLinkUrl)) {
-                Log.d("tempDeepLinkUrl", tempDeepLinkUrl);
-                handleDeeplinks(tempDeepLinkUrl);
+                Log.e("tempDeepLinkUrl", tempDeepLinkUrl);
+                String urlWithNoParams = tempDeepLinkUrl.split("\\?")[0];
+                if (urlWithNoParams.endsWith("/")) {
+                    urlWithNoParams = urlWithNoParams.substring(0, urlWithNoParams.length() - 1);
+                }
+                Pattern pattern19 = Pattern.compile(AppConstants.GROUPS_LISTING_REGEX);
+                Matcher matcher19 = pattern19.matcher(urlWithNoParams);
+                if (matcher19.matches()) {
+                    fragmentToLoad = Constants.GROUP_LISTING_FRAGMENT;
+                } else {
+                    handleDeeplinks(tempDeepLinkUrl);
+                }
             }
         } else if (newIntent.hasExtra(AppConstants.HOME_SELECTED_TAB)) {
             if (Constants.GROUP_LISTING_FRAGMENT.equals(newIntent.getStringExtra(AppConstants.HOME_SELECTED_TAB))) {
@@ -1255,6 +1273,12 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
     public void onClick(View v) {
         Fragment topFragment = getSupportFragmentManager().findFragmentById(R.id.content_frame);
         switch (v.getId()) {
+            case R.id.journeyLayout: {
+                Utils.shareEventTracking(this, "Homepage", "Onboarding_Android", "Onboarding_Close");
+                journeyLayout.setVisibility(View.GONE);
+                SharedPrefUtils.setUserJourneyCompletedFlag(this, true);
+            }
+            break;
             case R.id.dashBoardContentFilterCoachMark: {
                 Utils.shareEventTracking(this, "Home screen", "Read_Android", "TT_Home_Format");
                 removeContentFilterCoachmark();
@@ -1461,7 +1485,7 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
                 Utils.shareEventTracking(this, "Home screen", "Onboarding_Android", "Home_Read");
                 journeyLayout.setVisibility(View.GONE);
                 //  showContentFilterCoachmark();
-                showBottomSheet();
+                showTopicAndFollowOptionsBottomSheet();
                 SharedPrefUtils.setUserJourneyCompletedFlag(this, true);
             }
             break;
@@ -1940,7 +1964,7 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
         }
     }
 
-    private void showBottomSheet() {
+    private void showTopicAndFollowOptionsBottomSheet() {
         CustomizeFeedUsingTopicsAndFriendsBottomSheetDialogFragment customizeFeedBottomSheetDialogFragment =
                 new CustomizeFeedUsingTopicsAndFriendsBottomSheetDialogFragment();
         customizeFeedBottomSheetDialogFragment.show(getSupportFragmentManager(), "bottom_sheet");

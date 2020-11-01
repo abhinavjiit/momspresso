@@ -6,7 +6,7 @@
   android:layout_height="wrap_content"
   android:background="@drawable/upper_rounded_corner_layout"
   android:orientation="vertical"
-  android:paddingBottom="@dimen/space_40"
+  android:paddingBottom="@dimen/space_30"
   app:layout_behavior="@string/bottom_sheet_behavior">
 
   <com.mycity4kids.widget.CustomFontTextView
@@ -33,7 +33,7 @@
     android:paddingTop="14dp"
     android:paddingEnd="65dp"
     android:paddingBottom="14dp"
-    android:text="By finding my friends"
+    android:text="@string/by_finding_my_friends"
     android:textSize="18sp"
     app:fb_borderColor="@color/app_red"
     app:fb_borderWidth="1dp"
@@ -52,7 +52,7 @@
     android:paddingTop="14dp"
     android:paddingEnd="65dp"
     android:paddingBottom="14dp"
-    android:text="Choosing topics I like"
+    android:text="@string/choosing_topics_i_like"
     android:textSize="18sp"
     app:fb_borderColor="@color/app_red"
     app:fb_borderWidth="1dp"
@@ -67,10 +67,11 @@
     android:layout_height="wrap_content"
     android:layout_gravity="center_horizontal"
     android:layout_marginStart="32.5dp"
-    android:layout_marginTop="@dimen/space_35"
-    android:layout_marginEnd="32.5dp"
+    android:layout_marginTop="25dp"
+    android:layout_marginEnd="32dp"
     android:gravity="center_horizontal"
-    android:text="No, I don’t need customized feed"
+    android:padding="10dp"
+    android:text="@string/dont_want_a_customized_feed"
     android:textColor="#9B9B9B"
     android:textSize="18sp"
     app:fontName="Roboto-Regular.ttf" />

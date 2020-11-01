@@ -71,7 +71,7 @@
         android:layout_height="wrap_content"
         android:paddingTop="@dimen/space_8"
         android:paddingBottom="@dimen/space_8"
-        android:text="Select minimum 3 tags to continue"
+        android:text="@string/select_at_least_3_topics"
         android:textSize="14sp"
         android:visibility="gone"
         app:fb_defaultColor="@color/white"

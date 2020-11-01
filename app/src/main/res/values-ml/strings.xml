@@ -1395,7 +1395,7 @@ Thank you! We will be reviewing your story. You can expect to hear from us withi
   <string name="choose_video_from_gallery">Choose video from gallery</string>
   <string name="see_more_challenge">SEE MORE CHALLENGES</string>
   <string name="vlog_tutorial">Vlog Tutorial</string>
-  <string name="no_facebook_friends">None of your friends are logged into momspresso using facebook</string>
+  <string name="no_facebook_friends">നിങ്ങളുടെ സുഹൃത്തുക്കൾ ഇതുവരെ മോസ്‌പ്രെസ്സോയിൽ  അംഗമായിട്ടില്ലെന്ന് തോന്നുന്നു</string>
   <string name="share_app">ഷെയർ ആപ്പ്</string>
   <string name="choose_proof">Choose Proof</string>
   <string name="invite_friends_whatsapp">വാട്ട്സ്ആപ്പിലൂടെ ക്ഷണിക്കൂ</string>
@@ -1499,7 +1499,7 @@ Thank you! We will be reviewing your story. You can expect to hear from us withi
   <string name="lang_sel_express_yourself">10 ഭാഷകളിൽ ആശയാവിഷ്കാരം നടത്തുക </string>
   <string name="select_language">ഭാഷ തിരഞ്ഞെടുക്കുക</string>
   <string name="login_or_sign_up">ലോഗിൻ / സൈൻ അപ്പ്‌</string>
-  <string name="login_subheading">സൃഷ്ടിക്കുക, വായിക്കുക, സമ്പാദിക്കുക, 32 ദശലക്ഷം അമ്മമാരോടൊപ്പം ചേരുക</string>
+  <string name="login_subheading">വായിക്കുക. സൃഷ്ടിക്കുക. സമ്പാദിക്കുക. പിന്തുണയ്ക്കുക </string>
   <string name="welcome_user">പ്രിയപ്പെട്ട %1$s,</string>
   <string name="home_onboarding_consume">5 ലക്ഷത്തിലധികം സൃഷ്ടികളിൽ നിന്നും തിരഞ്ഞെടുക്കുക</string>
   <string name="home_onboarding_create">ബ്ലോഗ്, കഥ, വ്ലോഗ് എന്നിവ സൃഷ്ടിക്കുക</string>
@@ -1510,7 +1510,7 @@ Thank you! We will be reviewing your story. You can expect to hear from us withi
   <string name="all_earn">സമ്പാദിക്കുക </string>
   <string name="all_join">ചേരുക </string>
   <string name="explore_self">ഞാൻ സ്വന്തമായിഅന്വേഷിച്ചു കണ്ടെത്താം </string>
-  <string name="home_onboarding_title">നിങ്ങളുടെ യാത്ര എങ്ങനെ ആരംഭിക്കാനാണ് ആഗ്രഹിക്കുന്നത്?</string>
+  <string name="home_onboarding_title">%1$s, നിങ്ങളുടെ യാത്ര എങ്ങനെ ആരംഭിക്കാനാണ് ആഗ്രഹിക്കുന്നത്?</string>
   <string name="empty_leaderboard_text">ലീഡർബോർഡ് ഇതുവരെ സൃഷ്ടിച്ചിട്ടില്ല. നാളെ മടങ്ങിവരിക.</string>
   <string name="yesterday">ഇന്നലെ</string>
   <string name="take_tour">TAKE THE TOUR</string>
@@ -1561,4 +1561,27 @@ Thank you! We will be reviewing your story. You can expect to hear from us withi
   <string name="select_a_campaign">Select a campaign you want to participate in</string>
   <string name="apply_whatsapp_dialog_text">Get MyMoney Notifications on WhatsApp</string>
   <string name="allow">Allow</string>
+  <string name="momspresso_is_fun_with_friends">മോംസ്പ്രസ്സോ സുഹൃത്തുക്കളുമായി രസകരമാണ്</string>
+  <string name="by_finding_my_friends">നിങ്ങളുടെ സുഹൃത്തുക്കളെ കണ്ടെത്തുക </string>
+  <string name="choosing_topics_i_like">നിങ്ങൾക്ക്  താല്പര്യമുള്ള വിഷയങ്ങൾ പിന്തുടരുക</string>
+  <string name="dont_want_a_customized_feed">ഇല്ല, എനിക്ക് കസ്റ്റമൈസ്ഡ്  ഫീഡ് ആവശ്യമില്ല</string>
+  <string name="follow_topics">വിഷയങ്ങൾ പിന്തുടരുക</string>
+  <string name="find_my_friends">സുഹൃത്തുക്കളെ കണ്ടെത്തുക </string>
+  <string name="follow_to_never_miss">അവർ സൃഷ്ടിക്കുന്ന അതിശയകരമായ പോസ്റ്റുകൾ ഒരിക്കലും വിട്ടുപോകാതിരിക്കാൻ അവരെ പിന്തുടരുക</string>
+  <string name="follow_bloggers_your_friends_are_following">നിങ്ങളുടെ സുഹൃത്തുക്കൾ പിന്തുടരുന്ന സ്രഷ്‌ടാക്കളെ പിന്തുടരുക</string>
+  <string name="select_topics">വിഷയങ്ങൾ തിരഞ്ഞെടുക്കുക </string>
+  <string name="go_to_my_feed">എന്റെ ഫീഡിലേക്ക് പോകുക </string>
+  <string name="format_preference">നിങ്ങൾ എന്താണ് ഇഷ്ടപ്പെടുന്നത്? നിങ്ങൾക്ക് തിരഞ്ഞെടുക്കനായി 3വിഭാഗങ്ങൾ ഞങ്ങളുടെ പക്കലുണ്ട്</string>
+  <string name="interesting_content">രസകരമായ കഥകൾ‌, ലേഖനങ്ങൾ‌, ബ്ലോഗർ‌മാരുടെയും വിദഗ്ദ്ധരുടെയും അനുഭവങ്ങൾ‌</string>
+  <string name="short_stories_content">ചെറുകഥകൾ, കവിതകൾ, പ്രചോദനകരമോ രസകരമോ ആയ ഉദ്ധരണികൾ</string>
+  <string name="vlogs_content">അമ്മയുടെ  കഴിവ്, കുട്ടിയുടെ കഴിവ്, രസകരമായ കുടുംബ നിമിഷങ്ങൾ എന്നിങ്ങനെയുള്ള വിനോദ വീഡിയോകൾ</string>
+  <string name="topics_interest">നിങ്ങൾക്ക് താൽപ്പര്യമുണ്ടായേക്കാവുന്ന വിഷയങ്ങൾ</string>
+  <string name="select_at_least_3_topics">ഏറ്റവും കുറഞ്ഞത് 3 വിഷയങ്ങൾ തിരഞ്ഞെടുക്കുക </string>
+  <string name="select_at_least_1_topic">ഏറ്റവും കുറഞ്ഞത് ഒരു വിഷയമെങ്കിലും തിരഞ്ഞെടുക്കുക </string>
+  <string name="top_blogger_you_like">നിങ്ങൾ‌ പിന്തുടരാൻ‌ താൽ‌പ്പര്യപ്പെട്ടേക്കാവുന്ന ചില മുൻ‌നിര ബ്ലോഗർ‌മാർ‌</string>
+  <string name="bloggers_recently_read">അടുത്തിടെ നിങ്ങൾ വായിച്ച ചില ബ്ലോഗർ‌മാരെ പിന്തുടരുക ‌</string>
+  <string name="blogger_topic_based">വിഷയത്തെ അടിസ്ഥാനമാക്കി ബ്ലോഗർ‌മാരെ പിന്തുടരുന്നു</string>
+  <string name="follow_friend_based_blogger">നിങ്ങളുടെ സുഹൃത്തുക്കൾ പിന്തുടരുന്ന ബ്ലോഗേഴ്സിനെ പിന്തുടരുക</string>
+  <string name="connect_with_facebook_friends_on_momspresso">നിങ്ങളുടെ ഫേസ്ബുക്ക് ചങ്ങാതിമാരുമായി മോംസ്പ്രസ്സോയിലും ബന്ധപ്പെടുക</string>
+  <string name="connect_with_facebook">ഫേസ്ബുക്കുമായി ബന്ധിപ്പിക്കുക</string>
 </resources>

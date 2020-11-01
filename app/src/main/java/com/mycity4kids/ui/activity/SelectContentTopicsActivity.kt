@@ -23,7 +23,6 @@ class SelectContentTopicsActivity : BaseActivity() {
         selectContentTopicsPagerAdapter =
             SelectContentTopicsPagerAdapter(supportFragmentManager, selectedContent)
         viewPager.adapter = selectContentTopicsPagerAdapter
-
     }
 
     fun nextPageOnContinueClick() {

@@ -71,7 +71,7 @@
         android:layout_height="wrap_content"
         android:paddingTop="@dimen/space_8"
         android:paddingBottom="@dimen/space_8"
-        android:text="Select minimum 1 tags to continue"
+        android:text="Select minimum 1 tag to continue"
         android:textSize="14sp"
         app:fb_defaultColor="@color/white"
         app:fb_textColor="#707070"

@@ -136,19 +136,34 @@
             android:textSize="12sp"
             card_view:fontName="open_sans.ttf" />
 
-          <ImageView
-            android:id="@+id/winnerVlogImageView"
+          <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentEnd="true"
-            android:layout_centerVertical="true"
-            android:layout_marginTop="@dimen/space_5"
-            android:gravity="center_vertical"
-            android:paddingStart="5dp"
-            android:paddingEnd="10dp"
-            android:src="@drawable/ic_trophy"
-            android:visibility="visible" />
+            android:layout_centerVertical="true">
+            <ImageView
+              android:id="@+id/winnerVlogImageView"
+              android:layout_width="wrap_content"
+              android:layout_height="wrap_content"
+              android:layout_gravity="center_vertical"
+              android:paddingStart="5dp"
+              android:paddingEnd="10dp"
+              android:src="@drawable/ic_trophy"
+              android:visibility="visible" />
 
+            <ImageView
+              android:id="@+id/shareVlogImageView"
+              android:layout_width="wrap_content"
+              android:layout_height="wrap_content"
+              android:gravity="center_vertical"
+              android:paddingStart="5dp"
+              android:paddingTop="5dp"
+              android:paddingEnd="10dp"
+              android:paddingBottom="5dp"
+              android:src="@drawable/ic_share_icon"
+              android:tint="@color/app_red"
+              android:visibility="gone" />
+          </LinearLayout>
         </RelativeLayout>
 
         <ImageView

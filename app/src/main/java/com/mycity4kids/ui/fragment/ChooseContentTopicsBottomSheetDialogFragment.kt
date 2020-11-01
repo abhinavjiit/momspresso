@@ -1,5 +1,6 @@
 package com.mycity4kids.ui.fragment
 
+import android.content.DialogInterface
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -12,6 +13,7 @@ import androidx.core.content.res.ResourcesCompat
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.mycity4kids.R
+import com.mycity4kids.gtmutils.Utils
 import com.mycity4kids.ui.activity.DashboardActivity
 import com.mycity4kids.utils.ToastUtils
 import com.mycity4kids.widget.MomspressoButtonWidget
@@ -19,7 +21,7 @@ import com.mycity4kids.widget.MomspressoButtonWidget
 class ChooseContentTopicsBottomSheetDialogFragment : BottomSheetDialogFragment(),
     View.OnClickListener {
 
-
+    private var isSkipped: Boolean = false
     private lateinit var blogContainer: ConstraintLayout
     private lateinit var storyContainer: ConstraintLayout
     private lateinit var vlogContainer: ConstraintLayout
@@ -52,6 +54,7 @@ class ChooseContentTopicsBottomSheetDialogFragment : BottomSheetDialogFragment()
                 dialog.behavior.peekHeight = it.height
             }
         }
+        Utils.shareEventTracking(activity, "Home screen", "Read_Android", "Format_Options")
         blogContainer = view.findViewById(R.id.blogContainer)
         storyContainer = view.findViewById(R.id.storyContainer)
         vlogContainer = view.findViewById(R.id.vlogContainer)
@@ -77,11 +80,19 @@ class ChooseContentTopicsBottomSheetDialogFragment : BottomSheetDialogFragment()
     override fun onClick(view: View?) {
         when (view?.id) {
             R.id.mayBeLaterTextView -> {
+                isSkipped = true
+                Utils.shareEventTracking(activity, "Home screen", "Read_Android", "Format_Options")
                 dismiss()
             }
             R.id.blogContainer -> {
                 activity?.let {
                     if (!blogContainerSelected) {
+                        Utils.shareEventTracking(
+                            activity,
+                            "Home screen",
+                            "Read_Android",
+                            "Format_Options_Blog"
+                        )
                         selectedContainers++
                         selectedContentContainers.add("blog")
                         blogContainer.background = ResourcesCompat.getDrawable(
@@ -100,7 +111,6 @@ class ChooseContentTopicsBottomSheetDialogFragment : BottomSheetDialogFragment()
                         blogSelectImageView.setImageResource(R.drawable.ic_rectangle)
                         blogContainerSelected = false
                     }
-
                     if (selectedContainers > 0) {
                         selectTopicsTextView.setBackgroundColor(
                             ContextCompat.getColor(
@@ -117,13 +127,16 @@ class ChooseContentTopicsBottomSheetDialogFragment : BottomSheetDialogFragment()
                         )
                     }
                 }
-
-
             }
-
             R.id.storyContainer -> {
                 activity?.let {
                     if (!storyContainerSelected) {
+                        Utils.shareEventTracking(
+                            activity,
+                            "Home screen",
+                            "Read_Android",
+                            "Format_Options_100WS"
+                        )
                         selectedContainers++
                         selectedContentContainers.add("story")
                         storyContainer.background = ResourcesCompat.getDrawable(
@@ -141,7 +154,6 @@ class ChooseContentTopicsBottomSheetDialogFragment : BottomSheetDialogFragment()
                         )
                         storySelectImageView.setImageResource(R.drawable.ic_rectangle)
                         storyContainerSelected = false
-
                     }
                     if (selectedContainers > 0) {
                         selectTopicsTextView.setBackgroundColor(
@@ -159,12 +171,16 @@ class ChooseContentTopicsBottomSheetDialogFragment : BottomSheetDialogFragment()
                         )
                     }
                 }
-
             }
-
             R.id.vlogContainer -> {
                 activity?.let {
                     if (!vlogContainerSelected) {
+                        Utils.shareEventTracking(
+                            activity,
+                            "Home screen",
+                            "Read_Android",
+                            "Format_Options_Vlog"
+                        )
                         selectedContainers++
                         selectedContentContainers.add("vlog")
                         vlogContainer.background = ResourcesCompat.getDrawable(
@@ -200,7 +216,6 @@ class ChooseContentTopicsBottomSheetDialogFragment : BottomSheetDialogFragment()
                     }
                 }
             }
-
             R.id.selectTopicsTextView -> {
                 val list = (selectedContentContainers.toMutableList()).sortedBy {
                     it.toString()
@@ -209,6 +224,13 @@ class ChooseContentTopicsBottomSheetDialogFragment : BottomSheetDialogFragment()
                     if (selectedContainers == 0) {
                         ToastUtils.showToast(it, "select minimum one topic")
                     } else {
+                        isSkipped = true
+                        Utils.shareEventTracking(
+                            activity,
+                            "Home screen",
+                            "Read_Android",
+                            "Format_Options_Select_Topic_CTA"
+                        )
                         (it as DashboardActivity).selectedContentTopics(
                             list.toMutableList() as ArrayList<String>,
                             selectedContainers
@@ -217,6 +239,18 @@ class ChooseContentTopicsBottomSheetDialogFragment : BottomSheetDialogFragment()
                     }
                 }
             }
+        }
+    }
+
+    override fun onDismiss(dialog: DialogInterface) {
+        super.onDismiss(dialog)
+        if (!isSkipped) {
+            Utils.shareEventTracking(
+                activity,
+                "Home screen",
+                "Read_Android",
+                "Format_Options_Close"
+            )
         }
     }
 }

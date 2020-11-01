@@ -1412,7 +1412,7 @@ Thank you! We will be reviewing your story. You can expect to hear from us withi
   <string name="choose_video_from_gallery">Choose video from gallery</string>
   <string name="see_more_challenge">SEE MORE CHALLENGES</string>
   <string name="vlog_tutorial">Vlog Tutorial</string>
-  <string name="no_facebook_friends">None of your friends are logged into momspresso using facebook</string>
+  <string name="no_facebook_friends">ਇੰਝ ਜਾਪਦਾ ਹੈ ਕਿ ਤੁਹਾਡੇ ਦੋਸਤ ਅਜੇ ਵੀ ਮੌਮਸਪ੍ਰੈਸੋ \'ਤੇ ਨਹੀਂ ਹਨ</string>
   <string name="share_app">ਸਹਾਰੇ ਅੱਪ</string>
   <string name="choose_proof">Choose Proof</string>
   <string name="invite_friends_whatsapp">ਵਹੱਟਸ ਐਪ ਰਾਹੀਂ ਸੱਦਾ ਦਿਓ</string>
@@ -1516,7 +1516,7 @@ Thank you! We will be reviewing your story. You can expect to hear from us withi
   <string name="lang_sel_express_yourself">ਆਪਣੇ ਆਪ ਨੂੰ 10 ਭਾਸ਼ਾਵਾਂ ਵਿਚ ਪ੍ਰਗਟ ਕਰੋ</string>
   <string name="select_language">ਭਾਸ਼ਾ ਚੁਣੋ</string>
   <string name="login_or_sign_up">ਲੋਗਇਨ ਕਰੋ ਜਾਂ ਸਾਈਨ ਅਪ ਕਰੋ</string>
-  <string name="login_subheading">ਬਣਾਓ, ਪੜ੍ਹੋ, ਕਮਾਓ ਅਤੇ 32 ਮਿਲੀਅਨ ਮਾਵਾਂ ਨਾਲ ਜੁੜੋ</string>
+  <string name="login_subheading">ਪੜ੍ਹੋ. ਬਣਾਓ. ਕਮਾਓ. ਸਪੋਰਟ</string>
   <string name="welcome_user">ਨਮਸਕਾਰ %1$s,</string>
   <string name="home_onboarding_consume">5 ਲੱਖ ਤੋਂ ਵੱਧ ਬਲੌਗ ਅਤੇ ਕਹਾਣੀਆਂ ਪੜ੍ਹੋ ਜਾਂ ਵੀਡੀਓ ਵੇਖੋ</string>
   <string name="home_onboarding_create">ਆਪਣੇ ਆਪ ਨੂੰ ਬਲੌਗਸ, ਕਹਾਣੀਆਂ ਜਾਂ ਵੀਡਿਓਜ਼ ਰਾਹੀਂ ਪ੍ਰਗਟ ਕਰੋ</string>
@@ -1527,7 +1527,7 @@ Thank you! We will be reviewing your story. You can expect to hear from us withi
   <string name="all_earn">ਕਮਾਓ</string>
   <string name="all_join">ਜੁੜੋ</string>
   <string name="explore_self">ਮੈਂ ਆਪਣੇ ਆਪ ਐਕਸਪਲੋਰ ਕਰਾਂਗੀ</string>
-  <string name="home_onboarding_title">ਤੁਸੀਂ ਆਪਣੀ ਯਾਤਰਾ ਕਿਵੇਂ ਅਰੰਭ ਕਰਨਾ ਚਾਹੁੰਦੇ ਹੋ ?</string>
+  <string name="home_onboarding_title">%1$s, ਤੁਸੀਂ ਆਪਣੀ ਯਾਤਰਾ ਕਿਵੇਂ ਅਰੰਭ ਕਰਨਾ ਚਾਹੁੰਦੇ ਹੋ ?</string>
   <string name="empty_leaderboard_text">ਲੀਡਰਬੋਰਡ ਅਜੇ ਤਿਆਰ ਨਹੀਂ ਕੀਤਾ ਗਿਆ ਹੈ. ਕੱਲ੍ਹ ਵਾਪਸ ਆਓ ਜੀ.</string>
   <string name="yesterday">ਕੱਲ</string>
   <string name="take_tour">TAKE THE TOUR</string>
@@ -1578,4 +1578,27 @@ Thank you! We will be reviewing your story. You can expect to hear from us withi
   <string name="select_a_campaign">Select a campaign you want to participate in</string>
   <string name="apply_whatsapp_dialog_text">Get MyMoney Notifications on WhatsApp</string>
   <string name="allow">Allow</string>
+  <string name="momspresso_is_fun_with_friends">ਮੌਮਸਪ੍ਰੈਸੋ ਦੋਸਤਾਂ ਦੇ ਨਾਲ ਮਜ਼ੇਦਾਰ ਹੈ</string>
+  <string name="by_finding_my_friends">ਮੇਰੇ ਦੋਸਤਾਂ ਨੂੰ ਲੱਭ ਕੇ</string>
+  <string name="choosing_topics_i_like">ਉਹ ਵਿਸ਼ੇ ਚੁਣ ਕੇ ਜੋ ਮੈਨੂੰ ਪਸੰਦ ਹਨ</string>
+  <string name="dont_want_a_customized_feed">ਨਹੀਂ, ਮੈਨੂੰ ਇੱਕ ਕਸਟਮਾਇਜਡ ਫੀਡ ਨਹੀਂ ਚਾਹੀਦੀ</string>
+  <string name="follow_topics">ਵਿਸ਼ਿਆਂ ਨੂੰ ਫੋਲੋ ਕਰੋ</string>
+  <string name="find_my_friends">ਮੇਰੇ ਦੋਸਤ ਲੱਭੋ</string>
+  <string name="follow_to_never_miss">ਉਹਨਾਂ ਨੂੰ ਫੋਲੋ ਕਰੋ ਤਾਂ ਜੋ ਉਹ ਜੋ ਵੀ ਕਮਾਲ ਦੀਆਂ ਪੋਸਟ ਕ੍ਰਿਏਟ ਕਰਦੇ ਹਨ ਮਿਸ ਨਾ ਹੋ ਜਾਣ</string>
+  <string name="follow_bloggers_your_friends_are_following">ਤੁਹਾਡੇ ਦੋਸਤ ਜਿਹੜੇ ਬਲੌਗਰਸ ਨੂੰ ਫੋਲੋ ਕਰ ਰਹੇ ਹਨ ਤੁਸੀਂ ਵੀ ਫੋਲੋ ਕਰੋ</string>
+  <string name="select_topics">ਵਿਸ਼ੇ ਚੁਣੋ</string>
+  <string name="go_to_my_feed">ਮੇਰੀ ਫੀਡ ਤੇ ਜਾਓ</string>
+  <string name="format_preference">ਤੁਸੀਂ ਕੀ ਪਸੰਦ ਕਰਦੇ ਹੋ ? ਸਾਡੇ ਕੋਲ 3 ਫਾਰਮੈਟ ਹਨ ਜੋ ਤੁਸੀਂ ਐਕਸਪਲੋਰ ਕਰ ਸਕਦੇ ਹੋ</string>
+  <string name="interesting_content">ਬਲੌਗਰਸ ਅਤੇ ਮਾਹਰਾਂ ਦੁਆਰਾਦਿਲਚਸਪ ਕਹਾਣੀਆਂ, ਲੇਖ ਅਤੇ ਤਜਰਬੇ</string>
+  <string name="short_stories_content">ਲਘੂ ਕਹਾਣੀਆਂ, ਕਵਿਤਾਵਾਂ, ਪ੍ਰੇਰਣਾਦਾਇਕ ਜਾਂ ਮਜ਼ਾਕੀਆ ਵਿਚਾਰ</string>
+  <string name="vlogs_content">ਮਾਂ ਦਾ ਹੁਨਰ, ਬੱਚੇ ਦੀ ਪ੍ਰਤਿਭਾ, ਅਤੇ ਪਰਿਵਾਰਕ ਮਨੋਰੰਜਨ ਦੇ ਪਲਾਂ ਨੂੰ ਦਰਸਾਉਂਦੀਆਂ ਮਨੋਰੰਜਕ ਵੀਡਿਓਜ਼</string>
+  <string name="topics_interest">ਵਿਸ਼ੇ ਜੋ ਤੁਹਾਨੂੰ ਦਿਲਚਸਪ ਲੱਗ ਸਕਦੇ ਹਨ</string>
+  <string name="select_at_least_3_topics">ਘੱਟੋ ਘੱਟ 3 ਵਿਸ਼ੇ ਚੁਣੋ</string>
+  <string name="select_at_least_1_topic">ਘੱਟੋ ਘੱਟ 1 ਵਿਸ਼ਾ ਚੁਣੋ</string>
+  <string name="top_blogger_you_like">ਕੁਝ ਟਾਪ ਬਲੌਗਰਸ ਜੋ ਤੁਸੀਂ ਪਸੰਦ ਕਰ ਸਕਦੇ ਹੋ</string>
+  <string name="bloggers_recently_read">ਉਹਨਾਂ ਬਲੌਗਰਸ ਨੂੰ ਫੋਲੋ ਕਰੋ ਜੋ ਤੁਸੀਂ ਹਾਲ ਹੀ ਵਿੱਚ ਪੜ੍ਹਿਆ ਹੈ</string>
+  <string name="blogger_topic_based">ਫੋਲੋ ਕੀਤੇ ਵਿਸ਼ੇ ਦੇ ਅਧਾਰ ਤੇ ਬਲੌਗਰਸ</string>
+  <string name="follow_friend_based_blogger">ਤੁਹਾਡੇ ਦੋਸਤ ਜਿਹੜੇ ਬਲੌਗਰਸ ਨੂੰ ਫੋਲੋ ਕਰ ਰਹੇ ਹਨ ਤੁਸੀਂ ਵੀ ਫੋਲੋ ਕਰੋ</string>
+  <string name="connect_with_facebook_friends_on_momspresso">ਮੌਮਸਪ੍ਰੈਸੋ \'ਤੇ ਆਪਣੇ ਫੇਸਬੁੱਕ ਦੋਸਤਾਂ ਨਾਲ ਜੁੜੋ</string>
+  <string name="connect_with_facebook">ਫੇਸਬੁੱਕ ਨਾਲ ਜੁੜੋ</string>
 </resources>

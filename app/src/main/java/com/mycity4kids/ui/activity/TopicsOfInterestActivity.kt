@@ -13,6 +13,7 @@ import com.google.firebase.crashlytics.FirebaseCrashlytics
 import com.mycity4kids.R
 import com.mycity4kids.application.BaseApplication
 import com.mycity4kids.base.BaseActivity
+import com.mycity4kids.gtmutils.Utils
 import com.mycity4kids.models.Topics
 import com.mycity4kids.models.response.ArticleDetailResponse
 import com.mycity4kids.preference.SharedPrefUtils
@@ -546,40 +547,74 @@ class TopicsOfInterestActivity : BaseActivity(), View.OnClickListener {
     override fun onClick(view: View?) {
         when (view?.id) {
             R.id.blogAddTextView -> {
+                Utils.shareEventTracking(
+                    this,
+                    "Edit Topics",
+                    "Topics_Android",
+                    "Settings_Topics_Add"
+                )
                 val intent = Intent(this, EditorAddFollowedTopicsActivity::class.java)
                 intent.putExtra("comingFor", "add")
                 intent.putExtra("type", "blog")
                 startActivity(intent)
             }
             R.id.vlogAddTextView -> {
+                Utils.shareEventTracking(
+                    this,
+                    "Edit Topics",
+                    "Topics_Android",
+                    "Settings_Topics_Add"
+                )
                 val intent = Intent(this, EditorAddFollowedTopicsActivity::class.java)
                 intent.putExtra("comingFor", "add")
                 intent.putExtra("type", "vlog")
                 startActivity(intent)
             }
             R.id.storyAddTextView -> {
+                Utils.shareEventTracking(
+                    this,
+                    "Edit Topics",
+                    "Topics_Android",
+                    "Settings_Topics_Add"
+                )
                 val intent = Intent(this, EditorAddFollowedTopicsActivity::class.java)
                 intent.putExtra("comingFor", "add")
                 intent.putExtra("type", "story")
                 startActivity(intent)
             }
             R.id.blogEditTextView -> {
+                Utils.shareEventTracking(
+                    this,
+                    "Edit Topics",
+                    "Topics_Android",
+                    "Settings_Topics_Edit"
+                )
                 val intent = Intent(this, EditorAddFollowedTopicsActivity::class.java)
                 intent.putExtra("comingFor", "edit")
                 intent.putExtra("type", "0")
                 intent.putParcelableArrayListExtra("followedCategories", followArticleCategories)
-
                 startActivity(intent)
             }
             R.id.vlogEditTextView -> {
+                Utils.shareEventTracking(
+                    this,
+                    "Edit Topics",
+                    "Topics_Android",
+                    "Settings_Topics_Edit"
+                )
                 val intent = Intent(this, EditorAddFollowedTopicsActivity::class.java)
                 intent.putExtra("comingFor", "edit")
                 intent.putExtra("type", "2")
                 intent.putParcelableArrayListExtra("followedCategories", followVideoCategories)
-
                 startActivity(intent)
             }
             R.id.storyEditTextView -> {
+                Utils.shareEventTracking(
+                    this,
+                    "Edit Topics",
+                    "Topics_Android",
+                    "Settings_Topics_Edit"
+                )
                 val intent = Intent(this, EditorAddFollowedTopicsActivity::class.java)
                 intent.putExtra("comingFor", "edit")
                 intent.putExtra("type", "1")

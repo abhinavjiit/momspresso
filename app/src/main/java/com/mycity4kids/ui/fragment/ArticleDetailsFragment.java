@@ -60,6 +60,8 @@ import com.mycity4kids.constants.AppConstants;
 import com.mycity4kids.constants.Constants;
 import com.mycity4kids.gtmutils.Utils;
 import com.mycity4kids.models.BlockUserModel;
+import com.mycity4kids.models.SelectContentTopicsModel;
+import com.mycity4kids.models.SelectContentTopicsSubModel;
 import com.mycity4kids.models.TopCommentData;
 import com.mycity4kids.models.Topics;
 import com.mycity4kids.models.TopicsResponse;
@@ -3820,11 +3822,14 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
     }
 
     private void followUnfollowTopics(String selectedTopic, RelativeLayout tagView, int action) {
-        FollowUnfollowCategoriesRequest followUnfollowCategoriesRequest = new FollowUnfollowCategoriesRequest();
-        ArrayList<String> topicIdLList = new ArrayList<>();
-        topicIdLList.add(selectedTopic);
-        followUnfollowCategoriesRequest.setCategories(topicIdLList);
+        SelectContentTopicsModel followUnfollowCategoriesRequest = new SelectContentTopicsModel(null);
+        ArrayList<SelectContentTopicsSubModel> topicIdLList = new ArrayList<>();
+//        topicIdLList.add(selectedTopic);
+//        followUnfollowCategoriesRequest.setCategories(topicIdLList);
         if (action == 0) {
+            SelectContentTopicsSubModel selectContentTopicsSubModel = new SelectContentTopicsSubModel(selectedTopic,
+                    "0", "0");
+            topicIdLList.add(selectContentTopicsSubModel);
             tagView.getChildAt(0).setTag(selectedTopic);
             tagView.getChildAt(2).setTag(selectedTopic);
             ((ImageView) tagView.getChildAt(2)).setImageDrawable(
@@ -3832,6 +3837,9 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
             tagView.getChildAt(2).setOnClickListener(
                     v -> followUnfollowTopics((String) v.getTag(), (RelativeLayout) v.getParent(), 1));
         } else {
+            SelectContentTopicsSubModel selectContentTopicsSubModel = new SelectContentTopicsSubModel(selectedTopic,
+                    "0", "1");
+            topicIdLList.add(selectContentTopicsSubModel);
             Utils.shareEventTracking(getActivity(), "Article Detail", "Topic_Android", "AD_Tag_Follow");
             tagView.getChildAt(0).setTag(selectedTopic);
             tagView.getChildAt(2).setTag(selectedTopic);
@@ -3840,6 +3848,7 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
             tagView.getChildAt(2).setOnClickListener(
                     v -> followUnfollowTopics((String) v.getTag(), (RelativeLayout) v.getParent(), 0));
         }
+        followUnfollowCategoriesRequest.setTopics(topicIdLList);
         Retrofit retro = BaseApplication.getInstance().getRetrofit();
         TopicsCategoryAPI topicsCategoryApi = retro.create(TopicsCategoryAPI.class);
         Call<FollowUnfollowCategoriesResponse> call = topicsCategoryApi
@@ -3856,31 +3865,9 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
                     if (null == response.body()) {
                         NetworkErrorException nee = new NetworkErrorException(response.raw().toString());
                         FirebaseCrashlytics.getInstance().recordException(nee);
-                        if (isAdded()) {
-                            ((ArticleDetailsContainerActivity) getActivity())
-                                    .showToast(getString(R.string.server_went_wrong));
-                        }
                         return;
                     }
-                    try {
-                        FollowUnfollowCategoriesResponse responseData = response.body();
-                        if (responseData.getCode() == 200 && Constants.SUCCESS
-                                .equals(responseData.getStatus())) {
-                            if (isAdded()) {
-                                ((ArticleDetailsContainerActivity) getActivity()).showToast(responseData.getReason());
-                            }
-                        } else {
-                            if (isAdded()) {
-                                ((ArticleDetailsContainerActivity) getActivity()).showToast(responseData.getReason());
-                            }
-                        }
-                    } catch (Exception e) {
-                        FirebaseCrashlytics.getInstance().recordException(e);
-                        Log.d("MC4kException", Log.getStackTraceString(e));
-                        if (isAdded()) {
-                            ((ArticleDetailsContainerActivity) getActivity()).showToast(getString(R.string.went_wrong));
-                        }
-                    }
+                    ((BaseActivity) getActivity()).startSyncingUserInfo();
                 }
 
                 @Override
@@ -3888,10 +3875,7 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
                     removeProgressDialog();
                     FirebaseCrashlytics.getInstance().recordException(t);
                     Log.d("MC4kException", Log.getStackTraceString(t));
-                    if (isAdded()) {
-                        ((ArticleDetailsContainerActivity) getActivity())
-                                .showToast(getString(R.string.went_wrong));
-                    }
+                    ((BaseActivity) getActivity()).startSyncingUserInfo();
                 }
             };
 
@@ -4176,7 +4160,9 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
                                             .getString(R.string.ad_following_author));
                             followPlusIcon.setImageDrawable(
                                     getResources().getDrawable(R.drawable.ic_article_detail_tick_icon, null));
-
+                            if (getActivity() != null) {
+                                ((BaseActivity) getActivity()).syncFollowingList();
+                            }
                         } else {
                             if (getActivity() != null) {
                                 ToastUtils.showToast(getActivity(), responseData.getData().getMsg());
@@ -4225,6 +4211,9 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
                                     followTextViewFollowContainer.getContext().getResources()
                                             .getString(R.string.ad_follow_author));
                             isFollowing = false;
+                            if (getActivity() != null) {
+                                ((BaseActivity) getActivity()).syncFollowingList();
+                            }
                         } else {
                             if (getActivity() != null) {
                                 ToastUtils.showToast(getActivity(), responseData.getData().getMsg());

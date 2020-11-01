@@ -647,7 +647,12 @@ class ArticleListingFragment : BaseFragment(), View.OnClickListener,
     }
 
     private fun loadEmptyStateForFollowingFeed() {
-        Log.e("ndkwandkwdkn", "----- EMPTY FOLLOWING FEED -----")
+        Utils.shareEventTracking(
+            activity,
+            "My Feed",
+            "Onboarding_Android",
+            "MyFeed_ES"
+        )
         val item = MixFeedResult(
             contentType = AppConstants.CONTENT_TYPE_FOLLOW_TOPICS_AND_CREATORS
         )
@@ -671,7 +676,7 @@ class ArticleListingFragment : BaseFragment(), View.OnClickListener,
             followingFeedExtrasFlag = "Friends"
             loadCreatorsBasedFriendsFollowing(3)
         } else {
-
+            Log.e("ndkwandkwdkn", "----- NONE -----")
         }
     }
 
@@ -1232,12 +1237,36 @@ class ArticleListingFragment : BaseFragment(), View.OnClickListener,
                                 contentType = AppConstants.CONTENT_TYPE_UPCOMING_LIVE_STREAM,
                                 recentLiveStreamsList = responseData.data.result.events
                             )
-                            if (mixfeedList?.get(3)?.contentType == AppConstants.CONTENT_TYPE_TORCAI_ADS) {
-                                mixfeedList?.add(8, recentLiveList)
-                            } else if (mixfeedList?.get(4)?.contentType == AppConstants.CONTENT_TYPE_TORCAI_ADS) {
-                                mixfeedList?.add(9, recentLiveList)
-                            } else {
-                                mixfeedList?.add(7, recentLiveList)
+                            when {
+                                mixfeedList?.get(3)?.contentType == AppConstants.CONTENT_TYPE_TORCAI_ADS -> {
+                                    mixfeedList?.add(8, recentLiveList)
+                                }
+                                mixfeedList?.get(4)?.contentType == AppConstants.CONTENT_TYPE_TORCAI_ADS -> {
+                                    mixfeedList?.add(9, recentLiveList)
+                                }
+                                else -> {
+                                    mixfeedList?.add(7, recentLiveList)
+                                }
+                            }
+                            mixfeedAdapter.notifyDataSetChanged()
+                        } else {
+                            val item = MixFeedResult(
+                                contentType = AppConstants.CONTENT_TYPE_FOLLOW_TOPICS_AND_CREATORS
+                            )
+                            if (SharedPrefUtils.getFollowingTopicsJson(BaseApplication.getAppContext()).isNullOrEmpty() || SharedPrefUtils.getFollowingJson(
+                                    BaseApplication.getAppContext()
+                                ).isNullOrEmpty()) {
+                                when {
+                                    mixfeedList?.get(3)?.contentType == AppConstants.CONTENT_TYPE_TORCAI_ADS -> {
+                                        mixfeedList?.add(8, item)
+                                    }
+                                    mixfeedList?.get(4)?.contentType == AppConstants.CONTENT_TYPE_TORCAI_ADS -> {
+                                        mixfeedList?.add(9, item)
+                                    }
+                                    else -> {
+                                        mixfeedList?.add(7, item)
+                                    }
+                                }
                             }
                             mixfeedAdapter.notifyDataSetChanged()
                         }
@@ -1945,6 +1974,11 @@ class ArticleListingFragment : BaseFragment(), View.OnClickListener,
 
     override fun onClick(view: View, position: Int) {
         when (view.id) {
+            R.id.followCtaImageView -> {
+                activity?.let {
+                    (activity as BaseActivity).syncFollowingList()
+                }
+            }
             R.id.liveStreamItemView -> {
                 mixfeedList?.get(position)?.recentLiveStreamsList?.get(
                     0
@@ -2081,6 +2115,24 @@ class ArticleListingFragment : BaseFragment(), View.OnClickListener,
             R.id.menuItemImageView -> {
             }
             R.id.followTopicsWidget -> {
+                when (sortType) {
+                    Constants.KEY_FOLLOWING -> {
+                        Utils.shareEventTracking(
+                            activity,
+                            "My Feed",
+                            "Onboarding_Android",
+                            "MyFeed_ES_Follow_Topics"
+                        )
+                    }
+//                    Constants.KEY_TODAYS_BEST -> {
+//                        Utils.shareEventTracking(
+//                            activity,
+//                            "My Feed",
+//                            "Onboarding_Android",
+//                            "RO_Bloggers_Friends_Back"
+//                        )
+//                    }
+                }
                 val chooseContentTopicsBottomSheetDialogFragment =
                     ChooseContentTopicsBottomSheetDialogFragment()
                 chooseContentTopicsBottomSheetDialogFragment.show(
@@ -2090,6 +2142,24 @@ class ArticleListingFragment : BaseFragment(), View.OnClickListener,
             }
             R.id.followCreatorsWidget -> {
                 activity?.let {
+                    when (sortType) {
+                        Constants.KEY_FOLLOWING -> {
+                            Utils.shareEventTracking(
+                                it,
+                                "My Feed",
+                                "Onboarding_Android",
+                                "MyFeed_ES_Find_Friends"
+                            )
+                        }
+//                        Constants.KEY_TODAYS_BEST -> {
+//                            Utils.shareEventTracking(
+//                                it,
+//                                "My Feed",
+//                                "Onboarding_Android",
+//                                "RO_Bloggers_Friends_Back"
+//                            )
+//                        }
+                    }
                     val intent = Intent(it, FindFbFriendsActivity::class.java)
                     startActivity(intent)
                 }
@@ -2562,6 +2632,30 @@ class ArticleListingFragment : BaseFragment(), View.OnClickListener,
                 followApi.unfollowUserInShortStoryListingV2(request)
             followUnfollowUserResponseCall.enqueue(followUnfollowUserResponseCallback)
         } else {
+            if (mixfeedList!![mixfeedPosition].contentType == AppConstants.CONTENT_TYPE_SUGGESTED_CREATORS_BASED_ON_TOPICS) {
+                Utils.shareEventTracking(
+                    activity,
+                    "My Feed",
+                    "Read_Android",
+                    "MyFeed_Topic_Bloggers_Follow_CTA"
+                )
+            } else if (mixfeedList!![mixfeedPosition].contentType == AppConstants.CONTENT_TYPE_SUGGESTED_CREATORS_BASED_ON_ACTIVITY) {
+                Utils.shareEventTracking(
+                    activity,
+                    "My Feed",
+                    "Read_Android",
+                    "MyFeed_Bloggers_Read_Follow_CTA"
+                )
+            } else if (mixfeedList!![mixfeedPosition].contentType == AppConstants.CONTENT_TYPE_SUGGESTED_CREATORS_FOLLOWED_BY_FRIENDS) {
+                Utils.shareEventTracking(
+                    activity,
+                    "My Feed",
+                    "Read_Android",
+                    "MyFeed_Friend_Bloggers_Follow_CTA"
+                )
+            } else{
+                Log.e("jbubjbj","popopopopop")
+            }
             mixfeedList!![mixfeedPosition].suggestedCreatorList?.get(position)?.isfollowing = "1"
             mixfeedAdapter.notifyDataSetChanged()
             val followUnfollowUserResponseCall =
@@ -2582,6 +2676,12 @@ class ArticleListingFragment : BaseFragment(), View.OnClickListener,
                 followApi.unfollowUserInShortStoryListingV2(request)
             followUnfollowUserResponseCall.enqueue(followUnfollowUserResponseCallback)
         } else {
+            Utils.shareEventTracking(
+                activity,
+                "My Feed",
+                "Read_Android",
+                "MyFeed_Top_Bloggers_Follow_CTA"
+            )
             mixfeedList!![mixfeedPosition].topCreatorList?.get(position)?.isFollowed = 1
             mixfeedAdapter.notifyDataSetChanged()
             val followUnfollowUserResponseCall =

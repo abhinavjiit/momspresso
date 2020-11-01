@@ -26,7 +26,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:padding="8dp"
-        android:text="Topics that might interest you"
+        android:text="@string/topics_interest"
         android:textSize="14sp"
         card_view:fontName="Roboto-Medium.ttf" />
 

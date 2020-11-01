@@ -14,6 +14,7 @@ import com.mycity4kids.R
 import com.mycity4kids.application.BaseApplication
 import com.mycity4kids.base.BaseFragment
 import com.mycity4kids.constants.Constants
+import com.mycity4kids.gtmutils.Utils
 import com.mycity4kids.models.BloggersYourFriendsFollowingResponseModel
 import com.mycity4kids.models.request.FollowUnfollowUserRequest
 import com.mycity4kids.models.response.FacebookInviteFriendsData
@@ -71,6 +72,12 @@ class BloggersYourFriendsFollowingFeedFragment : BaseFragment(),
         skip.setOnClickListener(this)
         back.setOnClickListener(this)
         nextTextView.setOnClickListener(this)
+        Utils.shareEventTracking(
+            activity,
+            "Follow friends screen 2",
+            "Read_Android",
+            "RO_Bloggers_Friends"
+        )
 
         recyclerView.addOnScrollListener(object : EndlessScrollListener(llm) {
             override fun onLoadMore(page: Int, totalItemsCount: Int, view: RecyclerView?) {
@@ -112,9 +119,11 @@ class BloggersYourFriendsFollowingFeedFragment : BaseFragment(),
                                 facebookFriendList.addAll(it)
                                 adapter.notifyDataSetChanged()
                             } else {
-                                recyclerView.visibility = View.GONE
-                                noResultTextView.visibility = View.VISIBLE
-                                ToastUtils.showToast(activity, "no result")
+                                if (facebookFriendList.isNullOrEmpty()) {
+                                    recyclerView.visibility = View.GONE
+                                    noResultTextView.visibility = View.VISIBLE
+                                    ToastUtils.showToast(activity, "no result")
+                                }
                             }
                         } ?: run {
                             recyclerView.visibility = View.GONE
@@ -144,6 +153,12 @@ class BloggersYourFriendsFollowingFeedFragment : BaseFragment(),
     override fun onClick(view: View, position: Int) {
         when (view.id) {
             R.id.followTextView -> {
+                Utils.shareEventTracking(
+                    activity,
+                    "Follow friends screen 2",
+                    "Read_Android",
+                    "RO_Bloggers_Friends_Follow_CTA"
+                )
                 followApi(position)
             }
             R.id.followingTextView -> {
@@ -163,6 +178,12 @@ class BloggersYourFriendsFollowingFeedFragment : BaseFragment(),
                 activity?.onBackPressed()
             }
             R.id.skip -> {
+                Utils.shareEventTracking(
+                    activity,
+                    "Follow friends screen 2",
+                    "Read_Android",
+                    "RO_Bloggers_Friends_Skip"
+                )
                 activity?.finish()
             }
             R.id.nextTextView -> {

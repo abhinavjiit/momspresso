@@ -1349,7 +1349,7 @@ Thank you! We will be reviewing your story. You can expect to hear from us withi
   <string name="choose_video_from_gallery">Choose video from gallery</string>
   <string name="see_more_challenge">SEE MORE CHALLENGES</string>
   <string name="vlog_tutorial">Vlog Tutorial</string>
-  <string name="no_facebook_friends">None of your friends are logged into momspresso using facebook</string>
+  <string name="no_facebook_friends">असे दिसते आहे की तुमचे मित्र / मैत्रिणी अद्याप मॉम्प्रेसो वर नाहीत</string>
   <string name="share_app">शेयर एप्प</string>
   <string name="choose_proof">Choose Proof</string>
   <string name="invite_friends_whatsapp">व्हॉटसअॅप द्वारे आमंत्रित</string>
@@ -1453,7 +1453,7 @@ Thank you! We will be reviewing your story. You can expect to hear from us withi
   <string name="lang_sel_express_yourself">स्वत: ला 10 भाषांमध्ये व्यक्त करु शकता</string>
   <string name="select_language">भाषा निवडा</string>
   <string name="login_or_sign_up">लॉगिन किंवा साइन अप करा</string>
-  <string name="login_subheading">तयार करा, वाचा, कमवा आणि सामील व्हा  32 दशलक्ष मॉम्स सोबत</string>
+  <string name="login_subheading">वाचा. तयार करा. कमवा. आधार</string>
   <string name="welcome_user">नमस्कार %1$s,</string>
   <string name="home_onboarding_consume">5 लाखाहून अधिक ब्लॉग व कथा किंवा व्हिडिओ पहा.</string>
   <string name="home_onboarding_create">ब्लॉग, कथा किंवा व्हिडिओंद्वारे स्वतःला व्यक्त करा</string>
@@ -1464,7 +1464,7 @@ Thank you! We will be reviewing your story. You can expect to hear from us withi
   <string name="all_earn">कमवा</string>
   <string name="all_join">सामील व्हा</string>
   <string name="explore_self">मी स्वतःहून शोध घेईन</string>
-  <string name="home_onboarding_title">आपण आपली यात्रा कशी सुरू करू इच्छिता?</string>
+  <string name="home_onboarding_title">%1$s, आपण आपली यात्रा कशी सुरू करू इच्छिता?</string>
   <string name="empty_leaderboard_text">लीडरबोर्ड अद्याप व्युत्पन्न केलेला नाही. कृपया उद्या परत या.</string>
   <string name="yesterday">काल</string>
   <string name="take_tour">TAKE THE TOUR</string>
@@ -1515,4 +1515,27 @@ Thank you! We will be reviewing your story. You can expect to hear from us withi
   <string name="select_a_campaign">Select a campaign you want to participate in</string>
   <string name="apply_whatsapp_dialog_text">Get MyMoney Notifications on WhatsApp</string>
   <string name="allow">Allow</string>
+  <string name="momspresso_is_fun_with_friends">मॉम्सप्रेसो म्हणजे मैत्रिणीनं सोबत मजेदार गप्पा .</string>
+  <string name="by_finding_my_friends">तुमचे  मित्र/ मैत्रीणी  शोधा</string>
+  <string name="choosing_topics_i_like">तुमच्या आवडीच्या विषयांचे अनुसरण करा</string>
+  <string name="dont_want_a_customized_feed">नाही, मला कस्टमाइज्ड  फीडची आवश्यकता नाही</string>
+  <string name="follow_topics">विषयांना फॉलो  करा</string>
+  <string name="find_my_friends">माझे मित्र/मैत्रिणी  शोधा</string>
+  <string name="follow_to_never_miss">त्यांनी तयार केलेल्या  पोस्ट  नियमित वाचण्यासाठी त्यांना फॉलो करा .</string>
+  <string name="follow_bloggers_your_friends_are_following">तुमच्या  मैत्रिणी / मित्र फॉलो  करीत असलेल्या ब्लॉगरला फॉलो करा</string>
+  <string name="select_topics">विषय निवडा</string>
+  <string name="go_to_my_feed">माझ्या फीड वर जा</string>
+  <string name="format_preference">तुम्ही  काय पसंत करता? आमच्याकडे 3 स्वरूप आहेत जे आपण एक्सप्लोर करू शकता</string>
+  <string name="interesting_content">ब्लॉगर्स च्या कथा, लेख, अनुभव आणि तज्ञांकडील माहितीपूर्ण लेख </string>
+  <string name="short_stories_content">लघु कथा, कविता, प्रेरक किंवा मजेदार कोट</string>
+  <string name="vlogs_content">आईची प्रतिभा, मुलाची प्रतिभा आणि कौटुंबिक मनोरंजक क्षण दर्शविणारे मनोरंजक व्हिडिओ</string>
+  <string name="topics_interest">तुम्हाला स्वारस्य असलेले विषय</string>
+  <string name="select_at_least_3_topics">कमीतकमी 3 विषय निवडा</string>
+  <string name="select_at_least_1_topic">कमीतकमी 1 विषय निवडा</string>
+  <string name="top_blogger_you_like">तुम्हाला  आवडतील असे काही टॉप  ब्लॉगर</string>
+  <string name="bloggers_recently_read">तुम्ही  अलीकडे वाचलेल्या ब्लॉगरला  फॉलो  करा</string>
+  <string name="blogger_topic_based">त्यानंतर विषयावर आधारित ब्लॉगर</string>
+  <string name="follow_friend_based_blogger">तुमच्या  मैत्रिणी / मित्र फॉलो  करीत असलेल्या ब्लॉगरला फॉलो करा</string>
+  <string name="connect_with_facebook_friends_on_momspresso">मॉम्सप्रेसो  वर आपल्या फेसबुक मित्रांशी संपर्क साधा</string>
+  <string name="connect_with_facebook">फेसबुकशी कनेक्ट व्हा</string>
 </resources>

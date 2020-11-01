@@ -33,6 +33,8 @@ import com.mycity4kids.constants.Constants;
 import com.mycity4kids.gtmutils.GTMEventType;
 import com.mycity4kids.gtmutils.Utils;
 import com.mycity4kids.models.FollowTopics;
+import com.mycity4kids.models.SelectContentTopicsModel;
+import com.mycity4kids.models.SelectContentTopicsSubModel;
 import com.mycity4kids.models.Topics;
 import com.mycity4kids.models.TopicsResponse;
 import com.mycity4kids.models.response.ArticleListingResponse;
@@ -680,11 +682,12 @@ public class FilteredTopicsArticleListingActivity extends BaseActivity implement
     }
 
     private void followUnfollowTopics() {
-        FollowUnfollowCategoriesRequest followUnfollowCategoriesRequest = new FollowUnfollowCategoriesRequest();
-        ArrayList<String> topicIdLList = new ArrayList<>();
-        topicIdLList.add(selectedTopics);
-        followUnfollowCategoriesRequest.setCategories(topicIdLList);
+        SelectContentTopicsModel followUnfollowCategoriesRequest = new SelectContentTopicsModel(null);
+        ArrayList<SelectContentTopicsSubModel> topicIdLList = new ArrayList<>();
         if (isTopicFollowed == 0) {
+            SelectContentTopicsSubModel selectContentTopicsSubModel = new SelectContentTopicsSubModel(selectedTopics,
+                    "0", "1");
+            topicIdLList.add(selectContentTopicsSubModel);
             Log.d("GTM FOLLOW", displayName + ":" + selectedTopics);
             Utils.pushTopicFollowUnfollowEvent(this, GTMEventType.FOLLOW_TOPIC_CLICK_EVENT,
                     SharedPrefUtils.getUserDetailModel(this).getDynamoId(), "Topic Articles List",
@@ -692,6 +695,9 @@ public class FilteredTopicsArticleListingActivity extends BaseActivity implement
             followUnfollowTextView.setText(getString(R.string.ad_following_author));
             isTopicFollowed = 1;
         } else {
+            SelectContentTopicsSubModel selectContentTopicsSubModel = new SelectContentTopicsSubModel(selectedTopics,
+                    "0", "0");
+            topicIdLList.add(selectContentTopicsSubModel);
             Log.d("GTM UNFOLLOW", displayName + ":" + selectedTopics);
             Utils.pushTopicFollowUnfollowEvent(this, GTMEventType.UNFOLLOW_TOPIC_CLICK_EVENT,
                     SharedPrefUtils.getUserDetailModel(this).getDynamoId(), "Topic Articles List",

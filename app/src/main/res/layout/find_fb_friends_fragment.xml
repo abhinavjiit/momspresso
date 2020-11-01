@@ -5,7 +5,6 @@
   android:layout_height="match_parent"
   android:background="#F9F9F9">
 
-
   <androidx.appcompat.widget.Toolbar
     android:id="@+id/toolbar"
     android:layout_width="match_parent"
@@ -29,7 +28,6 @@
 
   </androidx.appcompat.widget.Toolbar>
 
-
   <androidx.constraintlayout.widget.ConstraintLayout
     android:id="@+id/fbFriendListContainer"
     android:layout_width="match_parent"
@@ -47,7 +45,7 @@
       android:gravity="center"
       android:paddingTop="@dimen/space_16"
       android:paddingBottom="5dp"
-      android:text="Friend1, Friend2  x other friends are on Momspresso"
+      android:text="@string/momspresso_is_fun_with_friends"
       android:textColor="@color/campaign_515151"
       android:textSize="16sp"
       app:fontName="Roboto-Bold.ttf"
@@ -63,7 +61,7 @@
       android:background="#F9F9F9"
       android:gravity="center_horizontal"
       android:paddingBottom="@dimen/space_16"
-      android:text="Follow them to never miss amazing posts they create"
+      android:text="@string/follow_to_never_miss"
       android:textColor="@color/campaign_515151"
       android:textSize="14sp"
       app:fontName="Roboto-Regular.ttf"
@@ -75,9 +73,10 @@
       android:layout_height="0dp"
       android:background="@color/white"
       android:padding="@dimen/space_16"
-      app:layout_constraintBottom_toBottomOf="parent"
+      app:layout_constraintBottom_toTopOf="@+id/separator"
       app:layout_constraintTop_toBottomOf="@id/subHeaderTextView" />
     <View
+      android:id="@+id/separator"
       android:layout_width="match_parent"
       android:layout_height="1dp"
       android:background="#E3E3E3"
@@ -142,7 +141,7 @@
       android:layout_marginStart="60dp"
       android:layout_marginEnd="60dp"
       android:gravity="center"
-      android:text="Connect with Facebook friends on Momspresso"
+      android:text="@string/connect_with_facebook_friends_on_momspresso"
       android:textColor="@color/campaign_515151"
       android:textSize="16sp"
       app:fontName="Roboto-Bold.ttf"
@@ -166,7 +165,7 @@
       app:shareBgColor="@color/all_facebook_share"
       app:shareImage="@drawable/ic_facebook_svg"
       app:shareImageTint="@color/white_color"
-      app:shareText="Connect with Facebook"
+      app:shareText="@string/connect_with_facebook"
       app:textSize="18sp" />
 
 
@@ -184,5 +183,13 @@
 
   </androidx.constraintlayout.widget.ConstraintLayout>
 
+  <TextView
+    android:id="@+id/emptyList"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:gravity="center"
+    android:text="@string/no_facebook_friends"
+    android:textColor="@color/black_color"
+    android:visibility="gone" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

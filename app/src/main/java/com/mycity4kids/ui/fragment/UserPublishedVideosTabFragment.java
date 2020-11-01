@@ -47,6 +47,7 @@ import com.mycity4kids.vlogs.VideoCategoryAndChallengeSelectionActivity;
 import java.util.ArrayList;
 import retrofit2.Call;
 import retrofit2.Callback;
+import retrofit2.Response;
 import retrofit2.Retrofit;
 
 /**
@@ -353,6 +354,14 @@ public class UserPublishedVideosTabFragment extends BaseFragment implements View
             spannableString.setSpan(new CustomTypeFace("", myTypeface), 0, spannableString.length(),
                     Spanned.SPAN_INCLUSIVE_INCLUSIVE);
             menuItem.setTitle(spannableString);
+            if (AppConstants.VIDEO_STATUS_APPROVAL_CANCELLED
+                    .equals(articleDataModelsNew.get(position).getPublication_status())) {
+                if (menuItem.getItemId() == R.id.deleteVlog) {
+                    menuItem.setVisible(true);
+                } else {
+                    menuItem.setVisible(false);
+                }
+            }
         }
         popup.setOnMenuItemClickListener(item -> {
             int i = item.getItemId();
@@ -366,6 +375,33 @@ public class UserPublishedVideosTabFragment extends BaseFragment implements View
                 editVlogTitleDialogFragment.setCancelable(true);
                 FragmentManager fm = getChildFragmentManager();
                 editVlogTitleDialogFragment.show(fm, "Choose video option");
+                return true;
+            }
+            if (i == R.id.deleteVlog) {
+                Retrofit retrofit = BaseApplication.getInstance().getRetrofit();
+                VlogsListingAndDetailsAPI vlogsListingAndDetailsApi = retrofit.create(VlogsListingAndDetailsAPI.class);
+                Call call = vlogsListingAndDetailsApi.deleteVlog(articleDataModelsNew.get(position).getId());
+                call.enqueue(new Callback() {
+                    @Override
+                    public void onResponse(Call call, Response response) {
+                        isLastPageReached = false;
+                        articleDataModelsNew.clear();
+                        articlesListingAdapter.notifyDataSetChanged();
+                        sortType = 0;
+                        nextPageNumber = 1;
+                        hitArticleListingApi();
+                    }
+
+                    @Override
+                    public void onFailure(Call call, Throwable t) {
+                        isLastPageReached = false;
+                        articleDataModelsNew.clear();
+                        articlesListingAdapter.notifyDataSetChanged();
+                        sortType = 0;
+                        nextPageNumber = 1;
+                        hitArticleListingApi();
+                    }
+                });
                 return true;
             } else {
                 return true;

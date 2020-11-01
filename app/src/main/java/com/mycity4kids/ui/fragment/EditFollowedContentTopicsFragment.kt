@@ -16,6 +16,7 @@ import androidx.core.content.ContextCompat
 import com.google.firebase.crashlytics.FirebaseCrashlytics
 import com.mycity4kids.R
 import com.mycity4kids.application.BaseApplication
+import com.mycity4kids.base.BaseActivity
 import com.mycity4kids.base.BaseFragment
 import com.mycity4kids.models.SelectContentTopicsModel
 import com.mycity4kids.models.SelectContentTopicsSubModel
@@ -466,6 +467,7 @@ class EditFollowedContentTopicsFragment : BaseFragment(), View.OnClickListener {
                 if (code == 200 && status == "success") {
                     activity?.let {
                       //  ToastUtils.showToast(it, msg)
+                        (it as BaseActivity).startSyncingUserInfo()
                         if (it is EditorAddFollowedTopicsActivity)
                             gotoProfileSetting(it)
                     } ?: run {

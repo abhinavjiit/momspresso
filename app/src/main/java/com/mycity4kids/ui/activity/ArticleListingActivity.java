@@ -8,7 +8,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.animation.AnimationUtils;
 import android.widget.FrameLayout;
-import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -64,7 +63,6 @@ public class ArticleListingActivity extends BaseActivity implements View.OnClick
     private Toolbar toolbar;
     private TextView toolbarTitleTextView;
     private RecyclerView recyclerView;
-    private LinearLayout addTopicsLayout;
     private FrameLayout headerArticleCardLayout;
     ShimmerFrameLayout ashimmerFrameLayout;
     private RelativeLayout root;
@@ -83,11 +81,7 @@ public class ArticleListingActivity extends BaseActivity implements View.OnClick
         progressBar = findViewById(R.id.progressBar);
         toolbar = findViewById(R.id.toolbar);
         toolbarTitleTextView = toolbar.findViewById(R.id.toolbarTitle);
-        addTopicsLayout = findViewById(R.id.addTopicsLayout);
         headerArticleCardLayout = findViewById(R.id.headerArticleView);
-
-        addTopicsLayout.setOnClickListener(this);
-
         toolbar.setVisibility(View.VISIBLE);
 
         findViewById(R.id.imgLoader).startAnimation(AnimationUtils.loadAnimation(this, R.anim.rotate_indefinitely));
@@ -232,13 +226,6 @@ public class ArticleListingActivity extends BaseActivity implements View.OnClick
 
     private void processForYouResponse(ArticleListingResponse responseData) {
         try {
-            if (responseData.getData().get(0).getResult() == null && (articleDataModelsNew == null
-                    || articleDataModelsNew.isEmpty())) {
-                addTopicsLayout.setVisibility(View.VISIBLE);
-                headerArticleCardLayout.setVisibility(View.GONE);
-                return;
-            }
-
             ArrayList<ArticleListingResult> dataList = responseData.getData().get(0).getResult();
             if (dataList.size() == 0) {
                 isLastPageReached = true;
@@ -398,12 +385,6 @@ public class ArticleListingActivity extends BaseActivity implements View.OnClick
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
-            case R.id.addTopicsLayout:
-                Intent intent1 = new Intent(this, ExploreArticleListingTypeActivity.class);
-                intent1.putExtra("fragType", "search");
-                intent1.putExtra("source", "foryou");
-                startActivity(intent1);
-                break;
             default:
                 break;
         }

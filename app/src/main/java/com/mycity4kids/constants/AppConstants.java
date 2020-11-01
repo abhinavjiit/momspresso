@@ -383,6 +383,9 @@ public class AppConstants {
     public static final String LIVE_STREAM_DETAIL_REGEX = ".+?(live\\/)([a-zA-Z0-9-]+$)";
     public static final String BLOGGER_GOLD_REGEX = ".+?(birthdaybonanza)";
     public static final String BLOGGER_GOLD_LEADERBOARD_REGEX = ".+?(birthdaybonanza\\/leaderboard)";
+    public static final String GROUPS_LISTING_REGEX = ".+?(groups)";
+    public static final String CAMPAIGN_LISTING_REGEX = ".+?(mymoney\\/dashboard)";
+    public static final String FOLLOWING_USERS_LISTING_REGEX = ".+?(userprofile\\/following\\/)([a-zA-Z0-9-]+$)";
 
     public static final String BADGE_ID = "badgeId";
     public static final String MILESTONE_ID = "milestoneId";

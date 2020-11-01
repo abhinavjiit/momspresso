@@ -76,7 +76,7 @@ class UserInviteFBSuggestionActivity : BaseActivity(),
 
         val retrofit = BaseApplication.getInstance().retrofit
         val fbFriendsApi = retrofit.create(FollowAPI::class.java)
-        val call = fbFriendsApi.getFacebookFriendsToInvite()
+        val call = fbFriendsApi.facebookFriendsToInvite
         call.enqueue(getFacebookFriendsResponseCallback)
     }
 

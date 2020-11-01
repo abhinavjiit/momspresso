@@ -15,6 +15,7 @@ import com.google.firebase.crashlytics.FirebaseCrashlytics
 import com.mycity4kids.R
 import com.mycity4kids.application.BaseApplication
 import com.mycity4kids.base.BaseFragment
+import com.mycity4kids.gtmutils.Utils
 import com.mycity4kids.models.SelectContentTopicsModel
 import com.mycity4kids.models.SelectContentTopicsSubModel
 import com.mycity4kids.models.Topics
@@ -60,21 +61,47 @@ class SelectOrAddStoryTopicsFragment : BaseFragment() {
         }
 
         continueTextView.setOnClickListener {
-            if (isValid())
+            if (isValid()) {
+                Utils.shareEventTracking(
+                    activity,
+                    "Home screen",
+                    "Read_Android",
+                    "Select_Topic_100WS_Contiue_CTA"
+                )
                 saveDataToServer()
-            else
+            } else {
                 activity?.let { ToastUtils.showToast(it, "choose minimum one topics") }
+            }
         }
         back.setOnClickListener {
             activity?.let {
-                if (it is SelectContentTopicsActivity)
+                if (it is SelectContentTopicsActivity) {
+                    Utils.shareEventTracking(
+                        activity,
+                        "Home screen",
+                        "Read_Android",
+                        "Select_Topic_100WS_Back"
+                    )
                     (it).previousPageOnBackClick()
-                else if (it is EditorAddFollowedTopicsActivity)
+                } else if (it is EditorAddFollowedTopicsActivity) {
                     it.finish()
+                }
             }
         }
         getTopicCategories()
         return view
+    }
+
+    override fun onResume() {
+        super.onResume()
+        if ("add" != arguments?.getString("comingFor")) {
+            Utils.shareEventTracking(
+                activity,
+                "Home screen",
+                "Read_Android",
+                "Select_Topic_100WS"
+            )
+        }
     }
 
     private fun getTopicCategories() {

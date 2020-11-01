@@ -46,6 +46,7 @@ public class FollowingListFBSuggestionActivity extends BaseActivity {
             userId = SharedPrefUtils.getUserDetailModel(this).getDynamoId();
         }
 
+        String selectedTab = getIntent().getStringExtra("selectedTab");
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
@@ -76,6 +77,9 @@ public class FollowingListFBSuggestionActivity extends BaseActivity {
 
             }
         });
+        if ("listType=suggestionList".equals(selectedTab)) {
+            viewPager.setCurrentItem(1);
+        }
     }
 
     @Override

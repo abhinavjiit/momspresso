@@ -61,7 +61,6 @@ class ProfileSetting : BaseActivity(), GoogleApiClient.OnConnectionFailedListene
     private var isRewardAdded: String? = null
     private var toolbar: Toolbar? = null
     private lateinit var securitySettingTextView: TextView
-    private lateinit var topicOfInterestTextView: TextView
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -71,7 +70,6 @@ class ProfileSetting : BaseActivity(), GoogleApiClient.OnConnectionFailedListene
             this, "Show_Settings_Detail", SharedPrefUtils.getUserDetailModel(this).dynamoId,
             "ProfileSetting"
         )
-        topicOfInterestTextView = findViewById(R.id.topicOfInterestTextView)
         toolbar = findViewById(R.id.toolbar)
         personal_info = findViewById(R.id.personal_info)
         myMoneyContainer = findViewById(R.id.mymoney_info)
@@ -138,15 +136,10 @@ class ProfileSetting : BaseActivity(), GoogleApiClient.OnConnectionFailedListene
         readArticlesTextView!!.setOnClickListener(this)
         inviteContactTextView?.setOnClickListener(this)
         securitySettingTextView.setOnClickListener(this)
-        topicOfInterestTextView.setOnClickListener(this)
     }
 
     override fun onClick(v: View) {
         when (v.id) {
-            R.id.topicOfInterestTextView -> {
-                val intent = Intent(this, TopicsOfInterestActivity::class.java)
-                startActivity(intent)
-            }
             R.id.backImageView -> onBackPressed()
             R.id.personal_info -> {
                 val personalIntent = Intent(this, RewardsContainerActivity::class.java)
@@ -176,12 +169,14 @@ class ProfileSetting : BaseActivity(), GoogleApiClient.OnConnectionFailedListene
                 chooseVideosLangDialogFragment.show(fm, "choose language")
             }
             R.id.chooseTopicsTextView -> {
-                val subscribeTopicIntent = Intent(
+                Utils.shareEventTracking(
                     this,
-                    SubscribeTopicsActivity::class.java
+                    "Profile Settings",
+                    "Topics_Android",
+                    "Settings_Topics"
                 )
-                subscribeTopicIntent.putExtra("source", "settings")
-                startActivity(subscribeTopicIntent)
+                val intent = Intent(this, TopicsOfInterestActivity::class.java)
+                startActivity(intent)
             }
             R.id.help -> {
                 val intent1 = Intent(this, ProfileWebViewActivity::class.java)

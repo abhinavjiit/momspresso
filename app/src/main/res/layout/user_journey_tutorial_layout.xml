@@ -30,7 +30,6 @@
     android:layout_above="@+id/bottomContainer"
     android:layout_marginBottom="20dp"
     android:gravity="center"
-    android:text="@string/home_onboarding_title"
     android:textColor="@color/white_color"
     android:textSize="16sp" />
 
@@ -48,6 +47,7 @@
     android:layout_height="wrap_content"
     android:layout_alignParentBottom="true"
     android:background="@color/white_color"
+    android:clickable="true"
     android:gravity="bottom"
     android:orientation="vertical">
 

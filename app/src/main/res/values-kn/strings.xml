@@ -1391,7 +1391,7 @@ Thank you! We will be reviewing your story. You can expect to hear from us withi
   <string name="choose_video_from_gallery">Choose video from gallery</string>
   <string name="see_more_challenge">SEE MORE CHALLENGES</string>
   <string name="vlog_tutorial">Vlog Tutorial</string>
-  <string name="no_facebook_friends">None of your friends are logged into momspresso using facebook</string>
+  <string name="no_facebook_friends">ನಿಮ್ಮ ಗೆಳೆಯರು ಇನ್ನೂ ಮಾಮ್ಸ್ ಪ್ರೇಸೊದಲ್ಲಿ ಇದ್ದಂತೆ ಕಾಣಿಸುತ್ತಿಲ್ಲ</string>
   <string name="share_app">ಶೇರ್ ಆಪ್</string>
   <string name="choose_proof">Choose Proof</string>
   <string name="invite_friends_whatsapp">Iವಾಟ್ಸಾಪ್ ಮೂಲಕ ಆಹ್ವಾನಿಸಿ</string>
@@ -1495,7 +1495,7 @@ Thank you! We will be reviewing your story. You can expect to hear from us withi
   <string name="lang_sel_express_yourself">10 ಭಾಷೆಗಳಲ್ಲಿ ನಿಮ್ಮ ಭಾವನೆಗಳನ್ನು ವ್ಯಕ್ತಪಡಿಸಬಹುದು</string>
   <string name="select_language">ನಿಮ್ಮ ಭಾಷೆಯನ್ನು ಆಯ್ಕೆ ಮಾಡಿ</string>
   <string name="login_or_sign_up">ಲಾಗ್ ಇನ್ / ಸೈನ್ ಅಪ್</string>
-  <string name="login_subheading">ರಚಿಸಿ,ಓದಿ, ಗಳಿಸಿ, 3 ಕೋಟಿ, 20 ಲಕ್ಷ ತಾಯಂದಿರ ಜೊತೆ ನೀವೂ ಸೇರಿಕೊಳ್ಳಿ</string>
+  <string name="login_subheading">ಓದಿ, ರಚಿಸಿ, ಸಂಪಾದಿಸಿ, ಬೆಂಬಲಿಸಿ</string>
   <string name="welcome_user">ನಮಸ್ತೆ %1$s</string>
   <string name="home_onboarding_consume">5 ಲಕ್ಷಕ್ಕೂ ಅಧಿಕ ಬ್ಲಾಗ್ ಮತ್ತು ಕಥೆಗಳನ್ನು ಓದಬಹುದು, ಮತ್ತು ವೀಡಿಯೋಗಳನ್ನು ನೋಡಿ</string>
   <string name="home_onboarding_create">ನಿಮ್ಮನ್ನು ನೀವು ಬರವಣಿಗೆಯ ಮೂಲಕ ಮತ್ತು ವೀಡಿಯೋ ಮೂಲಕ ತೊಡಗಿಸಿಕೊಳ್ಳಿ</string>
@@ -1506,7 +1506,7 @@ Thank you! We will be reviewing your story. You can expect to hear from us withi
   <string name="all_earn">ಗಳಿಸಿ</string>
   <string name="all_join">ಸೇರಿಕೊಳ್ಳಿ</string>
   <string name="explore_self">ನನ್ನನ್ನು ನಾನು ವ್ಯಕ್ತಪಡಿಸುತ್ತೇನೆ</string>
-  <string name="home_onboarding_title">ಹೇಗಿದ್ದೀರಾ?ನಿಮ್ಮ ಪ್ರಯಾಣವನ್ನು ಪ್ರಾರಂಭಿಸಲು ಬಯಸುತ್ತೀರಾ?</string>
+  <string name="home_onboarding_title">%1$s, ಹೇಗಿದ್ದೀರಾ?ನಿಮ್ಮ ಪ್ರಯಾಣವನ್ನು ಪ್ರಾರಂಭಿಸಲು ಬಯಸುತ್ತೀರಾ?</string>
   <string name="empty_leaderboard_text">ಲೀಡರ್‌ಬೋರ್ಡ್ ಇನ್ನೂ ರಚಿಸಲಾಗಿಲ್ಲ. ದಯವಿಟ್ಟು ನಾಳೆ ಹಿಂತಿರುಗಿ.</string>
   <string name="yesterday">ನಿನ್ನೆ</string>
   <string name="take_tour">TAKE THE TOUR</string>
@@ -1557,4 +1557,27 @@ Thank you! We will be reviewing your story. You can expect to hear from us withi
   <string name="select_a_campaign">Select a campaign you want to participate in</string>
   <string name="apply_whatsapp_dialog_text">Get MyMoney Notifications on WhatsApp</string>
   <string name="allow">Allow</string>
+  <string name="momspresso_is_fun_with_friends">ಮಾಮ್ಸ್ಪ್ರೆಸೊ ಗೆಳೆಯರೊಂದಿಗೆ ಸಂತೋಷದಾಯಕವಾಗಿರುತ್ತದೆ</string>
+  <string name="by_finding_my_friends">ಆತ್ಮೀಯ ಗೆಳೆಯರನ್ನು ಹುಡುಕಿ</string>
+  <string name="choosing_topics_i_like">ಇಷ್ಟವಾದ ವಿಷಯವನ್ನು ಆಯ್ಕೆ ಮಾಡಿ</string>
+  <string name="dont_want_a_customized_feed">ನಾನು ನನ್ನ ಆಯ್ಕೆಯನ್ನು ಕಸ್ಟಮೈಸ್ ಮಾಡಲು ಬಯಸಿಲ್ಲ</string>
+  <string name="follow_topics">ವಿಷಯವನ್ನು ಹಿಂಬಾಲಿಸಿ</string>
+  <string name="find_my_friends">ನಿಮ್ಮ ಗೆಳೆಯರನ್ನು ಹುಡುಕಿ</string>
+  <string name="follow_to_never_miss">ಅವರನ್ನು ಹಿಂಬಾಲಿಸಿ ಮತ್ತು ಅವರಿಂದ ರಚಿಸಲ್ಪಟ್ಟ ಅದ್ಭುತ ವಿಷಯಗಳ ಮಾಹಿತಿ ಪಡೆಯಿರಿ</string>
+  <string name="follow_bloggers_your_friends_are_following">ನಿಮ್ಮ ಗೆಳೆಯರು ಹಿಂಬಾಲಿಸುತ್ತಿರುವ ಬ್ಲಾಗರ್ ನನ್ನು ಹಿಂಬಾಲಿಸಿ</string>
+  <string name="select_topics">ವಿಷಯ ಆಯ್ಕೆ ಮಾಡಿ</string>
+  <string name="go_to_my_feed">ಮೈ ಫೀಡ್</string>
+  <string name="format_preference">ನಿಮ್ಮ ಅದ್ಯತೆಗೆ ತಕ್ಕಹಾಗೆ ನಮ್ಮಲ್ಲಿ 3 ಫಾರ್ಮ್ಯಾಟ್ ಗಳಿವೆ. </string>
+  <string name="interesting_content">ಆಸಕ್ತಿದಾಯಕ ಕಥೆಗಳು, ಬ್ಲಾಗರ್ಸ್ ಅನುಭವಗಳು, ಮತ್ತು ಎಕ್ಸ್ಪರ್ಟ್</string>
+  <string name="short_stories_content">ಸಣ್ಣ ಕಥೆಗಳು, ಕವಿತೆಗಳು, ಸ್ಪೂರ್ತಿದಾಯಕ, ಅಥವಾ ಹಾಸ್ಯ, ಮತ್ತು ಮನಮುಟ್ಟುವ ವಾಕ್ಯಗಳು</string>
+  <string name="vlogs_content">ತಾಯಂದಿರ ಆಸಕ್ತಿದಾಯಕ ಪ್ರತಿಭೆಯ ವೀಡಿಯೋ, ಮಕ್ಕಳ ಪ್ರತಿಭೆ,ಮತ್ತು ಕುಟುಂಬದ ಸಂತೋಷದ,ಹಾಸ್ಯದ ಕ್ಷಣಗಳು</string>
+  <string name="topics_interest">ನಿಮಗೆ ಅಸಕ್ತಿಯಿರಬಹುದಾದ ವಿಷಯಗಳು</string>
+  <string name="select_at_least_3_topics">ಕನಿಷ್ಠ ಮೂರು ವಿಷಯಗಳನ್ನು ಆಯ್ಕೆ ಮಾಡಿ</string>
+  <string name="select_at_least_1_topic">ಕನಿಷ್ಠ ಒಂದು ವಿಷಯವನ್ನು ಆಯ್ಕೆ ಮಾಡಿ</string>
+  <string name="top_blogger_you_like">ನೀವು ಇಷ್ಟ ಪಡಬಹುದಾದ ಟಾಪ್ ಬ್ಲಾಗರ್ಸ್</string>
+  <string name="bloggers_recently_read">ನೀವು ಇತ್ತೀಚೆಗೆ ಓದಲ್ಪಟ್ಟ ಬ್ಲಾಗರ್ ನನ್ನು ಹಿಂಬಾಲಿಸಿ</string>
+  <string name="blogger_topic_based">ವಿಷಯಗಳಿಗೆ ಸಂಬಂಧಿಸಿದ ಬ್ಲಾಗರ್ಸ್</string>
+  <string name="follow_friend_based_blogger">ನಿಮ್ಮ ಗೆಳೆಯರು ಹಿಂಬಾಲಿಸುತ್ತಿರುವ ಬ್ಲಾಗರ್ ನನ್ನು ಹಿಂಬಾಲಿಸಿ</string>
+  <string name="connect_with_facebook_friends_on_momspresso">ನಿಮ್ಮ ಮಾಮ್ಸ್ ಪ್ರೆಸೊ ಗೆಳತಿಯರನ್ನು ಫೇಸ್ಬುಕ್ ನೊಂದಿಗೆ ಕನೆಕ್ಟ್ ಆಗಿ</string>
+  <string name="connect_with_facebook">ಫೇಸ್ಬುಕ್ ಕನೆಕ್ಟ್ ಆಗಿ</string>
 </resources>

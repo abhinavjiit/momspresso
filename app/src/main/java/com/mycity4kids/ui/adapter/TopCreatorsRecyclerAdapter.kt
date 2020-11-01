@@ -9,10 +9,12 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.mycity4kids.R
 import com.mycity4kids.models.response.ContributorListResult
-import com.mycity4kids.models.response.SuggestedCreators
+import com.mycity4kids.models.response.LanguageRanksModel
 import com.mycity4kids.utils.AppUtils
 import com.mycity4kids.widget.MomspressoButtonWidget
 import com.squareup.picasso.Picasso
+import org.apache.commons.lang3.StringUtils
+import java.util.ArrayList
 
 class TopCreatorsRecyclerAdapter(
     private val mixFeedPosition: Int,
@@ -46,7 +48,9 @@ class TopCreatorsRecyclerAdapter(
         holder.authorPostsTextView.visibility = View.GONE
         try {
             holder.authorRankTextView.text =
-                "" + topCreatorsList?.get(position)?.ranks?.get(0)?.rank
+                StringUtils.capitalize(holder.authorRankTextView.context.getString(R.string.blogger_profile_rank_label).toLowerCase()) + " " + getCurrentLanguageRank(
+                    topCreatorsList?.get(position)?.ranks
+                )
         } catch (e: Exception) {
 
         }
@@ -111,5 +115,17 @@ class TopCreatorsRecyclerAdapter(
             view: View,
             topCreator: ContributorListResult?
         )
+    }
+
+    private fun getCurrentLanguageRank(rankArray: ArrayList<LanguageRanksModel>?): String? {
+        val langKey = AppUtils.getLangKey().toString()
+        rankArray?.let {
+            for (i in it.indices) {
+                if (it[i].langKey == langKey) {
+                    return "" + it[i].rank
+                }
+            }
+        }
+        return "--"
     }
 }

@@ -23,6 +23,7 @@ import java.util.ArrayList;
 import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.http.Body;
+import retrofit2.http.DELETE;
 import retrofit2.http.GET;
 import retrofit2.http.HTTP;
 import retrofit2.http.PATCH;
@@ -179,4 +180,7 @@ public interface VlogsListingAndDetailsAPI {
             @Query("type") int type,
             @Query("category_id") String categoryId,
             @Query("preferredLanguages") ArrayList<String> langs);
+
+    @DELETE("/v2/videos/delete/{videoId}")
+    Call<ResponseBody> deleteVlog(@Path("videoId") String videoId);
 }

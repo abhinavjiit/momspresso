@@ -94,6 +94,8 @@
       android:layout_height="wrap_content"
       android:layout_marginTop="6dp"
       android:text="Rank 1"
+      android:drawablePadding="4dp"
+      android:drawableStart="@drawable/ic_rank"
       android:textColor="#E38E9C"
       android:textSize="14sp"
       app:fontName="Roboto-Medium.ttf" />
